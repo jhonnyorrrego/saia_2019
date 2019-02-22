@@ -2,6 +2,57 @@
 class ExpedienteController
 {
     /**
+     * clasifica un documento a un expediente
+     *
+     * @param array $data
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function VincularExpedienteDocCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+        if (!empty($data['iddocumentos']) && !empty($data['idexpedientes']) && !empty($data['tipodocumental'])) {
+            $success = 0;
+            $cant = 0;
+            foreach ($data['iddocumentos'] as $iddoc) {
+                $Documento=new Documento($iddoc);
+                $Documento->serie= $data['tipodocumental'];
+                if($Documento->update()){
+                    foreach ($data['idexpedientes'] as $idexp) {
+                        $attributes = [
+                            'fk_expediente' => $idexp,
+                            'fk_documento' => $iddoc,
+                            'fk_funcionario' => $_SESSION['idfuncionario'],
+                            'fecha' => date('Y-m-d H:i'),
+                            'fecha_indice' => $Documento->fecha,
+                            'tipo' => 1
+                        ];
+                        $cant++;
+                        if (ExpedienteDoc::newRecord($attributes)) {
+                            $success++;
+                        }
+                    }
+                }
+            }
+            if ($success == $cant && $cant) {
+                $response['message'] = 'Documentos clasificados';
+                $response['exito'] = 1;
+            } else if ($success) {
+                $response['message'] = 'Hubo un error, se clasificaron algunos documentos';
+                $response['exito'] = 2;
+            } else {
+                $response['message'] = 'No se pudieron clasificar los documentos';
+            }
+        } else {
+            $response['message'] = 'faltan parametros obligatorios';
+        }
+
+        return $response;
+    }
+    /**
      * elimina un acceso directo
      *
      * @param array $data: idexpediente
@@ -288,7 +339,7 @@ class ExpedienteController
         if (!empty($data)) {
             if (!empty($data['idpermiso'])) {
                 $sql = "SELECT ex.* FROM permiso_expediente p,entidad_expediente ex WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente AND p.tipo_funcionario=ex.tipo_funcionario AND p.idpermiso_expediente={$data['idpermiso']}";
-                $instance = EntidadExpediente::findBySql($sql,true);
+                $instance = EntidadExpediente::findBySql($sql, true);
                 if ($instance) {
                     $EntidadExpediente = $instance[0];
                     $EntidadExpediente->setAccessPermits('c', false);
@@ -465,20 +516,6 @@ class ExpedienteController
                         $sql = "UPDATE expediente SET fk_caja={$Expediente->fk_caja} WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
                         StaticSql::query($sql);
                     }
-
-                    if (!empty($data['generarFiltro']) && !empty($data['idbusqueda_componente'])) {
-                        $attributes = [
-                            'fk_busqueda_componente' => $data["idbusqueda_componente"],
-                            'funcionario_idfuncionario' => $_SESSION['idfuncionario'],
-                            'fecha' => date("Y-m-d H:i:s"),
-                            'detalle' => 'idexpediente|=|' . $Expediente->getPK(),
-                        ];
-                        $BusquedaFiltroTemp = new BusquedaFiltroTemp();
-                        $BusquedaFiltroTemp->setAttributes($attributes);
-                        if ($BusquedaFiltroTemp->create()) {
-                            $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
-                        }
-                    }
                 }
             } else {
                 $response['message'] = 'faltal campos obligatorios expediente/expediente padre';
@@ -565,7 +602,7 @@ class ExpedienteController
                             $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra cerrado';
                         } else {
                             $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
-                            $instance = ExpedienteEli::findBySql($sql,true);
+                            $instance = ExpedienteEli::findBySql($sql, true);
                             if ($instance) {
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
@@ -634,25 +671,8 @@ class ExpedienteController
                     'cod_arbol' => 0
                 ];
                 $ExpTomo->setAttributes($attributes);
-                $info = $ExpTomo->CreateExpediente();
-                $response = $info;
+                $response = $ExpTomo->CreateExpediente();
 
-                if ($info['exito']) {
-                    $response['data']['cod_padre'] = $ExpTomo->cod_padre;
-                    if (!empty($data['generarFiltro']) && !empty($data['idbusqueda_componente'])) {
-                        $attributes = [
-                            'fk_busqueda_componente' => $data["idbusqueda_componente"],
-                            'funcionario_idfuncionario' => $ExpTomo->propietario,
-                            'fecha' => date("Y-m-d H:i:s"),
-                            'detalle' => 'idexpediente|=|' . $ExpTomo->getPK(),
-                        ];
-                        $BusquedaFiltroTemp = new BusquedaFiltroTemp();
-                        $BusquedaFiltroTemp->setAttributes($attributes);
-                        if ($BusquedaFiltroTemp->create()) {
-                            $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
-                        }
-                    }
-                }
             }
         }
 

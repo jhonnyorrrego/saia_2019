@@ -50,7 +50,12 @@ class Expediente extends Model
     public function __construct($id = null)
     {
         parent::__construct($id);
-        if ($id) {
+        $this->massiveAssigned();
+
+    }
+
+    public function massiveAssigned(){
+        if ($this->idexpediente) {
             $this->permiso = [
                 'a' => false,
                 'l' => false,
@@ -62,7 +67,7 @@ class Expediente extends Model
             $this->setAccessUser($_SESSION['idfuncionario']);
         }
     }
-
+    
 
     protected function defineAttributes()
     {

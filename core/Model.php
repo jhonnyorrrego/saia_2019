@@ -395,6 +395,9 @@ abstract class Model extends StaticSql
                     $Instance->$key = $value;
                 }
             }
+            if(method_exists($Instance,'massiveAssigned')){
+                $Instance->massiveAssigned();
+            }
             $data[] = $Instance;
         }
 

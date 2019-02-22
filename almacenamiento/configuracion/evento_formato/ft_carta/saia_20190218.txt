@@ -1,1 +1,0 @@
-ALTER TABLE ft_carta CHANGE idft_carta idft_carta INT(11) NOT NULL AUTO_INCREMENT 

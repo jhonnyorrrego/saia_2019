@@ -1,1 +1,0 @@
-idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*11997|||1|||2019-02-18 07:57:45|||MODIFICAR|||formato|||0|||update formato set fecha='2018-05-24 14:39:23', publicar='0' where idformato = 1 |||1|||UPDATE formato set publicar = 1 where idformato = 1*|*

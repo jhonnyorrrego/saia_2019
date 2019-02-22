@@ -16,7 +16,11 @@ class EntidadExpediente extends Model
     public function __construct($id = null)
     {
         parent::__construct($id);
-        if ($id) {
+        $this->massiveAssigned();
+    }
+
+    public function massiveAssigned(){
+        if ($this->identidad_expediente) {
             $this->accessPermits = [
                 'd' => false,
                 'e' => false,

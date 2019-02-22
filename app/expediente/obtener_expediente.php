@@ -25,37 +25,33 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $data = UtilitiesController::cleanForm($_REQUEST['ids']);
     if ($data) {
         $ids = implode(',', $data);
-        $sql = "SELECT * FROM documento WHERE iddocumento in ({$ids}) AND estado NOT IN ('ELIMINADO')";
+        $sql = "SELECT * FROM documento WHERE iddocumento in ({$ids}) AND estado NOT IN ('ELIMINADO','ACTIVO')";
         $records = Documento::findBySql($sql, true);
         if ($records) {
             $response['success'] = 1;
             $dataTable = [];
             foreach ($records as $Documento) {
-                $dataTable['id'] = $Documento->getPK();
+                $dataTable['id'] = (int)$Documento->getPK();
                 $dataTable['icono'] = '<i class="fa fa-minus-circle cursor f-20 remove-doc" data-id="' . $dataTable['id'] . '"></i>';
                 $dataTable['documento'] = $Documento->descripcion;
 
                 $tipo = 'SIN CLASIFICAR';
-                $dataTable['idseriePad'] = $Documento->serie;
+                $dataTable['idserie'] = 0;
                 if ($Documento->serie) {
-                    $infoCodArbol = $Documento->getRelationFk('Serie', 'serie')->getInfoCodArbol();
-                    $tipo = $infoCodArbol['etiqueta'];
-                    $dataTable['idserieAnt'] = $infoCodArbol['id'];
+                    $dataTable['idserie'] = (int)$Documento->serie;
+                    $tipo = $Documento->getRelationFk('Serie', 'serie')->getInfoCodArbol()['etiqueta'];
                 }
                 $dataTable['tipoDoc'] = $tipo;
 
-                $sql = "SELECT ed.idexpediente_doc,e.nombre FROM expediente_doc ed,expediente e WHERE e.idexpediente=ed.fk_expediente AND e.estado=1 AND ed.fk_documento='{$dataTable['id']}'";
+                $sql = "SELECT DISTINCT e.idexpediente,e.nombre FROM expediente_doc ed,expediente e WHERE e.idexpediente=ed.fk_expediente AND e.estado=1 AND ed.fk_documento='{$dataTable['id']}'";
                 $expeDoc = ExpedienteDoc::findBySql($sql);
                 $html = '';
                 if ($expeDoc) {
-                    $html .= '<table>';
+                    $html .= '<ol>';
                     foreach ($expeDoc as $expedienteDoc) {
-                        $html .= '<tr id="tr_' . $expedienteDoc['idexpediente_doc'] . '">
-                            <td style="font-size:0.9em">' . $expedienteDoc['nombre'] . '</td>
-                            <td><i class="fa fa-trash f-16 cursor remove-exp" data-id="' . $expedienteDoc['idexpediente_doc'] . '"></i></td>
-                        </tr>';
+                        $html .= '<li>'. $expedienteDoc['nombre'] .'</li>';
                     }
-                    $html .= '</table>';
+                    $html .= '</ol>';
                     $dataTable['expVinc'] = $html;
                 } else {
                     $dataTable['expVinc'] = $html;

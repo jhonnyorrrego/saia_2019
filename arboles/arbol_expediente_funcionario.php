@@ -104,7 +104,7 @@ class ExpedienteFuncionario
         return $objetoJson;
     }
 /**
- * Muestra los tipos documentales vinculados al expediente
+ * Muestra los tipos documentales vinculados al expedientep
  *
  * @param Expediente $Expediente :Instancia del expediente
  * @return array
@@ -129,10 +129,9 @@ class ExpedienteFuncionario
                 $item['title'] = $text;
                 $item['key'] =$Serie->getPK().'-'.$Expediente->getPK();
                 $item['data'] = [
-                    'idexpediente' => $Expediente->getPK(),
-                    'fk_serie' => $Serie->getPK(),
-                    'fk_serieAnt' => $Serie->getInfoCodArbol()['id'],
-                    'fk_entidad_serie' => $Expediente->fk_entidad_serie
+                    'fk_expediente' => (int)$Expediente->getPK(),
+                    'fk_serie' => (int)$Serie->getPK(),
+                    'fk_entidad_serie' => (int)$Expediente->fk_entidad_serie
                 ];
                 $objetoJson[] = $item;
             }

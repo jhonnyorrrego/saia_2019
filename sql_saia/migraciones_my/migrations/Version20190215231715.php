@@ -197,6 +197,7 @@ final class Version20190215231715 extends AbstractMigration
         $tabla7->addColumn("fk_expediente", "integer");
         $tabla7->addColumn("fk_documento", "integer");
         $tabla7->addColumn("fk_funcionario", "integer");
+        $tabla7->addColumn("tipo", "integer", ["default"=>1,"comment" => "1,NO compartido; 2,Compartido"]);
         $tabla7->addColumn("fecha", "datetime",["comment"=>"fecha creacion"]);
         $tabla7->addColumn("fecha_indice", "datetime");
         $tabla7->setPrimaryKey(["idexpediente_doc"]);
@@ -294,7 +295,8 @@ final class Version20190215231715 extends AbstractMigration
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 323, 'estado=1', 'Cajas')");
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 371, '{*conditions_caja_expediente*}', 'Caja Expediente')");
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 373, 'e.idexpediente=ed.fk_expediente {*user_actual*}', 'Accesos Directos')");
-      
+
+
         /*
             CREATE OR REPLACE VIEW vpapelera_expediente AS 
             select concat(ce.fk_caja,'-caja') AS id,ce.idcaja_eli AS idtabla,'CAJA' AS tipo,ce.fk_caja AS fk_tipo,ce.fk_funcionario AS fk_funcionario,ce.fecha_eliminacion AS fecha_eliminacion,ce.eliminar_expediente AS eliminar_expediente from caja_eli ce where isnull(ce.fecha_restauracion) union all select concat(ee.fk_expediente,'-expediente') AS id,ee.idexpediente_eli AS idtabla,'EXPEDIENTE' AS tipo,ee.fk_expediente AS fk_tipo,ee.fk_funcionario AS fk_funcionario,ee.fecha_eliminacion AS fecha_eliminacion,0 AS eliminar_expediente from expediente_eli ee where isnull(ee.fecha_restauracion)
@@ -315,6 +317,8 @@ final class Version20190215231715 extends AbstractMigration
             WHERE s.idserie=e.fk_serie AND e.identidad_serie=p.fk_entidad_serie AND f.iddependencia=p.llave_entidad AND p.fk_entidad=2 AND s.estado=1 AND e.estado=1
 
 
+115,116    
+320,321,
 
             DROP VIEW IF EXISTS vdependencia_serie;
             DROP VIEW IF EXISTS vpermiso_serie_entidad;

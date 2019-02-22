@@ -8,7 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "db.php";
 usuario_actual("login");
 
 // pagina actual inicia en 1
