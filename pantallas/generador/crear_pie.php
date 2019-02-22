@@ -19,13 +19,17 @@ echo librerias_validar_formulario();
 echo librerias_notificaciones();
 echo librerias_highslide();
 
-$contenidoDefecto =json_encode('<table align="center" border="1" cellspacing="0" style="border-collapse:collapse; width:100%">
-<tr>
+$contenidoDefecto =json_encode('<div class="row">
+<div class="col-md-12">
+<table border="0" cellspacing="0" class="table table-condensed" style="text-align:left; width:100%">
+	<tbody><tr>
   <td style="text-align:center;">{*logo_empresa*}</td>
   <td style="text-align:center;"><p><br />{*nombre_formato*}<br /><br />{*nombre_empresa*}</p></td>
   <td style="text-align:center;">{*formato_numero*}<br><br>{*fecha_creacion*}<br><br>Pagina {PAGENO}<br></td>
 </tr>
-</table>');
+</tbody>
+</table></div>
+</div>');
 ?>
 
 <script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
