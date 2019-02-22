@@ -114,6 +114,7 @@ span.fancytree-checkbox.fancytree-radio {
 span.fancytree-expander {
     vertical-align: middle !important;
 }
+
 </style>
 
 	<script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
@@ -425,15 +426,13 @@ if ($formato["numcampos"]) {
     </div>
   </div>
 
-  <!-- <div class="control-group">
-    <label class="control-label" for="funcion_predeterminada">Ruta de aprobaci&oacute;n</label>
+ <div class="control-group">
+    <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
     <div class="controls">
-      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
-      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2" data-toggle="tooltip" title="Opción que indica si el formato permite digitalizar">
+      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
     </div>
-  </div> -->
+  </div>
 
-  <div class="container">
   <div class="row-fluid">
   	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_formato" value="{*fecha_ano*}/{*fecha_mes*}/{*idformato*}">
   	<!--input type="hidden" name="prefijo" id="prefijo_formato" value=""-->
@@ -453,7 +452,6 @@ if ($formato["numcampos"]) {
   ?>
     <div class="pull-right" id="cargando_enviar"></div>
      </div>
-  </div>
 </form>
 
 <?php

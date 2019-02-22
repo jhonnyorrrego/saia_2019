@@ -62,6 +62,7 @@ if ($_REQUEST["idformato"]) {
         position: relative;
         border: none;
     }
+
     </style>
     <?php
 echo estilo_bootstrap();
@@ -143,6 +144,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
     #droppable ul{
        list-style:none;
        }
+
     </style>
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 </head>
@@ -221,7 +223,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                              <div class="control-group">
                                 <div class="controls">
                                     <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
-                                    <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="nuevo_formato"><i class="fa fa-plus"></i> Nuevo</button>
+                                    <!--<button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="nuevo_formato"><i class="fa fa-plus"></i> Nuevo</button>-->
 
                                 </div>
                                
@@ -350,7 +352,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                                 </div>
                                 <div id="pie_formato" name="pie_formato"></div>
 
-                            </form>
+                            </form><br>
 
                             <script type="text/javascript">
                             var encabezados = <?php echo json_encode($contenido_enc); ?>;
@@ -608,9 +610,9 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $("#nuevo_formato").click(function() {
+    /*$("#nuevo_formato").click(function() {
 		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
-	});
+	});*/
     $.ajax({
         type: 'POST',
         url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",

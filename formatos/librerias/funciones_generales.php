@@ -826,11 +826,11 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             $texto .= "</div>";
             break;
         case "checkbox":
-            $texto .= '<div class="row">';
+            $texto .= '<div class="row checkbox check-success">';
             //$texto .= '<table border="0">';
             $lista_default = explode(',', $default);
             for ($j = 0; $j < $cont3; $j++) {
-                $texto .= '<div class="col-3 px-1"><div class="form-check"><input class="form-check-input" type="' . $tipo . '" ';
+                $texto .= '<div class="col-3 px-1"><div class="form-check "><input class="form-check-input" type="' . $tipo . '" ';
 
                 if ($j == 0) {
                     $texto .= $obligatorio;
@@ -850,7 +850,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 $texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width">
 	  		  <option value="" selected >Por favor seleccione...</option>';
             } else {
-                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width" >
+                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" >
               <option value="" selected >Por favor seleccione...</option>';
             }
             for ($j = 0; $j < $cont3; $j++) {
@@ -866,6 +866,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                     $(document).ready(function() {
 
                         $("#' . $nombre . '").select2();
+                        $("#' . $nombre . '").addClass("full-width");
                     });
                     </script>
                      ';

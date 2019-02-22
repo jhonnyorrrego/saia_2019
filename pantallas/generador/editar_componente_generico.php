@@ -278,7 +278,6 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto) {
         } else {
             $resp["fs_obligatoriedad"] = false;
 		}
-		$resp["fs_opciones"] = false;
 	
         $resp["fs_acciones"] = false;
 

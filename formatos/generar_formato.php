@@ -570,7 +570,7 @@ class GenerarFormato
             ];
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%')", "", $conn);
+                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%' or nombre like '%{$campos_lectura['texto_descr']}%')", "", $conn);
                 if($consultaEtiquetas['numcampos']){
                     for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre'];
@@ -592,16 +592,41 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
-
             if ($campos['numcampos']) {
-                $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
+                $cuerpo_formato = '<style>
+        .table.table-condensed thead tr td {
+        padding-top: 2px;
+        padding-bottom: 2px;            
+    }
+    .table.table-condensed {
+        table-layout: auto;
+    }
+
+    </style>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;" border="1" cellspacing="0">
+                    <thead>
+                    <tr>
+                    <td><strong>Fecha</strong></td>
+                    <td>{*fecha_creacion*}&nbsp;</td>
+                    <td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr>
+                    <tr><td><strong>Asunto</strong></td>
+                    <td>{*asunto_documento*}</td></tr>
+                    </thead>
+                </table><br>
+                <table class="table table-bordered table-condensed" style="width: 100%;">
+                <thead>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
                     $cuerpo_formato .= '<tr>
             <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>
             <td>{*' . $campos[$i]['nombre'] . '*}</td>
             </tr>';
                 }
-                $cuerpo_formato .= '</tbody></table><br><br>{*mostrar_estado_proceso*}';
+                $cuerpo_formato .= '</thead>
+                </table>
+            </div>
+        </div><br><br>{*mostrar_estado_proceso*}';
                 $update_formato = "UPDATE formato set cuerpo='" . $cuerpo_formato . "' where idformato=" . $this->idformato;
                 phpmkr_query($update_formato);
                 $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento','mostrar_estado_proceso')", "", $conn);
@@ -874,7 +899,7 @@ class GenerarFormato
                     	<div class="card card-default">
                             <div class="card-body">';
             if (!$formato[0]["item"]) {
-                $texto .= '<center><h4 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h4></center>';
+                $texto .= '<center><h5 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h5></center>';
             }
             $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],' . $this->idformato . ',"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
@@ -988,15 +1013,15 @@ class GenerarFormato
                     switch ($campos[$h]["etiqueta_html"]) {
                         case "etiqueta":
                         case "etiqueta_titulo":
-                            $texto .= '<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . $this->codifica($campos[$h]["valor"]) . '</span></center></h5>
+                            $texto .= '<div id="tr_' . $campos[$h]["nombre"] . '">
+                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><label >' . $this->codifica($campos[$h]["valor"]) . '</label></h5>
                                       </div>';
                             break;
                         case "etiqueta_parrafo":
                             $texto .= '<p id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</p>';
                             break;
                         case "etiqueta_linea":
-                            $texto .= '<hr class="border border-info" id="' . $campos[$h]["nombre"] . '">';
+                            $texto .= '<hr class="border" id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
 
@@ -1806,11 +1831,11 @@ span.fancytree-expander {
             $js_archivos = "";
             if ($archivo) {
                 // $includes .= $this->incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
-                $includes .= $this->incluir('<?= $ruta_db_superior ?>dropzone/dist/dropzone.js', "javascript");
+                $includes .= $this->incluir('<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js', "javascript");
                 $includes .= $this->incluir("'<?= $ruta_db_superior ?>anexosdigitales/funciones_archivo.php'", "librerias");
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js', "javascript");
                 $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style>';
-                $includes .= '<link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />';
+                $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style>';
                 $includes .= '<script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>';
                 $js_archivos = $this->crear_campo_dropzone(null, null);
             }
@@ -2488,8 +2513,8 @@ span.fancytree-expander {
         }
         $pre = "";
         $post = "";
-        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . $obliga . '</label>';
+        $texto[] = '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . '</label>';
         if ($moneda) {
             $pre = '<div class="input-group" ' . $ancho . '>
                         <div class="input-group-prepend">
@@ -2500,7 +2525,7 @@ span.fancytree-expander {
         }
         $adicionales .= " $ancho";
         $texto[] = $pre;
-        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">';
+        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '"  value="' . $valor . '">';
         $texto[] = '</div>';
         $texto[] = $post;
         return implode("\n", $texto);
