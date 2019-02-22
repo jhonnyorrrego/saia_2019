@@ -14,6 +14,8 @@ include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
+
+
 $idpantalla = 0;
 $idencabezadoFormato = 0;
 $contenidoEncabezado = 0;
@@ -64,6 +66,7 @@ if ($_REQUEST["idformato"]) {
     <?php
 echo estilo_bootstrap();
 echo librerias_jquery("1.8.3");
+echo librerias_acciones_kaiten();
 echo librerias_html5();
 include_once $ruta_db_superior . "assets/librerias.php";
 
@@ -217,8 +220,11 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             <?= consultarPermisosPerfil(); ?>
                              <div class="control-group">
                                 <div class="controls">
-                                <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
+                                    <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
+                                    <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="nuevo_formato"><i class="fa fa-plus"></i> Nuevo</button>
+
                                 </div>
+                               
                             </div>
                         </div>
                         <div class="tab-pane" id="datos_formulario-tab">
@@ -602,6 +608,9 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 $(document).ready(function() {
+    $("#nuevo_formato").click(function() {
+		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
+	});
     $.ajax({
         type: 'POST',
         url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",

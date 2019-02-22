@@ -469,7 +469,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
     if ($idformato) {
         $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);        
-        $retorno["mensaje"] = "EL formato se guardo con éxito";
+        $retorno["mensaje"] = "EL formato se guardó con éxito";
         $retorno["idformato"] = $idformato;
         $retorno['exito'] = 1;
     } else {
