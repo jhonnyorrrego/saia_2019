@@ -607,7 +607,7 @@ class GenerarFormato
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;" border="1" cellspacing="0">
-                    <thead><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
+                    <thead><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered table-condensed" style="width: 100%;"><tbody>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
                     $cuerpo_formato .= '<tr>
             <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>
