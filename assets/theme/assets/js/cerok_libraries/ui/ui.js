@@ -17,7 +17,6 @@ class Ui {
                 }
             }, 'json');
         } else {
-            console.log(Session.getBaseUrl()+ logo);
             $('#client_image').attr('src', Session.getBaseUrl()+ logo);
         }
     }

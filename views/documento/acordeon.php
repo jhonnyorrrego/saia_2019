@@ -1,7 +1,7 @@
 <div class="row mx-0 pt-1">
     <div class="col-12 px-0">
         <div class="mx-0">
-            <div class="card-group horizontal" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="card-group horizontal my-0" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="card card-default mb-0" id="first_occordion_card">
                     <div class="card-header py-2" role="tab" style="height:32px;min-height:32px;">
                         <h4 class="card-title">

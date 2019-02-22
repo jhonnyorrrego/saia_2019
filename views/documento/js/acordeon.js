@@ -1,5 +1,4 @@
 $(function () {
-    let key = localStorage.getItem('key');
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
     let sizeFont = 0;
