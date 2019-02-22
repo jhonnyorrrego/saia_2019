@@ -3250,9 +3250,10 @@ function salir($texto, $login = "")
     session_destroy();
     unset($_COOKIE["PHPSESSID"]);
 
-    redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php");
-
-    die();
+    echo "<script language='javascript'>
+        top.window.location='" . PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php';
+    </script>";
+    exit();
 }
 
 /*
