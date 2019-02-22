@@ -1,9 +1,8 @@
 <?php
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
-while($max_salida > 0) {
-    if(is_file($ruta . "db.php")) {
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
     }
     $ruta .= "../";
@@ -22,7 +21,7 @@ $resp = array(
     "status" => 0
 );
 
-if(!isset($_REQUEST["saia_key"])) {
+if (!isset($_REQUEST["saia_key"])) {
     $resp["message"] = "No se envió identificación del funcionario";
     echo json_encode($resp);
     die();
@@ -31,23 +30,23 @@ if(!isset($_REQUEST["saia_key"])) {
 $saia_key = $_REQUEST["saia_key"];
 
 $resp["data"] = $_REQUEST["datos_correo"];
-if(isset($_REQUEST["datos_correo"])) {
+if (isset($_REQUEST["datos_correo"])) {
     $datos = json_decode($_REQUEST["datos_correo"], true);
-    if(json_last_error() !== JSON_ERROR_NONE) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
         $resp["message"] = "error en la cadena json";
         echo json_encode($resp);
         die();
     }
 }
 
-//$nombre_formato = 'factura_electronica';
-$nombre_formato = 'radicacion_facturas';
-//logear_funcionario_webservice("radicador_web");
+// $nombre_formato = 'factura_electronica';
+$nombre_formato = 'factura_electronica';
+// logear_funcionario_webservice("radicador_web");
 $datos_funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login", "funcionario", "idfuncionario=$saia_key", "", $conn);
 $formato = busca_filtro_tabla("idformato", "formato", "nombre='{$nombre_formato}'", "", $conn);
 $idformato = $formato[0]["idformato"];
 
-if($datos_funcionario["numcampos"]) {
+if ($datos_funcionario["numcampos"]) {
     logear_funcionario_webservice($datos_funcionario[0]["login"]);
 } else {
     $resp["message"] = "No se encontró el funcionario";
@@ -55,106 +54,148 @@ if($datos_funcionario["numcampos"]) {
     die();
 }
 
-//Preprocesar la lista de archivos
+// Preprocesar la lista de archivos
 
 $archivosXml = [];
 $archivosPdf = [];
 $archivoEml = [];
 
-//Separar por nombre los xml de los pdf
-foreach($datos as $datos_correo) {
+$noExiste = [];
+// Separar por nombre los xml de los pdf
+foreach ($datos as $datos_correo) {
+    $uidCorreo = $datos_correo["uid"];
     $esteEml = [];
-    foreach($datos_correo["adjuntos"] as $archivo) {
+    foreach ($datos_correo["adjuntos"] as $archivo) {
         $es = file_exists($archivo);
         $partes_ruta = pathinfo($archivo);
 
         $ext_arch = $partes_ruta['extension'];
         $nom_arch = $partes_ruta['filename'];
 
-        if($es) {
-            if(preg_match("/xml/i", $ext_arch)) {
-                $archivosXml[$datos_correo["uid"]][$nom_arch] = $archivo;
-            } else if(preg_match("/pdf/i", $ext_arch)) {
-                $archivosPdf[$datos_correo["uid"]][$nom_arch] = $archivo;
-            } else if(preg_match("/eml/i", $ext_arch)) {
+        if ($es) {
+            if (preg_match("/xml/i", $ext_arch)) {
+                $archivosXml[$uidCorreo][$nom_arch] = $archivo;
+            } else if (preg_match("/pdf/i", $ext_arch)) {
+                $archivosPdf[$uidCorreo][$nom_arch] = $archivo;
+            } else if (preg_match("/eml/i", $ext_arch)) {
                 $esteEml[] = $archivo;
             }
+        } else {
+            $noExiste[] = $archivo;
         }
     }
     $esteEml = array_unique($esteEml);
-    $archivoEml[$datos_correo["uid"]][] = $esteEml;
+    $archivoEml[$uidCorreo][] = $esteEml;
 }
 
-$radicados = 0;
-foreach($datos as $datos_correo) {
+$procesados = [];
+$procesadosXml = $archivosXml;
+$procesadosPdf = $archivosPdf;
 
-    //Debe existir un pdf con el mismo nombre
-    foreach($archivosXml[$datos_correo["uid"]] as $nombre => $ruta) {
+$mensajes = [];
+$radicados = [];
+
+foreach ($datos as $datos_correo) {
+
+    $radicados[$uidCorreo] = 0;
+    $uidCorreo = $datos_correo["uid"];
+    foreach ($archivosXml[$uidCorreo] as $nombre => $ruta) {
         $datos_factura = procesar_factura($ruta);
-        if(!empty($datos_factura)) {
+        if (!empty($datos_factura)) {
             $notas = $datos_factura["notas"];
             $tipo_persona = $datos_factura["tipo_persona"];
             unset($datos_factura["notas"]);
             unset($datos_factura["tipo_persona"]);
-            //$datos_factura["idgrupo"] = "'" . $datos_correo["idgrupo"] . "'";
+            // $datos_factura["idgrupo"] = "'" . $datos_correo["idgrupo"] . "'";
 
             $datos_factura["anexos"] = "'" . implode(",", $datos_correo["adjuntos"]) . "'";
 
             $iddatos_factura = registar_factura($datos_factura);
-            //$datos_factura["num_folios"] = count($datos_correo["adjuntos"]);
-            //$datos_factura["iddt_datos_factura"] = $iddatos_factura;
+            // $datos_factura["num_folios"] = count($datos_correo["adjuntos"]);
+            // $datos_factura["iddt_datos_factura"] = $iddatos_factura;
             $datos_factura["fk_datos_factura"] = $iddatos_factura;
-            //$datos_factura["notas"] = $notas;
+            // $datos_factura["notas"] = $notas;
             $iddoc = radicar_factura($datos_factura, $nombre_formato);
-            if(!empty($iddoc)) {
+            if (!empty($iddoc)) {
                 $anexos = [];
-                $anexos[] = $archivosXml[$datos_correo["uid"]][$nombre];
-                $anexos[] = $archivosPdf[$datos_correo["uid"]][$nombre];
-                $anexos[] = $archivoEml[$datos_correo["uid"]][0];
+                $anexos[] = $archivosXml[$uidCorreo][$nombre];
+                $anexos[] = $archivosPdf[$uidCorreo][$nombre];
+                $anexos[] = $archivoEml[$uidCorreo][0];
                 guardar_anexos($anexos, $idformato, $iddoc);
-                guardarDetalleFactura($datos_factura["items"]);
+                guardarDetalleFactura($iddoc, $datos_factura["items"]);
+                unset($procesadosXml[$uidCorreo][$nombre]);
+                unset($procesadosPdf[$uidCorreo][$nombre]);
+                $procesados[] = $nombre;
+                $radicados[$uidCorreo]++;
+                $mensajes[$datos_correo["asunto"]] = mensajeTerminacion($uidCorreo, $radicados, $archivosXml, $archivosPdf, $procesadosXml, $procesadosPdf);
+
             } else {
-                $resp["message"] = "No es posible adjuntar los anexos al documento";
+                $mensajes[$datos_correo["asunto"]] = "No fue posible radicar el documento para la factura: $nombre";
                 break;
             }
-            $radicados++;
+        } else {
+            $mensajes[$datos_correo["asunto"]] = "No se pudo procesar la factura: $nombre";
         }
     }
     mover_correo_buzon($datos_correo);
 }
 
-$resp["radicados"] = $radicados;
-if($radicados) {
+// echo json_encode($procesados);die();
+
+$resp["radicados"] = count($procesados);
+
+if ($radicados) {
     $resp["status"] = 1;
-    $resp["message"] = "Radicación existosa";
+} else {
+    $resp["status"] = 0;
 }
 
-//abrir_url($ruta_db_superior . "index_correo.php", "_self");
-//die("HECHO");
+//TODO revisar los mensajes
+
+$resp["message"] = http_build_query($mensajes);
 
 echo json_encode($resp);
 die();
 
+function mensajeTerminacion($uid, $archivosRadicados, $archivosXml, $archivosPdf, $procesadosXml, $procesadosPdf) {
+    $mensaje = "";
+    $radicados = count($archivosRadicados[$uid]);
+    $conteoPdfIni = count($archivosPdf[$uid]);
+    $conteoXmlIni = count($archivosXml[$uid]);
+    $conteoPdfFin = count($archivosPdf[$uid]);
+    $conteoXmlFin = count($procesadosXml[$uid]);
+
+    if ($radicados === $conteoXmlIni && $conteoXmlFin === 0 && $conteoXmlFin === $conteoPdfFin) {
+        $mensaje = '"Registro Exitoso". Todas las facturas con su respectiva versión en PDF';
+    } else if ($conteoXmlFin !== $conteoPdfFin) {
+        $mensaje = '"Registro Exitoso". Algunas facturas sin su respectiva versión en PDF';
+    } else {
+        $mensaje = "Por favor revise los documentos generados en busca de inconsistencias";
+    }
+
+    return $mensaje;
+}
+
 function procesar_factura($archivo_face) {
-    $es = file_exists($archivo);
+    $es = file_exists($archivo_face);
     $ext_arch = pathinfo($archivo_face, PATHINFO_EXTENSION);
 
     $datos_factura = array();
 
-    if(preg_match("/xml/i", $ext_arch) && $es) {
+    if (preg_match("/xml/i", $ext_arch) && $es) {
         $factura = new FacturaXML(array(
             "archivo" => $archivo_face
         ));
 
-        $datos_factura["num_factura"] = "'" . $factura->numeroFactura() . "'";
+        $datos_factura["num_factura"] = $factura->numeroFactura();
         $datos_factura["fecha_factura"] = fecha_db_almacenar($factura->fechaExpedicion(), "Y-m-d H:i:s");
         $datos_factura["items"] = $factura->items();
 
         $proveedor = $factura->datosProveedor();
-        if(is_array($proveedor)) {
+        if (is_array($proveedor)) {
             $info = array();
-            foreach($proveedor as $key => $value) {
-                switch($key) {
+            foreach ($proveedor as $key => $value) {
+                switch ($key) {
                     case "identificacion":
                         $datos_factura["nit_proveedor"] = "'$value'";
                         break;
@@ -181,7 +222,7 @@ function procesar_factura($archivo_face) {
                         break;
                 }
             }
-            if(!empty($info)) {
+            if (!empty($info)) {
                 $datos_factura["info_proveedor"] = "'" . implode(",", $info) . "'";
             }
         } else {
@@ -196,6 +237,7 @@ function procesar_factura($archivo_face) {
 
 function registar_factura($info_factura) {
     global $conn;
+    unset($info_factura["items"]);
     $insert = "INSERT INTO dt_datos_factura (" . implode(", ", array_keys($info_factura)) . ") VALUES (" . implode(", ", array_values($info_factura)) . ")";
     // print_r(array_keys($valores));
 
@@ -205,19 +247,19 @@ function registar_factura($info_factura) {
 
 function mover_correo_buzon($info_correo) {
     $email = busca_filtro_tabla("email,email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
-    //$cstr = "{" . SERVIDOR_CORREO_IMAP . ":" . PUERTO_SERVIDOR_CORREO . "/imap/ssl}";
+    // $cstr = "{" . SERVIDOR_CORREO_IMAP . ":" . PUERTO_SERVIDOR_CORREO . "/imap/ssl}";
     $cstr = "{" . ltrim(SERVIDOR_CORREO_IMAP, "ssl://") . ":" . PUERTO_SERVIDOR_CORREO . "/ssl/novalidate-cert}";
     $imapStream = imap_open($cstr, $email[0]['email'], $email[0]['email_contrasena']) or die("No es posible conectar al servidor de correo: " . imap_last_error());
 
     $carpetas = imap_listmailbox($imapStream, "{imap.example.org:143}", "Facturas SAIA");
 
-    if($carpetas === false) {
+    if ($carpetas === false) {
         imap_createmailbox($imapStream, imap_utf8($cstr . "Facturas SAIA"));
         imap_subscribe($imapStream, $cstr . "Facturas SAIA");
-        //imap_close($imapStream);
+        // imap_close($imapStream);
     }
 
-    //echo $move = imap_mail_move($imapStream, $info_correo["uid"], 'Facturas SAIA', CP_UID);
+    // echo $move = imap_mail_move($imapStream, $info_correo["uid"], 'Facturas SAIA', CP_UID);
     $move = imap_mail_move($imapStream, $info_correo["uid"], 'Facturas SAIA', CP_UID);
     imap_close($imapStream, CL_EXPUNGE);
 }
@@ -225,7 +267,7 @@ function mover_correo_buzon($info_correo) {
 function radicar_factura($datos, $nombre_formato) {
     global $ruta_db_superior, $conn;
     include_once ($ruta_db_superior . "class_transferencia.php");
-    if(!empty($datos)) {
+    if (!empty($datos)) {
         $tabla = "ft_{$nombre_formato}";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
         $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
@@ -239,7 +281,7 @@ function radicar_factura($datos, $nombre_formato) {
         $_REQUEST["total_factura"] = $datos["total_factura"];
         $_REQUEST["info_proveedor"] = implode("\n", $datos["notas"]);
 
-        //TODO: Revisar lo del remitente
+        // TODO: Revisar lo del remitente
         $idDatosEjecutor = obtener_ejecutor($datos);
 
         $_REQUEST["proveedor"] = $idDatosEjecutor;
@@ -260,23 +302,23 @@ function radicar_factura($datos, $nombre_formato) {
 
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
-        if($iddoc) {
+        if ($iddoc) {
             $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
-            if($ok["numcampos"]) {
-                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
+            if ($ok["numcampos"]) {
+                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos["fk_datos_factura"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT: $update_ok");
             } else {
                 $update = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=" . $iddoc;
                 phpmkr_query($update) or die("Error al Eliminar el documento: $update");
 
-                $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
+                $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["fk_datos_factura"];
                 phpmkr_query($update_dt) or die("Error al actualizar la DT: $update_dt");
             }
         } else {
-            $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
+            $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["fk_datos_factura"];
             phpmkr_query($update_dt) or die("Error al actualizar la DT: $update_dt");
         }
-        //redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
+        // redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
         return $iddoc;
     }
     return null;
@@ -284,18 +326,18 @@ function radicar_factura($datos, $nombre_formato) {
 
 function guardar_anexos($datos, $idformato, $iddoc) {
     global $conn, $ruta_db_superior;
-    require_once($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
-    //$datos = busca_filtro_tabla("anexos,numero", "ft_{$nombre_formato},documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+    require_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
+    // $datos = busca_filtro_tabla("anexos,numero", "ft_{$nombre_formato},documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
     $total = count($datos);
-    for($i = 0; $i < $total; $i++) {
-        //$ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
+    for ($i = 0; $i < $total; $i++) {
+        // $ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
         $ruta_real = $datos[$i];
-        //print_r($ruta_real);
-        if(file_exists($ruta_real)) {
+        // print_r($ruta_real);
+        if (file_exists($ruta_real)) {
             $dir_anexos = selecciona_ruta_anexos2($iddoc, "archivos");
 
             $nombres = preg_split('/___/', basename($ruta_real));
-            if(!empty($nombres) && count($nombres) > 1) {
+            if (!empty($nombres) && count($nombres) > 1) {
                 $nombre_anexo = $nombres[1];
             } else {
                 $nombre_anexo = basename($ruta_real);
@@ -305,7 +347,7 @@ function guardar_anexos($datos, $idformato, $iddoc) {
 
             $almacenamiento = new SaiaStorage("archivos");
             $resultado = $almacenamiento->copiar_contenido_externo($ruta_real, $dir_anexos . $archivo);
-            if($resultado) {
+            if ($resultado) {
                 $dir_anexos_1 = array(
                     "servidor" => $almacenamiento->get_ruta_servidor(),
                     "ruta" => $dir_anexos . $archivo
@@ -315,7 +357,7 @@ function guardar_anexos($datos, $idformato, $iddoc) {
                 $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $archivo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
                 phpmkr_query($sql) or die("Error al registrar el anexo: $sql");
                 $idanexo = phpmkr_insert_id();
-                if($idanexo) {
+                if ($idanexo) {
                     $sql1 = "insert into permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_total)values('" . $idanexo . "', '" . $_SESSION["idfuncionario"] . "', 'lem', 'l')";
                     phpmkr_query($sql1) or die("Error al registrar los permisos del anexo: $sql1");
                 }
@@ -326,27 +368,28 @@ function guardar_anexos($datos, $idformato, $iddoc) {
 }
 
 function guardarDetalleFactura($iddoc, $items) {
-    //TODO: Iterar en insertar
+    global $conn;
     $tabla = "ft_ite_factur_electronica";
-    /*
-        [id] => 1
-        [] => 1.00
-        [valor] => 5742.00
-        [gratis] => false
-        [id_std] => 999735*UN*703369575******
-        [impuestos] => 1091.00
-        [precio] => 5742.00
-     */
-    foreach($items as $item) {
+    $datos_padre = busca_filtro_tabla("idft_factura_electronica", "ft_factura_electronica", "documento_iddocumento = $iddoc", "", $conn);
+    $idft = null;
+    if ($datos_padre["numcampos"]) {
+        $idft = $datos_padre[0]["idft_factura_electronica"];
+    }
+    foreach ($items as $item) {
+        $datos = [];
         $datos["cantidad"] = $item["cantidad"];
-        $datos["descripcion"] = $item["descripcion"];
-        $datos["ft_factura_electronica"] = $item[$iddoc];
-        //$datos["impuesto_1"]=$item["cantidad"];
-        //$datos["impuesto_2"]=$item["cantidad"];
-        //$datos["serie_idserie"]=$item["cantidad"];
-        $datos["valor_iva"] = $item["impuestos"];
-        $datos["valor_total"] = $item["precio"];
-        $datos["valor_unitario"] = $item["valor"];
+        $datos["descripcion"] = "'" . $item["descripcion"] . "'";
+        $datos["ft_factura_electronica"] = $idft;
+        // $datos["impuesto_1"]=$item["cantidad"];
+        // $datos["impuesto_2"]=$item["cantidad"];
+        // $datos["serie_idserie"]=$item["cantidad"];
+        $datos["valor_iva"] = $item["impuestos"] ?? 0;
+        $datos["valor_total"] = $item["precio"] ?? 0;
+        $datos["valor_unitario"] = $item["valor"] ?? 0;
+
+        $sql = "INSERT INTO $tabla (" . implode(", ", array_keys($datos)) . ") VALUES (" . implode(", ", array_values($datos)) . ")";
+        phpmkr_query($sql) or die($sql);
+        $iditem = phpmkr_insert_id();
     }
 }
 
@@ -359,8 +402,8 @@ function obtener_ejecutor($datos) {
     global $conn;
     $datos_persona = array();
 
-    if(!empty($datos)) {
-        $datos = array_map(function($val) {
+    if (!empty($datos)) {
+        $datos = array_map(function ($val) {
             return trim(trim($val, "'"));
         }, $datos);
 
@@ -368,17 +411,17 @@ function obtener_ejecutor($datos) {
         $identificacion = trim(trim($datos["nit_proveedor"], "'"));
         $datos_persona["departamento"] = 0;
         $valida_dep = busca_filtro_tabla("iddepartamento", "departamento", "lower(nombre) like lower('" . htmlentities($datos["estado_proveedor"]) . "')", "", $conn);
-        if($valida_dep["numcampos"]) {
+        if ($valida_dep["numcampos"]) {
             $datos_persona["departamento"] = $valida_dep[0]["iddepartamento"];
         }
-        if(!empty($datos_persona["departamento"])) {
+        if (!empty($datos_persona["departamento"])) {
             $valida_ciudad = busca_filtro_tabla("m.idmunicipio", "departamento d, municipio m", "d.iddepartamento=m.departamento_iddepartamento and d.iddepartamento=" . $datos_persona["departamento"] . " and lower(m.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "", $conn);
-            if($valida_ciudad["numcampos"]) {
+            if ($valida_ciudad["numcampos"]) {
                 $datos_persona["ciudad"] = $valida_ciudad[0]["idmunicipio"];
             }
         } else {
             $valor = busca_filtro_tabla("", "municipio A", "lower(A.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "", $conn);
-            if($valor) {
+            if ($valor) {
                 $datos_persona["ciudad"] = $valor[0]["idmunicipio"];
             }
         }
@@ -387,9 +430,9 @@ function obtener_ejecutor($datos) {
         // $datos_persona["telefono"] =
         // $datos_persona["email"] =
 
-        if(!isset($datos_persona["ciudad"]) || empty($datos_persona["ciudad"])) {
+        if (!isset($datos_persona["ciudad"]) || empty($datos_persona["ciudad"])) {
             $config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "", $conn);
-            if($config["numcampos"]) {
+            if ($config["numcampos"]) {
                 $datos_persona["ciudad"] = $config[0][0];
             } else {
                 $datos_persona["ciudad"] = 658;
@@ -399,18 +442,18 @@ function obtener_ejecutor($datos) {
         $ejecutor = array(
             "numcampos" => 0
         );
-        if(!empty($identificacion)) {
+        if (!empty($identificacion)) {
             $ejecutor = busca_filtro_tabla("", "ejecutor", "identificacion LIKE '$identificacion'", "", $conn);
 
-            if(!$ejecutor["numcampos"]) {
+            if (!$ejecutor["numcampos"]) {
                 $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre') and (identificacion is null or identificacion='')", "", $conn);
             }
-        } elseif(trim($nombre) != "") {
+        } elseif (trim($nombre) != "") {
             $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre ')", "", $conn);
         }
-        if($ejecutor["numcampos"]) {
+        if ($ejecutor["numcampos"]) {
             $otros = "";
-            if(!empty($identificacion)) {
+            if (!empty($identificacion)) {
                 $otros .= ",identificacion='" . $identificacion . "'";
             }
             $sql = "UPDATE ejecutor SET nombre ='$nombre'" . $otros . " WHERE idejecutor=" . $ejecutor[0]["idejecutor"];
@@ -441,34 +484,34 @@ function obtener_ejecutor($datos) {
         );
 
         $condicion_actualiza = "";
-        for($i = 0; $i < count($campos_ejecutor); $i++) {
-            if(isset($datos_persona[$campos_ejecutor[$i]])) {
-                if(in_array($campos_ejecutor[$i], $campos_todos) && $datos_persona[$campos_ejecutor[$i]]) {
+        for ($i = 0; $i < count($campos_ejecutor); $i++) {
+            if (isset($datos_persona[$campos_ejecutor[$i]])) {
+                if (in_array($campos_ejecutor[$i], $campos_todos) && $datos_persona[$campos_ejecutor[$i]]) {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} = '{$datos_persona[$campos_ejecutor[$i]]}'";
-                } else if(in_array($campos_ejecutor[$i], $campos_todos)) {
+                } else if (in_array($campos_ejecutor[$i], $campos_todos)) {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} IS NULL or {$campos_ejecutor[$i] } = '')";
                 }
             }
         }
         $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor . $condicion_actualiza, "", $conn);
-        if((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "") {
+        if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "") {
             $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "iddatos_ejecutor desc", $conn);
             $campos = array();
             $valores = array();
 
-            for($i = 0; $i <= count($campos_todos); $i++) {
-                if($campos_todos[$i] != "fecha_nacimiento") {
-                    if(isset($datos_persona[$campos_todos[$i]]) && in_array($campos_todos[$i], $campos_ejecutor)) {
+            for ($i = 0; $i <= count($campos_todos); $i++) {
+                if ($campos_todos[$i] != "fecha_nacimiento") {
+                    if (isset($datos_persona[$campos_todos[$i]]) && in_array($campos_todos[$i], $campos_ejecutor)) {
                         array_push($valores, $datos_persona[$campos_todos[$i]]);
                         array_push($campos, $campos_todos[$i]);
                         $actualizado = 1;
-                    } else if($datos_ejecutor["numcampos"] && $datos_ejecutor[0][$campos_todos[$i]] != "") {
+                    } else if ($datos_ejecutor["numcampos"] && $datos_ejecutor[0][$campos_todos[$i]] != "") {
                         array_push($valores, $datos_ejecutor[0][$campos_todos[$i]]);
                         array_push($campos, $campos_todos[$i]);
                     }
                 }
             }
-            if($actualizado) {
+            if ($actualizado) {
                 $valor_insertar = "'" . implode("','", str_replace("'", "''", $valores)) . "',";
                 $campos_insertar = implode(",", $campos) . ",";
             }
@@ -476,12 +519,10 @@ function obtener_ejecutor($datos) {
             phpmkr_query($sql);
 
             $iddatos_ejecutor = phpmkr_insert_id();
-        } else if($datos_ejecutor["numcampos"]) {
+        } else if ($datos_ejecutor["numcampos"]) {
             $iddatos_ejecutor = $datos_ejecutor[0]["iddatos_ejecutor"];
         }
         return ($iddatos_ejecutor);
     }
     return null;
 }
-
-?>
