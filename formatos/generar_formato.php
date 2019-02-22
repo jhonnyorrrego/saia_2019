@@ -890,7 +890,7 @@ class GenerarFormato
                     	<div class="card card-default">
                             <div class="card-body">';
             if (!$formato[0]["item"]) {
-                $texto .= '<center><h4 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h4></center>';
+                $texto .= '<center><h5 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h5></center>';
             }
             $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],' . $this->idformato . ',"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
@@ -1004,15 +1004,15 @@ class GenerarFormato
                     switch ($campos[$h]["etiqueta_html"]) {
                         case "etiqueta":
                         case "etiqueta_titulo":
-                            $texto .= '<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . $this->codifica($campos[$h]["valor"]) . '</span></center></h5>
+                            $texto .= '<div id="tr_' . $campos[$h]["nombre"] . '">
+                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><label >' . $this->codifica($campos[$h]["valor"]) . '</label></h5>
                                       </div>';
                             break;
                         case "etiqueta_parrafo":
                             $texto .= '<p id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</p>';
                             break;
                         case "etiqueta_linea":
-                            $texto .= '<hr class="border border-info" id="' . $campos[$h]["nombre"] . '">';
+                            $texto .= '<hr class="border" id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
 
@@ -1822,11 +1822,11 @@ span.fancytree-expander {
             $js_archivos = "";
             if ($archivo) {
                 // $includes .= $this->incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
-                $includes .= $this->incluir('<?= $ruta_db_superior ?>dropzone/dist/dropzone.js', "javascript");
+                $includes .= $this->incluir('<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js', "javascript");
                 $includes .= $this->incluir("'<?= $ruta_db_superior ?>anexosdigitales/funciones_archivo.php'", "librerias");
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js', "javascript");
                 $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style>';
-                $includes .= '<link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />';
+                $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style>';
                 $includes .= '<script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>';
                 $js_archivos = $this->crear_campo_dropzone(null, null);
             }
@@ -2504,8 +2504,8 @@ span.fancytree-expander {
         }
         $pre = "";
         $post = "";
-        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . $obliga . '</label>';
+        $texto[] = '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . '</label>';
         if ($moneda) {
             $pre = '<div class="input-group" ' . $ancho . '>
                         <div class="input-group-prepend">
@@ -2516,7 +2516,7 @@ span.fancytree-expander {
         }
         $adicionales .= " $ancho";
         $texto[] = $pre;
-        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">';
+        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '"  value="' . $valor . '">';
         $texto[] = '</div>';
         $texto[] = $post;
         return implode("\n", $texto);
