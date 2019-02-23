@@ -32,7 +32,7 @@ $x_orientacion = Null;
 $x_papel = Null;
 $x_exportar = Null;
 ?>
-<?php 
+<?php
 include ("db.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
@@ -43,7 +43,7 @@ desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
 include ("phpmkrfn.php");
-include_once("librerias/funciones.php"); 
+include_once("librerias/funciones.php");
 ?>
 <?php
 
@@ -53,13 +53,13 @@ if (($sKey == "") || ((is_null($sKey)))) {
 	$sKey = @$_POST["key_d"];
 }
 $sDbWhere = "";
-$arRecKey = split(",",$sKey);
+$arRecKey = explode(",",$sKey);
 
 // Single delete record
 if (($sKey == "") || ((is_null($sKey)))) {
 	ob_end_clean();
 	header("Location: formatolist.php");
-	exit(); 
+	exit();
 }
 	$sKey = (get_magic_quotes_gpc()) ? $sKey : addslashes($sKey);
 $sDbWhere .= "idformato=" . trim($sKey) . "";
@@ -321,26 +321,26 @@ function DeleteData($sqlKey,$conn)
 	}
 	$nombre=busca_filtro_tabla("","formato A","idformato=".$sqlKey,"",$conn);
 	$modulo=busca_filtro_tabla("","modulo","lower(nombre) IN('".$nombre[0]["nombre"]."','crear_".$nombre[0]["nombre"]."')","",$conn);
-	
+
 	guardar_traza($sSql,$nombre[0]["nombre_tabla"]);
 	phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-	
+
 	$eliminar_tabla="DROP TABLE ".$nombre[0]["nombre_tabla"];
 	guardar_traza($eliminar_tabla,$nombre[0]["nombre_tabla"]);
 	phpmkr_query($eliminar_tabla) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $eliminar_tabla);
-	
+
 	$eliminar_modulo="DELETE FROM modulo WHERE idmodulo=".$modulo[0]["idmodulo"];
 	guardar_traza($eliminar_modulo,$nombre[0]["nombre_tabla"]);
 	phpmkr_query($eliminar_modulo) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $eliminar_modulo);
-	
+
 	$eliminar_modulo="DELETE FROM modulo WHERE idmodulo=".$modulo[1]["idmodulo"];
 	guardar_traza($eliminar_modulo,$nombre[0]["nombre_tabla"]);
 	phpmkr_query($eliminar_modulo) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $eliminar_modulo);
-	
+
 	$eliminar_campos_formato="DELETE FROM campos_formato WHERE formato_idformato=".$sqlKey;
 	guardar_traza($eliminar_campos_formato,$nombre[0]["nombre_tabla"]);
 	phpmkr_query($eliminar_campos_formato) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $eliminar_campos_formato);
-	
+
 	return true;
 }
 function listado_funciones_formato(){
@@ -356,7 +356,7 @@ if($funciones["numcampos"]){
   		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Formatos Vinculados</span></td>
   		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Ruta</span></td>
   		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Descripcion</span></td>
-  	</tr>');	
+  	</tr>');
   for($i=0;$i<$funciones["numcampos"];$i++){
   	$colorfila = " bgcolor=\"#FFFFFF\"";
 	// Display alternate color for rows
@@ -364,7 +364,7 @@ if($funciones["numcampos"]){
 		  $colorfila = " bgcolor=\"#F5F5F5\"";
 	 }
     echo('<tr '.$colorfila.'>');
-    $lformatos=extrae_campo($funciones,"nombre_formato","U");  
+    $lformatos=extrae_campo($funciones,"nombre_formato","U");
     echo('<td><span class="phpmaker">'.$funciones[$i]["nombre_funcion"].'</span></td><td>'.listado($funciones[$i]["parametros"]).'</td>');
     echo('<td>'.listado($lformatos).'</td>');
     echo('<td><span class="phpmaker">'.$funciones[$i]["ruta"].'</span></td><td><span class="phpmaker">'.$funciones[$i]["descripcion"].'</span></td>');
@@ -381,19 +381,19 @@ if($tipo=="numero"){
 }
 else $encabezado="ul";
   if(!is_array($dato)){
-    $datos=explode($separador,$dato);  
+    $datos=explode($separador,$dato);
   }
   else $datos=$dato;
   $campos=count($datos);
   $texto.='<'.$encabezado.'>';
-  
+
   for($i=0;$i<$campos;$i++){
     $texto.='
     <li><pre><span class="phpmaker">'.$datos[$i].'</span></pre></li>
     ';
-  }  
+  }
   $texto.='</'.$encabezado.'>';
-return($texto);  
+return($texto);
 }
 function listado_campos_formato(){
 global $conn;

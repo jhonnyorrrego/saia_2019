@@ -216,7 +216,7 @@ function nombre_proceso($doc)
         return ("");
 }
 
-function logo_empresa($idformato, $iddoc = 0)
+function logo_empresa($idformato, $iddoc = 0,$tipo=null,$width = null)
 {
     global $conn, $ruta_db_superior;
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
@@ -228,7 +228,12 @@ function logo_empresa($idformato, $iddoc = 0)
             if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                 $ruta_imagen = json_encode($ruta_imagen);
                 $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
-                return '<img src="' . $archivo_binario . '" width="20%" />';
+                if($width){
+                    $img = '<img src="' . $archivo_binario . '" width="80px" />';
+                }else{
+                    $img = '<img id="logoEmpresa" src="' . $archivo_binario . '" width="20%" />';
+                }
+                return $img;
             }
         }
     } else

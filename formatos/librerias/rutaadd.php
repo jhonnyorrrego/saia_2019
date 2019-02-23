@@ -1,4 +1,14 @@
 <?php
+$max_salida = 6; 
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; 
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
 /*
 <Archivo>
 <Nombre>rutaadd.php</Nombre> 
@@ -417,7 +427,7 @@ function eliminarespacio(elemento)
 
 </script>
 <?php
-
+global $ruta_db_superior;
 // Elimina la ruta y la vuelve a crear
   if(isset($_REQUEST["reset_ruta"])&&$_REQUEST["reset_ruta"])
    { 
@@ -434,7 +444,9 @@ function eliminarespacio(elemento)
 	  	$ruta_db_superior='../../';	
 	  	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&pdf_word=1");	 			
 	 }else{
-	 	redirecciona($ruta_db_superior. FORMATOS_CLIENTE . $formato[0][0]."/mostrar_".$formato[0][0].".php?iddoc=".$_GET["doc"]);
+         
+         abrir_url($ruta_db_superior."views/documento/index_acordeon.php?documentId=".$_GET["doc"],"_self");	
+
 	 }
   }   
 // Get action
@@ -932,8 +944,8 @@ function AddData($conn)
      echo "<script>window.history.go(-1);</script>";
      return false;
     }
-  else  
-   {global $sql,$conn;
+  else {
+    global $sql,$conn,$ruta_db_superior;
 
   if($_POST["add"]=="T"){
     $rs=busca_filtro_tabla("A.*,valor","configuracion A","nombre like 'radicador_salida'","",$conn);
@@ -977,23 +989,7 @@ function AddData($conn)
 			die();
 		}
   }
-  
-  $target="_self";		
-  if(@$_SESSION['abrir_centro']){		
-  	$ruta="../ordenar.php?key=".$fieldList["documento_iddocumento"]."&accion=mostrar&mostrar_formato=1";		
-    $target="centro";		
-  	unset($_SESSION['abrir_centro']);		
-  }  
-
-  if(@$_REQUEST['cargar'] || $_SESSION['tipo_dispositivo'] == 'movil'){
-  	abrir_url("../../" . FORMATOS_CLIENTE . $plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
-      	
-  }else{
-  	abrir_url("../../" . FORMATOS_CLIENTE . $plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");  	
-  }
-
-  
-  
+    abrir_url($ruta_db_superior."views/documento/index_acordeon.php?documentId=".$fieldList["documento_iddocumento"],"_self");	
   }   
 	return true;
 	} 

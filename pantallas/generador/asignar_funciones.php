@@ -301,6 +301,9 @@ $(document).ready(function() {
 
 function obtener_asignadas($idpantalla) {
     $texto = "";
+    if(empty($idpantalla)) {
+        return $texto;
+    }
     $lasignadas = busca_filtro_tabla("A.nombre AS accion, A.ruta AS ruta_accion,B.etiqueta AS funcion, B.ruta AS ruta_funcion, C.estado AS estado_af, B.parametros,C.idfunciones_formato_accion", "funciones_formato_accion C,accion A,funciones_formato B", "C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato AND C.formato_idformato=" . $idpantalla, "", $conn);
     if ($lasignadas["numcampos"]) {
         for ($j = 0; $j < $lasignadas["numcampos"]; $j++) {

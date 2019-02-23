@@ -54,11 +54,26 @@ if ($datos_funcionario["numcampos"]) {
     die();
 }
 
-// echo json_encode($resp); die();
+//Preprocesar la lista de archivos
+
+$archivosXml = [];
+$archivosPdf = [];
+
+foreach ($datos_correo["adjuntos"] as $archivo) {
+    $es = file_exists($archivo);
+    $ext_arch = pathinfo($archivo, PATHINFO_EXTENSION);
+
+    if (preg_match("/xml/i", $ext_arch) && $es) {
+        $archivosXml[] = $archivo;
+    } else if (preg_match("/pdf/i", $ext_arch) && $es) {
+        $archivosPdf[] = $archivo;
+    }
+}
 
 $radicados = 0;
 foreach ($datos as $datos_correo) {
     $id_correo = registar_correo($datos_correo);
+    //TODO: Radicar el correo. Llamar radicar_correo($info_correo["idgrupo"])
 
     $datos_factura = procesar_factura($datos_correo["adjuntos"]);
     if (!empty($datos_factura)) {
@@ -102,6 +117,7 @@ echo json_encode($resp);
 die();
 
 function procesar_factura($adjuntos) {
+    //TODO: Aqui ya debe llegar el archivo xml para poderlos procesar todos
     $archivo_face = null;
     foreach ($adjuntos as $archivo) {
         $es = file_exists($archivo);
@@ -256,7 +272,9 @@ function radicar_correo($idgrupo) {
         }
         // redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
         // die();
+        return $iddoc;
     }
+    return null;
 }
 
 function mover_correo_buzon($info_correo) {

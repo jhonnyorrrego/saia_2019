@@ -50,7 +50,12 @@ class Expediente extends Model
     public function __construct($id = null)
     {
         parent::__construct($id);
-        if ($id) {
+        $this->massiveAssigned();
+
+    }
+
+    public function massiveAssigned(){
+        if ($this->idexpediente) {
             $this->permiso = [
                 'a' => false,
                 'l' => false,
@@ -62,7 +67,7 @@ class Expediente extends Model
             $this->setAccessUser($_SESSION['idfuncionario']);
         }
     }
-
+    
 
     protected function defineAttributes()
     {
@@ -157,6 +162,7 @@ class Expediente extends Model
         }
         return true;
     }
+
     /**
      * Crea el expediente con sus correspondientes vinculados
      * NO utlizar save/create
@@ -383,20 +389,20 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function countAllExpedienteCaja(int $idcaja=null) : int
+    public static function countAllExpedienteCaja(int $idcaja = null) : int
     {
         $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
         $response = StaticSql::search($sql);
         return $response ? $response[0]['cant'] : 0;
     }
 
-/**
- * obtiene la etiqueta del agraupdor
- *
- * @return string
- * @author Andres.Agudelo <andres.agudelo@cerok.com>
- */
-    public function getAgrupador():string
+    /**
+     * obtiene la etiqueta del agraupdor
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getAgrupador() : string
     {
         $data = $this->keyValueField('agrupador');
         return $data[$this->agrupador] ?? '';
@@ -417,6 +423,19 @@ class Expediente extends Model
     }
 
     /**
+     * valida si un expediente tiene expedientes inferiores
+     *
+     * @return boolean
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function hasChild() : bool
+    {
+        $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1";
+        $cant = $this->findBySql($sql);
+        return ($cant[0]['cant']) ? true : false;
+    }
+
+    /**
      * valida si un expediente se puede cerrar
      *
      * @return boolean
@@ -424,13 +443,9 @@ class Expediente extends Model
      */
     public function canClose() : bool
     {
-        $response = false;
         $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 AND estado=1 AND estado_cierre=1";
-        $cant = $this->search($sql);
-        if (!$cant[0]['cant']) {
-            $response = true;
-        }
-        return $response;
+        $cant = $this->findBySql($sql);
+        return (!$cant[0]['cant']) ? true : false;
     }
 
     public function infoRetencion() : string
@@ -537,7 +552,6 @@ class Expediente extends Model
         } else {
             $data = ExpedienteDoc::findColumn('idexpediente_doc', ['idexpediente' => $this->idexpediente]);
         }
-
         return $data;
     }
 

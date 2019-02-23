@@ -740,9 +740,15 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
     $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
     $llenado = "";
     // ***************** validaciones ******************
-    if ($campo[0]["obligatoriedad"])
+    $labelRequired = '';
+    $required = '';
+    if ($campo[0]["obligatoriedad"]){
         $obligatorio[] = "class='required'";
+        $labelRequired = '<label id="' . $campos[$h]["nombre"] . '-error" class="error" for="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
+        $required = 'required';
 
+    }
+    
     $caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "", $conn);
     for ($i = 0; $i < $caracteristicas["numcampos"]; $i++)
         $obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
@@ -802,7 +808,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                   <label for="' . $nombre . $j . '">>Agree</label> */
                 $texto .= '<div class="col-3 px-1">'
                     . '<div class="radio radio-success">'
-                    . '<input class="form-check-input" type="' . $tipo . '" ';
+                    . '<input class="form-check-input" '.$required.' type="' . $tipo . '" ';
                 if ($buscar) {
                     $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
                 } else {
@@ -820,11 +826,11 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             $texto .= "</div>";
             break;
         case "checkbox":
-            $texto .= '<div class="row">';
+            $texto .= '<div class="row checkbox check-success">';
             //$texto .= '<table border="0">';
             $lista_default = explode(',', $default);
             for ($j = 0; $j < $cont3; $j++) {
-                $texto .= '<div class="col-3 px-1"><div class="form-check"><input class="form-check-input" type="' . $tipo . '" ';
+                $texto .= '<div class="col-3 px-1"><div class="form-check "><input class="form-check-input" type="' . $tipo . '" ';
 
                 if ($j == 0) {
                     $texto .= $obligatorio;
@@ -844,7 +850,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 $texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width">
 	  		  <option value="" selected >Por favor seleccione...</option>';
             } else {
-                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width" >
+                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" >
               <option value="" selected >Por favor seleccione...</option>';
             }
             for ($j = 0; $j < $cont3; $j++) {
@@ -860,6 +866,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                     $(document).ready(function() {
 
                         $("#' . $nombre . '").select2();
+                        $("#' . $nombre . '").addClass("full-width");
                     });
                     </script>
                      ';
@@ -958,7 +965,7 @@ function buscar_dependencia($iformato = 0)
 
     $html = '';
     if ($numfilas > 1) {
-        $html .= '<select class ="full-width" name="dependencia" id="dependencia" class="required">';
+        $html .= '<select class ="full-width" name="dependencia" id="dependencia" required>';
         if ($dep_sel == '') {
             $html .= "<option value='' selected>Por favor seleccione...</option>";
         }
@@ -1566,7 +1573,7 @@ function submit_formato($formato, $iddoc = null)
                 }
             }
         }
-        echo ('<div class="col-md-9 form-group">
+        echo ('<div class="col-md-9 form-group px-0 pt-3">
                      <button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
         if ($datos_f["numcampos"] && $datos_f[0]["item"]) {
             echo ('<button class="btn btn-danger cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" >Cancelar</button>');

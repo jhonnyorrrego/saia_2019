@@ -27,11 +27,13 @@ if ($_REQUEST['idformato']) {
     $formato[0]["tiempo_autoguardado"] = $formato[0]["tiempo_autoguardado"] / 60000;
   }
   $documentacion_formato = $formato[0]["documentacion"];
-  $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
-
-  if ($anexos_formato["numcampos"]) {
-    $ruta = $anexos_formato[0]["ruta"];
+  if($documentacion_formato){
+    $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
+    if ($anexos_formato["numcampos"]) {
+      $ruta = $anexos_formato[0]["ruta"];
+    }
   }
+  
 	//$formato = json_encode($formato);
   if ($cod_proceso_pertenece) {
     $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
@@ -41,7 +43,7 @@ if ($_REQUEST['idformato']) {
     $adicional_cod_padre = "&seleccionado=" . $cod_padre;
   }
   if ($categoria) {
-    $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato=" . $categoria, "", $conn);
+    $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato IN($categoria)", "", $conn);
     $adicional_categoria = "&seleccionado=" . $categoria;
   }
 
@@ -55,7 +57,7 @@ if ($_REQUEST['idformato']) {
   $extensionesCategoria = array("filter" => array());
   $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 }else{
-  
+
   $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
   $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
   $extensiones = array("filter" => array());
@@ -89,87 +91,6 @@ function procesar_cadena_json($resultado, $lista_valores)
   return ($resultado);
 }
 
-function crear_campo_dropzone($nombre, $parametros)
-{
-  $js_archivos = "<script type='text/javascript'>
-            var upload_url = '../../dropzone/cargar_archivos_anexos.php';
-            var mensaje = 'Arrastre aquí los archivos';
-            Dropzone.autoDiscover = false;
-            var lista_archivos = new Object();
-            $(document).ready(function () {
-                Dropzone.autoDiscover = false;
-                $('.saia_dz').each(function () {
-                    var paramName = $(this).attr('data-nombre-campo');
-                	var extensiones = $(this).attr('data-extensiones');
-                	var multiple_text = $(this).attr('data-multiple');
-                	var multiple = false;
-                	var form_uuid = $('#form_uuid').val();
-                	var maxFiles = 1;
-                	if(multiple_text == 'multiple') {
-                		multiple = true;
-                		maxFiles = 10;
-                	}
-                    var opciones = {
-                    	ignoreHiddenFiles : true,
-                    	maxFiles : maxFiles,
-                    	acceptedFiles: extensiones,
-                   		addRemoveLinks: true,
-                   		dictRemoveFile: 'Quitar anexo',
-                   		dictMaxFilesExceeded : 'No puede subir mas archivos',
-                   		dictResponseError : 'El servidor respondió con código {{statusCode}}',
-                		uploadMultiple: multiple,
-                    	url: upload_url,
-                    	paramName : paramName,
-                    	params : {
-                        	nombre_campo : paramName,
-                        	uuid : form_uuid
-                        },
-                            removedfile : function(file) {
-                                if(lista_archivos && lista_archivos[file.upload.uuid]) {
-                                	$.ajax({
-                                		url: upload_url,
-                                		type: 'POST',
-                                		data: {
-                                    		accion:'eliminar_temporal',
-                                        	archivo: lista_archivos[file.upload.uuid]}
-                                		});
-                                }
-                                if (file.previewElement != null && file.previewElement.parentNode != null) {
-                                    file.previewElement.parentNode.removeChild(file.previewElement);
-                                	delete lista_archivos[file.upload.uuid];
-                                	$('#'+paramName).val(Object.values(lista_archivos).join());
-                                }
-                                return this._updateMaxFilesReachedClass();
-                            },
-                            success : function(file, response) {
-
-                            	for (var key in response) {
-                                	if(Array.isArray(response[key])) {
-                                    	for(var i=0; i < response[key].length; i++) {
-                                    		archivo=response[key][i];
-                                        	if(archivo.original_name == file.upload.filename) {
-                                        		lista_archivos[file.upload.uuid] = archivo.id;
-                                        	}
-                                    	}
-                                	} else {
-                                		if(response[key].original_name == file.upload.filename) {
-                                    		lista_archivos[file.upload.uuid] = response[key].id;
-                                		}
-                                	}
-                            	}
-                            	$('#'+paramName).val(Object.values(lista_archivos).join());
-                                if($('#dz_campo').find('label.error').length) {
-                                    $('#dz_campo').find('label.error').remove()
-                                }
-                            }
-                    };
-                    $(this).dropzone(opciones);
-                    $(this).addClass('dropzone');
-                });
-            });</script>";
-  return $js_archivos;
-}
-
 ?>
 <!DOCTYPE html>
 <html >
@@ -177,6 +98,23 @@ function crear_campo_dropzone($nombre, $parametros)
 <meta charset="utf-8" />
 <style type="text/css">
 .arbol_saia>.containerTableStyle {overflow:hidden;}
+ul.fancytree-container {
+	overflow: auto;
+	position: relative;
+	border: none !important;
+    outline:none !important;
+}
+span.fancytree-title {
+    font-family: Ubuntu, sans-serif;
+	font-size: 12px;
+}
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+span.fancytree-expander {
+    vertical-align: middle !important;
+}
+
 </style>
 
 	<script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
@@ -185,27 +123,7 @@ function crear_campo_dropzone($nombre, $parametros)
 <body>
 <h4 class="title" style="margin-top: 20px;">Información general</h4><hr style="margin-top:10px;">
 <form name="datos_formato" id="datos_formato">
-  <?php
-  if ($_SESSION["LOGIN" . LLAVE_SAIA] == "cerok") {
-    ?>
-  <div class="row-fluid"><div class="span12">
-	  <div class="control-group">
-	    <label class="control-label" for="nombre"><strong>Nombre<span class="require-input">*</span> </strong></label>
-	    <div class="controls">
-	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required readonly>
-	    </div>
-	  </div>
-	  </div></div>
-	 <?php
-
-} else {
-  ?>
-      <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
-<?php
-
-}
-?>
-
+ <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
   <div class="row-fluid">
     <div class="span8">
       <div class="control-group">
@@ -239,7 +157,7 @@ if ($formato["numcampos"]) {
   <input type="hidden" name="item" id="item" value="<?= $valor_item ?>">
   <input type="hidden" name="mostrar_pdf" id="mostrar_pdf" value="<?= $valor_mostrar ?>">
   <div class="row-fluid">
-  
+
     <div class="span6">
       <div class="control-group">
         <label class="control-label" for="contador"><strong>Consecutivo asociado<span class="require-input">*</span></strong></label>
@@ -276,7 +194,7 @@ if ($formato["numcampos"]) {
       </div>
     </div>
 
-    
+
   </div>
 
   <div class="row-fluid">
@@ -356,7 +274,7 @@ if ($formato["numcampos"]) {
          </div>
       </div>
     </div>
-  
+
   </div>
 
 
@@ -369,13 +287,13 @@ if ($formato["numcampos"]) {
       <input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked><!--Tomar el asunto del padre al responder-->
     </div>
-  </div> 
+  </div>
 
   <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false); ?>>
   <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false); ?>>
 
 <p>&nbsp;</p>
-  <h5>Configuraci&oacute;n de página</h5>
+  <h4 class="title" style="margin-top: 20px;">Configuraci&oacute;n de página</h4><hr style="margin-top:10px;">
   <hr>
 
   <div class="row-fluid">
@@ -401,7 +319,7 @@ if ($formato["numcampos"]) {
         <div class="span6">
           <div class="control-group">
             <label class="control-label" for="orientacion"><strong>Orientaci&oacute;n</strong></label>
-            <div class="controls">            
+            <div class="controls">
               <input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if (!@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Vertical  &nbsp;&nbsp;
               <input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if (@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Horizontal
             </div>
@@ -508,15 +426,13 @@ if ($formato["numcampos"]) {
     </div>
   </div>
 
-  <!-- <div class="control-group">
-    <label class="control-label" for="funcion_predeterminada">Ruta de aprobaci&oacute;n</label>
+ <div class="control-group">
+    <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
     <div class="controls">
-      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
-      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2" data-toggle="tooltip" title="Opción que indica si el formato permite digitalizar">
+      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
     </div>
-  </div> -->
+  </div>
 
-  <div class="container">
   <div class="row-fluid">
   	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_formato" value="{*fecha_ano*}/{*fecha_mes*}/{*idformato*}">
   	<!--input type="hidden" name="prefijo" id="prefijo_formato" value=""-->
@@ -527,7 +443,7 @@ if ($formato["numcampos"]) {
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if ($_REQUEST["idformato"]) { ?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo ($_REQUEST['idformato']); ?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
-    <?php 
+    <?php
   }
   $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
   $id_unico = uniqid();
@@ -536,11 +452,9 @@ if ($formato["numcampos"]) {
   ?>
     <div class="pull-right" id="cargando_enviar"></div>
      </div>
-  </div>
 </form>
 
 <?php
-echo $js_archivos;
 //echo(librerias_jquery("1.7"));
 echo librerias_notificaciones();
 
@@ -595,7 +509,7 @@ $("document").ready(function(){
   var descripcion_formato = "<?php echo $descripcionFormato; ?>";
 	var formulario = $("#datos_formato");
 	var formato=<?php echo (json_encode($formato)); ?>;
-  
+
 
 	var nombre_formato="";
 	if($("#nombre_formato").val()!="") {
@@ -605,7 +519,7 @@ $("document").ready(function(){
 	$("#enviar_datos_formato").click(function() {
 
 		if(formulario.valid()) {
-			
+
 			var buttonAcep = $(this);
 			//buttonAcep.attr('disabled', 'disabled');
 			//parsear_items();
@@ -615,7 +529,7 @@ $("document").ready(function(){
                 url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php",
                 data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+nombre_formato,
                 success: function(objeto) {
-                    if(objeto.exito) {               
+                    if(objeto.exito) {
                         notificacion_saia(objeto.mensaje,'success','topCenter',3000);
                         window.parent.location.href = window.parent.location.pathname+"?idformato="+objeto.idformato;
 
@@ -752,10 +666,8 @@ function parsear_items(){
 	}
 	$("#prefijo_formato").val("ft_");
 }
-</script>
 
-</body>
-</html>
+</script>
 
 <?php
 function check_banderas($bandera, $chequear = true)
@@ -826,7 +738,7 @@ $("document").ready(function(){
 			valor_destino.value="";
 		}
 	}
-  <?php 
+  <?php
 } else {
   ?>
   tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_check_<?php echo ($nombre); ?>);
@@ -863,6 +775,9 @@ $("document").ready(function(){
 	}
 });
 </script>
+
+</body>
+</html>
 	<?php
 
 }

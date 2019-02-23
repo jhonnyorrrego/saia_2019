@@ -61,10 +61,9 @@ if (@$_REQUEST["idpantalla_campos"]) {
     }
 
     $config_campo = obtener_valores_campo($idpantalla_campos, $opciones_propias);
-
     if(!empty($config_campo)) {
         $opciones_propias["data"] = $config_campo;
-    }
+	}
 } else {
     alerta("No es posible Editar el Campo");
 }
@@ -120,6 +119,7 @@ echo librerias_jquery("2.2");
 	var nombre_componente = "<?=$nombre_componente?>";
 	var con_numeros = ["archivo", "moneda", "spin"];
 	var opciones_form = <?=$opciones_str?>;
+
 	$(document).ready(function(){
 		var rutaSuperior = "<?=$ruta_db_superior?>";
 		var idpantalla_campo = <?=$idpantalla_campos?>;
@@ -208,22 +208,11 @@ echo librerias_jquery("2.2");
 				});
 			}
 		};
-
 		$('#editar_pantalla_campo').alpaca(opciones_form);
 
 	});
 
 	function funcion_enviar(datos, idpantalla_campo) {
-		/*if(datos.fs_valor) {
-			datos.fs_valor = JSON.stringify(datos.fs_valor)
-		}
-		if(datos.fs_opciones) {
-			datos.fs_opciones = JSON.stringify(datos.fs_opciones)
-		}
-		if(datos.fs_estilo) {
-			datos.fs_estilo = JSON.stringify(datos.fs_estilo)
-		}*/
-
     	datos["ejecutar_campos_formato"] = "set_pantalla_campos";
     	datos["tipo_retorno"] = 1;
     	datos["idpantalla_campos"] = idpantalla_campo;
@@ -288,21 +277,31 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto) {
             $resp["fs_obligatoriedad"] = true;
         } else {
             $resp["fs_obligatoriedad"] = false;
-        }
+		}
+	
         $resp["fs_acciones"] = false;
 
         if(preg_match("/p/", $campo_formato[0]["acciones"])) {
             $resp["fs_acciones"] = true;
         }
 
-        $resp["fs_nombre"] = $campo_formato[0]["nombre"];
-        $resp["fs_etiqueta"] = $campo_formato[0]["etiqueta"];
+		$resp["fs_nombre"] = $campo_formato[0]["nombre"];
+		$resp["fs_etiqueta"] = $campo_formato[0]["etiqueta"];
+		$resp["fs_opciones_con_decimales"] = false;
+		if($campo_formato[0]["opciones"]) {
+			$opciones = json_decode($campo_formato[0]["opciones"], true);
+			if($opciones['con_decimales'] == true){
+				$resp["fs_opciones_con_decimales"] = true;					
+			}
+			
+		}
 
     }
-
+	
     if(isset($opciones_defecto["data"])) {
         $resp = array_merge_recursive_distinct($resp, $opciones_defecto["data"]);
-    }
+	}
+	
     return $resp;
 
 }

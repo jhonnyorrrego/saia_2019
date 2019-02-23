@@ -106,27 +106,6 @@ class UtilitiesController
         return $response;
     }
 
-    /**
-     * Retorna un array con instancias segun SQL
-     *
-     * @param string $nameInstance : Nombre de la instancia a generar
-     * @param string $nameIdInstance : Nombre del campo que se enviar al constructor de la instancia
-     * @param string $sql : Consulta SQL 
-     * @return array
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public static function instanceSql(string $nameInstance, string $nameIdInstance, string $sql) : array
-    {
-        $data = [];
-        $consulta = StaticSql::search($sql);
-        if ($consulta) {
-            foreach ($consulta as $records) {
-                $data[] = new $nameInstance($records[$nameIdInstance]);
-            }
-        }
-        return $data;
-    }
-
     /** 
      * @param string $rutaBase
      * @param string $storageType

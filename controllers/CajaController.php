@@ -208,8 +208,8 @@ class CajaController
         if (!empty($data['idcaja'])) {
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
-                $sql = "SELECT idcaja_eli FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_restauracion IS NULL";
-                $instance = UtilitiesController::instanceSql('CajaEli', 'idcaja_eli', $sql);
+                $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_restauracion IS NULL";
+                $instance = CajaEli::findBySql($sql,true);
                 if ($instance) {
                     $Caja->estado = 1;
                     $Caja->fk_caja_eli = 'NULL';

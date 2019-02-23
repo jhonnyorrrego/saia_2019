@@ -29,7 +29,7 @@ if (!empty($_REQUEST["idactividad"])) {
             <div class="col col-md-8">
                 <div class="form-control form-group-default">
                 <label>Informaci&oacute;n de entrada</label>
-                <input class="form-control form-control-sm" id="requisito_in" name="nombre" type="text" placeholder="Qu&eacute; se requiere previo a realizar este paso&quest;">
+                <input class="form-control form-control" id="requisito_in" name="nombre" type="text" placeholder="Qu&eacute; se requiere previo a realizar este paso&quest;">
                 </div>
             </div>
             <div class="col col-md-4">
@@ -98,7 +98,7 @@ if (!empty($_REQUEST["idactividad"])) {
     var $tabla = $("#tabla_req_in");
     $tabla.bootstrapTable();
 
-    var $botonEliminarRequisito = $('#boton_eliminar_req_in');
+    //var $botonEliminarRequisito = $('#boton_eliminar_req_in');
     var $botonGuardarRequisitoIn = $('#btnGuardarRequisitoIn');
 
     var idactividad = "<?= $idactividad ?>";
@@ -147,7 +147,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
     });
 
-    $botonEliminarRequisito.click(function () {
+    $('#boton_eliminar_req_in').click(function () {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
             return row.idrequisito_calidad
         });

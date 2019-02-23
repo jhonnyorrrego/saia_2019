@@ -27,7 +27,8 @@ class PermisoSerie extends Model
         ];
     }
 
-    public function afterDelete(){
+    public function afterDelete()
+    {
         return PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
     }
 
@@ -47,14 +48,18 @@ class PermisoSerie extends Model
             'message' => ''
         ];
         if ($this->create()) {
-            $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
-            $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
-            if ($okDel && $okIns) {
-                $response['data']['id'] = $this->idpermiso_serie;
-                $response['exito'] = 1;
+            $response['data']['id'] = $this->idpermiso_serie;
+            if ($this->getRelationFk('EntidadSerie')->getRelationFk('Serie')->tipo != 3) {
+                $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+                $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+                if ($okDel && $okIns) {
+                    $response['exito'] = 1;
+                } else {
+                    $response['message'] = 'No se pudo crear los permiso sobre los expedientes';
+                    $this->delete();
+                }
             } else {
-                $response['message'] = 'No se pudo crear los permiso sobre los expedientes';
-                $this->delete();
+                $response['exito'] = 1;
             }
         }
         return $response;
@@ -70,12 +75,16 @@ class PermisoSerie extends Model
     {
         $response = false;
         if ($this->update()) {
-            $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
-            $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
-            if ($okDel && $okIns) {
+            if ($this->getRelationFk('EntidadSerie')->getRelationFk('Serie')->tipo != 3) {
+                $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+                $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+                if ($okDel && $okIns) {
+                    $response = true;
+                } else {
+                    $this->delete();
+                }
+            } else {
                 $response = true;
-            }else{
-                $this->delete();
             }
         }
         return $response;
@@ -94,6 +103,12 @@ class PermisoSerie extends Model
             $response = true;
         }
         return $response;
+    }
+
+    public static function hasAccessUser(int $fk_dependencia, int $fk_serie, string $permiso = 'a') : bool
+    {
+        $sql = "SELECT permiso FROM vpermiso_serie WHERE idserie={$fk_serie} AND fk_dependencia={$fk_dependencia} AND permiso like '%{$permiso}%' AND idfuncionario={$_SESSION['idfuncionario']}";
+        return self::findBySql($sql) ? true : false;
     }
 
 }

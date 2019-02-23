@@ -379,6 +379,45 @@ class Serie extends Model
         }
         return $data;
     }
+
+    public function getInfoCodArbol():array{
+        $response=[];
+        $codArbol=str_replace('.',',',$this->cod_arbol);
+        $sql="SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
+        $records=$this->findBySql($sql);
+        if($records){
+            $etiq=[];
+            foreach ($records as $record) {
+                $etiq[]=$record['nombre'];
+                $response[$record['tipo']]=$record['idserie'];
+            }
+            $response['id'] = $response[2] ?? $response[1];
+            $response['etiqueta']=implode(' - ',$etiq);
+        }
+        return $response;
+    }
+
+    /**
+     * valida si tiene series hijas
+     *
+     * @param integer $estado : utlizado en el where, estado de la consulta
+     * @param integer $tipo : utlizado en el where, tipo de la consulta
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function hasChild(int $estado = null, int $tipo = null) : bool
+    {
+        $parteWhere = '';
+        if (!is_null($estado)) {
+            $parteWhere .= " and estado={$estado}";
+        }
+        if (!is_null($tipo)) {
+            $parteWhere .= " and tipo={$tipo}";
+        }
+        $sql = "SELECT count(idserie) as cant FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
+        $hijos = $this->search($sql);
+        return $hijos[0]['cant'] ? true : false ;
+    }
     /**
      * retorna las instancias de EntidadSerie vinculadas
      *

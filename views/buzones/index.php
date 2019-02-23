@@ -36,7 +36,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         $(function(){
             let baseUrl = $('script[data-baseurl]').data('baseurl');
             let component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
-            let param = '<?= $_REQUEST["variable_busqueda"] ?>';
+            let param = '<?= $_REQUEST['variable_busqueda'] ?? null;  ?>';
             let mailRoute = baseUrl + 'views/buzones/listado.php';
 
             $("#mailbox").load(mailRoute, {

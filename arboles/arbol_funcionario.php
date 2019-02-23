@@ -136,15 +136,16 @@ function llena_dependencia($id)
 function llena_funcionario($iddep)
 {
 	global $campo, $seleccionados, $checkbox, $condicion_vfun;
-
+	
 	$objetoJson = array();
 	$papas = busca_filtro_tabla("iddependencia_cargo,idfuncionario,funcionario_codigo,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $iddep, "", $conn);
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$text = $papas[$i]["nombres"] . " " . $papas[$i]["apellidos"] . " - " . $papas[$i]["cargo"];
 			$item = array();
-			$item["extraClasses"] = "estilo-dependencia";
+			$item["extraClasses"] = "estilo-arbol kenlace_saia";
 			$item["title"] = $text;
+            $item["expanded"] = true;
 			$item["key"] = $papas[$i][$campo];
 			$item["checkbox"] = $checkbox;
 			if (in_array($papas[$i][$campo], $seleccionados) !== false) {

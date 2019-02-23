@@ -120,13 +120,14 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
     $iddoc=1;
     $tipo=1;
     $nombreFunciones = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cuerpo, $resultadoFunciones);  
+   
     if ($nombreFunciones !== FALSE) {          
         $patronesBusqueda = str_replace(array(
             "{*",
             "*}"
         ), "", $resultadoFunciones[0]);        
-    }       
-    
+    }
+   
     foreach ($patronesBusqueda as $key => $nombreFuncion) {
     
         if($excluirFunciones==1 && $nombreFuncion =='mostrar_estado_proceso'){
@@ -149,9 +150,9 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
             $rutaContenido = $ruta_db_superior."imagenes/qrFormato.png";
             $contenidoFuncion ="<img src={$archivo_binario} width='109' />";            
         }else{
-            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo); 
+            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo,"width"); 
         }
-        
+   
         $cuerpo = str_replace("{*".$nombreFuncion."*}", $contenidoFuncion, $cuerpo);              
     }
 
@@ -445,7 +446,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
             vincular_campo_anexo($idformato);
         }
         insertar_anexo_formato($idformato, $documentacion, $anexos);
-        crear_modulo_formato($idformato);
+        //crear_modulo_formato($idformato);
     }
     if ($fieldList["cod_padre"] && $idformato) {
 
@@ -468,7 +469,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
     if ($idformato) {
         $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);        
-        $retorno["mensaje"] = "EL formato se guardo con éxito";
+        $retorno["mensaje"] = "EL formato se guardó con éxito";
         $retorno["idformato"] = $idformato;
         $retorno['exito'] = 1;
     } else {
@@ -601,10 +602,12 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
     } else {
         $buscar_formato = busca_filtro_tabla("", "formato", "idformato=" . $datos["idformato"], "", $conn);
         if ($buscar_formato["numcampos"]) {
+            $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
+            $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn); 
             $datos["nombre"] = $buscar_formato[0]["nombre"];
-           
             if(empty($datos['cod_padre'])){
-                $consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
+                
+                /*$consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
                 if($consultaPadre['numcampos']){
                     $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
                     $consultaDocumentos = busca_filtro_tabla("","documento","lower(plantilla) = '{$tablaDocumento[1]}'","",$conn);
@@ -615,18 +618,21 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                         echo json_encode($retorno);
                         die();
                     }
-                }
-            }else{
-                $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
-
-                $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
+                }*/
                 if ($consultaDocumentos['numcampos']) {
                     $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
                     $retorno['exito'] = 0;
                     echo json_encode($retorno);
                     die(); 
+                }
+            }else{
+                if ($consultaDocumentos['numcampos']) {
+                $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
+                $retorno['exito'] = 0;
+                echo json_encode($retorno);
+                die(); 
+                }
             }
-        }
         }
     }
     if($_REQUEST['fk_categoria_formato']){
@@ -855,7 +861,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         }
         // $retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
         // insertar_anexo_formato($idformato,$documentacion,$anexos);
-        crear_modulo_formato($idformato);
+        //crear_modulo_formato($idformato);
     }
 
     if ($fieldList["cod_padre"] && $idformato) {
@@ -3295,35 +3301,30 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ","",$conn);
+    $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
+    phpmkr_query($eliminarPermisos);
     if($consultaModulo['numcampos']){
-        $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
-        if($consultarPermiso['numcampos']){
-            $retorno['exito'] = 0;
-            $retorno['mensaje'] = 'El permiso ya existe asignado';
-        }else{
-            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil},'lame','lame','lame')";
+        for ($i=0; $i < count($idperfil) ; $i++) {
+            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil[$i]},'lame','lame','lame')";
             phpmkr_query($guardarPermiso);
             $retorno['exito'] = 1;
-            $retorno['mensaje'] = 'Permiso asignado correctamente al formato';
-        }       
+            $retorno['mensaje'] = 'permisos asignados correctamente'; 
+        }
     }
-    echo json_encode($retorno);
+    return  $retorno;
 }
 
-function eliminarPermisoFormato($idformato, $idperfil, $nombreFormato){
+function eliminarPermisoFormato($idformato, $nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
-    if ($consultaModulo['numcampos']) {
-        $consultarPermiso = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
-        if ($consultarPermiso['numcampos']) {
-            $eliminarPermiso = "DELETE from permiso_perfil where idpermiso_perfil = {$consultarPermiso[0]['idpermiso_perfil']} and perfil_idperfil = {$idperfil}";
-            phpmkr_query($eliminarPermiso);
-            $retorno['exito'] = 1;
-            $retorno['mensaje'] = "Permiso eliminado correctamente";
-        }
+    $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
+    $deletePermisos = phpmkr_query($eliminarPermisos);
+    if($deletePermisos){
+        $retorno['exito'] = 1;
+        //$retorno['mensaje'] = 'permisos eliminados correctamente';
     }
-    echo json_encode($retorno);
+    return $retorno;
 }
 
 ?>

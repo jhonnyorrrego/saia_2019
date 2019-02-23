@@ -28,7 +28,7 @@
         <span class="cursor py-0 px-2" data-toggle="tooltip" data-placement="bottom" title="Etiquetar" id="mark_document">
             <i class="fa fa-tag" style="font-size:20px"></i>
         </span>
-        <span class="cursor py-0 px-2" data-toggle="tooltip" data-placement="bottom" title="Mover a Expediente">
+        <span class="cursor py-0 px-2" data-toggle="tooltip" data-placement="bottom" title="Clasificar en un Expediente" id="clasif_expediente">
             <i class="fa fa-folder" style="font-size:20px"></i>
         </span>
     </div>
