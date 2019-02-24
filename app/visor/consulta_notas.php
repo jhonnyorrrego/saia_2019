@@ -22,10 +22,9 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $params = (object)$_REQUEST['params'];
-
-    if ($params->tipo && $params->idtipo) {
-        $data = VisorNota::findByDocument($params->tipo, $params->idtipo);
+    if ($_REQUEST['type'] && $_REQUEST['typeId']) {
+        eval('$type = VisorNota::' . $_REQUEST['type'] . ';');
+        $data = VisorNota::findByDocument($type, $_REQUEST['typeId']);
 
         foreach ($data->notes as $key => $VisorNota) {
             $Response->data[] = [

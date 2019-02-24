@@ -22,13 +22,13 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $params = (object)$_REQUEST['params'];
     $annotation = (object)$_REQUEST['annotation'];
     $comment = $_REQUEST['comment'];
+    eval('$type = VisorNota::' . $_REQUEST['type'] . ';');
 
     $VisorNota = VisorNota::findByAttributes([
-        'tipo_relacion' => $params->tipo,
-        'idrelacion' => $params->idtipo,
+        'tipo_relacion' => $type,
+        'idrelacion' => $_REQUEST['typeId'],
         'uuid' => $annotation->uuid,
         'page' => $annotation->page
     ]);
@@ -39,8 +39,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $VisorNota->setAttributes([
             'fk_funcionario' => $_REQUEST['key'],
             'fecha' => date('Y-m-d H:i:s'),
-            'tipo_relacion' => $params->tipo,
-            'idrelacion' => $params->idtipo
+            'tipo_relacion' => $type,
+            'idrelacion' => $_REQUEST['typeId']
         ]);
 
         if(!$VisorNota->save()){

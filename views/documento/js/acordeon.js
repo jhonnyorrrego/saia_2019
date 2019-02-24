@@ -5,7 +5,6 @@ $(function () {
     (function init() {
         getFormatInformation();
         loadHeader();
-
     })();
 
     $(document).off("click", ".new_add");

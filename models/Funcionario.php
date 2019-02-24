@@ -59,7 +59,7 @@ class Funcionario extends Model {
      * @return string
      */
     public function getTemporalRoute(){
-        return 'temporal/temporal_' . $this->login;
+        return 'temporal/temporal_' . strtolower($this->login);
     }
 
     /**

@@ -15,6 +15,9 @@ class VisorNota extends Model
     protected $page;
     protected $dbAttributes;
 
+    const NOTA_DOCUMENTO = 1;
+    const NOTA_PAGINA = 2;
+
     function __construct($id = null)
     {
         return parent::__construct($id);

@@ -509,21 +509,26 @@ class GenerarFormato
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
         
-        global $conn;
-        $iddocumento = $_REQUEST["iddoc"];
-        $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=".$iddocumento, "", $conn);
-        if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-            $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&rnd=" . rand(0, 100);
-        } else {
-            if ($formato[0]["mostrar_pdf"] == 1) {
-                $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&actualizar_pdf=1&rnd=" . rand(0, 100);
-            } else if ($formato[0]["mostrar_pdf"] == 2) {
-                $ruta = "/pantallas/documento/visor_documento.php?pdf_word=1&iddoc={$iddocumento}&rnd=" . rand(0, 100);
-            }
+        $documentId = $_REQUEST["iddoc"];
+        $sql = "select b.pdf, a.mostrar_pdf,a.exportar from formato a, documento b where lower(b.plantilla)= lower(a.nombre) and b.documentId={$documentId}";
+        $record = StaticSql::search($sql);
+
+        $params = [
+            "iddoc" => $documentId,
+            "exportar" => $record[0]["exportar"],
+            "ruta" => base64_encode($record[0]["pdf"]),
+            "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
+        ];
+
+        if(($record[0]["mostrar_pdf"] == 1 && !$record[0]["pdf"]) || $_REQUEST["actualizar_pdf"]){
+            $params["actualizar_pdf"] = 1;
+        }else if($record[0]["mostrar_pdf"] == 2){
+            $params["pdf_word"] = 1;
         }
         
-        $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . $ruta . "&idfunc=" . $idfuncionario;
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url.= http_build_query($params);
+
         $ch = curl_init();
         if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -533,7 +538,7 @@ class GenerarFormato
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         echo curl_exec($ch);
         curl_close($ch);
-        ?>';
+        ?>';        
 
         return $string;
     }
