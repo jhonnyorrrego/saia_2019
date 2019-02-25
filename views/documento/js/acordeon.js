@@ -143,7 +143,6 @@ $(function () {
         });
     }
     function redimensionarQr(sizeDocument, widthAct) {
-        console.log(sizeDocument);
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
         if (sizeDocument == 'xs' && widthAct < '8') {
@@ -174,6 +173,9 @@ $(function () {
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;
+            $("#logoEmpresa").css("width", sizeImg + "%");
+        } else if (sizeDocument == 'xl') {
+            sizeImg = sizeImg * 0.5;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
 
