@@ -107,6 +107,10 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 					case "fs_opciones":
 					case "fs_estilo":
 						if (is_array($value)) {
+							
+							if($value['con_decimales'] === 'false'){
+								unset($value['con_decimales']);
+							}
 							$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 						}
 						$retorno[$key] = $value;
@@ -119,12 +123,11 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 							$value = 0;
 							$retorno["obligatoriedad"] = 0;
 						}
+						break;
 				}
 				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
-		
-	
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
 			//$retorno["sql"] = $sql2; // Solo para depurar

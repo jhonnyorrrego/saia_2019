@@ -6,20 +6,20 @@ class Session {
 
     init() {
         let session = this;
-        
-        if(!localStorage.getItem('user')){
+
+        if (!localStorage.getItem('user')) {
             $.ajax({
-                type:'GET',
-                dataType:'json',
+                type: 'GET',
+                dataType: 'json',
                 url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
-                data:{
+                data: {
                     type: 'session'
                 },
-                async:false,
+                async: false,
                 success: function (response) {
                     if (response.success) {
                         session.user = response.data;
-                    }else{
+                    } else {
                         Session.violation('Debe iniciar sessión');
                     }
                 }
@@ -47,10 +47,10 @@ class Session {
     set user(data) {
         this._user = data;
 
-        if(data.iduser){            
+        if (data.iduser) {
             localStorage.setItem('user', JSON.stringify(data));
             localStorage.setItem('key', data.iduser);
-        }else{
+        } else {
             localStorage.setItem('key', 0);
             localStorage.setItem('userImage', '');
         }
@@ -60,16 +60,16 @@ class Session {
         return this._user;
     }
 
-    static check(baseUrl){
+    static check(baseUrl) {
         var access = false;
 
-        if(localStorage.getItem('key') > 0){
+        if (localStorage.getItem('key') > 0) {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
                 url: `${baseUrl}app/funcionario/verificar_session.php`,
-                data:{
-                    key : localStorage.getItem('key')
+                data: {
+                    key: localStorage.getItem('key')
                 },
                 async: false,
                 success: function (response) {
@@ -96,10 +96,10 @@ class Session {
         setTimeout(() => {
             Session.close();
             window.location = Session.getBaseUrl() + 'views/login/login.php';
-        }, 1500);
+        }, 1000);
     }
 
-    static close(){
+    static close() {
         localStorage.clear();
     }
 

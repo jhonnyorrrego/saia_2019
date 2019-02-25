@@ -72,11 +72,9 @@ function setSessionUserData()
  */
 function setTemporalRoute()
 {
-    global $conn, $usuactual;
-
-    $findConfiguration = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-    $temporalRoute = $findConfiguration[0]["valor"] ?? "temporal/temporal";
-    $_SESSION["ruta_temp_funcionario"] = "{$temporalRoute}_{$usuactual}/";
+    global $usuactual;
+    
+    $_SESSION["ruta_temp_funcionario"] = 'temporal/temporal_' . strtolower($usuactual);
 
     return true;
 }
@@ -3250,9 +3248,10 @@ function salir($texto, $login = "")
     session_destroy();
     unset($_COOKIE["PHPSESSID"]);
 
-    redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php");
-
-    die();
+    echo "<script language='javascript'>
+        top.window.location='" . PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php';
+    </script>";
+    exit();
 }
 
 /*

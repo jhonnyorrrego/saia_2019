@@ -57,10 +57,11 @@ if (isset($_REQUEST["genera"])) {
         "exito" => 0,
         "mensaje" => ["No se pudo generar el formato"]
     ];
-   
-    
+
+
     ob_start();
     $acciones = [
+        "formato",
         "tabla",
         "adicionar",
         "editar",
@@ -74,9 +75,9 @@ if (isset($_REQUEST["genera"])) {
     $exito = true;
     $cuerpo_formato = '';
     $publicar = 0;
-    
+
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
-   
+
     if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
@@ -90,7 +91,7 @@ if (isset($_REQUEST["genera"])) {
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
-      
+
         if (!$generar->exito) {
             $mensajes[] = "Error en la accion $accion";
             $mensajes[] = $generar->mensaje;
@@ -111,13 +112,13 @@ if (isset($_REQUEST["genera"])) {
             }
             include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
-           
+
             if($_REQUEST['permisosPerfil']){
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             }else{
                 $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
             }
-        }         
+        }
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
     ob_get_clean();
@@ -127,7 +128,7 @@ if (isset($_REQUEST["genera"])) {
     $status["publicar"] = $publicar;
     $status["permisos"] = $permisosFormato['mensaje'];
     $status["estadoPermisos"] = $permisosFormato['exito'];
-    
+
     ob_end_clean();
     echo json_encode($status);
     die();
@@ -509,31 +510,28 @@ class GenerarFormato
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
         
-        global $conn;
-        $iddocumento = $_REQUEST["iddoc"];
-        $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=".$iddocumento, "", $conn);
-        if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-            $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&rnd=" . rand(0, 100);
-        } else {
-            if ($formato[0]["mostrar_pdf"] == 1) {
-                $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&actualizar_pdf=1&rnd=" . rand(0, 100);
-            } else if ($formato[0]["mostrar_pdf"] == 2) {
-                $ruta = "/pantallas/documento/visor_documento.php?pdf_word=1&iddoc={$iddocumento}&rnd=" . rand(0, 100);
-            }
+        $documentId = $_REQUEST["iddoc"];
+        $sql = "select b.pdf, a.mostrar_pdf,a.exportar from formato a, documento b where lower(b.plantilla)= lower(a.nombre) and b.iddocumento={$documentId}";
+        $record = StaticSql::search($sql);
+
+        $params = [
+            "iddoc" => $documentId,
+            "exportar" => $record[0]["exportar"],
+            "ruta" => base64_encode($record[0]["pdf"]),
+            "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
+        ];
+
+        if(($record[0]["mostrar_pdf"] == 1 && !$record[0]["pdf"]) || $_REQUEST["actualizar_pdf"]){
+            $params["actualizar_pdf"] = 1;
+        }else if($record[0]["mostrar_pdf"] == 2){
+            $params["pdf_word"] = 1;
         }
         
-        $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . $ruta . "&idfunc=" . $idfuncionario;
-        $ch = curl_init();
-        if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        echo curl_exec($ch);
-        curl_close($ch);
-        ?>';
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url.= http_build_query($params);
+
+        ?>
+        <iframe width="100%" frameborder="0" onload="this.height = window.innerHeight - 20" src="<?= $url ?>"></iframe>';
 
         return $string;
     }
@@ -1161,7 +1159,7 @@ class GenerarFormato
                                 $classRadios = 'required';
                                 $labelRequired = '<label id="'.$campos[$h]["no mbre"].'-error" class="error" f or="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
                             }
-                              /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
+                            /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
                             $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
                             <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta" ]) . $obliga .   '</label>';
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
@@ -2234,6 +2232,8 @@ span.fancytree-expander {
         if (usuario_actual('login') == 'cerok') {
             $redireccion = "funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $this->idformato . $adicionales;
         }
+        $this->mensaje="Formato generado con exito";
+        $this->exito="1";
         return $redireccion;
     }
 
@@ -2534,7 +2534,7 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
-      
+
         //$formato_fecha="L";
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();

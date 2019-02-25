@@ -138,14 +138,6 @@ class radicar_factura extends rcube_plugin {
                     $rcmail->output->command('display_message', $this->gettext('errarchivosxml'), 'error');
                     return false;
                 }
-                if ($conteo_pdf < 1) {
-                    $rcmail->output->command('display_message', $this->gettext('errarchivospdf'), 'error');
-                    return false;
-                }
-                if ($conteo_pdf != $conteo_xml) {
-                    $rcmail->output->command('display_message', $this->gettext('errnumarchivos'), 'error');
-                    return false;
-                }
                 $info_correo[] = $dato_correo;
             }
         }
@@ -157,12 +149,15 @@ class radicar_factura extends rcube_plugin {
         if(empty($json)) {
             $json = array('message' =>$respuesta);
         }
+        $tipo = 'error';
         if(isset($json["status"]) && $json["status"] == 1) {
-            $rcmail->output->command('display_message', $this->gettext('msgfacturaradicada'), 'confirmation');
+            $tipo = 'confirmation'; // 'notice'
+            //$rcmail->output->command('display_message', $this->gettext('msgfacturaradicada'), 'confirmation');
             //$this->_moverCorreos($buzon);
-        } else if(isset($json["message"])) {
+        } /*else if(isset($json["message"])) {
             $rcmail->output->command('display_message', $json["message"], 'error');
-        }
+        }*/
+        $rcmail->output->command('display_message', urldecode($json["message"]), $tipo);
 
         $rcmail->output->command('plugin.procesar_respuesta', $json);
         $rcmail->output->send();

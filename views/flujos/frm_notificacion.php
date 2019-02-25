@@ -82,11 +82,12 @@ if (empty($idflujo)) {
         <?= icons() ?>
         <?= theme() ?>
         <?= librerias_UI("1.12") ?>
-        <?= librerias_tabla_bootstrap("1.13", false, false) ?>
+        <?= bootstrapTable() ?>
+        <?= bootstrapTableEditable() ?>
         <?= librerias_arboles_ft("2.24") ?>
         <?= dropzone() ?>
 
-        <script type="text/javascript" src="js/notificaciones.js" ></script>
+        <script type="text/javascript" src="js/anexos_notificacion.js" ></script>
 
     </head>
     <body>
@@ -183,17 +184,10 @@ if (empty($idflujo)) {
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <input type="hidden" id="anexos_notificacion" name="anexos_notificacion" value="">
-                            <label for="dropzone">Adjuntar anexos preestablecidos que se enviar&aacute;n en cada notificaci&oacute;n</label>
-                        </div>
-
-                        <div class="col col-md-9">
-                            <div id="dropzone" class="dropzone" data-campo="anexos_notificacion" data-multiple="multiple">
-                                <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
-                            </div>
+                        <div class="col col-md-12" id="anexos_notificacion">
                         </div>
                     </div>
+
                     <div class="row mb-2">
                         <div class="col col-md-9">
                             <label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>

@@ -1,4 +1,4 @@
-class Ui {    
+class Ui {
     static showUserInfo(user) {
         $("#profile_image").attr("src", Session.getBaseUrl() + user.cutedPhoto);
         $("#user_name").text(user.name);
@@ -8,8 +8,8 @@ class Ui {
         var logo = localStorage.getItem('logo');
 
         if (!logo) {
-            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php',{
-                configurations : ['logo']
+            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
+                configurations: ['logo']
             }, function (response) {
                 if (response.success) {
                     localStorage.setItem('logo', response.data);
@@ -17,24 +17,24 @@ class Ui {
                 }
             }, 'json');
         } else {
-            $('#client_image').attr('src', logo);
+            $('#client_image').attr('src', Session.getBaseUrl()+ logo);
         }
     }
 
-    static putColor(){
+    static putColor() {
         const color = localStorage.getItem('color');
 
-        if(color){
+        if (color) {
             $('head').append(
-                $('<style>',{
+                $('<style>', {
                     id: 'instition_style',
                     rel: 'stylesheet',
                     type: 'text/css',
                     text: `.bg-institutional{background: ${color}!important;color: "#ffff"!important}`
                 })
             );
-        }else{
-            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php',{
+        } else {
+            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
                 configurations: ['color_institucional']
             }, function (response) {
                 if (response.success) {
@@ -45,7 +45,7 @@ class Ui {
         }
     }
 
-    static imageAreaSelect(){
+    static imageAreaSelect() {
         setTimeout(() => {
             $("#img_edit_photo").imgAreaSelect({
                 handles: "corners",
@@ -60,7 +60,7 @@ class Ui {
         }, 500);
     }
 
-    static hideImgAreaSelect(){
+    static hideImgAreaSelect() {
         let ias = $("#img_edit_photo").imgAreaSelect({ instance: true });
         ias.setOptions({ hide: true });
         ias.update();
@@ -111,7 +111,7 @@ class Ui {
         if ($.inArray(breakpoint, ['xs', 'sm', 'md']) != -1) {
             $('#workspace').css('position', 'absolute');
         } else {
-            $('#workspace').css('position', 'relative');            
+            $('#workspace').css('position', 'relative');
         }
     }
 }
