@@ -271,7 +271,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto) {
             $resp["fs_estilo"] = $estilo;
         }
 
-        $resp["fs_ayuda"] = $campo_formato[0]["ayuda"];
+        $resp["fs_ayuda"] = html_entity_decode($campo_formato[0]["ayuda"]);
 
         if($campo_formato[0]["obligatoriedad"]) {
             $resp["fs_obligatoriedad"] = true;
