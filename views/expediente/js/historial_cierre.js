@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var params = JSON.parse($('script[data-params]').attr('data-params'));
+    var params = $("#scriptHistorial").data("params");
 
     $("#guardarHistorial").click(function () {
         if ($(this).attr("disable") != "disabled") {

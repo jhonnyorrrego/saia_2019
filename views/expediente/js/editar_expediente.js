@@ -1,5 +1,6 @@
 $(document).ready(function (){
-    var params = JSON.parse($('script[data-params]').attr('data-params'));
+    var params = $("#scriptEditExp").data("params");
+
     if(!params.agrupador){
         if(params.countDocuments || params.countTomos>1){
             $("#AgAgr").remove();

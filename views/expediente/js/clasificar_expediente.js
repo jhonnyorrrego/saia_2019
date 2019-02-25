@@ -1,49 +1,6 @@
-<?php
-$max_salida = 10;
-$ruta_db_superior = $ruta = '';
-
-while ($max_salida > 0) {
-    if (is_file($ruta . 'db.php')) {
-        $ruta_db_superior = $ruta;
-    }
-
-    $ruta .= '../';
-    $max_salida--;
-}
-
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo arboles_ft("2.24", 'filtro');
-echo bootstrapTable ();
-echo validate();
-?>
-
-<div class="container-fluid">
-    <form id="formulario" name="formulario">
-        <div class="row">
-            <div class="col-12 py-2">
-                <table id="table" data-selections=""></table>
-            </div>
-        </div>
-
-        <div class="row py-2">
-            <div class="col-12">
-                <label>Clasificar en:</label>
-                <div id="treebox"></div>
-            </div>
-        </div>
-
-        <div class="row py-2">
-            <div class="col-12">
-                <button class="btn btn-complete float-right" id="save">Guardar</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script>
 $(document).ready(function (){
+    var iddocs = $("#scriptClasificar").data("params");
     let baseUrl = Session.getBaseUrl();
-    let iddocs=<?= json_encode(explode(',',$_REQUEST['selections'])) ?>;
 
     $('#table').bootstrapTable({
         url: `${baseUrl}app/expediente/obtener_expediente.php`,
@@ -57,10 +14,8 @@ $(document).ready(function (){
             { field: 'documento', title: 'DESCRIPCIÓN DEL DOCUMENTO' },
             { field: 'tipoDoc', title: 'TIPO DOCUMENTAL' },
             { field: 'expVinc', title: 'EXPEDIENTES VINCULADOS' }
-        ]    
+        ]  
     });
-
-
 
     $(document).on("click",".remove-doc",function(){
         let id=$(this).data('id');
@@ -92,7 +47,6 @@ $(document).ready(function (){
                 
     $("#formulario").validate({
         submitHandler : function(form) {
-            //$("#save").attr('disabled',true);
             let dataDocs=$("#table").bootstrapTable('getData');
             if(dataDocs.length){
                 let iddocs_sel=[];
@@ -125,8 +79,7 @@ $(document).ready(function (){
                             if(!idserieDoc || (idserieDoc==tipoSel[0])){
                                 $.ajax({
                                     type : 'POST',
-                                    async : false,
-                                    url: `${baseUrl}pantallas/ejecutar_acciones.php`,
+                                    url: `${baseUrl}app/expediente/ejecutar_acciones.php`,
                                     data : {
                                         methodInstance:'VincularExpedienteDocCont',
                                         nameInstance:'ExpedienteController',
@@ -201,4 +154,3 @@ $(document).ready(function (){
     })
 
 });
-</script>

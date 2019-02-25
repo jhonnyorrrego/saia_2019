@@ -54,12 +54,11 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 for (let index = 0; index < response.rows.length; index++) {
                     let node = $(response.rows[index].info);
                     let identificador = node.find('.identificator').val();
-
-                    node.find('#checkbox_location').html(`<input data-index="${index}" data-id="${identificador}" name="btSelectItem" type="checkbox">`);
-
-                    response.rows[index].info = node.prop('outerHTML');
+                    if(identificador){
+                        node.find('#checkbox_location').html(`<input data-index="${index}" data-id="${identificador}" name="btSelectItem" type="checkbox">`);
+                        response.rows[index].info = node.prop('outerHTML');
+                    }
                 }
-
                 return response;
             },
             onPostBody: function(){

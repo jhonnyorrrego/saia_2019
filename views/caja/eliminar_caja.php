@@ -78,7 +78,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $.ajax({
                 type : 'POST',
                 async : false,
-                url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+                url: `${params.baseUrl}app/expediente/ejecutar_acciones.php`,
                 data : $("#formularioCaja").serialize(),
                 dataType : 'json',
                 success : function(objeto) {

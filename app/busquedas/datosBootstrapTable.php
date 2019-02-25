@@ -14,22 +14,25 @@ include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 
 $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
-$actualRow = ($_REQUEST['pageNumber'] - 1 ) * $_REQUEST['pageSize'];
+$actualRow = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
 
-$dataParams=[
-    'idfunc'=>$idfuncionario,
+$dataParams = [
+    'idfunc' => $idfuncionario,
     'page' => $_REQUEST['pageNumber'],
     'rows' => $_REQUEST['pageSize'],
     'actual_row' => $actualRow
 ];
-unset($_REQUEST['pageNumber'],$_REQUEST['pageSize']);
+unset($_REQUEST['pageNumber'], $_REQUEST['pageSize']);
 
-$params=array_merge($dataParams,$_REQUEST);
+$params = array_merge($dataParams, $_REQUEST);
 
 $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda_exp.php?' . http_build_query($params);
 
-if($_REQUEST['debug']){
-    echo '<pre>';var_dump($url);echo '</pre>';exit;
+if ($_REQUEST['debug']) {
+    echo '<pre>';
+    var_dump($url);
+    echo '</pre>';
+    exit;
 }
 $ch = curl_init();
 if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
@@ -45,8 +48,13 @@ $data = array(
     'total' => $output->records,
     'rows' => array()
 );
+
+$i = 0;
 foreach ($output->rows as $key => $value) {
-    $data ['rows'][]['info'] = $value->info;
+    $data['rows'][$i]['info'] = $value->info;
+    $data['rows'][$i]['id'] = (int)$value->llave;
+    $i++;
 }
 
 echo json_encode($data);
+

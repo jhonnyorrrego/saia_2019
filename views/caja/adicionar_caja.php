@@ -11,15 +11,8 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "controllers/autoload.php";
 
-$idcaja = $_REQUEST['idcaja'];
-$Caja = new Caja($idcaja);
-if (!$idcaja || !$Caja->isResponsable()) {
-    return;
-}
-
-$params = [
-    'baseUrl' => $ruta_db_superior,
-    'countExpediente' => $Caja->countAllExpediente()
+$params=[
+    'baseUrl'=>$ruta_db_superior
 ];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
@@ -46,7 +39,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="card card-default">
                         <div class="card-header ">
                             <div class="card-title">
-                                EDITAR CAJA
+                                CREAR CAJA
                             </div>
                         </div>
 
@@ -55,84 +48,76 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <form role="form" method="post" name="formularioCaja" id="formularioCaja">
                                 <div class="form-group">
                                     <label>Codigo *</label>
-                                    <input type="text" class="form-control" name="codigo" id="codigo" value="<?=$Caja->codigo?>">
+                                    <input type="text" class="form-control" name="codigo" id="codigo">
                                 </div>
 
-                                <div class="form-group" id="divTipoDisabled" style="display:none">
-                                    <label>Tipo *</label>
-                                    <span class="help">No se permite editar el tipo, tiene expedientes vinculados</span>
-                                    <input type="text" disabled="true" class="form-control" value="<?= $Caja->getEstadoArchivo() ?>">
-                                </div>
-
-                                <div class="form-group" id="divTipo">
+                                <div class="form-group">
                                     <label>Tipo *</label>
                                     <select class="form-control" name="estado_archivo" id="estado_archivo">
                                         <option value="">por favor seleccione</option>
-                                        <?= $Caja->getHtmlField('estado_archivo', 'select',$Caja->estado_archivo) ?>
+                                        <?= Caja::getHtmlField('estado_archivo', 'select') ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Fondo</label>
-                                    <input type="text" class="form-control" name="fondo" id="fondo" value="<?= $Caja->fondo ?>">
+                                    <input type="text" class="form-control" name="fondo" id="fondo">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>Sección</label>
-                                    <input type="text" class="form-control" name="seccion" id="seccion" value="<?= $Caja->seccion ?>">
+                                    <input type="text" class="form-control" name="seccion" id="seccion">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Subsección </label>
-                                    <input type="text" class="form-control" name="subseccion" id="subseccion" value="<?= $Caja->subseccion ?>">
+                                    <input type="text" class="form-control" name="subseccion" id="subseccion">
                                 </div>
 
                                 <div class="form-group">
                                     <label>División </label>
-                                    <input type="text" class="form-control" name="division" id="division" value="<?= $Caja->division ?>">
+                                    <input type="text" class="form-control" name="division" id="division">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Módulo</label>
-                                    <input type="text" class="form-control" name="modulo" id="modulo" value="<?= $Caja->modulo ?>">
+                                    <input type="text" class="form-control" name="modulo" id="modulo">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Panel</label>
-                                    <input type="text" class="form-control" name="panel" id="panel" value="<?= $Caja->panel ?>">
+                                    <input type="text" class="form-control" name="panel" id="panel">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Nivel</label>
-                                    <input type="text" class="form-control" name="nivel" id="nivel" value="<?= $Caja->nivel ?>">
+                                    <input type="text" class="form-control" name="nivel" id="nivel">
                                 </div>
 
 
-                                <div class="form-group ocultar">
+                                <div class="form-group">
                                     <label>Material</label>
                                     <select class="form-control" name="material" id="material">
                                         <option value="">por favor seleccione</option>
-                                        <?= $Caja->getHtmlField('material', 'select', $Caja->material) ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group ocultar">
-                                    <label>Seguridad</label>
-                                    <select class="form-control" name="seguridad" id="seguridad">
-                                        <option value="">por favor seleccione</option>
-                                        <?= $Caja->getHtmlField('seguridad', 'select',$Caja->seguridad) ?>
+                                        <?= Caja::getHtmlField('material', 'select') ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="hidden" name="methodInstance" value="updateCajaCont">
+                                    <label>Seguridad</label>
+                                    <select class="form-control" name="seguridad" id="seguridad">
+                                        <option value="">por favor seleccione</option>
+                                        <?= Caja::getHtmlField('seguridad', 'select') ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="hidden" name="methodInstance" value="createCajaCont">
                                     <input type="hidden" name="nameInstance" value="CajaController">
-                                    <input type="hidden" name="setNull" value="1">
-                                    <input type="hidden" name="idcaja" value="<?=$idcaja?>">
                                     <input type="hidden" name="generarFiltro" value="1">
-                                    <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?= $_REQUEST['idbusqueda_componente'] ?>">
-                                    <button id="acualizarCaja" type="submit" class="btn btn-primary">
-                                        Actualizar
+                                    <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?=$_REQUEST['idbusqueda_componente']?>">
+                                    <button id="guardarCaja" type="submit" class="btn btn-primary">
+                                        Adicionar
                                     </button>
                                 </div>
 
@@ -146,25 +131,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     
         <script type="text/javascript">
             $(document).ready(function (){
-                var params=<?= json_encode($params) ?>;
-                if(params.countExpediente){
-                    $("#divTipo").remove();
-                    $("#divTipoDisabled").show();
-                }
+                var params=<?=json_encode($params)?>;
+                
                 $("#formularioCaja").validate({
 					rules : {
 						codigo : {
 							required : true
-						}
+						},
+                        estado_archivo:{
+                            required : true
+                        }
 					},
 					submitHandler : function(form) {
-                        $("#acualizarCaja").attr('disabled',true);
+                        $("#guardarCaja").attr('disabled',true);
                         var idcomponente=$("#idbusqueda_componente").val(); 
-                        
+
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+                            url: `${params.baseUrl}app/expediente/ejecutar_acciones.php`,
                             data : $("#formularioCaja").serialize(),
                             dataType : 'json',
                             success : function(objeto) {
@@ -184,9 +169,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                         dataType : 'json',
                                         success : function(objeto2) {
                                             if (objeto2.exito) {
-                                                $("#resultado_pantalla_"+objeto2.rows[0].idcaja,parent.document).addClass("removeDiv");
-                                                $(".removeDiv", parent.document).after(objeto2.rows[0].info);
-                                                $(".removeDiv", parent.document).remove();
+                                                $("#resultado_busqueda"+idcomponente, parent.document).prepend(objeto2.rows[0].info);
+                                                $("[id^='resultado_pantalla_']", parent.document).removeClass("alert-warning");
                                                 $('#resultado_pantalla_'+objeto2.rows[0].idcaja, parent.document).addClass("alert-warning");
                                             }else{
                                                 top.notification({
@@ -220,7 +204,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             },
                             error : function() {
                                 top.notification({
-                                    message : "Error al procesar la solicitud (actualizar caja)",
+                                    message : "Error al procesar la solicitud (guardar expediente)",
                                     type : "error",
                                     duration : 3000
                                 });

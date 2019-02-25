@@ -7,7 +7,8 @@ class ExpedienteEli extends Model
     protected $fk_expediente;
     protected $fk_funcionario;
     protected $fecha_eliminacion;
-    protected $fecha_restauracion;
+    protected $fecha_accion;
+    protected $accion;
     
     protected $dbAttributes;
 
@@ -23,11 +24,12 @@ class ExpedienteEli extends Model
                 'fk_expediente',
                 'fk_funcionario',
                 'fecha_eliminacion',
-                'fecha_restauracion'
+                'fecha_accion',
+                'accion'
             ],
             'date' => [
                 'fecha_eliminacion',
-                'fecha_restauracion'
+                'fecha_accion'
             ]
         ];
     }

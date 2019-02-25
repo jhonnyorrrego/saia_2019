@@ -68,7 +68,8 @@ if(!$Expediente->nucleo){
             let tab = $(e.target);
             let container = $(tab.attr('href'))
 
-            container.load(tab.data('url'));
+            container.load(tab.data('url'));            
+            
         });
         $('.ExpTab:first').trigger('click');
     });

@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    var params = $("#scriptResponsableExp").data("params");
-    
+    var params = $("#scriptResponsableCaja").data("params");
+        
     $('#newResponsable').select2({
         minimumInputLength: 4,
         ajax: {
@@ -32,26 +32,26 @@ $(document).ready(function () {
         $('#newResponsable').val('').trigger('change');
     });
 
-    $("#formularioExp").validate({
+    $("#formularioCaja").validate({
         rules: {
             newResponsable: {
                 required: true
             },
-            idexpediente: {
+            idcaja: {
                 required: true
             }
         },
         submitHandler: function (form) {
-            let idexpediente = $("#idexpediente").val();
+            let idcaja = $("#idcaja").val();
             let funcionario = $("#newResponsable").val();
 
             $.ajax({
                 type: 'POST',
                 url: `${params.baseUrl}app/expediente/ejecutar_acciones.php`,
-                data: { 
-                    nameInstance: 'ExpedienteController', 
-                    methodInstance: 'updateResponsableExpedienteCont', 
-                    idexpediente: idexpediente, 
+                data: {
+                    nameInstance: 'CajaController',
+                    methodInstance: 'updateResponsableCajaCont',
+                    idcaja: idcaja,
                     responsable: funcionario
                 },
                 dataType: 'json',
@@ -62,7 +62,7 @@ $(document).ready(function () {
                             type: 'success',
                             duration: 3000
                         });
-                        $('.ExpTab').trigger('shown.bs.tab');
+                        $('.cajaTab').trigger('shown.bs.tab');
                     } else {
                         top.notification({
                             message: response.message,
@@ -81,4 +81,5 @@ $(document).ready(function () {
             });
         }
     });
+
 });

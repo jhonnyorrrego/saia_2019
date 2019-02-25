@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var params = JSON.parse($('script[data-params]').attr('data-params'));
+    var params = $("#scriptCompartirExp").data("params");
 
     var loadTable = function () {
         $.ajax({
