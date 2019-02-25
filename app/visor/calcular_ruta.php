@@ -36,9 +36,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $temporalFile = $_SESSION["ruta_temp_funcionario"] . '/' . strtolower(basename($jsonRoute->ruta));
             $relativeRoute = $ruta_db_superior . $temporalFile;
 
-            if (!is_file($relativeRoute) || $_REQUEST['actualizar_pdf']) {
-                $content = StorageUtils::get_file_content($ruta_string);
-                file_put_contents($relativeRoute, $content);
+            if ($_REQUEST['actualizar_pdf']) {
+                $content = StorageUtils::get_file_content(json_encode($jsonRoute));
+                if($content){
+                    file_put_contents($relativeRoute, $content);
+                }
                 
                 if (!is_file($relativeRoute)) {
                     $Response->message = "Error al generar el PDF";

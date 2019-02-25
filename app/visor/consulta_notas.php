@@ -40,7 +40,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $Response->data[] = [
                 'annotation' => $VisorComentario->annotation,
                 'class' => $VisorComentario->class,
-                'content' => $VisorComentario->content,
+                'content' => html_entity_decode($VisorComentario->content),
                 'uuid' => $VisorComentario->uuid
             ];
         }

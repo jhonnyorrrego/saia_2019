@@ -15,8 +15,6 @@
 }
 
 #comment-wrapper {
-    position: fixed;
-    top: 35px;
     right: 0;
     bottom: 0;
     overflow: auto;
@@ -69,6 +67,7 @@
     border-image: none;
 }
 
-#content-wrapper{
+#content-wrapper {
     overflow-x: auto;
+    overflow-y: auto;
 }

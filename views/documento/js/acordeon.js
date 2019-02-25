@@ -2,6 +2,7 @@ $(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
     let sizeFont = 0;
+
     (function init() {
         getFormatInformation();
         loadHeader();
@@ -65,7 +66,6 @@ $(function () {
             $('#view_document').load(route, function () {
                 sizeFont = $('#documento').find("p").css("font-size")
                 setSize();
-
             });
         }, 'json');
     }
@@ -93,7 +93,7 @@ $(function () {
 
     function setValores(sizeDocument) {
         var xsFont = parseFloat(sizeFont);
-        
+
         if (sizeDocument == 'sm') {
             var widthIni = 668;
         } else if (sizeDocument == 'xs') {
@@ -109,7 +109,7 @@ $(function () {
             $('#documento').css("font-size", widthAct + "px");
             $('#documento').find("p").css("font-size", widthAct + "px")
         }
-       
+
         $('#documento').find("img")
 
         var contenidoImg = $("#documento").find("img:not('#qr,#logoEmpresa')");
@@ -119,7 +119,7 @@ $(function () {
         redimensionarLgEmpresa(sizeDocument, widthAct);
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));
-            
+
             if (sizeImg >= 50 && sizeDocument != 'xl') {
                 sizeImg = sizeImg * 1.1;
             } else if (sizeImg <= 50 && sizeDocument == 'xl' && widthAct < '10') {
@@ -143,7 +143,7 @@ $(function () {
     function redimensionarQr(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
-         if (sizeDocument == 'xs') {
+        if (sizeDocument == 'xs') {
             sizeImg = sizeImg * 0.5;
             sizeH = sizeH * 0.5;
             $("#qr").css("width", sizeImg + "%");
@@ -155,14 +155,14 @@ $(function () {
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         }
-        
+
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
             sizeImg = sizeImg * 3;
-            $("#logoEmpresa").css("width", sizeImg + "%");        
+            $("#logoEmpresa").css("width", sizeImg + "%");
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;

@@ -17,6 +17,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <head>
     <meta charset="utf-8" />
     <title>PDFJSAnnotate</title>
+
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= icons() ?>
+
     <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/shared/toolbar.css" />
     <link rel="stylesheet" type="text/css"
         href="<?= $ruta_db_superior ?>views/visor/shared/pdf_viewer.css" />
@@ -24,7 +30,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </head>
 
 <body>
-    <div class="container mw-100 px-0 mx-0">
+    <div class="container mw-100 px-0 mx-0" id="pdf_editor">
         <div class="row mx-0 sticky-top" id="toolbar_container">
             <div class="col-12 toolbar" id="toolbar">
                 <select class="scale">
@@ -54,20 +60,20 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
         <div class="row mx-0">
-            <div class="col-2 d-none parent_list px-1">
-                <div id="thumbnails" class="pdfViewer"></div>
+            <div class="col-2 d-none px-1">
+                <div id="thumbnails" class="pdfViewer height_window"></div>
             </div>
-            <div class="col px-1" id="content-wrapper">
+            <div class="col px-1 height_window" id="content-wrapper">
                 <div id="viewer" class="pdfViewer"></div>
             </div>
-            <div class="col-3 d-none" id="comment-wrapper">
-                <h4>Comments</h4>
+            <div class="col-2 px-1 d-none height_window" id="comment-wrapper">
+                <h4>Comentarios</h4>
                 <div class="comment-list">
                     <div class="comment-list-container">
-                        <div class="comment-list-item">No comments</div>
+                        <div class="comment-list-item">Sin comentarios</div>
                     </div>
                     <form class="comment-list-form" style="display:none;">
-                        <input type="text" placeholder="Add a Comment" />
+                        <input type="text" placeholder="Comentario" />
                     </form>
                 </div>
             </div>

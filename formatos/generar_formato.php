@@ -510,7 +510,7 @@ class GenerarFormato
         include_once "../../pantallas/lib/librerias_cripto.php";
         
         $documentId = $_REQUEST["iddoc"];
-        $sql = "select b.pdf, a.mostrar_pdf,a.exportar from formato a, documento b where lower(b.plantilla)= lower(a.nombre) and b.documentId={$documentId}";
+        $sql = "select b.pdf, a.mostrar_pdf,a.exportar from formato a, documento b where lower(b.plantilla)= lower(a.nombre) and b.iddocumento={$documentId}";
         $record = StaticSql::search($sql);
 
         $params = [
@@ -529,16 +529,8 @@ class GenerarFormato
         $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
         $url.= http_build_query($params);
 
-        $ch = curl_init();
-        if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        echo curl_exec($ch);
-        curl_close($ch);
-        ?>';        
+        ?>
+        <iframe width="100%" frameborder="0" onload="this.height = window.innerHeight - 20" src="<?= $url ?>"></iframe>';
 
         return $string;
     }

@@ -58,7 +58,8 @@ class VisorNota extends Model
 
         $data->notes = self::findAllByAttributes([
             'tipo_relacion' => $type,
-            'idrelacion' => $typeId
+            'idrelacion' => $typeId,
+            'estado' => 1
         ]);
 
         foreach ($data->notes as $key => $VisorNota) {

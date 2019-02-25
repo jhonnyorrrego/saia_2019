@@ -176,6 +176,8 @@
 						PAGE_HEIGHT = viewport.height;
 					});
 				}
+
+				$('.height_window').height($(window).height() - $('#toolbar_container').height() - 10);
 			}
 
 			function createStorageManager(documentId) {
@@ -236,27 +238,6 @@
 			(function () {
 				createStorageManager(RENDER_OPTIONS.documentId);
 				render();
-			})();
-
-			(function () {
-				let initialTop = $('#toolbar_container').position().top;
-				let toolHeight = $('#toolbar').height();
-
-				$('#comment-wrapper').css('top', +initialTop + toolHeight);
-				
-				function changeHelperTop() {
-					let newTop = $('#toolbar').position().top || $('#toolbar_container').position().top;
-
-					if(newTop > initialTop){
-						$('#comment-wrapper').css('top', toolHeight);
-					}else if(newTop == initialTop){
-						$('#comment-wrapper').css('top', +initialTop + toolHeight);
-					}
-				}
-
-				$('#right_workspace').on('scroll', function () {
-					changeHelperTop();
-				});
 			})();
 
 			// Toolbar buttons
@@ -417,6 +398,7 @@
 			(function () {
 				$('.toolbar .search').on('click', function () {
 					let string = $('#content').val();
+					console.log(window.find(string));
 				});
 			})();
 
@@ -441,6 +423,7 @@
 
 				function handleAnnotationClick(target) {
 					if (supportsComments(target)) {
+						checkCursor();
 						$('#comment-wrapper').removeClass('d-none');
 						var documentId = RENDER_OPTIONS.documentId;
 						var annotationId = target.getAttribute('data-pdf-annotate-id');
@@ -464,6 +447,14 @@
 					}
 				}
 
+				function checkCursor(){	
+					let tooltype = window.localStorageManager.get('tooltype');
+
+					if(tooltype == 'cursor'){						
+						$('#thumbnails').empty().parent().addClass('d-none	');
+					}
+				}
+
 				function handleAnnotationBlur(target) {
 					if (supportsComments(target)) {
 						$('#comment-wrapper').addClass('d-none');
@@ -472,13 +463,48 @@
 						commentForm.onsubmit = null;
 
 						insertComment({
-							content: 'No comments'
+							content: 'Sin comentarios'
 						});
 					}
 				}
 
+				function handleAnnotationDelete(documentId, uuid){
+					$.post(`${baseUrl}app/visor/eliminar_nota.php`, {
+						key: localStorage.getItem('key'),
+						uuid: uuid,
+						type: 'NOTA_DOCUMENTO',
+						typeId: params.iddoc
+					}, function (response){
+						if(!response.success){
+							top.notification({
+								type: 'error',
+								message: response.message
+							});
+						}
+					}, 'json');
+				}
+
+				function handleAnnotationEdit(documentId, uuid, annotation){
+					$.post(`${baseUrl}app/visor/editar_nota.php`, {
+						key: localStorage.getItem('key'),
+						uuid: uuid,
+						annotation: annotation,
+						type: 'NOTA_DOCUMENTO',
+						typeId: params.iddoc
+					}, function (response){
+						if(!response.success){
+							top.notification({
+								type: 'error',
+								message: response.message
+							});
+						}
+					}, 'json');
+				}
+				
 				UI.addEventListener('annotation:click', handleAnnotationClick);
 				UI.addEventListener('annotation:blur', handleAnnotationBlur);
+				UI.addEventListener('annotation:delete', handleAnnotationDelete);
+				UI.addEventListener('annotation:edit', handleAnnotationEdit);
 
 				function handleCommentAdd(documentId, annotationId, comment) {
 					adapter.getAnnotation(documentId, annotationId).then(annotation => {
