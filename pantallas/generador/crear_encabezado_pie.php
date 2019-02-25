@@ -20,7 +20,7 @@ echo librerias_notificaciones();
 echo librerias_highslide();
 
 $contenidoDefecto = json_encode('<div class="row">
-<div class="col-md-12">
+<div class="col-md-12 px-0">
 <table border="0" cellspacing="0" class="table table-condensed" style="text-align:left; width:100%">
 	<tbody>
   <td rowspan="3" style="text-align:center;">{*logo_empresa*}</td>
