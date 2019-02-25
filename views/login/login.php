@@ -191,7 +191,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $('#form_login').on('submit', function (event) {
                 event.preventDefault();
                 $.ajax({
-                    type: 'GET',
+                    type: 'POST',
                     url: baseUrl + 'verificar_login.php',
                     dataType: 'json',
                     data: {
@@ -252,11 +252,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     }, function (response) {
                         if (response.success) {
                             localStorage.setItem('logo', response.data[0].value);
-                            $('#logo').attr('src', response.data[0].value);
+                            getImage();
                         }
                     }, 'json');
                 } else {
-                    $('#logo').attr('src', logo);
+                    $('#logo').attr('src', Session.getBaseUrl() + logo);
                 }
             })();
 

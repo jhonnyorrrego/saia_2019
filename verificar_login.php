@@ -131,13 +131,8 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 			setCookie("saia_userid", "", 0);
 		}
 		include_once("tarea_limpiar_carpeta.php");
-		$cons_temp_func = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-		if ($cons_temp_func["numcampos"]) {
-			$ruta_temp_func = $cons_temp_func[0]["valor"];
-		} else {
-			$ruta_temp_func = "temporal/temporal";
-		}
-		borrar_archivos_carpeta($ruta_temp_func . "_" . $sUserId, false);
+		$ruta_temp_func = "temporal/temporal_{$sUserId}";
+		borrar_archivos_carpeta($ruta_temp_func, false);
 		if ($admin) {
 			$retorno["mensaje"] = "IMPORTANTE! Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
 		} else {

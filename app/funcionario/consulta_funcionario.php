@@ -34,7 +34,7 @@ if(isset($_REQUEST['type'])){
 
         $Response->data = $data;
     }else{
-        $Response->message = 'undefined type';
+        $Response->message = 'tipo indefinido';
         $Response->success = 0;
     }
 }else{

@@ -238,8 +238,8 @@ class Files {
                 theadClasses: 'thead-light',
                 columns: [
                     { field: 'icono', title: '' },
-                    { field: 'etiqueta', title: 'nombre', editable: { mode: 'inline' } },
-                    { field: 'descripcion', title: 'descripcion', editable: { mode: 'inline' } },
+                    { field: 'etiqueta', title: 'nombre', editable: { mode: 'inline', emptytext: '...' } },
+                    { field: 'descripcion', title: 'descripcion', editable: { mode: 'inline', emptytext: '...' } },
                     { field: 'version', title: 'version', align: 'center' },
                     { field: 'extension', title: 'clase', align: 'center' },
                     { field: 'usuario', title: 'responsable' },

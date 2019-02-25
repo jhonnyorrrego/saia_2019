@@ -304,19 +304,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= breakpoint() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/modules.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>    
-    <!-- BEGIN LIBRARIES FOR EVENTS-->
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
-    <!-- END LIBRARIES FOR EVENTS-->
     <?= topModal() ?>
     <script>
         $(function(){
-            Ui.putColor();
-            Ui.inactiveTime();
+            if(localStorage.getItem('key') > 0){
+                Ui.putColor();
+                Ui.inactiveTime();
+            }
         });
     </script>
 </body>
