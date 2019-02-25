@@ -57,10 +57,11 @@ if (isset($_REQUEST["genera"])) {
         "exito" => 0,
         "mensaje" => ["No se pudo generar el formato"]
     ];
-   
-    
+
+
     ob_start();
     $acciones = [
+        "formato",
         "tabla",
         "adicionar",
         "editar",
@@ -74,9 +75,9 @@ if (isset($_REQUEST["genera"])) {
     $exito = true;
     $cuerpo_formato = '';
     $publicar = 0;
-    
+
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
-   
+
     if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
@@ -90,7 +91,7 @@ if (isset($_REQUEST["genera"])) {
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
-      
+
         if (!$generar->exito) {
             $mensajes[] = "Error en la accion $accion";
             $mensajes[] = $generar->mensaje;
@@ -111,13 +112,13 @@ if (isset($_REQUEST["genera"])) {
             }
             include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
-           
+
             if($_REQUEST['permisosPerfil']){
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             }else{
                 $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
             }
-        }         
+        }
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
     ob_get_clean();
@@ -127,7 +128,7 @@ if (isset($_REQUEST["genera"])) {
     $status["publicar"] = $publicar;
     $status["permisos"] = $permisosFormato['mensaje'];
     $status["estadoPermisos"] = $permisosFormato['exito'];
-    
+
     ob_end_clean();
     echo json_encode($status);
     die();
@@ -1161,7 +1162,7 @@ class GenerarFormato
                                 $classRadios = 'required';
                                 $labelRequired = '<label id="'.$campos[$h]["no mbre"].'-error" class="error" f or="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
                             }
-                              /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
+                            /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
                             $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
                             <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta" ]) . $obliga .   '</label>';
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
@@ -2234,6 +2235,8 @@ span.fancytree-expander {
         if (usuario_actual('login') == 'cerok') {
             $redireccion = "funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $this->idformato . $adicionales;
         }
+        $this->mensaje="Formato generado con exito";
+        $this->exito="1";
         return $redireccion;
     }
 
@@ -2534,7 +2537,7 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
-      
+
         //$formato_fecha="L";
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
