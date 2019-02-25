@@ -35,8 +35,8 @@ function procesar_moneda($idcampo = '', $seleccionado = '', $accion = '', $campo
     
     $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["nombre"]}'>{$eliminarPantalla}
     <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatorio}</b></span>";
-    $texto .= '<div class="controls"><div class="input-prepend"><span class="add-on" style="padding-bottom: 1px;">$</span>';
-    $texto .= '<input id="' . $campo["nombre"] . '" type="number" value="' . $valor . '" name="' . $campo["nombre"] . '">';
+    $texto .= '<div class="controls"><div class="input-prepend"><span class="add-on" style="">$</span>';
+    $texto .= '<input id="' . $campo["nombre"] . '" type="number" value="' . $valor . '" name="' . $campo["nombre"] . '" class="span5">';
     $texto .= '</div></div></li>';
     return ($texto);
 }

@@ -159,7 +159,7 @@ $(function () {
             $("#qr").css("height", sizeH + "%");
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
-            sizeImg = sizeImg * 0.4;
+            sizeImg = sizeImg * 0.9;
             sizeH = sizeH * 0.4;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
@@ -182,7 +182,7 @@ $(function () {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");
         } else if (sizeDocument == 'xl') {
-            sizeImg = sizeImg * 0.5;
+            sizeImg = sizeImg * 1;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
 
