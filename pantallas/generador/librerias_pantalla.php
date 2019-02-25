@@ -618,13 +618,13 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                         echo json_encode($retorno);
                         die();
                     }
-                }*/
+                }
                 if ($consultaDocumentos['numcampos']) {
                     $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
                     $retorno['exito'] = 0;
                     echo json_encode($retorno);
                     die(); 
-                }
+                }*/
             }else{
                 if ($consultaDocumentos['numcampos']) {
                 $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';

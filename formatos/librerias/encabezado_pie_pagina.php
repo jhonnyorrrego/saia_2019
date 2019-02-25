@@ -231,7 +231,7 @@ function logo_empresa($idformato, $iddoc = 0,$tipo=null,$width = null)
                 if($width){
                     $img = '<img src="' . $archivo_binario . '" width="80px" />';
                 }else{
-                    $img = '<img id="logoEmpresa" src="' . $archivo_binario . '" width="20%" />';
+                    $img = '<img class="img-responsive" id="logoEmpresa" src="' . $archivo_binario . '" width="20%" />';
                 }
                 return $img;
             }

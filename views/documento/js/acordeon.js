@@ -143,11 +143,17 @@ $(function () {
         });
     }
     function redimensionarQr(sizeDocument, widthAct) {
+        console.log(widthAct);
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
-         if (sizeDocument == 'xs') {
-            sizeImg = sizeImg * 0.5;
-            sizeH = sizeH * 0.5;
+        if (sizeDocument == 'xs' && widthAct < '10') {
+            sizeImg = sizeImg * 0.6;
+            sizeH = sizeH * 0.6;
+            $("#qr").css("width", sizeImg + "%");
+            $("#qr").css("height", sizeH + "%");
+        } else if (sizeDocument == 'xs' && widthAct > '10') {
+            sizeImg = sizeImg * 0.4;
+            sizeH = sizeH * 0.4;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         }
