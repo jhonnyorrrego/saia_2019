@@ -602,10 +602,12 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
     } else {
         $buscar_formato = busca_filtro_tabla("", "formato", "idformato=" . $datos["idformato"], "", $conn);
         if ($buscar_formato["numcampos"]) {
+            $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
+            $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn); 
             $datos["nombre"] = $buscar_formato[0]["nombre"];
-           
             if(empty($datos['cod_padre'])){
-                $consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
+                
+                /*$consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
                 if($consultaPadre['numcampos']){
                     $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
                     $consultaDocumentos = busca_filtro_tabla("","documento","lower(plantilla) = '{$tablaDocumento[1]}'","",$conn);
@@ -616,18 +618,21 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                         echo json_encode($retorno);
                         die();
                     }
-                }
-            }else{
-                $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
-
-                $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
+                }*/
                 if ($consultaDocumentos['numcampos']) {
                     $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
                     $retorno['exito'] = 0;
                     echo json_encode($retorno);
                     die(); 
+                }
+            }else{
+                if ($consultaDocumentos['numcampos']) {
+                $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
+                $retorno['exito'] = 0;
+                echo json_encode($retorno);
+                die(); 
+                }
             }
-        }
         }
     }
     if($_REQUEST['fk_categoria_formato']){
