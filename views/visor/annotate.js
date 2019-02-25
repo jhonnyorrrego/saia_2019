@@ -275,6 +275,10 @@
 					switch (type) {
 						case 'cursor':
 							UI.enableEdit();
+
+							if($('#select_scale').is(':hidden')){
+								$('.search_toggler').toggleClass('d-none');
+							}
 							break;
 						case 'point':
 							UI.enablePoint();
@@ -397,8 +401,12 @@
 			//find
 			(function () {
 				$('.toolbar .search').on('click', function () {
-					let string = $('#content').val();
-					console.log(window.find(string));
+					if($('#search_content').is(':hidden')){console.log('toggle')
+						$('.search_toggler').toggleClass('d-none');
+					}else{
+						let string = $('#search_content').val();
+						window.find(string);
+					}
 				});
 			})();
 

@@ -191,7 +191,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $('#form_login').on('submit', function (event) {
                 event.preventDefault();
                 $.ajax({
-                    type: 'GET',
+                    type: 'POST',
                     url: baseUrl + 'verificar_login.php',
                     dataType: 'json',
                     data: {

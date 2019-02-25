@@ -36,7 +36,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $temporalFile = $_SESSION["ruta_temp_funcionario"] . '/' . strtolower(basename($jsonRoute->ruta));
             $relativeRoute = $ruta_db_superior . $temporalFile;
 
-            if ($_REQUEST['actualizar_pdf']) {
+            if ($_REQUEST['actualizar_pdf'] || !is_file($relativeRoute)) {
                 $content = StorageUtils::get_file_content(json_encode($jsonRoute));
                 if($content){
                     file_put_contents($relativeRoute, $content);
