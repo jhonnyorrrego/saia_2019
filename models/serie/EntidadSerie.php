@@ -88,32 +88,67 @@ class EntidadSerie extends Model
                 if ($ValidArbolExp['exito']) {
                     $Serie = $this->getRelationFk('Serie');
                     if ($Serie) {
-                        for ($i = 1; $i < 4; $i++) {
-                            $codPadreExp = end($ValidArbolExp['data']['idexpediente'][$i]);
-                            $ok = 1;
-                            if ($Serie->tipo != 1) {
-                                $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1 and estado_archivo={$i}";
-                                $consPadre = $this->search($sql);
-                                if ($consPadre) {
-                                    $codPadreExp = $consPadre[0]['idexpediente'];
-                                } else {
-                                    $SeriePadre = $Serie->getCodPadre();
-                                    $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$SeriePadre->cod_padre} and nucleo=1 and estado=1 and estado_archivo={$i}";
-                                    $ExpPad = $this->search($sql);
-                                    if ($ExpPad) {
+                        if($Serie->tipo!=3){
+                            for ($i = 1; $i < 4; $i++) {
+                                $codPadreExp = end($ValidArbolExp['data']['idexpediente'][$i]);
+                                $ok = 1;
+                                if ($Serie->tipo == 2) {
+                                    $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1 and estado_archivo={$i}";
+                                    $consPadre = $this->search($sql);
+                                    if ($consPadre) {
+                                        $codPadreExp = $consPadre[0]['idexpediente'];
+                                    } else {
+                                        $SeriePadre = $Serie->getCodPadre();
+                                        $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$SeriePadre->cod_padre} and nucleo=1 and estado=1 and estado_archivo={$i}";
+                                        $ExpPad = $this->search($sql);
+                                        if ($ExpPad) {
+                                            $Expediente = new Expediente();
+                                            $attributes = [
+                                                'fecha' => date('Y-m-d H:i:s'),
+                                                'nombre' => $SeriePadre->nombre,
+                                                'fondo' => $SeriePadre->nombre,
+                                                'descripcion' => $SeriePadre->nombre,
+                                                'codigo_numero' => $SeriePadre->codigo,
+                                                'cod_padre' => $ExpPad[0]['idexpediente'],
+                                                'estado_archivo' => $i,
+                                                'fk_caja' => 0,
+                                                'propietario' => 0,
+                                                'responsable' => 0,
+                                                'fk_serie' => $SeriePadre->getPK(),
+                                                'fk_dependencia' => $this->fk_dependencia,
+                                                'cod_arbol' => 0,
+                                                'agrupador' => 2,
+                                                'fk_entidad_serie' => $this->identidad_serie,
+                                                'nucleo' => 1
+                                            ];
+                                            $Expediente->SetAttributes($attributes);
+                                            $infoExpediente = $Expediente->CreateExpediente();
+                                            if ($infoExpediente['exito']) {
+                                                $codPadreExp = $Expediente->getPK();
+                                            }
+                                        } else {
+                                            $ok = 0;
+                                        }
+                                    }
+                                }
+
+                                if ($ok) {
+                                    $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} and nucleo=1 and estado=1 and agrupador=2 and estado_archivo={$i}";
+                                    $existExp = $this->search($sql);
+                                    if (!$existExp) {
                                         $Expediente = new Expediente();
                                         $attributes = [
                                             'fecha' => date('Y-m-d H:i:s'),
-                                            'nombre' => $SeriePadre->nombre,
-                                            'fondo' => $SeriePadre->nombre,
-                                            'descripcion' => $SeriePadre->nombre,
-                                            'codigo_numero' => $SeriePadre->codigo,
-                                            'cod_padre' => $ExpPad[0]['idexpediente'],
+                                            'nombre' => $Serie->nombre,
+                                            'fondo' => $Serie->nombre,
+                                            'descripcion' => $Serie->nombre,
+                                            'codigo_numero' => $Serie->codigo,
+                                            'cod_padre' => $codPadreExp,
                                             'estado_archivo' => $i,
                                             'fk_caja' => 0,
                                             'propietario' => 0,
                                             'responsable' => 0,
-                                            'fk_serie' => $SeriePadre->getPK(),
+                                            'fk_serie' => $this->fk_serie,
                                             'fk_dependencia' => $this->fk_dependencia,
                                             'cod_arbol' => 0,
                                             'agrupador' => 2,
@@ -123,51 +158,21 @@ class EntidadSerie extends Model
                                         $Expediente->SetAttributes($attributes);
                                         $infoExpediente = $Expediente->CreateExpediente();
                                         if ($infoExpediente['exito']) {
-                                            $codPadreExp = $Expediente->getPK();
+                                            $response['data']['idexpediente'] = $Expediente->getPK();
+                                            $response['exito'] = 1;
                                         }
                                     } else {
-                                        $ok = 0;
-                                    }
-                                }
-                            }
-
-                            if ($ok) {
-                                $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} and nucleo=1 and estado=1 and agrupador=2 and estado_archivo={$i}";
-                                $existExp = $this->search($sql);
-                                if (!$existExp) {
-                                    $Expediente = new Expediente();
-                                    $attributes = [
-                                        'fecha' => date('Y-m-d H:i:s'),
-                                        'nombre' => $Serie->nombre,
-                                        'fondo' => $Serie->nombre,
-                                        'descripcion' => $Serie->nombre,
-                                        'codigo_numero' => $Serie->codigo,
-                                        'cod_padre' => $codPadreExp,
-                                        'estado_archivo' => $i,
-                                        'fk_caja' => 0,
-                                        'propietario' => 0,
-                                        'responsable' => 0,
-                                        'fk_serie' => $this->fk_serie,
-                                        'fk_dependencia' => $this->fk_dependencia,
-                                        'cod_arbol' => 0,
-                                        'agrupador' => 2,
-                                        'fk_entidad_serie' => $this->identidad_serie,
-                                        'nucleo' => 1
-                                    ];
-                                    $Expediente->SetAttributes($attributes);
-                                    $infoExpediente = $Expediente->CreateExpediente();
-                                    if ($infoExpediente['exito']) {
-                                        $response['data']['idexpediente'] = $Expediente->getPK();
+                                        $response['data']['idexpediente'] = $existExp[0]['idexpediente'];
                                         $response['exito'] = 1;
                                     }
                                 } else {
-                                    $response['data']['idexpediente'] = $existExp[0]['idexpediente'];
-                                    $response['exito'] = 1;
+                                    $response['message'] = 'Error al crear el expediente padre';
+                                    break;
                                 }
-                            } else {
-                                $response['message'] = 'Error al crear el expediente padre';
-                                break;
                             }
+                        }else{
+                            $response['exito'] = 1;
+                            $response['message'] = 'Entidad creada';
                         }
                     } else {
                         $response['message'] = 'NO se encontro la serie a vincular';
