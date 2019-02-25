@@ -1,8 +1,9 @@
 <?php
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
+while($max_salida > 0) {
+    if(is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
     }
     $ruta .= "../";
@@ -17,7 +18,9 @@ header('Content-Type: application/json');
 
 $datos = array();
 
-$resp = array("status" => 0);
+$resp = array(
+    "status" => 0
+);
 
 if(!isset($_REQUEST["saia_key"])) {
     $resp["message"] = "No se envió identificación del funcionario";
@@ -28,9 +31,9 @@ if(!isset($_REQUEST["saia_key"])) {
 $saia_key = $_REQUEST["saia_key"];
 
 $resp["data"] = $_REQUEST["datos_correo"];
-if (isset($_REQUEST["datos_correo"])) {
+if(isset($_REQUEST["datos_correo"])) {
     $datos = json_decode($_REQUEST["datos_correo"], true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
+    if(json_last_error() !== JSON_ERROR_NONE) {
         $resp["message"] = "error en la cadena json";
         echo json_encode($resp);
         die();
@@ -53,20 +56,20 @@ if($datos_funcionario["numcampos"]) {
 //echo json_encode($resp); die();
 
 $radicados = 0;
-foreach ($datos as $datos_correo) {
+foreach($datos as $datos_correo) {
     $id_correo = registar_correo($datos_correo);
 
     $datos_factura = procesar_factura($datos_correo["adjuntos"]);
-    if (!empty($datos_factura)) {
+    if(!empty($datos_factura)) {
         $datos_factura["fk_datos_correo"] = $id_correo;
         $datos_factura["idgrupo"] = "'" . $datos_correo["idgrupo"] . "'";
         $nombres_anexos = array();
-        /*foreach ($datos_correo["adjuntos"] as $archivo) {
-            $nombres = preg_split('/___/', $archivo);
-            if (!empty($nombres) && count($nombres) > 1) {
-                $nombres_anexos = $nombres[1];
-            }
-        }*/
+        /* foreach ($datos_correo["adjuntos"] as $archivo) {
+          $nombres = preg_split('/___/', $archivo);
+          if (!empty($nombres) && count($nombres) > 1) {
+          $nombres_anexos = $nombres[1];
+          }
+          } */
 
         $datos_factura["anexos"] = "'" . implode(",", $datos_correo["adjuntos"]) . "'";
 
@@ -99,11 +102,11 @@ die();
 
 function procesar_factura($adjuntos) {
     $archivo_face = null;
-    foreach ($adjuntos as $archivo) {
+    foreach($adjuntos as $archivo) {
         $es = file_exists($archivo);
         $ext_arch = pathinfo($archivo, PATHINFO_EXTENSION);
 
-        if (preg_match("/xml/i", $ext_arch) && $es) {
+        if(preg_match("/xml/i", $ext_arch) && $es) {
             $archivo_face = $archivo;
             break;
         }
@@ -111,7 +114,7 @@ function procesar_factura($adjuntos) {
 
     $datos_factura = array();
 
-    if (!empty($archivo_face)) {
+    if(!empty($archivo_face)) {
         $factura = new FacturaXML(array(
             "archivo" => $archivo_face
         ));
@@ -120,10 +123,10 @@ function procesar_factura($adjuntos) {
         $datos_factura["fecha_factura"] = fecha_db_almacenar($factura->fechaExpedicion(), "Y-m-d H:i:s");
 
         $proveedor = $factura->datosProveedor();
-        if (is_array($proveedor)) {
+        if(is_array($proveedor)) {
             $info = array();
-            foreach ($proveedor as $key => $value) {
-                switch ($key) {
+            foreach($proveedor as $key => $value) {
+                switch($key) {
                     case "identificacion":
                         $datos_factura["nit_proveedor"] = "'$value'";
                         break;
@@ -150,7 +153,7 @@ function procesar_factura($adjuntos) {
                         break;
                 }
             }
-            if (!empty($info)) {
+            if(!empty($info)) {
                 $datos_factura["info_proveedor"] = "'" . implode(",", $info) . "'";
             }
         } else {
@@ -208,7 +211,7 @@ function radicar_correo($idgrupo) {
     global $ruta_db_superior, $conn;
     include_once ($ruta_db_superior . "class_transferencia.php");
     $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $idgrupo . "' and iddoc_rad=0", "", $conn);
-    if ($datos["numcampos"]) {
+    if($datos["numcampos"]) {
         $tabla = "ft_correo_saia";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
         $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
@@ -243,9 +246,9 @@ function radicar_correo($idgrupo) {
 
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
-        if ($iddoc) {
+        if($iddoc) {
             $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
-            if ($ok["numcampos"]) {
+            if($ok["numcampos"]) {
                 $update_ok = "UPDATE dt_datos_correo SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_correo=" . $datos[0]["iddt_datos_correo"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT");
             } else {
@@ -286,7 +289,7 @@ function mover_correo_buzon($info_correo) {
 function radicar_factura($datos) {
     global $ruta_db_superior, $conn;
     include_once ($ruta_db_superior . "class_transferencia.php");
-    if (!empty($datos)) {
+    if(!empty($datos)) {
         $tabla = "ft_factura_electronica";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
         $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
@@ -323,9 +326,9 @@ function radicar_factura($datos) {
 
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
-        if ($iddoc) {
+        if($iddoc) {
             $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
-            if ($ok["numcampos"]) {
+            if($ok["numcampos"]) {
                 $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT: $update_ok");
             } else {
@@ -347,31 +350,31 @@ function radicar_factura($datos) {
 
 function guardar_anexos($datos, $idformato, $iddoc) {
     global $conn, $ruta_db_superior;
-    require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
+    require_once($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
     //$datos = busca_filtro_tabla("anexos,numero", "ft_factura_electronica,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
     $vector = $datos;
     $total = count($vector);
-    for ($i = 0; $i < $total; $i++) {
+    for($i = 0; $i < $total; $i++) {
         //$ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
         $ruta_real = $vector[$i];
         //print_r($ruta_real);
-        if (file_exists($ruta_real)) {
+        if(file_exists($ruta_real)) {
             $dir_anexos = selecciona_ruta_anexos2($iddoc, "archivos");
 
             $nombres = preg_split('/___/', basename($ruta_real));
-             if (!empty($nombres) && count($nombres) > 1) {
+            if(!empty($nombres) && count($nombres) > 1) {
                 $nombre_anexo = $nombres[1];
-             } else {
-                 $nombre_anexo = basename($ruta_real);
-             }
+            } else {
+                $nombre_anexo = basename($ruta_real);
+            }
 
-             $archivo = uniqid() . "_" . $nombre_anexo;
+            $archivo = uniqid() . "_" . $nombre_anexo;
 
             $almacenamiento = new SaiaStorage("archivos");
-            $resultado = $almacenamiento -> copiar_contenido_externo($ruta_real, $dir_anexos . $archivo);
-            if ($resultado) {
+            $resultado = $almacenamiento->copiar_contenido_externo($ruta_real, $dir_anexos . $archivo);
+            if($resultado) {
                 $dir_anexos_1 = array(
-                    "servidor" => $almacenamiento -> get_ruta_servidor(),
+                    "servidor" => $almacenamiento->get_ruta_servidor(),
                     "ruta" => $dir_anexos . $archivo
                 );
                 $datos_anexo = pathinfo($ruta_real);
@@ -379,19 +382,19 @@ function guardar_anexos($datos, $idformato, $iddoc) {
                 $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $archivo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
                 phpmkr_query($sql) or die("Error al registrar el anexo: $sql");
                 $idanexo = phpmkr_insert_id();
-                if ($idanexo) {
+                if($idanexo) {
                     $sql1 = "insert into permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_total)values('" . $idanexo . "', '" . $_SESSION["idfuncionario"] . "', 'lem', 'l')";
                     phpmkr_query($sql1) or die("Error al registrar los permisos del anexo: $sql1");
                 }
             }
         }
-
     }
     return;
 }
 
-function limpiarContenido($texto){
+function limpiarContenido($texto) {
     $textoLimpio = preg_replace('([^ A-Za-z0-9_-ñÑ,&;@\.\-])', '', utf8_decode($texto));
     return $textoLimpio;
 }
+
 ?>
