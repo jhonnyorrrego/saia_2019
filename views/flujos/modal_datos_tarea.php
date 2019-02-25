@@ -49,7 +49,7 @@ $tabs = [
         "url" => "tab_req_out.php", "href" => "salida", "icon" => "fa fa-sign-out",
     ],
     [
-        "url" => "tab5.php", "href" => "anexos", "icon" => "fa fa-paperclip",
+        "url" => "tab_anexos.php", "href" => "anexos", "icon" => "fa fa-paperclip",
     ],
     [
         "url" => "tab_funcionarios_actividad.php", "href" => "participantes", "icon" => "fa fa-users",
@@ -85,14 +85,15 @@ if($tipoElemento != TipoElemento::TIPO_TAREA) {
 		<?= librerias_arboles_ft("2.24")?>
 
         <?= bootstrapTable() ?>
+        <?= bootstrapTableEditable() ?>
 
 	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
         <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
 
-		<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
+		<!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
 
-        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>  -->
 
     </head>
     <body>

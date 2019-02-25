@@ -1,6 +1,6 @@
 <?php
 
-class Elemento extends Model {
+class Elemento extends Model implements IAnexos {
 
 	use TFlujo;
 
@@ -66,5 +66,23 @@ class Elemento extends Model {
 			"bpmn_id" => $name
 		]);
 	}
+
+	public function findActiveFiles($params) {
+	    $sql = <<<SQL
+            select a.*
+            from anexo a
+            join wf_anexo_actividad af
+                on a.idanexo = af.fk_anexo
+            join wf_elemento f
+                on af.fk_actividad = f.idelemento
+            where
+                f.idelemento = $this->idelemento and a.eliminado = 0
+            order by $params->order
+SQL;
+	    $records = StaticSql::search($sql, $params->offset, $params->limit);
+
+	    return self::convertToArray($records);
+	}
+
 }
 
