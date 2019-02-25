@@ -182,7 +182,7 @@ $(function () {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");
         } else if (sizeDocument == 'xl') {
-            sizeImg = sizeImg * 1;
+            sizeImg = sizeImg * 1.1;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
 
