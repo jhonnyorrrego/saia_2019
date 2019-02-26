@@ -179,6 +179,5 @@ $(function () {
             sizeImg = sizeImg * 0.5;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
-
     }
 });
