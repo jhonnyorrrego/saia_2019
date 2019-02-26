@@ -361,16 +361,6 @@ class Imprime_Pdf {
 				$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this -> documento[0]["iddocumento"];
 				phpmkr_query($sqlu) or die($sqlu);
 			}
-
-			if ($this -> tipo_salida == "F") {
-				$parteUrl = "";
-				if ($_REQUEST["actualizar_pdf"] == 1) {
-					$parteUrl = "&actualizar_pdf=1";
-				}
-				if (!isset($_REQUEST["no_redirecciona"])) {
-					redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
-				}
-			}
 		}
 	}
 
