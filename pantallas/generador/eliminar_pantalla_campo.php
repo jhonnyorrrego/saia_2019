@@ -51,7 +51,8 @@ echo librerias_notificaciones();
 $(document).ready(function(){
 	var formulario = $("#editar_pantalla_campo");
 	formulario.validate();
-	$("#enviar_formulario_saia").click(function(){
+	$("#enviar_formulario_saia").click(function(event){
+		event.preventDefault();
 		if(formulario.valid()){
 			$('#cargando_enviar').html("<div id='icon-cargando'></div>Eliminando");
 			$(this).attr('disabled', 'disabled');
