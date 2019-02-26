@@ -163,7 +163,6 @@ $(function () {
 
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
-        console.log(sizeDocument, widthAct)
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
@@ -176,7 +175,7 @@ $(function () {
             sizeImg = sizeImg * 0.7;
             $("#logoEmpresa").css("width", sizeImg + "%");
         } else if (sizeDocument == 'xl' && widthAct > 10) {
-            sizeImg = sizeImg * 0.5;
+            sizeImg = sizeImg * 1.1;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
     }
