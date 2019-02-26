@@ -26,13 +26,6 @@ if ($_REQUEST['idformato']) {
   if ($formato[0]["tiempo_autoguardado"] > 3000) {
     $formato[0]["tiempo_autoguardado"] = $formato[0]["tiempo_autoguardado"] / 60000;
   }
-  $documentacion_formato = $formato[0]["documentacion"];
-  if($documentacion_formato){
-    $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
-    if ($anexos_formato["numcampos"]) {
-      $ruta = $anexos_formato[0]["ruta"];
-    }
-  }
   
 	//$formato = json_encode($formato);
   if ($cod_proceso_pertenece) {
