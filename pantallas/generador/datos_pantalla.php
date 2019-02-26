@@ -26,7 +26,11 @@ if ($_REQUEST['idformato']) {
   if ($formato[0]["tiempo_autoguardado"] > 3000) {
     $formato[0]["tiempo_autoguardado"] = $formato[0]["tiempo_autoguardado"] / 60000;
   }
-  
+  $funcionPredeterminada = strpos($formato[0]['funcion_predeterminada'], "1");
+  $checkResponsables = '';
+  if($funcionPredeterminada !== false){
+    $checkResponsables = "checked";
+  }
 	//$formato = json_encode($formato);
   if ($cod_proceso_pertenece) {
     $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
@@ -422,7 +426,7 @@ if ($formato["numcampos"]) {
  <div class="control-group">
     <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
     <div class="controls">
-      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
+      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" <?php echo $checkResponsables; ?> data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
     </div>
   </div>
 
