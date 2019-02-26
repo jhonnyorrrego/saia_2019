@@ -166,8 +166,8 @@ $(function () {
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
-            sizeImg = sizeImg * 3;
-            $("#logoEmpresa").css("width", sizeImg + "%");
+            sizeImg = sizeImg * 2.5;
+            $("#logoEmpresa").css("width", sizeImg + "px");        
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;

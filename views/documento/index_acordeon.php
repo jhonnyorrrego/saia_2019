@@ -32,7 +32,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="col-12" id="content" style="overflow: auto;"></div>
         </div>
     </div>
-    <script data-baseurl="<?= $ruta_db_superior ?>" data-params='<?= json_encode($_REQUEST) ?>''>
+    <script data-baseurl="<?= $ruta_db_superior ?>" data-params='<?= json_encode($_REQUEST) ?>'>
         $(function(){
             let baseUrl = $('script[data-baseurl]').data('baseurl');
             let params = $('script[data-params]').data('params');
