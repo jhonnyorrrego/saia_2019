@@ -352,7 +352,6 @@ echo librerias_validar_formulario("11");
 			<td class="encabezado" title="Ventanilla de Radicaci6oacute;n del funcionario."><span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion">
-					<option value=''>Seleccione...</option>
 					<?php		echo($options_ventanilla_radicacion); ?>
 				</select> </span></td>
 		</tr>
@@ -420,9 +419,12 @@ echo librerias_validar_formulario("11");
 					required : true,
 					email: true
 				},
-				x_fecha_ingreso:{
-					required : true
-				}
+                x_fecha_ingreso:{
+                    required : true
+                },
+                x_ventanilla_radicacion:{
+                    required : true
+                }
 			},
 			submitHandler: function(form) {
 				<?php encriptar_sqli("funcionarioedit");?>
