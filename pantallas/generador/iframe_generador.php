@@ -30,6 +30,9 @@ if ($_REQUEST["idformato"]) {
 <html>
 <head>
 <title>Generador Pantallas SAIA</title>
+<style>
+
+</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />    
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -68,7 +71,9 @@ if ($_REQUEST["idformato"]) {
 		</div>
 		<script> 
 		$(document).ready(function(){
+		
 			$("iframe").height($(window).height()-5);
+				
 		}); 
 		</script>
 	</body>
