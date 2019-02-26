@@ -25,7 +25,7 @@ function procesar_datetime($idcampo='',$seleccionado='',$accion='',$campo=''){
 	else{
 		$datos[1]=$seleccionado;
 	}
-	return '<input data-format="'.$datos[0].'" type="text" name="'.$campo["nombre"].'" id="'.$campo["nombre"].'" value="'.$datos[1].'" readonly>
+	return '<input data-format="'.$datos[0].'" type="text" name="'.$campo["nombre"].'" id="'.$campo["nombre"].'" value="'.$datos[1].'" readonly class="span5">
 	<script type="text/javascript">
 $(document).ready(function(){		
 	$("#'.$campo["nombre"].'").datetimepicker({

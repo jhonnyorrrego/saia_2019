@@ -1139,10 +1139,8 @@ function enrutar_documento($url = "", $documentId)
     }
 
     if (!$url && $documentId) {
-        $Documento = new Documento($documentId);
         $params = http_build_query([
-            'documentId' => $Documento->getPK(),
-            'format' => strtolower($Documento->plantilla)
+            'documentId' => $documentId,
         ]);
         $url = $ruta_db_superior . "views/documento/index_acordeon.php?" . $params;
 

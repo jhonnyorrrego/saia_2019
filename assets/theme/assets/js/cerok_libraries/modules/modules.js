@@ -4,6 +4,7 @@ class Modules {
             this.find(0);
         }else{
             console.error('invalid arguments');
+            Session.close();
         }
     }
 

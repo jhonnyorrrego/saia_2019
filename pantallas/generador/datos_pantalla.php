@@ -357,7 +357,7 @@ if ($formato["numcampos"]) {
     </div> <!-- FIN COLUMNA IZQUIERDA -->
 
   	<?php
-  $margen_defecto = array(2.5, 2.5, 2.5, 2.5);
+  $margen_defecto = array(2.5, 2.5, 1.9, 2.5);
   if ($formato["numcampos"] && !empty($formato[0]["margenes"])) {
     $margen_defecto = explode(",", $formato[0]["margenes"]);
     $margen_defecto = array_map(function ($val) {
@@ -516,8 +516,8 @@ $("document").ready(function(){
 		var nombre_formato=$("#nombre_formato").val();
 	}
 
-	$("#enviar_datos_formato").click(function() {
-
+	$("#enviar_datos_formato").click(function(event) {
+    event.preventDefault();
 		if(formulario.valid()) {
 
 			var buttonAcep = $(this);

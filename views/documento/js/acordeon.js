@@ -1,12 +1,11 @@
 $(function () {
-    let key = localStorage.getItem('key');
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
     let sizeFont = 0;
+
     (function init() {
         getFormatInformation();
         loadHeader();
-
     })();
 
     $(document).off("click", ".new_add");
@@ -67,7 +66,6 @@ $(function () {
             $('#view_document').load(route, function () {
                 sizeFont = $('#documento').find("p").css("font-size")
                 setSize();
-
             });
         }, 'json');
     }
@@ -95,7 +93,7 @@ $(function () {
 
     function setValores(sizeDocument) {
         var xsFont = parseFloat(sizeFont);
-        
+
         if (sizeDocument == 'sm') {
             var widthIni = 668;
         } else if (sizeDocument == 'xs') {
@@ -111,7 +109,7 @@ $(function () {
             $('#documento').css("font-size", widthAct + "px");
             $('#documento').find("p").css("font-size", widthAct + "px")
         }
-       
+
         $('#documento').find("img")
 
         var contenidoImg = $("#documento").find("img:not('#qr,#logoEmpresa')");
@@ -121,7 +119,7 @@ $(function () {
         redimensionarLgEmpresa(sizeDocument, widthAct);
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));
-            
+
             if (sizeImg >= 50 && sizeDocument != 'xl') {
                 sizeImg = sizeImg * 1.1;
             } else if (sizeImg <= 50 && sizeDocument == 'xl' && widthAct < '10') {
@@ -143,7 +141,6 @@ $(function () {
         });
     }
     function redimensionarQr(sizeDocument, widthAct) {
-        console.log(sizeDocument);
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
         if (sizeDocument == 'xs' && widthAct < '8') {
@@ -158,12 +155,12 @@ $(function () {
             $("#qr").css("height", sizeH + "%");
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
-            sizeImg = sizeImg * 0.4;
+            sizeImg = sizeImg * 0.9;
             sizeH = sizeH * 0.4;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         }
-        
+
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
@@ -174,6 +171,9 @@ $(function () {
         }
         else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;
+            $("#logoEmpresa").css("width", sizeImg + "%");
+        } else if (sizeDocument == 'xl') {
+            sizeImg = sizeImg * 1.1;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
 
