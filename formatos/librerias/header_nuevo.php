@@ -101,8 +101,8 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
     <?php
         leido($_SESSION["usuario_actual"], $iddocumento);
 
-        if (!$formato[0]["item"]) {
-            if (isset($_REQUEST["vista"]) && $_REQUEST["vista"]) {
+        if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
+            if (!empty($_REQUEST["vista"])) {
                 $vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
                 $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
             } else {
