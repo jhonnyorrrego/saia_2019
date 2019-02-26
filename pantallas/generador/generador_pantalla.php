@@ -50,8 +50,8 @@ if ($_REQUEST["idformato"]) {
 }
 
 ?>
+<!DOCTYPE html>
 <html>
-
 <head>
     <title>Generador Pantallas SAIA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

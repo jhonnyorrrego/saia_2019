@@ -465,26 +465,22 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            if(!$formato[0]['mostrar_pdf']){
-                $validacion_tipo = '<?php if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] != 5): ?>';
-                $validacion_tipo.= '<!DOCTYPE html>
-                            <html>
-                                <head>
-                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-                                    <meta charset="utf-8" />
-                                    <meta name="viewport"
-                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-                                    <meta name="apple-mobile-web-app-capable" content="yes">
-                                    <meta name="apple-touch-fullscreen" content="yes">
-                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-                                    <meta content="" name="description" />
-                                    <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-                $validacion_tipo.= '<?php else: ?>';
-                $validacion_tipo.= $this->generar_mostrar_pdf();
-                $validacion_tipo.= '<?php endif; ?>';
-            }else{
-                $validacion_tipo = $this->generar_mostrar_pdf();
-            }
+            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
+            $validacion_tipo.= '<!DOCTYPE html>
+                        <html>
+                            <head>
+                                <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+                                <meta charset="utf-8" />
+                                <meta name="viewport"
+                                    content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                <meta name="apple-mobile-web-app-capable" content="yes">
+                                <meta name="apple-touch-fullscreen" content="yes">
+                                <meta name="apple-mobile-web-app-status-bar-style" content="default">
+                                <meta content="" name="description" />
+                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo.= '<?php else: ?>';
+            $validacion_tipo.= $this->generar_mostrar_pdf();
+            $validacion_tipo.= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -510,31 +506,28 @@ class GenerarFormato
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
         
-        global $conn;
-        $iddocumento = $_REQUEST["iddoc"];
-        $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=".$iddocumento, "", $conn);
-        if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-            $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&rnd=" . rand(0, 100);
-        } else {
-            if ($formato[0]["mostrar_pdf"] == 1) {
-                $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&actualizar_pdf=1&rnd=" . rand(0, 100);
-            } else if ($formato[0]["mostrar_pdf"] == 2) {
-                $ruta = "/pantallas/documento/visor_documento.php?pdf_word=1&iddoc={$iddocumento}&rnd=" . rand(0, 100);
-            }
+        $documentId = $_REQUEST["iddoc"];
+        $sql = "select b.pdf, a.mostrar_pdf,a.exportar from formato a, documento b where lower(b.plantilla)= lower(a.nombre) and b.iddocumento={$documentId}";
+        $record = StaticSql::search($sql);
+
+        $params = [
+            "iddoc" => $documentId,
+            "exportar" => $record[0]["exportar"],
+            "ruta" => base64_encode($record[0]["pdf"]),
+            "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
+        ];
+
+        if(($record[0]["mostrar_pdf"] == 1 && !$record[0]["pdf"]) || $_REQUEST["actualizar_pdf"]){
+            $params["actualizar_pdf"] = 1;
+        }else if($record[0]["mostrar_pdf"] == 2){
+            $params["pdf_word"] = 1;
         }
         
-        $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . $ruta . "&idfunc=" . $idfuncionario;
-        $ch = curl_init();
-        if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        echo curl_exec($ch);
-        curl_close($ch);
-        ?>';
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url.= http_build_query($params);
+
+        ?>
+        <iframe width="100%" frameborder="0" onload="this.height = window.innerHeight - 20" src="<?= $url ?>"></iframe>';
 
         return $string;
     }

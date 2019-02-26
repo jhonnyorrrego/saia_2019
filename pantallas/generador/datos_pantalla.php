@@ -26,14 +26,11 @@ if ($_REQUEST['idformato']) {
   if ($formato[0]["tiempo_autoguardado"] > 3000) {
     $formato[0]["tiempo_autoguardado"] = $formato[0]["tiempo_autoguardado"] / 60000;
   }
-  $documentacion_formato = $formato[0]["documentacion"];
-  if($documentacion_formato){
-    $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
-    if ($anexos_formato["numcampos"]) {
-      $ruta = $anexos_formato[0]["ruta"];
-    }
+  $funcionPredeterminada = strpos($formato[0]['funcion_predeterminada'], "1");
+  $checkResponsables = '';
+  if($funcionPredeterminada !== false){
+    $checkResponsables = "checked";
   }
-  
 	//$formato = json_encode($formato);
   if ($cod_proceso_pertenece) {
     $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
@@ -357,7 +354,7 @@ if ($formato["numcampos"]) {
     </div> <!-- FIN COLUMNA IZQUIERDA -->
 
   	<?php
-  $margen_defecto = array(2.5, 2.5, 2.5, 2.5);
+  $margen_defecto = array(2.5, 2.5, 1.9, 2.5);
   if ($formato["numcampos"] && !empty($formato[0]["margenes"])) {
     $margen_defecto = explode(",", $formato[0]["margenes"]);
     $margen_defecto = array_map(function ($val) {
@@ -429,7 +426,7 @@ if ($formato["numcampos"]) {
  <div class="control-group">
     <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
     <div class="controls">
-      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
+      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" <?php echo $checkResponsables; ?> data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
     </div>
   </div>
 
@@ -516,8 +513,8 @@ $("document").ready(function(){
 		var nombre_formato=$("#nombre_formato").val();
 	}
 
-	$("#enviar_datos_formato").click(function() {
-
+	$("#enviar_datos_formato").click(function(event) {
+    event.preventDefault();
 		if(formulario.valid()) {
 
 			var buttonAcep = $(this);
