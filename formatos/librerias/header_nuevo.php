@@ -65,39 +65,42 @@ $color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'
 $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
 ?>
 <html class="f-12">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <?php if ($color["numcampos"]) : ?>
-        <style type="text/css">
-            .phpmaker{
-                font-family: Verdana,Tahoma,arial;
-                color:#000000;
-            }
-            .encabezado{
-                background-color: <?= $color[0]["valor"] ?>;
-                color:white;
-                padding: 10px;
-                text-align: left;
-            }
-            .encabezado_list{
-                background-color: <?= $color[0]["valor"] ?>;
-                color:white;
-                vertical-align:middle;
-                text-align: center;
-                font-weight: bold;
-            }
-        </style>
+    <style type="text/css">
+    .phpmaker {
+        font-family: Verdana, Tahoma, arial;
+        color: #000000;
+    }
+
+    .encabezado {
+        background-color: <?=$color[0]["valor"] ?>;
+        color: white;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .encabezado_list {
+        background-color: <?=$color[0]["valor"] ?>;
+        color: white;
+        vertical-align: middle;
+        text-align: center;
+        font-weight: bold;
+    }
+    </style>
     <?php endif; ?>
     <?php if ($fuente["numcampos"]) : ?>
-        <style>
-            #documento > table tr td div p span {
-                font-size : <?= $formato[0]["font_size"] . 'px' ?>;
-                font-family : <?= $fuente[0]["valor"] ?>
-            }
-        </style>
-    <?php endif; ?>  
+    <style>
+    #documento>table tr td div p span {
+        font-size: <?=$formato[0]["font_size"] . 'px'?>;
+        font-family: <?=$fuente[0]["valor"] ?>
+    }
+    </style>
+    <?php endif; ?>
     <?php
         leido($_SESSION["usuario_actual"], $iddocumento);
 
@@ -111,10 +114,11 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         } 
     ?>
     <script>
-        var ancho =  "<?= $ancho_paginador ?>";
-        var alto =  "<?= $alto_paginador ?>";
+    var ancho = "<?= $ancho_paginador ?>";
+    var alto = "<?= $alto_paginador ?>";
     </script>
-    <style type="text/css">
+    <?php if(!$_REQUEST['tipo'] || ($_REQUEST['tipo'] && $_REQUEST['tipo'] != 5)): ?>
+        <style type="text/css">
         .page_border {
             border: 1px solid #CACACA;
             margin-bottom: 8px;
@@ -123,34 +127,38 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
             -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
             box-shadow: 2px 2px 8px #c6c6c6;
         }
+        </style>
+    <?php endif; ?>
 
-        .page_margin_top,
-        .page_content,
-        .page_margin_bottom{
-            overflow:hidden;
-            margin-left: 5%;
-            margin-right: 5%;
-            margin-top: 5%;
-            margin-bottom: 5%;
-        }
+    <style type="text/css">
+    .page_margin_top,
+    .page_content,
+    .page_margin_bottom {
+        overflow: hidden;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 5%;
+        margin-bottom: 5%;
+    }
 
-        .page_margin_top {
-            height: <?= $tam_pagina["margen_superior"] . 'px' ?>;
-        }
+    .page_margin_top {
+        height: <?=$tam_pagina["margen_superior"] . 'px'?>;
+    }
 
-        .page_margin_bottom {
-            height: <?= $tam_pagina["margen_inferior"] . 'px' ?>;
-        }
+    .page_margin_bottom {
+        height: <?=$tam_pagina["margen_inferior"] . 'px'?>;
+    }
     </style>
 </head>
+
 <body>
-<div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
-    <div id="documento" class="row p-0 m-0">
-        <div id="pag-0" class="col-12 page_border bg-white">
-            <div class="page_margin_top mb-0" id="doc_header">
-                <?php if ($encabezado["numcampos"]) {
+    <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
+        <div id="documento" class="row p-0 m-0">
+            <div id="pag-0" class="col-12 page_border bg-white">
+                <div class="page_margin_top mb-0" id="doc_header">
+                    <?php if ($encabezado["numcampos"]) {
                     echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], 0);
                 } ?>
-            </div>
-            <div id="pag_content-0" class="page_content">
-                <div id="page_overflow">
+                </div>
+                <div id="pag_content-0" class="page_content">
+                    <div id="page_overflow">
