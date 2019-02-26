@@ -163,17 +163,20 @@ $(function () {
 
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
+        console.log(sizeDocument, widthAct)
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
             sizeImg = sizeImg * 2.5;
             $("#logoEmpresa").css("width", sizeImg + "px");        
-        }
-        else if (sizeDocument == 'sm' && widthAct < '8') {
+        } else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");
-        } else if (sizeDocument == 'xl') {
-            sizeImg = sizeImg * 1.1;
+        } else if (sizeDocument == 'xl' && widthAct < 10) {
+            sizeImg = sizeImg * 0.7;
+            $("#logoEmpresa").css("width", sizeImg + "%");
+        } else if (sizeDocument == 'xl' && widthAct > 10) {
+            sizeImg = sizeImg * 0.5;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
 
