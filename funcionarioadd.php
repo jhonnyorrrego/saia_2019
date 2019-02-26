@@ -227,8 +227,7 @@ switch ($sAction) {
 			<tr>
 				<td class="encabezado" title="Ventanilla de Radicaci6oacute;n del funcionario."><span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N</span></td>
 				<td bgcolor="#F5F5F5"><span class="phpmaker">					
-					<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion">
-						<option value=''>Seleccione...</option>
+					<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion" class="required">
 						<?php
 							$ventanilla_radicacion=busca_filtro_tabla("idcf_ventanilla,nombre","cf_ventanilla","estado=1","",$conn);
 							$options_ventanilla_radicacion='';
