@@ -19,7 +19,9 @@
 		"mpdf/mpdf": "^7.1",
 		"setasign/fpdf": "^1.8",
 		"setasign/fpdi": "v1.6",
-		"setasign/fpdi-tcpdf": "v1.6"
+		"setasign/fpdi-tcpdf": "v1.6",
+		"phpoffice/phpspreadsheet": "^1.6",
+		"phpoffice/phpexcel": "^1.8"
 	},
 	"extra": {
 		"class": "Corley\\Composer\\MyHook"

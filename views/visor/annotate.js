@@ -401,7 +401,7 @@
 			//find
 			(function () {
 				$('.toolbar .search').on('click', function () {
-					if($('#search_content').is(':hidden')){console.log('toggle')
+					if($('#search_content').is(':hidden')){
 						$('.search_toggler').toggleClass('d-none');
 					}else{
 						let string = $('#search_content').val();
