@@ -144,7 +144,7 @@ $(function () {
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
         if (sizeDocument == 'xs' && widthAct < '8') {
-            sizeImg = sizeImg * 0.7;
+            sizeImg = sizeImg * 1;
             sizeH = sizeH * 0.6;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
@@ -163,6 +163,7 @@ $(function () {
 
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
+        console.log(sizeDocument, widthAct)
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
@@ -172,7 +173,7 @@ $(function () {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");
         } else if (sizeDocument == 'xl' && widthAct < 10) {
-            sizeImg = sizeImg * 0.7;
+            sizeImg = sizeImg * 1.3;
             $("#logoEmpresa").css("width", sizeImg + "%");
         } else if (sizeDocument == 'xl' && widthAct > 10) {
             sizeImg = sizeImg * 1.1;
