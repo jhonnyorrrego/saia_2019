@@ -523,7 +523,7 @@ class GenerarFormato
             $params["pdf_word"] = 1;
         }
         
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
         $url.= http_build_query($params);
 
         ?>

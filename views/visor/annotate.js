@@ -101,11 +101,11 @@
 			var adapter = new PDFJSAnnotate.LocalStoreAdapter();
 			var PAGE_HEIGHT = void 0;
 			var NUM_PAGES = 0;
-			var route = findRoute(params, baseUrl);
+			var route = params.pdfRoute ? params.pdfRoute : findRoute(params, baseUrl);
 			var RENDER_OPTIONS = {
 				documentId: baseUrl + route,
 				pdfDocument: null,
-				scale: 1.33,
+				scale: 1,
 				rotate: 0
 			};
 
@@ -238,6 +238,13 @@
 			(function () {
 				createStorageManager(RENDER_OPTIONS.documentId);
 				render();
+			})();
+
+			// Scale/rotate
+			(function () {
+				document.getElementById('goto_viewer').addEventListener('click', function(){
+					window.history.back('-1');
+				})
 			})();
 
 			// Toolbar buttons
