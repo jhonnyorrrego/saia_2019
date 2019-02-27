@@ -1,6 +1,5 @@
-
 $(document).ready(function () {
-    var params = JSON.parse($('script[data-params]').attr('data-params'));
+    var params = $("#scriptResponsableExp").data("params");
     
     $('#newResponsable').select2({
         minimumInputLength: 4,

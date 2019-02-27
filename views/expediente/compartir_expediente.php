@@ -75,6 +75,4 @@ echo select2();
 
   </div>
 </div>
-    
-  <script data-params='<?=json_encode($params)?>'></script>
-  <script src="<?= $ruta_db_superior ?>views/expediente/js/compartir_expediente.js"></script>
+<script id="scriptCompartirExp" src="<?= $ruta_db_superior ?>views/expediente/js/compartir_expediente.js" data-params='<?=json_encode($params)?>'></script>

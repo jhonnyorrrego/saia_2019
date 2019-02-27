@@ -190,6 +190,4 @@ $params =[
         </form>
     </div>
 </div>
-
-<script data-params='<?=json_encode($params)?>'></script>
-<script src="<?= $ruta_db_superior ?>views/expediente/js/editar_expediente.js"></script>
+<script id="scriptEditExp" src="<?= $ruta_db_superior ?>views/expediente/js/editar_expediente.js" data-params='<?=json_encode($params)?>'></script>

@@ -199,10 +199,14 @@ abstract class Model extends StaticSql
             }
 
             $fields .= $attribute;
-            if (in_array($attribute, $dateAttributes)) {
-                $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
-            } else {
-                $values .= "'" . $value . "'";
+            if($value==="NULL"){
+                $values .= "NULL";
+            }else{
+                if (in_array($attribute, $dateAttributes)) {
+                    $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
+                } else {
+                    $values .= "'" . $value . "'";
+                }
             }
         }
 
@@ -444,8 +448,8 @@ abstract class Model extends StaticSql
                 $set .= ',';
             }
 
-            if ($value == "NULL") {
-                $set .= $attribute . "=" . $value;
+            if ($value === "NULL") {
+                $set .= $attribute . "=NULL";
             } else if (in_array($attribute, $dateAttributes)) {
                 $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {

@@ -1,6 +1,48 @@
 <?php
 class ExpedienteController
 {
+
+    /**
+     * Elimina definitivamente el expediente
+     *
+     * @param array $data : array con idexpediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+
+    public static function deleteDefExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+
+        if (!empty($data['idexpediente'])) {
+            $Expediente = new Expediente($data['idexpediente']);
+            if ($Expediente->estado == 0) {
+                $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
+                $instance = ExpedienteEli::findBySql($sql,true);
+                if ($instance) {
+                    $ExpedienteDel=$instance[0];
+                    $ExpedienteDel->fecha_accion=date("Y-m-d H:i:s");
+                    $ExpedienteDel->accion=1;
+                    if($ExpedienteDel->update()){
+                        $response['exito']=1;
+                        $response['message']='Se ha eliminado el expediente';
+                    }else{
+                        $response['message'] = 'se presento un error al eliminar definitivamente el expediente, intente de nuevo';
+                    }
+                } else {
+                    $response['message'] = 'No se puede eliminar definitivamente el expediente, contacte al administrador';
+                }
+            } else {
+                $response['message'] = 'El expediente NO se encuentra eliminado';
+            }
+        } else {
+            $response['message'] = 'Falta el identificador del expediente';
+        }
+        return ($response);
+    }
     /**
      * clasifica un documento a un expediente
      *
@@ -536,14 +578,14 @@ class ExpedienteController
     {
 
         $response = [
-            'exito' => 0,
+            'exito' => 1,
             'message' => 'Faltan los datos a procesar'
         ];
 
         if (!empty($data['idexpediente'])) {
             $Expediente = new Expediente($data['idexpediente']);
             if ($Expediente->estado == 1) {
-                $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
                 $exis = StaticSql::search($sql);
                 if (!$exis[0]['cant']) {
                     $ExpDel = new ExpedienteEli();
@@ -568,7 +610,7 @@ class ExpedienteController
                     $response['message'] = 'No se puede eliminar el expediente, contacte al administrador';
                 }
             } else {
-                $response['message'] = 'El expediente se encuentra inactivo';
+                $response['message'] = 'El expediente se encuentra eliminado';
             }
         } else {
             $response['message'] = 'Falta el identificar del expediente';
@@ -601,18 +643,20 @@ class ExpedienteController
                         if ($Expadre->estado_cierre == 2) {
                             $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra cerrado';
                         } else {
-                            $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                            $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
                             $instance = ExpedienteEli::findBySql($sql, true);
                             if ($instance) {
                                 $ExpDel = $instance[0];
-                                $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
+                                $ExpDel->fecha_accion = date('Y-m-d H:i:s');
+                                $ExpDel->accion=2;
                                 if ($ExpDel->update()) {
                                     $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE fk_expediente_eli={$ExpDel->getPK()}";
                                     if (StaticSql::query($sql)) {
                                         $response['exito'] = 1;
                                         $response['message'] = 'Expediente restaurado';
                                     } else {
-                                        $ExpDel->fecha_restauracion = 'NULL';
+                                        $ExpDel->fecha_accion = 'NULL';
+                                        $ExpDel->accion = 'NULL';
                                         $ExpDel->update();
                                         $response['message'] = 'Error al restaurar el expediente';
                                     }
@@ -668,6 +712,9 @@ class ExpedienteController
                     'responsable' => $_SESSION['idfuncionario'],
                     'tomo_padre' => $tomoPadre,
                     'tomo_no' => $cant + 1,
+                    'estado_cierre'=>1,
+                    'fecha_cierre'=>'NULL',
+                    'funcionario_cierre'=>'NULL',
                     'cod_arbol' => 0
                 ];
                 $ExpTomo->setAttributes($attributes);

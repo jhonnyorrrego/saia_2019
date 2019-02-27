@@ -80,6 +80,18 @@ class Caja extends Model
         $data = $this->getRelationFk('Funcionario', 'propietario');
         return $data ? $data->nombres . ' ' . $data->apellidos : '';
     }
+
+    /**
+     * Obtiene el icono de la caja
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-dropbox';
+    }
+
     /**
      * Retorna el nombre del funcionario responsable
      *
@@ -144,13 +156,25 @@ class Caja extends Model
      * Cuenta los expedientes que existen dentro de una caja
      * incluye expedientes inferiores
      *
-     * @param integer $tipoAg : identificador del agrupador (expediente,separador, serie, dependencia)
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function countAllExpediente() : int
     {
         return Expediente::countAllExpedienteCaja($this->idcaja);
+    }
+
+
+    /**
+     * Cuenta los expedientes que existen dentro de una caja
+     * NO incluye expedientes inferiores     
+     * 
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countExpediente() : int
+    {
+        return Expediente::countExpedienteCaja($this->idcaja);
     }
 
     /**
