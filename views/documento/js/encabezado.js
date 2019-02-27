@@ -120,6 +120,14 @@ $(function () {
         })
     });
 
+    $('#actualizar_pdf').on('click', function(){
+        let route = $('#acordeon_container').attr('data-location');
+        route += '&actualizar_pdf=1';
+
+        $('#view_document').load(baseUrl + route);
+    });
+
+    ////////// FUNCIONES //////////
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             toggleGoBack();

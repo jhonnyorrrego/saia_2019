@@ -64,6 +64,7 @@ $(function () {
         }, function (response) {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route, function () {
+                $('#acordeon_container').attr('data-location', response.data.ruta_mostrar);
                 sizeFont = $('#documento').find("p").css("font-size")
                 setSize();
             });
