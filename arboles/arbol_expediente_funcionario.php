@@ -91,14 +91,12 @@ class ExpedienteFuncionario
                     'fk_serie' => $Expediente->fk_serie,
                     'fk_entidad_serie' => $Expediente->fk_entidad_serie
                 ];
-                
-                if(!$cerrado){
-                    $item["lazy"] = $Expediente->hasChild();
-                    if ($item["lazy"]) {
-                        $item["children"] = $this->llenaExpediente($item['key']);
-                    } else if ($Expediente->agrupador == 0) {
-                        $item["children"] = $this->llenaTipoDocumental($Expediente);
-                    }
+
+                $item["lazy"] = $Expediente->hasChild();
+                if ($item["lazy"]) {
+                    $item["children"] = $this->llenaExpediente($item['key']);
+                } else if ($Expediente->agrupador == 0) {
+                    $item["children"] = $this->llenaTipoDocumental($Expediente);
                 }
                 $objetoJson[] = $item;
             }
@@ -142,4 +140,5 @@ class ExpedienteFuncionario
     }
 
 }
+
 ?>
