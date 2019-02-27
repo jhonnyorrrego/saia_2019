@@ -21,10 +21,6 @@ $params = [
 	'responsable' => $Caja->responsable,
 	'baseUrl' => $ruta_db_superior
 ];
-
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo validate();
-echo select2();
 ?>
 <form id="formularioCaja" name="formularioCaja" class="form-horizontal">
 	<div class="form-group row">

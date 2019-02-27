@@ -15,6 +15,9 @@ if (!$idcaja) {
 	return;
 }
 require_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . 'assets/librerias.php';
+echo validate();
+echo select2();
 
 $Caja = new Caja($idcaja);
 $tabs = [
@@ -59,7 +62,7 @@ if($Caja->isResponsable()){
             let tab = $(e.target);
             let container = $(tab.attr('href'))
 
-            container.load(tab.data('url'));
+            container.empty().load(tab.data('url'));
         });
         $('.cajaTab:first').trigger('click');
     });
