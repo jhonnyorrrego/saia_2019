@@ -120,6 +120,17 @@ $(function () {
         })
     });
 
+    $('#actualizar_pdf').on('click', function(){
+        let route = $('#acordeon_container').attr('data-location');
+        route += '&actualizar_pdf=1';
+
+        $('#view_document').load(baseUrl + route);
+    });
+
+    $('#anexos').on("click", function () {
+        $("#show_files").trigger('click');
+    });
+
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             toggleGoBack();

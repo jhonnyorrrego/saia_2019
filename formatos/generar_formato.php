@@ -465,7 +465,10 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
+            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
+                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
+                0 == '.$formato[0]['mostrar_pdf'].'
+            )): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
                         <html>
                             <head>
