@@ -113,10 +113,6 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
             }
         } 
     ?>
-    <script>
-    var ancho = "<?= $ancho_paginador ?>";
-    var alto = "<?= $alto_paginador ?>";
-    </script>
     <?php if(!$_REQUEST['tipo'] || ($_REQUEST['tipo'] && $_REQUEST['tipo'] != 5)): ?>
         <style type="text/css">
         .page_border {
