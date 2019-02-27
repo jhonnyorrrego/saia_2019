@@ -48,6 +48,4 @@ echo select2();
 		</div>
 	</div>
 </form>
-
-<script data-params='<?=json_encode($params)?>'></script>
-<script src="<?= $ruta_db_superior ?>views/expediente/js/cambiar_responsable.js"></script>
+<script id="scriptResponsableExp" src="<?= $ruta_db_superior ?>views/expediente/js/cambiar_responsable.js" data-params='<?=json_encode($params)?>'></script>

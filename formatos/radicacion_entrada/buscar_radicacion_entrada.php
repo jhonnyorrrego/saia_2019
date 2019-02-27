@@ -1,4 +1,4 @@
-<html><title>.: REGISTRO DE CORRESPONDENCIA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_formatos_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA REGISTRO DE CORRESPONDENCIA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_despachado"><div class="btn-group" data-toggle="buttons-radio" >
+<html><title>.: RADICACI&OACUTE;N DE CORRESPONDENCIA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_formatos_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA RADICACI&Oacute;N DE CORRESPONDENCIA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_despachado"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_despachado',this.id)">
 		    Y
 		  </button>
@@ -96,15 +96,15 @@
 		  <input type="hidden" name="bqsaiaenlace_tipo_origen" id="bqsaiaenlace_tipo_origen" value="y" />
 		</div>
                      <td class="encabezado" width="20%" title="">ORIGEN DEL DOCUMENTO</td><input type="hidden" name="bksaiacondicion_tipo_origen" id="bksaiacondicion_tipo_origen" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(3,4966,'',1,'buscar');?></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_documento',this.id)">
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_oficio_entrada',this.id)">
 		    Y
 		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_documento',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_oficio_entrada',this.id)">
 		    O
 		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_fecha_documento" id="bqsaiaenlace_fecha_documento" value="y" />
+		  <input type="hidden" name="bqsaiaenlace_fecha_oficio_entrada" id="bqsaiaenlace_fecha_oficio_entrada" value="y" />
 		</div>
-                       <td class="encabezado" width="20%" title="">FECHA DEL DOCUMENTO</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true"  name="fecha_documento_1" id="fecha_documento_1" tipo="fecha" value=""><?php selector_fecha("fecha_documento_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true"  name="fecha_documento_2" id="fecha_documento_2" tipo="fecha" value=""><?php selector_fecha("fecha_documento_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td></tr><tr id="tr_numero_oficio"><div class="btn-group" data-toggle="buttons-radio" >
+                       <td class="encabezado" width="20%" title="">FECHA DOCUMENTO ENTRADA</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true"  name="fecha_oficio_entrada_1" id="fecha_oficio_entrada_1" tipo="fecha" value=""><?php selector_fecha("fecha_oficio_entrada_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true"  name="fecha_oficio_entrada_2" id="fecha_oficio_entrada_2" tipo="fecha" value=""><?php selector_fecha("fecha_oficio_entrada_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td></tr><tr id="tr_numero_oficio"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_numero_oficio',this.id)">
 		    Y
 		  </button>
@@ -330,7 +330,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_tipo_destino" id="bqsaiaenlace_tipo_destino" value="y" />
 		</div>
-                     <td class="encabezado" width="20%" title="">DESTINO DEL DOCUMENTO</td><input type="hidden" name="bksaiacondicion_tipo_destino" id="bksaiacondicion_tipo_destino" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(3,4968,'',1,'buscar');?></td></tr><tr id="tr_destino"><div class="btn-group" data-toggle="buttons-radio" >
+                     <td class="encabezado" width="20%" title="">DESTINO DEL DOCUMENTO</td><input type="hidden" name="bksaiacondicion_tipo_destino" id="bksaiacondicion_tipo_destino" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(3,4968,'',1,'buscar');?></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_destino',this.id)">
 		    Y
 		  </button>
@@ -339,17 +339,69 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_destino" id="bqsaiaenlace_destino" value="y" />
 		</div>
-                     <td class="encabezado" width="20%" title="">DESTINO*</td><input type="hidden" name="bksaiacondicion_destino" id="bksaiacondicion_destino" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="destino" name="destino"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#destino").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+                   <td class="encabezado" width="20%" title="">DESTINO*</td><input type="hidden" name="bksaiacondicion_destino" id="bksaiacondicion_destino" value="like"><td bgcolor="#F5F5F5"><div id="esperando_destino"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(3,43,'5
+',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input type="text" id="stext_destino" width="200px" size="25">
+                   <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                          <br /><br /><div id="treeboxbox_destino" height="90%"></div><input type="hidden"  name="destino" id="destino"   value="" ><label style="display:none" class="error" for="destino">Campo obligatorio.</label><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_destino=new dhtmlXTreeObject("treeboxbox_destino","100%","100%",0);
+                			tree_destino.setImagePath("../../imgs/");
+                			tree_destino.enableIEImageFix(true);tree_destino.enableCheckBoxes(1);
+                			tree_destino.enableThreeStateCheckboxes(1);tree_destino.setOnLoadingStart(cargando_destino);
+                      tree_destino.setOnLoadingEnd(fin_cargando_destino);tree_destino.enableSmartXMLParsing(true);tree_destino.loadXML("../../test.php?rol=1");
+                      tree_destino.setOnCheckHandler(onNodeSelect_destino);
+                      function onNodeSelect_destino(nodeId)
+                      {valor_destino=document.getElementById("destino");
+                       destinos=tree_destino.getAllChecked();
+                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+                       nuevo=nuevo.replace(/\,$/gi,"");
+                       vector=destinos.split(",");
+                       for(i=0;i<vector.length;i++) {
+                           if(vector[i].indexOf("#")!=-1) {
+                               hijos=tree_destino.getAllSubItems(vector[i]);
+                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+                               hijos=hijos.replace(/\,$/gi,"");
+                               vectorh=hijos.split(",");
+                               for(h=0;h<vectorh.length;h++)
+                                  nuevo=eliminarItem(nuevo,vectorh[h]);
+								}
+						}
+                       valor_destino.value=nuevo;
+                      }
+                      function fin_cargando_destino() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_destino")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_destino")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_destino"]');
+                        document.poppedLayer.style.visibility = "hidden";
+                      }
+                      function cargando_destino() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_destino")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_destino")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_destino"]');
+                        document.poppedLayer.style.visibility = "visible";
+                      }
+                	--></script></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
 		    Y
 		  </button>
@@ -613,7 +665,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_colilla" id="bqsaiaenlace_colilla" value="y" />
 		</div>
-                     <td class="encabezado" width="20%" title="">COLILLA</td><input type="hidden" name="bksaiacondicion_colilla" id="bksaiacondicion_colilla" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(3,7009,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="39"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                     <td class="encabezado" width="20%" title="">COLILLA</td><input type="hidden" name="bksaiacondicion_colilla" id="bksaiacondicion_colilla" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(3,7009,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="39,54"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>
