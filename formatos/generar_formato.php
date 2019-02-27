@@ -465,26 +465,22 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            if(!$formato[0]['mostrar_pdf']){
-                $validacion_tipo = '<?php if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] != 5): ?>';
-                $validacion_tipo.= '<!DOCTYPE html>
-                            <html>
-                                <head>
-                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-                                    <meta charset="utf-8" />
-                                    <meta name="viewport"
-                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-                                    <meta name="apple-mobile-web-app-capable" content="yes">
-                                    <meta name="apple-touch-fullscreen" content="yes">
-                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-                                    <meta content="" name="description" />
-                                    <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-                $validacion_tipo.= '<?php else: ?>';
-                $validacion_tipo.= $this->generar_mostrar_pdf();
-                $validacion_tipo.= '<?php endif; ?>';
-            }else{
-                $validacion_tipo = $this->generar_mostrar_pdf();
-            }
+            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
+            $validacion_tipo.= '<!DOCTYPE html>
+                        <html>
+                            <head>
+                                <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+                                <meta charset="utf-8" />
+                                <meta name="viewport"
+                                    content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                <meta name="apple-mobile-web-app-capable" content="yes">
+                                <meta name="apple-touch-fullscreen" content="yes">
+                                <meta name="apple-mobile-web-app-status-bar-style" content="default">
+                                <meta content="" name="description" />
+                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo.= '<?php else: ?>';
+            $validacion_tipo.= $this->generar_mostrar_pdf();
+            $validacion_tipo.= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -527,7 +523,7 @@ class GenerarFormato
             $params["pdf_word"] = 1;
         }
         
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
         $url.= http_build_query($params);
 
         ?>
@@ -1111,38 +1107,16 @@ class GenerarFormato
 
                             break;
                         case "textarea":
-                            $valor = $campos[$h]["valor"];
-                            $valor2 = explode("|", $campos[$h]["valor"]);
-                            $nivel_barra = "";
-                            if (count($valor2)) {
-                                $nivel_barra = $valor2[0];
-                                if (@$valor2[1] != "") {
-                                    if ($accion == "adicionar" && strpos($valor2[1], "*}")) {
-                                        $includes .= $this->incluir("funciones.php", "librerias");
-                                        $valor = $this->arma_funcion($valor2[1], $this->idformato . ",$" . "_REQUEST['iddoc']", $accion);
-                                    } else if ($accion == "adicionar" && strpos($valor2[1], "*}") === false) {
-                                        $valor = $valor2[1];
-                                    }
-                                } else {
-                                    $valor = "";
-                                }
-                            }
-                            if ($accion == "editar") {
-                                $valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
-                            } else if ($valor == "") {
-                                $valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
-                            }
-                            if ($nivel_barra == "") {
-                                $nivel_barra = "basico";
-                            }
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+                           $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                                        <div class="celda_transparente">
-                                        <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control tiny_' . $nivel_barra;
+                                        <div class="celda_transparente">';
+                            $idcampo_cke = $campos[$h]["nombre"];
+                            $texto .= '<textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $idcampo_cke . '" cols="53" rows="3" class="form-control';
                             if ($campos[$h]["obligatoriedad"]) {
                                 $texto .= ' required';
                             }
-                            $texto .= '">' . $valor . '</textarea></div></div>';
+                            $texto .= '">' . $valor . '</textarea>';
+                            $texto .= '</div></div>';
                             $textareas++;
                             $indice_tabindex++;
                             break;
@@ -1700,9 +1674,6 @@ class GenerarFormato
                 $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
             }
             $texto .= '</form></body>';
-            if ($textareas) {
-                $includes .= $this->incluir_libreria("header_formato.php", "librerias");
-            }
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }

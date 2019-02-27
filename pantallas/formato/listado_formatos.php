@@ -181,7 +181,7 @@ padding:13px;
         <div class="col-sm-2" >
         	 <button style="float: right;"class="btn btn-complete mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="nuevo_formato">
                	<i class="fa fa-plus"></i> Nuevo
-              </button>
+            </button>
         	<!--<input id="nuevo_formato" class="btn btn-complete" type="button" value="Nuevo">-->
         </div>
   </div>

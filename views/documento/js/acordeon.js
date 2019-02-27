@@ -143,16 +143,12 @@ $(function () {
     function redimensionarQr(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
-<<<<<<< HEAD
         if (sizeDocument == 'xs' && widthAct < '8') {
-            sizeImg = sizeImg * 0.7;
+            sizeImg = sizeImg * 1;
             sizeH = sizeH * 0.6;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         } else if (sizeDocument == 'sm' && widthAct > '9') {
-=======
-        if (sizeDocument == 'xs') {
->>>>>>> cfd3318f40cedefd261363638b008ad8cee64122
             sizeImg = sizeImg * 0.5;
             sizeH = sizeH * 0.8;
             $("#qr").css("width", sizeImg + "%");
@@ -167,24 +163,21 @@ $(function () {
 
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
+        console.log(sizeDocument, widthAct)
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
-<<<<<<< HEAD
             sizeImg = sizeImg * 2.5;
             $("#logoEmpresa").css("width", sizeImg + "px");        
-=======
-            sizeImg = sizeImg * 3;
-            $("#logoEmpresa").css("width", sizeImg + "%");
->>>>>>> cfd3318f40cedefd261363638b008ad8cee64122
-        }
-        else if (sizeDocument == 'sm' && widthAct < '8') {
+        } else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");
-        } else if (sizeDocument == 'xl') {
+        } else if (sizeDocument == 'xl' && widthAct < 10) {
+            sizeImg = sizeImg * 1.3;
+            $("#logoEmpresa").css("width", sizeImg + "%");
+        } else if (sizeDocument == 'xl' && widthAct > 10) {
             sizeImg = sizeImg * 1.1;
             $("#logoEmpresa").css("width", sizeImg + "%");
         }
-
     }
 });

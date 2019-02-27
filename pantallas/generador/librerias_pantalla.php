@@ -864,29 +864,8 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         //crear_modulo_formato($idformato);
     }
 
-    if ($fieldList["cod_padre"] && $idformato) {
-
-        $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
-        $strsql_icf = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
-        //guardar_traza($strsql_icf, "ft_" . $datos["nombre"]);
-        //phpmkr_query($strsql_icf) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf);
-    }
-    if ($idformato && !$fieldList["item"]) {
-        $strsql_icf2 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
-        //TODO: Verificar existencia del campo
-        //phpmkr_query($strsql_icf2) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf2);
-
-        $strsql_icf3 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
-        //TODO: Verificar existencia del campo
-        //guardar_traza($strsql_icf3, "ft_" . $datos["nombre"]);
-        //phpmkr_query($strsql_icf3) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf3);
-    }
-    /*
-     * Se validan y adicionan los campos adicionales al formato como iddocumento, serie_idserie, idft , etc
-     */
 
     if ($datos["idformato"]) {
-        $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);
         $retorno["mensaje"] = "EL formato se actualizó con éxito";
         $retorno["idformato"] = $datos["idformato"];
         $retorno['exito'] = 1;
@@ -915,6 +894,7 @@ function editar_datos_pantalla($datos, $tipo_retorno = 1) {
             $sql2 = "INSERT INTO pantalla_campos(pantalla_idpantalla,tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $datos["idpantalla"] . ",'" . $datos["nombre"] . "','id" . $datos["nombre"] . "','Identificador " . $datos["etiqueta"] . "','INT','11',0,'','a','Identificador " . $datos["etiqueta"] . "','','pk','hidden',0,0,'id" . $datos["nombre"] . "')";
             phpmkr_query($sql2) or die($sql2);
         }
+        
         if ($pantalla_actual["numcampos"]) {
             if ($datos["clase"] != $pantalla_actual[0]["clase"]) {
                 eliminar_datos_clase_padre($datos["idpantalla"], $pantalla_actual[0]["clase"]);
