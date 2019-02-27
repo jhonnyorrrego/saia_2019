@@ -108,13 +108,15 @@ foreach ($datos as $datos_correo) {
             unset($datos_factura["tipo_persona"]);
             // $datos_factura["idgrupo"] = "'" . $datos_correo["idgrupo"] . "'";
 
-            $datos_factura["anexos"] = "'" . implode(",", $datos_correo["adjuntos"]) . "'";
+            $anexLst = implode(",", $datos_correo["adjuntos"]);
+            $anexLst = trim($anexLst, "'");
+            $datos_factura["anexos"] = "'" . $anexLst . "'";
 
             $iddatos_factura = registar_factura($datos_factura);
             // $datos_factura["num_folios"] = count($datos_correo["adjuntos"]);
             // $datos_factura["iddt_datos_factura"] = $iddatos_factura;
             $datos_factura["fk_datos_factura"] = $iddatos_factura;
-            // $datos_factura["notas"] = $notas;
+            $datos_factura["anexos"] = $anexLst;
             $iddoc = radicar_factura($datos_factura, $nombre_formato);
             if (!empty($iddoc)) {
                 $anexos = [];
