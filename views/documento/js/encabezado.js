@@ -127,7 +127,10 @@ $(function () {
         $('#view_document').load(baseUrl + route);
     });
 
-    ////////// FUNCIONES //////////
+    $('#anexos').on("click", function () {
+        $("#show_files").trigger('click');
+    });
+
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             toggleGoBack();
