@@ -50,7 +50,7 @@ function mostrar_detalle_factura($idformato, $iddoc) {
             $lineas[] = '<th style="text-align: center;">Descripci&oacute;n</th>';
             $lineas[] = '<th style="text-align: center;">Cantidad</th>';
             $lineas[] = '<th style="text-align: center;">V. Unitario</th>';
-            $lineas[] = '<th style="text-align: center;">IVA</th>';
+            //$lineas[] = '<th style="text-align: center;">IVA</th>';
             $lineas[] = '<th style="text-align: center;">Total</th>';
             $lineas[] = '</tr></thead>';
             $lineas[] = '<tbody>';
@@ -59,7 +59,7 @@ function mostrar_detalle_factura($idformato, $iddoc) {
                 $lineas[] = "<td>{$items[$i]['descripcion']}</td>";
                 $lineas[] = "<td style='text-align: right;'>{$items[$i]['cantidad']}</td>";
                 $lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_unitario']}</td>";
-                $lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_iva']}</td>";
+                //$lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_iva']}</td>";
                 $lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_total']}</td>";
                 $lineas[] = '</tr>';
             }
@@ -68,7 +68,7 @@ function mostrar_detalle_factura($idformato, $iddoc) {
             $lineas[] = '<th scope="row">Total</th>';
             $lineas[] = "<td></td>";
             $lineas[] = "<td></td>";
-            $lineas[] = "<td></td>";
+            //$lineas[] = "<td></td>";
             $lineas[] = "<td style='text-align: right;'>{$factura[0]['total_factura']}</td>";
             $lineas[] = '</tr></tfoot>';
             $lineas[] = '</table>';

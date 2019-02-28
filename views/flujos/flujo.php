@@ -58,6 +58,7 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
         <?= bootstrapTable() ?>
         <?= bootstrapTableEditable() ?>
+        <?= notificacion() ?>
 
         <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/selectize.js"></script>
 

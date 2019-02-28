@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var params = JSON.parse($('script[data-params]').attr('data-params'));
+    var params = $("#scriptCompartirExp").data("params");
 
     var loadTable = function () {
         $.ajax({
@@ -46,6 +46,7 @@ $(document).ready(function () {
     }
     loadTable();
 
+    $(document).off("click", ".btn-danger");
     $(document).on("click", ".btn-danger", function () {
         var idpermisoExpediente = $(this).data("id");
         top.confirm({
@@ -147,6 +148,7 @@ $(document).ready(function () {
             let idexpediente = $("#idexpediente").val();
             let funcionario = $("#nombre").val();
             $('#nombre').val(null).trigger('change');
+            
             $.ajax({
                 type: 'POST',
                 url: `${params.baseUrl}app/expediente/ejecutar_acciones.php`,

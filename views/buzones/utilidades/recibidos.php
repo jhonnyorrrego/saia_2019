@@ -93,7 +93,7 @@ $(function(){
     $(document).on('click', '#clasif_expediente', function(){
         let selections = $('#table').data('selections');
         top.topModal({
-            url: `${baseUrl}views/documento/clasificar_expediente.php`,
+            url: `${baseUrl}views/expediente/clasificar_expediente.php`,
             title: 'Clasificar documento a un expediente',
             size: 'modal-xl',
             params: {

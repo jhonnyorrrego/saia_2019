@@ -208,7 +208,8 @@ final class Version20190215231715 extends AbstractMigration
         $tabla8->addColumn("fk_expediente", "integer");
         $tabla8->addColumn("fk_funcionario", "integer");
         $tabla8->addColumn("fecha_eliminacion", "datetime");
-        $tabla8->addColumn("fecha_restauracion", "datetime", ["notnull" => false]);
+        $tabla8->addColumn("fecha_accion", "datetime", ["notnull" => false]);
+        $tabla8->addColumn("accion", "integer", ["notnull" => false,"comment"=>"1:Eli.Definitiva;2,Restauracion"]);
         $tabla8->setPrimaryKey(["idexpediente_eli"]);
 
 
@@ -255,10 +256,11 @@ final class Version20190215231715 extends AbstractMigration
         $tabla12 = $schema->createTable("caja_eli");
         $tabla12->addColumn("idcaja_eli", "integer", ["autoincrement" => true]);
         $tabla12->addColumn("fk_caja", "integer");
-        $tabla12->addColumn("eliminar_expediente", "integer", ["default" => 1, "comment" => "1,Eliminar;0,Actualizar"]);
+        $tabla12->addColumn("eliminar_expediente", "integer", ["default" => 1, "comment" => "1,Eli.Caja/Exp;0,Eli.Caja"]);
         $tabla12->addColumn("fk_funcionario", "integer", ["comment" => "Elimino"]);
         $tabla12->addColumn("fecha_eliminacion", "datetime");
-        $tabla12->addColumn("fecha_restauracion", "datetime", ["notnull" => false]);
+        $tabla12->addColumn("fecha_accion", "datetime", ["notnull" => false]);
+        $tabla12->addColumn("accion", "integer", ["notnull" => false,"comment"=>"1:Eli.Definitiva;2,Restauracion"]);
         $tabla12->setPrimaryKey(["idcaja_eli"]);
 
         $tabla13 = $schema->createTable("expediente_directo");
@@ -269,7 +271,7 @@ final class Version20190215231715 extends AbstractMigration
         $tabla13->setPrimaryKey(["idexpediente_directo"]);
 
 
-        $this->addSql("DELETE FROM busqueda WHERE idbusqueda IN (37,48,115,116)");
+       /* $this->addSql("DELETE FROM busqueda WHERE idbusqueda IN (37,48,115,116)");
         $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente IN (9,10,110,111,160,323,368,320,321,371,372,373)");
         $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente IN (9,10,110,111,160,323,368,320,321,371,372,373)");
 
@@ -295,11 +297,15 @@ final class Version20190215231715 extends AbstractMigration
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 323, 'estado=1', 'Cajas')");
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 371, '{*conditions_caja_expediente*}', 'Caja Expediente')");
         $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 373, 'e.idexpediente=ed.fk_expediente {*user_actual*}', 'Accesos Directos')");
-
+*/
 
         /*
             CREATE OR REPLACE VIEW vpapelera_expediente AS 
-            select concat(ce.fk_caja,'-caja') AS id,ce.idcaja_eli AS idtabla,'CAJA' AS tipo,ce.fk_caja AS fk_tipo,ce.fk_funcionario AS fk_funcionario,ce.fecha_eliminacion AS fecha_eliminacion,ce.eliminar_expediente AS eliminar_expediente from caja_eli ce where isnull(ce.fecha_restauracion) union all select concat(ee.fk_expediente,'-expediente') AS id,ee.idexpediente_eli AS idtabla,'EXPEDIENTE' AS tipo,ee.fk_expediente AS fk_tipo,ee.fk_funcionario AS fk_funcionario,ee.fecha_eliminacion AS fecha_eliminacion,0 AS eliminar_expediente from expediente_eli ee where isnull(ee.fecha_restauracion)
+            select concat(ce.fk_caja,'1') AS id,ce.idcaja_eli AS idtabla,'CAJA' AS tipo,ce.fk_caja AS fk_tipo,ce.fk_funcionario AS fk_funcionario,ce.fecha_eliminacion AS fecha_eliminacion,ce.eliminar_expediente AS eliminar_expediente
+            from caja_eli ce where isnull(ce.fecha_accion) 
+            union all
+            select concat(ee.fk_expediente,'2') AS id,ee.idexpediente_eli AS idtabla,'EXPEDIENTE' AS tipo,ee.fk_expediente AS fk_tipo,ee.fk_funcionario AS fk_funcionario,ee.fecha_eliminacion AS fecha_eliminacion,0 AS eliminar_expediente
+            from expediente_eli ee where isnull(ee.fecha_accion)
         
             CREATE OR REPLACE VIEW vpermiso_expediente AS 
             select e.idexpediente AS idexpediente,e.nombre AS nombre,e.estado_archivo AS estado_archivo,e.cod_padre AS cod_padre,e.fk_serie AS fk_serie,e.fk_entidad_serie AS fk_entidad_serie,

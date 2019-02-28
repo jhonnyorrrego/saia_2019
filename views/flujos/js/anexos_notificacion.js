@@ -1,14 +1,14 @@
 $(function () {
     let baseUrl = $("script[data-baseurl]", parent.document).data('baseurl') || "../../";
     let params = $("script[data-params]").data("params")
-    //console.log("params", params);
-    idactividad = params.idactividad; 
+    console.log("params", params);
+    idnotificacion = params.idnotificacion; 
     if (typeof Files == 'undefined') {
         $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
-            files = initAnexosNotificacion(idactividad);
+            files = initAnexosNotificacion(idnotificacion);
         });
     } else {
-        files = initAnexosNotificacion(idactividad);
+        files = initAnexosNotificacion(idnotificacion);
     }
 
     window.initAnexosNotificacion = function (id) {

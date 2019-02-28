@@ -1087,7 +1087,7 @@ function has_files($documentId, $showCounter = false)
 {
     global $conn;
 
-    $response = '';
+    $response = '<span class="d-none" id="show_files"></span>';
     if ($documentId) {
         $files = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $documentId, '', $conn);
         $pages = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $documentId, '', $conn);

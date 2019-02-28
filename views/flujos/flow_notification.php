@@ -127,25 +127,50 @@ if (isset($_REQUEST["idflujo"])) {
 
             var pk = false;
 
-            if (confirm('Desea eliminar la notificación? Se eliminaran todos los registros asociados.')) {
-                $.ajax({
-                    dataType: "json",
-                    url: "<?= $ruta_db_superior ?>app/flujo/borrarNotificacion.php",
-                    type: "POST",
-                    data: data,
-                    async: false,
-                    success: function (response) {
-                        if (response["success"] == 1) {
-                            top.notification({type: "success", message: response.message});
-                            pk = true;
-                            //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
-                            postMessage({accion: "recargarTabla", id: id}, "*");
-                        } else {
-                            top.notification({type: "error", message: response.message});
-                        }
-                    }
-                });
-            }
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Atención',
+                message: 'Desea eliminar la notificación?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>Si</b></button>', function (instance, toast) {
+                        $.ajax({
+                            dataType: "json",
+                            url: "<?= $ruta_db_superior ?>app/flujo/borrarNotificacion.php",
+                            type: "POST",
+                            data: data,
+                            async: false,
+                            success: function (response) {
+                                if (response["success"] == 1) {
+                                    top.notification({type: "success", message: response.message});
+                                    pk = true;
+                                    //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                                } else {
+                                    top.notification({type: "error", message: response.message});
+                                }
+                            }
+                        });
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }, true],
+                    ['<button>No</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }],
+                ],
+                onClosing: function(instance, toast, closedBy){
+                    postMessage({accion: "recargarTabla", id: id}, "*");
+                    //console.info('Closing | closedBy: ' + closedBy);
+                },
+                onClosed: function(instance, toast, closedBy){
+                    //console.info('Closed | closedBy: ' + closedBy);
+                }
+            });
             return pk;
 
         });

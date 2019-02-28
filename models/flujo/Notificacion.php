@@ -44,12 +44,12 @@ class Notificacion extends Model implements IAnexos {
         $sql = <<<SQL
             select a.*
             from anexo a
-            join wf_idanexo_notificacion af
+            join wf_anexo_notificacion af
                 on a.idanexo = af.fk_anexo
             join wf_notificacion f
                 on af.fk_notificacion = f.idnotificacion
             where
-                f.idnotificacion = $this->idnotificacion and a.eliminado = 0
+                f.idnotificacion = {$this->idnotificacion} and a.eliminado = 0
             order by $params->order
 SQL;
         $records = StaticSql::search($sql, $params->offset, $params->limit);

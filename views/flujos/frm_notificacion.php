@@ -272,7 +272,7 @@ if (empty($idflujo)) {
         </div>
         <!-- /.modal -->
 
-        <script type="text/javascript" data-params='{"idflujo" : "<?= $idflujo ?>"}'>
+        <script type="text/javascript" data-params='{"idflujo" : "<?= $idflujo ?>", "idnotificacion" : "<?= $idnotificacion ?>"}'>
             //var $table = $('#tabla_notificaciones');
             //$table.bootstrapTable();
 

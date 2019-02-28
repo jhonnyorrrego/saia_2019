@@ -1,4 +1,4 @@
-<div class="row mx-0 pt-1">
+<div class="row mx-0 pt-1" id="acordeon_container">
     <div class="col-12 px-0">
         <div class="mx-0">
             <div class="card-group horizontal my-0" id="accordion" role="tablist" aria-multiselectable="true">
@@ -55,7 +55,7 @@
         </div>
     </div>
 </div>
-<script data-params='<?= json_encode($_REQUEST) ?>'>
+<script data-params='<?= json_encode($_REQUEST) ?>' id="acordeon_script">
     $(function(){
         let baseUrl = $('script[data-baseurl]').data('baseurl');
         $.getScript(`${baseUrl}views/documento/js/acordeon.js`);
