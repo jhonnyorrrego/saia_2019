@@ -741,6 +741,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
     $llenado = "";
     // ***************** validaciones ******************
     $labelRequired = '';
+    $valor = null;
     $required = '';
     if ($campo[0]["obligatoriedad"]){
         $obligatorio[] = "class='required'";
@@ -768,51 +769,52 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             $llenado = implode(";", $listado0);
         }
         // else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo[0]["etiqueta"]);
-    } else
-        $llenado = html_entity_decode($campo[0]["valor"]);
+    } else{
+        $llenado = json_decode($campo[0]["opciones"],true);
+    }
 
     $tipo = $campo[0]["etiqueta_html"];
     $nombre = $campo[0]["nombre"];
 
     $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
-    if ($buscar)
+    if ($buscar){
         $default = "";
-    elseif ($iddoc != null) {
-        if ($tabla[0]["item"])
+    }elseif ($iddoc != null) {
+        if ($tabla[0]["item"]){
             $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "", $conn);
-        else
+        }else{
             $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+        }
         $default = $valor[0][0];
-    } else
+    } else{
         $default = $campo[0]["predeterminado"];
+    }
 
     $texto = "";
     $listado3 = array();
     if ($llenado != "" && $llenado != "Null") {
-        $listado1 = explode(";", $llenado);
+        $listado1 = $llenado;
         $cont1 = count($listado1);
+        
         for ($i = 0; $i < $cont1; $i++) {
-            $listado2 = explode(",", $listado1[$i]);
+            $listado2 = $listado1[$i];
+
             array_push($listado3, $listado2);
         }
     }
     $cont3 = count($listado3);
+  
 
     switch ($tipo) {
         case "radio":
-            $texto .= '<div class="row">';
-            //$texto .= '<table border="0">';
+            $texto .= '<div class="radio radio-success">';
             for ($j = 0; $j < $cont3; $j++) {
-
-                /* <input type="' . $tipo . '" value="yes" name="optionyes" id="yes">
-                  <label for="' . $nombre . $j . '">>Agree</label> */
-                $texto .= '<div class="col-3 px-1">'
-                    . '<div class="radio radio-success">'
-                    . '<input class="form-check-input" '.$required.' type="' . $tipo . '" ';
+                
+                $texto .= '<input '.$required.' type="' . $tipo . '" ';
                 if ($buscar) {
-                    $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
+                    $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($j+1) . '" class="radio"';
                 } else {
-                    $texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
+                    $texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($j+1) . '"';
                 }
                 if (($listado3[$j][0]) == $default) {
                     $texto .= ' checked ';
@@ -820,9 +822,9 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 if ($j == 0) {
                     $texto .= $obligatorio;
                 }
-                $texto .= ' aria-required="true"><label class="etiqueta_selector" for="' . $nombre . $j . '">' . codifica_encabezado($listado3[$j][1]) . "</label></div></div>";
+                $texto .= ' aria-required="true"><label class="" for="' . $nombre . $j . '">' . codifica_encabezado($listado3[$j]) . "</label>";
+                
             }
-            //$texto .= "<tr><td colspan='$columnas'><label style='display:none' for='$nombre' class='error'>Campo obligatorio</label></td></tr></table>";
             $texto .= "</div>";
             break;
         case "checkbox":
@@ -1249,6 +1251,8 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
                 $retorno = "<a target='_blank' href='" . $campos[0][0] . "'>" . $campos[0][0] . "</a>";
             } elseif ($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
                 $retorno = "$" . number_format($campos[0][$campo], 0, ",", ".");
+            } elseif ($datos[0]["etiqueta_html"] == "moneda") {
+                $retorno = "$" . $campos[0][$campo];
             } elseif ($datos[0]["etiqueta_html"] == "ejecutor") {
 
                 if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_adicionar"]) && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
@@ -2050,6 +2054,11 @@ function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
                     break;
 
                 case "cargo":
+                // cargo
+                    $datos = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $fila, "", $conn);
+                    if ($datos["numcampos"]) {
+                        $nombres[] = ucwords($datos[0][0]);
+                    }
                     break;
                 //roles
             }
