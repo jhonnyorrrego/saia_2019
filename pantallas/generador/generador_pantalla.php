@@ -882,7 +882,14 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    if (objeto.exito == 1 && objeto.permisos) {
+                    if(objeto.publicar == 1 && objeto.exito == 1){
+                        $("#barra_formato").html("100%");
+                        $("#barra_formato").css("width", "100%");
+                        CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
+                        setTimeout(function() {
+                            $(".barra_principal_formato").fadeOut(1500);
+                        }, 3000);
+                    }else if (objeto.exito == 1 && objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado y "+objeto.permisos, "success", "", 3500);
@@ -1716,7 +1723,7 @@ $(document).ready(function() {
                 break;
             case 'pantalla_mostrar-tab':
                 if(publicar!=1){
-                     $("#generar_pantalla").trigger("click");
+                     //$("#generar_pantalla").trigger("click");
                 }else{
                     $('#cambiar_nav').hide();
                     $("#cambiar_nav_basico").show();
