@@ -586,9 +586,9 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
 					$cadena = addslashes("lower(" . concatenar_cadena_sql(array(
-						"'',''",
+						"','",
 						"CAST(" . $key . " AS CHAR(255))",
-						"'',''"
+						"','"
 					)) . ")" . $condicion . str_replace(" ", "%", $valor));
 				} else {
 					$valores = explode(",", $valor);
