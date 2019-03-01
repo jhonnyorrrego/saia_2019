@@ -832,17 +832,17 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             //$texto .= '<table border="0">';
             $lista_default = explode(',', $default);
             for ($j = 0; $j < $cont3; $j++) {
-                $texto .= '<div class="col-3 px-1"><div class="form-check "><input class="form-check-input" type="' . $tipo . '" ';
+                $texto .= '<input class="form-check-input" type="' . $tipo . '" ';
 
                 if ($j == 0) {
                     $texto .= $obligatorio;
                 }
-                $texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
+                $texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . ($j+1) . '"';
 
                 if (in_array(($listado3[$j][0]), $lista_default)) {
                     $texto .= ' checked ';
                 }
-                $texto .= '><label class="form-check-label etiqueta_selector" for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></div></div>";
+                $texto .= '><label class="form-check-label etiqueta_selector" for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($listado3[$j])) . "</label>";
             }
             // $texto .= "<tr><td colspan='$columnas'><label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
             break;
@@ -860,7 +860,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 if (($listado3[$j][0]) == $default) {
                     $texto .= ' selected ';
                 }
-                $texto .= '>' . codifica_encabezado($listado3[$j][1]) . '</option>';
+                $texto .= '>' . codifica_encabezado($listado3[$j]) . '</option>';
             }
             $texto .= '</select>';
             $texto .= '
@@ -932,7 +932,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             $texto .= "</table>";
             break;
     }
-    echo ($texto);
+    echo $texto;
 }
 
 /*
