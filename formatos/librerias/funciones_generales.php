@@ -828,7 +828,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
             $texto .= "</div>";
             break;
         case "checkbox":
-            $texto .= '<div class="row checkbox check-success">';
+            $texto .= '<div class="checkbox check-success">';
             //$texto .= '<table border="0">';
             $lista_default = explode(',', $default);
             for ($j = 0; $j < $cont3; $j++) {
@@ -1433,20 +1433,12 @@ function asignar_responsables($campo, $idformato, $iddoc = null)
 
     $campo = '<div class="form-group" id="tr_asignar_responsables">
                 <label title="">ASIGNAR RESPONSABLES</label>
-                <div class="row">
-                    <div class="col-3 px-1">
                         <div class="radio radio-success">
-                            <input class="form-check-input" type="radio" name="firmado" id="una" value="una" checked="" aria-required="true">
+                            <input  type="radio" name="firmado" id="una" value="una" checked="" aria-required="true">
                             <label class="etiqueta_selector" for="una">Uno</label>
-                        </div>
-                    </div>
-                    <div class="col-3 px-1">
-                        <div class="radio radio-success">
-                            <input class="form-check-input" type="radio" name="firmado" id="varias" value="varias" aria-required="true">
+                            <input  type="radio" name="firmado" id="varias" value="varias" aria-required="true">
                             <label class="etiqueta_selector" for="varias">Varios</label>
                         </div>
-                    </div>
-                </div>
             </div>';
     $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
     $responsable = html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"]);
@@ -1454,20 +1446,12 @@ function asignar_responsables($campo, $idformato, $iddoc = null)
     $responsable = codifica_encabezado($responsable);
     $campo .= '<div class="form-group" id="tr_firma">
                 <label title="">' . $responsable . ' FIRMA:</label>
-                <div class="row">
-                    <div class="col-3 px-1">
-                        <div class="radio radio-success">
-                            <input class="form-check-input" type="radio" name="obligatorio" id="si1" value="1" aria-required="true">
-                            <label class="etiqueta_selector" for="si1">Si</label>
-                        </div>
+                    <div class="radio radio-success">
+                        <input class="form-check-input" type="radio" name="obligatorio" id="si1" value="1" aria-required="true">
+                        <label class="etiqueta_selector" for="si1">Si</label>
+                        <input class="form-check-input" type="radio" name="obligatorio" id="no1" value="0" checked aria-required="true">
+                        <label class="etiqueta_selector" for="no1">No</label>
                     </div>
-                    <div class="col-3 px-1">
-                        <div class="radio radio-success">
-                            <input class="form-check-input" type="radio" name="obligatorio" id="no1" value="0" checked aria-required="true">
-                            <label class="etiqueta_selector" for="no1">No</label>
-                        </div>
-                    </div>
-                </div>
             </div>';
     $campo .= '<script type="text/javascript">
                 $("#una").click(function(){
