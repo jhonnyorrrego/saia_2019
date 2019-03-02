@@ -42,7 +42,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= breakpoint() ?>
 
     <script type="text/javascript">
-        window.onload = function () {
+        window.onload = function() {
             // fix for windows 8
             if (navigator.appVersion.indexOf("Windows NT 6.2") != -1)
                 document.head.innerHTML += '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/pages/css/windows.chrome.fix.css" />'
@@ -93,8 +93,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <div class="form-group form-group-default">
                                         <label><i class="fa fa-user"></i> Usuario</label>
                                         <div class="controls">
-                                            <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control"
-                                                required>
+                                            <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control" required>
                                         </div>
                                     </div>
                                     <!-- END Form Control-->
@@ -128,7 +127,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <!-- END Login Right Container-->
         </div>
-        <div class="row mx-0 px-0 bg-complete fixed-bottom" id="footer">
+        <div class="row mx-0 px-0 bg-institutional fixed-bottom" id="footer">
             <div class="col-12">
                 <p class="text-left text-white my-auto"><b>© 2019 CERO K. Todos los derechos reservados.</b></p>
             </div>
@@ -156,16 +155,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                         <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Escribe
                                             tu login</label>
                                         <div class="offset-md-1 col-md-9">
-                                            <input type="text" class="form-control" id="user" placeholder="Nombre de usuario."
-                                                name="username" required>
+                                            <input type="text" class="form-control" id="user" placeholder="Nombre de usuario." name="username" required>
                                         </div>
                                     </div>
                                     <div class="row my-2">
                                         <label for="message" class="col-md-2 control-label text-black" style="line-height: 1;">Mensaje
                                             para el administrador</label>
                                         <div class="offset-md-1 col-md-9">
-                                            <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador."
-                                                name="message"></textarea>
+                                            <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -183,12 +180,15 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
     <!-- /.modal-dialog -->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
     <script>
-        $(function () {
+        $(function() {
             var baseUrl = Session.getBaseUrl();
+            Ui.putColor();
+            Ui.putLogo('#logo');
             resize();
 
-            $('#form_login').on('submit', function (event) {
+            $('#form_login').on('submit', function(event) {
                 event.preventDefault();
                 $.ajax({
                     type: 'POST',
@@ -198,7 +198,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         userid: $("[name='username']").val(),
                         passwd: $("[name='password']").val()
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.ingresar) {
                             window.location = baseUrl + 'views/dashboard/dashboard.php';
                         } else {
@@ -209,20 +209,20 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log(xhr.status, 'Error!');
                     }
                 });
             });
 
-            $('#recovery_form').on('submit', function (event) {
+            $('#recovery_form').on('submit', function(event) {
                 event.preventDefault();
                 $.ajax({
                     type: 'GET',
                     url: baseUrl + 'app/funcionario/solicitar_cambio_clave.php',
                     dataType: 'json',
                     data: $("#recovery_form").serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             top.notification({
                                 message: response.message,
@@ -237,36 +237,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log(xhr.status, 'Error!');
                     }
                 });
             });
 
-            (function getImage() {
-                var logo = localStorage.getItem('logo');
-
-                if (!logo) {
-                    $.get(baseUrl + 'app/configuracion/consulta_configuraciones.php',{
-                        configurations : ['logo']
-                    }, function (response) {
-                        if (response.success) {
-                            localStorage.setItem('logo', response.data[0].value);
-                            getImage();
-                        }
-                    }, 'json');
-                } else {
-                    $('#logo').attr('src', Session.getBaseUrl() + logo);
-                }
-            })();
-
-            function loadCarousel(){
-                if($("#carousel_container").is(':visible') && !$("#homepageItems").children().length){
+            function loadCarousel() {
+                if ($("#carousel_container").is(':visible') && !$("#homepageItems").children().length) {
                     $.ajax({
                         url: baseUrl + 'app/carrusel/consulta_carousel.php',
                         dataType: 'json',
-                        success: function (response) {
-                            if(!$("#homepageItems").children().length){
+                        success: function(response) {
+                            if (!$("#homepageItems").children().length) {
                                 var data = '',
                                     indicator = '';
 
@@ -275,48 +258,47 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <div class="carousel-item mx-0 px-0">
                                         <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
                                         <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                                            <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
+                                            <h3 class="text-white" style="opacity: 1">` + response.data[i].title + `</h3>
                                             <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
                                         </div>
                                     </div>`;
                                     indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
                                 }
-                                
+
                                 $('#homepageItems').append(data);
                                 $('#indicators').append(indicator);
                                 $('.carousel-item > img')
                                     .attr('height', $(window).height() - $("#footer").height())
                                     .attr('width', $("#carousel_container").width());
                                 $('.carousel-item').first().addClass('active');
-                                $('.carousel-indicators > li').first().addClass('active');                        
-                                $("#myCarousel").carousel();                        
+                                $('.carousel-indicators > li').first().addClass('active');
+                                $("#myCarousel").carousel();
                             }
                         }
                     });
                 }
             }
-            
-            $(window).resize( function(){
+
+            $(window).resize(function() {
                 resize();
             });
 
-            window.addEventListener("orientationchange", function () {
+            window.addEventListener("orientationchange", function() {
                 setTimeout(() => {
                     resize();
                 }, 500);
             }, false);
 
-            function resize(){
+            function resize() {
                 breakpoint = checkSize();
                 $('.carousel-item > img')
                     .attr('height', $(window).height() - $("#footer").height())
                     .attr('width', $("#carousel_container").width());
-                
+
                 loadCarousel();
             }
         });
-        
     </script>
 </body>
 
-</html>
+</html> 
