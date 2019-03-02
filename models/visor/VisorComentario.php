@@ -10,16 +10,19 @@ class VisorComentario extends Model
     protected $uuid;
     protected $annotation;
     protected $content;
+    protected $user;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'fk_funcionario',
@@ -34,9 +37,18 @@ class VisorComentario extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    public function getUser()
+    {
+        if (!$this->user) {
+            $this->user = new Funcionario($this->fk_funcionario);
+        }
+
+        return $this->user;
     }
 }

@@ -65,14 +65,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="col px-1 height_window" id="content-wrapper">
                 <div id="viewer" class="pdfViewer"></div>
             </div>
-            <div class="col-5 col-md-2 px-1 d-none height_window" id="comment-wrapper">
+            <div class="col-5 col-md-3 px-1 d-none height_window" id="comment-wrapper">
                 <h4>Comentarios</h4>
                 <div class="comment-list">
-                    <div class="comment-list-container">
-                        <div class="comment-list-item">Sin comentarios</div>
-                    </div>
+                    <div class="comment-list-container"></div>
                     <form class="comment-list-form" style="display:none;">
-                        <input type="text" placeholder="Comentario" />
+                        <input type="text" placeholder="Comentario" class="form-control">
                     </form>
                 </div>
             </div>
@@ -82,6 +80,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     
     <script src="<?= $ruta_db_superior ?>views/visor/shared/pdf.js"></script>
     <script src="<?= $ruta_db_superior ?>views/visor/shared/pdf_viewer.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/comments/comments.js"></script>
     <script src="<?= $ruta_db_superior ?>views/visor/annotate.js"
         data-params='<?= json_encode($_REQUEST) ?>' data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
