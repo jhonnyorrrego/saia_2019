@@ -465,8 +465,11 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == ' . $formato[0]['mostrar_pdf'] . '): ?>';
-            $validacion_tipo .= '<!DOCTYPE html>
+            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
+                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
+                0 == '.$formato[0]['mostrar_pdf'].'
+            )): ?>';
+            $validacion_tipo.= '<!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -477,10 +480,10 @@ class GenerarFormato
                                 <meta name="apple-touch-fullscreen" content="yes">
                                 <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                 <meta content="" name="description" />
-                                <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $validacion_tipo .= '<?php else: ?>';
-            $validacion_tipo .= $this->generar_mostrar_pdf();
-            $validacion_tipo .= '<?php endif; ?>';
+                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo.= '<?php else: ?>';
+            $validacion_tipo.= $this->generar_mostrar_pdf();
+            $validacion_tipo.= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -501,8 +504,7 @@ class GenerarFormato
         return false;
     }
 
-    public function generar_mostrar_pdf()
-    {
+    public function generar_mostrar_pdf(){
         $string = '<?php
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
@@ -524,7 +526,7 @@ class GenerarFormato
             $params["pdf_word"] = 1;
         }
         
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
         $url.= http_build_query($params);
 
         ?>
@@ -532,6 +534,7 @@ class GenerarFormato
 
         return $string;
     }
+
 
     /*
      * <Clase>
