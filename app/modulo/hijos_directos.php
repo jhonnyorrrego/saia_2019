@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'db.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => [],
     'message' => '',
     'success' => 1,
@@ -21,18 +21,18 @@ $Response = (object) array(
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     global $conn;
-    
+
     $data = array();
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-    $modules = busca_filtro_tabla('*', 'modulo', 'cod_padre=' . $parent, 'orden asc', $conn);
+    $modules = busca_filtro_tabla('*', 'modulo', "cod_padre='" . $parent . "'", 'orden asc', $conn);
 
-    if($grouperParent == 1 && $parent){
+    if ($grouperParent == 1 && $parent) {
         $dashboard = busca_filtro_tabla('*', 'modulo', "nombre='dashboard'", '', $conn);
-        $data [] = addElement($dashboard[0], 0);
+        $data[] = addElement($dashboard[0], 0);
     }
-    
-    if ($modules['numcampos']) {     
+
+    if ($modules['numcampos']) {
         $permiso = new PERMISO();
 
         for ($i = 0; $i < $modules['numcampos']; $i++) {
@@ -40,7 +40,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
             $access = $permiso->acceso_modulo_perfil($module['nombre']);
 
             if ($access) {
-                if($grouperParent){
+                if ($grouperParent) {
                     $countChilds = busca_filtro_tabla('count(*) as total', 'modulo', 'cod_padre = ' . $module['idmodulo'], '', $conn);
                     $isParent = $countChilds[0]['total'] ? 1 : 0;
                 }
@@ -58,7 +58,8 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
 echo json_encode($Response);
 
-function addElement($data, $isParent){
+function addElement($data, $isParent)
+{
     return array(
         'idmodule' => $data['idmodulo'],
         'isParent' => $isParent,

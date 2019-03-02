@@ -4,7 +4,7 @@ class Ui {
         $("#user_name").text(user.name);
     }
 
-    static putLogo() {
+    static putLogo(selector) {
         var logo = localStorage.getItem('logo');
 
         if (!logo) {
@@ -12,12 +12,12 @@ class Ui {
                 configurations: ['logo']
             }, function (response) {
                 if (response.success) {
-                    localStorage.setItem('logo', response.data);
-                    Ui.putLogo();
+                    localStorage.setItem('logo', response.data[0].value);
+                    Ui.putLogo(selector);
                 }
             }, 'json');
         } else {
-            $('#client_image').attr('src', Session.getBaseUrl()+ logo);
+            $(selector).attr('src', Session.getBaseUrl()+ logo);
         }
     }
 
@@ -25,12 +25,16 @@ class Ui {
         const color = localStorage.getItem('color');
 
         if (color) {
+            $('#instition_style').remove();
             $('head').append(
                 $('<style>', {
                     id: 'instition_style',
                     rel: 'stylesheet',
                     type: 'text/css',
-                    text: `.bg-institutional{background: ${color}!important;color: "#ffff"!important}`
+                    text: `
+                        .bg-institutional{background: ${color} !important;color: #ffff !important}
+                        .text-institutional{color: ${color} !important;}
+                    `
                 })
             );
         } else {
