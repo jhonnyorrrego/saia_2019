@@ -18,6 +18,7 @@
                 baseUrl: Session.getBaseUrl(),
                 placeholder: 'Escriba su mensaje',
                 order: 'desc',
+                showForm: true,
                 userData: {
                     id: user.iduser,
                     name: user.name,

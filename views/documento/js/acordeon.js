@@ -164,7 +164,6 @@ $(function () {
 
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
-        console.log(sizeDocument, widthAct)
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {

@@ -35,7 +35,6 @@ if (isset($_REQUEST["genera"])) {
         $idformato = $_REQUEST["idformato"];
         $generar = new GenerarFormato($idformato, $accion, $archivo);
         $redireccion = $generar->ejecutar_accion();
-
     } else {
         alerta("por favor seleccione un Formato a Generar");
         $redireccion = "formatolist.php";
@@ -82,7 +81,7 @@ if (isset($_REQUEST["genera"])) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
-    }else if($camposDescripcion['error'] == 0){
+    } else if ($camposDescripcion['error'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
@@ -110,12 +109,12 @@ if (isset($_REQUEST["genera"])) {
                 $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
                 phpmkr_query($updatePublicar);
             }
-            include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
+            include_once $ruta_db_superior . "/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
 
-            if($_REQUEST['permisosPerfil']){
+            if ($_REQUEST['permisosPerfil']) {
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
-            }else{
+            } else {
                 $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
             }
         }
@@ -173,7 +172,7 @@ class GenerarFormato
         if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
             $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripciÃ³n de los documentos';
-        }else{
+        } else {
             $consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
             $camposFormato = StaticSql::search($consultaFormato);
             if ($camposFormato) {
@@ -456,6 +455,7 @@ class GenerarFormato
                 $texto = str_replace($funciones[$i]["nombre"], $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
             }
 
+            $includes = '';
             $includes .= $this->incluir("'../../librerias_saia.php'", "librerias");
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
             $includes .= $this->incluir("'../../class_transferencia.php'", "librerias");
@@ -465,7 +465,10 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
+            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
+                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
+                0 == '.$formato[0]['mostrar_pdf'].'
+            )): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
                         <html>
                             <head>
@@ -523,7 +526,7 @@ class GenerarFormato
             $params["pdf_word"] = 1;
         }
         
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
         $url.= http_build_query($params);
 
         ?>
@@ -531,6 +534,7 @@ class GenerarFormato
 
         return $string;
     }
+
 
     /*
      * <Clase>
@@ -565,8 +569,8 @@ class GenerarFormato
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
                 $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%' or nombre like '%{$campos_lectura['texto_descr']}%')", "", $conn);
-                if($consultaEtiquetas['numcampos']){
-                    for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
+                if ($consultaEtiquetas['numcampos']) {
+                    for ($k = 0; $k < $consultaEtiquetas['numcampos']; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre'];
                     }
                 }
@@ -807,9 +811,6 @@ class GenerarFormato
                 $texto = str_replace($funciones[$i]["nombre"], $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
             }
 
-            if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
-                $includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
-            }
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
             $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
@@ -822,7 +823,7 @@ class GenerarFormato
                 if ($modulo_formato["numcampos"]) {
                     $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre LIKE '" . $vista[0]["nombre"] . "'", "", $conn);
                     if (!$submodulo_formato["numcampos"]) {
-                        $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
+                        $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','3','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
                         guardar_traza($sql, $fpadre[0]["nombre_tabla"]);
                         phpmkr_query($sql, $conn);
                     }
@@ -875,8 +876,7 @@ class GenerarFormato
 
     public function crear_formato_ae($accion)
     {
-        global $conn;
-        $datos_detalles["numcampos"] = 0;
+        global $conn, $ruta_db_superior;
         $texto = '';
         $includes = "";
         $obligatorio = "";
@@ -1151,14 +1151,14 @@ class GenerarFormato
                         case "radio":
                             /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
                             $classRadios = '';
-                            if($campos[$h]["obligatoriedad"]){
+                            if ($campos[$h]["obligatoriedad"]) {
                                 $classRadios = 'required';
-                                $labelRequired = '<label id="'.$campos[$h]["no mbre"].'-error" class="error" f or="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
+                                $labelRequired = '<label id="' . $campos[$h]["no mbre"] . '-error" class="error" f or="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
                             }
                             /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
-                            $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
-                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta" ]) . $obliga .   '</label>';
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
+                            $texto .= '<div class="form-group  ' . $classRadios . '" id="tr_' . $campos[$h]["nombre"] . '">
+                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga .   '</label>';
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired . '<br></div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -1223,7 +1223,7 @@ class GenerarFormato
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
                                        <div class="card-body no-scroll no-padding">';
-                            
+
                             if ($extensiones_fijas != "") {
                                 $new_ext = array_map('trim', explode('|', $extensiones_fijas));
                                 $extensiones_fijas = "." . implode(', .', $new_ext);
@@ -1232,11 +1232,11 @@ class GenerarFormato
                                 $extensiones = '<?php echo $extensiones;?' . '>';
                             }
                             if ($accion == "adicionar") {
-                                $opcionesCampo = json_decode($campos[$h]['opciones'],true);
+                                $opcionesCampo = json_decode($campos[$h]['opciones'], true);
                                 $longitud = $opcionesCampo['longitud'];
                                 $cantidad = $opcionesCampo['cantidad'];
                                 $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
-                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-longitud="'.$longitud.'"  data-cantidad="'.$cantidad.'" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
+                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-longitud="' . $longitud . '"  data-cantidad="' . $cantidad . '" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
                                 $texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div>';
                                 if ($campos[$h]["obligatoriedad"]) {
                                     $texto .= '<input type="hidden" class="required" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" value="">';
@@ -1694,7 +1694,7 @@ class GenerarFormato
             //$includes .= $this->incluir_libreria("estilo_formulario.php", "librerias");
             if ($archivo) {
                 $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
-                $id_unico = '<?php echo (uniqid("' . $idformato . '-") . "-" . uniqid());?>';
+                $id_unico = '<?php echo (uniqid("' . $this->idformato . '-") . "-" . uniqid());?>';
                 $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
             }
             $texto .= '</form></body>';
@@ -1758,11 +1758,12 @@ span.fancytree-expander {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/jquery.clock.js', "javascript");
             }
             $numero_unicos = count($unico);
+            $enmascarar = '';
             if ($numero_unicos) {
                 $listado = array();
                 $enmascarar .= '<script type="text/javascript">
 	$(document).ready(function() {';
-                for ($k; $k < $numero_unicos; $k++) {
+                for ($k = 0; $k < $numero_unicos; $k++) {
                     $enmascarar .= "$('#" . $unico[0][0] . "').blur(function(){
 	$.ajax({url: '../librerias/validar_unico.php',
 	type:'POST',
@@ -2230,8 +2231,8 @@ span.fancytree-expander {
         if (usuario_actual('login') == 'cerok') {
             $redireccion = "funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $this->idformato . $adicionales;
         }
-        $this->mensaje="Formato generado con exito";
-        $this->exito="1";
+        $this->mensaje = "Formato generado con exito";
+        $this->exito = "1";
         return $redireccion;
     }
 
@@ -2339,8 +2340,8 @@ span.fancytree-expander {
     private function crear_campo_dropzone($nombre, $parametros)
     {
 
-        $upload_max_size = str_replace("M","",ini_get('upload_max_filesize'));
-        $maximo = str_replace("M","",return_megabytes($upload_max_size));
+        $upload_max_size = str_replace("M", "", ini_get('upload_max_filesize'));
+        $maximo = str_replace("M", "", return_megabytes($upload_max_size));
         $js_archivos = "<script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
@@ -2526,6 +2527,7 @@ span.fancytree-expander {
             }
         }
 
+        $adicionales = '';
         if (is_array($aux2)) {
             $adicionales .= implode(" ", $aux2);
         }
@@ -2563,7 +2565,7 @@ span.fancytree-expander {
         $required = '';
         if ($campo["obligatoriedad"]) {
             $obliga = "*";
-            $labelRequired = '<label id="'.$campo["nombre"]. '-error" class="error" for="'.$campo["nombre"].'" style="display: none;"></label>';
+            $labelRequired = '<label id="' . $campo["nombre"] . '-error" class="error" for="' . $campo["nombre"] . '" style="display: none;"></label>';
             $required = 'required';
         } else {
             $obliga = "";
@@ -2696,5 +2698,4 @@ span.fancytree-expander {
 
         return implode("\n", $texto);
     }
-
 }

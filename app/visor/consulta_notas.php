@@ -41,7 +41,13 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 'annotation' => $VisorComentario->annotation,
                 'class' => $VisorComentario->class,
                 'content' => html_entity_decode($VisorComentario->content),
-                'uuid' => $VisorComentario->uuid
+                'uuid' => $VisorComentario->uuid,
+                'user' => [
+                    'key' => $VisorComentario->getUser()->getPK(),
+                    'name' => $VisorComentario->getUser()->getName(),
+                    'image' => $VisorComentario->getUser()->getImage('foto_recorte')
+                ],
+                'date' => $VisorComentario->getDateAttribute('fecha')
             ];
         }
         $Response->success = 1;
@@ -54,3 +60,4 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
+

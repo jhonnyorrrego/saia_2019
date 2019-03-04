@@ -107,9 +107,9 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						</td>
 					</tr>
 					<tr>
-						<td style="font-size:8pt;"  align="center">Descripci&oacuten General</td>
+						<td style="font-size:8pt;"  align="center">Descripci&oacuten General*</td>
 						<td align="center">
-						<input type="text" id="descripcion_general" name="descripcion_general"/>
+						<input type="text" id="descripcion_general" class="required" name="descripcion_general"/>
 						</td>
 					</tr>
                     <tr>
