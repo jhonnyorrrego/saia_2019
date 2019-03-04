@@ -465,10 +465,7 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
-                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
-                0 == '.$formato[0]['mostrar_pdf'].'
-            )): ?>';
+            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
                         <html>
                             <head>
@@ -526,7 +523,7 @@ class GenerarFormato
             $params["pdf_word"] = 1;
         }
         
-        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/index.php?";
         $url.= http_build_query($params);
 
         ?>
@@ -1110,16 +1107,38 @@ class GenerarFormato
 
                             break;
                         case "textarea":
-                           $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+                            $valor = $campos[$h]["valor"];
+                            $valor2 = explode("|", $campos[$h]["valor"]);
+                            $nivel_barra = "";
+                            if (count($valor2)) {
+                                $nivel_barra = $valor2[0];
+                                if (@$valor2[1] != "") {
+                                    if ($accion == "adicionar" && strpos($valor2[1], "*}")) {
+                                        $includes .= $this->incluir("funciones.php", "librerias");
+                                        $valor = $this->arma_funcion($valor2[1], $this->idformato . ",$" . "_REQUEST['iddoc']", $accion);
+                                    } else if ($accion == "adicionar" && strpos($valor2[1], "*}") === false) {
+                                        $valor = $valor2[1];
+                                    }
+                                } else {
+                                    $valor = "";
+                                }
+                            }
+                            if ($accion == "editar") {
+                                $valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
+                            } else if ($valor == "") {
+                                $valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
+                            }
+                            if ($nivel_barra == "") {
+                                $nivel_barra = "basico";
+                            }
+                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                                        <div class="celda_transparente">';
-                            $idcampo_cke = $campos[$h]["nombre"];
-                            $texto .= '<textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $idcampo_cke . '" cols="53" rows="3" class="form-control';
+                                        <div class="celda_transparente">
+                                        <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control tiny_' . $nivel_barra;
                             if ($campos[$h]["obligatoriedad"]) {
                                 $texto .= ' required';
                             }
-                            $texto .= '">' . $valor . '</textarea>';
-                            $texto .= '</div></div>';
+                            $texto .= '">' . $valor . '</textarea></div></div>';
                             $textareas++;
                             $indice_tabindex++;
                             break;
@@ -1204,7 +1223,7 @@ class GenerarFormato
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
                                        <div class="card-body no-scroll no-padding">';
-
+                            
                             if ($extensiones_fijas != "") {
                                 $new_ext = array_map('trim', explode('|', $extensiones_fijas));
                                 $extensiones_fijas = "." . implode(', .', $new_ext);
@@ -1213,9 +1232,11 @@ class GenerarFormato
                                 $extensiones = '<?php echo $extensiones;?' . '>';
                             }
                             if ($accion == "adicionar") {
-                                // $campos[$h]["idcampos_formato"]
+                                $opcionesCampo = json_decode($campos[$h]['opciones'],true);
+                                $longitud = $opcionesCampo['longitud'];
+                                $cantidad = $opcionesCampo['cantidad'];
                                 $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
-                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
+                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-longitud="'.$longitud.'"  data-cantidad="'.$cantidad.'" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
                                 $texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div>';
                                 if ($campos[$h]["obligatoriedad"]) {
                                     $texto .= '<input type="hidden" class="required" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" value="">';
@@ -1677,6 +1698,9 @@ class GenerarFormato
                 $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
             }
             $texto .= '</form></body>';
+            if ($textareas) {
+                $includes .= $this->incluir_libreria("header_formato.php", "librerias");
+            }
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }
@@ -2314,8 +2338,9 @@ span.fancytree-expander {
 
     private function crear_campo_dropzone($nombre, $parametros)
     {
-        $upload_max_size = ini_get('upload_max_filesize');
-        $maximo = return_megabytes($upload_max_size);
+
+        $upload_max_size = str_replace("M","",ini_get('upload_max_filesize'));
+        $maximo = str_replace("M","",return_megabytes($upload_max_size));
         $js_archivos = "<script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
@@ -2324,21 +2349,40 @@ span.fancytree-expander {
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
+                    var upload_max_size = $upload_max_size;
+                    var maximo = $maximo;
+                    var longitudSolicitada = $(this).attr('data-longitud');
+                    var cantidadSolicitada = $(this).attr('data-cantidad');
+                    var multiple_text = $(this).attr('data-multiple');
+                    if(longitudSolicitada > 1){
+                         multiple_text = 'multiple';
+                    }
+                    
                     var idformato = $(this).attr('data-idformato');
                 	var idcampo = $(this).attr('id');
                 	var paramName = $(this).attr('data-nombre-campo');
                 	var idcampoFormato = $(this).attr('data-idcampo-formato');
                 	var extensiones = $(this).attr('data-extensiones');
-                	var multiple_text = $(this).attr('data-multiple');
+                	
                 	var multiple = false;
                 	var form_uuid = $('#form_uuid').val();
-                	var maxFiles = 1;
+                    var maxFiles = 1;
+                    var maxFiles = $maximo;
                 	if(multiple_text == 'multiple') {
-                	multiple = true;
-                	maxFiles = 10;
+                	    multiple = true;
+                        if(longitudSolicitada > upload_max_size){
+                            maxFilesize = 200;                           
+                        }else{
+                            maxFilesize = longitudSolicitada;
+                        }
+                        if(cantidadSolicitada > maximo){
+                            maxFiles = 10;
+                        }else{
+                            maxFiles = cantidadSolicitada;
+                        } 
                 	}
                     var opciones = {
-                        maxFilesize: $maximo,
+                        maxFilesize: maxFilesize,
                     	ignoreHiddenFiles : true,
                     	maxFiles : maxFiles,
                     	acceptedFiles: extensiones,

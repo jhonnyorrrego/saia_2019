@@ -71,15 +71,17 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 {
 	global $conn, $ruta_db_superior;
-	$retorno = array(
+	$retorno = [
 		"exito" => 0,
 		"idpantalla_campos" => $idpantalla_campos
-	);
+	];
 	
-	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
+	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html,formato_idformato", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
 	$acciones = array("a", "e", "b");
 	if ($pantalla_campos["numcampos"]) {
 		$datos = $_REQUEST;
+		$consultarNombre = busca_filtro_tabla("","campos_formato","formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}","",$conn);
+		if(!$consultarNombre['numcampos']){
 		$retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
 		$retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 
@@ -136,7 +138,10 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 			$cadena = load_pantalla_campos($idpantalla_campos, 0);
 			$retorno["codigo_html"] = $cadena["codigo_html"];
 		}
+	}else{
+		$retorno["exito"] = 0;
 	}
+}
 	if ($tipo_retorno == 1) {
 		echo (json_encode($retorno));
 	} else {
@@ -404,10 +409,14 @@ function delete_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 			}
 		}
 		$consultarTabla = busca_filtro_tabla("f.nombre_tabla,cf.nombre,cf.tipo_dato,cf.longitud","formato f, campos_formato cf","f.idformato=cf.formato_idformato and f.idformato={$_REQUEST['idformato']} and cf.idcampos_formato={$idpantalla_campos}","",$conn);
-		$quitarObligatoriedad = "ALTER TABLE {$consultarTabla[0]['nombre_tabla']} modify {$consultarTabla[0]['nombre']} {$consultarTabla[0]['tipo_dato']}({$consultarTabla[0]['longitud']}) null";
-		phpmkr_query($quitarObligatoriedad);
-		$sql_delete = 'DELETE FROM campos_formato WHERE idcampos_formato=' . $idpantalla_campos;
-		
+		if($consultarTabla['numcampos']){
+			$consultaCampo = Conexion::getConnection()->Busca_tabla("{$consultarTabla[0]['nombre_tabla']}","{$consultarTabla[0]['nombre']}");
+			if($consultaCampo['numcampos']){
+				$quitarObligatoriedad = "ALTER TABLE {$consultarTabla[0]['nombre_tabla']} modify {$consultarTabla[0]['nombre']} {$consultarTabla[0]['tipo_dato']}({$consultarTabla[0]['longitud']}) null";
+				phpmkr_query($quitarObligatoriedad);
+			}
+		}
+		$sql_delete = 'DELETE FROM campos_formato WHERE idcampos_formato=' . $idpantalla_campos;		
 		$retorno["exito"] = 1;
 		$retorno["sql"] = $sql_delete;
 		$eliminarCampo = phpmkr_query($sql_delete);

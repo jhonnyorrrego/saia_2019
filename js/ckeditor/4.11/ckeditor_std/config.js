@@ -17,7 +17,6 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'forms' },
 		{ name: 'tools' },
 		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'hola-mundo' },
 		{ name: 'others' },
 		'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
@@ -36,10 +35,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
-
-	config.extraPlugins =  "plantillas";
 	
 	config.extraAllowedContent = '* [id]; * (*); * {*}; p (*) [*] {*}; div (*) [*] {*}; li (*) [*] { *}; ul (*) [*] {*}; span (*) [*] {*}; table (*) [*] {*}; td (*) [*] {*} ';
 
-	
 };
