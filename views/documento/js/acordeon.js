@@ -144,9 +144,9 @@ $(function () {
     function redimensionarQr(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
-        if (sizeDocument == 'xs' && widthAct < '8') {
-            sizeImg = sizeImg * 1;
-            sizeH = sizeH * 0.6;
+        if (sizeDocument == 'xs') {
+            sizeImg = sizeImg * 0.7;
+            sizeH = sizeH * 0.7;
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         } else if (sizeDocument == 'sm' && widthAct > '9') {
@@ -161,7 +161,6 @@ $(function () {
             $("#qr").css("width", sizeImg + "%");
             $("#qr").css("height", sizeH + "%");
         }
-
     }
     function redimensionarLgEmpresa(sizeDocument, widthAct) {
         var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
