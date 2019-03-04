@@ -35,7 +35,6 @@ if (isset($_REQUEST["genera"])) {
         $idformato = $_REQUEST["idformato"];
         $generar = new GenerarFormato($idformato, $accion, $archivo);
         $redireccion = $generar->ejecutar_accion();
-
     } else {
         alerta("por favor seleccione un Formato a Generar");
         $redireccion = "formatolist.php";
@@ -82,7 +81,7 @@ if (isset($_REQUEST["genera"])) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
-    }else if($camposDescripcion['error'] == 0){
+    } else if ($camposDescripcion['error'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
@@ -110,12 +109,12 @@ if (isset($_REQUEST["genera"])) {
                 $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
                 phpmkr_query($updatePublicar);
             }
-            include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
+            include_once $ruta_db_superior . "/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
 
-            if($_REQUEST['permisosPerfil']){
+            if ($_REQUEST['permisosPerfil']) {
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
-            }else{
+            } else {
                 $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
             }
         }
@@ -173,7 +172,7 @@ class GenerarFormato
         if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
             $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripciÃ³n de los documentos';
-        }else{
+        } else {
             $consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
             $camposFormato = StaticSql::search($consultaFormato);
             if ($camposFormato) {
@@ -465,8 +464,8 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == '.$formato[0]['mostrar_pdf'].'): ?>';
-            $validacion_tipo.= '<!DOCTYPE html>
+            $validacion_tipo = '<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == ' . $formato[0]['mostrar_pdf'] . '): ?>';
+            $validacion_tipo .= '<!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -477,10 +476,10 @@ class GenerarFormato
                                 <meta name="apple-touch-fullscreen" content="yes">
                                 <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                 <meta content="" name="description" />
-                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $validacion_tipo.= '<?php else: ?>';
-            $validacion_tipo.= $this->generar_mostrar_pdf();
-            $validacion_tipo.= '<?php endif; ?>';
+                                <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo .= '<?php else: ?>';
+            $validacion_tipo .= $this->generar_mostrar_pdf();
+            $validacion_tipo .= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -501,7 +500,8 @@ class GenerarFormato
         return false;
     }
 
-    public function generar_mostrar_pdf(){
+    public function generar_mostrar_pdf()
+    {
         $string = '<?php
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
@@ -565,8 +565,8 @@ class GenerarFormato
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
                 $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%' or nombre like '%{$campos_lectura['texto_descr']}%')", "", $conn);
-                if($consultaEtiquetas['numcampos']){
-                    for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
+                if ($consultaEtiquetas['numcampos']) {
+                    for ($k = 0; $k < $consultaEtiquetas['numcampos']; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre'];
                     }
                 }
@@ -586,6 +586,7 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
+            
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<style>
         .table.table-condensed thead tr td {
@@ -1151,14 +1152,14 @@ class GenerarFormato
                         case "radio":
                             /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
                             $classRadios = '';
-                            if($campos[$h]["obligatoriedad"]){
+                            if ($campos[$h]["obligatoriedad"]) {
                                 $classRadios = 'required';
-                                $labelRequired = '<label id="'.$campos[$h]["no mbre"].'-error" class="error" f or="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
+                                $labelRequired = '<label id="' . $campos[$h]["no mbre"] . '-error" class="error" f or="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
                             }
                             /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
-                            $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
-                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta" ]) . $obliga .   '</label>';
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
+                            $texto .= '<div class="form-group  ' . $classRadios . '" id="tr_' . $campos[$h]["nombre"] . '">
+                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga .   '</label>';
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired . '<br></div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -1223,7 +1224,7 @@ class GenerarFormato
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
                                        <div class="card-body no-scroll no-padding">';
-                            
+
                             if ($extensiones_fijas != "") {
                                 $new_ext = array_map('trim', explode('|', $extensiones_fijas));
                                 $extensiones_fijas = "." . implode(', .', $new_ext);
@@ -1232,11 +1233,11 @@ class GenerarFormato
                                 $extensiones = '<?php echo $extensiones;?' . '>';
                             }
                             if ($accion == "adicionar") {
-                                $opcionesCampo = json_decode($campos[$h]['opciones'],true);
+                                $opcionesCampo = json_decode($campos[$h]['opciones'], true);
                                 $longitud = $opcionesCampo['longitud'];
                                 $cantidad = $opcionesCampo['cantidad'];
                                 $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
-                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-longitud="'.$longitud.'"  data-cantidad="'.$cantidad.'" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
+                                $texto .= '<div id="' . $idelemento . '" class="saia_dz dropzone no-margin" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-longitud="' . $longitud . '"  data-cantidad="' . $cantidad . '" data-idformato="' . $this->idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
                                 $texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div>';
                                 if ($campos[$h]["obligatoriedad"]) {
                                     $texto .= '<input type="hidden" class="required" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" value="">';
@@ -2230,8 +2231,8 @@ span.fancytree-expander {
         if (usuario_actual('login') == 'cerok') {
             $redireccion = "funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $this->idformato . $adicionales;
         }
-        $this->mensaje="Formato generado con exito";
-        $this->exito="1";
+        $this->mensaje = "Formato generado con exito";
+        $this->exito = "1";
         return $redireccion;
     }
 
@@ -2339,8 +2340,8 @@ span.fancytree-expander {
     private function crear_campo_dropzone($nombre, $parametros)
     {
 
-        $upload_max_size = str_replace("M","",ini_get('upload_max_filesize'));
-        $maximo = str_replace("M","",return_megabytes($upload_max_size));
+        $upload_max_size = str_replace("M", "", ini_get('upload_max_filesize'));
+        $maximo = str_replace("M", "", return_megabytes($upload_max_size));
         $js_archivos = "<script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
@@ -2563,7 +2564,7 @@ span.fancytree-expander {
         $required = '';
         if ($campo["obligatoriedad"]) {
             $obliga = "*";
-            $labelRequired = '<label id="'.$campo["nombre"]. '-error" class="error" for="'.$campo["nombre"].'" style="display: none;"></label>';
+            $labelRequired = '<label id="' . $campo["nombre"] . '-error" class="error" for="' . $campo["nombre"] . '" style="display: none;"></label>';
             $required = 'required';
         } else {
             $obliga = "";
@@ -2696,5 +2697,5 @@ span.fancytree-expander {
 
         return implode("\n", $texto);
     }
-
 }
+

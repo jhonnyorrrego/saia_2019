@@ -168,10 +168,12 @@ function ordenar_pantalla_campos($nuevo_orden) {
 
     foreach ($pantalla_campos as $key => $valor) {
         $cadena = str_replace("pc_", "", $valor);
-        /* $sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena; */
-        $sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
-        $i++;
-        phpmkr_query($sql2);
+       if ($cadena != 'list_one') {
+            /* $sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena; */
+            $sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
+            $i++;
+            phpmkr_query($sql2);
+        }
     }
 }
 
