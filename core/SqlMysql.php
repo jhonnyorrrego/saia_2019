@@ -333,11 +333,15 @@ class SqlMysql extends SQL2
      */
     public function Busca_tabla($tabla, $campo = "")
     {
-        if (!$tabla && @$_REQUEST["tabla"])
+        if (!$tabla && @$_REQUEST["tabla"]){
             $tabla = $_REQUEST["tabla"];
-        else if (!$tabla)
+        }else if (!$tabla){
             return (false);
-        $this->consulta = "show columns from " . $tabla;
+        }
+        if($campo){
+            $tabla .= " where Field = '{$campo}'";
+        }   
+        $this->consulta = "show columns from {$tabla}";
         $this->res = mysqli_query($this->Conn->conn, $this->consulta);
         $i = 0;
         $resultado = array();
