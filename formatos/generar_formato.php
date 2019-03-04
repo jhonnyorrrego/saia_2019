@@ -587,6 +587,7 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
+            
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<style>
         .table.table-condensed thead tr td {
