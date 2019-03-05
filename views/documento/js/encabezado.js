@@ -74,8 +74,8 @@ $(function () {
         top.topModal(options);
     });
 
-    $(".priority_flag").on('click', function () {
-        let flag = $(this).find('.priority'),
+    $("#priority_flag").on('click', function () {
+        let flag = $("#priority_flag i"),
             priority = flag.hasClass('text-danger') ? 0 : 1,
             key = localStorage.getItem('key');
 
@@ -92,10 +92,10 @@ $(function () {
 
                 if (priority) {
                     flag.addClass('text-danger');
-                    $(`#table i[data-key=${documentId}]`).show();
+                    $(`#table .priority_flag[data-key=${documentId}]`).removeClass('d-none');
                 } else {
                     flag.removeClass('text-danger');
-                    $(`#table i[data-key=${documentId}]`).hide();
+                    $(`#table .priority_flag[data-key=${documentId}]`).addClass('d-none');
                 }
             } else {
                 top.notification({
