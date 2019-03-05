@@ -43,7 +43,6 @@ $component = StaticSql::search($sql);
             pagination: true,
             maintainSelected: true,
             pageSize: '<?= $component[0]['cantidad_registros'] ?>',
-            height: $(window).height() - $('#header_list').height(),
             columns: [{
                 field: 'info',
                 title: ''
