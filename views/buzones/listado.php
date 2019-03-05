@@ -115,6 +115,10 @@ $component = StaticSql::search($sql);
             table.find('tr[data-index] td').addClass('p-2');
             $('.card-view .title').remove();
             $('.pagination-detail .page-list').remove();
+
+            if (window.resizeIframe) {
+                window.resizeIframe();
+            }
         }
 
         if (encabezado) {
