@@ -29,7 +29,6 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
     $(function(){
         var baseUrl = $("script[data-baseurl]").data('baseurl');
         var params = <?= json_encode($params); ?>;
-        var component = params.idbusqueda_componente;
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
         var table = $('#table');
         
@@ -113,9 +112,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         }
 
         if(encabezado){
-            $("#header_list").load(baseUrl+encabezado,{
-                idbusqueda_componente: component
-            }, function(){
+            $("#header_list").load(baseUrl+encabezado,params, function(){
                 $('[data-toggle="tooltip"]').tooltip();
             });
         }

@@ -196,7 +196,7 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findBySql($sql,true);
+                $instance = CajaEli::findBySql($sql);
                 if ($instance) {
                     $Caja->estado = 1;
                     $Caja->fk_caja_eli = 'NULL';
@@ -264,7 +264,7 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findBySql($sql,true);
+                $instance = CajaEli::findBySql($sql);
                 if ($instance) {
                     $CajaDel=$instance[0];
                     $CajaDel->fecha_accion=date("Y-m-d H:i:s");
@@ -304,7 +304,10 @@ class CajaController
         ];
 
         if (!empty($data['idcaja'])) {
-            $sql = "SELECT ce.idcaja_entidadserie,d.nombre as dependencia,s.nombre as serie,ce.fecha_creacion FROM caja c,caja_entidadserie ce,entidad_serie e,dependencia d,serie s WHERE c.idcaja=ce.fk_caja AND ce.fk_entidad_serie=e.identidad_serie AND e.fk_dependencia=d.iddependencia AND e.fk_serie=s.idserie AND e.estado=1 AND s.estado=1 AND d.estado=1 AND c.idcaja={$data['idcaja']} ";
+            $sql = "SELECT ce.idcaja_entidadserie,d.nombre as dependencia,s.nombre as serie,ce.fecha_creacion 
+            FROM caja c,caja_entidadserie ce,entidad_serie e,dependencia d,serie s 
+            WHERE c.idcaja=ce.fk_caja AND ce.fk_entidad_serie=e.identidad_serie AND e.fk_dependencia=d.iddependencia 
+            AND e.fk_serie=s.idserie AND e.estado=1 AND s.estado=1 AND d.estado=1 AND c.idcaja={$data['idcaja']} ";
             $records = StaticSql::search($sql);
             if ($records) {
                 $data = [];
@@ -344,7 +347,7 @@ class CajaController
             $subQuery = "SELECT fk_entidad_serie FROM caja_entidadserie WHERE fk_caja={$data['idcaja']}";
 
             $sql = "SELECT e.identidad_serie,d.nombre as dependencia,s.nombre as serie FROM entidad_serie e, dependencia d,serie s 
-            WHERE e.fk_dependencia=d.iddependencia AND e.fk_serie=s.idserie AND e.estado=1 AND d.estado=1 AND s.estado=1  AND s.tipo=1
+            WHERE e.fk_dependencia=d.iddependencia AND e.fk_serie=s.idserie AND e.estado=1 AND d.estado=1 AND s.estado=1  AND s.tipo in (1,2)
             AND e.identidad_serie NOT IN ({$subQuery}) AND (s.nombre like '%{$data['search']}%' OR d.nombre like '%{$data['search']}%')";
             $records = StaticSql::search($sql);
             if ($records) {

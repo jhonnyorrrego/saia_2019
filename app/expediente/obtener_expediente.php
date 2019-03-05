@@ -26,7 +26,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if ($data) {
         $ids = implode(',', $data);
         $sql = "SELECT * FROM documento WHERE iddocumento in ({$ids}) AND estado NOT IN ('ELIMINADO','ACTIVO')";
-        $records = Documento::findBySql($sql, true);
+        $records = Documento::findBySql($sql);
         if ($records) {
             $response['success'] = 1;
             $dataTable = [];
@@ -44,7 +44,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
                 $dataTable['tipoDoc'] = $tipo;
 
                 $sql = "SELECT DISTINCT e.idexpediente,e.nombre FROM expediente_doc ed,expediente e WHERE e.idexpediente=ed.fk_expediente AND e.estado=1 AND ed.fk_documento='{$dataTable['id']}'";
-                $expeDoc = ExpedienteDoc::findBySql($sql);
+                $expeDoc = ExpedienteDoc::findBySql($sql,false);
                 $html = '';
                 if ($expeDoc) {
                     $html .= '<ol>';

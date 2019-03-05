@@ -51,10 +51,10 @@ class Expediente extends Model
     {
         parent::__construct($id);
         $this->massiveAssigned();
-
     }
 
-    public function massiveAssigned(){
+    public function massiveAssigned()
+    {
         if ($this->idexpediente) {
             $this->permiso = [
                 'a' => false,
@@ -67,7 +67,7 @@ class Expediente extends Model
             $this->setAccessUser($_SESSION['idfuncionario']);
         }
     }
-    
+
 
     protected function defineAttributes()
     {
@@ -190,7 +190,7 @@ class Expediente extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function CreateExpediente() : array
+    public function CreateExpediente(): array
     {
         $response = [
             'data' => [],
@@ -227,7 +227,7 @@ class Expediente extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateResponsable(int $responAnt) : array
+    public function updateResponsable(int $responAnt): array
     {
         $response = [
             'exito' => 0,
@@ -237,7 +237,8 @@ class Expediente extends Model
             $response['exito'] = 1;
         } else {
             if ($this->update()) {
-                $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
+                $sql = "SELECT identidad_expediente FROM entidad_expediente 
+                WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
                 $idEnt = $this->search($sql);
                 if ($idEnt) {
                     $EntidadExpediente = new EntidadExpediente($idEnt[0]['identidad_expediente']);
@@ -267,7 +268,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEstado() : string
+    public function getEstado(): string
     {
         $data = $this->keyValueField('estado');
         return $data[$this->estado] ?? '';
@@ -279,7 +280,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEstadoCierre() : string
+    public function getEstadoCierre(): string
     {
         $data = $this->keyValueField('estado_cierre');
         return $data[$this->estado_cierre] ?? '';
@@ -307,7 +308,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getPropietario() : string
+    public function getPropietario(): string
     {
         $data = $this->getRelationFk('Funcionario', 'propietario');
         return $data ? $data->nombres . ' ' . $data->apellidos : '';
@@ -318,7 +319,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getResponsable() : string
+    public function getResponsable(): string
     {
         $data = $this->getRelationFk('Funcionario', 'responsable');
         return $data ? $data->nombres . ' ' . $data->apellidos : '';
@@ -330,7 +331,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEstadoArchivo() : string
+    public function getEstadoArchivo(): string
     {
         $data = $this->keyValueField('estado_archivo');
         return $data[$this->estado_archivo] ?? '';
@@ -342,7 +343,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getCaja() : string
+    public function getCaja(): string
     {
         $data = $this->getRelationFk('Caja');
         return $data ? $data->codigo : '';
@@ -366,13 +367,15 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countTomos() : int
+    public function countTomos(): int
     {
         if ($this->tomo_padre) {
-            $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->tomo_padre}";
+            $sql = "SELECT count(idexpediente) as cant FROM expediente 
+            WHERE tomo_padre={$this->tomo_padre}";
             $data = $this->search($sql);
         } else {
-            $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->idexpediente}";
+            $sql = "SELECT count(idexpediente) as cant FROM expediente 
+            WHERE tomo_padre={$this->idexpediente}";
             $data = $this->search($sql);
         }
         return $data ? $data[0]['cant'] + 1 : 1;
@@ -383,7 +386,7 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countDocuments() : int
+    public function countDocuments(): int
     {
         return ExpedienteDoc::countDocumentsExp($this->idexpediente);
     }
@@ -395,9 +398,10 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countExpediente(int $tipoAg = 0) : int
+    public function countExpediente(int $tipoAg = 0): int
     {
-        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador={$tipoAg} AND cod_padre={$this->idexpediente} AND estado=1";
+        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente
+        WHERE agrupador={$tipoAg} AND cod_padre={$this->idexpediente} AND estado=1";
         $response = $this->search($sql);
         return $response ? $response[0]['cant'] : 0;
     }
@@ -410,9 +414,10 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function countAllExpedienteCaja(int $idcaja = null) : int
+    public static function countAllExpedienteCaja(int $idcaja = null): int
     {
-        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
+        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente 
+        WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
         $response = StaticSql::search($sql);
         return $response ? $response[0]['cant'] : 0;
     }
@@ -425,7 +430,7 @@ class Expediente extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function countExpedienteCaja(int $idcaja = null) : int
+    public static function countExpedienteCaja(int $idcaja = null): int
     {
         return 0;
     }
@@ -436,7 +441,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getAgrupador() : string
+    public function getAgrupador(): string
     {
         $data = $this->keyValueField('agrupador');
         return $data[$this->agrupador] ?? '';
@@ -447,10 +452,12 @@ class Expediente extends Model
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function isResponsable() : bool
+    public function isResponsable(): bool
     {
         $response = false;
-        if ($this->propietario == $_SESSION['idfuncionario'] || $this->responsable == $_SESSION['idfuncionario']) {
+        if ($this->propietario == $_SESSION['idfuncionario'] || 
+            $this->responsable == $_SESSION['idfuncionario']
+        ){
             $response = true;
         }
         return $response;
@@ -459,13 +466,19 @@ class Expediente extends Model
     /**
      * valida si un expediente tiene expedientes inferiores
      *
+     * @param int $agrupador: si desea filtrar por un tipo de agrupador
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function hasChild() : bool
+    public function hasChild(int $agrupador=null): bool
     {
-        $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1";
-        $cant = $this->findBySql($sql);
+        $where='';
+        if(!is_null($agrupador)){
+            $where= " and agrupador={$agrupador}";
+        }
+        $sql = "SELECT count(idexpediente) as cant FROM expediente 
+        WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1 {$where}";
+        $cant = $this->findBySql($sql,false);
         return ($cant[0]['cant']) ? true : false;
     }
 
@@ -475,14 +488,16 @@ class Expediente extends Model
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function canClose() : bool
+    public function canClose(): bool
     {
-        $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 AND estado=1 AND estado_cierre=1";
-        $cant = $this->findBySql($sql);
+        $sql = "SELECT count(idexpediente) as cant FROM expediente
+        WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 
+        AND estado=1 AND estado_cierre=1";
+        $cant = $this->findBySql($sql,false);
         return (!$cant[0]['cant']) ? true : false;
     }
 
-    public function infoRetencion() : string
+    public function infoRetencion(): string
     {
         $response = '';
         if ($this->estado_cierre == 2) {
@@ -533,7 +548,8 @@ class Expediente extends Model
                 'v' => false
             ];
         } else {*/
-        $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
+        $sql = "SELECT permiso FROM permiso_expediente 
+        WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
         $consPermiso = $this->search($sql);
         if ($consPermiso) {
             foreach ($consPermiso as $fila) {
@@ -563,7 +579,7 @@ class Expediente extends Model
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getAccessUser(string $permiso) : bool
+    public function getAccessUser(string $permiso): bool
     {
         $response = false;
         if (in_array($permiso, $this->permiso)) {
@@ -582,9 +598,14 @@ class Expediente extends Model
     public function getExpedienteDocFk(int $instance = 1)
     {
         if ($instance) {
-            $data = ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
+            $data = ExpedienteDoc::findAllByAttributes(
+                ['idexpediente' => $this->idexpediente]
+            );
         } else {
-            $data = ExpedienteDoc::findColumn('idexpediente_doc', ['idexpediente' => $this->idexpediente]);
+            $data = ExpedienteDoc::findColumn(
+                'idexpediente_doc',
+                ['idexpediente' => $this->idexpediente]
+            );
         }
         return $data;
     }
@@ -599,20 +620,28 @@ class Expediente extends Model
     public function getExpedienteCierreFk(int $instance = 1)
     {
         if ($instance) {
-            $data = ExpedienteCierre::findAllByAttributes(['fk_expediente' => $this->idexpediente], [], 'idexpediente_cierre desc');
+            $data = ExpedienteCierre::findAllByAttributes(
+                ['fk_expediente' => $this->idexpediente],
+                [], 
+                'idexpediente_cierre desc'
+            );
         } else {
-            $data = ExpedienteCierre::findColumn('idexpediente_cierre', ['fk_expediente' => $this->idexpediente]);
+            $data = ExpedienteCierre::findColumn(
+                'idexpediente_cierre', 
+                ['fk_expediente' => $this->idexpediente]
+            );
         }
         return $data;
     }
 
-    public static function getHtmlCaja(Expediente $Expediente = null) : string
+    public static function getHtmlCaja(Expediente $Expediente = null): string
     {
         $html = '';
         if ($Expediente) {
             $sql = "SELECT c.idcaja,c.codigo FROM caja_entidadserie ce,caja c, entidad_serie e 
-            WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 AND c.estado=1
-            AND c.estado_archivo={$Expediente->estado_archivo} AND ce.fk_entidad_serie={$Expediente->fk_entidad_serie}";
+            WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 
+            AND c.estado=1 AND c.estado_archivo={$Expediente->estado_archivo} 
+            AND ce.fk_entidad_serie={$Expediente->fk_entidad_serie}";
             $records = StaticSql::search($sql);
             if ($records) {
                 foreach ($records as $record) {
@@ -637,7 +666,7 @@ class Expediente extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function getHtmlField(string $campo, string $etiqHtml, $selected = 0) : string
+    public static function getHtmlField(string $campo, string $etiqHtml, $selected = 0): string
     {
         $html = '';
         switch ($etiqHtml) {
@@ -663,7 +692,7 @@ class Expediente extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function keyValueField(string $campo) : array
+    public static function keyValueField(string $campo): array
     {
         $response['estado'] = [
             0 => 'INACTIVO',

@@ -37,14 +37,16 @@ class Documento extends Model
     protected $ventanilla_radicacion;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'iddocumento',
@@ -89,9 +91,19 @@ class Documento extends Model
             'fecha_limite'
         ];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * @return  string Nombre del Creador
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getCreador()
+    {
+        $Funcionario = $this->getRelationFk('Funcionario', 'ejecutor');
+        return $Funcionario->getName();
     }
 }

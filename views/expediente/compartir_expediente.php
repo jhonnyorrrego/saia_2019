@@ -35,10 +35,6 @@ $params = [
   'idexpediente'=>$idexpediente,
   'baseUrl'=> $ruta_db_superior
 ];
-
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo validate();
-echo select2();
 ?>
     
 <div class="row mx-0">
@@ -56,7 +52,7 @@ echo select2();
         <div class="row">
             <div class="col-md-12">
               <input type="hidden" id="idexpediente" name="idexpediente" value="<?= $ids; ?>">
-            <button class="btn btn-complete" id="guardarPermiso">Compartir</button>
+            <button class="btn btn-complete" type="submit" id="guardarPermiso">Compartir</button>
           </div>
         </div>
       </form>

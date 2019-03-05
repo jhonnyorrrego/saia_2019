@@ -166,7 +166,7 @@ $(function () {
     $(document).on("click", ".new_add", function () {
         switch ($(this).data('type')) {
             case 'folder':
-                console.log('pending');
+                newExpediente();
                 break;
             case 'task':
                 taskAction();
@@ -265,6 +265,17 @@ $(function () {
         };
 
         $("#close_modal", window.top.document).trigger("click");
+        top.topModal(options);
+    }
+
+    function newExpediente(){
+        let options = {
+            url: `${baseUrl}views/expediente/seleccionar.php`,
+            size: "modal-lg",
+            title: "SELECCIONAR EXPEDIENTE SUPERIOR",
+            centerAlign: false,
+            buttons: {}
+        };
         top.topModal(options);
     }
 });

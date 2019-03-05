@@ -19,7 +19,7 @@ $(document).ready(function () {
                         let tr = `<tr id="tr_${row.idpermiso}">
                         <td>${row.funcionario}</td>
                         <td>${row.nombreExpediente}</td>
-                        <td><button class="btn btn-danger" data-id="${row.idpermiso}"><i class="fa fa-trash"></i></button></td>
+                        <td><button class="btn btn-danger delPerm" data-id="${row.idpermiso}"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
                         $("#data-table").append(tr);
                         });
@@ -46,12 +46,15 @@ $(document).ready(function () {
     }
     loadTable();
 
-    $(document).off("click", ".btn-danger");
-    $(document).on("click", ".btn-danger", function () {
+    $(document).off("click", ".delPerm");
+    $(document).on("click", ".delPerm", function () {
         var idpermisoExpediente = $(this).data("id");
         top.confirm({
+            drag: false,
+            overlay: true,
+            close: false,
             type: 'error',
-            title: 'Eliminando!',
+            title: 'Eliminar!',
             message: 'Está seguro de eliminar el permiso?',
             position: 'center',
             timeout: 0,
