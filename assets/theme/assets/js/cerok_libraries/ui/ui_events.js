@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     var session = new Session();
     var baseUrl = Session.getBaseUrl();
     var xDown = null;
@@ -6,37 +6,36 @@ $(function () {
 
     (function init() {
         if (session.user) {
-            Ui.putLogo();
+            Ui.putLogo("#client_image");
             Ui.showUserInfo(session.user);
             Ui.resizeIframe();
         }
     })();
 
-
     $(document).ajaxSend(() => top.window.checkSession());
 
-    $("#btn_logout").on("click", function (event) {
+    $("#btn_logout").on("click", function(event) {
         event.preventDefault();
         Ui.close();
     });
 
-    $("#menu_user_info").mouseleave(function () {
+    $("#menu_user_info").mouseleave(function() {
         $("#user_info").trigger("click");
     });
 
-    $("#config_profile").on("click", function () {
+    $("#config_profile").on("click", function() {
         let modal_options = {
             url: `${baseUrl}views/funcionario/cambio_datos_personales.php`,
             params: {
                 baseUrl: baseUrl
             },
-            size: 'modal-lg',
-            title: 'Datos Personales',
-        }
+            size: "modal-lg",
+            title: "Datos Personales"
+        };
         topModal(modal_options);
     });
 
-    $("#change_password").on("click", function () {
+    $("#change_password").on("click", function() {
         let modal_options = {
             url: `${baseUrl}views/funcionario/cambiar_clave.php`,
             params: {
@@ -44,21 +43,21 @@ $(function () {
             },
             buttons: {
                 success: {
-                    label: 'Cambiar la Contraseña',
-                    class: 'btn btn-complete'
+                    label: "Cambiar la Contraseña",
+                    class: "btn btn-complete"
                 },
                 cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
+                    label: "Cancelar",
+                    class: "btn btn-danger"
                 }
             },
-            size: 'modal-lg',
-            title: 'Cambiar Contraseña',
-        }
+            size: "modal-lg",
+            title: "Cambiar Contraseña"
+        };
         topModal(modal_options);
     });
 
-    $("#new_action_mobile").on('click', function () {
+    $("#new_action_mobile").on("click", function() {
         let html = `
             <a href="#" class="dropdown-item new_add" data-type="folder">
                 <i class="fa fa-folder-open"></i> Expediente
@@ -79,34 +78,34 @@ $(function () {
             content: html,
             buttons: {
                 cancel: {
-                    label: 'Cerrar',
-                    class: 'btn btn-danger'
+                    label: "Cerrar",
+                    class: "btn btn-danger"
                 }
             },
-            size: 'modal-sm',
-        }
+            size: "modal-sm"
+        };
         topModal(modal_options);
     });
 
-    $("#edit_photo_modal").on("shown.bs.modal", function () {
+    $("#edit_photo_modal").on("shown.bs.modal", function() {
         Ui.imageAreaSelect();
     });
 
-    $("#file_photo").on("change", function () {
+    $("#file_photo").on("change", function() {
         var data = new FormData();
-        $.each($("#file_photo")[0].files, function (i, file) {
+        $.each($("#file_photo")[0].files, function(i, file) {
             data.append("image", file);
         });
 
         $.ajax({
-            type: 'POST',
+            type: "POST",
             data: data,
-            dataType: 'json',
+            dataType: "json",
             url: `${baseUrl}app/funcionario/guardar_imagen.php`,
             cache: false,
             contentType: false,
             processData: false,
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#img_edit_photo")
                     .hide()
                     .parent()
@@ -114,11 +113,11 @@ $(function () {
                 Ui.hideImgAreaSelect();
                 return true;
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     let route = baseUrl + response.data;
                     $("#img_edit_photo").attr("src", route);
-                    $("#img_edit_photo").on("load", function () {
+                    $("#img_edit_photo").on("load", function() {
                         $("#img_edit_photo")
                             .show()
                             .parent()
@@ -128,65 +127,83 @@ $(function () {
                 } else {
                     top.notification({
                         message: "Error en la carga!",
-                        type: 'error',
-                        title: 'Error!'
+                        type: "error",
+                        title: "Error!"
                     });
                 }
             }
         });
     });
 
-    $("#edit_photo_modal").on("hide.bs.modal", function () {
+    $("#edit_photo_modal").on("hide.bs.modal", function() {
         Ui.hideImgAreaSelect();
     });
 
-    $("#btn_save_photo").on("click", function () {
+    $("#btn_save_photo").on("click", function() {
         let ias = $("#img_edit_photo").imgAreaSelect({ instance: true });
         let options = ias.getSelection();
         options.imageWidth = $("#img_edit_photo").width();
         options.imageHeight = $("#img_edit_photo").height();
 
-        $.post(`${baseUrl}app/funcionario/guardar_recorte.php`, options, function (response) {
-            if (response.success) {
-                let user = JSON.parse(localStorage.getItem('user'));
-                user.cutedPhoto = response.data.foto_recorte;
-                localStorage.setItem('user', JSON.stringify(user));
+        $.post(
+            `${baseUrl}app/funcionario/guardar_recorte.php`,
+            options,
+            function(response) {
+                if (response.success) {
+                    let user = JSON.parse(localStorage.getItem("user"));
+                    user.cutedPhoto = response.data.foto_recorte;
+                    localStorage.setItem("user", JSON.stringify(user));
 
-                $(".cuted_photo").attr("src", baseUrl + response.data.foto_recorte);
-                $("#img_edit_photo").attr("src", baseUrl + response.data.foto_original);
-                $("#edit_photo_modal,#dinamic_modal").modal("toggle");
-            }
-        }, "json");
+                    $(".cuted_photo").attr(
+                        "src",
+                        baseUrl + response.data.foto_recorte
+                    );
+                    $("#img_edit_photo").attr(
+                        "src",
+                        baseUrl + response.data.foto_original
+                    );
+                    $("#edit_photo_modal,#dinamic_modal").modal("toggle");
+                }
+            },
+            "json"
+        );
     });
 
-    $("#toggle_right_navbar").on("click", function () {
+    $("#toggle_right_navbar").on("click", function() {
         $("#note_tab").trigger("click");
     });
 
+<<<<<<< HEAD
     $(document).on("click", ".new_add", function () {
         switch ($(this).data('type')) {
             case 'folder':
                 newExpediente();
+=======
+    $(document).on("click", ".new_add", function() {
+        switch ($(this).data("type")) {
+            case "folder":
+                console.log("pending");
+>>>>>>> 7432ce813a2f04d3b7f8d1e6a2df8e4e574dd1ce
                 break;
-            case 'task':
+            case "task":
                 taskAction();
                 break;
-            case 'comunication':
-                newDocument(5, 'Comunicaciones');
+            case "comunication":
+                newDocument(5, "Comunicaciones");
 
                 break;
-            case 'process':
-                newDocument(3, 'Tramites generales');
+            case "process":
+                newDocument(3, "Tramites generales");
                 break;
         }
     });
 
-    $(".tab-content").on("touchstart", function (evt) {
+    $(".tab-content").on("touchstart", function(evt) {
         xDown = getTouches(evt)[0].clientX;
         yDown = getTouches(evt)[0].clientY;
     });
 
-    $(".tab-content").on("touchmove", function (evt) {
+    $(".tab-content").on("touchmove", function(evt) {
         if (!xDown || !yDown) {
             return;
         }
@@ -197,42 +214,55 @@ $(function () {
         var xDiff = xDown - xUp;
         var yDiff = yDown - yUp;
 
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            /*most significant*/
             if (xDiff > 0) {
                 /** right swipe*/
             } else {
                 $("#toggle_right_navbar").trigger("click");
             }
         } else {
-            if (yDiff > 0) {/** up swipe*/ } else {/** Dowsn swipe*/ }
+            if (yDiff > 0) {
+                /** up swipe*/
+            } else {
+                /** Dowsn swipe*/
+            }
         }
         /* reset values */
         xDown = null;
         yDown = null;
     });
 
-    document.getElementById('note_content').addEventListener("paste", function (e) {
-        // cancel paste
-        e.preventDefault();
+    document
+        .getElementById("note_content")
+        .addEventListener("paste", function(e) {
+            // cancel paste
+            e.preventDefault();
 
-        // get text representation of clipboard
-        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            // get text representation of clipboard
+            var text = (e.originalEvent || e).clipboardData.getData(
+                "text/plain"
+            );
 
-        // insert text manually 
-        document.execCommand("insertHTML", false, text);
-    });
+            // insert text manually
+            document.execCommand("insertHTML", false, text);
+        });
 
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
     }
 
-    window.addEventListener("orientationchange", function () {
-        setTimeout(() => {
-            Ui.resizeIframe();
-        }, 500);
-    }, false);
+    window.addEventListener(
+        "orientationchange",
+        function() {
+            setTimeout(() => {
+                Ui.resizeIframe();
+            }, 500);
+        },
+        false
+    );
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         Ui.resizeIframe();
     });
 
@@ -251,7 +281,7 @@ $(function () {
         ]);
 
         let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
-        $("#iframe_workspace").attr('src', route);
+        $("#iframe_workspace").attr("src", route);
         $("#close_modal", window.top.document).trigger("click");
     }
 
@@ -260,7 +290,7 @@ $(function () {
             url: `${baseUrl}views/tareas/crear.php`,
             centerAlign: false,
             size: "modal-lg",
-            title: 'Tarea',
+            title: "Tarea",
             buttons: {}
         };
 
