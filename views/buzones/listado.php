@@ -27,7 +27,7 @@ $component = StaticSql::search($sql);
 <script>
     $(function() {
         var baseUrl = $("script[data-baseurl]").data('baseurl');
-        var params = <?= json_encode($params); ?>;
+        var params = JSON.parse('<?= json_encode($params); ?>');
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
         var table = $('#table');
 
@@ -43,6 +43,8 @@ $component = StaticSql::search($sql);
             pagination: true,
             maintainSelected: true,
             pageSize: '<?= $component[0]['cantidad_registros'] ?>',
+            paginationSuccessivelySize: 1,
+            paginationPagesBySide: 1,
             columns: [{
                 field: 'info',
                 title: ''
