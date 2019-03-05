@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 
 global $conn;
 
@@ -20,9 +20,11 @@ $Response->success = 0;
 $Response->message = "";
 
 if($_REQUEST['username']){
-    $busca_funcionario = busca_filtro_tabla('*', 'funcionario', "login='" . $_REQUEST['username'] . "'");
+    $total = Funcionario::countRecords([
+        'login' => $_REQUEST['username']
+    ]);
 
-    if($busca_funcionario['numcampos']){
+    if($total){
         $busca_administrador = busca_filtro_tabla('email, concat(nombres, " ", apellidos) as administrador', 'vfuncionario_dc a,perfil b', "a.perfil=b.idperfil and lower(b.nombre) = 'admin_interno' and estado=1 and estado_dc=1", '', $conn);
         
         if($busca_administrador['numcampos']){
