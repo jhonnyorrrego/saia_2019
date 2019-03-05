@@ -470,6 +470,7 @@ class GenerarFormato
                 0 == '.$formato[0]['mostrar_pdf'].'
             )): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
+
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -480,10 +481,10 @@ class GenerarFormato
                                 <meta name="apple-touch-fullscreen" content="yes">
                                 <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                 <meta content="" name="description" />
-                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $validacion_tipo.= '<?php else: ?>';
-            $validacion_tipo.= $this->generar_mostrar_pdf();
-            $validacion_tipo.= '<?php endif; ?>';
+                                <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo .= '<?php else: ?>';
+            $validacion_tipo .= $this->generar_mostrar_pdf();
+            $validacion_tipo .= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -504,7 +505,8 @@ class GenerarFormato
         return false;
     }
 
-    public function generar_mostrar_pdf(){
+    public function generar_mostrar_pdf()
+    {
         $string = '<?php
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
@@ -590,6 +592,7 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
+            
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<style>
         .table.table-condensed thead tr td {
@@ -2699,3 +2702,4 @@ span.fancytree-expander {
         return implode("\n", $texto);
     }
 }
+
