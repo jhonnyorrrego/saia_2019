@@ -7,4 +7,4 @@
   * @license MIT
   */
 
-.bootstrap-table .table>tbody>tr.groupBy{cursor:pointer}.bootstrap-table .table>tbody>tr.hidden+tr.detail-view{display:none}
+.jumpto input{height:31px;width:50px;margin-left:5px;margin-right:5px;text-align:center;display:inline-block}
