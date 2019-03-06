@@ -1,67 +1,33 @@
 <?php
 class UtilitiesController
 {
-    /** Genera el archivo temporal con nombre y ruta que se especifique (almacenamiento nuevo)
-     * @param array 
-     * : [ruta] string obtenido de la DB
-     * : [sufijo] string Sufijo que se concatena al Nombre de la imagen
-     * : [filename] string Nombre de la imagen
-     * : [force] boolean para sobreescribir la imagen
-     * : [ruta_almacenar] string ruta donde desea almacenar la imagen
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     * */
-    public static function getFileTemp(
-        array $param = [
-            "ruta" => null,
-            "sufijo" => "",
-            "filename" => null,
-            "force" => false,
-            "ruta_almacenar" => null
-        ]
-    ) : array {
+    public static function createTemporalFile($dbString, $prefix = '', $force = false)
+    {
         global $ruta_db_superior;
-        $retorno = array(
-            "exito" => 0,
-            "msn" => "",
-            "url" => ""
-        );
 
-        $filebinario = StorageUtils::get_file_content($param["ruta"]);
-        if ($filebinario !== false) {
-            if (!$param["filename"]) {
-                $nameFile = basename(json_decode($param["ruta"])->ruta);
-            } else {
-                $nameFile = $param["filename"];
-            }
-            if ($param["ruta_almacenar"]) {
-                $tempFile = $ruta_db_superior . $param["ruta_almacenar"] . $param["sufijo"] . $nameFile;
-                crear_destino($ruta_db_superior . $param["ruta_almacenar"]);
-            } else {
-                $tempFile = $ruta_db_superior . $_SESSION["ruta_temp_funcionario"] . $param["sufijo"] . $nameFile;
-                crear_destino($ruta_db_superior . $_SESSION["ruta_temp_funcionario"]);
+        $response = (object)[
+            'success' => 0,
+            'route' => ''
+        ];
+
+        $filebinario = StorageUtils::get_file_content($dbString);
+        if ($filebinario) {
+            $json = json_decode($dbString);
+            $fileName = $prefix . basename($json->ruta);
+            $temporalRoute = $_SESSION['ruta_temp_funcionario'] . '/' . $fileName;
+            $relativeRoute = $ruta_db_superior . $temporalRoute;
+
+            if (!is_file($relativeRoute) || $force) { 
+                file_put_contents($relativeRoute, $filebinario);
             }
 
-            if (!is_file($tempFile) || $force) {
-                $ok = file_put_contents($tempFile, $filebinario);
-                if ($ok !== false) {
-                    if (is_file($tempFile)) {
-                        $retorno["exito"] = 1;
-                        $retorno["url"] = $tempFile;
-                    } else {
-                        $retorno["msn"] = "Error al obtener el temporal";
-                    }
-                } else {
-                    $retorno["msn"] = "Error al escribir en el archivo temporal";
-                }
-            } else {
-                $retorno["url"] = $tempFile;
-                $retorno["exito"] = 1;
+            if(is_file($relativeRoute)){
+                $response->success = 1;
+                $response->route = $temporalRoute;
             }
-        } else {
-            $retorno["msn"] = "Error al obtener el binario";
         }
 
-        return $retorno;
+        return $response;
     }
 
     /**
@@ -165,7 +131,7 @@ class UtilitiesController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function cleanForm(array $data, int $setNull = 0) : array
+    public static function cleanForm(array $data, int $setNull = 0): array
     {
         if ($setNull) {
             array_walk_recursive($data, function (&$element, $key) {
@@ -181,12 +147,11 @@ class UtilitiesController
                 if (trim($element) != '') {
                     $element = trim($element);
                 }
-            });            
+            });
             $response = array_filter($data, function ($val, $key) {
                 return trim($val) != '' || is_array($val);
             }, ARRAY_FILTER_USE_BOTH);
         }
         return $response;
     }
-
 }
