@@ -155,8 +155,7 @@ function findActions($documentId)
             'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=formato_devolucion"
         ],
         "confirm" => [
-            'see' =>  $confirmButton,
-            'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=aprobar"
+            'see' =>  $confirmButton            
         ],
     ];
 
