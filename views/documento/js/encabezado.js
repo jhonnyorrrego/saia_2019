@@ -120,7 +120,7 @@ $(function () {
         })
     });
 
-    $('#actualizar_pdf').on('click', function(){
+    $('#actualizar_pdf').on('click', function () {
         let route = $('#acordeon_container').attr('data-location');
         route += '&actualizar_pdf=1';
 
@@ -197,7 +197,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.confirm.route, "_self");
+                        confirmDocument();
                     }
                 });
             }
@@ -250,7 +250,7 @@ $(function () {
                 });
             }
 
-            var fab = new Fab({
+            new Fab({
                 selector: "#fab",
                 button: {
                     style: "blue",
@@ -267,5 +267,24 @@ $(function () {
                 buttons: buttons
             });
         }
+    }
+
+    function confirmDocument() {
+        $.post(`${baseUrl}app/documento/confirmar.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                let route = baseUrl + 'views/documento/acordeon.php';
+                $('#acordeon_container').parent().load(route, {
+                    documentId: documentId
+                });
+            } else {
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                });
+            }
+        }, 'json');
     }
 });
