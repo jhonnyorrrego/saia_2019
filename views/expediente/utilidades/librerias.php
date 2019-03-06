@@ -144,7 +144,7 @@ function info_expediente_doc($iddocExp){
         <button class="btn mx-1 btn-info" title="Mover"><i class="fa fa-share-square-o"></i></button>
         <button class="btn mx-1 btn-info" title="Quitar documento de este expediente"><i class="fa fa-sign-out"></i></button>';
     }else{
-        $btn.='<button class="btn mx-1 btn-info" title="Eliminar"><i class="fa fa-trash"></i></button>';
+        $btn.= '<button class="btn mx-1 btn-info delDoc" data-id="'.$iddocExp.'" title="Eliminar"><i class="fa fa-trash"></i></button>';
     }
 
     $html = <<<FINHTML
@@ -165,8 +165,8 @@ function info_expediente_doc($iddocExp){
             {$Documento->fecha}
         </div>
 
-        <div class="float-right col-3 cursor kenlace_saia" conector = "iframe" enlace = "views/documento/index_acordeon.php?documentId={$iddoc}" titulo="Rad. {$Documento->numero}">
-            <button class="btn mx-1 btn-info" title="Información del documento"><i class="fa fa-info-circle"></i></button>{$btn}
+        <div class="float-right col-3">
+            <button class="btn mx-1 btn-info cursor kenlace_saia" title="Información del documento" conector = "iframe" enlace = "views/documento/index_acordeon.php?documentId={$Documento->getPK()}" titulo="Rad. {$Documento->numero}"><i class="fa fa-info-circle"></i></button>{$btn}
         </div>
     </div> 
 FINHTML;

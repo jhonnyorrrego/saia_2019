@@ -270,12 +270,12 @@ final class Version20190215231715 extends AbstractMigration
         $tabla13->addColumn("fecha_creacion", "datetime", ["notnull" => false]);
         $tabla13->setPrimaryKey(["idexpediente_directo"]);
 
+        $this->addSql("DELETE FROM modulo WHERE (nombre LIKE '%expedie%' OR nombre like '%permiso_admin_archivo%') and nombre<>'expediente_admin'");
+
 
        /* $this->addSql("DELETE FROM busqueda WHERE idbusqueda IN (37,48,115,116)");
         $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente IN (9,10,110,111,160,323,368,320,321,371,372,373)");
         $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente IN (9,10,110,111,160,323,368,320,321,371,372,373)");
-
-        $this->addSql("DELETE FROM modulo WHERE nombre LIKE '%expedie%' and nombre<>'expediente_admin'");
 
         $this->addSql("INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades, elastic) VALUES (37, 'expediente', ' Mis expedientes', 1, 200, NULL, NULL, NULL, 'pantallas/expediente/librerias.php', 'pantallas/expediente/librerias_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_expediente.php', 1, NULL, 0)");
         $this->addSql("INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades, elastic) VALUES (48, 'cajas', 'Cajas', 1, 200, NULL, NULL, NULL, 'pantallas/caja/librerias.php', 'pantallas/caja/librerias_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_caja.php', 1, NULL, 0)");

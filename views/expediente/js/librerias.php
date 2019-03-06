@@ -486,6 +486,77 @@ $(document).ready(function(){
       top.topModal(options);
   });
 
+//Eliminar el documento del expediente (tipo 2)
+ $(document).on("click",".delDoc",function(){
+    let iddocExp=$(this).data("id");
+
+    top.confirm({
+      drag: false,
+      overlay: true,
+      close: false,
+      type: 'warning',
+      message: 'Está seguro de eliminar el vinculo con el expediente?',
+      position: 'center',
+      timeout: 0,
+      buttons: [
+        [
+          '<button><b>SI</b></button>',
+          function (instance, toast) {
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+            $.ajax({
+              type : 'POST',
+              url: `${baseUrl}app/expediente/ejecutar_acciones.php`,
+              data: {
+                nameInstance:'ExpedienteController',
+                methodInstance:'deleteExpDocController',
+                iddocExp:iddocExp
+              },
+              dataType: 'json',
+              success: function(response){
+                if(response.exito){
+                  $("#table").bootstrapTable(
+                    'remove', {
+                      field: 'id',
+                      values: [iddocExp]
+                    }
+                  );
+                  top.notification({
+                    message : response.message,
+                    type : "success",
+                    duration : 3000
+                  });
+
+                }else{
+                  top.notification({
+                    message : response.message,
+                    type : "error",
+                    duration : 3000
+                  });
+                }
+              },
+              error : function() {
+                top.notification({
+                  message : "Error al procesar la solicitud",
+                  type : "error",
+                  duration : 3000
+                });
+              }
+            });
+
+          },
+          true
+        ],
+        [
+          '<button>NO</button>',
+          function (instance, toast) {
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }
+        ],
+      ]
+    });
+  });
+
   /*// Compartir documento
   $(document).on("click","#shareExp,.shareExp",function(){
     let idcomp=$(this).data("componente");

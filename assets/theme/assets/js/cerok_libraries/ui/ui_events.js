@@ -173,17 +173,10 @@ $(function() {
         $("#note_tab").trigger("click");
     });
 
-<<<<<<< HEAD
     $(document).on("click", ".new_add", function () {
         switch ($(this).data('type')) {
             case 'folder':
                 newExpediente();
-=======
-    $(document).on("click", ".new_add", function() {
-        switch ($(this).data("type")) {
-            case "folder":
-                console.log("pending");
->>>>>>> 7432ce813a2f04d3b7f8d1e6a2df8e4e574dd1ce
                 break;
             case "task":
                 taskAction();

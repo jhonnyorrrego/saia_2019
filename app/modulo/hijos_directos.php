@@ -25,7 +25,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     $data = array();
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-    $modules = busca_filtro_tabla('*', 'modulo', "cod_padre='" . $parent . "'", 'orden asc', $conn);
+    $modules = busca_filtro_tabla('*', 'modulo', "cod_padre='" . $parent . "' and tipo<3", 'orden asc', $conn);
 
     if ($grouperParent == 1 && $parent) {
         $dashboard = busca_filtro_tabla('*', 'modulo', "nombre='dashboard'", '', $conn);
@@ -41,7 +41,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
             if ($access) {
                 if ($grouperParent) {
-                    $countChilds = busca_filtro_tabla('count(*) as total', 'modulo', 'cod_padre = ' . $module['idmodulo'], '', $conn);
+                    $countChilds = busca_filtro_tabla('count(*) as total', 'modulo', 'tipo<3 and cod_padre = ' . $module['idmodulo'], '', $conn);
                     $isParent = $countChilds[0]['total'] ? 1 : 0;
                 }
 
