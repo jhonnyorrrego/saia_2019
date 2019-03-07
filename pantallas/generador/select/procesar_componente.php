@@ -36,29 +36,37 @@ function procesar_select($idcampo='',$seleccionado='',$accion='',$campo=''){
 	  	$llenado=implode(";",$listado0);
 	  }
 	  else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
-	} else {
-	$dato = busca_filtro_tabla("", "campos_formato A", "A.idcampos_formato=" . $idcampo, "", $conn);
-	$llenado = json_decode($dato[0]['opciones'], true);
-	$cantidadOpciones = count($llenado);
-}	
+	}    
+	else 
+	  $llenado=utf8_encode(html_entity_decode($campo["valor"]));	
 	$texto="";
 	$listado3=array();
-	if($cantidadOpciones){		
+	$ultimo=substr($llenado,-1);
+	if($ultimo==";")$llenado=substr($llenado,0,-1);
+	if($llenado!="" && $llenado!="Null"){
+	  $listado1=explode(";",$llenado);
+	  $cont1=count($listado1);
+	  for($i=0;$i<$cont1;$i++){
+	    $listado2=explode(",",$listado1[$i]);
+	    array_push($listado3,$listado2);
+	  }
+	}
+	$cont3=count($listado3);
+	if($cont3){		
 		$texto='<select id="'.$campo["nombre"].'" name="'.$campo["nombre"].'"> <option value="">Por favor seleccione</option>';
-		for($j=0;$j< $cantidadOpciones;$j++){		
-			$texto.='<option value="'.($llenado[$j]['llave']).'"';	  
-		  if($llenado[$j]['llave'] == $predeterminado)
+		for($j=0;$j<$cont3;$j++){		
+			$texto.='<option value="'.($listado3[$j][0]).'"';	  
+		  if(($listado3[$j][0])==$predeterminado)
 		    $texto.=' selected ';
-		  $texto.='>'.$llenado[$j]['item'].'</option>';
+		  $texto.='>'.($listado3[$j][1]).'</option>';
 			
 		}
 		$texto.='</select>';
 	}
 	else{
-		$texto='<select id="'.$campo["nombre"].'" name="'.$campo["nombre"].'"> 
-		<option value="">Por favor seleccione</option><option value="">1</option></select>';	
+		$texto="<div class='alert alert-error'>Lista vacia</div>";	
 	}  	
-	return $texto;
+	return($texto);
 }
 function mostrar_select($idcampo='',$seleccionado='',$accion='',$campo=''){
 	global $conn;
