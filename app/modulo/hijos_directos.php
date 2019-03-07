@@ -1,4 +1,5 @@
 <?php
+session_start();
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -13,16 +14,13 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
+$Response = (object)[
     'data' => [],
     'message' => '',
-    'success' => 1,
-);
+    'success' => 1
+];
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
-    global $conn;
-
-    $data = array();
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
     $modules = Modulo::findAllByAttributes([
@@ -31,7 +29,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
     if ($grouperParent == 1 && $parent) {
         $Modulo = Modulo::findByAttributes(['nombre' => 'dashboard']);
-        $data[] = [
+        $Response->data[] = [
             'idmodule' => $Modulo->getPK(),
             'isParent' => 0,
             'name' => html_entity_decode($Modulo->etiqueta),
@@ -43,12 +41,12 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
     foreach ($modules as $key => $Modulo) {
         if (PermisoController::moduleAccess($Modulo->nombre)) {
-            if ($grouperParent) {                
+            if ($grouperParent) {
                 $countChilds = Modulo::countRecords(['cod_padre' => $Modulo->getPK()]);
                 $isParent = $countChilds ? 1 : 0;
             }
 
-            $data[] =[
+            $Response->data[] = [
                 'idmodule' => $Modulo->getPK(),
                 'isParent' => $isParent,
                 'name' => html_entity_decode($Modulo->etiqueta),
@@ -58,10 +56,8 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
             ];
         }
     }
-
-    $Response->data = $data;
 } else {
-    $Response->message = 'Debe inicial session';
+    $Response->message = 'Debe iniciar session';
     $Response->success = 0;
 }
 

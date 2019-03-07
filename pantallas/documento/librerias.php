@@ -537,64 +537,6 @@ function filtro_funcionario($funcionario)
     return ($retorno);
 }
 
-function barra_inferior_documentos_activos($iddoc, $numero)
-{
-    $dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc, "fecha_asignacion DESC", $conn);
-    $prioridad = "icon-flag";
-    if ($dato_prioridad["numcampos"]) {
-        switch ($dato_prioridad[0]["prioridad"]) {
-            case 1:
-                $prioridad = 'icon-star';
-                break;
-            case 2:
-                $prioridad = 'icon-star-empty';
-                break;
-            default:
-                $prioridad = 'icon-flag';
-                break;
-        }
-    }
-    $tarea = "icon-check";
-    $dato_leido = documento_leido($iddoc);
-    $texto .= '<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha documento_leido" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key=' . $iddoc . '" titulo="' . $dato_leido[0] . ' No.' . $numero . '" conector="iframe" idregistro="' . $iddoc . '">
-    <i class="' . $dato_leido[1] . '"></i>
-  </button>
-
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia" titulo="Desactivar documento" enlace="activar_documentofunc.php?func=0&key=' . $iddoc . '" conector="iframe" idregistro="' . $iddoc . '"><i class="icon-trash"></i></button>
-
-  </div>';
-    $texto .= barra_estandar_documento($iddoc, $funcionario);
-    return ((str_replace("\\r", "", str_replace("\\n", "", $texto))));
-}
-
-function barra_inferior_documentos_noactivos($iddoc, $numero)
-{
-    $dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc, "fecha_asignacion DESC", $conn);
-    $prioridad = "icon-flag";
-    if ($dato_prioridad["numcampos"]) {
-        switch ($dato_prioridad[0]["prioridad"]) {
-            case 1:
-                $prioridad = 'icon-star';
-                break;
-            case 2:
-                $prioridad = 'icon-star-empty';
-                break;
-            default:
-                $prioridad = 'icon-flag';
-                break;
-        }
-    }
-    $tarea = "icon-check";
-    $dato_leido = documento_leido($iddoc);
-    $texto .= '<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha" titulo="Activar documento" enlace="activar_documentofunc.php?func=1&key=' . $iddoc . '" conector="iframe" idregistro="' . $iddoc . '"><i class="icon-ok"></i></button>
-
-  </div>';
-    $texto .= barra_estandar_documento($iddoc, $funcionario);
-    return (str_replace("\\r", "", str_replace("\\n", "", $texto)));
-}
-
 function exportar_excel()
 {
     global $conn;
@@ -850,14 +792,14 @@ function mostrar_fecha_limite_documento($iddoc)
         $title = 'Faltan ' . $interval_diferencia . ' dias';
         $color = 'btn-success';
         //si la diferencia es de mas de 8 dias (verde)
-        if ($interval_diferencia <= 8 && $interval_diferencia >= 5) {//si la diferencia esta entre 5 & 8 dias
+        if ($interval_diferencia <= 8 && $interval_diferencia >= 5) { //si la diferencia esta entre 5 & 8 dias
             $color = 'btn-warning';
             //naranja
-        } elseif ($interval_diferencia < 5) {//si la diferencia es menor a 5 dias
+        } elseif ($interval_diferencia < 5) { //si la diferencia es menor a 5 dias
             $color = 'btn-danger';
             //rojo
         }
-        if ($interval_pos_neg == 1) {//si ya se vencio
+        if ($interval_pos_neg == 1) { //si ya se vencio
             $color = 'btn-danger';
             //rojo
             $title = 'Hace ' . $interval_diferencia . ' dias';
@@ -1117,7 +1059,7 @@ function priority($documentId)
 {
     global $conn;
     $class = 'text-dark';
-    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'fk_documento=' . $documentId, '', $conn);
+    //$findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'fk_documento=' . $documentId, '', $conn);
     if (!$findPriority['numcampos'] || !$findPriority[0]['prioridad']) {
         $style = 'style="display:none"';
     } else {
@@ -1192,7 +1134,7 @@ function temporality($date)
     $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
     $diference = strtotime("now") - $timeFromDate;
 
-    if ($diference < 900) {//under 15 minutes 15 * 60
+    if ($diference < 900) { //under 15 minutes 15 * 60
         if ($diference < 300) { //5 minutes 5 * 60
             return 'Hace un momento';
         } else { //15 minutes
@@ -1201,17 +1143,17 @@ function temporality($date)
         }
     }
 
-    if (strtotime(date('Y-m-d')) < $timeFromDate) {// today
+    if (strtotime(date('Y-m-d')) < $timeFromDate) { // today
         return $date->format('H:i:s a');
     }
 
     $yesterday = (new DateTime())->sub(new DateInterval('P1D'))->format('Y-m-d');
-    if (strtotime($yesterday) < $timeFromDate) {// yesterday
+    if (strtotime($yesterday) < $timeFromDate) { // yesterday
         return 'Ayer';
     }
 
     $beforeYesterday = (new DateTime())->sub(new DateInterval('P2D'))->format('Y-m-d');
-    if (strtotime($beforeYesterday) < $timeFromDate) {// yesterday
+    if (strtotime($beforeYesterday) < $timeFromDate) { // yesterday
         return 'Anteayer';
     } else {
         return $date->format('d-m-Y');
@@ -1242,5 +1184,4 @@ function mostrar_numero_enlace($number, $documentId)
 
     return $response;
 }
-
-?>
+ 
