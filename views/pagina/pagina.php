@@ -38,7 +38,7 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
             <div class="row">
                 <div class="col-12">
                     <a href="#" id="addNoty" class="btn btn-mini float-right"><i class="fa fa-comment-o"></i></a>
-                    <?php if (UtilitiesController::permisoModulo("editar_paginas")) : ?>
+                    <?php if (PermisoController::moduleAccess("editar_paginas")) : ?>
                     <a href="listar_pagina.php?iddoc=<?= $iddocumento; ?>" class="btn btn-mini float-right"><i
                             class="fa fa-edit"></i></a>
                     <?php endif; ?>

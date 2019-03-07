@@ -199,9 +199,9 @@ abstract class Model extends StaticSql
             }
 
             $fields .= $attribute;
-            if($value==="NULL"){
+            if ($value === "NULL") {
                 $values .= "NULL";
-            }else{
+            } else {
                 if (in_array($attribute, $dateAttributes)) {
                     $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
                 } else {
@@ -399,7 +399,7 @@ abstract class Model extends StaticSql
                     $Instance->$key = $value;
                 }
             }
-            if(method_exists($Instance,'massiveAssigned')){
+            if (method_exists($Instance, 'massiveAssigned')) {
                 $Instance->massiveAssigned();
             }
             $data[] = $Instance;
@@ -578,5 +578,4 @@ abstract class Model extends StaticSql
         }
         return $data;
     }
-
 }
