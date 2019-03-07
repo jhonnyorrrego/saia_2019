@@ -22,8 +22,6 @@ $jsParams = json_encode([
     <meta charset="utf-8" />
     <title>PDFJSAnnotate</title>
     <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/shared/toolbar.css" />
-    <link href="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/assets/owl.carousel.css" rel="stylesheet" type="text/css" media="screen" />
-    <link href="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/assets/owl.theme.default.min.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 
 <body>
@@ -38,11 +36,11 @@ $jsParams = json_encode([
             </div>
         </div>
         <div class="row mx-0">
-            <div class="col-5 col-md-2 px-1 window_height">
-                <div id="item_parent"></div>
+            <div class="col-5 col-md-2 px-1" id="thumbnails">
+                <div id="item_parent" style="overflow-y:auto;"></div>
             </div>
-            <div class="col px-1" id="content-wrapper"></div>
-            <div class="col-5 col-md-3 px-1 d-none" id="comment-wrapper">
+            <div class="col px-1" id="content-wrapper" style="overflow-x:auto;"></div>
+            <div class="col-auto px-1 d-none" id="comment-wrapper" style="overflow-y:auto;">
                 <h4>Comentarios</h4>
                 <div class="comment-list">
                     <div class="comment-list-container"></div>
@@ -53,7 +51,7 @@ $jsParams = json_encode([
             </div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/owl.carousel.min.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior; ?>assets/theme/assets/js/cerok_libraries/comments/comments.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior; ?>views/pagina/js/pagina.js" data-pages-params='<?= $jsParams ?>' type="text/javascript"></script>
 </body>
 

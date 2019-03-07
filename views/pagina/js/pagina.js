@@ -1,6 +1,7 @@
 $(function() {
     let params = $("script[data-pages-params]").data("pagesParams");
     let key = localStorage.getItem("key");
+    let annotations = [];
 
     (function getPages() {
         $.post(
@@ -23,6 +24,10 @@ $(function() {
         );
     })();
 
+    $("button.thumbnails").on("click", function() {
+        $("#thumbnails").toggle();
+    });
+
     $("#add_comment").on("click", function() {
         $("#content-wrapper img").css("cursor", "crosshair");
     });
@@ -32,6 +37,25 @@ $(function() {
         $("#content-wrapper")
             .html($(this).html())
             .attr("data-page", $(this).data("page"));
+        $("#content-wrapper img").removeClass("w-100");
+        $("#item_parent,#comment-wrapper").height(
+            $("#content-wrapper img").height()
+        );
+
+        findNotes();
+        annotations.forEach(a => {
+            if (a.class == "annotation") {
+                $("#content-wrapper").append(
+                    $("<div>")
+                        .css({
+                            top: a.y,
+                            left: a.x,
+                            position: "absolute"
+                        })
+                        .html(annotationTemplate(a))
+                );
+            }
+        });
     });
 
     $(document).off("click", "#content-wrapper img");
@@ -68,19 +92,20 @@ $(function() {
 
     $(document).off("keyup", "#comment_input");
     $(document).on("keyup", "#comment_input", function(e) {
-        if (e.keyCode == 13) {
-            let annotation = {
+        if (e.keyCode == 13 && $("#comment_input").val().length) {
+            let commentContent = $(this).val();
+            let position = {
                 y: $(this)
                     .parent()
                     .css("top")
-                    .replace('px', ''),
+                    .replace("px", ""),
                 x: $(this)
                     .parent()
                     .css("left")
-                    .replace('px', ''),
-                content: $(this).val()
+                    .replace("px", "")
             };
-            createAnnotation(annotation);
+
+            createAnnotation(position, commentContent);
         }
     });
 
@@ -91,8 +116,14 @@ $(function() {
             .parent()
             .remove();
 
-        alert("consultar nota " + $(this).data("key"));
+        let annotationId = $(this).data("key");
+        showComments(annotationId);
     });
+
+    function showComments(annotationId) {
+        let options = commentOptions(annotationId);
+        new Comments(options);
+    }
 
     function createThumbnails(data) {
         data.forEach(element => {
@@ -113,62 +144,132 @@ $(function() {
         $(".page_thumbnail:first").trigger("click");
     }
 
-    function createAnnotation(annotation) {
-        let relationId = $("#content-wrapper").data("page");
-        annotation.uuid = generateAnnotationId(relationId);
-        commentId = generateCommentId(annotation.uuid);
+    function findNotes() {
+        let output = false;
 
-        $.post(
-            `${params.baseUrl}app/visor/guardar_nota.php`,
-            {
+        $.ajax({
+            url: `${params.baseUrl}app/visor/consulta_notas.php`,
+            type: "POST",
+            dataType: "json",
+            async: false,
+            data: {
                 key: key,
                 type: "NOTA_PAGINA",
-                typeId: relationId,
-                annotation: {
-                    type: "point",
-                    x: annotation.x,
-                    y: annotation.y,
-                    class: "annotation",
-                    page: relationId,
-                    uuid: annotation.uuid
-                },
-                comment: {
-                    class: "Comment",
-                    annotation: annotation.uuid,
-                    uuid: commentId,
-                    content: annotation.content
-                }
+                typeId: $("#content-wrapper").attr("data-page")
             },
-            function(response) {
+            success: function(response) {
                 if (response.success) {
-                    $("#comment_input")
-                        .parent()
-                        .html(annotationTemplate(annotation));
+                    annotations = response.data;
+                    output = true;
                 } else {
                     top.notification({
                         type: "error",
                         message: response.message
                     });
                 }
-            },
-            "json"
-        );
+            }
+        });
+
+        return output;
+    }
+
+    function createAnnotation(position, commentContent) {
+        let relationId = $("#content-wrapper").attr("data-page");
+        let annotation = {
+            type: "point",
+            x: position.x,
+            y: position.y,
+            class: "annotation",
+            page: 1,
+            uuid: generateAnnotationId(relationId)
+        };
+
+        if (saveComment(commentContent, annotation)) {
+            $("#comment_input")
+                .parent()
+                .html(annotationTemplate(annotation));
+        }
     }
 
     function annotationTemplate(annotation) {
-        annotation.id = 1;
         return `<span class='fa fa-file text-white f-20 annotation' data-key='${
-            annotation.id
+            annotation.uuid
         }'></span>`;
     }
 
-    function generateAnnotationId(relationId){
+    function generateAnnotationId(relationId) {
         let date = new Date();
         return `${params.id}-${relationId}-${date.getTime()}`;
     }
 
-    function generateCommentId(annotationId){
+    function generateCommentId(annotationId) {
         let date = new Date();
         return `${annotationId}-${date.getTime()}`;
+    }
+
+    function commentOptions(annotationId) {
+        return {
+            selector: ".comment-list-container",
+            baseUrl: params.baseUrl,
+            showForm: true,
+            order: "asc",
+            placeholder: "Comentario.",
+            userData: {
+                id: localStorage.getItem("key")
+            },
+            source: function() {
+                findNotes();
+                let comments = annotations.filter(
+                    a => a.class == "Comment" && a.annotation == annotationId
+                );
+                return comments.map(c => {
+                    c.temporality = c.date;
+                    c.comment = c.content;
+
+                    return c;
+                });
+            },
+            save: function(comment) {
+                let annotation = annotations.find(
+                    a => a.uuid == annotationId && a.class == "annotation"
+                );
+                return saveComment(comment.comment, annotation);
+            }
+        };
+    }
+
+    function saveComment(content, annotation) {
+        let output = false;
+
+        $.ajax({
+            url: `${params.baseUrl}app/visor/guardar_nota.php`,
+            type: "POST",
+            dataType: "json",
+            async: false,
+            data: {
+                key: key,
+                type: "NOTA_PAGINA",
+                typeId: $("#content-wrapper").attr("data-page"),
+                annotation: annotation,
+                comment: {
+                    class: "Comment",
+                    annotation: annotation.uuid,
+                    uuid: generateCommentId(annotation.uuid),
+                    content: content
+                }
+            },
+            success: function(response) {
+                if (!response.success) {
+                    top.notification({
+                        type: "error",
+                        message: response.message
+                    });
+                } else {
+                    output = true;
+                }
+            }
+        });
+
+        return output;
     }
 });
