@@ -36,28 +36,33 @@ function procesar_checkbox($idcampo='',$seleccionado='',$accion='',$campo=''){
       $llenado=implode(";",$listado0);
     }
     else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
-  }    
-  else 
-    $llenado=utf8_encode(html_entity_decode($campo["valor"]));	
-  $texto="";
-  $listado3=array();
-  if($llenado!="" && $llenado!="Null"){
-    $listado1=explode(";",$llenado);
-    $cont1=count($listado1);
-    for($i=0;$i<$cont1;$i++){
-      $listado2=explode(",",$listado1[$i]);
-      array_push($listado3,$listado2);
-    }
+  } else {
+    $dato = busca_filtro_tabla("", "campos_formato A", "A.idcampos_formato=" . $idcampo, "", $conn);
+    $llenado = json_decode($dato[0]['opciones'], true);
+    $cantidadOpciones = count($llenado);
+}		
+	$texto="";
+	$listado3=array();
+  if($cantidadOpciones){
+    for ($j = 0; $j < $cantidadOpciones; $j++) {
+      $texto .= '<label class="checkbox inline" for="' . $campo["nombre"] . "_" . $j . '">
+      <input type="checkbox" class="checkbox"';
+      $texto .= ' name="' . $campo["nombre"] . '[]" id="' . $campo["nombre"] . "_" . $j . '" value="' . $llenado[$j]['llave'] . '"';
+      if (in_array(($listado3[$j][0]), $predeterminado))
+        $texto .= ' checked ';
+        $texto .= '>' . $llenado[$j]['item'] . '</label>';
+    } 
+  }else{
+    $texto .= '<label class="checkbox inline" for="">
+      <input type="checkbox" class="checkbox"  name="" id="" value="" >1</label>
+      <label class="checkbox inline" for="">
+      <input type="checkbox" class="checkbox"  name="" id="" value="" >2</label>
+      <label class="checkbox inline" for="">
+      <input type="checkbox" class="checkbox"  name="" id="" value="" >3</label>
+      <label class="checkbox inline" for="">
+      <input type="checkbox" class="checkbox"  name="" id="" value="" >4</label>';
   }
-  $cont3=count($listado3);
-  for($j=0;$j<$cont3;$j++){		
-    $texto.='<label class="checkbox inline" for="'.$campo["nombre"]."_".$j.'">
-  <input type="checkbox" class="checkbox"';		
-    $texto.=' name="'.$campo["nombre"].'[]" id="'.$campo["nombre"]."_".$j.'" value="'.($listado3[$j][0]).'"';	  
-    if(in_array(($listado3[$j][0]),$predeterminado))
-      $texto.=' checked ';
-    $texto.='>'.($listado3[$j][1]).'</label>';
-  }  	
+  	
   return($texto);
 }
 function validacion_adicional_checkbox($reglas,$nombre_campo){		
