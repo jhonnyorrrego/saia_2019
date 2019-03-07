@@ -355,7 +355,7 @@ abstract class Model extends StaticSql
     public static function findColumn($field, $conditions = [], $order = '')
     {
         $sql = self::generateSelectSql($conditions, [$field], $order);
-        $records = self::search($sql, $offset, $limit);
+        $records = self::search($sql);
 
         $data = [];
         foreach ($records as $key => $value) {
@@ -569,7 +569,7 @@ abstract class Model extends StaticSql
     }
 
 
-    public static function findBySql($sql, $getInstance = false)
+    public static function findBySql($sql, $getInstance = true)
     {
         $data = self::search($sql);
         if ($getInstance) {

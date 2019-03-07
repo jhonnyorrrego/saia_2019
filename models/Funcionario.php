@@ -6,14 +6,30 @@ class Funcionario extends Model {
     protected $login;
     protected $nombres;
     protected $apellidos;
+    protected $firma;
+    protected $firma_temporal;
+    protected $firma_original;
     protected $estado;
+    protected $fecha_ingreso;
+    protected $clave;
+    protected $nit;
+    protected $perfil;
+    protected $debe_firmar;
+    protected $tipo;
+    protected $ultimo_pwd;
+    protected $mensajeria;
     protected $email;
-    protected $foto_original;
-    protected $foto_recorte;
+    protected $sistema;
     protected $email_contrasena;
     protected $direccion;
     protected $telefono;
-    protected $clave;
+    protected $fecha_fin_inactivo;
+    protected $intento_login;
+    protected $foto_original;
+    protected $foto_recorte;
+    protected $foto_cordenadas;
+    protected $ventanilla_radicacion;
+    protected $pertenece_nucleo;
     protected $dbAttributes;
 
     /**
@@ -34,18 +50,38 @@ class Funcionario extends Model {
             'login',
             'nombres',
             'apellidos',
+            'firma',
+            'firma_temporal',
+            'firma_original',
             'estado',
+            'fecha_ingreso',
+            'clave',
+            'nit',
+            'perfil',
+            'debe_firmar',
+            'tipo',
+            'ultimo_pwd',
+            'mensajeria',
             'email',
-            'foto_original',
-            'foto_recorte',
+            'sistema',
             'email_contrasena',
             'direccion',
             'telefono',
-            'clave'
+            'fecha_fin_inactivo',
+            'intento_login',
+            'foto_original',
+            'foto_recorte',
+            'foto_cordenadas',
+            'ventanilla_radicacion',
+            'pertenece_nucleo'
         ];
 
         // set the date attributes on the schema
-        $dateAttributes = [];
+        $dateAttributes = [
+            'fecha_ingreso',
+            'ultimo_pwd',
+            'fecha_fin_inactivo'
+        ];
 
         $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
@@ -266,5 +302,15 @@ class Funcionario extends Model {
         $sql = "select * from funcionario where funcionario_codigo in ({$list})";        
         $records = Conexion::getConnection()->executeSelect($sql);
         return self::convertToObjectCollection($records);
+    }
+
+    /**
+     * retorna una lista de objectos perfil
+     *
+     * @return array
+     */
+    public function getProfiles(){
+        $sql = "select * from perfil where idperfil in ({$this->perfil})";
+        return Perfil::findBySql($sql);
     }
 }
