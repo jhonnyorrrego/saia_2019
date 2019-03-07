@@ -676,9 +676,9 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             async: false,
-            url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
+            url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias.php",
             data: {
-                ejecutar_libreria_formato: 'consultar_campos_formato',
+                ejecutarLibreria: 'validarCamposObligatorios',
                 idformato: $("#idformato").val(),
                 rand: Math.round(Math.random() * 100000)
             },
@@ -785,15 +785,8 @@ $(document).ready(function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
         var funcion = $(this).attr("name");
         var tipo = idfuncionFormato.split("_");
-        /*for(var id in CKEDITOR.instances) {
-        	    CKEDITOR.instances[id].on('focus', function(e) {
-        	        // Fill some global var here
-        	        global_editor = e.editor.name;
-        	    });
-        	}*/
         if (tipo[1] === 'func') {
             CKEDITOR.instances['editor_mostrar'].insertText(funcion);
-            //tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
             $.ajax({
                 type: 'POST',
                 url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
@@ -882,7 +875,7 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    if(objeto.publicar == 1 && objeto.exito == 1){
+                    if(objeto.publicar == 0 && objeto.exito == 1){
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
