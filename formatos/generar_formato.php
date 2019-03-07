@@ -105,8 +105,8 @@ if (isset($_REQUEST["genera"])) {
             $mensajes[] = $msg;
             $cuerpo_formato = $generar->contenido_cuerpo;
             $publicar = $generar->publicar;
-            if ($publicar == 1) {
-                $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
+            if ($publicar == 0) {
+                $updatePublicar = "UPDATE formato set publicar = 1 where idformato = {$idformato}";
                 phpmkr_query($updatePublicar);
             }
             include_once $ruta_db_superior . "/pantallas/generador/librerias_pantalla.php";
@@ -640,14 +640,15 @@ class GenerarFormato
                         }
                     }
                     $this->exito = 1;
-                    $this->contenido_cuerpo = $cuerpo_formato;
+                    $this->contenido_cuerpo = $cuerpo_formato;                    
                     return true;
                 }
             }
         }
-        if ($formato[0]['publicar'] == 0) {
-            $this->publicar = 1;
-        }
+
+
+
+        $this->publicar = $formato[0]['publicar'];
         $this->exito = 1;
         $this->contenido_cuerpo = $formato[0]['cuerpo'];
     }
@@ -2591,7 +2592,7 @@ span.fancytree-expander {
                 //$formato_fecha="L LT";
                 $formato_fecha = "YYYY-MM-DD HH:mm:ss";
             }
-
+            $fecha_por_defecto = '';
             $opciones_fecha = array();
             if (isset($opciones["criterio"])) {
                 $criterio = $opciones["criterio"];
@@ -2620,6 +2621,24 @@ span.fancytree-expander {
                         $opciones_fecha["minDate"] = $ini;
                         $opciones_fecha["maxDate"] = $fin;
                         break;
+                    case "actual":
+                        if($opciones["tipo"] == "datetime"){
+                            $fecha_por_defecto = date("Y-m-d H:i:s");
+                        } else if ($opciones["tipo"] == "date") {
+                            $fecha_por_defecto = date("Y-m-d");
+                        }                     
+                        break;
+                    case "ant_actual":
+                        if($opciones["tipo"] == "datetime"){
+                            $fecha_por_defecto = date("Y-m-d H:i:s");
+                            $fecha_por_defecto = strtotime('-1 day', strtotime( $fecha_por_defecto));
+                            $fecha_por_defecto = date ('Y-m-d H:i:s' , $fecha_por_defecto );
+                        } else if ($opciones["tipo"] == "date") {
+                            $fecha_por_defecto = date("Y-m-d");
+                            $fecha_por_defecto = strtotime('-1 day', strtotime($fecha_por_defecto));
+                            $fecha_por_defecto = date('Y-m-d' , $fecha_por_defecto );
+                        }                     
+                        break;
                     case "not_between":
                         $excluidos = array();
                         $fi = new Datetime($opciones["fecha_1"]);
@@ -2642,7 +2661,6 @@ span.fancytree-expander {
                 }
             }
         } else {
-            $fecha_por_defecto = '';
             if (strtoupper($campo["tipo_dato"]) == "DATE") {
                 $formato_fecha = "YYYY-MM-DD";
 
