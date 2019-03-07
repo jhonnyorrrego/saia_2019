@@ -5,7 +5,8 @@ $(function () {
     (function init() {
         toggleGoBack();
         showFlag();
-        showFab();
+        findActions();
+        findMenu();
         $('[data-toggle="tooltip"]').tooltip();
     })();
 
@@ -120,7 +121,7 @@ $(function () {
         })
     });
 
-    $('#actualizar_pdf').on('click', function(){
+    $('#actualizar_pdf').on('click', function () {
         let route = $('#acordeon_container').attr('data-location');
         route += '&actualizar_pdf=1';
 
@@ -130,7 +131,7 @@ $(function () {
     $('#anexos').on("click", function () {
         $("#show_files").trigger('click');
     });
-
+    /////// FIN MENU INTERMEDIO /////
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             toggleGoBack();
@@ -179,10 +180,20 @@ $(function () {
         top.topModal(options);
     }
 
-    function showFab() {
-        let actions = $('script[data-documentactions]').data('documentactions');
-        $('script[data-documentactions]').attr('data-documentactions', '');
+    function findActions() {
+        $.post(`${baseUrl}app/documento/eventos_fab.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                showFab(response.data);
+            } else {
+                console.error('error al mostrar las acciones');
+            }
+        }, 'json');
+    }
 
+    function showFab(actions) {
         if (actions.showFab) {
             let buttons = [];
 
@@ -250,7 +261,7 @@ $(function () {
                 });
             }
 
-            var fab = new Fab({
+            new Fab({
                 selector: "#fab",
                 button: {
                     style: "blue",
@@ -267,5 +278,35 @@ $(function () {
                 buttons: buttons
             });
         }
+    }
+
+    function findMenu() {
+        $.post(`${baseUrl}app/documento/menu_intermedio.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                createMenu(response.data);
+            } else {
+                console.error('error al crear el menu');
+            }
+        }, 'json');
+    }
+
+    function createMenu(data) {console.log(data);
+        data.forEach(m => {
+            $('#module_items').append(
+                $('<span>', {                   
+                    class: 'dropdown-item menu_options text-truncate cursor',
+                    style: "line-height:28px;",
+                    'data-url': m.enlace,
+                }).append(
+                    $('<i>', {
+                        class: `${m.imagen} px-1`,
+                        id: m.nombre
+                    })
+                ).append(m.etiqueta)
+            );
+        });
     }
 });

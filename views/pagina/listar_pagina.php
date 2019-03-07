@@ -16,7 +16,7 @@ if (!isset($_REQUEST["iddoc"])) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . "views/documento/encabezado.php";
 
-if (!UtilitiesController::permisoModulo("editar_paginas")) {
+if (!PermisoController::moduleAccess("editar_paginas")) {
     return false;
 }
 $iddocumento = $_REQUEST["iddoc"];

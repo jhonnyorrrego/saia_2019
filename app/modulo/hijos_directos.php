@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)array(
     'data' => [],
@@ -25,28 +25,37 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     $data = array();
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-    $modules = busca_filtro_tabla('*', 'modulo', "cod_padre='" . $parent . "'", 'orden asc', $conn);
+    $modules = Modulo::findAllByAttributes([
+        'cod_padre' => $parent
+    ], null, 'orden');
 
     if ($grouperParent == 1 && $parent) {
-        $dashboard = busca_filtro_tabla('*', 'modulo', "nombre='dashboard'", '', $conn);
-        $data[] = addElement($dashboard[0], 0);
+        $Modulo = Modulo::findByAttributes(['nombre' => 'dashboard']);
+        $data[] = [
+            'idmodule' => $Modulo->getPK(),
+            'isParent' => 0,
+            'name' => html_entity_decode($Modulo->etiqueta),
+            'icon' => $Modulo->imagen,
+            'type' => $Modulo->tipo,
+            'url' => $Modulo->enlace
+        ];
     }
 
-    if ($modules['numcampos']) {
-        $permiso = new PERMISO();
-
-        for ($i = 0; $i < $modules['numcampos']; $i++) {
-            $module = $modules[$i];
-            $access = $permiso->acceso_modulo_perfil($module['nombre']);
-
-            if ($access) {
-                if ($grouperParent) {
-                    $countChilds = busca_filtro_tabla('count(*) as total', 'modulo', 'cod_padre = ' . $module['idmodulo'], '', $conn);
-                    $isParent = $countChilds[0]['total'] ? 1 : 0;
-                }
-
-                $data[] = addElement($module, $isParent);
+    foreach ($modules as $key => $Modulo) {
+        if (PermisoController::moduleAccess($Modulo->nombre)) {
+            if ($grouperParent) {                
+                $countChilds = Modulo::countRecords(['cod_padre' => $Modulo->getPK()]);
+                $isParent = $countChilds ? 1 : 0;
             }
+
+            $data[] =[
+                'idmodule' => $Modulo->getPK(),
+                'isParent' => $isParent,
+                'name' => html_entity_decode($Modulo->etiqueta),
+                'icon' => $Modulo->imagen,
+                'type' => $Modulo->tipo,
+                'url' => $Modulo->enlace
+            ];
         }
     }
 
@@ -57,15 +66,3 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 }
 
 echo json_encode($Response);
-
-function addElement($data, $isParent)
-{
-    return array(
-        'idmodule' => $data['idmodulo'],
-        'isParent' => $isParent,
-        'name' => html_entity_decode($data['etiqueta']),
-        'icon' => $data['imagen'],
-        'type' => $data['tipo'],
-        'url' => $data['enlace']
-    );
-}
