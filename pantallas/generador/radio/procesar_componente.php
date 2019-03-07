@@ -13,20 +13,21 @@ function procesar_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 	global $conn;
   if($idcampo==''){
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
-  }
+	}
+
 	if($campo==''){
 		$dato=busca_filtro_tabla("","campos_formato A","A.idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	if($seleccionado!=''){
 		$predeterminado=$seleccionado;
-	}
-	else{
+	}else{
 		$predeterminado=$campo["predeterminado"];
 	}
 	$sql2 = trim($campo["valor"]);
 	$accion = strtoupper(substr($sql2,0,strpos($sql2,' ')));	
 	$listado0=array();
+
 	if($accion=="SELECT"){
 	  $datos=ejecuta_filtro_tabla($campo["valor"],$conn);
 	  if($datos["numcampos"]){
@@ -35,33 +36,32 @@ function procesar_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 	    }
 	  	$llenado=implode(";",$listado0);
 	  }
-	  else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
-	}    
-	else 
-	  $llenado=utf8_encode(html_entity_decode($campo["valor"]));
+	  else alerta("EXISTE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
+	}else{
+		$dato=busca_filtro_tabla("","campos_formato A","A.idcampos_formato=".$idcampo,"",$conn);
+		$llenado=json_decode($dato[0]['opciones'],true);
+		$cantidadOpciones = count($llenado);
+	}
 	$texto="";
 	$listado3=array();
-	$ultimo=substr($llenado,-1);
-	if($ultimo==";")$llenado=substr($llenado,0,-1);
-	if($llenado!="" && $llenado!="Null"){
-	  $listado1=explode(";",$llenado);
-	  $cont1=count($listado1);
-	  for($i=0;$i<$cont1;$i++){
-	    $listado2=explode(",",$listado1[$i]);
-	    array_push($listado3,$listado2);
-	  }
-	}
-	$cont3=count($listado3);
-	for($j=0;$j<$cont3;$j++){		
-		$texto.='<label class="radio inline" for="'.$campo["nombre"]."_".$j.'">
-      <input type="radio" ';		
-	  $texto.=' name="'.$campo["nombre"].'" id="'.$campo["nombre"]."_".$j.'" value="'.($listado3[$j][0]).'"';	  
-	  if(($listado3[$j][0])==$predeterminado)
-	    $texto.=' checked ';
-	  $texto.='>'.($listado3[$j][1]).'</label>';
-		
+	if($cantidadOpciones){
+		for($j=0;$j< $cantidadOpciones;$j++){		
+			$texto.='<label class="radio inline" for="'.$campo["nombre"]."_".$j.'">
+				<input type="radio" ';		
+			$texto.=' name="'.$campo["nombre"].'" id="'.$campo["nombre"]."_".$j.'" value="'.($llenado[$j]['llave']).'"';	  
+			if($llenado[$j]['llave'] == $predeterminado){
+				$texto.=' checked ';
+			}   
+			$texto.='>'.$llenado[$j]['item'].'</label>';
+		}
+	}else{
+		$texto.= '<label class="radio inline" for="">
+				<input type="radio"  name="" id="" value="" >1</label>
+				<label class="radio inline" for=""><input type="radio"  name="" id="" value="" >2</label>
+				<label class="radio inline" for=""><input type="radio"  name="" id="" value="" >3</label>
+				<label class="radio inline" for=""><input type="radio"  name="" id="" value="" >4</label>';
 	}  	
-	return($texto);
+	return $texto;
 }
 function mostrar_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 	global $conn;
@@ -90,7 +90,7 @@ function mostrar_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 	    }
 	  	$llenado=implode(";",$listado0);
 	  }
-	  else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
+	  else alerta("EXISTE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo["etiqueta"]);
 	}    
 	else 
 	  $llenado=utf8_encode(html_entity_decode($campo["valor"]));	
@@ -106,6 +106,6 @@ function mostrar_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 	    $listado3[$listado2[0]]=$listado2[1];
 	  }
 	}
-	return($listado3[$seleccionado]);
+	return $listado3[$seleccionado];
 }
 ?>
