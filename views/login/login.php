@@ -136,7 +136,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
 
     <!-- Modal -->
-    <div class="modal fade slide-up disable-scroll" id="recovery_modal" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal" id="recovery_modal" tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog ">
             <div class="modal-content-wrapper">
                 <div class="modal-content">
@@ -178,7 +178,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- /.modal-content -->
         </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- modal -->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
     <script>
