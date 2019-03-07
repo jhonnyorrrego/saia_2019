@@ -27,8 +27,8 @@ if (!empty($_REQUEST["idactividad"])) {
         <input type="hidden" name="fk_actividad" value="<?= $idactividad ?>">
         <div class="row py-1 mt-1">
             <div class="col col-md-8">
-                <div class="form-control form-group-default">
-                <label>Nombre</label>
+                <div class="form-group-default">
+                <label for="nombre_tarea">Nombre</label>
                 <input class="form-control form-control-sm" id="nombre_tarea" name="nombre" type="text" placeholder="Qu&eacute; desea que se realice &quest;">
                 </div>
             </div>
