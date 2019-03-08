@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <div class="row mx-0">
-    <div class="col-12">
+    <div class="col-12 px-0">
         <div class="card card-borderless">
             <ul class="nav nav-tabs nav-tabs-simple" role="tablist" data-init-reponsive-tabs="dropdownfx">
                 <li class="nav-item">
@@ -32,7 +32,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <div class="tab-pane " id="document_pages">
                     <div class="row">
-                        <div class="col-12" id="pages_container"></div>
+                        <div class="col-12 px-0" id="pages_container"></div>
                     </div>
                 </div>
             </div>

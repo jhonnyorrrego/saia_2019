@@ -648,6 +648,7 @@ class SqlMysql extends SQL2
 
     public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null)
     {
+        $campo = '';
         switch (strtoupper(@$tipo_dato)) {
             case "NUMBER":
                 $campo .= " decimal";
@@ -812,6 +813,8 @@ class SqlMysql extends SQL2
 
     protected function formato_elimina_indices_tabla($tabla)
     {
+        global $conn;
+
         $tabla = strtoupper($tabla);
         $indices = $this->ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
         for ($i = 0; $i < $indices["numcampos"]; $i++) {
@@ -887,6 +890,7 @@ class SqlMysql extends SQL2
     public function concatenar_cadena($arreglo_cadena)
     {
         $cadena_final = '';
+        $i = 0;
         if (@$arreglo_cadena[($i + 1)] == "") {
             return ($arreglo_cadena[0]);
         }

@@ -11,7 +11,6 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $raiz_saia . "db.php";
 include_once $raiz_saia . "assets/librerias.php";
 
 function librerias_jquery($version = "1.7.2")
@@ -70,7 +69,7 @@ function librerias_UI($version = "1.8.17")
 function librerias_jqgrid()
 {
     global $raiz_saia;
-    $texto .= '<script src="' . $raiz_saia . 'js/idiomas/grid.locale-es.js" type="text/javascript"></script>
+    $texto = '<script src="' . $raiz_saia . 'js/idiomas/grid.locale-es.js" type="text/javascript"></script>
 <script src="' . $raiz_saia . 'js/jquery.jqGrid.min.js" type="text/javascript"></script>';
     return $texto;
 }
@@ -78,7 +77,7 @@ function librerias_jqgrid()
 function estilo_jqgrid()
 {
     global $raiz_saia;
-    $texto .= '<link rel="stylesheet" type="text/css" media="screen" href="' . $raiz_saia . 'css/ui.jqgrid.css" />
+    $texto = '<link rel="stylesheet" type="text/css" media="screen" href="' . $raiz_saia . 'css/ui.jqgrid.css" />
 <link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'asset/css/contenedor.css">';
     return $texto;
 }
@@ -138,8 +137,10 @@ function estilo_bootstrap($version = "saia")
 
 function librerias_tabla_bootstrap($toolbar = false)
 {
+    global $raiz_saia;
+
     $texto = bootstrapTable();
-    if ($avanzado) {
+    if ($toolbar) {
         $texto .= '<script src="' . $raiz_saia . 'assets/theme/assets/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>';
     }
 
@@ -210,7 +211,7 @@ function librerias_arboles($opciones = '')
 <script type="text/javascript" src="' . $raiz_saia . 'js/dhtmlxtree_xw.js"></script>
   <script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/librerias_arboles.js"></script>
 	<link rel="STYLESHEET" type="text/css" href="' . $raiz_saia . 'css/dhtmlXTree.css">';
-    if ($opcion == 'drag') {
+    if ($opciones == 'drag') {
         $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/dhtmlxTree_dragIn.js"></script>';
     }
     return $texto;
