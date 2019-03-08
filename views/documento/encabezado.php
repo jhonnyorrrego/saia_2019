@@ -63,7 +63,7 @@ function plantilla($documentId, $transferId = 0)
         'name' => $Transfer->user->getName()
     ];
     
-    $priorityClass = $document[0]['prioridad'] ? 'text-danger' : '';
+    $priorityClass = $Documento->prioridad ? 'text-danger' : '';
     ?>
 <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">
 <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
@@ -105,16 +105,7 @@ function plantilla($documentId, $transferId = 0)
                 <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
                     &nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;
                 </span>
-                <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end" id="module_items">
-                    <?php foreach ($moduleActions as $key => $item) : ?>
-                    <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate cursor" data-url="<?= $item['enlace'] ?>" class="text-body" style="line-height:28px;">
-                        <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta'] ?>
-                    </span>
-                    <?php if ($key == 4 || $key == 11) : ?>
-                    <hr class="m-1">
-                    <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
+                <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end" id="module_items"></div>
             </div>
         </div>
     </div>
