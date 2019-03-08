@@ -18,7 +18,7 @@ $retorno = array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_POST) {
-    if (!Utilities::permisoModulo("editar_paginas")) {
+    if (!PermisoController::moduleAccess("editar_paginas")) {
         $retorno["message"] = "No tiene permisos para actualizar las paginas";
     } else {
         $ord = count($_POST["ordenar"]);

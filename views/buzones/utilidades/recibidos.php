@@ -40,17 +40,17 @@ $(function(){
                 });
                 
                 selections = selections.split(',').map(Number);
-                $("#table i.priority").each(function(i, e){
+                $("#table .priority_flag").each(function(i, e){
                     let element = $(e);
                     let key = element.data('key');
                     
                     if($.inArray(key, selections) != -1){
                         if(priority){
-                            element.show();
-                            $(`#document_information [data-key=${key}]`).addClass('text-danger')
+                            element.removeClass('d-none');
+                            $(`#priority_flag[data-key=${key}]`).children().addClass('text-danger')
                         }else{
-                            element.hide();
-                            $(`#document_information [data-key=${key}]`).removeClass('text-danger')
+                            element.addClass('d-none');
+                            $(`#priority_flag[data-key=${key}]`).children().removeClass('text-danger')
                         }
                     }
                 });                                

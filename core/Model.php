@@ -199,9 +199,9 @@ abstract class Model extends StaticSql
             }
 
             $fields .= $attribute;
-            if($value==="NULL"){
+            if ($value === "NULL") {
                 $values .= "NULL";
-            }else{
+            } else {
                 if (in_array($attribute, $dateAttributes)) {
                     $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
                 } else {
@@ -355,7 +355,7 @@ abstract class Model extends StaticSql
     public static function findColumn($field, $conditions = [], $order = '')
     {
         $sql = self::generateSelectSql($conditions, [$field], $order);
-        $records = self::search($sql, $offset, $limit);
+        $records = self::search($sql);
 
         $data = [];
         foreach ($records as $key => $value) {
@@ -399,7 +399,7 @@ abstract class Model extends StaticSql
                     $Instance->$key = $value;
                 }
             }
-            if(method_exists($Instance,'massiveAssigned')){
+            if (method_exists($Instance, 'massiveAssigned')) {
                 $Instance->massiveAssigned();
             }
             $data[] = $Instance;
@@ -569,7 +569,7 @@ abstract class Model extends StaticSql
     }
 
 
-    public static function findBySql($sql, $getInstance = false)
+    public static function findBySql($sql, $getInstance = true)
     {
         $data = self::search($sql);
         if ($getInstance) {
@@ -578,5 +578,4 @@ abstract class Model extends StaticSql
         }
         return $data;
     }
-
 }
