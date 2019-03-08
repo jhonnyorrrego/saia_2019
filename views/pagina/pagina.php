@@ -14,6 +14,8 @@ $jsParams = json_encode([
     'baseUrl' => $ruta_db_superior,
     'id' => $_REQUEST['documentId']
 ]);
+
+include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,7 +42,7 @@ $jsParams = json_encode([
                 <div id="item_parent" style="overflow-y:auto;"></div>
             </div>
             <div class="col px-1" id="content-wrapper" style="overflow-x:auto;"></div>
-            <div class="col-auto px-1 d-none" id="comment-wrapper" style="overflow-y:auto;">
+            <div class="col-auto px-1 d-none bg-master-lighter" id="comment-wrapper" style="overflow-y:auto;">
                 <h4>Comentarios</h4>
                 <div class="comment-list">
                     <div class="comment-list-container"></div>
@@ -52,6 +54,7 @@ $jsParams = json_encode([
         </div>
     </div>
     <script src="<?= $ruta_db_superior; ?>assets/theme/assets/js/cerok_libraries/comments/comments.js" type="text/javascript"></script>
+    <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior; ?>views/pagina/js/pagina.js" data-pages-params='<?= $jsParams ?>' type="text/javascript"></script>
 </body>
 

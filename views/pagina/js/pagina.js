@@ -25,11 +25,19 @@ $(function() {
     })();
 
     $("button.thumbnails").on("click", function() {
-        $("#thumbnails").toggle();
+        $("#thumbnails").toggleClass("d-none");
     });
 
     $("#add_comment").on("click", function() {
         $("#content-wrapper img").css("cursor", "crosshair");
+        $(':button.active').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    $("#cursor_tool").on("click", function() {
+        $("#content-wrapper img").css("cursor", "");
+        $(':button.active').removeClass('active');
+        $(this).addClass('active');
     });
 
     $(document).off("click", ".page_thumbnail");
@@ -38,9 +46,16 @@ $(function() {
             .html($(this).html())
             .attr("data-page", $(this).data("page"));
         $("#content-wrapper img").removeClass("w-100");
-        $("#item_parent,#comment-wrapper").height(
-            $("#content-wrapper img").height()
-        );
+
+        setTimeout(() => {
+            $("#content-wrapper").css(
+                "maxWidth",
+                $("#content-wrapper img").width()
+            );
+            $("#item_parent,#comment-wrapper").height(
+                $("#content-wrapper img").height()
+            );
+        }, 0);
 
         findNotes();
         annotations.forEach(a => {
@@ -60,6 +75,9 @@ $(function() {
 
     $(document).off("click", "#content-wrapper img");
     $(document).on("click", "#content-wrapper img", function(e) {
+        $(".annotation")
+            .parent()
+            .css("border", "");
         $("#comment-wrapper").addClass("d-none");
         $("#comment_input")
             .parent()
@@ -111,13 +129,39 @@ $(function() {
 
     $(document).off("click", ".annotation");
     $(document).on("click", ".annotation", function(e) {
+        $("#thumbnails").addClass("d-none");
+        $(".annotation")
+            .parent()
+            .css("border", "");
+
+        let container = $(this).parent();
+        container.css({
+            borderStyle: "dashed",
+            borderColor: "blue"
+        });
+
         $("#comment-wrapper").removeClass("d-none");
+        $("#content-wrapper").scrollLeft(container.position().left);
+        console.log($("#content-wrapper")[0].clientWidth);
+        
         $("#comment_input")
             .parent()
             .remove();
 
         let annotationId = $(this).data("key");
         showComments(annotationId);
+
+        container.draggable({
+            containment: "#content-wrapper",
+            scroll: true,
+            cursor: "crosshair",
+            start: function(event, ui) {
+                $("#comment-wrapper").addClass("d-none");
+            },
+            stop: function(event, ui) {
+                editAnnotation(ui.position, annotationId);
+            }
+        });
     });
 
     function showComments(annotationId) {
@@ -192,7 +236,7 @@ $(function() {
     }
 
     function annotationTemplate(annotation) {
-        return `<span class='fa fa-file text-white f-20 annotation' data-key='${
+        return `<span class='fa fa-file text-warning f-20 annotation cursor' data-key='${
             annotation.uuid
         }'></span>`;
     }
@@ -236,6 +280,31 @@ $(function() {
                 return saveComment(comment.comment, annotation);
             }
         };
+    }
+
+    function editAnnotation(position, annotationId) {
+        $.post(
+            `${params.baseUrl}app/visor/editar_nota.php`,
+            {
+                key: localStorage.getItem("key"),
+                type: "NOTA_PAGINA",
+                typeId: $("#content-wrapper").attr("data-page"),
+                uuid: annotationId,
+                annotation: {
+                    x: position.left,
+                    y: position.top
+                }
+            },
+            function(response) {
+                if (!response.success) {
+                    top.notification({
+                        type: "error",
+                        message: response.message
+                    });
+                }
+            },
+            "json"
+        );
     }
 
     function saveComment(content, annotation) {
