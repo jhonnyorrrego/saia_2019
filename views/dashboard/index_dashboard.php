@@ -39,9 +39,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             let mailRoute = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST["idbusqueda_componente"] ?>';
 
             $("#mailbox").load(mailRoute, function(){
-                setTimeout(() => {
-                    window.resizeIframe();
-                }, 1500);
+                let interval = setInterval(() => {
+                    if ($("#table tr[data-index]").length) {
+                        window.resizeIframe();
+                        clearInterval(interval);
+                    }
+                }, 50);
             });
 
             if($('#right_workspace').is(':visible')){
@@ -59,10 +62,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 window.resizeIframe();
             });
             
-            window.resizeIframe = function (){
-                let height = $(window).height() - $('#header_list').height();
-                $('#right_workspace').height($(window).height());
-                $('#table').bootstrapTable( 'resetView' , {height: height} );
+            window.resizeIframe = function() {
+                let frameH = $(window).height();
+                let paginationH = $('.fixed-table-pagination').height();
+                let headerH = $('#header_list').height();
+                $(".fixed-table-container").height(frameH - paginationH - headerH);
+                $('#right_workspace').height(frameH);
             }
         });
     </script>
