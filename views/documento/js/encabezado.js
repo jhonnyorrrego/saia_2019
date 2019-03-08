@@ -135,7 +135,7 @@ $(function () {
 
     $(document).off("click", '#anexos');
     $(document).on("click", '#anexos', function () {
-        $("#show_files").trigger('click');
+        $("#show_files").click();
     });
     /////// FIN MENU INTERMEDIO /////
     window.addEventListener("orientationchange", function () {

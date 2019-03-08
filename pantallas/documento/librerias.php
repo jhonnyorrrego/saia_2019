@@ -305,23 +305,22 @@ function unread($iddocumento, $fecha)
  */
 function has_files($documentId, $showCounter = false)
 {
-    global $conn;
-
-    $response = '<span class="d-none" id="show_files"></span>';
     if ($documentId) {
-        $files = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $documentId, '', $conn);
-        $pages = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $documentId, '', $conn);
+        $files = Anexos::countRecords(['documento_iddocumento' => $documentId]);
+        $pages = Pagina::countRecords(['id_documento' => $documentId]);
 
-        if ($files[0]['cant'] || $pages[0]['cant']) {
+        if ($files || $pages) {
             if ($showCounter) {
-                $total = $files[0]["cant"] + $pages[0]['cant'];
+                $total = $files + $pages;
 
-                $response = '<span class="px-1 cursor fa fa-paperclip notification f-20" id="show_files" data-toggle="tooltip" data-placement="bottom" title="Anexos">
+                $response = '<span id="show_files" class="px-1 cursor fa fa-paperclip notification f-20" data-toggle="tooltip" data-placement="bottom" title="Anexos">
                     <span class="badge badge-important counter">' . $total . '</span>
                 </span>';
             } else {
                 $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
             }
+        }else if($showCounter){
+            $response = '<span id="show_files" class="d-none"></span>';
         }
     }
     return $response;
