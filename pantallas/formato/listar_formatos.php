@@ -18,13 +18,14 @@ $idcategoria_formato = $_REQUEST['idcategoria_formato'];
 if (!$idcategoria_formato) {
     $idcategoria_formato = 2;
 }
-$lista_formatos = busca_filtro_tabla("idformato,nombre,etiqueta,ruta_adicionar", "formato", "mostrar=1 AND (fk_categoria_formato like '" . $idcategoria_formato . "' OR   fk_categoria_formato like '%," . $idcategoria_formato . "'  OR   fk_categoria_formato like '" . $idcategoria_formato . ",%' OR   fk_categoria_formato like '%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like '2' OR fk_categoria_formato like '%,2'  OR fk_categoria_formato like '2,%' OR fk_categoria_formato like '%,2,%')", "etiqueta ASC", $conn);
+$lista_formatos = busca_filtro_tabla("", "formato", "mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'" . $idcategoria_formato . "' OR   fk_categoria_formato like'%," . $idcategoria_formato . "'  OR   fk_categoria_formato like'" . $idcategoria_formato . ",%' OR   fk_categoria_formato like'%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%')", "etiqueta ASC", $conn);
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 $nombre_proceso = codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 $nombre_proceso = mb_strtoupper($nombre_proceso);
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,13 +35,15 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
     <?= bootstrap() ?>
     <?= librerias_acciones_kaiten() ?>
 </head>
+
 <body>
     <div class="container" style="font-size:16px">
         <div class="row pt-2">
             <div class="col-12">
                 <table class="table table-hover table-bordered">
                     <tr>
-                        <td class="text-center"><b><?= $nombre_proceso ?></b></td>
+                        <td class="text-center"><b>
+                                <?= $nombre_proceso ?></b></td>
                     </tr>
                     <?php for ($i = 0; $i < $lista_formatos['numcampos']; $i++) :
                         if (UtilitiesController::permisoModulo('crear_' . $lista_formatos[$i]['nombre'])) :
@@ -49,17 +52,20 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
 
                             $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';
                             $enlace_adicionar .= http_build_query($_REQUEST + ['idformato' => $lista_formatos[$i]['idformato']]);
-                    ?>
-                            <tr>
-                                <td>
-                                    <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe"><?= $etiqueta ?></div>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
+                            ?>
+                    <tr>
+                        <td>
+                            <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe">
+                                <?= $etiqueta ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
                     <?php endfor; ?>
                 </table>
             </div>
         </div>
     </div>
 </body>
-</html>
+
+</html> 

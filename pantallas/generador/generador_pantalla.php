@@ -875,14 +875,14 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    if(objeto.publicar == 0 && objeto.exito == 1){
+                    if(objeto.publicar == 0 && objeto.exito == true){
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1500);
                         }, 3000);
-                    }else if (objeto.exito == 1 && objeto.permisos) {
+                    }else if (objeto.exito == true && objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado y "+objeto.permisos, "success", "", 3500);
@@ -893,7 +893,7 @@ $(document).ready(function() {
                         if(objeto.publicar==1){
                            publicar=objeto.publicar;  
                         }
-                    }else if (objeto.exito == 1 && !objeto.permisos) {
+                    }else if (objeto.exito == true && !objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado correctamente", "success", "", 3500);
@@ -905,7 +905,7 @@ $(document).ready(function() {
                            publicar=objeto.publicar;  
                         }
                     } else {
-                        //notificacion_saia(objeto.mensaje, "error", "", 9500);
+                        notificacion_saia("Se a producido un error por favor comuniquese con el administrador", "error", "", 9500);
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1000);
                         }, 2000);

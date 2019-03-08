@@ -767,7 +767,7 @@ function validarCamposObligatorios($idformato)
                         $opciones = json_decode($camposFormato[$i]['opciones'], true);
                         if (!$opciones) {                    
                             $campos.= $camposFormato[$i]['etiqueta'].",";
-                            $retorno['error'] = 0;
+                            $retorno['exito'] = 0;
                             $retorno['mensaje'] = "Es necesario configurar los campos antes de seguir: ".substr(trim($campos), 0, -1)." ";
                         }
                     }
@@ -776,7 +776,7 @@ function validarCamposObligatorios($idformato)
         }else{
             $retorno['mensaje'] = 'Recuerde que se deben crear campos del formato';
             $retorno['exito'] = 0;
-        } 
+        }
     }
     echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
 }
