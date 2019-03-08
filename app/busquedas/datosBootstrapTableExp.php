@@ -22,18 +22,13 @@ $dataParams = [
     'rows' => $_REQUEST['pageSize'],
     'actual_row' => $actualRow
 ];
-unset($_REQUEST['pageNumber'], $_REQUEST['pageSize']);
+$columns=$_REQUEST['nameColumns'];
+
+unset($_REQUEST['pageNumber'], $_REQUEST['pageSize'],$_REQUEST['nameColumns']);
 
 $params = array_merge($dataParams, $_REQUEST);
-
 $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda_exp.php?' . http_build_query($params);
 
-if ($_REQUEST['debug']) {
-    echo '<pre>';
-    var_dump($url);
-    echo '</pre>';
-    exit;
-}
 $ch = curl_init();
 if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -50,6 +45,8 @@ $data = [
 ];
 foreach ($output->rows as $key => $value) {
     $data['rows'][$key]['id'] = (int)$value->llave;
-    $data['rows'][$key]['info'] = $value->info;
+    foreach ($columns as $name) {
+        $data['rows'][$key][$name] = $value->$name;
+    }
 }
 echo json_encode($data);

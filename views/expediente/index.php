@@ -40,7 +40,7 @@ $params = (!empty($_REQUEST)) ? $_REQUEST : [];
         $(function(){
             let baseUrl = $('script[data-baseurl]').data('baseurl');
             let params = <?= json_encode($params); ?>;
-            let mailRoute = baseUrl + 'views/buzones/listado.php';
+            let mailRoute = baseUrl + 'views/buzones/grid.php';
 
             $("#mailbox").load(mailRoute,params);
 

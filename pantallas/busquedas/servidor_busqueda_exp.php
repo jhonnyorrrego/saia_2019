@@ -306,9 +306,11 @@ if (!$_REQUEST['onlyCount']) {
                     }
                 }
                 $listado_funciones = parsear_datos_plantilla_visual($info_base, implode(",", $lcampos));
-
+                
                 for ($i = 0; $i < $result["numcampos"]; $i++) {
                     $response['rows'][$i] = [];
+                    $response['rows'][$i]['llave'] = $result[$i][$llave];
+                    
                     unset($listado_campos);
                     $listado_campos = array();
 
@@ -337,12 +339,15 @@ if (!$_REQUEST['onlyCount']) {
                         if (function_exists($funcion[0])) {
                             $valor_funcion = call_user_func_array($funcion[0], $valor_variables);
                             $info = str_replace("{*" . $valor . "*}", $valor_funcion, $info);
+                            if ($datos_busqueda[0]["tipo_busqueda"] == 2) {
+                                $response["rows"][$i][$funcion[0]] = $valor_funcion;
+                            }
                         }
                     }
+                    
                     if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
                         $response['rows'][$i]['info'] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'></div>";
                         $response['rows'][$i]['info'] = str_replace("\n", "", str_replace("\r", "", $info));
-                        $response['rows'][$i]['llave'] = $result[$i][$llave];
                     }
                 }
             }

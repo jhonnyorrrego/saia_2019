@@ -310,8 +310,12 @@ class Expediente extends Model
      */
     public function getPropietario(): string
     {
-        $data = $this->getRelationFk('Funcionario', 'propietario');
-        return $data ? $data->nombres . ' ' . $data->apellidos : '';
+        $propietario='GENERADO POR EL SISTEMA';
+        if($this->propietario){
+            $data = $this->getRelationFk('Funcionario', 'propietario');
+            $propietario= $data ? $data->nombres . ' ' . $data->apellidos : '';
+        }
+        return $propietario;
     }
     /**
      * Retorna el nombre del funcionario responsable
