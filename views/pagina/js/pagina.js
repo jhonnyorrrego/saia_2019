@@ -12,7 +12,14 @@ $(function() {
             },
             function(response) {
                 if (response.success) {
-                    createThumbnails(response.data);
+                    if (response.data.length) {
+                        createThumbnails(response.data);
+                    } else {
+                        $('#page_editor').html($('<div>', {
+                            class: 'alert alert-danger mx-3',
+                            text: 'Este documento no tiene páginas'
+                        }));
+                    }
                 } else {
                     top.notification({
                         type: "error",

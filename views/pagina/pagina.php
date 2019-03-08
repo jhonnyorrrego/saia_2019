@@ -27,7 +27,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </head>
 
 <body>
-    <div class="container mw-100 px-0 mx-0" id="pdf_editor">
+    <div class="container mw-100 px-0 mx-0" id="page_editor">
         <div class="row mx-0 sticky-top" id="toolbar_container">
             <div class="col-12 toolbar" id="toolbar">
                 <button class="fa fa-comment" type="button" title="Comentario" id="add_comment"></button>
