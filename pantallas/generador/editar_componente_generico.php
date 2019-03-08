@@ -127,6 +127,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
         var opciones_form = <?= $opciones_str ?>;
 
         $(document).ready(function() {
+
             var rutaSuperior = "<?= $ruta_db_superior ?>";
             var idpantalla_campo = <?= $idpantalla_campos ?>;
 

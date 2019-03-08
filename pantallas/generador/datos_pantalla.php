@@ -197,9 +197,9 @@ if ($formato["numcampos"]) {
   <div class="row-fluid">
     <div class="span12">
       <div class="control-group">
-        <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong></label>
+        <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong><span class="require-input">*</span></label>
         <div class="controls">
-          <textarea class="span6" name="descripcion_formato" id="descripcion_formato" placeholder="Descripci&oacute;n" rows="3"></textarea>
+          <textarea class="span6" name="descripcion_formato" id="descripcion_formato" placeholder="Descripci&oacute;n" rows="3" required></textarea>
         </div>
       </div>
     </div>
