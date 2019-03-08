@@ -19,6 +19,7 @@ final class Version20190225155304 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
+       
        $componente1 = [
                 'nombre' => "{*fecha_creacion*}",
                 'nombre_funcion' => "fecha_creacion",
@@ -50,6 +51,12 @@ final class Version20190225155304 extends AbstractMigration
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
+
+        $table = $schema->getTable('funciones_formato');
+
+        if($table && $table->hasColumn('formato')){
+            $table->dropColumn('formato');
+        }
     }
 
     public function preDown(Schema $schema): void {
@@ -62,7 +69,11 @@ final class Version20190225155304 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        $table = $schema->getTable('funciones_formato');
+
+        if($table && $table->hasColumn('formato')){
+            $table->dropColumn('formato');
+        }
 
     }
 }

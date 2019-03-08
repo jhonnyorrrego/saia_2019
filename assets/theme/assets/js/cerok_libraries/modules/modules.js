@@ -83,7 +83,7 @@ class Modules {
                     parent: idmodule,
                     grouper: grouper
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         if (response.data.length) {
                             parentModule.childs = response.data;
@@ -152,20 +152,20 @@ class Modules {
         this.groupers.forEach((g, i) => {
             row.append(`
                 <div class="col-12 col-md-auto grouper cursor text-center p-1" id="${
-                    g.idmodule
+                g.idmodule
                 }">
                     <table>
                         <tbody>
                             <tr>
                                 <td class="align-middle ${
-                                    backgrounds[i]
-                                }" style="height: 95px;width: 95px;">
+                backgrounds[i]
+                }" style="height: 95px;width: 95px;">
                                     <i class="${
-                                        g.icon
-                                    } w-100 py-2" style="font-size:2.5rem"></i>
+                g.icon
+                } w-100 py-2" style="font-size:2.5rem"></i>
                                     <span class="d-block text-truncate" title="${
-                                        g.name
-                                    }">${g.name}</span>
+                g.name
+                }">${g.name}</span>
                                 </td>
                             </tr>
                         </tbody>

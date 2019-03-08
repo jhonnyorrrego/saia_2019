@@ -56,7 +56,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         ]);
         $pk = VisorComentario::newRecord($data);
         if($pk) {
-            $Response->message = 'Comantario creado';
+            $Response->message = 'Comentario creado';
             $Response->success = 1;
         }else{
             $Response->message = 'Error al crear el comentario';

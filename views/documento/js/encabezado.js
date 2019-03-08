@@ -5,7 +5,8 @@ $(function () {
     (function init() {
         toggleGoBack();
         showFlag();
-        showFab();
+        findActions();
+        findMenu();
         $('[data-toggle="tooltip"]').tooltip();
     })();
 
@@ -26,16 +27,19 @@ $(function () {
         top.topModal(options);
     });
 
-    $('#resend,#reenviar').on('click', function () {
+    $(document).off('click', '#resend,#reenviar');
+    $(document).on('click', '#resend,#reenviar', function () {
         transferModal(1);
     });
 
-    $('#reply,#responder').on('click', function () {
+    $(document).off('click', '#reply,#responder');
+    $(document).on('click', '#reply,#responder', function () {
         let userInfo = $('#userInfo').data('info');
         transferModal(2, userInfo);
     });
 
-    $('#responder_todos').on('click', function () {
+    $(document).off('click', '#responder_todos');
+    $(document).on('click', '#responder_todos', function () {
         transferModal(3);
     });
 
@@ -74,8 +78,8 @@ $(function () {
         top.topModal(options);
     });
 
-    $(".priority_flag").on('click', function () {
-        let flag = $(this).find('.priority'),
+    $("#priority_flag").on('click', function () {
+        let flag = $("#priority_flag i"),
             priority = flag.hasClass('text-danger') ? 0 : 1,
             key = localStorage.getItem('key');
 
@@ -92,10 +96,10 @@ $(function () {
 
                 if (priority) {
                     flag.addClass('text-danger');
-                    $(`#table i[data-key=${documentId}]`).show();
+                    $(`#table .priority_flag[data-key=${documentId}]`).removeClass('d-none');
                 } else {
                     flag.removeClass('text-danger');
-                    $(`#table i[data-key=${documentId}]`).hide();
+                    $(`#table .priority_flag[data-key=${documentId}]`).addClass('d-none');
                 }
             } else {
                 top.notification({
@@ -108,7 +112,8 @@ $(function () {
     });
 
     /////// MENU INTERMEDIO ////////
-    $('#crear_tarea,#etiquetar').on('click', function () {
+    $(document).off('click', '#crear_tarea,#etiquetar');
+    $(document).on('click', '#crear_tarea,#etiquetar', function () {
         let route = $(this).data('url');
         top.topModal({
             url: baseUrl + route,
@@ -120,17 +125,19 @@ $(function () {
         })
     });
 
-    $('#actualizar_pdf').on('click', function(){
+    $(document).off('click', '#actualizar_pdf');
+    $(document).on('click', '#actualizar_pdf', function () {
         let route = $('#acordeon_container').attr('data-location');
         route += '&actualizar_pdf=1';
 
         $('#view_document').load(baseUrl + route);
     });
 
-    $('#anexos').on("click", function () {
-        $("#show_files").trigger('click');
+    $(document).off("click", '#anexos');
+    $(document).on("click", '#anexos', function () {
+        $("#show_files").click();
     });
-
+    /////// FIN MENU INTERMEDIO /////
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             toggleGoBack();
@@ -179,10 +186,20 @@ $(function () {
         top.topModal(options);
     }
 
-    function showFab() {
-        let actions = $('script[data-documentactions]').data('documentactions');
-        $('script[data-documentactions]').attr('data-documentactions', '');
+    function findActions() {
+        $.post(`${baseUrl}app/documento/eventos_fab.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                showFab(response.data);
+            } else {
+                console.error('error al mostrar las acciones');
+            }
+        }, 'json');
+    }
 
+    function showFab(actions) {
         if (actions.showFab) {
             let buttons = [];
 
@@ -197,7 +214,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.confirm.route, "_self");
+                        confirmDocument();
                     }
                 });
             }
@@ -250,7 +267,7 @@ $(function () {
                 });
             }
 
-            var fab = new Fab({
+            new Fab({
                 selector: "#fab",
                 button: {
                     style: "blue",
@@ -267,5 +284,56 @@ $(function () {
                 buttons: buttons
             });
         }
+    }
+
+    function confirmDocument() {
+        $.post(`${baseUrl}app/documento/confirmar.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                let route = baseUrl + 'views/documento/acordeon.php';
+                $('#acordeon_container').parent().load(route, {
+                    documentId: documentId
+                });
+            } else {
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                });
+            }
+        }, 'json');
+    }
+
+
+    function findMenu() {
+        $.post(`${baseUrl}app/documento/menu_intermedio.php`, {
+            key: localStorage.getItem('key'),
+            documentId: documentId
+        }, function (response) {
+            if (response.success) {
+                createMenu(response.data);
+            } else {
+                console.error('error al crear el menu');
+            }
+        }, 'json');
+    }
+
+
+    function createMenu(data) {
+        data.forEach(m => {
+            $('#module_items').append(
+                $('<span>', {
+                    id: m.nombre,
+                    class: 'dropdown-item menu_options text-truncate cursor',
+                    style: "line-height:28px;",
+                    'data-url': m.enlace,
+                }).append(
+                    $('<i>', {
+                        class: `${m.imagen} px-1`
+                    })
+                ).append(m.etiqueta)
+            );
+        });
     }
 });

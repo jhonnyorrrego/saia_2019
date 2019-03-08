@@ -35,6 +35,7 @@ class Documento extends Model
     protected $version;
     protected $fecha_limite;
     protected $ventanilla_radicacion;
+    protected $prioridad;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -82,6 +83,7 @@ class Documento extends Model
             'version',
             'fecha_limite',
             'ventanilla_radicacion',
+            'prioridad'
         ];
         // set the date attributes on the schema
         $dateAttributes = [

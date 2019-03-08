@@ -1,7 +1,4 @@
 <?php
-
-use function GuzzleHttp\json_decode;
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
 
@@ -19,7 +16,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 $params = (!empty($_REQUEST)) ? $_REQUEST : [];
 
 global $conn;
-$component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente,info', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente=' . $_REQUEST['idbusqueda_componente'], '', $conn);
+$sql = "select a.ruta_libreria_pantalla,b.encabezado_componente,info,cantidad_registros from busqueda a,busqueda_componente b where a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente={$_REQUEST['idbusqueda_componente']}";
+$component = StaticSql::search($sql);
 
 $nameColumns = [];
 $columns = [];
@@ -29,13 +27,13 @@ foreach ($cantColumns as $attColumn) {
     $attributes = explode("|", $attColumn);
     $column['title'] = $attributes[0];
     $column['field'] = explode('@', str_replace("{*", "", str_replace("*}", "", $attributes[1])))[0];
-    $nameColumns[]=$column['field'];
+    $nameColumns[] = $column['field'];
     if (!empty($attributes[2])) {
         $column['align'] = $attributes[2];
     }
-    $columns[]=$column;
+    $columns[] = $column;
 }
-$params['nameColumns']=$nameColumns;
+$params['nameColumns'] = $nameColumns;
 
 ?>
 <?= bootstrapTable() ?>
@@ -62,8 +60,8 @@ $params['nameColumns']=$nameColumns;
             sidePagination: 'server',
             queryParamsType: 'other',
             pagination: true,
-            pageSize: 15,
-            columns : <?=json_encode($columns);?>,
+            pageSize: '<?= $component[0]['cantidad_registros'] ?>',
+            columns: <?= json_encode($columns); ?>,
             onPostBody: function() {
                 table.parents('.bootstrap-table').addClass('w-100');
             },
@@ -81,6 +79,5 @@ if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
 
     foreach ($libraries as $librarie) {
         include_once $ruta_db_superior . $librarie;
-  
-  }
+    }
 }

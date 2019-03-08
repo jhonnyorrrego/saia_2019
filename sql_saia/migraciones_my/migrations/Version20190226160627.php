@@ -23,7 +23,8 @@ final class Version20190226160627 extends AbstractMigration
 
         $this->addSql("INSERT INTO cf_ventanilla (idcf_ventanilla, nombre, estado) VALUES(1, 'Sin Ventanilla', 1)");
 
-        $this->addSql("ALTER TABLE funcionario CHANGE ventanilla_radicacion ventanilla_radicacion INT(11) NOT NULL DEFAULT '1'");
+        $this->addSql("ALTER TABLE `funcionario` CHANGE `ventanilla_radicacion` `ventanilla_radicacion` INT(11) NOT NULL DEFAULT '1'");
+        $this->addSql("update funcionario set ventanilla_radicacion=1 where ventanilla_radicacion is null");
         $conn = $this->connection;
         //Busqueda
         $this->connection->update('busqueda', ['campos' => 'a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,a.estado_distribucion,a.estado_recogida,a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,b.descripcion,c.ventanilla_radicacion,d.nombre as ventanilla','tablas' => 'distribucion a, documento b,funcionario c, cf_ventanilla d'], ["nombre" => "reporte_distribucion_general"]);

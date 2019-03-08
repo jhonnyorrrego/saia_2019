@@ -43,7 +43,7 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
                         <td class="text-center"><b><?= $nombre_proceso ?></b></td>
                     </tr>
                     <?php for ($i = 0; $i < $lista_formatos['numcampos']; $i++) :
-                        if (UtilitiesController::permisoModulo('crear_' . $lista_formatos[$i]['nombre'])) :
+                        if (PermisoController::moduleAccess('crear_' . $lista_formatos[$i]['nombre'])) :
                             $etiqueta = $lista_formatos[$i]['etiqueta'];
                             $etiqueta = ucwords(strtolower($etiqueta));
 

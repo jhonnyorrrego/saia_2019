@@ -14,9 +14,8 @@ include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 
 $params = (!empty($_REQUEST)) ? $_REQUEST : [];
-
-global $conn;
-$component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente=' . $_REQUEST['idbusqueda_componente'], '', $conn);
+$sql = "select a.cantidad_registros,a.ruta_libreria_pantalla,b.encabezado_componente from busqueda a,busqueda_componente b where a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente={$_REQUEST['idbusqueda_componente']}";
+$component = StaticSql::search($sql);
 ?>
 <?= bootstrapTable() ?>
 <div class="container px-0">
@@ -44,8 +43,9 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             cardView: true,
             pagination: true,
             maintainSelected: true,
-            pageSize: 15,
-            height: $(window).height() - $('#header_list').height(),
+            pageSize: '<?= $component[0]['cantidad_registros'] ?>',
+            paginationSuccessivelySize: 1,
+            paginationPagesBySide: 1,
             columns: [{
                 field: 'info',
                 title: ''
@@ -62,8 +62,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 return response;
             },
             onPostBody: function() {
-                $('.card-view .title').hide();
-                table.parents('.bootstrap-table').addClass('w-100');
+                beautyTable();
 
                 var selections = table.data('selections').split(',').map(Number).filter(n => n > 0);
                 selections.forEach(s => {
@@ -112,6 +111,17 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             }
         }
 
+        function beautyTable() {
+            table.parents('.bootstrap-table').addClass('w-100');
+            table.find('tr[data-index] td').addClass('p-2');
+            $('.card-view .title').remove();
+            $('.pagination-detail .page-list').remove();
+
+            if (window.resizeIframe) {
+                window.resizeIframe();
+            }
+        }
+
         if (encabezado) {
             $("#header_list").load(baseUrl + encabezado, params, function() {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -120,7 +130,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
     });
 </script>
 <?php
-if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
+if ($component[0]['ruta_libreria_pantalla']) {
     $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
     foreach ($libraries as $librarie) {
