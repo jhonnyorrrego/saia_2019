@@ -64,7 +64,7 @@ function cssBootstrap()
 }
 /**
  * retorna los enlaces css , js y locale
- * de bootstrap table v1.13.1 minificados
+ * de bootstrap table v1.13.5 minificados
  */
 function bootstrapTable()
 {

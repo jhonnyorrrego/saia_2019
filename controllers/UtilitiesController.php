@@ -31,19 +31,6 @@ class UtilitiesController
     }
 
     /**
-     * Retorna si tiene o no permiso sobre el modulo
-     * 
-     * @param string $nombreModulo nombre del modulo
-     * @return boolean
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     * */
-    public static function permisoModulo(string $nombreModulo)
-    {
-        $permiso = new PERMISO();
-        return $permiso->acceso_modulo_perfil($nombreModulo);
-    }
-
-    /**
      * retorna el string ferencia
      * del archivo almacenado para la bd
      *
