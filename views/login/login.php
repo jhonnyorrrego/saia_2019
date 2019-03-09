@@ -137,7 +137,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
     <!-- Modal -->
     <div class="modal" id="recovery_modal" tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog ">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content-wrapper">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -150,20 +150,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="modal-body">
                             <div class="col-12">
                                 <hr>
-                                <div class="form-group-attached">
-                                    <div class="row">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Escribe
-                                            tu login</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="text" class="form-control" id="user" placeholder="Nombre de usuario." name="username" required>
-                                        </div>
+                                <div class="row">
+                                    <div class="form-group form-group-default required">
+                                        <label>Escribe tu login</label>
+                                        <input type="text" class="form-control" id="user" placeholder="Nombre de usuario." name="username" required>
                                     </div>
-                                    <div class="row my-2">
-                                        <label for="message" class="col-md-2 control-label text-black" style="line-height: 1;">Mensaje
-                                            para el administrador</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group form-group-default">
+                                        <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
+
                                     </div>
                                 </div>
                             </div>
