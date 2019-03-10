@@ -138,7 +138,7 @@ function plantilla($documentId, $transferId = 0)
             </div>
         </div>
         <div class="col-auto col-md mt-2 pr-0">
-            <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>'>
+            <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>' data-toggle="tooltip" data-placement="bottom" title="Prioridad">
                 <i class='fa fa-flag  <?= $priorityClass ?>'></i>
             </span>
             <?= has_files($documentId, true) ?>
