@@ -49,7 +49,7 @@ class Comments {
 
     createForm() {
         if (this.options.showForm) {
-            let form = `<div class="row">
+            let form = `<div class="row mx-0">
                 <div class="col">
                     <div class="form-group">
                         <textarea class="form-control" id="comment_content" rows="3" placeholder="${
@@ -82,16 +82,19 @@ class Comments {
 
         if (document.querySelector("#comment_list")) {
             var div = document.querySelector("#comment_list");
+            div.innerHTML = list;
         } else {
             var div = document.createElement("div");
             div.setAttribute("id", "comment_list");
+            div.innerHTML = list;
+            document.querySelector(this.options.selector).appendChild(div);
         }
 
-        div.innerHTML = list;
-
-        let element = document.querySelector(this.options.selector);
-        element.appendChild(div);
-        element.scrollTop = element.scrollHeight;
+        document.querySelector(
+            this.options.selector
+        ).scrollTop = document.querySelector(
+            this.options.selector
+        ).scrollHeight;
     }
 
     createTemplate() {
@@ -124,7 +127,7 @@ class Comments {
 
     createItem() {
         let baseUrl = this.options.baseUrl;
-        
+
         let self = this.options.userData.id == this.activeComment.user.key;
         let response = new String();
 

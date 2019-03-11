@@ -125,7 +125,7 @@ include_once($ruta_db_superior . "db.php");
                         }
                         if (@$datos_busqueda[0]["enlace_adicionar"]) {
                             ?>
-                            <button class="btn btn-sm kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+                            <button class="btn btn-sm kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button>
                         <?php
                     }/* if(@$datos_busqueda[0]["menu_busqueda_superior"]){
                       $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
