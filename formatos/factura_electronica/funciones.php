@@ -57,10 +57,13 @@ function mostrar_detalle_factura($idformato, $iddoc) {
             for($i = 0; $i < $items["numcampos"]; $i++) {
                 $lineas[] = '<tr>';
                 $lineas[] = "<td>{$items[$i]['descripcion']}</td>";
+                $vu = number_format($items[$i]['valor_unitario'], 0);
+                $vt = number_format($items[$i]['valor_total'], 0);
+
                 $lineas[] = "<td style='text-align: right;'>{$items[$i]['cantidad']}</td>";
-                $lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_unitario']}</td>";
+                $lineas[] = "<td style='text-align: right;'>&#36;{$vu}</td>";
                 //$lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_iva']}</td>";
-                $lineas[] = "<td style='text-align: right;'>{$items[$i]['valor_total']}</td>";
+                $lineas[] = "<td style='text-align: right;'>&#36;{$vt}</td>";
                 $lineas[] = '</tr>';
             }
             $lineas[] = '</tbody>';
@@ -69,7 +72,8 @@ function mostrar_detalle_factura($idformato, $iddoc) {
             $lineas[] = "<td></td>";
             $lineas[] = "<td></td>";
             //$lineas[] = "<td></td>";
-            $lineas[] = "<td style='text-align: right;'>{$factura[0]['total_factura']}</td>";
+            $tf = number_format($factura[0]['total_factura'], 0);
+            $lineas[] = "<td style='text-align: right;'>&#36;{$tf}</td>";
             $lineas[] = '</tr></tfoot>';
             $lineas[] = '</table>';
             $texto = implode("\n", $lineas);

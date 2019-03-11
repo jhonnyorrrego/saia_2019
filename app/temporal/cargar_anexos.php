@@ -25,7 +25,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $dir = $_SESSION["ruta_temp_funcionario"];
 
     if(!empty($_REQUEST['dir'])){
-        $dir .= 'anexos/' . $_REQUEST['dir'] . '/';
+        $dir .= '/anexos/' . $_REQUEST['dir'] . '/';
     }
 
     $relative = $ruta_db_superior . $dir;

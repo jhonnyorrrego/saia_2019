@@ -622,7 +622,6 @@ function aprobar($iddoc = 0, $opcion = 0)
     actualizar_datos_documento($tipo_radicado[0]["idformato"], $iddoc);
     if ($opcion == 0) {
         if ($_REQUEST["anterior"] == $iddoc) {
-            enrutar_documento('', $iddoc);
             return ($iddoc);
         } else {
             $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "", $conn);
@@ -632,7 +631,6 @@ function aprobar($iddoc = 0, $opcion = 0)
                     $_REQUEST["anterior"] = $iddoc_anterior[0]["documento_iddocumento"];
                 }
             }
-            enrutar_documento('', $iddoc);
         }
     }
     return $iddoc;
@@ -1133,6 +1131,8 @@ function radicar_plantilla()
  */
 function enrutar_documento($url = "", $documentId)
 {
+    global $ruta_db_superior;
+
 	// webservice utilitie
     if (isset($_REQUEST["no_redirecciona"])) {
         return $_REQUEST['iddoc'] ? $_REQUEST['iddoc'] : $documentId;
@@ -1140,7 +1140,7 @@ function enrutar_documento($url = "", $documentId)
 
     if (!$url && $documentId) {
         $params = http_build_query([
-            'documentId' => $documentId,
+            'documentId' => $documentId
         ]);
         $url = $ruta_db_superior . "views/documento/index_acordeon.php?" . $params;
 
