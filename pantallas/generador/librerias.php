@@ -26,6 +26,12 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
         $sql_campos = array();
         $sql_valores = array();
         $default_campo = json_decode($dato[0]["opciones"], true);
+        $consultaCampos = busca_filtro_tabla("orden","campos_formato","formato_idformato={$idpantalla} and orden <> 0","orden DESC ",$conn);
+        if($consultaCampos['numcampos']){
+            $default_campo['orden'] = $consultaCampos[0]['orden']+1;
+        }
+       
+
         if (isset($default_campo["valor"]) && is_array($default_campo["valor"])) {
             $default_campo["valor"] = json_encode($default_campo["valor"]);
         }
@@ -47,6 +53,8 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
             array_push($sql_valores, $idpantalla);
         }
         if (count($sql_campos) && count($sql_valores)) {
+            
+          
             $sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
             $retorno["sql"] = $sql2;
             phpmkr_query($sql2) or die($sql2);
@@ -107,9 +115,39 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                             $retorno["fs_predeterminado"] = $value;
                             break;
                         case "fs_opciones":
+                            $consultarValores = busca_filtro_tabla("opciones", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and idcampos_formato = {$idpantalla_campos}", "", $conn);
+                            if($consultarValores[0]['opciones']){
+                                $opcionesGuardadas = json_decode($consultarValores[0]['opciones'],true);
+                                $elementosGuardados = [];
+                                foreach($opcionesGuardadas as $fila) {
+                                    $elementosGuardados[]=$fila['llave'];
+                                }
+                                $cantidadElementos = count($elementosGuardados);
+                                $nuevasPosiciones = $elementosGuardados;
+
+                                foreach($value as &$valor) {
+                                    if(in_array ( $valor["llave"], $elementosGuardados)) {
+                                        continue;
+                                    }
+                                    $cantidadElementos = asginarValor($cantidadElementos, $nuevasPosiciones);
+                                    $nuevasPosiciones[] = $cantidadElementos;
+                                    $valor["llave"] = $cantidadElementos;
+                                }
+                            }else{
+                              
+                                $cantidadElementos = count($value);
+                                $nuevasPosiciones = $value;
+                                
+                                $i=0;
+                                foreach($value as &$valor) {
+                                    $valor["llave"] = $i+1;
+                                     $i++;   
+                                }
+                            }
+                            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                        break;
                         case "fs_estilo":
                             if (is_array($value)) {
-
                                 if ($value['con_decimales'] === 'false') {
                                     unset($value['con_decimales']);
                                 }
@@ -132,7 +170,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
             }
             if (count($sql_update)) {
                 $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
-                //$retorno["sql"] = $sql2; // Solo para depurar
+                //$retorno["sql"] = $sql2; // Solo para depurar3
                 phpmkr_query($sql2) or die($sql2);
                 $retorno["exito"] = 1;
                 $cadena = load_pantalla_campos($idpantalla_campos, 0);
@@ -149,6 +187,10 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
     }
 }
 
+function asginarValor($x, $a) {
+    for(; in_array($x, $a); $x++);
+    return $x;
+}
 function kma_valor_campo($datos, $tiqueta_html)
 {
     switch ($tiqueta_html) {
@@ -688,26 +730,52 @@ function camposNucleo($idformato)
 
 function validarCamposObligatorios($idformato)
 {
-
+    global $conn;
     $retorno = ["exito" => 1, "mensaje" => ''];
-    $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
-    $camposFormato = StaticSql::search($consultaFormato);
-    if (!$camposFormato) {
-        $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
-        $retorno['exito'] = 0;
-    } else {
-        $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select')";
-        $camposFormato = StaticSql::search($consultaFormato);
-        if ($camposFormato) {
-            $campos = '';
-            for ($i = 0; $i < count($camposFormato); $i++) {
-                $opciones = json_decode($camposFormato[$i]['opciones'], true);
-                if (!$opciones) {                    
-                    $campos.= $camposFormato[$i]['etiqueta'].",";
-                    $retorno['error'] = 0;
-                    $retorno['mensaje'] = "Es necesario configurar los campos antes de seguir: ".substr(trim($campos), 0, -1)." ";
+    if (@$_REQUEST["idformato"]) {
+        $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
+        $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
+
+        if ($consulta_campos_lectura['numcampos']) {
+            $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
+            $campos_lectura = implode(",", $campos_lectura);
+            $campos_lectura = str_replace(",", "','", $campos_lectura);
+            $busca_idft = strpos($campos_lectura, "idft_");
+            if ($busca_idft !== false) {
+                $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
+                $campos_lectura = str_replace("idft_", "id" . $formato[0]['nombre_tabla'], $campos_lectura);
+                $campos_excluir[] = $campos_lectura;
+            }
+        }
+        include_once($ruta_db_superior . "pantallas/generador/librerias.php");
+        $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idformato)) . "')";
+        $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
+        $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " " . $camposNucleo . "", "A.orden", $conn);
+        
+        if ($campos['numcampos']) {
+            $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
+            $camposFormato = StaticSql::search($consultaFormato);
+            if (!$camposFormato) {
+                $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+                $retorno['exito'] = 0;
+            } else {
+                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo')";
+                $camposFormato = StaticSql::search($consultaFormato);
+                if ($camposFormato) {
+                    $campos = '';
+                    for ($i = 0; $i < count($camposFormato); $i++) {
+                        $opciones = json_decode($camposFormato[$i]['opciones'], true);
+                        if (!$opciones) {                    
+                            $campos.= $camposFormato[$i]['etiqueta'].",";
+                            $retorno['exito'] = 0;
+                            $retorno['mensaje'] = "Es necesario configurar los campos antes de seguir: ".substr(trim($campos), 0, -1)." ";
+                        }
+                    }
                 }
             }
+        }else{
+            $retorno['mensaje'] = 'Recuerde que se deben crear campos del formato';
+            $retorno['exito'] = 0;
         }
     }
     echo json_encode($retorno, JSON_UNESCAPED_UNICODE);

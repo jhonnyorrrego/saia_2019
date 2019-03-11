@@ -676,9 +676,9 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             async: false,
-            url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
+            url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias.php",
             data: {
-                ejecutar_libreria_formato: 'consultar_campos_formato',
+                ejecutarLibreria: 'validarCamposObligatorios',
                 idformato: $("#idformato").val(),
                 rand: Math.round(Math.random() * 100000)
             },
@@ -785,15 +785,8 @@ $(document).ready(function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
         var funcion = $(this).attr("name");
         var tipo = idfuncionFormato.split("_");
-        /*for(var id in CKEDITOR.instances) {
-        	    CKEDITOR.instances[id].on('focus', function(e) {
-        	        // Fill some global var here
-        	        global_editor = e.editor.name;
-        	    });
-        	}*/
         if (tipo[1] === 'func') {
             CKEDITOR.instances['editor_mostrar'].insertText(funcion);
-            //tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
             $.ajax({
                 type: 'POST',
                 url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
@@ -882,14 +875,14 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    if(objeto.publicar == 1 && objeto.exito == 1){
+                    if(objeto.publicar == 0 && objeto.exito == true){
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1500);
                         }, 3000);
-                    }else if (objeto.exito == 1 && objeto.permisos) {
+                    }else if (objeto.exito == true && objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado y "+objeto.permisos, "success", "", 3500);
@@ -900,7 +893,7 @@ $(document).ready(function() {
                         if(objeto.publicar==1){
                            publicar=objeto.publicar;  
                         }
-                    }else if (objeto.exito == 1 && !objeto.permisos) {
+                    }else if (objeto.exito == true && !objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado correctamente", "success", "", 3500);
@@ -912,7 +905,7 @@ $(document).ready(function() {
                            publicar=objeto.publicar;  
                         }
                     } else {
-                        //notificacion_saia(objeto.mensaje, "error", "", 9500);
+                        notificacion_saia("Se a producido un error por favor comuniquese con el administrador", "error", "", 9500);
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1000);
                         }, 2000);
