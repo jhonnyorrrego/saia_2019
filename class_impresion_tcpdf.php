@@ -252,12 +252,6 @@ class Imprime_Pdf {
 			$this -> pdf -> SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
 		$cad_etiquetas = ',PDF/a-1b';
-
-		$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
-		if ($etiquetas["numcampos"]) {
-			$letiquetas = extrae_campo($etiquetas, "nombre");
-			$cad_etiquetas .= ',' . implode(",", $letiquetas);
-		}
 		$this -> pdf -> SetKeywords("SAIA" . $cad_etiquetas);
 		$this -> pdf -> SetSubject(codifica_encabezado(strip_tags($this -> documento[0]["descripcion"])));
 
