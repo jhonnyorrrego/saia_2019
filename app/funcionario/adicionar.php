@@ -31,13 +31,17 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         ]);
 
         if (!$Funcionario) {
-            $fileRoute = $_REQUEST['firma'];
-
+            $fileRoute = $_REQUEST['firma'];            
             unset($_REQUEST['firma'], $_REQUEST['key']);
+
+            $fileParts = explode('.', $fileRoute);
+            $fileName = 'firmas/' . $_REQUEST['nit'] . '.' . end($fileParts);
+            $content = file_get_contents($ruta_db_superior . $fileRoute);
+            $dbRoute = UtilitiesController::createFileDbRoute($fileName, 'archivos', $content);
 
             $Funcionario = new Funcionario();
             $Funcionario->setAttributes($_REQUEST);
-            $Funcionario->firma = file_get_contents($ruta_db_superior . $fileRoute);
+            $Funcionario->firma = $dbRoute;
 
             if (!$Funcionario->login) {
                 $login = strtolower($Funcionario->nombres)[0];

@@ -137,6 +137,18 @@ $(function () {
     $(document).on("click", '#anexos', function () {
         $("#show_files").click();
     });
+
+    $(document).on('click', '#asignar_responsable', function () {
+        let route = $(this).data('url');
+        top.topModal({
+            url: baseUrl + route,
+            title: 'Seguidores',
+            params: {
+                documentId: documentId
+            },
+            buttons: {}
+        })    
+    });
     /////// FIN MENU INTERMEDIO /////
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
