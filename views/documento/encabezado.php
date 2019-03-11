@@ -19,9 +19,10 @@ $userId = 0;
 /**
  * retorna los datos del documento
  * @param int $documentId identificador del documento
- * @return array busca_filtro_tabla 
+ * @return array busca_filtro_tabla
  */
-function findDocument($documentId){
+function findDocument($documentId)
+{
     global $conn, $userId;
 
     if (!$documentId) {
@@ -33,7 +34,7 @@ function findDocument($documentId){
             die('No existe un documento valido');
         }
     }
-    
+
     $document = busca_filtro_tabla("*", "formato a,documento b", "lower(b.plantilla)=lower(a.nombre) and b.iddocumento=" . $documentId, "", $conn);
     $formatName = $document[0]["nombre"];
     $userId = $_SESSION["usuario_actual"];
@@ -52,34 +53,36 @@ function findDocument($documentId){
 /**
  * retorna los permisos sobre modulos
  * hijos de un determinado modulo
- * 
+ *
  * @param int $documentId identificador del documento
  * @param int $parentModule
- * 
+ *
  * @return array de array [] = array(
-        'id' => int,
-        'route' => string,
-        'icon' => string,
-        'label' => string
-    )
+ * 'id' => int,
+ * 'route' => string,
+ * 'icon' => string,
+ * 'label' => string
+ * )
  */
-function moduleActions($parentModule){
+function moduleActions($parentModule)
+{
     global $conn;
 
     $findModules = busca_filtro_tabla('a.nombre,a.enlace,a.imagen,a.etiqueta', 'modulo a, modulo b', 'a.cod_padre = b.idmodulo and b.nombre = "' . $parentModule . '"', 'a.orden', $conn);
-    unset($findModules['tabla'],$findModules['numcampos'],$findModules['sql']);
-    
+    unset($findModules['tabla'], $findModules['numcampos'], $findModules['sql']);
+
     return $findModules;
 }
 
 /**
- * busca las acciones permitidas sobre 
+ * busca las acciones permitidas sobre
  * el documento por el funcionario
- * 
+ *
  * @param int $documentId identificador del documento
- * @return array         
+ * @return array
  */
-function findActions($documentId){
+function findActions($documentId)
+{
     global $conn, $ruta_db_superior, $userId, $document;
 
     $seePreviousManagers = false;
@@ -96,11 +99,11 @@ function findActions($documentId){
 
     $findManager = busca_filtro_tabla("destino,estado,plantilla", "buzon_entrada,documento", "iddocumento=archivo_idarchivo and archivo_idarchivo=" . $documentId, "buzon_entrada.idtransferencia asc", $conn);
 
+    $edicion_continua = busca_filtro_tabla("tipo_edicion", "formato", "nombre ='" . strtolower($findManager[0]['plantilla']) . "'", "", $conn);
     if ($findManager["numcampos"]) {
-        if ($findManager[0]["estado"] == "ACTIVO" || $document["numcampos"]) {
-            if ($findManager[0]["estado"] == "ACTIVO") {
-                $seePreviousManagers = true;
-            }
+        if (
+            ($findManager[0]["estado"] == "ACTIVO" || $findManager[0]["estado"] == "INICIADO" || $document[0]['tipo_edicion'] == 1)
+            && $document["numcampos"]) {
             if (in_array("m", $permissions)) {
                 if (!$_REQUEST["vista"]) {
                     $editButton = true;
@@ -112,7 +115,7 @@ function findActions($documentId){
         if ($findCurrent["numcampos"]) {
             $findPrevious = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $findCurrent[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $documentId . " and origen='" . $userId . "'", "", $conn);
         }
-        
+
         if ($findManager["numcampos"] > 0 && $findManager[0]["destino"] != $userId) {
             $returnButton = true;
         }
@@ -132,11 +135,11 @@ function findActions($documentId){
         }
     }
 
-    $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $document[0]['nombre'] .'/'. $document[0]['ruta_editar'];
-    $editRoute.= '?' . http_build_query([
-        'iddoc' => $documentId,
-        'idformato' => $document[0]['idformato']
-    ]);
+    $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $document[0]['nombre'] . '/' . $document[0]['ruta_editar'];
+    $editRoute .= '?' . http_build_query([
+            'iddoc' => $documentId,
+            'idformato' => $document[0]['idformato']
+        ]);
     $response = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
         "managers" => [
@@ -144,15 +147,15 @@ function findActions($documentId){
             'route' => "{$ruta_db_superior}mostrar_ruta.php?doc={$documentId}"
         ],
         "edit" => [
-            'see' =>  $editButton,
+            'see' => $editButton,
             'route' => $editRoute
         ],
         "return" => [
-            'see' =>  $returnButton,
+            'see' => $returnButton,
             'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=formato_devolucion"
         ],
         "confirm" => [
-            'see' =>  $confirmButton,
+            'see' => $confirmButton,
             'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=aprobar"
         ],
     ];
@@ -160,20 +163,21 @@ function findActions($documentId){
     return $response;
 }
 
-function getTransfer($transferId){
+function getTransfer($transferId)
+{
     global $conn, $userId;
 
-    if($transferId){
-        $findTransfer = busca_filtro_tabla('*', 'buzon_salida', 'idtransferencia ='. $transferId, '', $conn);
-        if($findTransfer[0]['origen'] == $userId){
+    if ($transferId) {
+        $findTransfer = busca_filtro_tabla('*', 'buzon_salida', 'idtransferencia =' . $transferId, '', $conn);
+        if ($findTransfer[0]['origen'] == $userId) {
             $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
-        }else{
+        } else {
             $ReferenceUser = new Funcionario($findTransfer[0]['origen']);
         }
 
-        $Response = (object) $findTransfer[0];
+        $Response = (object)$findTransfer[0];
         $Response->user = $ReferenceUser;
-    }else{
+    } else {
         $Response = new stdclass();
         $Response->user = new Funcionario($userId);
     }
@@ -183,26 +187,27 @@ function getTransfer($transferId){
 
 
 /**
- *  pinta en el encabezado con la 
+ *  pinta en el encabezado con la
  *  informaciobndel documento
- * 
- * @param int $documentId  identificador del documento
+ *
+ * @param int $documentId identificador del documento
  * @param int $idtransferencia identificador de la
  *      transferencia en caso de venir de un buzon
- * 
+ *
  * @return string html del encabezado
  */
-function plantilla($documentId, $transferId = 0){
+function plantilla($documentId, $transferId = 0)
+{
     global $conn, $ruta_db_superior, $document;
 
-    $document = findDocument($documentId);    
+    $document = findDocument($documentId);
     $documentActions = findActions($documentId);
     $Transfer = getTransfer($transferId);
     $temporality = $Transfer->fecha ? temporality($Transfer->fecha) : '';
     $totalComments = ComentarioDocumento::getTotalByDocument($documentId);
     $totalTasks = DocumentoTarea::getTotalByDocument($documentId);
 
-    if($_REQUEST['tipo'] !== 5){
+    if ($_REQUEST['tipo'] !== 5) {
         $moduleActions = moduleActions('menu_documento');
     }
 
@@ -253,13 +258,14 @@ function plantilla($documentId, $transferId = 0){
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <?php foreach ($moduleActions as $key => $item): ?>
-                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate cursor" data-url="<?= $item['enlace']?>" class="text-body" style="line-height:28px;">
-                                <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
+                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate cursor"
+                                  data-url="<?= $item['enlace'] ?>" class="text-body" style="line-height:28px;">
+                                <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta'] ?>
                             </span>
-                            <?php if($key == 4 || $key == 11): ?>
+                            <?php if ($key == 4 || $key == 11): ?>
                                 <hr class="m-1">
                             <?php endif; ?>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -275,7 +281,7 @@ function plantilla($documentId, $transferId = 0){
                         <div class="row" style="line-height:1.5">
                             <div class="col-12">
                                 <span class="bold">
-                                    <?= $document[0]['numero']?> - <?= $userInfo['name'] ?>
+                                    <?= $document[0]['numero'] ?> - <?= $userInfo['name'] ?>
                                 </span>
                             </div>
                         </div>
@@ -295,19 +301,22 @@ function plantilla($documentId, $transferId = 0){
             <div class="col-auto col-md mt-2 pr-0">
                 <?= priority($documentId) ?>
                 <?= has_files($documentId, true) ?>
-                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
+                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip"
+                      data-placement="bottom" title="Comentarios">
                     <span class="badge badge-important counter"><?= $totalComments ?></span>
                 </span>
-                <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
+                <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip"
+                      data-placement="bottom" title="Tareas">
                     <span class="badge badge-important counter"><?= $totalTasks ?></span>
                 </span>
-                <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
+                <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip"
+                      data-placement="bottom" title="Trazabilidad"></span>
             </div>
             <div class="col-auto d-none d-md-block">
                 <?= expiration($document[0]['fecha_limite']) ?>
             </div>
         </div>
-        <div class="row mx-0 px-1">            
+        <div class="row mx-0 px-1">
             <div class="col px-0">
                 <span class="m-0">
                     <?= $document[0]['descripcion'] ?>
@@ -326,11 +335,12 @@ function plantilla($documentId, $transferId = 0){
         </div>
     </div>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>" data-documentactions='<?= json_encode($documentActions) ?>'></script>
+    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>"
+            data-documentid="<?= $documentId ?>" data-documentactions='<?= json_encode($documentActions) ?>'></script>
     <?php
 }
 
-if(isset($_REQUEST['documentId'])){
+if (isset($_REQUEST['documentId'])) {
     plantilla($_REQUEST['documentId'], $_REQUEST['transferId']);
 }
 ?>
