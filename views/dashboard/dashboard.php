@@ -127,14 +127,32 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="input-group transparent">
                         <div class="input-group-prepend">
                             <span class="input-group-text transparent">
-                                <i class="fa fa-search"></i>
+                                <div class="dropdown">
+                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </span>
+                                    <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                                        <a href="#" class="dropdown-item finder_option" data-type="document">
+                                            <i class="fa fa-file"></i> Documento
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="task">
+                                            <i class="fa fa-calendar-o"></i> Tarea
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="folder">
+                                            <i class="fa fa-folder-open"></i> Expediente
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="file">
+                                            <i class="fa fa-paperclip"></i> Anexos
+                                        </a>
+                                    </div>
+                                </div>
                             </span>
                         </div>
                         <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:250px">
                         <div class="input-group-append ">
                             <span class="input-group-text transparent">
                                 <i class="fa fa-times pr-3" id="clean_finder"></i>
-                                <i class="fa fa-chevron-down" id="show_filters"></i>
+                                <i class="fa fa-search"></i>
                             </span>
                         </div>
                     </div>

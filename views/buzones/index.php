@@ -12,6 +12,8 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
+
+$params = json_encode($_REQUEST);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,14 +39,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $(function() {
             let baseUrl = $('script[data-baseurl]').data('baseurl');
-            let component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
-            let param = '<?= $_REQUEST['variable_busqueda'] ?? null;  ?>';
             let mailRoute = baseUrl + 'views/buzones/listado.php';
+            let params = JSON.parse('<?= $params ?>');
 
-            $("#mailbox").load(mailRoute, {
-                idbusqueda_componente: component,
-                variable_busqueda: param
-            }, function() {
+            $("#mailbox").load(mailRoute, params, function() {
                 if ($("#right_workspace").is(':visible')) {
                     let interval = setInterval(() => {
                         if ($("#table tr[data-index]").length) {
