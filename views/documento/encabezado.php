@@ -55,8 +55,6 @@ function plantilla($documentId, $transferId = 0)
     $Documento = new Documento($documentId);
     $Transfer = getTransfer($transferId);
     $temporality = $Transfer->fecha ? temporality($Transfer->fecha) : '';
-    $totalComments = ComentarioDocumento::getTotalByDocument($documentId);
-    $totalTasks = DocumentoTarea::getTotalByDocument($documentId);
 
     $userInfo = [
         'user' => $Transfer->user->getPK(),
@@ -143,10 +141,13 @@ function plantilla($documentId, $transferId = 0)
             </span>
             <?= has_files($documentId, true) ?>
             <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
-                <span class="badge badge-important counter"><?= $totalComments ?></span>
+                <span class="badge badge-important counter" id="comments_counter"></span>
             </span>
             <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
-                <span class="badge badge-important counter"><?= $totalTasks ?></span>
+                <span class="badge badge-important counter" id="tasks_counter"></span>
+            </span>
+            <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
+                <span class="badge badge-important counter" id="documents_counter"></span>
             </span>
             <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
         </div>
