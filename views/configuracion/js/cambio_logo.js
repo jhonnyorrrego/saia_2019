@@ -4,6 +4,7 @@ $(function() {
     let dropzone = null;
 
     (function init() {
+        showImage();
         dropzone = createFileInput();
     })();
 
@@ -21,6 +22,10 @@ $(function() {
                             type: "success",
                             message: response.message
                         });
+
+                        localStorage.setItem('logo', route);
+                        
+                        showImage();
                     } else {
                         top.notification({
                             type: "error",
@@ -64,6 +69,8 @@ $(function() {
 
                     if (response.success) {
                         route = response.data[0];
+
+                        showImage(route);
                     } else {
                         top.notification({
                             type: "error",
@@ -73,5 +80,13 @@ $(function() {
                 });
             }
         });
+    }
+
+    function showImage(route = ''){
+        if(!route){
+            route = localStorage.getItem('logo');
+        }
+
+        $('#logo').attr('src', baseUrl + route);
     }
 });

@@ -28,7 +28,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $dbRoute = TemporalController::createFileDbRoute("logos/{$fileName}", "archivos", $content);
 
         $update = Configuracion::executeUpdate([
-            'valor' => json_encode($dbRoute),
+            'valor' => $dbRoute,
         ], [
             'nombre' => 'logo'
         ]);

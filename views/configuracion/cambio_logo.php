@@ -29,18 +29,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-12">
+        <div class="row pt-3">
+            <div class="col-12 col-md-6">
                 <div class="form-group form-group-default">
                     <label>Logo:</label>
                     <div id="file"></div>
                 </div>
+                <div class="form-group">
+                    <button class="btn btn-danger" id="remove_logo">Cancelar</button>
+                    <button class="btn btn-complete" id="save_logo">Guardar</button>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <button class="btn btn-danger" id="remove_logo">Cancelar</button>
-                <button class="btn btn-complete" id="save_logo">Guardar</button>
+            <div class="col-12 col-md-6">
+                <img src="" width="100%" id="logo">
             </div>
         </div>
     </div>
