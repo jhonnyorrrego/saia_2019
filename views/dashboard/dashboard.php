@@ -32,37 +32,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
-    <style>
-        .autocomplete-suggestions {
-            border: 1px solid #E6E6E6;
-            background: #FFF;
-            overflow: auto;
-        }
-
-        .autocomplete-suggestion {
-            padding: 2px 5px;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .autocomplete-selected {
-            background: #F0F0F0;
-        }
-
-        .autocomplete-suggestions strong {
-            font-weight: normal;
-            color: #3399FF;
-        }
-
-        .autocomplete-group {
-            padding: 2px 5px;
-        }
-
-        .autocomplete-group strong {
-            display: block;
-            border-bottom: 1px solid #000;
-        }
-    </style>
     <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.min.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -173,7 +142,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <i class="fa fa-user"></i>Configurar perfil
                         </a>
                         <a href="#" class="dropdown-item" id="change_password">
-                            <i class="fa fa-lock"></i>Cambiar mi Contraseña
+                            <i class="fa fa-lock"></i>Cambiar mi contraseña
                         </a>
                         <a href="#" class="clearfix bg-master-lighter dropdown-item" id="btn_logout">
                             <span class="pull-left">Cerrar Sesión</span>
@@ -183,7 +152,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <!-- END User Info-->
                 <a href="#" class="header-icon btn-link m-l-10 sm-no-margin d-inline-block" data-toggle="quickview" data-toggle-element="#quickview" id="toggle_right_navbar">
-                    <i class="fa fa-bars" style="font-size:1.5rem"></i>
+                    <i class="fa fa-th-list" style="font-size:1.5rem"></i>
                 </a>
             </div>
         </div>
@@ -211,13 +180,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <!--START QUICKVIEW -->
     <div id="quickview" class="quickview-wrapper" data-pages="quickview">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs text-white pl-1" role="tablist">
             <li class="">
-                <a class="active show" href="#quickview-notes" data-target="#quickview-notes" data-toggle="tab" role="tab" id="note_tab">Notas</a>
+                <a class="active show text-white" href="#quickview-notes" data-target="#quickview-notes" data-toggle="tab" role="tab" id="note_tab">Notas</a>
             </li>
         </ul>
-        <a class="btn-link quickview-toggle" data-toggle-element="#quickview" data-toggle="quickview">
-            <i class="text-white fa fa-times" id="close_quickview"></i>
+        <a class="btn-link quickview-toggle cursor" data-toggle-element="#quickview" data-toggle="quickview">
+            <i class="text-white fa fa-times" id="close_quickview" data-toggle="tooltip" data-placement="bottom" title="Ocultar ventana"></i>
         </a>
         <!-- BEGIN TAB PANES -->
         <div class="tab-content">
@@ -237,8 +206,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 </li>
                             </ul>
                             <button class="btn-remove-notes btn btn-xs btn-block hide btn-danger" id="delete_notes">
-                                <i class="fa fa-times"></i>
-                                BORRAR NOTA
+                                Borrar Nota
                             </button>
                         </div>
                         <ul id="list_note" style="overflow-y:auto;"></ul>
@@ -248,7 +216,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div>
                             <ul class="toolbar">
                                 <li>
-                                    <a href="#" class="close-note-link">
+                                    <a href="#" class="close-note-link" data-toggle="tooltip" data-placement="bottom" title="Regresar">
                                         <i class="fa fa-angle-left"></i>
                                     </a>
                                 </li>
@@ -325,9 +293,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
     <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
-    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>-->
-    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>-->
-    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-actual/jquery.actual.min.js"></script>-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
@@ -337,7 +302,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js" type="text/javascript"></script>
 
-    <?= moment() ?>
     <?= breakpoint() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
@@ -348,11 +312,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
     <?= topModal() ?>
+    <?= moment() ?>
     <script>
         $(function() {
             if (localStorage.getItem('key') > 0) {
                 Ui.putColor();
                 Ui.inactiveTime();
+
+                $('[data-toggle="tooltip"]').tooltip();
             }
         });
     </script>

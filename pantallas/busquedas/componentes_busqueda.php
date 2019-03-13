@@ -11,15 +11,13 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 function acceso_modulo($idmodulo = 0){
     global $conn;
     if ($idmodulo) {
-        $Permiso = new Permiso();
-        $modulo = busca_filtro_tabla("*", "modulo", "idmodulo=" . $idmodulo, "", $conn);
-        $acceso = $Permiso->acceso_modulo_perfil($modulo[0]["nombre"]);
-        return $acceso;
+        $modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "", $conn);
+        return PermisoController::moduleAccess($modulo[0]["nombre"]);
     } else {
         return true;
     }

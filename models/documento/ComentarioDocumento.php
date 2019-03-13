@@ -34,13 +34,6 @@ class ComentarioDocumento extends Model
         ];
     }
 
-    public static function getTotalByDocument($documentId){
-        global $conn;
-
-        $findTotal = busca_filtro_tabla('count(*) as total', 'comentario_documento', 'fk_documento =' . $documentId, '', $conn);
-        return $findTotal[0]['total'];
-    }
-
     public function getUser(){
         if(!$this->user){
             $this->user = new Funcionario($this->fk_funcionario);
