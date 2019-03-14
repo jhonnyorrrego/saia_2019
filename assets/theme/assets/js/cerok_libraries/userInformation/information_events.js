@@ -9,11 +9,6 @@ $(function(){
     $("#show_image_modal").on("click", function() {
         $("#edit_photo_modal,#dinamic_modal").modal('toggle');
     });
-
-    setTimeout(() => {
-        $("#profile_form").trigger('reset');
-        $("[name='email']").blur();
-    }, 300);
 });
 
 $("#profile_form").validate({
