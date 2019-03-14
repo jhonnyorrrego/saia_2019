@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Migrations;
 
@@ -10,25 +10,26 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190312212052 extends AbstractMigration
+final class Version20190313184504 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
+
         $this->connection->delete('busqueda', [
-            'nombre' => 'busqueda_general_documentos'
+            'nombre' => 'busqueda_general_tareas'
         ]);
         $this->connection->insert('busqueda', [
-            'nombre' => 'busqueda_general_documentos',
-            'etiqueta' => 'Busqueda avanzada documentos',
+            'nombre' => 'busqueda_general_tareas',
+            'etiqueta' => 'Busqueda avanzada tareas',
             'estado' => 1,
-            'campos' => 'a.fecha,a.estado,a.ejecutor,a.serie,a.descripcion,a.pdf,a.tipo_radicado,a.plantilla,a.numero,a.tipo_ejecutor,a.fecha_limite',
-            'llave' => 'a.iddocumento',
-            'tablas' => 'documento a',
+            'campos' => 'idtarea,nombre',
+            'llave' => 'idtarea',
+            'tablas' => 'tarea',
             'ruta_libreria' => '',
             'ruta_libreria_pantalla' => '',
             'cantidad_registros' => 20,
@@ -37,22 +38,22 @@ final class Version20190312212052 extends AbstractMigration
         ]);
 
         $result = $this->connection->fetchAll('select idbusqueda from busqueda where nombre= :nombre', [
-            ':nombre' => 'busqueda_general_documentos'
+            ':nombre' => 'busqueda_general_tareas'
         ]);
 
-        if($result[0]['idbusqueda']){
+        if ($result[0]['idbusqueda']) {
             $this->connection->delete('busqueda_componente', [
-                'nombre' => 'busqueda_general_documentos'
+                'nombre' => 'busqueda_general_tareas'
             ]);
             $this->connection->insert('busqueda_componente', [
                 'busqueda_idbusqueda' => $result[0]['idbusqueda'],
                 'tipo' => 3,
                 'conector' => 2,
                 'url' => '',
-                'etiqueta' => 'Busqueda avanzada de documentos',
-                'nombre' => 'busqueda_general_documentos',
+                'etiqueta' => 'Busqueda avanzada de tareas',
+                'nombre' => 'busqueda_general_tareas',
                 'orden' => 1,
-                'info' => '{*iddocumento*} - {*numero*}',
+                'info' => '{*idtarea*} - {*nombre*}',
                 'exportar' => '',
                 'exportar_encabezado' => '',
                 'estado' => '1',
@@ -60,7 +61,7 @@ final class Version20190312212052 extends AbstractMigration
                 'cargar' => 0,
                 'campos_adicionales' => '',
                 'tablas_adicionales' => '',
-                'ordenado_por' => 'iddocumento',
+                'ordenado_por' => 'idtarea',
                 'direccion' => 'desc',
                 'agrupado_por' => '',
                 'busqueda_avanzada' => '',
@@ -69,31 +70,28 @@ final class Version20190312212052 extends AbstractMigration
                 'menu_busqueda_superior' => '',
                 'enlace_adicionar' => '',
                 'encabezado_grillas' => '',
-                'llave' => '' 
+                'llave' => ''
             ]);
 
             $result = $this->connection->fetchAll('select idbusqueda_componente from busqueda_componente where nombre= :nombre', [
-                ':nombre' => 'busqueda_general_documentos'
+                ':nombre' => 'busqueda_general_tareas'
             ]);
-    
-            if($result[0]['idbusqueda_componente']){
+
+            if ($result[0]['idbusqueda_componente']) {
                 $this->connection->delete('busqueda_condicion', [
-                    'etiqueta_condicion' => 'busqueda_general_documentos'
+                    'etiqueta_condicion' => 'busqueda_general_tareas'
                 ]);
                 $this->connection->insert('busqueda_condicion', [
                     'busqueda_idbusqueda' => 0,
                     'fk_busqueda_componente' => $result[0]['idbusqueda_componente'],
                     'codigo_where' => '1=1',
-                    'etiqueta_condicion' => 'busqueda_general_documentos' 
+                    'etiqueta_condicion' => 'busqueda_general_tareas'
                 ]);
-        
             }
-    
         }
-
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
 

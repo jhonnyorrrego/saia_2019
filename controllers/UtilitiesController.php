@@ -45,7 +45,7 @@ class UtilitiesController
     public static function createFileDbRoute(string $route, string $storageType, string $content)
     {
         $SaiaStorage = new SaiaStorage($storageType);
-        $size = $SaiaStorage->almacenar_contenido($route, $content, false);
+        $size = $SaiaStorage->almacenar_contenido($route, $content);
 
         if ($size) {
             $response = json_encode([
