@@ -65,14 +65,14 @@ if ($_REQUEST["idformato"]) {
 						</div>	
 				</div>			
 				<div class="col mx-0 p-0" id="admin_generador">
-					<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior . "pantallas/generador/generador_pantalla.php?idformato=" . $idpantalla; ?>" scrolling="yes"></iframe> 
+					<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior . "pantallas/generador/generador_pantalla.php?idformato=" . $idpantalla; ?>" scrolling="no"></iframe> 
 				</div>
 			</div>
 		</div>
 		<script> 
 		$(document).ready(function(){
 		
-			$("iframe").height($(window).height()-5);
+			$("iframe").height($(window).height()-10);
 				
 		}); 
 		</script>
