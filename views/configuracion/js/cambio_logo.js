@@ -24,7 +24,7 @@ $(function() {
                         });
 
                         localStorage.setItem('logo', route);
-                        
+                        $('#client_image', top.document).attr('src', baseUrl + route);
                         showImage();
                     } else {
                         top.notification({

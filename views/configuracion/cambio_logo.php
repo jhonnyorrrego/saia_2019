@@ -36,7 +36,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div id="file"></div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-danger" id="remove_logo">Cancelar</button>
+                    <button class="btn btn-danger" id="remove_logo">Limpiar</button>
                     <button class="btn btn-complete" id="save_logo">Guardar</button>
                 </div>
             </div>
