@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     var baseUrl = Session.getBaseUrl();
     var userId = localStorage.getItem("key");
     var params = {
@@ -16,12 +16,12 @@ $(function() {
         noCache: true,
         type: "POST",
         params: params,
-        onSelect: function(suggestion) {
+        onSelect: function (suggestion) {
             alert("You selected: " + suggestion.value + ", " + suggestion.data);
         }
     });
 
-    $("#document_finder").on("keyup", function() {
+    $("#document_finder").on("keyup", function () {
         if (Number($(this).val())) {
             $("#document_finder").autocomplete("setOptions", { minChars: 1 });
             $(this).trigger("focus");
@@ -30,42 +30,66 @@ $(function() {
         }
     });
 
-    $("#clean_finder").on("click", function() {
+    $("#clean_finder").on("click", function () {
         $("#document_finder").val("");
     });
 
-    $(".finder_option").on("click", function() {
+    $(".finder_option").on("click", function () {
         $("#document_finder").trigger("blur");
 
         switch ($(this).data("type")) {
             case "folder":
                 var file = "busqueda_general_expedientes.php";
+                var component = "busqueda_general_expedientes";
                 break;
             case "task":
                 var file = "busqueda_general_tareas.php";
+                var component = "busqueda_general_tareas";
                 break;
             case "file":
                 var file = "busqueda_general_anexos.php";
+                var component = "busqueda_general_anexos";
                 break;
             case "document":
             default:
                 var file = "busqueda_general_documentos.php";
+                var component = "busqueda_general_documentos";
                 break;
         }
 
-        let options = {
-            url: `${baseUrl}views/buzones/${file}`,
-            size: "modal-lg",
-            title: "Búsqueda avanzada",
-            centerAlign: false,
-            buttons: {}
-        };
+        $.post(
+            `${baseUrl}app/busquedas/consulta_componente.php`,
+            {
+                key: localStorage.getItem("key"),
+                name: component
+            },
+            function (response) {
+                if (response.success) {
+                    let options = {
+                        url: `${baseUrl}views/buzones/${file}`,
+                        params: {
+                            idbusqueda_componente: response.data
+                        },
+                        size: "modal-lg",
+                        title: "Búsqueda avanzada",
+                        centerAlign: false,
+                        buttons: {}
+                    };
 
-        topModal(options);
+                    topModal(options);
+                } else {
+                    top.notification({
+                        type: "error",
+                        message: response.message
+                    });
+                }
+            },
+            "json"
+        );
     });
 
-    window.fillAutocompleteParams = function() {
-        $("#form_filters input").each(function(i, e) {
+    window.fillAutocompleteParams = function () {
+        $("#form_filters input").each(function (i, e) {
             params[$(e).attr("name")] = $(e).val();
         });
 

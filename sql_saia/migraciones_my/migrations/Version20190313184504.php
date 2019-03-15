@@ -27,9 +27,9 @@ final class Version20190313184504 extends AbstractMigration
             'nombre' => 'busqueda_general_tareas',
             'etiqueta' => 'Busqueda avanzada tareas',
             'estado' => 1,
-            'campos' => 'idtarea,nombre',
-            'llave' => 'idtarea',
-            'tablas' => 'tarea',
+            'campos' => 'a.idtarea,a.nombre,a.fecha_inicial,a.descripcion,b.fk_funcionario',
+            'llave' => 'a.idtarea',
+            'tablas' => 'tarea a, tarea_funcionario b',
             'ruta_libreria' => '',
             'ruta_libreria_pantalla' => '',
             'cantidad_registros' => 20,
@@ -49,11 +49,11 @@ final class Version20190313184504 extends AbstractMigration
                 'busqueda_idbusqueda' => $result[0]['idbusqueda'],
                 'tipo' => 3,
                 'conector' => 2,
-                'url' => '',
+                'url' => 'views/buzones/index.php',
                 'etiqueta' => 'Busqueda avanzada de tareas',
                 'nombre' => 'busqueda_general_tareas',
                 'orden' => 1,
-                'info' => '{*idtarea*} - {*nombre*}',
+                'info' => '{*idtarea*} - {*nombre*} - {*fk_funcionario*}',
                 'exportar' => '',
                 'exportar_encabezado' => '',
                 'estado' => '1',
@@ -84,7 +84,7 @@ final class Version20190313184504 extends AbstractMigration
                 $this->connection->insert('busqueda_condicion', [
                     'busqueda_idbusqueda' => 0,
                     'fk_busqueda_componente' => $result[0]['idbusqueda_componente'],
-                    'codigo_where' => '1=1',
+                    'codigo_where' => 'a.idtarea = b.fk_tarea and b.estado = 1 and b.tipo = 1',
                     'etiqueta_condicion' => 'busqueda_general_tareas'
                 ]);
             }

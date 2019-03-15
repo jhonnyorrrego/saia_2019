@@ -48,7 +48,7 @@ final class Version20190312212052 extends AbstractMigration
                 'busqueda_idbusqueda' => $result[0]['idbusqueda'],
                 'tipo' => 3,
                 'conector' => 2,
-                'url' => '',
+                'url' => 'views/buzones/index.php',
                 'etiqueta' => 'Busqueda avanzada de documentos',
                 'nombre' => 'busqueda_general_documentos',
                 'orden' => 1,
