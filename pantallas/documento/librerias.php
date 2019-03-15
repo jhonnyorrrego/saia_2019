@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
@@ -237,10 +237,6 @@ function variable_busqueda()
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
-    global $conn, $ruta_db_superior;
-
-    include_once $ruta_db_superior . 'controllers/autoload.php';
-
     $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
     $temporality = strtotime($date) ? temporality($date) : '';
@@ -274,8 +270,8 @@ function roundedImage($route)
     global $ruta_db_superior;
 
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
-        <img id="profile_image" src="' . $routeImage . '" style="width:36px;height:36px">
+    return '<span class="thumbnail-wrapper circular inline rounded_image" style="float:none" style="width:36px;height:36px">
+        <img src="' . $routeImage . '" style="width:36px;height:36px">
     </span>';
 }
 
