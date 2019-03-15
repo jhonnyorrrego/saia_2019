@@ -30,8 +30,8 @@ final class Version20190313184504 extends AbstractMigration
             'campos' => 'a.idtarea,a.nombre,a.fecha_inicial,a.descripcion,b.fk_funcionario',
             'llave' => 'a.idtarea',
             'tablas' => 'tarea a, tarea_funcionario b',
-            'ruta_libreria' => '',
-            'ruta_libreria_pantalla' => '',
+            'ruta_libreria' => 'app/tareas/funciones_reporte.php,pantallas/documento/librerias.php',
+            'ruta_libreria_pantalla' => 'views/buzones/utilidades/busqueda_avanzada_tareas.php',
             'cantidad_registros' => 20,
             'ruta_visualizacion' => '',
             'tipo_busqueda' => 1
@@ -53,7 +53,21 @@ final class Version20190313184504 extends AbstractMigration
                 'etiqueta' => 'Busqueda avanzada de tareas',
                 'nombre' => 'busqueda_general_tareas',
                 'orden' => 1,
-                'info' => '{*idtarea*} - {*nombre*} - {*fk_funcionario*}',
+                'info' => '<div class="task_info" data-task="{*idtarea*}">
+                <div class="row mx-0">
+                    {*responsable@fk_funcionario*}
+                </div>
+                <div class="row mx-0">
+                    <div class="col px-0 offset-2">
+                            {*nombre*}
+                    </div>
+                    <div class="col">
+                        <span class="float-right">
+                            {*date_formatted@fecha_inicial*}
+                        </span>
+                    </div>
+                </div>
+            </div>',
                 'exportar' => '',
                 'exportar_encabezado' => '',
                 'estado' => '1',

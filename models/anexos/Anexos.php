@@ -163,4 +163,27 @@ SQL;
 
         return false;
     }
+
+
+     /**
+     * consulta las versiones anteriores de un anexo
+     *
+     * @param integer $fileId id del anexo referencia
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-15
+     */
+    public function findHistory($fileId)
+    {
+        $Anexos = new Anexos($fileId);
+
+        if ($Anexos->fk_anexos) {
+            $sql = "select * from anexos where idanexos <>{$fileId} and fk_anexos={$Anexos->fk_anexos} order by idanexos desc";
+            $response = Anexos::findBySql($sql);
+        } else {
+            $response = [];
+        }
+
+        return $response;
+    }
 }

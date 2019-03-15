@@ -39,40 +39,53 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <select class="full-width" id="filtro_usuario">
                                     <option value="1">Cualquier usuario</option>
                                     <option value="2">Soy el propietario</option>
-                                    <option value="3">No soy el propietario</option>
-                                    <option value="4">Usuario especifico</option>
+                                    <option value="3">Usuario especifico</option>
                                 </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="user_container" style="display:none">
+                        <div class="col-12">
+                            <div class="form-group form-group-default form-group-default-select2">
+                                <label>Responsable:</label>
+                                <select class="full-width" id="select_responsable" multiple="multiple"></select>
+                                <input type="hidden" name="bqsaia_b@fk_funcionario" id="user_list">
+                                <input type="hidden" name="bksaiacondicion_b@fk_funcionario" value="in">
+                                <input type="hidden" name="bqsaiaenlace_b@fk_funcionario" id="bqsaiaenlace_b@fk_funcionario" value="y" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group form-group-default">
-                                <label>Nombre:</label>
+                                <label>Nombre de la tarea:</label>
                                 <input type="hidden" name="bksaiacondicion_a@nombre" id="bksaiacondicion_a@nombre" value="like">
                                 <input type="hidden" name="bqsaiaenlace_a@nombre" id="bqsaiaenlace_a@nombre" value="y" />
-                                <select class="form-control" name="bqsaia_a@nombre" multiple="multiple" id="user_autocomplete"></select>
+                                <input class="form-control" name="bqsaia_a@nombre" type="text">
                             </div>
 
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group form-group-default form-group-default-select2">
-                                <label>Responsable</label>
-                                <select class="full-width" id="select_responsable" name="bqsaia_fk_funcionario">
-                                    <option value="">Seleccione...</option>
+                            <div class="form-group">
+                                <select class="full-width" id="filtro_fecha">
+                                    <option value="1">En cualquier momento</option>
+                                    <option value="2">Hoy</option>
+                                    <option value="3">Ayer</option>
+                                    <option value="4">Últimos 7 días</option>
+                                    <option value="5">Últimos 30 días</option>
+                                    <option value="6">Últimos 90 días</option>
+                                    <option value="7">Entre las fechas</option>
                                 </select>
-                                <input type="hidden" name="bksaiacondicion_b@fk_funcionario" value="=">
-                                <input type="hidden" name="bqsaiaenlace_b@fk_funcionario" id="bqsaiaenlace_b@fk_funcionario" value="y" />
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="date_container" style="display:none">
                         <div class="col-12 col-md-6">
                             <div class="form-group form-group-default input-group">
                                 <div class="form-input-group">
-                                    <label>Fecha inicial</label>
+                                    <label>Fecha inicial:</label>
                                     <input name="bqsaia_a@fecha_inicial_x" type="text" class="form-control" placeholder="Seleccione.." id="fecha_inicial">
                                     <input type="hidden" name="bksaiacondicion_a@fecha_inicial_x" id="bksaiacondicion_a@fecha_inicial_x" value=">=">
                                     <input type="hidden" name="bqsaiaenlace_a@fecha_inicial_x" id="bqsaiaenlace_a@fecha_inicial_x" value="y" />
@@ -85,10 +98,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="col-12 col-md-6">
                             <div class="form-group form-group-default input-group">
                                 <div class="form-input-group">
-                                    <label>Fecha final</label>
+                                    <label>Fecha final:</label>
                                     <input name="bqsaia_a@fecha_inicial_y" type="text" class="form-control" placeholder="Seleccione.." id="fecha_final">
                                     <input type="hidden" name="bksaiacondicion_a@fecha_inicial_y" id="bksaiacondicion_a@fecha_inicial_y" value="<=">
-                                    <input type="hidden" name="bqsaiaenlace_a@fecha_inicial_y" id="bqsaiaenlace_a@fecha_inicial_y" value="y" />
                                 </div>
                                 <div class="input-group-append ">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>

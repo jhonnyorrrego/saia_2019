@@ -113,24 +113,26 @@ SQL;
         return false;
     }
 
-    /**
-     * Undocumented function
+     /**
+     * consulta las versiones anteriores de un anexo
      *
-     * @param [type] $fileId
+     * @param integer $fileId id del anexo referencia
      * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-15
      */
     public function findHistory($fileId)
     {
         $Anexo = new Anexo($fileId);
 
-        if($Anexo->fk_anexo){
-            $sql = "select * from anexo where idanexo <>{$fileId} and (fk_anexo={$Anexo->fk_anexo} or idanexo = {$Anexo->fk_anexo}) order by idanexo desc";
-            $records = StaticSql::search($sql);
-            $response = Anexo::convertToObjectCollection($records);
-        }else{
+        if ($Anexo->fk_anexo) {
+            $sql = "select * from anexo where idanexo <>{$fileId} and fk_anexo={$Anexo->fk_anexo} order by idanexo desc";
+            $response = Anexo::findBySql($sql);
+        } else {
             $response = [];
         }
 
         return $response;
     }
 }
+

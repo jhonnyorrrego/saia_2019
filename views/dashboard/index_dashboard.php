@@ -48,8 +48,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             });
 
             if($('#right_workspace').is(':visible')){
-                let calendarRoute = baseUrl + 'views/tareas/calendario.php';
-                $('#right_workspace').load(calendarRoute);
+                $('#right_workspace').load(`${baseUrl}views/tareas/calendario.php`);
             }
 
             window.addEventListener("orientationchange", function () {

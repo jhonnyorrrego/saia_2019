@@ -26,6 +26,15 @@ class AnexoLog extends Model
         ];
     }
 
+    /**
+     * crea una nueva relacion con log
+     *
+     * @param integer $logId
+     * @param integer $fileId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-15
+     */
     public static function newLogRelation($logId, $fileId)
     {
         return self::newRecord([
