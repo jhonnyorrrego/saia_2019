@@ -30,8 +30,18 @@
                     removeCheck($(e));
                 });
             }
-
         });
+
+        $('#table').on('post-body.bs.table', function() {
+            $(this).find(':checkbox').hide();
+            var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
+            selections.forEach(s => {
+                let imgs = $(`:checkbox[data-id=${s}]`).parents('tr[data-index]').find('.rounded_image');
+                imgs.each((i, e) => {
+                    showCheck($(e));
+                });
+            });
+        })
 
         $(document).on('click', '.priority_dropdown', function() {
             $("#priority_menu").toggleClass('show');
