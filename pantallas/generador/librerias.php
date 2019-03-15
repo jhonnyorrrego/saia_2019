@@ -787,7 +787,8 @@ function validarCamposObligatorios($idformato)
                 $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
                 $retorno['exito'] = 0;
             } else {
-                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo','Arboles')";                $camposFormato = StaticSql::search($consultaFormato);
+                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo','arbol')";                
+                $camposFormato = StaticSql::search($consultaFormato);
                 if ($camposFormato) {
                     $campos = '';
                     for ($i = 0; $i < count($camposFormato); $i++) {
