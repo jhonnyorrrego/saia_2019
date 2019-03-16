@@ -205,7 +205,7 @@
             });
 
             node.parents('tr[data-index]').addClass('selected');
-            node.parents('tr[data-index]').find('.unread').hide();
+            node.parents('tr[data-index]').find('.bold').removeClass('bold');
         }
 
         (function setDate() {

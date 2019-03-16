@@ -276,20 +276,22 @@ function roundedImage($route)
 }
 
 /**
- * determina si un documento ya fue leido por el usuario actual
+ * retorna la clase bold cuando el documento
+ * no se ha leido, usado para los buzones
  *
  * @param int $iddocumento
  * @param string $fecha
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function unread($iddocumento, $fecha)
 {
-    global $conn;
-
     $idfuncionario = $_SESSION["usuario_actual"];
-    $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=" . $idfuncionario . " and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '" . $fecha . "'", "", $conn);
+    $convertString = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
+    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$idfuncionario} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
+    $total = StaticSql::search($sql);
 
-    return !$leido["numcampos"] ? '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>' : '';
+    return !$total[0]['total'] ? 'bold' : '';
 }
 
 /**
