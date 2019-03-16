@@ -12,12 +12,18 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
+
+$params = json_encode([
+    'baseUrl' => $ruta_db_superior,
+    'documentId' => $_REQUEST['documentId']
+]);
 ?>
+
 <div class="row">
     <div class="col">
         <div class="form-group">
             <label class="my-0" for="follower">Seguidor</label>
-            <select class="form-control" id="follower" multiple="multiple"></select>
+            <select class="form-control" id="follower" multiple="multiple"></select>                                
         </div>
     </div>
 </div>
@@ -25,4 +31,4 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <div class="col-12" id="follower_list"></div>
 </div>
 <?= select2() ?>
-<script src="<?= $ruta_db_superior ?>views/tareas/js/seguidores.js"></script> 
+<script src="<?= $ruta_db_superior ?>views/documento/js/seguidores.js" data-followers-params='<?= $params ?>'></script>
