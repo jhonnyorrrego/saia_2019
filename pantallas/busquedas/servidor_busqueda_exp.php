@@ -272,12 +272,7 @@ if ($count > 0) {
     $total_pages = ceil($count / $limit);
     $response['total_pages'] = $total_pages;
     $response['records'] = $count;
-
-    if ($start) {
-        $response['page'] = $page + 1;
-    } else {
-        $response['page'] = 1;
-    }
+    $response['page'] = $page;
 
     if ($response['page'] > $response['total_pages']) {
         $response['exito'] = 2;

@@ -51,41 +51,35 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
                                         <div class="bg-primary b-a b-grey">
                                             <div class="bg-white m-t-45 padding-10 text-master">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-primary</p>
                                                 <p class="small no-margin pull-left">
                                                     <input type="radio" name="theme" value="#6D5CAE">
                                                     #6D5CAE
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
                                         <div class="bg-complete b-a b-grey">
                                             <div class="bg-white m-t-45 padding-10">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-complete</p>
                                                 <p class="small no-margin pull-left">
                                                     <input type="radio" name="theme" value="#48B0F7">
                                                     #48B0F7
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 color_container">
+                                    <div class="col-xl-4 col-md-6 color_container cursor">
                                         <div class="bg-success b-a b-grey">
                                             <div class="bg-white m-t-45 padding-10">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-success</p>
                                                 <p class="small no-margin pull-left">
                                                     <input type="radio" name="theme" value="#10CFBD">
                                                     #10CFBD
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
@@ -93,41 +87,40 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 </div>
                                 <br>
                                 <div class="row">
-                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
                                         <div class="bg-warning b-a b-grey">
                                             <div class="bg-white m-t-45 padding-10">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-warning</p>
                                                 <p class="small no-margin pull-left">
                                                     <input type="radio" name="theme" value="#F8D053">
                                                     #F8D053
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
                                         <div class="bg-danger b-a b-grey">
                                             <div class="bg-white m-t-45 padding-10">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-danger</p>
                                                 <p class="small no-margin pull-left">
                                                     <input type="radio" name="theme" value="#F55753">
                                                     #F55753
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 color_container">
-                                        <div class="bg-info b-a b-grey">
-                                            <div class="bg-white m-t-45 padding-10">
-                                                <p class="font-montserrat all-caps small m-b-5">@color-info</p>
+                                    <div class="col-xl-4 col-md-6 color_container cursor">
+                                        <div class="b-a b-grey">
+                                            <input class="form-control" type="color" value="#3B4752" id="example-color-input">
+
+                                            <div class="bg-white padding-10 pb-0">
                                                 <p class="small no-margin pull-left">
-                                                    <input type="radio" name="theme" value="#3B4752">
-                                                    #3B4752
+                                                    <input type="radio" name="theme" value="#3B4752" id="color_radio">
+                                                    <span id="color_label">#3B4752</span>
                                                 </p>
-                                                <p class="small no-margin pull-right">100%</p>
+                                                <p class="pull-right m-0">
+                                                    <button class="btn btn-sm" onclick="js:$('input[type=\'color\']').click()">Cambiar</button>
+                                                </p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
@@ -141,58 +134,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
     </div>
-    <script>
-        $(function() {
-            var baseUrl = '<?= $ruta_db_superior ?>';
-
-            $(".color_container").on('click', function() {
-                $(":radio").attr('checked', false);
-                $(this).find('input:radio').attr('checked', true);
-            });
-
-            $(".color_container").hover(function() {
-                $(this).css('cursor', 'pointer');
-            });
-
-            $("#saveColor").on('click', function() {
-                var color = $("[name='theme']:checked").val();
-
-                if (color) {
-                    $.post(baseUrl + 'app/configuracion/actualizar_color.php', {
-                        color: color
-                    }, function(response) {
-                        if (response.success) {
-                            top.notification({
-                                message: response.message,
-                                type: 'success'
-                            });
-
-                            let style = `
-                                .btn.bg-institutional:hover{background: ${color} !important;color: #ffff !important; opacity:0.8; border:none}
-                                .btn.bg-institutional{border:none}
-                                .bg-institutional{background: ${color} !important;color: #ffff !important}
-                                .text-institutional{color: ${color} !important;}
-                            `;
-                            $('#instition_style', window.top.document).text(style);
-                            window.top.localStorage.setItem('color', color);
-                        } else {
-                            top.notification({
-                                message: response.message,
-                                type: 'error',
-                                title: 'Error!'
-                            });
-                        }
-                    }, 'json');
-                } else {
-                    top.notification({
-                        message: 'Debe Seleccionar un color',
-                        type: 'error',
-                        title: 'Error!'
-                    });
-                }
-            })
-        });
-    </script>
+    <script data-baseurl="<?= $ruta_db_superior ?>" src="<?= $ruta_db_superior ?>views/configuracion/js/cambio_tema.js"></script>
 </body>
 
 </html> 
