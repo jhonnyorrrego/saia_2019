@@ -270,7 +270,7 @@ function roundedImage($route)
     global $ruta_db_superior;
 
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper circular inline rounded_image" style="float:none" style="width:36px;height:36px">
+    return '<span class="thumbnail-wrapper circular inline rounded_image cursor" style="float:none" style="width:36px;height:36px">
         <img src="' . $routeImage . '" style="width:36px;height:36px">
     </span>';
 }

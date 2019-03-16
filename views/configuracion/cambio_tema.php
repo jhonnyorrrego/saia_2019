@@ -3,12 +3,12 @@ $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-  if (is_file($ruta . 'db.php')) {
-    $ruta_db_superior = $ruta;
-  }
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
 
-  $ruta .= '../';
-  $max_salida--;
+    $ruta .= '../';
+    $max_salida--;
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
@@ -168,8 +168,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             });
 
                             let style = `
-                              .bg-institutional{background: ${color} !important;color: #ffff !important}
-                              .text-institutional{color: ${color} !important;}
+                                .btn.bg-institutional:hover{background: ${color} !important;color: #ffff !important; opacity:0.8; border:none}
+                                .btn.bg-institutional{border:none}
+                                .bg-institutional{background: ${color} !important;color: #ffff !important}
+                                .text-institutional{color: ${color} !important;}
                             `;
                             $('#instition_style', window.top.document).text(style);
                             window.top.localStorage.setItem('color', color);
