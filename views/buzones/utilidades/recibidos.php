@@ -1,7 +1,6 @@
 <script>
     $(function() {
         let baseUrl = $("script[data-baseurl]").data('baseurl');
-        let pressTime = new Object();
 
         $('#table').on('check.bs.table uncheck.bs.table', function(event, row, checkbox) {
             if ($(this).data('selections').length) {
@@ -154,21 +153,14 @@
         });
 
         $(document).on('click', '#table tr[data-index]', function(e) {
-            if (!$(e.target).hasClass('action')) {
+            if (!$(e.target).hasClass('action') && !$(e.target).parents('.action').length) {
                 let node = $(this).find('.principal_action');
                 executeAction(node);
             }
         });
 
         $(document).on('mouseup', '#table .rounded_image', function(e) {
-            let initial = pressTime.getTime();
-            let now = (new Date).getTime();
-
-            if (now - initial > 500) {
-                $(this).parents('tr[data-index]').find(':checkbox').trigger('click');
-            }
-        }).on('mousedown', '#table .rounded_image', function(e) {
-            pressTime = new Date();
+            $(this).parents('tr[data-index]').find(':checkbox').trigger('click');
         });
 
         $(document).on('click', '#table .checked_icon', function() {
