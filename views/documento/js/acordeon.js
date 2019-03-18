@@ -87,11 +87,15 @@ $(function () {
         }, 500);
     }, false);
 
+    $(window).resize(function () {
+        setSize();
+    });
+
     function setSize() {
         let sizeDocument = localStorage.getItem('breakpoint');
         setValores(sizeDocument);
     }
-
+   
     function setValores(sizeDocument) {
         var xsFont = parseFloat(sizeFont);
 
