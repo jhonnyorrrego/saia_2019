@@ -1,4 +1,6 @@
 <?php
+
+use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -81,7 +83,7 @@ function procesarAnexosFlujo($anexos_tmp, $flujo, $funcionario) {
         $anexos = array_map("trim", explode(",", $anexos_tmp));
         foreach ($anexos as $idTemp) {
             $rutaBase = $flujo;
-            $dbRoute = UtilitiesController::moverAnexoTemporal($rutaBase, 'anexos_flujos', $idTemp, true);
+            $dbRoute = TemporalController::moverAnexoTemporal($rutaBase, 'anexos_flujos', $idTemp, true);
             if (!empty($dbRoute)) {
                 $pkAnexo = AnexoFlujo::newRecord(
                 [
