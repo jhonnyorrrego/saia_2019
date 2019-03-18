@@ -40,7 +40,7 @@ $params = [
 <div class="row mx-0">
   <div class="col-12">
 
-      <form id="formularioExp" name="formularioExp" class="form-horizontal">
+      <form id="formularioExp" name="formularioExp" action="#" class="form-horizontal">
         <div class="form-group row">
           <label for="nombre" class="col-md-3 control-label">Nombre del funcionario</label>
           <div class="col-md-9">

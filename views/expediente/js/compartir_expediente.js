@@ -146,8 +146,7 @@ $(document).ready(function () {
                 required: true
             }
         },
-        submitHandler: function (form) {
-            $("#guardarPermiso").attr('disabled', true);
+        submitHandler: function (form) {            
             let idexpediente = $("#idexpediente").val();
             let funcionario = $("#nombre").val();
             $('#nombre').val(null).trigger('change');
@@ -190,6 +189,7 @@ $(document).ready(function () {
                     });
                 }
             });
+            return false;
         }
     });
 

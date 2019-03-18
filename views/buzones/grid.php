@@ -74,7 +74,7 @@ $params['nameColumns'] = $nameColumns;
     });
 </script>
 <?php
-if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
+if ($component[0]['ruta_libreria_pantalla']) {
     $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
     foreach ($libraries as $librarie) {

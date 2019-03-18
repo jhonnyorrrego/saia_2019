@@ -11,7 +11,6 @@ $(document).ready(function(){
     // Informacion del expediente
   $(document).on("click", ".infoExp", function () {
     let idexp=$(this).data("id");
-
     let options = {
       url: `${baseUrl}views/expediente/informacion.php`,
       params: {
@@ -303,6 +302,7 @@ $(document).ready(function(){
       methodInstance:'restoreExpedienteCont',
       idexpediente:id
     };
+    
     if(tabla=='caja'){
       eti='la caja?';
       params={
