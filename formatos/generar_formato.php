@@ -1564,6 +1564,8 @@ class GenerarFormato
                             if (!empty($estilo)) {
                                 $tam = $estilo["size"];
                                 $ancho = ' style="width:' . $tam . '%;" ';
+                                $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
+                                
                             }
 
                             if ($campos[$h]["obligatoriedad"] == 1) {
