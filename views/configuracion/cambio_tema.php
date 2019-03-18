@@ -134,57 +134,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
     </div>
-    <script>
-        $(function() {
-            var baseUrl = '<?= $ruta_db_superior ?>';
-
-            $("input[type='color']").on('change', function(){
-                $('#color_radio').val($(this).val());
-                $('#color_label').text($(this).val());
-            })
-
-            $(".color_container").on('click', function() {
-                $(":radio").attr('checked', false);
-                $(this).find('input:radio').attr('checked', true);
-            });
-
-            $("#saveColor").on('click', function() {
-                var color = $("[name='theme']:checked").val();
-
-                if (color) {
-                    $.post(baseUrl + 'app/configuracion/actualizar_color.php', {
-                        color: color
-                    }, function(response) {
-                        if (response.success) {
-                            top.notification({
-                                message: response.message,
-                                type: 'success'
-                            });
-
-                            let style = `
-                              .bg-institutional{background: ${color} !important;color: #ffff !important}
-                              .text-institutional{color: ${color} !important;}
-                            `;
-                            $('#instition_style', window.top.document).text(style);
-                            window.top.localStorage.setItem('color', color);
-                        } else {
-                            top.notification({
-                                message: response.message,
-                                type: 'error',
-                                title: 'Error!'
-                            });
-                        }
-                    }, 'json');
-                } else {
-                    top.notification({
-                        message: 'Debe Seleccionar un color',
-                        type: 'error',
-                        title: 'Error!'
-                    });
-                }
-            })
-        });
-    </script>
+    <script data-baseurl="<?= $ruta_db_superior ?>" src="<?= $ruta_db_superior ?>views/configuracion/js/cambio_tema.js"></script>
 </body>
 
 </html> 
