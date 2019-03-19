@@ -133,16 +133,23 @@ class Files {
             }, function (response) {
                 if (response.success) {
                     if (!response.data.see) {
-                        parentNode.find('[data-type="see"]').remove();
+                        parentNode.find('[data-type="see"]').hide();
+                    } else {
+                        parentNode.find('[data-type="see"]').show();
                     }
 
                     if (!response.data.edit) {
-                        parentNode.find('[data-type="upload"]').remove();
-                        parentNode.find('[data-type="access"]').remove();
+                        parentNode.find('[data-type="upload"]').hide();
+                        parentNode.find('[data-type="access"]').hide();
+                    } else {
+                        parentNode.find('[data-type="upload"]').show();
+                        parentNode.find('[data-type="access"]').show();
                     }
 
                     if (!response.data.delete) {
-                        parentNode.find('[data-type="delete"]').remove();
+                        parentNode.find('[data-type="delete"]').hide();
+                    } else {
+                        parentNode.find('[data-type="delete"]').show();
                     }
 
                     if (response.data.see || response.data.edit || response.data.delete) {

@@ -50,7 +50,10 @@ function topModal(options) {
         if (options.buttons && options.buttons.cancel) {
             modal.find("#close_modal").show()
                 .text(options.buttons.cancel.label)
-                .addClass(options.buttons.cancel.class);
+                .addClass(options.buttons.cancel.class)
+                .on('click', function () {
+                    top.closeTopModal();
+                });
         } else {
             modal.find("#close_modal").hide();
         }

@@ -30,10 +30,15 @@ $(function () {
     };
 
     (function init() {
+        findData();
         createAutocomplete();
     })();
 
-    $('#select_responsable').on('select2:select', function (e) {
+    $('#go_back').on('click', function () {
+        top.closeTopModal();
+    })
+
+    $('#select_responsable').on('change', function (e) {
         let values = $('#select_responsable').val();
         $('#user_list').val(values.join(','));
     });
@@ -89,6 +94,55 @@ $(function () {
                 processResults: function (response) {
                     return response.success ? { results: response.data } : {};
                 }
+            }
+        });
+    }
+
+    function findData() {
+        $('[name="key"]').val(localStorage.getItem('key'));
+        $.post(
+            `${baseUrl}app/permisos/consulta_datos_asignar.php`,
+            $("#permissions").serialize(),
+            function (response) {
+                if (response.success) {
+                    $(`[name="private"][value=${response.data.type}]`).trigger('click');
+
+                    if (response.data.type == 3) {
+                        response.data.users.forEach(userId => {
+                            defaultUsers(userId);
+                        });
+
+                        if (response.data.edit) {
+                            $(':checkbox[name="edit"]').prop('checked', true);
+                        }
+                    }
+                } else {
+                    top.notification({
+                        type: "error",
+                        message: response.message
+                    });
+                }
+            },
+            "json"
+        );
+    }
+
+    function defaultUsers(userId) {
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: `${baseUrl}app/funcionario/autocompletar.php`,
+            data: {
+                defaultUser: userId,
+                key: localStorage.getItem('key')
+            },
+            success: function (response) {
+                response.data.forEach(u => {
+                    var option = new Option(u.text, u.id, true, true);
+                    $('#select_responsable').append(option).trigger('change');
+                });
+
+                $('#select_responsable').trigger({type: 'select2:select'});
             }
         });
     }

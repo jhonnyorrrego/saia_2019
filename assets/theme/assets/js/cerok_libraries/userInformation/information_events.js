@@ -36,7 +36,7 @@ $("#profile_form").validate({
                         message: response.message,
                         type: 'success'
                     });
-                    $('#close_modal').trigger('click');
+                    top.closeTopModal();
                 } else {
                     top.notification({
                         message: response.message,

@@ -749,7 +749,7 @@ function EditData($sKey, $conn) {
 		$fieldList["librerias"] = $theValue;
 
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_margenes) : $x_margenes;
-		$theValue = ($theValue != "") ? " '" . limpia_tabla($theValue) . "'" : "NULL";
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["margenes"] = $theValue;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_orientacion) : $x_orientacion;
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";

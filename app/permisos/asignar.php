@@ -23,71 +23,71 @@ $Response = (object)array(
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     eval('$type = Acceso::' . $_REQUEST['type'] . ';');
+    $condition = [
+        'tipo_relacion' => $type,
+        'id_relacion' => $_REQUEST['typeId']
+    ];
+
+    //consulto el propietario
+    $Acceso = Acceso::findByAttributes([
+        'accion' => Acceso::ACCION_ELIMINAR
+    ] + $condition, ['fk_funcionario']);
 
     switch ($_REQUEST['private']) {
         case 1: //public
-            $output = Acceso::executeUpdate([
-                'estado' => 1
-            ], [
-                'tipo_relacion' => $type,
-                'id_relacion' => $_REQUEST['typeId'],
+            $output = Acceso::executeUpdate(['estado' => 1], [
                 'accion' => Acceso::ACCION_VER_PUBLICO
-            ]);
+            ] + $condition);
             break;
         case 2: //privado
-            $output = Acceso::executeUpdate([
-                'estado' => 0
-            ], [
-                'tipo_relacion' => $type,
-                'id_relacion' => $_REQUEST['typeId']
-            ]);
+            if ($Acceso->fk_funcionario == $_SESSION['idfuncionario']) {
+                $output = Acceso::executeUpdate(['estado' => 0], $condition);
 
-            if ($output) {
-                $output = Acceso::executeUpdate([
-                    'estado' => 1
-                ], [
-                    'tipo_relacion' => $type,
-                    'id_relacion' => $_REQUEST['typeId'],
-                    'fk_funcionario' => $_SESSION['idfuncionario']
-                ]);
+                if ($output) {
+                    $output = Acceso::executeUpdate(['estado' => 1], [
+                        'fk_funcionario' => $_SESSION['idfuncionario']
+                    ] + $condition);
+                }
+            } else {
+                $Response->message = 'Solo el propietario puede cambiar a esta privacidad';
             }
             break;
         case 3: //usuario especifico
+            $output = Acceso::executeUpdate(['estado' => 0], $condition);
             $users = explode(',', $_REQUEST['user']);
 
-            /*$output = Acceso::executeUpdate([
-                'estado' => 0
-            ], [
-                'tipo_relacion' => $type,
-                'id_relacion' => $_REQUEST['typeId']
-            ]);*/
-
-            $data = [
-                'tipo_relacion' => $type,
-                'id_relacion' => $_REQUEST['typeId']
-            ];
             foreach ($users as $key => $userId) {
-                Acceso::newRecord([
-                    'accion' => Acceso::ACCION_VER,
-                    'fk_funcionario' => $userId
-                ] + $data);
-
-                if($_REQUEST['edit']){
+                if ($Acceso->fk_funcionario != $userId) {
                     Acceso::newRecord([
-                        'accion' => Acceso::ACCION_EDITAR,
-                        'fk_funcionario' => $userId
-                    ] + $data);
+                        'accion' => Acceso::ACCION_VER,
+                        'fk_funcionario' => $userId,
+                        'fecha' => date('Y-m-d H:i:s')
+                    ] + $condition);
+
+                    if ($_REQUEST['edit']) {
+                        Acceso::newRecord([
+                            'accion' => Acceso::ACCION_EDITAR,
+                            'fk_funcionario' => $userId,
+                            'fecha' => date('Y-m-d H:i:s')
+                        ] + $condition);
+                    }
                 }
             }
-            exit;
             break;
     }
+
+    //activo los permisos del propietario    
+    Acceso::executeUpdate(['estado' => 1], [
+        'fk_funcionario' => $Acceso->fk_funcionario
+    ] + $condition);
 
     if ($output) {
         $Response->message = 'Privacidad actualizada';
         $Response->success = 1;
     } else {
-        $Response->message = 'Error al modificar la privacidad';
+        if (!$Response->message) {
+            $Response->message = 'Error al modificar la privacidad';
+        }
     }
 } else {
     $Response->message = "Debe iniciar sesion";

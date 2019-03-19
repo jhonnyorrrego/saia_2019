@@ -70,6 +70,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         </div>
                     </div>
                     <div class="form-group pull-right">
+                        <button type="button" class="btn btn-danger" id="go_back">Volver</button>
                         <button type="submit" class="btn btn-complete">Guardar</button>
                     </div>
                 </form>
