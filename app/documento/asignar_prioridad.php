@@ -15,48 +15,27 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
-    'data' => new stdClass(),
+$Response = (object)[
+    'data' => [],
     'message' => "",
     'success' => 0
-);
+];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if($_REQUEST['selections']){
-        $selections = explode(',', $_REQUEST['selections']);
-        
-        foreach($selections as $documentId){
-            $PrioridadDocumento = PrioridadDocumento::findByAttributes([
-                'fk_documento' => $documentId
-            ]);
+    if ($_REQUEST['selections']) {
+        $selections = $_REQUEST['selections'];
+        $priority = $_REQUEST['priority'];
 
-            if(!$PrioridadDocumento){
-                $pk = PrioridadDocumento::newRecord([
-                    'fk_documento' => $documentId,
-                    'fk_funcionario' => $_REQUEST['key'],
-                    'fecha' => date('Y-m-d H:i:s'),
-                    'prioridad' => strval($_REQUEST['priority'])
-                ]);
-            }else{
-                $PrioridadDocumento->setAttributes(array(
-                    'fk_documento' => $documentId,
-                    'fk_funcionario' => $_REQUEST['key'],
-                    'fecha' => date('Y-m-d H:i:s'),
-                    'prioridad' => strval($_REQUEST['priority'])
-                ));
-                $pk = $PrioridadDocumento->save();
-            }
+        $sql = "update documento set prioridad={$priority} where iddocumento in({$_REQUEST['selections']})";
+        $update = StaticSql::query($sql);
 
-            if($pk){
-                $Response->message = "Prioridad actualizada";
-                $Response->success = 1; 
-            }else{
-                $Response->message = "Error al guardar";
-                $Response->success = 0;
-                break;
-            }
+        if ($update) {
+            $Response->success = 1;
+            $Response->message = "Prioridad asignada";
+        } else {
+            $Response->message = "Error al asignar prioridad";
         }
-    }else{
+    } else {
         $Response->message = "invalid data";
     }
 } else {

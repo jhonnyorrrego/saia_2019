@@ -69,8 +69,7 @@ abstract class Model extends StaticSql
     public function getPkName()
     {
         if (empty($this->dbAttributes->primary)) {
-            $Stringy = new Stringy(get_called_class());
-            $this->dbAttributes->primary = 'id' . $Stringy->underscored();
+            $this->dbAttributes->primary = 'id' . $this->getTable();
         }
         return $this->dbAttributes->primary;
     }
@@ -186,8 +185,7 @@ abstract class Model extends StaticSql
 
     private function runCreate()
     {
-
-        $table = self::getTableName();
+        $table = $this->getTable();
         $attributes = $this->getNotNullAttributes();
         $dateAttributes = $this->getDateAttributes();
 
@@ -199,7 +197,9 @@ abstract class Model extends StaticSql
             }
 
             $fields .= $attribute;
-            if (in_array($attribute, $dateAttributes)) {
+            if ($value === "NULL") {
+                $values .= $value;
+            } else if (in_array($attribute, $dateAttributes)) {
                 $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
                 $values .= "'" . $value . "'";
@@ -351,7 +351,7 @@ abstract class Model extends StaticSql
     public static function findColumn($field, $conditions = [], $order = '')
     {
         $sql = self::generateSelectSql($conditions, [$field], $order);
-        $records = self::search($sql, $offset, $limit);
+        $records = self::search($sql);
 
         $data = [];
         foreach ($records as $key => $value) {
@@ -395,7 +395,7 @@ abstract class Model extends StaticSql
                     $Instance->$key = $value;
                 }
             }
-            if(method_exists($Instance,'massiveAssigned')){
+            if (method_exists($Instance, 'massiveAssigned')) {
                 $Instance->massiveAssigned();
             }
             $data[] = $Instance;
@@ -444,8 +444,8 @@ abstract class Model extends StaticSql
                 $set .= ',';
             }
 
-            if ($value == "NULL") {
-                $set .= $attribute . "=" . $value;
+            if ($value === "NULL") {
+                $set .= $attribute . "=NULL";
             } else if (in_array($attribute, $dateAttributes)) {
                 $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
@@ -550,22 +550,14 @@ abstract class Model extends StaticSql
      */
     public function getRelationFk(string $instance = null, string $fieldName = null)
     {
-        $response = null;
         if ($instance) {
-            if (!$fieldName) {
-                $fieldName = 'fk_' . $instance::getTableName();
-            }
-            $Stringy = new Stringy($instance);
-            $NameIdInstance = 'id' . $Stringy->underscored();
-
-            $data = $instance::findAllByAttributes([$NameIdInstance => $this->$fieldName]);
-            $response = $data ? $data[0] : null;
+            $fieldName = $fieldName ?? 'fk_' . $instance::getTableName();
+            $response = new $instance($this->$fieldName);
         }
-        return $response;
+        return $response ?? null;
     }
 
-
-    public static function findBySql($sql, $getInstance = false)
+    public static function findBySql($sql, $getInstance = true)
     {
         $data = self::search($sql);
         if ($getInstance) {
@@ -574,5 +566,4 @@ abstract class Model extends StaticSql
         }
         return $data;
     }
-
 }

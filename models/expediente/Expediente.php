@@ -164,6 +164,26 @@ class Expediente extends Model
     }
 
     /**
+     * Obtiene el icono del expediente
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getIcon(): string
+    {
+        $icon = [
+            0 => 'fa fa-folder',
+            1 => 'fa fa-group',
+            2 => 'fa fa-barcode',
+            3 => 'fa fa-briefcase',
+        ];
+        if ($this->estado_cierre == 1) {
+            $icon[0] = 'fa fa-folder-open';
+        }
+        return $icon[$this->agrupador];
+    }
+
+    /**
      * Crea el expediente con sus correspondientes vinculados
      * NO utlizar save/create
      * 
@@ -384,7 +404,8 @@ class Expediente extends Model
 
     /**
      * Cuenta los expedientes que existen dentro de una caja
-     *
+     * incluye expedientes inferiores
+     * 
      * @param integer $idcaja : identificador de la caja
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -394,6 +415,19 @@ class Expediente extends Model
         $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
         $response = StaticSql::search($sql);
         return $response ? $response[0]['cant'] : 0;
+    }
+
+    /**
+     * Cuenta los expedientes que existen dentro de una caja
+     * NO incluye expedientes inferiores
+     * 
+     * @param integer $idcaja : identificador de la caja
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function countExpedienteCaja(int $idcaja = null) : int
+    {
+        return 0;
     }
 
     /**

@@ -132,7 +132,13 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 		}
 		include_once("tarea_limpiar_carpeta.php");
 		$ruta_temp_func = "temporal/temporal_{$sUserId}";
-		borrar_archivos_carpeta($ruta_temp_func, false);
+
+		if(is_dir($ruta_temp_func)){
+			borrar_archivos_carpeta($ruta_temp_func, false);
+		}else{
+			mkdir($ruta_temp_func, 0777, true);
+		}
+		
 		if ($admin) {
 			$retorno["mensaje"] = "IMPORTANTE! Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
 		} else {

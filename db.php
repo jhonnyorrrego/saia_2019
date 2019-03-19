@@ -36,7 +36,7 @@ function defineGlobalVars()
         }
 
         setTemporalRoute();
-    } elseif (!empty($_REQUEST['idfunc'])) {//Utilizado para la generacion del PDF
+    } elseif (!empty($_REQUEST['idfunc'])) { //Utilizado para la generacion del PDF
         include_once 'pantallas/lib/librerias_cripto.php';
 
         $encryptedUserId = decrypt_blowfish($_REQUEST['idfunc'], LLAVE_SAIA_CRYPTO);
@@ -73,7 +73,7 @@ function setSessionUserData()
 function setTemporalRoute()
 {
     global $usuactual;
-    
+
     $_SESSION["ruta_temp_funcionario"] = 'temporal/temporal_' . strtolower($usuactual);
 
     return true;
@@ -286,7 +286,7 @@ function limpia_tabla($tabla)
         'b' => array(),
         'em' => array(),
         'hr' => array(),
-        'pagebreak' => array(),//<!-- pagebreak -->
+        'pagebreak' => array(), //<!-- pagebreak -->
         'strong' => array(),
         'sup' => array(),
         'sub' => array(),
@@ -335,7 +335,7 @@ function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log 
     return $conn->guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
 }
 
-    /*
+/*
 <Clase>
 <Nombre>evento_archivo</Nombre>
 <Parametros>$cadena:cadena con los datos que se insertaron en la bd</Parametros>
@@ -473,7 +473,7 @@ function phpmkr_db_connect($HOST = HOST, $USER = USER, $PASS = PASS, $DB = DB, $
             error("Error al conectarse con la Base de datos." . $conn->consulta);
             $response = false;
         }
-    }else{
+    } else {
         $response = $conn;
     }
 
@@ -515,7 +515,7 @@ function phpmkr_query($strsql)
     global $conn;
 
     if (!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
-    $strsql = stripslashes($strsql);
+        $strsql = stripslashes($strsql);
     $rs = null;
     if ($conn) {
         $sqleve = "";
@@ -539,7 +539,7 @@ function phpmkr_query($strsql)
             case ("INSERT"):
 
                 $values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
-				//$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
+                //$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
                 $rs = $conn->Ejecutar_Sql($strsql);
 
                 $llave = $conn->Ultimo_Insert();
@@ -558,8 +558,8 @@ function phpmkr_query($strsql)
                 break;
             case ('UPDATE'):
                 $parser = new PHPSQLParser($strsql, true);
-	
-				//$campos=$parser->parsed["UPDATE"][0]["columns"];
+
+                //$campos=$parser->parsed["UPDATE"][0]["columns"];
                 $valores = $parser->parsed["WHERE"];
                 $cant = count($valores);
                 $condicion = '';
@@ -569,18 +569,18 @@ function phpmkr_query($strsql)
                 }
                 preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
                 $tabla = $resultados[2];
-				
-				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				//preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
-				//$llave = trim($resultados[2]);
-				//$llave = str_replace("'","",$llave);
-				//$campo_llave = $resultados[1];
-				//$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+
+                //preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+                //preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
+                //$llave = trim($resultados[2]);
+                //$llave = str_replace("'","",$llave);
+                //$campo_llave = $resultados[1];
+                //$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
                 $detalle = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
                 $rs = $conn->Ejecutar_Sql($strsql);
-				//$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+                //$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
                 $detalle2 = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
-				// ************ miro cuales campos cambiaron en la tabla ****************
+                // ************ miro cuales campos cambiaron en la tabla ****************
                 $nombres_campos = array();
                 if ($detalle["numcampos"]) {
                     $nombres_campos = array_keys($detalle[0]);
@@ -592,20 +592,20 @@ function phpmkr_query($strsql)
                             $cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
                     }
                 }
-				//$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
+                //$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
                 $diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $condicion;
-				// guardo el evento
+                // guardo el evento
                 if (count($cambios)) {
-					//if(!is_numeric($llave)) {
+                    //if(!is_numeric($llave)) {
                     $llave = $detalle[0]["id" . $tabla];
-					//}
+                    //}
                     guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
                 }
                 break;
             case ('DELETE'):
                 preg_match("/delete from (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
                 $tabla = $resultados[2];
-				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+                //preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
                 preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
                 $llave = trim($resultados[2]);
                 $llave = str_replace("'", "", $llave);
@@ -671,7 +671,7 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias = 
         $archivo = "$registro|||$func|||" . date('Y-m-d H:i:s') . "|||$accion|||$tabla|||0|||$diferencias|||$llave|||$strsql";
         evento_archivo($archivo);
     }
-	//20160915. Actualizar el estado del documento en el ft
+    //20160915. Actualizar el estado del documento en el ft
     if ($tabla == "documento" && $accion == "MODIFICAR") {
         actualizar_estado_formato($llave);
     }
@@ -686,12 +686,12 @@ function actualizar_estado_formato($iddoc)
         $idestado = obtener_estado_documento($iddoc);
         if ($idestado) {
             $campos_formato = busca_filtro_tabla("f.idformato, cf.nombre", "formato f join campos_formato cf on f.idformato = cf.formato_idformato", "f.nombre='" . $formato . "' and cf.nombre='estado_documento'", "", $conn);
-			//El formato si tiene el campo estado_documento
+            //El formato si tiene el campo estado_documento
             if ($campos_formato["numcampos"]) {
                 $sql1 = "update ft_$formato set estado_documento=$idestado where documento_iddocumento=$iddoc";
                 phpmkr_query($sql1) or die($sql1);
             } else {
-				//print_r($campos_formato);
+                //print_r($campos_formato);
             }
         } else {
             die("No se encontro el estado para el documento $iddoc");
@@ -1053,7 +1053,7 @@ function ejecuta_filtro($sql1, $con)
  */
 function delimita($string, $length)
 {
-    if(strlen($string) > $length){
+    if (strlen($string) > $length) {
         $string = substr($string, 0, $length - 3) . '...';
     }
 
@@ -1122,7 +1122,7 @@ function busca_toda_tabla($tabla, $conn)
     $retorno = array();
     $temp = array();
     $retorno["tabla"] = $tabla;
-/*if($tabla=='funcionario'||*/
+    /*if($tabla=='funcionario'||*/
     if ($tabla == 'cuenta') {
         phpmkr_query("use intranet", $conn) or error("CONEXION CON intranet");
         if ($tabla == 'funcionario')
@@ -1294,29 +1294,29 @@ function sincronizar_carpetas($tipo, $conn)
                 break;
         }
     }
-	//Define si se almacena en la BD o en archivos
+    //Define si se almacena en la BD o en archivos
 
     $config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "", $conn);
     if ($config["numcampos"]) {
         $tipo_almacenamiento = $config[0]['valor'];
-    } else {// Si no encuentra el registro en configuracion almacena en archivo
+    } else { // Si no encuentra el registro en configuracion almacena en archivo
         $tipo_almacenamiento = "archivo";
     }
 
-    if ($tipo_almacenamiento == "archivo") {// Se alcenan paginas y miniaturas en la BD
+    if ($tipo_almacenamiento == "archivo") { // Se alcenan paginas y miniaturas en la BD
         $tipo_almacenamiento == "archivos";
         if (is_dir($usr_tmp_dir)) { // ruta_temporal
             $directorio = opendir("$usr_tmp_dir");
         } else {
             $directorio = null;
         }
-        if ($directorio) {//ruta_temporal
+        if ($directorio) { //ruta_temporal
             $cont = 1;
             $ruta_arch_tmp = "";
             $cad = "";
             $cad_temp = "";
             $numero_pagina = "";
-			//Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+            //Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
             while ($archivo = readdir($directorio)) {
                 if ($archivo != "." && $archivo != ".." && !is_dir($archivo)) {
                     $archivos[] = $archivo;
@@ -1349,13 +1349,13 @@ function sincronizar_carpetas($tipo, $conn)
 
                     $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
                     $numero_pagina = $paginas["numcampos"];
-					// Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
-					//$ruta_imagenes = ruta_almacenamiento("imagenes");
+                    // Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+                    //$ruta_imagenes = ruta_almacenamiento("imagenes");
                     $alm_imagenes = new SaiaStorage("imagenes");
                     $cad2 = $fieldList["id_documento"];
                     $dir_dst = $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
                     $ruta_dir = $estado . "/" . $fecha . "/" . $cad2;
-					//crear_destino($dir_dst);
+                    //crear_destino($dir_dst);
 
                     if ($numero_pagina != "") {
                         $numero_pagina = intval($numero_pagina) + 1;
@@ -1364,7 +1364,7 @@ function sincronizar_carpetas($tipo, $conn)
                     }
                     $ruta_img_dst = $dir_dst . "doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg";
 
-					//NUEVO. Para redimensionar en memoria
+                    //NUEVO. Para redimensionar en memoria
                     $imagine = new Imagine();
                     $imagen = $imagine->open($ruta_arch_tmp);
                     $width = $imagen->getSize()->getWidth();
@@ -1375,17 +1375,17 @@ function sincronizar_carpetas($tipo, $conn)
                         $imgalto = ($imgancho / $width) * $height;
                     }
                     $size = new Box($imgancho, $imgalto);
-					//$image = $imagine->create($size);
+                    //$image = $imagine->create($size);
                     $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
                     $redim = $imagen->resize($size);
-					//FIN NUEVO. Para redimensionar en memoria
-					//print_r($redim);die();
+                    //FIN NUEVO. Para redimensionar en memoria
+                    //print_r($redim);die();
                     if ($redim) {
                         @unlink($ruta_arch_tmp);
                         $ruta2 = $ruta_img_dst;
                         $dirminiatura = $ruta_dir . "/miniaturas";
                         $ruta_img_min = $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg";
-						/*if (! is_dir($dirminiatura . "/")) {
+                        /*if (! is_dir($dirminiatura . "/")) {
 							if (!mkdir($dirminiatura . "/", 0777)) {
 								alerta("Problemas al crear la carpeta " . $dirminiatura . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
 							}
@@ -1423,19 +1423,19 @@ function sincronizar_carpetas($tipo, $conn)
             closedir($directorio);
         } //Fin If directorio
 
-		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
-        if (is_dir($usr_tmp_dir)) {// ruta_temporal
+        //aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
+        if (is_dir($usr_tmp_dir)) { // ruta_temporal
             $directorio = opendir("$usr_tmp_dir");
         } else {
             $directorio = null;
         }
-        if ($directorio) {//ruta_temporal
+        if ($directorio) { //ruta_temporal
             $cont = 1;
             $ruta_arch_tmp = "";
             $cad = "";
             $cad_temp = "";
             $numero_pagina = "";
-			//Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+            //Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
             while ($archivo = readdir($directorio)) {
                 if ($archivo != "." && $archivo != ".." && !is_dir($archivo)) {
                     if (preg_match("/^.*(?<!\.jpg|jpeg)$/i") === 1) {
@@ -1462,8 +1462,7 @@ function sincronizar_carpetas($tipo, $conn)
                 } //fin if file_exist
             } //recorriendo directorio
         } //fin if directorio
-
-    } elseif ($tipo_almacenamiento == "db") {// Se almacena en la base de datos
+    } elseif ($tipo_almacenamiento == "db") { // Se almacena en la base de datos
         if (is_dir($usr_tmp_dir)) { // ruta_temporal
             $directorio = opendir("$usr_tmp_dir");
         } else {
@@ -1474,7 +1473,7 @@ function sincronizar_carpetas($tipo, $conn)
             $ruta_arch_tmp = "";
             $cad = "";
             $cad_temp = "";
-			// Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+            // Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
             $archivo = readdir($directorio);
 
             while ($archivo) {
@@ -1482,7 +1481,7 @@ function sincronizar_carpetas($tipo, $conn)
                 $ruta_arch_tmp = $usr_tmp_dir . "/" . $archivo;
                 $path = pathinfo($ruta_arch_tmp);
                 if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
-					//cad define el nombre de la organizacion de las carpetas y el criterio de almacenamiento, sin embargo debe ser cambiando luego de definir el codigo del documento
+                    //cad define el nombre de la organizacion de las carpetas y el criterio de almacenamiento, sin embargo debe ser cambiando luego de definir el codigo del documento
                     $ic = strrpos($path["basename"], "#");
                     $fc = strrpos($path["basename"], ")");
                     $cad = substr($path["basename"], $ic + 1, $fc - $ic - 1);
@@ -1510,22 +1509,22 @@ function sincronizar_carpetas($tipo, $conn)
                         $cont3 = count($paginas_temporales);
                         $cad_temp = $paginas_temporales[$cont3 - 1];
                     }
-					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+                    //Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
                     $cad2 = $fieldList["id_documento"];
                     $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
 
-					/*if (! is_dir($dir_dst)) {
+                    /*if (! is_dir($dir_dst)) {
 					 if (mkdir($dir_dst, 0777)) {
 					 $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
 					 } else {
 					 $dir_dst = "../documentos/error/" . $cad2;
 					}
 					 }*/
-					//Me lleva hasta la Ultima pagina del documento.
+                    //Me lleva hasta la Ultima pagina del documento.
                     if ($cad_temp != "") {
                         $cont = intval($cad_temp) + intval($cont);
                     }
-					//NUEVO. Para redimensionar en memoria
+                    //NUEVO. Para redimensionar en memoria
                     $imagine = new Imagine();
                     $imagen = $imagine->open($ruta_arch_tmp);
                     $width = $imagen->getSize()->getWidth();
@@ -1536,17 +1535,17 @@ function sincronizar_carpetas($tipo, $conn)
                         $imgalto = ($imgancho / $width) * $height;
                     }
                     $size = new Box($imgancho, $imgalto);
-					//$image = $imagine->create($size);
+                    //$image = $imagine->create($size);
                     $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
                     $redim = $imagen->resize($size);
-					//FIN NUEVO. Para redimensionar en memoria
-					//print_r($redim);die();
+                    //FIN NUEVO. Para redimensionar en memoria
+                    //print_r($redim);die();
                     if ($redim) {
                         @unlink($ruta_arch_tmp);
                         $ruta2 = $dir_dst . "doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg";
                         $dirminiatura = "../miniaturas/documentos/";
                         $ruta_img_min = $dirminiatura . $fieldList["id_documento"] . "/doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg";
-						/*if (! is_dir($dirminiatura . $fieldList["id_documento"] . "/")) {
+                        /*if (! is_dir($dirminiatura . $fieldList["id_documento"] . "/")) {
 							if (!mkdir($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS)) {
 								alerta("Problemas al crear la carpeta " . $dirminiatura . $fieldList["id_documento"] . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
 							}
@@ -1567,7 +1566,6 @@ function sincronizar_carpetas($tipo, $conn)
                             $idpag = phpmkr_insert_id();
                             array_push($idimagenes, $idpag);
                             registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
-
                         } else {
                             alerta("Error al almacenar el archivo Por favor verifique que el archivo sea accesible y este correctamente almacenado");
                         }
@@ -1604,20 +1602,20 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $vector_nombre_extension = explode('.', $nombre_extension);
     $extension = $vector_nombre_extension[(count($vector_nombre_extension) - 1)];
     $nombre_temporal = uniqid() . "." . $extension;
-	/*mkdir($ruta_db_superior . $ruta_destino, 0777);
+    /*mkdir($ruta_db_superior . $ruta_destino, 0777);
 	$tmpVar = 1;
 	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
 		$tmpVar++;
 	}*/
-	//$nombre_temporal = $tmpVar . '_' . $nombre_temporal;
+    //$nombre_temporal = $tmpVar . '_' . $nombre_temporal;
 
     $almacenamiento = new SaiaStorage("archivos");
     $resultado = $almacenamiento->copiar_contenido_externo($ruta_origen, $ruta_destino . $nombre_temporal);
 
-	//copy($ruta_db_superior . $ruta_origen, $ruta_destino . $nombre_temporal);
+    //copy($ruta_db_superior . $ruta_origen, $ruta_destino . $nombre_temporal);
     $data_sql = array();
     $data_sql['documento_iddocumento'] = $iddoc;
-	//$data_sql['ruta'] = $ruta_destino . $nombre_temporal;
+    //$data_sql['ruta'] = $ruta_destino . $nombre_temporal;
     $arr_ruta = array("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $ruta_destino . $nombre_temporal);
     $data_sql['ruta'] = json_encode($arr_ruta);
     $data_sql['etiqueta'] = $etiqueta;
@@ -1633,7 +1631,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $tabla = "anexos";
     $strsql = "INSERT INTO " . $tabla . " (fecha_anexo,"; //fecha_anexo
     $strsql .= implode(",", array_keys($data_sql));
-    $strsql .= ") VALUES (" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'";	//fecha_anexo
+    $strsql .= ") VALUES (" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'";    //fecha_anexo
     $strsql .= implode("','", array_values($data_sql));
     $strsql .= "')";
     phpmkr_query($strsql, $conn);
@@ -1675,7 +1673,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
 function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $binario = false)
 {
     $ext = 'jpg';
-// Se obtienen las nuevas dimensiones
+    // Se obtienen las nuevas dimensiones
     list($width, $height) = getimagesize($nombreorig);
     if ($nwidth && ($width < $height)) {
         $nwidth = ($nheight / $height) * $width;
@@ -1685,9 +1683,9 @@ function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $bi
     $image_p = imagecreatetruecolor($nwidth, $nheight);
     imagecolorallocate($image_p, 255, 255, 255);
     if ($ext == 'gif') {
-        $image = imagecreatefromgif($nombreorig);///nombre del archivo origen
+        $image = imagecreatefromgif($nombreorig); ///nombre del archivo origen
         imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
-        imagegif($image_p, $nombredest);///nombre del destino
+        imagegif($image_p, $nombredest); ///nombre del destino
         imagedestroy($image_p);
         imagedestroy($image);
 
@@ -1700,7 +1698,7 @@ function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $bi
     } else {
         $image = imagecreatefromjpeg($nombreorig);
         imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
-        imagejpeg($image_p, $nombredest, 80);///nombre del destino
+        imagejpeg($image_p, $nombredest, 80); ///nombre del destino
         imagedestroy($image_p);
         imagedestroy($image);
         if ($binario) {
@@ -1737,7 +1735,7 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
             $file = str_replace(CARPETA_SAIA . "/saia/", "", $_SERVER["PHP_SELF"]);
         }
         if ($ruta == "") {
-      //TODO: Falta validar el contraslash para windows en la ruta del archivo.
+            //TODO: Falta validar el contraslash para windows en la ruta del archivo.
             $ruta = $_SERVER["DOCUMENT_ROOT"] . "/" . CARPETA_SAIA . "/errores/" . date("Ymd") . "_" . str_replace(".", "_", $_SERVER["REMOTE_ADDR"]) . ")-(" . str_replace("/", "-", $file) . ").txt";
         }
         $size = file_put_contents($ruta, "[" . date("Y-m-d H:i:s") . "][" . $file . "]" . $cad . "\n\r", FILE_APPEND);
@@ -1921,7 +1919,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
         }
         $mail = new PHPMailer();
         $mail->IsSMTP();
-		//$mail->SMTPDebug  = 2;
+        //$mail->SMTPDebug  = 2;
         $mail->Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
         $mail->Port = $puerto_correo_salida;
         $mail->SMTPAuth = true;
@@ -2102,17 +2100,17 @@ function muestra_contador($cad)
 function generar_ingreso($tipo_contador)
 {
     global $conn;
-  // Field numero
+    // Field numero
     $contador = busca_filtro_tabla("*", "contador", "lower(nombre)=lower('" . $tipo_contador . "')", "", $conn);
     $fieldList["numero"] = 0;
     $fieldList["tipo_radicado"] = $contador[0]["idcontador"];
     $fieldList["estado"] = "'INICIADO'";
     $fieldList["plantilla"] = "''";
-  // Field fecha
+    // Field fecha
     $fieldList["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
     $fieldList["fecha_creacion"] = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 
-  // Field paginas
+    // Field paginas
     $fieldList["paginas"] = 1;
     $strsql = "INSERT INTO documento (";
     $strsql .= implode(",", array_keys($fieldList));
@@ -2156,7 +2154,6 @@ function ingresar_documento($doc, $tipo_contador, $arreglo, $destino, $archivos 
         if ($contador[0]["idcontador"] == 2) {
             $arreglo["estado"] = "'APROBADO'";
         }
-
     } else $arreglo["tipo_radicado"] = 0;
     $sKey = $doc;
     $strsql = "UPDATE documento SET ";
@@ -2172,7 +2169,7 @@ function ingresar_documento($doc, $tipo_contador, $arreglo, $destino, $archivos 
     phpmkr_query($strsql, $conn);
     registrar_accion_digitalizacion($doc, 'LLENADO DATOS');
     if ($archivos <> null && $archivos <> "") {
-       /*  Manejo anterior de los anexos ... cuando el frame ya los almacenaba
+        /*  Manejo anterior de los anexos ... cuando el frame ya los almacenaba
        $archivos=explode(",",$archivos);
        foreach($archivos as $nombre)
           {$datos_anexo=explode(";",$nombre);
@@ -2180,7 +2177,7 @@ function ingresar_documento($doc, $tipo_contador, $arreglo, $destino, $archivos 
            $resultado=evento("ANEXOS","ADICIONAR",$sql,0) or error("PROBLEMAS CON EL ANEXO: $nombre");
           }
          */
-       /// Nuevo Procesamiento de anexos ... los anexos seran almacenados en documento edit..
+        /// Nuevo Procesamiento de anexos ... los anexos seran almacenados en documento edit..
 
     }
     global $ruta_db_superior;
@@ -2289,7 +2286,6 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
         else {
             $dorig = $temp[0]['idfuncionario'];
             $datorig = busca_filtro_tabla("d.*,c.*,f.*,f.estado AS estado_f,d.estado AS estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC", $conn);
-
         }
     } else if ($tipo == "cargo" || $tipo == 4) {
         $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=" . $dependencia, "A.estado", $conn);
@@ -2396,228 +2392,6 @@ function volver($back)
 
 /*
 <Clase>
-<Nombre>PERMISO</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Busca los permisos de un funcionario con respecto a un modulo<Responsabilidades>
-<Notas>Esta clase busca los permisos por funcionario y por perfil</Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
- */
-class PERMISO
-{
-    var $login;
-    var $conn;
-    var $acceso_propio;
-    var $acceso_grupo;
-    var $acceso_total;
-    var $idfuncionario;
-    var $funcionario_codigo;
-    var $perfil;
-
-/*
-<Clase>PERMISO
-<Nombre>PERMISO
-<Parametros>
-<Responsabilidades>Inicializar el objeto permiso actual
-<Notas>
-<Excepciones>No se Puede Encontrar el Funcionario para Permisos. Si no se encuentra el funcionario en la base de datos
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function __construct()
-    {
-        global $usuario_actual, $conn;
-        if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
-            salir("La sesi&oacute;n ha expirado, por favor ingrese de nuevo.");
-        $this->login = @$_SESSION["LOGIN" . LLAVE_SAIA];
-        $this->conn = $conn;
-        if ($this->acceso_root()) {
-            $this->idfuncionario = 0;
-            $this->funcionario_codigo = 0;
-            $this->perfil = 1;
-            return (true);
-        } else {
-            $funcionario = busca_filtro_tabla("A.idfuncionario,A.funcionario_codigo,A.perfil", "funcionario A", "A.login='" . $this->login . "'", "", $this->conn);
-            if ($funcionario["numcampos"]) {
-                $this->idfuncionario = $funcionario[0]["idfuncionario"];
-                $this->funcionario_codigo = $funcionario[0]["funcionario_codigo"];
-                $this->perfil = $funcionario[0]["perfil"];
-                return (true);
-            }
-        }
-        if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
-            salir("No se Puede Encontrar el Funcionario para Permisos");
-        else
-            alerta("No se Puede Encontrar el Funcionario para Permisos");
-        return (false);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>acceso_root
-<Parametros>
-<Responsabilidades>buscar el login del administrador
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function acceso_root()
-    {
-        $configuracion = busca_filtro_tabla("A.valor,A.fecha", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $this->conn);
-        if ($configuracion["numcampos"] && $this->login == $configuracion[0]["valor"])
-            return (true);
-        else return (false);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>acceso_usuario_documento
-<Parametros>
-<Responsabilidades>inicializa el objeto actual con los permisos que tiene dicho usuario para el documento
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function acceso_usuario_documento()
-    {
-        global $sql;
-        if ($this->acceso_root()) {
-            $this->acceso_total = "l,a,m,e";
-            return (true);
-        }
-        $acceso = busca_filtro_tabla("*", "funcionario A,permiso B,modulo C", "C.nombre='transferir' AND C.idmodulo=B.modulo_idmodulo AND A.idfuncionario=B.funcionario_idfuncionario AND A.login='" . $this->login . "'", "", $this->conn);
-        for ($i = 0; $i < $acceso["numcampos"]; $i++) {
-            $this->acceso_propio = $acceso[$i]["caracteristica_propio"];
-            $this->acceso_grupo = $acceso[$i]["caracteristica_grupo"];
-            $this->acceso_total = $acceso[$i]["caracteristica_total"];
-        }
-        return (true);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>permiso_usuario
-<Parametros>$tabla: tabla sobre la que se verifica el permiso
-            $accion: accion a realizar sobre la tabla
-<Responsabilidades>Verificar si el usuario actual tiene permiso para realizar $accion sobre $tabla
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function permiso_usuario($tabla, $accion)
-    {
-        global $sql;
-        $permiso["numcampos"] = 0;
-        if ($this->acceso_root() && $accion == 1) {
-            return (true);
-        }
-        if (isset($tabla) && $tabla != "" && @$accion != "" && $this->login != "") {
-            $permisos = busca_filtro_tabla("*", "funcionario,permiso,modulo", "funcionario.idfuncionario=permiso.funcionario_idfuncionario AND modulo.idmodulo=permiso.modulo_idmodulo AND funcionario.login='" . $this->login . "' and funcionario.estado=1 AND accion='" . $accion . "' AND modulo.nombre='" . $tabla . "'", "", $this->conn);
-            if ($permisos["numcampos"]) {
-                return (true);
-            } else
-                return (false);
-        } else if (isset($tabla) && $tabla != "") {
-            return ($this->acceso_modulo_perfil($tabla));
-        }
-        return (false);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>asignar_usuario
-<Parametros>$login1: nuevo login
-<Responsabilidades>Asignar un nuevo login al objeto actual
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function asignar_usuario($login1)
-    {
-        $this->login = $login1;
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>verifica
-<Parametros>$clave: clave a verificar
-<Responsabilidades>Verifica que el login y la clave de acceso existan y concuerden
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function verifica($clave)
-    {
-        global $sql;
-        $dato = busca_filtro_tabla("*", "funcionario A", "A.login='" . $this->login . "' AND A.clave='" . $clave . "'", "", $this->conn);
-        if ($dato["numcampos"] > 0)
-            return (true);
-        return (false);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>acceso_modulo
-<Parametros>$nombre: nombre del modulo
-<Responsabilidades> Verificar que el permiso para el usuario actual en el modulo $nombre existen
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function acceso_modulo($nombre)
-    {
-        $dato = busca_filtro_tabla("modulo.nombre", "permiso,modulo", "permiso.modulo_idmodulo=modulo.idmodulo AND permiso.funcionario_idfuncionario=" . $this->idfuncionario . " AND modulo.nombre='" . $nombre . "'", "", $this->conn);
-        if ($dato["numcampos"])
-            return (true);
-        return (false);
-    }
-
-/*
-<Clase>PERMISO
-<Nombre>acceso_modulo_perfil
-<Parametros>$nombre: nombre modulo
-<Responsabilidades>Verifica si el usuario actual posee permisos a un modulo con nombre=nombre en permiso_perfil
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-     */
-    function acceso_modulo_perfil($nombre)
-    {
-        $dato = busca_filtro_tabla("modulo.nombre", "modulo,permiso_perfil", "permiso_perfil.modulo_idmodulo=modulo.idmodulo AND permiso_perfil.perfil_idperfil in(" . $this->perfil . ") AND modulo.nombre='" . $nombre . "'", "", $this->conn);
-        if ($this->acceso_root()) {
-            return (true);
-        }
-        if ($dato["numcampos"]) {
-            $denegado = $this->permiso_usuario($nombre, '0');
-            if ($denegado)
-                return (false);
-            else
-                return (true);
-        } else
-            return ($this->acceso_modulo($nombre));
-    }
-}
-
-/*
-<Clase>
 <Nombre>agrega_boton
 <Parametros>$nombre:
             $imagen:
@@ -2643,17 +2417,14 @@ function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo
             $ayuda = busca_filtro_tabla("f.ayuda", "formato f", "f.nombre='" . strtolower($nombre) . "'", "", $conn);
         } else
             $ayuda = busca_filtro_tabla("A.ayuda", "modulo A", "A.nombre='$modulo'", "", $conn);
-        $ok = false;
-        $perm = new PERMISO();
-        $ok = $perm->acceso_modulo_perfil($modulo, $acceso);
-
+        $ok = PermisoController::moduleAccess($modulo);
     } else if (isset($_SESSION["LOGIN" . LLAVE_SAIA]))
         $ok = 1;
     else $ok = 0;
     if ($ok) {
         if ($dir == "" || $dir == null)
             $dir = "#";
-    //||!is_file($imagen)
+        //||!is_file($imagen)
         if ($imagen == "" || $imagen == null) {
             $imagen = "botones/configuracion/default.gif";
         }
@@ -2702,9 +2473,7 @@ function agrega_boton2($nombre = "Boton", $imagen = "../../botones/configuracion
     global $conn;
     $acceso = 1;
     if ($modulo != "") {
-        $ok = false;
-        $perm = new PERMISO();
-        $ok = $perm->acceso_modulo_perfil($modulo);
+        $ok = PermisoController::moduleAccess($modulo);
     } else if (isset($_SESSION["LOGIN" . LLAVE_SAIA]))
         $ok = 1;
     else $ok = 0;
@@ -2893,7 +2662,7 @@ function convertir_formato_fecha($foriginal, $fdestino, $cadena, $soriginal, $sd
  */
 function convertir_fecha($y, $m, $d, $sep, $formato)
 {
-//echo($y.",".$m.",".$d);
+    //echo($y.",".$m.",".$d);
     $cad = "";
     switch ($formato) {
         case "yyyy" . $sep . "mm" . $sep . "dd":
@@ -2905,11 +2674,11 @@ function convertir_fecha($y, $m, $d, $sep, $formato)
             $cad = $d . $sep . $m . $sep . $y;
             break;
     }
- //echo($cad);
+    //echo($cad);
     return ($cad);
 }
 
-    /*
+/*
  * <Clase>
  * <Nombre>fecha_db
  * <Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
@@ -3013,7 +2782,7 @@ function resta_fechas($fecha1, $fecha2)
     return $conn->resta_fechas($fecha1, $fecha2);
 }
 
- /*<Clase>
+/*<Clase>
 <Nombre>resta_horas</Nombre>
 <Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
 <Responsabilidades>Crea la cadena para calcular el numero de horas de diferencia entre dos fechas<Responsabilidades>
@@ -3067,11 +2836,11 @@ function getRealIP()
 {
     if (@$_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
         $client_ip = servidor_remoto();
-  // los proxys van añadiendo al final de esta cabecera
-  // las direcciones ip que van "ocultando". Para localizar la ip real
-  // del usuario se comienza a mirar por el principio hasta encontrar
-  // una dirección ip que no sea del rango privado. En caso de no
-  // encontrarse ninguna se toma como valor el REMOTE_ADDR
+        // los proxys van añadiendo al final de esta cabecera
+        // las direcciones ip que van "ocultando". Para localizar la ip real
+        // del usuario se comienza a mirar por el principio hasta encontrar
+        // una dirección ip que no sea del rango privado. En caso de no
+        // encontrarse ninguna se toma como valor el REMOTE_ADDR
         $entries = preg_split('[, ]', $_SERVER['HTTP_X_FORWARDED_FOR']);
         reset($entries);
         while (list(, $entry) = each($entries)) {
@@ -3128,7 +2897,7 @@ function almacenar_sesion($exito, $login)
     }
     if (!$exito) {
         $intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
-        if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) {//Desarrollo de validacion de intentos al loguearse
+        if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) { //Desarrollo de validacion de intentos al loguearse
             if (!$intentos[0]["intento_login"]) {
                 $consecutivo = 1;
             } else {
@@ -3325,7 +3094,7 @@ function crear_archivo_formato($nombre, $texto = null, $modo = 'wb')
     return (false);
 }
 
-    /*
+/*
  * <Clase>
  * <Nombre>crear_destino</Nombre>
  * <Parametros>$destino:estructura de carpetas a crear</Parametros>
@@ -3467,18 +3236,18 @@ function menu_ordenar($key, $retorno = 0, $exp = 0)
 function dirToPdf($nameFile, $dir)
 {
     require_once('html2ps/public_html/fpdf/fpdf.php');
-//Coordenadas X, Y iniciales en las que se ubicará la imagen
+    //Coordenadas X, Y iniciales en las que se ubicará la imagen
     define("X0", 0.5);
     define("Y0", 0.3);
-//Ancho y alto de la imagen (ajustada a una hoja de tamaño carta)
+    //Ancho y alto de la imagen (ajustada a una hoja de tamaño carta)
     define("W", 215);
     define("H", 278.4);
     if (is_dir($dir)) {
         if ($pdir = opendir($dir)) {
             $pags = 0;
             while (($archivo = readdir($pdir)) !== false) {
-      //si el archivo es un "." o ".." o no es una imagen .jpeg ni .jpg
-      //if (($archivo=="." || $archivo=="..") || (!eregi(".jpeg",$archivo) && !eregi(".jpg",$archivo)))
+                //si el archivo es un "." o ".." o no es una imagen .jpeg ni .jpg
+                //if (($archivo=="." || $archivo=="..") || (!eregi(".jpeg",$archivo) && !eregi(".jpg",$archivo)))
                 if (($archivo == "." || $archivo == "..") || (!preg_match("/.jpeg/i", $archivo) && !preg_match("/.jpg/i", $archivo)))
                     continue;
                 $archivos[] = $archivo;
@@ -3486,16 +3255,16 @@ function dirToPdf($nameFile, $dir)
             if (isset($archivos)) {
                 sort($archivos);
                 foreach ($archivos as $archivo) {
-        //creation of the pdf file
+                    //creation of the pdf file
                     if ($pags == 0)
                         $pdf = new FPDF("P", "mm", "Letter");
                     $pags++;
                     $pdf->AddPage();
-        //adition of an image to a page
+                    //adition of an image to a page
                     $pdf->Image($dir . "/" . $archivo, X0, Y0, W, H);
-        //linea de confirmacion:
+                    //linea de confirmacion:
                 }
-      //creation of the final pdf file
+                //creation of the final pdf file
                 $pdf->Output($nameFile);
                 closedir($pdir);
                 return $nameFile;
@@ -3553,7 +3322,7 @@ function concatenar_cadena_sql($arreglo_cadena)
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
 {
     global $conn;
-	//$fun_codigo= funcionario_codigo del usuario a consultar
+    //$fun_codigo= funcionario_codigo del usuario a consultar
     $retorno = array();
     $retorno['exito'] = 0;
     if ($tipo) {
@@ -3639,7 +3408,7 @@ function obtener_codigo_hash_pdf($archivo, $algoritmo = "crc32", $tmp = 0)
     if ($tmp) {
         $ruta_db_superior = '';
     }
-   // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
+    // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
     return (md5_file($ruta_db_superior . $archivo));
 }
 function parsear_comilla_sencilla_cadena($cadena)
@@ -3647,20 +3416,20 @@ function parsear_comilla_sencilla_cadena($cadena)
     global $conn;
     $cadena_original = $cadena;
     $cadena_sinespacios = trim($cadena);
-//	$cadena_minuscula=strtolower($cadena_sinespacios);
+    //	$cadena_minuscula=strtolower($cadena_sinespacios);
     $parseada = 0;
     if (preg_match('/^select/i', $cadena_sinespacios)) {
-		//$findme   = "'";
-		//$pos = strpos($cadena, $findme);
+        //$findme   = "'";
+        //$pos = strpos($cadena, $findme);
         if (preg_match("/'/", $cadena)) {  //fue encontrada
-			/*$motor=$conn->motor;
+            /*$motor=$conn->motor;
 			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");*/
             $cadena = str_replace("'", "''", $cadena);
             $parseada = 1;
         }
     } else {
-		//$findme   = "'";
-		//$pos = strpos($cadena, $findme);
+        //$findme   = "'";
+        //$pos = strpos($cadena, $findme);
         if (preg_match("/'/", $cadena)) {  //fue encontrada
             $cadena = str_replace("'", "''", $cadena);
             $parseada = 1;
@@ -3734,7 +3503,7 @@ function return_megabytes($val)
     $val = substr($val, 0, -1); // necessary since PHP 7.1; otherwise optional
 
     switch ($last) {
-        // The 'G' modifier is available since PHP 5.1.0
+            // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
             break;
@@ -3748,4 +3517,4 @@ function return_megabytes($val)
 
     return $val;
 }
-?>
+ 

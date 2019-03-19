@@ -163,15 +163,20 @@ function echo_load_pantalla($idpantalla, $tipo_retorno) {
 }
 
 function ordenar_pantalla_campos($nuevo_orden) {
+    global $conn;
     $pantalla_campos = explode(",", $nuevo_orden);
+    print_r($_REQUEST);die();
     $i = 0;
-
+    $consultarOrden = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$idFormato} and orden <> 0", "", $conn);
+    print_r($consultarOrden);die();
     foreach ($pantalla_campos as $key => $valor) {
         $cadena = str_replace("pc_", "", $valor);
-        /* $sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena; */
-        $sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
-        $i++;
-        phpmkr_query($sql2);
+       if ($cadena != 'list_one') {
+            /* $sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena; */
+            $sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
+            $i++;
+            phpmkr_query($sql2);
+        }
     }
 }
 
@@ -452,6 +457,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
         $sql_icf1 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
+        
         guardar_traza($sql_icf1, "ft_" . $datos["nombre"]);
         phpmkr_query($sql_icf1) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_icf1);
     }

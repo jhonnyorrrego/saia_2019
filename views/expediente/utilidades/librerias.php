@@ -57,29 +57,16 @@ function info_expediente($idexpediente)
         "idexpediente" => $idexpediente
     ];
     $params = http_build_query($data);
-    $icon = [
-        0 => 'fa fa-folder',
-        1 => 'fa fa-group',
-        2 => 'fa fa-barcode',
-        3 => 'fa fa-briefcase',
-    ];
-    if ($ExpedienteInfo->estado_cierre == 1) {
-        $icon[0] = 'fa fa-folder-open';
-    }
 
     if(!$ExpedienteInfo->nucleo){
-        if ($ExpedienteInfo->getAccessUser('c')) {
-            //$btn .= '<button class="btn btn-info selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></button>';
-        }
-
         if ($ExpedienteInfo->isResponsable()) {
             if (!$ExpedienteInfo->agrupador) {
                 $btn .= '<button class="btn btn-info mx-1 tomoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Crear Tomo"><i class="fa fa-copy"></i></button>';
             }
-            $btn .= '<button class="btn btn-info mx-1 delExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Eliminar"><i class="fa fa-trash"></i></button>';
+            $btn .= '<button class="btn btn-info mx-1 delExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Mover a la papelera"><i class="fa fa-recycle"></i></button>';
         }
-        $btn .= '<button class="btn btn-info mx-1 directExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Acceso Directo"><i class="fa fa-star-o"></i></button>';
     }
+    $btn .= '<button class="btn btn-info mx-1 directExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Acceso Directo"><i class="fa fa-star-o"></i></button>';
 
     $link='class="col-3"';
     $nombre=$ExpedienteInfo->nombre;
@@ -99,7 +86,7 @@ function info_expediente($idexpediente)
     $html .= <<<FINHTML
     <div class ="row mx-0 my-0">
         <div class="col-1">
-            <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>
+            <i class='{$ExpedienteInfo->getIcon()}'></i>
         </div>
 
         <div {$link}>
@@ -115,7 +102,7 @@ function info_expediente($idexpediente)
         </div>
 
         <div class="float-right col-3">
-            {$btn}<button class="btn btn-info infoExp" data-id="{$idexpediente}" data-componente="{$idcomp}" title="{$ExpedienteInfo->nombre}"><i class="fa fa-info-circle"></i></button>
+            {$btn}<button class="btn btn-info infoExp" data-id="{$idexpediente}" data-componente="{$idcomp}" title="Información del expediente"><i class="fa fa-info-circle"></i></button>
         </div>
     </div> 
 FINHTML;
@@ -126,139 +113,59 @@ function info_restaurar($id, $idtabla, $tipo)
 {
 
     if (strtolower($tipo) == 'expediente') {
-        $ExpEli = new ExpedienteEli($id);
         $Expediente = new Expediente($idtabla);
 
-        $icon = [
-            0 => 'icon-folder-close',
-        ];
-        if ($Expediente->estado_cierre == 1) {
-            $icon[0] = 'icon-folder-open';
-        }
-
         $html .= <<<FINHTML
-        <table style="font-size:12px;width:100%;">
-            <tr>
-                <td style="text-align:center;width:50%;" colspan="2">INFORMACIÓN DEL EXPEDIENTE</td>
-                <td style="text-align:center;width:50%;" colspan="2">INFORMACION DE LA ELIMINACIÓN</td>
-            </tr>
+        <div class ="row mx-0 my-0">
+            <div class="col-1">
+                <i class='{$Expediente->getIcon()}'></i>
+            </div>
 
-            <tr>
-                <td colspan="4">
-                    <i class='{$icon[$Expediente->agrupador]}'></i>&nbsp;<strong>{$Expediente->nombre}</strong>
-                </td>
-            </tr>
+            <div class="col-3">
+                {$Expediente->nombre}
+            </div>
 
-            <tr>
-                <td>
-                    <strong>Tipo:</strong>
-                </td>
-                <td>
-                    {$Expediente->getEstadoArchivo()}
-                </td>
+            <div class="col-3">
+                {$Expediente->getPropietario()}
+            </div>
 
-                <td>
-                    <strong>Fecha de eliminación:</strong>
-                </td>
-                <td>
-                    {$ExpEli->fecha_eliminacion}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Serie:</strong>
-                </td>
-                <td>
-                    {$Expediente->getRelationFk('Serie')->nombre}
-                </td>
+            <div class="col-2">
+                {$Expediente->fecha}
+            </div>
 
-                <td>
-                    <strong>Funcionario:</strong>
-                </td>
-                <td>
-                    {$ExpEli->getRelationFk('Funcionario')->getName()}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Responsable:</strong>
-                </td>
-                <td>
-                    {$Expediente->getResponsable()}
-                </td>
-
-                <td>
-                    <strong>Restaurar:</strong>
-                </td>
-                <td>
-                    <button class="btn btn-mini btn-primary restore" data-id="{$idtabla}" data-tabla="expediente">Restaurar</button>
-                </td>
-            </tr>
-        </table>        
+            <div class="float-right col-3">
+                <button class="btn btn-info restore" data-id="{$idtabla}" data-key="{$id}" data-tabla="expediente" title="Restaurar el expediente"><i class="fa fa-history"></i></button>
+                <button class="btn btn-info delDef" data-id="{$idtabla}" data-key="{$id}" data-tabla="expediente" title="Eliminar definitivamente"><i class="fa fa-trash"></i></button>
+            </div>
+        </div> 
 FINHTML;
 
     } else {
         $Caja = new Caja($idtabla);
-        $CajaEli = new CajaEli($id);
+
         $html .= <<<FINHTML
-        <table style="font-size:12px;width:100%;">
-            <tr>
-                <td style="text-align:center;width:50%;"  colspan="2">INFORMACIÓN DE LA CAJA</td>
-                <td style="text-align:center;width:50%;"  colspan="2">INFORMACION DE LA ELIMINACIÓN</td>
-            </tr>
+        <div class ="row mx-0 my-0">
+            <div class="col-1">
+                <i class='{$Caja->getIcon()}'></i>
+            </div>
 
-            <tr>
-                <td colspan="4">
-                    <i class='icon-book'></i>&nbsp;<strong>{$Caja->codigo}</strong>
-                </td>
-            </tr>
+            <div class="col-3">
+                {$Caja->codigo}
+            </div>
 
-            <tr>
-                <td>
-                    <strong>Tipo:</strong>
-                </td>
-                <td>
-                    {$Caja->getEstadoArchivo()}
-                </td>
+            <div class="col-3">
+                {$Caja->getPropietario()}
+            </div>
 
-                <td>
-                    <strong>Fecha de eliminación:</strong>
-                </td>
-                <td>
-                    {$CajaEli->fecha_eliminacion}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Fondo:</strong>
-                </td>
-                <td>
-                    {$Caja->fondo}
-                </td>
+            <div class="col-2">
+                {$Caja->fecha_creacion}
+            </div>
 
-                <td>
-                    <strong>Funcionario:</strong>
-                </td>
-                <td>
-                    {$CajaEli->getRelationFk('Funcionario')->getName()}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Responsable:</strong>
-                </td>
-                <td>
-                    {$Caja->getResponsable()}
-                </td>
-
-                <td>
-                    <strong>Restaurar:</strong>
-                </td>
-                <td>
-                    <button class="btn btn-mini btn-primary restore" data-id="{$idtabla}" data-tabla="caja">Restaurar</button>
-                </td>
-            </tr>
-        </table>        
+            <div class="float-right col-3">
+                <button class="btn btn-info restore" data-id="{$idtabla}" data-key="{$id}" data-tabla="caja" title="Restaurar la caja"><i class="fa fa-history"></i></button>
+                <button class="btn btn-info delDef" data-id="{$idtabla}" data-key="{$id}" data-tabla="caja" title="Eliminar definitivamente"><i class="fa fa-trash"></i></button>
+            </div>
+        </div> 
 FINHTML;
     }
     return $html;
@@ -281,53 +188,46 @@ function info_expediente_directo($idexpediente)
             "idexpediente" => $idexpediente
         ];
         $params = http_build_query($data);
-        $icon = 'icon-folder-close';
-        if ($ExpedienteInfo->estado_cierre == 1) {
-            $icon = 'icon-folder-open';
-        }
-        $link = '';
-        if ($ExpedienteInfo->getAccessUser('c') || $ExpedienteInfo->getAccessUser('v')) {
-            $link = 'class ="link kenlace_saia" conector = "iframe" enlace = "pantallas/busquedas/consulta_busqueda_expediente.php?' . $params . '" titulo = "' . $ExpedienteInfo->nombre . '"';
-        }
-        $btn .= '<div class="btn btn-mini delDirectoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Eliminar"><i class="icon-remove"></i></div>';
-        $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
-        if ($ExpedienteInfo->agrupador == 3) {
-            $html .= <<<FINHTML
-            <table style="font-size:12px;width:100%;">
-                <tr {$link}>
-                    <td>
-                        <i class='icon-book'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td align="right">
-                        {$btn}
-                    </td>
-                </tr>
-            </table>        
-FINHTML;
-        } else {
-            $cadenaTomo = "<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
-            $html = <<<FINHTML
-            <table style="font-size:12px;width:100%;">
-                <tr {$link}>
-                    <td>
-                        <i class='{$icon}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>{$cadenaTomo}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td align="right">
-                        {$btn}
-                    </td>
-                </tr>
-                <tr>
-                    <td>{$ExpedienteInfo->getRelationFk('Serie')->nombre}</td>
-                </tr>
-            </table>        
-FINHTML;
+        $link='class="col-3"';
+        $nombre=$ExpedienteInfo->nombre;
+        if ($ExpedienteInfo->nucleo) {
+            $creador='GENERADO POR EL SISTEMA';
+            $link = "class ='col-3 cursor kenlace_saia' enlace='views/expediente/index.php?{$params}' conector='iframe' titulo='{$ExpedienteInfo->nombre}'";
+        }else{
+            $creador=$ExpedienteInfo->getPropietario();
+            if ($ExpedienteInfo->getAccessUser('c') || $ExpedienteInfo->getAccessUser('v')) {
+                $link = 'class ="col-3 cursor kenlace_saia" conector = "iframe" enlace = "views/expediente/index.php?' . $params . '" titulo = "' . $ExpedienteInfo->nombre . '"';
+            }
+            if (!$ExpedienteInfo->agrupador) {
+                $nombre.= "<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
+            }
         }
+        
+        $html = <<<FINHTML
+        <div class ="row mx-0 my-0">
+            <div class="col-1">
+                <i class='{$ExpedienteInfo->getIcon()}'></i>
+            </div>
+
+            <div {$link}>
+                {$nombre}
+            </div>
+
+            <div class="col-3">
+                {$creador}
+            </div>
+
+            <div class="col-2">
+                {$ExpedienteInfo->fecha}
+            </div>
+
+            <div class="float-right col-3">
+                <button class="btn btn-info mx-1 delDirectoExp" data-id="{$idexpediente}" data-componente="{$idcomp}" title="Eliminar acceso directo"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-info infoExp" data-id="{$idexpediente}" data-componente="{$idcomp}" title="Información del expediente"><i class="fa fa-info-circle"></i></button>
+            </div>
+        </div> 
+FINHTML;
     }else{
         $html="NO se encuentra el componente";
     }
@@ -335,6 +235,12 @@ FINHTML;
 }
 
 /** TERMINA LAS FUNCIONES DEL INFO */
+
+
+
+
+
+
 
 
 /** EMPIEZA LAS FUNCIONES DE CONSULTA BUSQUEDA */

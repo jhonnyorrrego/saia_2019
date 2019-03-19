@@ -1,15 +1,15 @@
 class Modules {
-    constructor(iduser, grouperSelector, listSelector){
-        if (this.setAttributes(iduser, grouperSelector, listSelector)){
+    constructor(iduser, grouperSelector, listSelector) {
+        if (this.setAttributes(iduser, grouperSelector, listSelector)) {
             this.find(0);
-        }else{
-            console.error('invalid arguments');
+        } else {
+            console.error("invalid arguments");
             Session.close();
         }
     }
 
-    setAttributes(iduser, grouperSelector, listSelector){
-        if(iduser && grouperSelector && listSelector){
+    setAttributes(iduser, grouperSelector, listSelector) {
+        if (iduser && grouperSelector && listSelector) {
             this.baseUrl = Session.getBaseUrl();
             this.user = iduser;
             this._grouperSelector = grouperSelector;
@@ -17,125 +17,155 @@ class Modules {
             this.defaultModule();
 
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
-    set baseUrl(route){
+
+    set baseUrl(route) {
         this._baseUrl = route;
     }
 
-    get baseUrl(){
+    get baseUrl() {
         return this._baseUrl;
     }
 
-    set user(iduser){
+    set user(iduser) {
         this._iduser = iduser;
     }
 
-    get user(){
+    get user() {
         return this._iduser;
     }
 
-    set modules(data) {        
+    set modules(data) {
         data = JSON.stringify(data);
-        localStorage.setItem('modules', data);
+        localStorage.setItem("modules", data);
     }
 
     get modules() {
-        let string = localStorage.getItem('modules');
+        let string = localStorage.getItem("modules");
         return JSON.parse(string);
     }
 
-    get groupers(){
+    get groupers() {
         let initialModule = Modules.findModule(this.modules, 0);
-        return initialModule.childs.filter(m => m.type == 'grouper');
+        return initialModule.childs.filter(m => m.type == 0);
     }
 
-    defaultModule(){
-        if (!localStorage.getItem('modules')){
-            this.modules = [{
-                idmodule: 0,
-                isParent: 1,
-                type: 'grouper'
-            }];
-        }        
-    }
-
-    find(idmodule, url = ''){
-        let parentModule = Modules.findModule(this.modules, idmodule);
-        url = url || 'app/modulo/hijos_directos.php';
-
-        if((!parentModule.childs && parentModule.isParent) || parentModule.url){
-            let instance = this;
-            let grouper = parentModule.type == "grouper" ? 1 : 0;
-            
-            $.get(this.baseUrl + url, {
-                iduser: this.user,
-                parent: idmodule,
-                grouper: grouper
-            }, function(response){
-                if(response.success){
-                    if(response.data.length){
-                        parentModule.childs = response.data;
-                        instance.modules = Modules.changeModule(instance.modules, idmodule, parentModule);
-                        instance.show(idmodule);
-                    }
+    defaultModule() {
+        if (!localStorage.getItem("modules")) {
+            this.modules = [
+                {
+                    idmodule: 0,
+                    isParent: 1,
+                    type: 0
                 }
-            },'json');
-        }else{
+            ];
+        }
+    }
+
+    find(idmodule, url = "") {
+        let parentModule = Modules.findModule(this.modules, idmodule);
+        url = url || "app/modulo/hijos_directos.php";
+
+        if (
+            (!parentModule.childs && parentModule.isParent) ||
+            parentModule.url
+        ) {
+            let instance = this;
+            let grouper = parentModule.type == 0 ? 1 : 0;
+
+            $.get(
+                this.baseUrl + url,
+                {
+                    iduser: this.user,
+                    parent: idmodule,
+                    grouper: grouper
+                },
+                function (response) {
+                    if (response.success) {
+                        if (response.data.length) {
+                            parentModule.childs = response.data;
+                            instance.modules = Modules.changeModule(
+                                instance.modules,
+                                idmodule,
+                                parentModule
+                            );
+                            instance.show(idmodule);
+                        }
+                    }
+                },
+                "json"
+            );
+        } else {
             this.show(idmodule);
         }
     }
 
-    show(idmodule){
+    show(idmodule) {
         let nodes = this.createNodes(idmodule);
 
-        if(nodes.groupers){
+        if (nodes.groupers) {
             $(this._grouperSelector).html(nodes.groupers);
 
             let grouper = this.groupers[0];
             this.find(grouper.idmodule);
-        }else{
-            if(this.groupers.find(m => m.idmodule == idmodule)){
+        } else {
+            if (this.groupers.find(m => m.idmodule == idmodule)) {
                 $(this._listSelector).empty();
-                nodes.list.forEach(i => $(this._listSelector).append(i));                
-            }else{
+                nodes.list.forEach(i => $(this._listSelector).append(i));
+            } else {
                 let module = Modules.findModule(this.modules, idmodule);
                 let selector = $(`#${idmodule} > .child_list`);
 
-                if(!selector.children().length || (module.url && module.isParent)){
+                if (
+                    !selector.children().length ||
+                    (module.url && module.isParent)
+                ) {
                     selector.html(nodes.list);
                 }
             }
         }
     }
 
-    createNodes(idmodule) {        
-        if(!idmodule){
+    createNodes(idmodule) {
+        if (!idmodule) {
             return this.createGroupers();
-        }else{
+        } else {
             return this.createList(idmodule);
         }
     }
 
-    createGroupers(){              
-        let row = $('<div>',{
-            class: 'row p-0 m-0 justify-content-center'
+    createGroupers() {
+        let row = $("<div>", {
+            class: "row p-0 m-0 justify-content-center"
         });
 
-        let backgrounds = ['bg-complete', 'bg-danger', 'bg-primary', 'bg-warning'];
-        
+        let backgrounds = [
+            "bg-complete",
+            "bg-danger",
+            "bg-primary",
+            "bg-warning"
+        ];
+
         this.groupers.forEach((g, i) => {
             row.append(`
-                <div class="col-12 col-md-auto grouper cursor text-center p-1" id="${g.idmodule}">
+                <div class="col-12 col-md-auto grouper cursor text-center p-1" id="${
+                g.idmodule
+                }">
                     <table>
                         <tbody>
                             <tr>
-                                <td class="align-middle ${backgrounds[i]}" style="height: 95px;width: 95px;">
-                                    <i class="${g.icon} w-100 py-2" style="font-size:2.5rem"></i>
-                                    <span class="d-block text-truncate" title="${g.name}">${g.name}</span>
+                                <td class="align-middle ${
+                backgrounds[i]
+                }" style="height: 95px;width: 95px;">
+                                    <i class="${
+                g.icon
+                } w-100 py-2" style="font-size:2.5rem"></i>
+                                    <span class="d-block text-truncate" title="${
+                g.name
+                }">${g.name}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -144,46 +174,45 @@ class Modules {
             `);
         });
 
-        return {groupers : row};
+        return { groupers: row };
     }
 
-    createList(idmodule){ 
+    createList(idmodule) {
         let module = Modules.findModule(this.modules, idmodule);
         let list = [];
-        
+
         module.childs.forEach(m => {
-            if (m.isParent){
+            if (m.isParent) {
                 list.push(Modules.createParent(m));
-            }else{
+            } else {
                 list.push(Modules.createChild(m));
-            }  
+            }
         });
 
-        return {list: list};
+        return { list: list };
     }
 
-    static findModule(modules, idmodule){
+    static findModule(modules, idmodule) {
         let module = 0;
 
-        for(let m of modules){
-            if(m.idmodule == idmodule){
-                module = m;    
-            }else if(m.childs){
+        for (let m of modules) {
+            if (m.idmodule == idmodule) {
+                module = m;
+            } else if (m.childs) {
                 module = Modules.findModule(m.childs, idmodule);
             }
 
-            if(module)
-                break;
+            if (module) break;
         }
 
         return module;
     }
 
-    static changeModule(modules, idmodule, data){
+    static changeModule(modules, idmodule, data) {
         return modules.map(m => {
-            if(m.idmodule == idmodule){
+            if (m.idmodule == idmodule) {
                 return data;
-            }else if(m.childs){
+            } else if (m.childs) {
                 m.childs = Modules.changeModule(m.childs, idmodule, data);
             }
 
@@ -191,53 +220,56 @@ class Modules {
         });
     }
 
-    static createParent(module){
-        return $('<li>',{
-            class: 'parent_item',
+    static createParent(module) {
+        return $("<li>", {
+            class: "parent_item",
             id: module.idmodule
-        }).append(
-            $('<a>', {
-                href: 'javascript:;'
-            }).append(
-                $('<span>', {
-                    class: 'title',
-                    text: module.name
-                }),
-                $('<span>', {
-                    class: 'arrow',
-                }),
-                $('<span>', {
-                    class: 'icon-thumbnail'
-                }).append($('<i>', {
-                        class: module.icon
-                    })
-                )
-            ),
-            $('<ul>',{
-                class: 'sub-menu child_list'                
-            })
-        ).attr('data-url', module.url);
+        })
+            .append(
+                $("<a>", {
+                    href: "javascript:;"
+                }).append(
+                    $("<span>", {
+                        class: "title",
+                        text: module.name
+                    }),
+                    $("<span>", {
+                        class: "arrow"
+                    }),
+                    $("<span>", {
+                        class: "icon-thumbnail"
+                    }).append(
+                        $("<i>", {
+                            class: module.icon
+                        })
+                    )
+                ),
+                $("<ul>", {
+                    class: "sub-menu child_list"
+                })
+            )
+            .attr("data-url", module.url);
     }
 
-    static createChild(module){       
-        return $('<li>').append(
-            $('<a>', {
-                href: '#',
-                class: 'detailed module_link',
+    static createChild(module) {
+        return $("<li>").append(
+            $("<a>", {
+                href: "#",
+                class: "detailed module_link",
                 url: Session.getBaseUrl() + module.url
             }).append(
-                $('<span>', {
-                    class: 'title',
+                $("<span>", {
+                    class: "title",
                     text: module.name
                 }),
-                $('<span>', {
-                    class: 'icon-thumbnail'
+                $("<span>", {
+                    class: "icon-thumbnail"
                 }).append(
-                    $('<i>', {
+                    $("<i>", {
                         class: module.icon
                     })
                 )
             )
-        );            
+        );
     }
 }

@@ -264,12 +264,12 @@ function adicionar_pantalla_campos_formato($idpantalla, $datos)
     $nombre_tabla = trim($datos["nombre_tabla"], "'");
     $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre='idft_" . $nombre_tabla . "' AND formato_idformato=" . $idpantalla, "", $conn);
     if (!$campo_formato["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'id" . $nombre_tabla . "','Identificador de formato','int','11',0,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id" . $nombre_tabla . "')";
+        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'id" . $nombre_tabla . "','Identificador de formato','int','11',1,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id" . $nombre_tabla . "')";
         phpmkr_query($sql2);
         $retorno["idformato"] = phpmkr_insert_id();
         $retorno["idformato_sql"] = $sql2;
     }
-    return ($retorno);
+    return $retorno;
 }
 
 function eliminar_pantalla_campos_formato($idpantalla)

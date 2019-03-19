@@ -1,53 +1,92 @@
 <?php
 
-class Funcionario extends Model {
+class Funcionario extends Model
+{
     protected $idfuncionario;
     protected $funcionario_codigo;
     protected $login;
     protected $nombres;
     protected $apellidos;
+    protected $firma;
+    protected $firma_temporal;
+    protected $firma_original;
     protected $estado;
+    protected $fecha_ingreso;
+    protected $clave;
+    protected $nit;
+    protected $perfil;
+    protected $debe_firmar;
+    protected $tipo;
+    protected $ultimo_pwd;
+    protected $mensajeria;
     protected $email;
-    protected $foto_original;
-    protected $foto_recorte;
+    protected $sistema;
     protected $email_contrasena;
     protected $direccion;
     protected $telefono;
-    protected $clave;
+    protected $fecha_fin_inactivo;
+    protected $intento_login;
+    protected $foto_original;
+    protected $foto_recorte;
+    protected $foto_cordenadas;
+    protected $ventanilla_radicacion;
+    protected $pertenece_nucleo;
     protected $dbAttributes;
 
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
      */
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'funcionario_codigo',
             'login',
             'nombres',
             'apellidos',
+            'firma',
+            'firma_temporal',
+            'firma_original',
             'estado',
+            'fecha_ingreso',
+            'clave',
+            'nit',
+            'perfil',
+            'debe_firmar',
+            'tipo',
+            'ultimo_pwd',
+            'mensajeria',
             'email',
-            'foto_original',
-            'foto_recorte',
+            'sistema',
             'email_contrasena',
             'direccion',
             'telefono',
-            'clave'
+            'fecha_fin_inactivo',
+            'intento_login',
+            'foto_original',
+            'foto_recorte',
+            'foto_cordenadas',
+            'ventanilla_radicacion',
+            'pertenece_nucleo'
         ];
 
         // set the date attributes on the schema
-        $dateAttributes = [];
+        $dateAttributes = [
+            'fecha_ingreso',
+            'ultimo_pwd',
+            'fecha_fin_inactivo'
+        ];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -58,7 +97,8 @@ class Funcionario extends Model {
      *
      * @return string
      */
-    public function getTemporalRoute(){
+    public function getTemporalRoute()
+    {
         return 'temporal/temporal_' . strtolower($this->login);
     }
 
@@ -81,7 +121,7 @@ class Funcionario extends Model {
      */
     public function getName()
     {
-	$name = $this->nombres . ' ' . $this->apellidos;
+        $name = $this->nombres . ' ' . $this->apellidos;
         $name = trim(strtolower($name));
         $name = ucwords($name);
         return $name;
@@ -100,7 +140,8 @@ class Funcionario extends Model {
      * @return string attribute
      * @author jhon.valencia@cerok.com
      */
-    public function getEmail(){
+    public function getEmail()
+    {
         return $this->email;
     }
 
@@ -108,7 +149,8 @@ class Funcionario extends Model {
      * @return string attribute
      * @author jhon.valencia@cerok.com
      */
-    public function getDirection(){
+    public function getDirection()
+    {
         return $this->direccion;
     }
 
@@ -116,7 +158,8 @@ class Funcionario extends Model {
      * @return string attribute
      * @author jhon.valencia@cerok.com
      */
-    public function getPhoneNumber(){
+    public function getPhoneNumber()
+    {
         return $this->telefono;
     }
 
@@ -124,7 +167,8 @@ class Funcionario extends Model {
      * @return string attribute
      * @author jhon.valencia@cerok.com
      */
-    public function getPassword(){
+    public function getPassword()
+    {
         return $this->clave;
     }
 
@@ -132,7 +176,8 @@ class Funcionario extends Model {
      * @return string attribute
      * @author jhon.valencia@cerok.com
      */
-    public function getLogin(){
+    public function getLogin()
+    {
         return $this->login;
     }
 
@@ -164,7 +209,7 @@ class Funcionario extends Model {
                 $fileName = end($route);
                 $finalRoute = $tempRoute . '/' . $fileName;
 
-                if(!is_file($finalRoute) || $force){
+                if (!is_file($finalRoute) || $force) {
                     $file = fopen($finalRoute, 'w+');
 
                     if ($file) {
@@ -176,7 +221,7 @@ class Funcionario extends Model {
 
                 return $this->getTemporalRoute() . '/' . $fileName;
             }
-        }else{
+        } else if($image != 'firma'){
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
             $name = strtok($this->nombres, " ") . ' ' . strtok($this->apellidos, " ");
@@ -198,7 +243,7 @@ class Funcionario extends Model {
                 'extension' => 'jpg',
             );
 
-            if($this->updateImage($imageData, $image))
+            if ($this->updateImage($imageData, $image))
                 return $this->getImage($image, true);
         }
     }
@@ -211,13 +256,14 @@ class Funcionario extends Model {
      * @return string the new $attribute value
      * @author jhon.valencia@cerok.com
      */
-    public function updateImage($image, $attribute){
+    public function updateImage($image, $attribute)
+    {
         $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extension'];
 
         $tipo_almacenamiento = new SaiaStorage("imagenes");
         $content = $tipo_almacenamiento->almacenar_contenido($ruta, $image['binary'], false);
 
-        if($content){
+        if ($content) {
             $this->$attribute = json_encode(array(
                 "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
                 "ruta" => $ruta
@@ -225,23 +271,24 @@ class Funcionario extends Model {
 
             $this->save();
             return $this->$attribute;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public static function findAllByTerm($term){
+    public static function findAllByTerm($term)
+    {
         global $conn;
 
         $table = self::getTableName();
-        $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%".$term."%' or apellidos like '%".$term."%'", '', $conn);
+        $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%" . $term . "%' or apellidos like '%" . $term . "%'", '', $conn);
 
         $data = [];
         if ($findRecords['numcampos']) {
-            for($row=0; $row < $findRecords['numcampos']; $row++){
+            for ($row = 0; $row < $findRecords['numcampos']; $row++) {
                 $Instance = new Funcionario();
                 foreach ($findRecords[$row] as $key => $value) {
-                    if (is_string($key) && property_exists(Funcionario , $key)) {
+                    if (is_string($key) && property_exists(Funcionario, $key)) {
                         $Instance->$key = $value;
                     }
                 }
@@ -251,7 +298,8 @@ class Funcionario extends Model {
         return $data;
     }
 
-    public static function findByDocumentTransfer($documentId){
+    public static function findByDocumentTransfer($documentId)
+    {
         $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
         $records = Conexion::getConnection()->executeSelect($sql);
 
@@ -263,8 +311,19 @@ class Funcionario extends Model {
 
         $users = array_unique($users);
         $list = implode(',', $users);
-        $sql = "select * from funcionario where funcionario_codigo in ({$list})";        
+        $sql = "select * from funcionario where funcionario_codigo in ({$list})";
         $records = Conexion::getConnection()->executeSelect($sql);
         return self::convertToObjectCollection($records);
+    }
+
+    /**
+     * retorna una lista de objectos perfil
+     *
+     * @return array
+     */
+    public function getProfiles()
+    {
+        $sql = "select * from perfil where idperfil in ({$this->perfil})";
+        return Perfil::findBySql($sql);
     }
 }

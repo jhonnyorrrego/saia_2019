@@ -24,6 +24,7 @@ final class Version20190226160627 extends AbstractMigration
         $this->addSql("INSERT INTO `cf_ventanilla` (`idcf_ventanilla`, `nombre`, `valor`, `cod_padre`, `descripcion`, `tipo`, `categoria`, `estado`) VALUES
 (1, 'Sin Ventanilla', NULL, NULL, NULL, NULL, NULL, 1)");
 
+        $this->addSql("update funcionario set ventanilla_radicacion=1 where ventanilla_radicacion is null");
         $this->addSql("ALTER TABLE `funcionario` CHANGE `ventanilla_radicacion` `ventanilla_radicacion` INT(11) NOT NULL DEFAULT '1'");
         $conn = $this->connection;
         //Busqueda

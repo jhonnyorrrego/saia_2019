@@ -62,6 +62,7 @@ $archivoEml = [];
 
 $noExiste = [];
 // Separar por nombre los xml de los pdf
+// Tener en cuenta que se le asigna un identificador unico separado por "___" del nombre
 foreach ($datos as $datos_correo) {
     $uidCorreo = $datos_correo["uid"];
     $esteEml = [];
@@ -70,8 +71,14 @@ foreach ($datos as $datos_correo) {
         $partes_ruta = pathinfo($archivo);
 
         $ext_arch = $partes_ruta['extension'];
-        $nom_arch = $partes_ruta['filename'];
+        $sNomArch = new Stringy\Stringy($partes_ruta['filename']);
+        $prefijo = strstr((string)$sNomArch, '___', true);
+        if(!empty($prefijo)) {
+            $prefijo = $prefijo . '___';
+            $sNomArch = $sNomArch->removeLeft($prefijo);
+        }
 
+        $nom_arch = (string)$sNomArch;
         if ($es) {
             if (preg_match("/xml/i", $ext_arch)) {
                 $archivosXml[$uidCorreo][$nom_arch] = $archivo;
@@ -89,8 +96,12 @@ foreach ($datos as $datos_correo) {
 }
 
 $procesados = [];
-$procesadosXml = $archivosXml;
-$procesadosPdf = $archivosPdf;
+$procesadosXml = [];
+$procesadosPdf = [];
+//var_dump($archivosXml);
+//var_dump($archivosPdf);
+//var_dump($archivoEml);
+//die();
 
 $mensajes = [];
 $radicados = [];
@@ -108,13 +119,15 @@ foreach ($datos as $datos_correo) {
             unset($datos_factura["tipo_persona"]);
             // $datos_factura["idgrupo"] = "'" . $datos_correo["idgrupo"] . "'";
 
-            $datos_factura["anexos"] = "'" . implode(",", $datos_correo["adjuntos"]) . "'";
+            $anexLst = implode(",", $datos_correo["adjuntos"]);
+            $anexLst = trim($anexLst, "'");
+            $datos_factura["anexos"] = "'" . $anexLst . "'";
 
             $iddatos_factura = registar_factura($datos_factura);
             // $datos_factura["num_folios"] = count($datos_correo["adjuntos"]);
             // $datos_factura["iddt_datos_factura"] = $iddatos_factura;
             $datos_factura["fk_datos_factura"] = $iddatos_factura;
-            // $datos_factura["notas"] = $notas;
+            $datos_factura["anexos"] = $anexLst;
             $iddoc = radicar_factura($datos_factura, $nombre_formato);
             if (!empty($iddoc)) {
                 $anexos = [];
@@ -123,12 +136,10 @@ foreach ($datos as $datos_correo) {
                 $anexos[] = $archivoEml[$uidCorreo][0];
                 guardar_anexos($anexos, $idformato, $iddoc);
                 guardarDetalleFactura($iddoc, $datos_factura["items"]);
-                unset($procesadosXml[$uidCorreo][$nombre]);
-                unset($procesadosPdf[$uidCorreo][$nombre]);
+                $procesadosXml[$uidCorreo][$nombre] = $archivosXml[$uidCorreo][$nombre];
+                $procesadosPdf[$uidCorreo][$nombre] = $archivosPdf[$uidCorreo][$nombre];
                 $procesados[] = $nombre;
                 $radicados[$uidCorreo]++;
-                $mensajes[$datos_correo["asunto"]] = mensajeTerminacion($uidCorreo, $radicados, $archivosXml, $archivosPdf, $procesadosXml, $procesadosPdf);
-
             } else {
                 $mensajes[$datos_correo["asunto"]] = "No fue posible radicar el documento para la factura: $nombre";
                 break;
@@ -137,6 +148,8 @@ foreach ($datos as $datos_correo) {
             $mensajes[$datos_correo["asunto"]] = "No se pudo procesar la factura: $nombre";
         }
     }
+    $mensajes[$datos_correo["asunto"]] = mensajeTerminacion($archivosXml[$uidCorreo], $procesadosXml[$uidCorreo], $procesadosPdf[$uidCorreo]);
+
     mover_correo_buzon($datos_correo);
 }
 
@@ -157,18 +170,21 @@ $resp["message"] = http_build_query($mensajes);
 echo json_encode($resp);
 die();
 
-function mensajeTerminacion($uid, $archivosRadicados, $archivosXml, $archivosPdf, $procesadosXml, $procesadosPdf) {
+function mensajeTerminacion($archivosXml, $procesadosXml, $procesadosPdf) {
     $mensaje = "";
-    $radicados = count($archivosRadicados[$uid]);
-    $conteoPdfIni = count($archivosPdf[$uid]);
-    $conteoXmlIni = count($archivosXml[$uid]);
-    $conteoPdfFin = count($archivosPdf[$uid]);
-    $conteoXmlFin = count($procesadosXml[$uid]);
 
-    if ($radicados === $conteoXmlIni && $conteoXmlFin === 0 && $conteoXmlFin === $conteoPdfFin) {
-        $mensaje = '"Registro Exitoso". Todas las facturas con su respectiva versión en PDF';
-    } else if ($conteoXmlFin !== $conteoPdfFin) {
-        $mensaje = '"Registro Exitoso". Algunas facturas sin su respectiva versión en PDF';
+    $procesadosXml = array_filter($procesadosXml);
+    $procesadosPdf = array_filter($procesadosPdf);
+
+    $aDiffIni = array_diff_key($archivosXml, $procesadosXml);
+    $aDiffFin = array_diff_key($procesadosXml, $procesadosPdf);
+
+    if (empty($aDiffIni)) {
+        if(empty($aDiffFin)) {
+            $mensaje = '"Registro Exitoso". Todas las facturas con su respectiva versión en PDF';
+        } else {
+            $mensaje = '"Registro Exitoso". Algunas facturas sin su respectiva versión en PDF';
+        }
     } else {
         $mensaje = "Por favor revise los documentos generados en busca de inconsistencias";
     }
@@ -299,6 +315,7 @@ function radicar_factura($datos, $nombre_formato) {
         $_REQUEST["idformato"] = $campos_formato[0]["idformato"];
         $_REQUEST["tabla"] = $tabla;
         $_REQUEST["no_redirecciona"] = 1;
+        $_REQUEST["webservie_aprob_doc"] = 1;
 
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
@@ -354,7 +371,7 @@ function guardar_anexos($datos, $idformato, $iddoc) {
                 );
                 $datos_anexo = pathinfo($ruta_real);
                 $consulta_campos_formato = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='anexos' and formato_idformato=" . $idformato, "", $conn);
-                $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $archivo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
+                $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $nombre_anexo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
                 phpmkr_query($sql) or die("Error al registrar el anexo: $sql");
                 $idanexo = phpmkr_insert_id();
                 if ($idanexo) {

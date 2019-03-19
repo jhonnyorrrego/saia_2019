@@ -112,7 +112,8 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
 
                     $item["children"] = $children;
                 }
-            } else if($seleccionable) {
+            }
+            if($seleccionable) {
                 $item["checkbox"] = $seleccionable;
             }
 

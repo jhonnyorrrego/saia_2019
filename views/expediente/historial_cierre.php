@@ -78,5 +78,4 @@ echo validate();
         </table>
     </div>
 </div>
-<script data-params='<?=json_encode($params)?>'></script>
-<script src="<?= $ruta_db_superior ?>views/expediente/js/historial_cierre.js"></script>
+<script id="scriptHistorial" src="<?= $ruta_db_superior ?>views/expediente/js/historial_cierre.js" data-params='<?=json_encode($params)?>'></script>

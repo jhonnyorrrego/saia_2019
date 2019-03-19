@@ -1,5 +1,5 @@
-function checkSize (){ 
-    var envs = {xs:"d-none", sm:"d-sm-none", md:"d-md-none", lg:"d-lg-none", xl:"d-xl-none"};
+function checkSize() {
+    var envs = { xs: "d-none", sm: "d-sm-none", md: "d-md-none", lg: "d-lg-none", xl: "d-xl-none" };
     var env = "";
     var $el = $("<div>");
     $el.appendTo($("body"));
@@ -12,17 +12,21 @@ function checkSize (){
         }
     }
     $el.remove();
-    
-    localStorage.setItem('breakpoint', env);
-    return env; 
-} 
 
-$(document).ready(function(){
-	checkSize();
-    
+    localStorage.setItem('breakpoint', env);
+    return env;
+}
+
+$(document).ready(function () {
+    checkSize();
+
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             checkSize();
         }, 500);
     }, false);
+});
+
+$(window).resize(function () {
+    checkSize();
 });

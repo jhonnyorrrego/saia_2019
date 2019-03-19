@@ -15,6 +15,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +26,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= icons() ?>
     <?= theme() ?>
 </head>
+
 <body>
     <div class="container m-0 p-0 mw-100 mx-100">
         <div class="row mx-0">
@@ -33,7 +35,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <script data-baseurl="<?= $ruta_db_superior ?>">
-        $(function(){
+        $(function() {
             let baseUrl = $('script[data-baseurl]').data('baseurl');
             let component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
             let param = '<?= $_REQUEST['variable_busqueda'] ?? null;  ?>';
@@ -42,22 +44,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $("#mailbox").load(mailRoute, {
                 idbusqueda_componente: component,
                 variable_busqueda: param
-            }, function(){
-                if($("#right_workspace").is(':visible')){
+            }, function() {
+                if ($("#right_workspace").is(':visible')) {
                     let interval = setInterval(() => {
-                        if($(".show_document").length){
-                            $(".show_document").first().trigger('click');
+                        if ($("#table tr[data-index]").length) {
+                            $("#table tr[data-index]").first().trigger('click');
                             clearInterval(interval);
                         }
                     }, 50);
                 }
-                
-                setTimeout(() => {
-                    window.resizeIframe();
-                }, 1000);
+
+                let interval = setInterval(() => {
+                    if ($("#table tr[data-index]").length) {
+                        window.resizeIframe();
+                        clearInterval(interval);
+                    }
+                }, 50);
             });
 
-            window.addEventListener("orientationchange", function () {
+            window.addEventListener("orientationchange", function() {
                 setTimeout(() => {
                     window.resizeIframe();
                 }, 500);
@@ -66,8 +71,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $(window).resize(function() {
                 window.resizeIframe();
             });
-            
-            window.resizeIframe = function (){
+
+            window.resizeIframe = function() {
                 let frameH = $(window).height();
                 let paginationH = $('.fixed-table-pagination').height();
                 let headerH = $('#header_list').height();
@@ -77,4 +82,5 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         });
     </script>
 </body>
-</html>
+
+</html> 
