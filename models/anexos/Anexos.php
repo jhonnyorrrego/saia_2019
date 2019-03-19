@@ -58,13 +58,19 @@ class Anexos extends Model
     }
 
     /**
-     * evento de base de datos
-     * se ejecuta despues de crear un nuevo registro
-     * @return void
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-18
      */
     protected function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'AnexosLog', $this);
+        if (AccesoController::setFullFileAccess(Acceso::TIPO_ANEXOS, $this->getPK())) {
+            return LogController::create(LogAccion::CREAR, 'AnexosLog', $this);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -91,9 +97,9 @@ class Anexos extends Model
     public function getLastUser()
     {
         if (!$this->user) {
-            if($this->getLastLog()){
+            if ($this->getLastLog()) {
                 $this->user = $this->getLastLog()->getUser();
-            }else{
+            } else {
                 $this->user = new Funcionario($this->fk_funcionario);
             }
         }
@@ -105,7 +111,7 @@ class Anexos extends Model
     {
         if ($this->getLastLog()) {
             $date = $this->getLastLog()->getDateAttribute('fecha');
-        } else if ($this->fecha_anexo) {            
+        } else if ($this->fecha_anexo) {
             $date = $this->getDateAttribute('fecha_anexo');
         } else {
             $date = '';
@@ -163,4 +169,28 @@ SQL;
 
         return false;
     }
+
+
+    /**
+     * consulta las versiones anteriores de un anexo
+     *
+     * @param integer $fileId id del anexo referencia
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-15
+     */
+    public function findHistory($fileId)
+    {
+        $Anexos = new Anexos($fileId);
+
+        if ($Anexos->fk_anexos) {
+            $sql = "select * from anexos where idanexos <>{$fileId} and fk_anexos={$Anexos->fk_anexos} order by idanexos desc";
+            $response = Anexos::findBySql($sql);
+        } else {
+            $response = [];
+        }
+
+        return $response;
+    }
 }
+

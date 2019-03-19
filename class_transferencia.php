@@ -1330,10 +1330,10 @@ function guardar_documento($iddoc, $tipo = 0)
                         case "TEXT":
                             $_REQUEST[$lcampos[$j]["nombre"]] = str_replace("'", "&#39;", stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
                             if ($tipo == 1 && $lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             } elseif ($lcampos[$j]["longitud"] < 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 array_push($valores, "'" . @$_REQUEST[$lcampos[$j]["nombre"]] . "'");
                                 array_push($campos, $lcampos[$j]["nombre"]);
                             }
@@ -1441,7 +1441,7 @@ function guardar_documento($iddoc, $tipo = 0)
                     switch (strtoupper($lcampos[$j]["tipo_dato"])) {
                         case "TEXT":
                             if ($lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             }
                             break;

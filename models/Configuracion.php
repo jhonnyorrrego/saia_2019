@@ -10,14 +10,16 @@ class Configuracion extends Model
     protected $encrypt;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
-     /**
+    /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'nombre',
@@ -29,7 +31,7 @@ class Configuracion extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -40,10 +42,10 @@ class Configuracion extends Model
      * @param array $nombres
      * @return Configuracion[]
      */
-     public static function findByNames($nombres) {
-         global $conn;
-         $cond = implode("','", $nombres);
-         $data = busca_filtro_tabla('nombre,valor', 'configuracion', "nombre IN('" . $cond . "')", '', $conn);
-         return self::convertToObjectCollection($data);
+    public static function findByNames($names)
+    {
+        $names = implode("','", $names);
+        $sql = "select nombre,valor from configuracion where nombre IN('{$names}')";
+        return self::findBySql($sql);
     }
 }
