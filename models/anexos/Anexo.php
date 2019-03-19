@@ -54,7 +54,7 @@ class Anexo extends Model
      */
     protected function afterCreate()
     {
-        if (AccesoController::setFullFileAccess(Acceso::TIPO_ANEXO, $this->getPK())) {
+        if (AccesoController::setFullAccess(Acceso::TIPO_ANEXO, $this->getPK())) {
             return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
         } else {
             return false;

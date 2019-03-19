@@ -2,6 +2,10 @@
 
 class Funcionario extends Model
 {
+    const CEROK = 1;
+    const RADICADOR_SALIDA = 2;
+    const RADICADOR_WEB = 3;
+
     protected $idfuncionario;
     protected $funcionario_codigo;
     protected $login;
