@@ -15,18 +15,27 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
-    'data' => new stdClass(),
+$Response = (object)array(
+    'data' => [],
     'message' => "",
     'success' => 0,
 );
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
-    $notes = NotaFuncionario::findActiveByUser($_REQUEST['iduser']);
+    $notes = NotaFuncionario::findAllByAttributes([
+        'estado' => 1,
+        'fk_funcionario' => $_REQUEST['iduser']
+    ]);
 
-    if(count($notes)){
-        $Response->data = $notes;
-    }else{
+    if ($notes) {
+        foreach ($notes as $key => $NotaFuncionario) {
+            $Response->data[] = [
+                'id' => $NotaFuncionario->getPK(),
+                'date' => $NotaFuncionario->getDateAttribute('fecha', 'd-m-Y'),
+                'contenido' => $NotaFuncionario->contenido
+            ];
+        }
+    } else {
         $Response->message = "Actualmente no tiene notas";
     }
 
@@ -36,3 +45,4 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 }
 
 echo json_encode($Response);
+

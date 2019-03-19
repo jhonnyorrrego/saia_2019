@@ -30,10 +30,9 @@ class EtiquetaDocumento extends Model
     }
 
     public static function defineCheckboxType($tagId, $documentIds){
-        global $conn;
-
-        $findIncluded = busca_filtro_tabla("count(*) as total", "etiqueta_documento", "fk_etiqueta =" . $tagId . " and fk_documento in(".$documentIds.")", "", $conn);
-
+        $sql = "select count(*) as total from etiqueta_documento where fk_etiqueta ={$tagId} and fk_documento in({$documentIds})";
+        $findIncluded = StaticSql::search($sql);
+        
         $totalDocuments = substr_count($documentIds, ',') + 1;
         if($findIncluded[0]['total'] ==  $totalDocuments){
             $response = 1;
