@@ -173,11 +173,11 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
   	  <br>
       Buscar:<br><input type="text" id="stext2" width="200px" size="20" style="font-family: Verdana; font-size: 9px;">
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext2').value,1)">
-      <img src="botones/general/anterior.png"border="0px"></a>
+      <img src="assets/images/anterior.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext2').value,0,1)">
-      <img src="botones/general/buscar.png"border="0px"></a>
+      <img src="assets/images/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext2').value)">
-      <img src="botones/general/siguiente.png"border="0px"></a>
+      <img src="assets/images/siguiente.png"border="0px"></a>
      </span><br><br>
 <div id="treeboxbox_tree3"></div>
 <input type="hidden" name="x_dependencia_iddependencia" class="required" id="x_dependencia_iddependencia">
@@ -243,11 +243,11 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
   	  <br>
       Buscar:<br><input type="text" id="stext" width="200px" size="20" style="font-family: Verdana; font-size: 9px;">
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,1)">
-      <img src="botones/general/anterior.png"border="0px"></a>
+      <img src="assets/images/anterior.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,0,1)">
-      <img src="botones/general/buscar.png"border="0px"></a>
+      <img src="assets/images/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value)">
-      <img src="botones/general/siguiente.png"border="0px"></a>
+      <img src="assets/images/siguiente.png"border="0px"></a>
      </span><br><br>
 <div id="treeboxbox_tree2"></div>
 <input type="hidden" name="x_cargo_idcargo" class="required" id="x_cargo_idcargo">

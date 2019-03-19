@@ -42,11 +42,11 @@ if(isset($_REQUEST["modulo"])&&($_REQUEST["modulo"]!=""))
     <br />
       Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
-      <img src="<?php echo($ruta_db_superior);?>botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <img src="<?php echo($ruta_db_superior);?>assets/images/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,0,1)">
-      <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <img src="<?php echo($ruta_db_superior);?>assets/images/buscar.png" border="0px" alt="Buscar"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value)">
-      <img src="<?php echo($ruta_db_superior);?>botones/general/siguiente.png" border="0px" alt="Siguiente"></a>
+      <img src="<?php echo($ruta_db_superior);?>assets/images/siguiente.png" border="0px" alt="Siguiente"></a>
     <br /><div id="esperando_serie">
     <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
     <div id="treeboxbox_tree3"></div>

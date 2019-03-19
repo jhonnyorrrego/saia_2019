@@ -373,9 +373,9 @@ return true;
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>        
         <td bgcolor="#F5F5F5" colspan="4" ><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif">
 Buscar: <input type="text" id="stext_responsable" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),1)"><img src="botones/general/anterior.png"border="0px"></a>
-<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-    <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value))"> <img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),1)"><img src="assets/images/anterior.png"border="0px"></a>
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),0,1)"><img src="assets/images/buscar.png" alt="Buscar" border="0px"></a>
+    <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value))"> <img src="assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
                 <div id="treeboxbox_tree3"></div>
 	              <script type="text/javascript">
                 <!--
@@ -430,9 +430,9 @@ echo $nombreSerie."<br />";
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 Buscar: <input type="text" id="stext_serie" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-    <a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>  
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),1)"><img src="assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a>
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),0,1)"><img src="assets/images/buscar.png" alt="Buscar" border="0px"></a>
+    <a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value))"><img src="assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>  
     <br />
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
     <div id="treeboxbox_serie" height="100%"></div>
