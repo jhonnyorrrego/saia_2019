@@ -123,10 +123,47 @@ class Files {
             instance.reset();
         });
 
-        $(document).off('click', '.file_option');
-        $(document).on('click', '.file_option', function () {
-            $(this).parent().find('.file_option').toggleClass('d-none');
+        $(document).off('click', '.show_options');
+        $(document).on('click', '.show_options', function () {
+            let parentNode = $(this).parent();
+            $.post(`${instance.options.baseUrl}app/permisos/permiso_funcionario.php`, {
+                key: localStorage.getItem('key'),
+                sourceReference: instance.options.sourceReference || 'TIPO_ANEXO',
+                typeId: $(this).data('id')
+            }, function (response) {
+                if (response.success) {
+                    if (!response.data.see) {
+                        parentNode.find('[data-type="see"]').remove();
+                    }
 
+                    if (!response.data.edit) {
+                        parentNode.find('[data-type="upload"]').remove();
+                        parentNode.find('[data-type="access"]').remove();
+                    }
+
+                    if (!response.data.delete) {
+                        parentNode.find('[data-type="delete"]').remove();
+                    }
+
+                    if (response.data.see || response.data.edit || response.data.delete) {
+                        parentNode.find('.file_option').toggleClass('d-none');
+                    } else {
+                        top.notification({
+                            type: 'info',
+                            message: 'Actualmente no tiene permisos sobre este anexo'
+                        });
+                    }
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            }, 'json');
+        });
+
+        $(document).off('click', '.file_option:not(".show_options")');
+        $(document).on('click', '.file_option:not(".show_options")', function () {
             switch ($(this).data('type')) {
                 case 'upload':
                     instance.upload($(this).data('id'));
@@ -138,6 +175,8 @@ class Files {
                     instance.access($(this).data('id'));
                     break;
             }
+
+            $(this).parent().find('.file_option').toggleClass('d-none');
         });
 
         instance.getTable().on('expand-row.bs.table', function (event, index, row, $detail) {
@@ -262,7 +301,8 @@ class Files {
 
     static OptionButttons(value, row, index) {
         return [
-            `<span class="file_option fa fa-chevron-circle-down cursor f-20"><br></span>`,
+            `<span data-id="${row.id}" class="file_option show_options fa fa-chevron-circle-down cursor f-20"><br></span>`,
+            `<span data-type="see" data-id="${row.id}" class="file_option fa fa-eye cursor f-20 d-none"><br></span>`,
             `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
             `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
             `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
@@ -346,8 +386,16 @@ class Files {
         });
     }
 
-    access(key) {
-        alert(key);
+    access(fileId) {
+        top.topModal({
+            url: `${this.options.baseUrl}views/permisos/asignar.php`,
+            title: 'Permisos',
+            params: {
+                type: this.options.sourceReference,
+                typeId: fileId
+            },
+            buttons: {}
+        });
     }
 
     expand(row, element) {

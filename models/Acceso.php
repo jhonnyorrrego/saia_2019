@@ -10,7 +10,6 @@ class Acceso extends Model
     const ACCION_EDITAR = 2;
     const ACCION_ELIMINAR = 3;
     const ACCION_VER_PUBLICO = 4;
-    const ACCION_EDITAR_PUBLICO = 5;
 
     protected $idacceso;
     protected $tipo_relacion;

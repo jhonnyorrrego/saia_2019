@@ -14,6 +14,7 @@ $(function () {
         let options = {
             baseUrl: baseUrl,
             selector: '#files_table',
+            sourceReference: 'TIPO_ANEXOS',
             dropzone: {
                 url: `${baseUrl}app/temporal/cargar_anexos.php`,
                 params: {
