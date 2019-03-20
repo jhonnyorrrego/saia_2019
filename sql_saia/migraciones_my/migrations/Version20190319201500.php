@@ -22,7 +22,7 @@ final class Version20190319201500 extends AbstractMigration
         $this->connection->update('modulo', [
             'enlace' => 'views/permisos/asignar.php'
         ], [
-            'nombre' => 'seguridad'
+            'nombre' => 'privacidad'
         ]);
 
     }
