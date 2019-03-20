@@ -67,7 +67,7 @@
                         message: 'Documentos etiquetados',
                         type: 'success'
                     });
-                    $('#close_modal').trigger('click');
+                    top.closeTopModal();
                 }else{
                     top.notification({
                         message: response.message,

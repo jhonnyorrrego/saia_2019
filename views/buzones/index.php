@@ -27,6 +27,7 @@ $params = json_encode($_REQUEST);
     <?= bootstrap() ?>
     <?= icons() ?>
     <?= theme() ?>
+    <?= moment() ?>
 </head>
 
 <body>

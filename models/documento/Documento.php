@@ -38,14 +38,16 @@ class Documento extends Model
     protected $prioridad;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'iddocumento',
@@ -91,9 +93,21 @@ class Documento extends Model
             'fecha_limite'
         ];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-19
+     */
+    protected function afterCreate()
+    {
+        return AccesoController::setFullAccess(Acceso::TIPO_DOCUMENTO, $this->getPK());
     }
 }

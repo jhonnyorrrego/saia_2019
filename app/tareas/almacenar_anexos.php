@@ -46,11 +46,19 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
             $Anexo->setAttributes([
                 'version' => ++$OldRecord->version,
-                'fk_anexo' => $OldRecord->fk_anexo ? $OldRecord->fk_anexo : $OldRecord->getPK()
+                'fk_anexo' => $OldRecord->fk_anexo
             ]);
         }
 
         if ($Anexo->save()) {
+            if(!$Anexo->fk_anexo){
+                Anexo::executeUpdate([
+                    'fk_anexo' => $Anexo->getPK()
+                ], [
+                    Anexo::getPrimaryLabel() => $Anexo->getPK()
+                ]);
+            }
+
             $data[] = TareaAnexo::newRecord([
                 'fk_anexo' => $Anexo->getPK(),
                 'fk_tarea' => $_REQUEST['task']

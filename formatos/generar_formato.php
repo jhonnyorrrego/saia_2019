@@ -1377,13 +1377,13 @@ class GenerarFormato
                                 }
                                 $texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25" onblur="closetree_' . $campos[$h]["nombre"] . '()"> <input type="hidden" id="idclosetree_' . $campos[$h]["nombre"] . '">
                                 <a href="javascript:void(0)" onclick="' . $busqueda . '">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/>';
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/>';
                                 $indice_tabindex++;
                             }
 

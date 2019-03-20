@@ -45,7 +45,7 @@ class Notes {
     }
 
     getInfoFromActive(){
-        return this.notes.find(n => n.idnota_funcionario == this.active);
+        return this.notes.find(n => n.id == this.active);
     }
 
     list(refresh = 0) {
@@ -87,19 +87,18 @@ class Notes {
 
         if (this.notes.length) {
             for (const note of this.notes) {
-                let fecha = moment(note.fecha, 'YYYY-MM-DD ').format('DD-MM-YYYY');
                 elements.push({
-                    id: note.idnota_funcionario,
-                    node: `<li data-noteid="` + note.idnota_funcionario + `" class="note_item">
+                    id: note.id,
+                    node: `<li data-noteid="` + note.id + `" class="note_item">
                         <div class="left">
                                 <div class="checkbox check-warning no-margin" class="label_checkbox_note">
-                                    <input id="qncheckbox`+ note.idnota_funcionario + `" type="checkbox" value="` + note.idnota_funcionario + `" class="checkbox_note">
-                                    <label for="qncheckbox`+ note.idnota_funcionario + `"></label>
+                                    <input id="qncheckbox`+ note.id + `" type="checkbox" value="` + note.id + `" class="checkbox_note">
+                                    <label for="qncheckbox`+ note.id + `"></label>
                                 </div>
                                 <p class="note-preview">`+ note.contenido + `</p>
                         </div>
                         <div class="right pull-right">
-                            <span class="date">`+ fecha + `</span>
+                            <span class="date">`+ note.date + `</span>
                             <a href="#" data-navigate="view" data-view-port="#note-views" data-view-animation="push">
                                 <i class="fa fa-chevron-right"></i>
                             </a>

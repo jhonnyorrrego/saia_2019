@@ -1330,10 +1330,10 @@ function guardar_documento($iddoc, $tipo = 0)
                         case "TEXT":
                             $_REQUEST[$lcampos[$j]["nombre"]] = str_replace("'", "&#39;", stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
                             if ($tipo == 1 && $lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             } elseif ($lcampos[$j]["longitud"] < 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 array_push($valores, "'" . @$_REQUEST[$lcampos[$j]["nombre"]] . "'");
                                 array_push($campos, $lcampos[$j]["nombre"]);
                             }
@@ -1441,7 +1441,7 @@ function guardar_documento($iddoc, $tipo = 0)
                     switch (strtoupper($lcampos[$j]["tipo_dato"])) {
                         case "TEXT":
                             if ($lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             }
                             break;
@@ -2141,7 +2141,7 @@ function arbol_serie($condicion_adicional = '')
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="assets/images/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2"></div>
 	<script type="text/javascript">
