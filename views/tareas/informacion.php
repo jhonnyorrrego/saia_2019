@@ -11,9 +11,8 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
+include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
-<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
-<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" media="screen">
 <div class="form-group">
     <label class="my-0" for="name">Nombre de la tarea<span class="text-danger">*</span></label>
     <input type="text" class="form-control" id="name" placeholder="Qué desea que se realice?">
@@ -29,7 +28,7 @@ while ($max_salida > 0) {
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="send_notification">
             <label class="form-check-label" for="send_notification">Desea notificar por email?</label>
-        </div>                            
+        </div>
     </div>
 </div>
 <div class="form-group">
@@ -48,8 +47,6 @@ while ($max_salida > 0) {
 <div class="form-group text-right">
     <button class="btn btn-complete" id="save_task"></button>
 </div>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>
-<script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script>
+<?= select2() ?>
+<?= dateTimePicker() ?>
+<script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script> 
