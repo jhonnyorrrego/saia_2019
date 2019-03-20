@@ -465,12 +465,14 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
+            $validacion_tipo = '<?php if (!Documento::canSee($_SESSION["idfuncionario"], $_REQUEST["iddoc"]):
+                include_once "../../views/documento/acceso_denegado.php";
+            else:';
+            $validacion_tipo = 'if(!$_REQUEST["actualizar_pdf"] && (
                 ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
                 0 == '.$formato[0]['mostrar_pdf'].'
             )): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
-
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -484,6 +486,7 @@ class GenerarFormato
                                 <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
             $validacion_tipo .= '<?php else: ?>';
             $validacion_tipo .= $this->generar_mostrar_pdf();
+            $validacion_tipo .= '<?php endif; ?>';
             $validacion_tipo .= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
