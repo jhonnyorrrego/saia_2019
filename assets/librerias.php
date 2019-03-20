@@ -307,34 +307,6 @@ function topModal()
     return $js;
 }
 
-/**
- * incluye las librerias necesarias
- * para la pantalla del topModal
- *
- * @param array $data
- * @return string <script> incluye las librerias
- * cuando el documento esta listo
- */
-function librariesForTopModal($data)
-{
-    $data = implode('', $data);
-    $libraries = str_replace('</script>', '<\/script>', $data);
-
-    return "<script type='text/javascript'>
-        div = $('<div>').append('" . $libraries . "');
-
-        $.each(div.children(), function(i, e){
-            if(e.href){
-                $('head').append(e);
-            }else if(e.src){
-                $('body').append(e);
-            }
-        });
-
-        delete div;
-    </script>";
-}
-
 function bpmnModeler()
 {
     global $ruta_db_superior;
@@ -381,7 +353,8 @@ function select2()
  * el dropzone  v5.5
  * @return void
  */
-function dropzone(){
+function dropzone()
+{
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';
@@ -391,4 +364,28 @@ function dropzone(){
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
+}
+
+/**
+ * retorna los enlaces para incluir
+ * datetimepicker v4.17.47
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-20
+ */
+function dateTimePicker()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    $routeLanguage = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js';
+    $language = '<script type="text/javascript" src="' . $routeLanguage . '"></script>';
+
+    return $css . $js . $language;
 }
