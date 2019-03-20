@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
@@ -237,10 +237,6 @@ function variable_busqueda()
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
-    global $conn, $ruta_db_superior;
-
-    include_once $ruta_db_superior . 'controllers/autoload.php';
-
     $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
     $temporality = strtotime($date) ? temporality($date) : '';
@@ -274,26 +270,28 @@ function roundedImage($route)
     global $ruta_db_superior;
 
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
-        <img id="profile_image" src="' . $routeImage . '" style="width:36px;height:36px">
+    return '<span class="thumbnail-wrapper circular inline rounded_image cursor" style="float:none" style="width:36px;height:36px">
+        <img src="' . $routeImage . '" style="width:36px;height:36px">
     </span>';
 }
 
 /**
- * determina si un documento ya fue leido por el usuario actual
+ * retorna la clase bold cuando el documento
+ * no se ha leido, usado para los buzones
  *
  * @param int $iddocumento
  * @param string $fecha
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function unread($iddocumento, $fecha)
 {
-    global $conn;
-
     $idfuncionario = $_SESSION["usuario_actual"];
-    $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=" . $idfuncionario . " and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '" . $fecha . "'", "", $conn);
+    $convertString = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
+    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$idfuncionario} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
+    $total = StaticSql::search($sql);
 
-    return !$leido["numcampos"] ? '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>' : '';
+    return !$total[0]['total'] ? 'bold' : '';
 }
 
 /**
