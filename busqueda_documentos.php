@@ -735,11 +735,11 @@ function EW_checkMyForm(f)
 			<span class="phpmaker">
 			      Buscar:<br><input type="text" id="stext" width="200px" size="20">      
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,1)">
-      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,0,1)">
-      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value)">
-      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
+      <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />
 <br />
          <div id="esperando_func">
     <img src="imagenes/cargando.gif"></div>

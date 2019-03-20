@@ -465,13 +465,14 @@ class GenerarFormato
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
+            $validacion_tipo = '<?php if (!Documento::canSee($_SESSION["idfuncionario"], $_REQUEST["iddoc"]):
+                include_once "../../views/documento/acceso_denegado.php";
+            else:';
+            $validacion_tipo = 'if(!$_REQUEST["actualizar_pdf"] && (
                 ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
                 0 == ' . $formato[0]['mostrar_pdf'] . '
             )): ?>';
-			
-            $validacion_tipo .= '<!DOCTYPE html>
-
+            $validacion_tipo.= '<!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -482,10 +483,11 @@ class GenerarFormato
                                 <meta name="apple-touch-fullscreen" content="yes">
                                 <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                 <meta content="" name="description" />
-                                <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $validacion_tipo.= '<?php else: ?>';
-            $validacion_tipo.= $this->generar_mostrar_pdf();
-            $validacion_tipo.= '<?php endif; ?>';
+                                <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $validacion_tipo .= '<?php else: ?>';
+            $validacion_tipo .= $this->generar_mostrar_pdf();
+            $validacion_tipo .= '<?php endif; ?>';
+            $validacion_tipo .= '<?php endif; ?>';
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
@@ -1377,13 +1379,13 @@ class GenerarFormato
                                 }
                                 $texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25" onblur="closetree_' . $campos[$h]["nombre"] . '()"> <input type="hidden" id="idclosetree_' . $campos[$h]["nombre"] . '">
                                 <a href="javascript:void(0)" onclick="' . $busqueda . '">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/>';
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/>';
                                 $indice_tabindex++;
                             }
 

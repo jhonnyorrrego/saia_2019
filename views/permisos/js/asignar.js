@@ -29,7 +29,7 @@ $(function () {
         }
     };
 
-    (function init() {
+    (function init() {        
         findData();
         createAutocomplete();
     })();
@@ -49,7 +49,11 @@ $(function () {
         $('[name="edit"]').prop('checked', false);
 
         if ($(this).val() == 3) {
-            $('#user_container,#edit_container').show();
+            $('#user_container').show();
+            
+            if ($("[name='type']").val() != 'TIPO_DOCUMENTO') {
+                $('#edit_container').show();
+            }
         }
     });
 

@@ -88,7 +88,7 @@ function openModal(options) {
 }
 
 function closeTopModal() {
-    if (window.modalOptions.oldSource) {
+    if (window.modalOptions && window.modalOptions.oldSource) {
         top.topModal(window.modalOptions.oldSource);
         window.modalOptions = {};
     } else {

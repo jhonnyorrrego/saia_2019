@@ -38,7 +38,7 @@ $indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,
 <td style="width:15%">Nombre del Indicador</td>
 <td style="width:15%">Fuente de Datos</td>
 <td style="width:15%">Periocidad</td>
-<td style="width:15%"><img id="anterior" class="cambiar_mes" style="cursor:pointer;" src="../../botones/general/anterior.png" border="0px"> <div id="mes">Enero</div> <img id="siguiente" class="cambiar_mes" style="cursor:pointer;" src="../../botones/general/siguiente.png" border="0px"></td>
+<td style="width:15%"><img id="anterior" class="cambiar_mes" style="cursor:pointer;" src="../../assets/images/anterior.png" border="0px"> <div id="mes">Enero</div> <img id="siguiente" class="cambiar_mes" style="cursor:pointer;" src="../../assets/images/siguiente.png" border="0px"></td>
 <td style="width:20%">Gr&aacute;fico Cumplimiento</td>
 <td style="width:20%">Gr&aacute;fico Resultado</td>
 </tr>

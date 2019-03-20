@@ -49,7 +49,7 @@ if (@$_REQUEST["adicionar"] == 1) {
                  Buscar:
                 <input type="text" id="stext_antiguo">
                 <a href="javascript:void(0)" onclick="tree_antiguo.openAllItems(0);find_item_tree((document.getElementById('stext_antiguo').value),'antiguo');">
-                    <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png"></a><br />
+                    <img src="<?php echo($ruta_db_superior);?>assets/images/buscar.png"></a><br />
                 <div id="esperando_antiguo">
                     <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
                 </div>
@@ -64,7 +64,7 @@ if (@$_REQUEST["adicionar"] == 1) {
                Buscar:
                 <input type="text" id="stext_nuevo">
                 <a href="javascript:void(0)" onclick="tree_nuevo.openAllItems(0);find_item_tree((document.getElementById('stext_nuevo').value),'nuevo');">
-                    <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png"></a>
+                    <img src="<?php echo($ruta_db_superior);?>assets/images/buscar.png"></a>
                 <div id="esperando_nuevo">
                     <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
                 </div>

@@ -980,11 +980,11 @@ function arbol_categorias($campo,$seleccionados){
 	<br>
 	Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
 <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
-<img src="../botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
+<img src="../assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
-<img src="../botones/general/buscar.png" alt="Buscar" border="0px"></a>
+<img src="../assets/images/buscar.png" alt="Buscar" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
-<img src="../botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+<img src="../assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 <div id="esperando<?php echo $entidad; ?>"><img src="../imagenes/cargando.gif"></div>
 <div id="treeboxbox<?php echo $entidad; ?>" width="100px" height="100px"></div>
