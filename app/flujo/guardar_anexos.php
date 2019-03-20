@@ -29,7 +29,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $extensionParts = explode('.', end($routePath));
         $storageName = time() . '-' . rand(0, 1000) . '.' . end($extensionParts);
         $archivo = date('Y') . '/' . date('m') . '/' . date('d') . '/' . $_REQUEST['id'] . '/' . $storageName;
-        $dbRoute = UtilitiesController::createFileDbRoute($archivo, 'anexos_flujos', $content);
+        $dbRoute = TemporalController::createFileDbRoute($archivo, 'anexos_flujos', $content);
 
         $anexo = new Anexo();
         $anexo->setAttributes([

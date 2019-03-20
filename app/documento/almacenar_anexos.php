@@ -31,7 +31,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
         $Documento = new Documento($_REQUEST['documentId']);
         $route = $Documento->estado . '/' . date('Y-m-d') . '/' . $_REQUEST['documentId'] . '/anexos/' . $storageName;
-        $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
+        $dbRoute = TemporalController::createFileDbRoute($route, 'archivos', $content);
 
         $Anexos = new Anexos();
         $Anexos->setAttributes([
