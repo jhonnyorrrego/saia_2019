@@ -503,11 +503,11 @@ function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 			<span class="phpmaker">
 			      Buscar:<br><input type="text" id="stext" width="200px" size="20">
       <a href="javascript:void(0)" onclick="tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <img src="<?php echo $ruta_db_superior; ?>assets/images/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <img src="<?php echo $ruta_db_superior; ?>assets/images/buscar.png" border="0px" alt="Buscar"></a>
       <a href="javascript:void(0)" onclick="tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
+      <img src="<?php echo $ruta_db_superior; ?>assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />
 <br />
          <div id="esperando_func">
     <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>

@@ -120,7 +120,7 @@ $(function () {
                         type: 'success',
                         message: response.message
                     });
-                    $('#close_modal').trigger('click');
+                    top.closeTopModal();
                 } else {
                     top.notification({
                         type: 'error',

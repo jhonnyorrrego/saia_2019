@@ -25,7 +25,7 @@ while ($max_salida > 0) {
             <select class="form-control" id="manager" multiple="multiple" placeholder="Quien desea que la realice?"></select>
         </div>
     </div>
-    <div class="col-auto">
+    <div class="col-auto py-3">
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="send_notification">
             <label class="form-check-label" for="send_notification">Desea notificar por email?</label>

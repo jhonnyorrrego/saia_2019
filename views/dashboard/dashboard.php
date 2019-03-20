@@ -283,7 +283,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <div class="modal-body" id="modal_body"></div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" id="close_modal"></button>
+                    <button type="button" id="close_modal"></button>
                     <button type="submit" id="btn_success"></button>
                 </div>
             </div>

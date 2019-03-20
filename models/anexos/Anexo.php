@@ -46,13 +46,19 @@ class Anexo extends Model
     }
 
     /**
-     * evento de base de datos
-     * se ejecuta despues de crear un nuevo registro
-     * @return void
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-18
      */
     protected function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
+        if (AccesoController::setFullAccess(Acceso::TIPO_ANEXO, $this->getPK())) {
+            return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -113,7 +119,7 @@ SQL;
         return false;
     }
 
-     /**
+    /**
      * consulta las versiones anteriores de un anexo
      *
      * @param integer $fileId id del anexo referencia
@@ -135,4 +141,3 @@ SQL;
         return $response;
     }
 }
-

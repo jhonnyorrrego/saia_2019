@@ -106,13 +106,13 @@ function AddData($conn) {
 	global $x_encabezado, $x_cuerpo, $x_pie_pagina, $ruta_db_superior;
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST["formato"], "", $conn);
 	// Field encabezado
-	$fieldList["encabezado"] = limpia_tabla($x_encabezado);
+	$fieldList["encabezado"] = $x_encabezado;
 
 	// Field cuerpo
 	$fieldList["cuerpo"] = ($x_cuerpo);
 
 	// Field pie_pagina
-	$fieldList["pie_pagina"] = limpia_tabla($x_pie_pagina);
+	$fieldList["pie_pagina"] = $x_pie_pagina;
 
 	// insert into database
 	$strsql = "update formato set encabezado='" . $fieldList["encabezado"] . "', pie_pagina='" . $fieldList["pie_pagina"] . "', cuerpo='" . $fieldList["cuerpo"] . "' where idformato=" . $_REQUEST["formato"];
