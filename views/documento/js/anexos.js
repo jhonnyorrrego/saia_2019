@@ -98,6 +98,11 @@ $(function () {
                 });
 
                 return success;
+            },
+            expandBootstrapTable: function (row) {
+                return {
+                    url: `${baseUrl}app/documento/consulta_anexos.php`
+                }
             }
         };
 

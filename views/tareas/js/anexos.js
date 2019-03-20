@@ -103,7 +103,7 @@ $(function () {
                 return {
                     url: `${baseUrl}app/tareas/consulta_anexos.php`
                 }
-            },
+            }
         };
 
         return new Files(options);
