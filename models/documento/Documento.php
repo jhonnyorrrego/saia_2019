@@ -100,7 +100,7 @@ class Documento extends Model
     }
 
     /**
-     * asigna la fecha limite en base a la ultima tarea
+     * asigna la fecha limite en base a la ultima tarea activa
      *
      * @param integer $documentId
      * @return void
@@ -109,11 +109,9 @@ class Documento extends Model
      */
     public static function setLimitDate($documentId)
     {
-        //ordenadas por fecha inicial
-        $tasks = DocumentoTarea::findTaskByDocument($documentId);
-        $Tarea = end($tasks);
+        $data = DocumentoTarea::getLastStateByTask($documentId);
 
-        return self::executeUpdate(['fecha_limite' => $Tarea->fecha_inicial], [
+        return self::executeUpdate(['fecha_limite' => $data['fecha_inicial']], [
             self::getPrimaryLabel() => $documentId
         ]);
     }

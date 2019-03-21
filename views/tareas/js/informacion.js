@@ -1,6 +1,6 @@
-$(function() {
+$(function () {
     let baseUrl = Session.getBaseUrl();
-    let params = $('script[data-params]').data('params');
+    let params = JSON.parse($('script[data-params]').attr('data-params'));
 
     (function init() {
         defineButtonLabel();
@@ -19,30 +19,31 @@ $(function() {
         ajax: {
             url: `${baseUrl}app/funcionario/autocompletar.php`,
             dataType: "json",
-            data: function(params) {
+            data: function (params) {
                 return {
                     term: params.term,
                     key: localStorage.getItem("key")
                 };
             },
-            processResults: function(response) {
+            processResults: function (response) {
                 return response.success ? { results: response.data } : {};
             }
         }
     });
 
-    $("#manager").on("select2:unselect", function(e) {
+    $("#manager").on("select2:unselect", function (e) {
         let id = e.params.data.id;
         $(this)
             .find(`[value="${id}"]`)
             .remove();
     });
 
-    $(document).on("keyup", "#name", function() {
+    $(document).on("keyup", "#name", function () {
         checkName();
     });
 
-    $("#save_task").on("click", function() {
+    $("#save_task").on("click", function () {
+        params = JSON.parse($('script[data-params]').attr('data-params'));
         let key = localStorage.getItem("key");
         let managers = $("#manager").val();
         let initial = moment($("#final_date").val(), "DD/MM/YYYY hh:mm a")
@@ -68,7 +69,7 @@ $(function() {
         $.post(
             `${baseUrl}/app/tareas/guardar.php`,
             data,
-            function(response) {
+            function (response) {
                 $("#save_task,#spiner").toggle();
 
                 if (response.success) {
@@ -84,6 +85,8 @@ $(function() {
                         .contents()
                         .find(".fc-refresh-button")
                         .trigger("click");
+
+                    defineButtonLabel()
                 } else {
                     top.notification({
                         type: "error",
@@ -102,7 +105,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 task: id
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     fillForm(response.data);
                 } else {
@@ -165,12 +168,14 @@ $(function() {
             format: "DD/MM/YYYY hh:mm a"
         });
 
-        $("#final_date").on("dp.change", function(e) {
+        $("#final_date").on("dp.change", function (e) {
             $(this).trigger("click");
         });
     }
 
     function defineButtonLabel() {
+        params = JSON.parse($('script[data-params]').attr('data-params'));
+        
         if (params.id) {
             $("#save_task").text("Guardar");
         } else {

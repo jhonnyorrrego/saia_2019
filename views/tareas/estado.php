@@ -13,7 +13,7 @@
             <input class="form-check-input" type="radio" name="state" value="2">
             <label class="form-check-label">
                 <i class="f-20 fa fa-pause text-warning"></i>
-                En espera
+                Pendiente
             </label>
         </div>
     </div>
