@@ -38,14 +38,16 @@ class Documento extends Model
     protected $prioridad;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'iddocumento',
@@ -91,9 +93,28 @@ class Documento extends Model
             'fecha_limite'
         ];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * asigna la fecha limite en base a la ultima tarea
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-20
+     */
+    public static function setLimitDate($documentId)
+    {
+        //ordenadas por fecha inicial
+        $tasks = DocumentoTarea::findTaskByDocument($documentId);
+        $Tarea = end($tasks);
+
+        return self::executeUpdate(['fecha_limite' => $Tarea->fecha_inicial], [
+            self::getPrimaryLabel() => $documentId
+        ]);
     }
 }

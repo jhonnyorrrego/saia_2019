@@ -360,18 +360,23 @@ function documental_type($documentId)
 /**
  * calcula el vencimiento de un documento
  *
- * @param string $date
- * @return string
+ * @param string $date fecha limite del documento
+ * @param integer $documentId
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-21
  */
-function expiration($date)
+function expiration($date, $documentId)
 {
     if (strtotime($date)) {
+        $Tarea = DocumentoTarea::getLastTaskByDocument($documentId);
+
         $Limit = new DateTime($date);
         $Today = new DateTime();
 
         $diference = dias_habiles_entre_fechas($Today, $Limit);
 
-        if ($diference < 3) {
+        if ($diference < 2) {
             if ($diference == 0) {
                 $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
             } elseif ($diference == 1) {
@@ -379,7 +384,7 @@ function expiration($date)
             } else {
                 $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace ' . abs($diference) . ' días</span>';
             }
-        } elseif ($diference >= 3 && $diference <= 8) {
+        } elseif ($diference >= 2 && $diference <= 8) {
             $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">' . $diference . ' días</span>';
         } else {
             $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">' . $diference . ' días</span>';

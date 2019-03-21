@@ -90,9 +90,9 @@ class Tarea extends Model
 
         $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
 
-        if ($diference < 3) {
+        if ($diference < 2) {
             $color = '#dc3545';
-        } elseif ($diference >= 3 && $diference <= 8) {
+        } elseif ($diference >= 2 && $diference <= 8) {
             $color = '#ffc107';
         } else {
             $color = '#17a2b8';
