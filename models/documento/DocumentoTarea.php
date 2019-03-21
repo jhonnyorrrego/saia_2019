@@ -33,6 +33,18 @@ class DocumentoTarea extends Model
     }
 
     /**
+     * funcionalidad ejecutada despues de crear un nuevo registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-20
+     */
+    protected function afterCreate()
+    {
+        return Documento::setLimitDate($this->fk_documento);
+    }
+
+    /**
      * busca las tareas de un documento
      * ordenadas por fecha_inicial
      *
