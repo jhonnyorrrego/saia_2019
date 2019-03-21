@@ -54,7 +54,12 @@ $component = StaticSql::search($sql);
                     let node = $(response.rows[index].info);
                     let identificador = node.find('.identificator').val();
                     if (identificador) {
-                        node.find('#checkbox_location').html(`<input data-index="${index}" data-id="${identificador}" name="btSelectItem" type="checkbox">`);
+                        node.find('#checkbox_location').html($('<input>', {
+                            'data-index': index,
+                            'data-id': identificador,
+                            'name': 'btSelectItem',
+                            'type': 'checkbox'
+                        }));
                         response.rows[index].info = node.prop('outerHTML');
                     }
                 }

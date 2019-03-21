@@ -19,7 +19,7 @@ $(function() {
             $.post(
                 baseUrl + "app/configuracion/actualizar_color.php",
                 {
-                    key: localStorage.getItem('key'),
+                    key: localStorage.getItem("key"),
                     color: color
                 },
                 function(response) {
@@ -30,9 +30,11 @@ $(function() {
                         });
 
                         let style = `
-                              .bg-institutional{background: ${color} !important;color: #ffff !important}
-                              .text-institutional{color: ${color} !important;}
-                            `;
+                            .btn.bg-institutional:hover{background: ${color} !important;color: #ffff !important; opacity:0.8; border:none}
+                            .btn.bg-institutional{border:none}
+                            .bg-institutional{background: ${color} !important;color: #ffff !important}
+                            .text-institutional{color: ${color} !important;}
+                        `;
                         $("#instition_style", window.top.document).text(style);
                         window.top.localStorage.setItem("color", color);
                     } else {

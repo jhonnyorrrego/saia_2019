@@ -263,6 +263,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 $('.carousel-item > img')
                                     .attr('height', $(window).height() - $("#footer").height())
                                     .attr('width', $("#carousel_container").width());
+                                $('#homepageItems').css('max-height', $(window).height() - $("#footer").height());
                                 $('.carousel-item').first().addClass('active');
                                 $('.carousel-indicators > li').first().addClass('active');
                                 $("#myCarousel").carousel();

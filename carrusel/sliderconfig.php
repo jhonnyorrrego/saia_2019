@@ -9,7 +9,6 @@ desencriptar_sqli('form_info');
 
 echo(estilo_bootstrap());
 echo(librerias_jquery('1.7'));
-echo(librerias_kaiten());
 
 
 ?>
