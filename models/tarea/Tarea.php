@@ -44,7 +44,9 @@ class Tarea extends Model
      */
     protected function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'TareaLog', $this);
+        return
+            LogController::create(LogAccion::CREAR, 'TareaLog', $this) &&
+            $this->setDefaultState();
     }
 
     /**
@@ -65,7 +67,29 @@ class Tarea extends Model
      */
     protected function afterUpdate()
     {
-        return LogController::create(LogAccion::EDITAR, 'TareaLog', $this);
+        return
+            LogController::create(LogAccion::EDITAR, 'TareaLog', $this) &&
+            $this->refreshDocumentLimitDate()();
+    }
+
+    /**
+     * refresca la fecha limite del documento enlazado
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-21
+     */
+    public function refreshDocumentLimitDate()
+    {
+        $DocumentoTarea = DocumentoTarea::findByAttributes(['fk_tarea' => $this->getPK()]);
+
+        if ($DocumentoTarea) {
+            $response = Documento::setLimitDate($DocumentoTarea->fk_documento);
+        } else {
+            $response = true;
+        }
+
+        return $response;
     }
 
     /**
@@ -90,15 +114,25 @@ class Tarea extends Model
 
         $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
 
-        if ($diference < 3) {
+        if ($diference < 2) {
             $color = '#dc3545';
-        } elseif ($diference >= 3 && $diference <= 8) {
+        } elseif ($diference >= 2 && $diference <= 8) {
             $color = '#ffc107';
         } else {
             $color = '#17a2b8';
         }
 
         return $color;
+    }
+
+    public function setDefaultState(){
+        return TareaEstado::newRecord([
+            'fk_funcionario' => $_SESSION['idfuncionario'],
+            'fk_tarea' => $this->getPK(),
+            'fecha' => date('Y-m-d H:i:s'),
+            'estado' => 1,
+            'valor' => TareaEstado::PENDIENTE
+        ]);
     }
 
     /**
@@ -113,8 +147,6 @@ class Tarea extends Model
      */
     public static function findBetweenDates($userId, $initialDate, $finalDate, $type)
     {
-        global $conn;
-
         $tables = self::getTableName() . ' a,' . TareaFuncionario::getTableName() . ' b';
         $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='" . $finalDate . "'", '', $conn);
 
@@ -169,5 +201,6 @@ SQL;
 SQL;
         $record = StaticSql::search($sql);
         return $record[0]['total'];
-    }
+ 
+   }
 }
