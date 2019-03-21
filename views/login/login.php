@@ -156,14 +156,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <div class="row">
                                     <div class="form-group form-group-default">
                                         <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-complete" id="btn_recovery">Enviar</button>
+                        <div class="modal-footer text-right">
+                            <div id="buttons">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-complete" id="btn_recovery">Enviar</button>
+                            </div>
+                            <div class="float-right mx-0 progress-circle-indeterminate d-none" id="spiner"></div>
                         </div>
                     </form>
                 </div>
@@ -215,7 +217,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     url: baseUrl + 'app/funcionario/solicitar_cambio_clave.php',
                     dataType: 'json',
                     data: $("#recovery_form").serialize(),
+                    beforeSend: function(){
+                        $('#buttons,#spiner').toggleClass('d-none');
+                    },
                     success: function(response) {
+                        $('#buttons,#spiner').toggleClass('d-none');
                         if (response.success) {
                             top.notification({
                                 message: response.message,
@@ -235,6 +241,18 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     }
                 });
             });
+
+            (function checkDirectory() {
+                $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
+                    configurations: ['validar_acceso_ldap']
+                }, function(response) {
+                    if (response.success) {
+                        if (response.data[0].value == 0) {
+                            $('#message').parent().parent().hide();
+                        }
+                    }
+                }, 'json');
+            })();
 
             function loadCarousel() {
                 if ($("#carousel_container").is(':visible') && !$("#homepageItems").children().length) {

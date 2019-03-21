@@ -35,6 +35,7 @@ class Funcionario extends Model
     protected $foto_cordenadas;
     protected $ventanilla_radicacion;
     protected $pertenece_nucleo;
+    protected $token;
     protected $dbAttributes;
 
     /**
@@ -80,7 +81,8 @@ class Funcionario extends Model
             'foto_recorte',
             'foto_cordenadas',
             'ventanilla_radicacion',
-            'pertenece_nucleo'
+            'pertenece_nucleo',
+            'token'
         ];
 
         // set the date attributes on the schema
@@ -322,5 +324,19 @@ SQL;
     {
         $sql = "select * from perfil where idperfil in ({$this->perfil})";
         return Perfil::findBySql($sql);
+    }
+
+    /**
+     * verifica si un token es valido
+     *
+     * @param string $token
+     * @param integer $userId
+     * @return boolean
+     */
+    public function isValidToken($token, $userId){
+        return Funcionario::countRecords([
+            'token' => $token,
+            self::getPrimaryLabel() => $userId
+        ]);
     }
 }

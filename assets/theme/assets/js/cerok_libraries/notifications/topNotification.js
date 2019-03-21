@@ -85,7 +85,7 @@ function showConfirm(options) {
 
 window.notification = function (options) {
     if (typeof top.iziToast == 'undefined') {
-        let baseUrl = top.jQuery("#baseUrl", window.top.document).data('baseurl');
+        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
         top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
             $('head').append($('<style>').html(r));
             top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`, function () {
@@ -99,7 +99,7 @@ window.notification = function (options) {
 
 window.confirm = function (options) {
     if (typeof top.iziToast == 'undefined') {
-        let baseUrl = top.jQuery("#baseUrl", window.top.document).data('baseurl');
+        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
         top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
             $('head').append($('<style>').html(r));
             top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`, function () {
