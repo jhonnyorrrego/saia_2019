@@ -211,14 +211,26 @@ function iddoc_no_distribuidos()
 }
 
 /**
- * @return int retorna el funcionario codigo
- * para las cosultas de los buzones
+ * retorna el funcionario codigo del usuario logueado
+ * usado para los reportes
+ *
+ * @return integer
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
 function code_logged_user()
 {
-    return usuario_actual('funcionario_codigo');
+    return $_SESSION['usuario_actual'];
 }
 
+/**
+ * retorna el valor de variable busqueda
+ * usado para los reportes
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
 function variable_busqueda()
 {
     return $_REQUEST['variable_busqueda'];
@@ -234,6 +246,7 @@ function variable_busqueda()
  * @param string $date
  * @param int $transferId
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
@@ -261,9 +274,10 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
 }
 
 /**
- *  retorna una imagen redondeada
+ * retorna el html de una imagen redondeada
  * @param string $route ruta de la imagen
  * @return string html de la imagen
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function roundedImage($route)
 {
@@ -300,6 +314,7 @@ function unread($iddocumento, $fecha)
  * @param int $documentId
  * @param boolean $showCounter
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function has_files($documentId, $showCounter = false)
 {
@@ -329,6 +344,7 @@ function has_files($documentId, $showCounter = false)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function priority($documentId, $priority)
 {
@@ -343,6 +359,7 @@ function priority($documentId, $priority)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function documental_type($documentId)
 {
@@ -399,6 +416,7 @@ function expiration($date, $documentId)
  *
  * @param string $date
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function temporality($date)
 {
@@ -455,5 +473,18 @@ function mostrar_numero_enlace($number, $documentId)
 	</div>";
 
     return $response;
+}
+
+/**
+ * convierte una fecha con formato 
+ * Y-m-d H:i:s al formato predefinido del sistema
+ *
+ * @param string $date
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-15
+ */
+function date_formatted($date){
+    return DateController::convertDate($date);
 }
  

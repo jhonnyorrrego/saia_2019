@@ -32,20 +32,4 @@ class NotaFuncionario extends Model{
             'date' => $dateAttributes
         ];
     }
-
-    public static function findActiveByUser($userId){
-        $notes = busca_filtro_tabla('*', 'nota_funcionario', 'estado=1 and fk_funcionario =' . $userId, '', $conn);
-        unset($notes['numcampos'], $notes['sql'], $notes['tabla']);
-
-        return $notes;
-    }
-
-    public static function deleteByPk($idnota){
-        if($idnota){
-            $update = 'update nota_funcionario set estado=0 where idnota_funcionario=' . $idnota;
-            return phpmkr_query($update);
-        }else{
-            return false;
-        }
-    }
 }

@@ -75,7 +75,7 @@ class Tarea extends Model
      */
     public function getName()
     {
-        return ucfirst(trim(strtolower($this->nombre)));
+        return ucfirst(trim(strtolower(html_entity_decode($this->nombre))));
     }
 
     /**

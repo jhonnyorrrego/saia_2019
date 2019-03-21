@@ -69,5 +69,9 @@ class DocumentoTarea extends Model
 SQL;
         return Tarea::findBySql($sql);
     }
+
+    public static function getLastTaskByDocument($documentId){
+        return '';
+    }
 }
 

@@ -275,7 +275,7 @@ $(function() {
 
         let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
         $("#iframe_workspace").attr("src", route);
-        $("#close_modal", window.top.document).trigger("click");
+        top.closeTopModal();
     }
 
     function taskAction() {
@@ -287,7 +287,6 @@ $(function() {
             buttons: {}
         };
 
-        $("#close_modal", window.top.document).trigger("click");
         top.topModal(options);
     }
 });

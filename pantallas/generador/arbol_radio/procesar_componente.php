@@ -27,20 +27,20 @@ function busca_componente_arbol_radio($idcampo='',$seleccionado='',$accion='',$c
  Buscar:
 <input type="text" id="stext_'.$campo["nombre"].'">
 <a href="javascript:void(0)" onclick="tree_'.$campo["nombre"].'.findItem(document.getElementById(\'stext_'.$campo["nombre"].'\'.value),1)">
-<img src="'.$ruta_db_superior.'botones/general/anterior.png" border="0px">
+<img src="'.$ruta_db_superior.'assets/images/anterior.png" border="0px">
 </a>
 <a href="javascript:void(0)" onclick="tree_'.$campo["nombre"].'.findItem(document.getElementById(\'stext_'.$campo["nombre"].'\').value,0,1)">
-<img src="'.$ruta_db_superior.'botones/general/buscar.png"border="0px">
+<img src="'.$ruta_db_superior.'assets/images/buscar.png"border="0px">
 </a>
 <a href="javascript:void(0)" onclick="tree_'.$campo["nombre"].'.findItem(document.getElementById(\'stext_'.$campo["nombre"].'\').value)">
-<img src="'.$ruta_db_superior.'botones/general/siguiente.png"border="0px"></a>
+<img src="'.$ruta_db_superior.'assets/images/siguiente.png"border="0px"></a>
 </div>';*/
 
 		$texto='<div id="arbol_buscar_'.$campo["nombre"].'">
 <input type="text" id="stext_'.$campo["nombre"].'" width="200px" size="25" placeholder="Buscar">
 
 <a href="javascript:void(0)" onclick="tree_'.$campo["nombre"].'.openAllItems(0);find_item_tree(htmlentities(document.getElementById(\'stext_'.$campo["nombre"].'\').value),\''.$campo["nombre"].'\')">
-<img src="'.$ruta_db_superior.'botones/general/buscar.png" alt="Buscar" border="0px"></a>
+<img src="'.$ruta_db_superior.'assets/images/buscar.png" alt="Buscar" border="0px"></a>
 
 </div>';
 	}
