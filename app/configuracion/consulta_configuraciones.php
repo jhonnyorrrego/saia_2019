@@ -32,37 +32,37 @@ if ($findConfigurations) {
             $tipo_almacenamiento = new SaiaStorage("archivos");
             $binary = StorageUtils::get_binary_file($configuration['valor']);
             $dir = 'temporal/saia/logo';
-            
+
             if (!is_dir($ruta_db_superior . $dir)) {
-                if(!mkdir($ruta_db_superior . $dir, 0777, true)){
-                    throw new Exception("cant no create dir", 1);                        
+                if (!mkdir($ruta_db_superior . $dir, 0777, true)) {
+                    throw new Exception("cant no create dir", 1);
                 }
             }
 
             $route = explode('/', $Object->ruta);
             $fileName = end($route);
-            $finalRoute = $ruta_db_superior . $dir . '/'. $fileName;
+            $finalRoute = $ruta_db_superior . $dir . '/' . $fileName;
 
-            if(!is_file($finalRoute)){
+            if (!is_file($finalRoute)) {
                 $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                if(file_put_contents($finalRoute, $content)){
-                    $value = $dir . '/'. $fileName;
+                if (file_put_contents($finalRoute, $content)) {
+                    $value = $dir . '/' . $fileName;
                 }
-            }else{
-                $value = $dir . '/'. $fileName;
+            } else {
+                $value = $dir . '/' . $fileName;
             }
-        }else{
+
+            if (!$value) {
+                $Response->success = 0;
+            }
+        } else {
             $value = $configuration['valor'];
         }
 
         $Response->data[] = [
             'name' => $configuration['nombre'],
-            'value' => $value,
+            'value' => $value
         ];
-
-        if(!$value){
-            $Response->success = 0;
-        }
     }
 } else {
     $Response->success = 0;
