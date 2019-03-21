@@ -126,6 +126,51 @@ class Documento extends Model
      */
     protected function afterCreate()
     {
-        return AccesoController::setFullAccess(Acceso::TIPO_DOCUMENTO, $this->getPK());
+        return self::setPermissions($this->getPK());
+    }
+
+    /**
+     * asigna los permisos sobre el documento
+     *
+     * @param integer $documentId id del documento
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-20
+     */
+    public static function setPermissions($documentId)
+    {
+        return AccesoController::setFullAccess(Acceso::TIPO_DOCUMENTO, $documentId);
+    }
+
+    /**
+     * determina si un usuario tiene acceso 
+     * a ver un documento
+     *
+     * @param integer $userId
+     * @param integer $documentId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-20
+     */
+    public static function canSee($userId, $documentId)
+    {
+        $access = Acceso::countRecords([
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'estado' => 1,
+            'accion' => Acceso::ACCION_VER_PUBLICO
+        ]);
+
+        if (!$access) {
+            $access = Acceso::countRecords([
+                'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+                'id_relacion' => $documentId,
+                'estado' => 1,
+                'accion' => Acceso::ACCION_VER,
+                'fk_funcionario' => $userId
+            ]);
+        }
+
+        return $access;
     }
 }
