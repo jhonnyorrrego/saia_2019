@@ -475,10 +475,13 @@ function generar_select_mensajeros_distribucion($atributos_input, $tipo, $idft_r
     $html = '';
     if ($tipo == 1) {//internos
         if ($selected) {//mensajeros de la ruta de distribucion
-            $mensajeros_ruta = busca_filtro_tabla("b.mensajero_ruta", "ft_ruta_distribucion a, ft_funcionarios_ruta b", "a.idft_ruta_distribucion=b.ft_ruta_distribucion AND estado_mensajero=1 AND a.idft_ruta_distribucion=" . $idft_ruta_distribucion, "", $conn);
-            $cnombre_mensajero = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $mensajeros_ruta[0]['mensajero_ruta'], "", $conn);
-            $nombre_mensajero = $cnombre_mensajero[0]['nombres'] . ' ' . $cnombre_mensajero[0]['apellidos'];
-            $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$mensajeros_ruta[0]['mensajero_ruta'].'-i">' . $nombre_mensajero . '</label>';
+            /*$mensajeros_ruta = busca_filtro_tabla("b.mensajero_ruta", "ft_ruta_distribucion a, ft_funcionarios_ruta b", "a.idft_ruta_distribucion=b.ft_ruta_distribucion AND estado_mensajero=1 AND a.idft_ruta_distribucion=" . $idft_ruta_distribucion, "", $conn);
+            $cnombre_mensajero = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $mensajeros_ruta[0]['mensajero_ruta'], "", $conn);*/
+
+            $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
+
+            $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
+            $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
         } else {//si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
             $html .= '<label> No tiene mensajero asignado</label>';
         } //FIN: //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio

@@ -19,12 +19,11 @@ include_once($ruta_db_superior . "db.php");
         include_once ($ruta_db_superior . "librerias_saia.php");
         include_once ($ruta_db_superior . "pantallas/documento/librerias.php");
         include_once($ruta_db_superior . "assets/librerias.php");
-        echo (librerias_html5());
+        //echo (librerias_html5());
         echo jquery();
         echo bootstrap();
         echo theme();
-        echo librerias_notificaciones();
-        echo bootstrapTable();
+
 
         $funciones = array();
         $datos_componente = $_REQUEST["idbusqueda_componente"];
@@ -412,6 +411,8 @@ $ruta_temporal = $_SESSION["ruta_temp_funcionario"];
 
 </script>
 <?php
+echo bootstrapTable();
+echo librerias_notificaciones();
 echo(librerias_tooltips());
 echo(librerias_acciones_kaiten());
 
@@ -422,6 +423,5 @@ if ($datos_busqueda[0]["ruta_libreria_pantalla"]) {
     }
 }
 ?>
-<script type="text/javascript" src="<?php echo($ruta_db_superior . "pantallas/lib/main.js"); ?>"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior . "pantallas/lib/librerias_ventana_modal.js"); ?>"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
