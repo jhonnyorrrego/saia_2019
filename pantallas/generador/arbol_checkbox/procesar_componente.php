@@ -53,7 +53,7 @@ function busca_componente_arbol_checkbox($idcampo='',$seleccionado='',$accion=''
 <input type="text" id="stext_'.$campo["nombre"].'" width="200px" size="25" placeholder="Buscar">
 
 <a href="javascript:void(0)" onclick="tree_'.$campo["nombre"].'.openAllItems(0);find_item_tree(htmlentities(document.getElementById(\'stext_'.$campo["nombre"].'\').value),\''.$campo["nombre"].'\')">
-<img src="'.$ruta_db_superior.'botones/general/buscar.png" alt="Buscar" border="0px"></a>
+<img src="'.$ruta_db_superior.'assets/images/buscar.png" alt="Buscar" border="0px"></a>
 
 </div>';
 	}    

@@ -4,9 +4,8 @@ $(function() {
     $(document).on("click", ".note_item", function() {
         notes.active = $(this).data("noteid");
 
-        let date = notes.getInfoFromActive().fecha;
-        let formated = moment(date, "YYYY-MM-DD ").format("DD-MM-YYYY");
-        $("#span_note_header").html(formated);
+        let date = notes.getInfoFromActive().date;
+        $("#span_note_header").html(date);
     });
 
     $("#note_tab").on("click", function() {

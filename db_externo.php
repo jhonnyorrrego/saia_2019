@@ -96,7 +96,6 @@ function guardar_lob_externa($campo, $tabla, $condicion, $contenido, $tipo, $con
 						alerta("No se pudo modificar el campo.");
 						$resultado = FALSE;
 					} else {
-						$contenido = limpia_tabla($contenido);
 						if (!$row[strtoupper($campo)]->save(trim((($contenido))))) {
 							oci_rollback($conn2->Conn->conn);
 							$resultado = FALSE;
@@ -170,7 +169,7 @@ END";
 			mysqli_query($conn2->Conn->conn, $sql);
 			// TODO verificar resultado de la insecion $resultado=FALSE;
 		} elseif ($tipo == "texto") {
-			$contenido = codifica_encabezado(limpia_tabla($contenido));
+			$contenido = codifica_encabezado($contenido);
 			$sql = "update $tabla set $campo='" . addslashes(stripslashes($contenido)) . "' where $condicion";
 			if ($log) {
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);

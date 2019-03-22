@@ -50,11 +50,19 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
             $Anexos->setAttributes([
                 'version' => ++$OldRecord->version,
-                'fk_anexos' => $OldRecord->getPK()
+                'fk_anexos' => $OldRecord->fk_anexos
             ]);
         }
 
         if ($Anexos->save()) {
+            if(!$Anexos->fk_anexos){
+                Anexos::executeUpdate([
+                    'fk_anexos' => $Anexos->getPK()
+                ], [
+                    Anexos::getPrimaryLabel() => $Anexos->getPK()
+                ]);
+            }
+
             $data[] = $Anexos->getPK();
         }
     }

@@ -19,7 +19,9 @@ $Response = (object) array(
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     foreach ($_REQUEST['ids'] as $key => $value) {
-        $delete = NotaFuncionario::deleteByPk($value);        
+        $delete = NotaFuncionario::executeUpdate(['estado' => 0], [
+            NotaFuncionario::getPrimaryLabel() => $value
+        ]);
     }
 
     $Response->message = "Notas eliminadas";

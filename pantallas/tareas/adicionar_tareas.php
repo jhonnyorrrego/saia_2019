@@ -225,11 +225,11 @@ function arbol($entidad,$url,$tipo_etiqueta='check'){
 ?>
 <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
 <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
+<img src="<?php echo $ruta_db_superior; ?>assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
+<img src="<?php echo $ruta_db_superior; ?>assets/images/buscar.png" alt="Buscar" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+<img src="<?php echo $ruta_db_superior; ?>assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 
 <div id="esperando_<?php echo $entidad; ?>">

@@ -105,7 +105,7 @@ $("#form_password").validate({
                         message: "Datos Actualizados",
                         type: "success"
                     });
-                    $("#close_modal").trigger("click");
+                    top.closeTopModal();
                 } else {
                     top.notification({
                         message: response.message,
