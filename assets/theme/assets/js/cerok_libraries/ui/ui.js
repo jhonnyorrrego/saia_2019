@@ -32,6 +32,8 @@ class Ui {
                     rel: 'stylesheet',
                     type: 'text/css',
                     text: `
+                        .btn.bg-institutional:hover{background: ${color} !important;color: #ffff !important; opacity:0.8; border:none}
+                        .btn.bg-institutional{border:none}
                         .bg-institutional{background: ${color} !important;color: #ffff !important}
                         .text-institutional{color: ${color} !important;}
                     `

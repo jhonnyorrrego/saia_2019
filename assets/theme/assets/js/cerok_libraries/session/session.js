@@ -29,7 +29,7 @@ class Session {
                 let data = localStorage.getItem('user');
                 session.user = JSON.parse(data);
             } else {
-                Session.close();
+                Session.violation('Debe iniciar sesión');
             }
         }
 

@@ -38,7 +38,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $extensionParts = explode('.', end($routePath));
             $route = 'anexo_transferencia/' . $_REQUEST['documentId'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
 
-            $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
+            $dbRoute = TemporalController::createFileDbRoute($route, 'archivos', $content);
     
             Anexos::newRecord([
                 'documento_iddocumento' => $_REQUEST['documentId'],
