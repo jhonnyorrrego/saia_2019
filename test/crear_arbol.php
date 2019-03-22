@@ -39,13 +39,13 @@ function crear_arbol($xml,$campo,$parametros) {
 	?>
 		<input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="20">          
 		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)">
-		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/anterior.png"border="0px"></a>
+		<img src="<?php echo $parametros["ruta_db_superior"]; ?>assets/images/anterior.png"border="0px"></a>
 		
 		<!--a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))"-->
 		<a href="javascript:void(0)" onClick="buscar_nodo()">
-		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/buscar.png"border="0px"></a>
+		<img src="<?php echo $parametros["ruta_db_superior"]; ?>assets/images/buscar.png"border="0px"></a>
 		<a href="javascript:void(0)" onclick="buscar_nodo()">
-		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/siguiente.png"border="0px"></a>      
+		<img src="<?php echo $parametros["ruta_db_superior"]; ?>assets/images/siguiente.png"border="0px"></a>      
 	<?php }?>
 
 	<div id="esperando<?php echo $campo; ?>"><img src="<?php echo $parametros["ruta_db_superior"];?>imagenes/cargando.gif"></div>

@@ -82,7 +82,7 @@ function procesarAnexosNotificacion($anexos_tmp, $notificacion, $funcionario) {
         $anexos = array_map("trim", explode(",", $anexos_tmp));
         foreach($anexos as $idTemp) {
             $rutaBase = $notificacion;
-            $dbRoute = UtilitiesController::moverAnexoTemporal($rutaBase, 'anexos_notificacion', $idTemp, true);
+            $dbRoute = TemporalController::moverAnexoTemporal($rutaBase, 'anexos_notificacion', $idTemp, true);
             if(!empty($dbRoute)) {
                 $pkAnexo = AnexoNotificacion::newRecord([
                     "fk_notificacion" => $notificacion,

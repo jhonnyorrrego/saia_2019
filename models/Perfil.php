@@ -2,6 +2,10 @@
 
 class Perfil extends Model
 {
+    const ADMINISTRADOR = 1; 
+    const GENERAL = 6; 
+    const ADMIN_INTERNO = 8; 
+
     protected $id_perfil;
     protected $nombre;
     protected $dbAttributes;

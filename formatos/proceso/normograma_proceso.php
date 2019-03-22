@@ -59,7 +59,7 @@ if($norma["numcampos"]){
           $tiponorma="<img src='../../js/imgs/guia.gif' border=0 width=\"20px\" />";
         else
           $tiponorma="<img src='../../js/imgs/manual.gif' border=0 width=\"20px\" />";  
-        $texto.='<td border="1px" title="'.$anexos[$h]["etiqueta"].'" align="left" width="'.(100/$items_fila).'%"><div style="float:left"><a href="../../formatos/norma_calidad/mostrar_norma_calidad.php?iddoc='.$anexos[$h]["documento_iddocumento"].'&idformato='.$anexos[$h]["formato"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width: 550, height:500,preserveContent:false } )\'>'.$tiponorma.'<img src="../../botones/general/buscar.png" border="0px"></a></div><a href="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$h]["ruta"].'" target="_blank"><img width="16px" src="'.$imagen.'" border="0px"; align="left"><b>'.delimita($anexos[$h]["etiqueta"],40).'</b><br /><br /></td>';
+        $texto.='<td border="1px" title="'.$anexos[$h]["etiqueta"].'" align="left" width="'.(100/$items_fila).'%"><div style="float:left"><a href="../../formatos/norma_calidad/mostrar_norma_calidad.php?iddoc='.$anexos[$h]["documento_iddocumento"].'&idformato='.$anexos[$h]["formato"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width: 550, height:500,preserveContent:false } )\'>'.$tiponorma.'<img src="../../assets/images/buscar.png" border="0px"></a></div><a href="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$h]["ruta"].'" target="_blank"><img width="16px" src="'.$imagen.'" border="0px"; align="left"><b>'.delimita($anexos[$h]["etiqueta"],40).'</b><br /><br /></td>';
         $j++;
         if(($j%$items_fila==0) && $j>0){
           $texto.='</tr><tr>';
@@ -107,7 +107,7 @@ if($norma["numcampos"]){
           $tiponorma="<img src='../../js/imgs/guia.gif' border=0 width=\"20px\" />";
         else
           $tiponorma="<img src='../../js/imgs/manual.gif' border=0 width=\"20px\" />";  
-        $texto.='<td border="1px" title="'.$anexos[$h]["etiqueta"].'" align="left" width="'.(100/$items_fila).'%"><div style="float:left"><a href="../../formatos/norma_calidad/mostrar_norma_calidad.php?iddoc='.$anexos[$h]["documento_iddocumento"].'&idformato='.$anexos[$h]["formato"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width: 550, height:500,preserveContent:false } )\'>'.$tiponorma.'<img src="../../botones/general/buscar.png" border="0px"></a></div><a href="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$h]["ruta"].'" target="_blank"><img width="16px" src="'.$imagen.'" border="0px"; align="left"><b>'.delimita($anexos[$h]["etiqueta"],40).'</b><br /><br /></td>';
+        $texto.='<td border="1px" title="'.$anexos[$h]["etiqueta"].'" align="left" width="'.(100/$items_fila).'%"><div style="float:left"><a href="../../formatos/norma_calidad/mostrar_norma_calidad.php?iddoc='.$anexos[$h]["documento_iddocumento"].'&idformato='.$anexos[$h]["formato"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width: 550, height:500,preserveContent:false } )\'>'.$tiponorma.'<img src="../../assets/images/buscar.png" border="0px"></a></div><a href="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$h]["ruta"].'" target="_blank"><img width="16px" src="'.$imagen.'" border="0px"; align="left"><b>'.delimita($anexos[$h]["etiqueta"],40).'</b><br /><br /></td>';
         $j++;
         if(($j%$items_fila==0) && $j>0){
           $texto.='</tr><tr>';

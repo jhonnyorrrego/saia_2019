@@ -1,5 +1,5 @@
-<div class="row">
-    <div class="col-3">
+<div class="row mx-0">
+    <div class="col-6 col-m-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="priority" value="1">
             <label class="form-check-label">
@@ -8,7 +8,7 @@
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-m-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="priority" value="2">
             <label class="form-check-label">
@@ -17,7 +17,7 @@
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-m-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="priority" value="3">
             <label class="form-check-label">
@@ -26,7 +26,7 @@
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-m-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="priority" value="4" checked>
             <label class="form-check-label">

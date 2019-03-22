@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
@@ -211,14 +211,26 @@ function iddoc_no_distribuidos()
 }
 
 /**
- * @return int retorna el funcionario codigo
- * para las cosultas de los buzones
+ * retorna el funcionario codigo del usuario logueado
+ * usado para los reportes
+ *
+ * @return integer
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
 function code_logged_user()
 {
-    return usuario_actual('funcionario_codigo');
+    return $_SESSION['usuario_actual'];
 }
 
+/**
+ * retorna el valor de variable busqueda
+ * usado para los reportes
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
 function variable_busqueda()
 {
     return $_REQUEST['variable_busqueda'];
@@ -234,13 +246,10 @@ function variable_busqueda()
  * @param string $date
  * @param int $transferId
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
-    global $conn, $ruta_db_superior;
-
-    include_once $ruta_db_superior . 'controllers/autoload.php';
-
     $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
     $temporality = strtotime($date) ? temporality($date) : '';
@@ -265,35 +274,38 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
 }
 
 /**
- *  retorna una imagen redondeada
+ * retorna el html de una imagen redondeada
  * @param string $route ruta de la imagen
  * @return string html de la imagen
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function roundedImage($route)
 {
     global $ruta_db_superior;
 
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
-        <img id="profile_image" src="' . $routeImage . '" style="width:36px;height:36px">
+    return '<span class="thumbnail-wrapper circular inline rounded_image cursor" style="float:none" style="width:36px;height:36px">
+        <img src="' . $routeImage . '" style="width:36px;height:36px">
     </span>';
 }
 
 /**
- * determina si un documento ya fue leido por el usuario actual
+ * retorna la clase bold cuando el documento
+ * no se ha leido, usado para los buzones
  *
  * @param int $iddocumento
  * @param string $fecha
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function unread($iddocumento, $fecha)
 {
-    global $conn;
-
     $idfuncionario = $_SESSION["usuario_actual"];
-    $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=" . $idfuncionario . " and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '" . $fecha . "'", "", $conn);
+    $convertString = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
+    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$idfuncionario} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
+    $total = StaticSql::search($sql);
 
-    return !$leido["numcampos"] ? '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>' : '';
+    return !$total[0]['total'] ? 'bold' : '';
 }
 
 /**
@@ -302,6 +314,7 @@ function unread($iddocumento, $fecha)
  * @param int $documentId
  * @param boolean $showCounter
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function has_files($documentId, $showCounter = false)
 {
@@ -331,6 +344,7 @@ function has_files($documentId, $showCounter = false)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function priority($documentId, $priority)
 {
@@ -345,6 +359,7 @@ function priority($documentId, $priority)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function documental_type($documentId)
 {
@@ -364,6 +379,7 @@ function documental_type($documentId)
  *
  * @param string $date
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function expiration($date)
 {
@@ -396,6 +412,7 @@ function expiration($date)
  *
  * @param string $date
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function temporality($date)
 {
@@ -452,5 +469,18 @@ function mostrar_numero_enlace($number, $documentId)
 	</div>";
 
     return $response;
+}
+
+/**
+ * convierte una fecha con formato 
+ * Y-m-d H:i:s al formato predefinido del sistema
+ *
+ * @param string $date
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-15
+ */
+function date_formatted($date){
+    return DateController::convertDate($date);
 }
  

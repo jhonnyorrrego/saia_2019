@@ -1,0 +1,2 @@
+pantalla de acceso denegado (pendiente por desarrollar)
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere quis debitis reiciendis tempore omnis doloremque blanditiis accusantium ullam assumenda fuga excepturi, explicabo illum minima quasi tenetur cupiditate dolor quidem. Iste?

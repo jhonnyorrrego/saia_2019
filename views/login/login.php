@@ -51,8 +51,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </head>
 
 <body class="bg-white">
-    <div class="container-fluid m-0 p-0">
-        <div class="row bg-white m-0 p-0" id="content">
+    <div class="container-fluid h-100 d-flex flex-column p-0 m-0">
+        <div class="row bg-white m-0 p-0 h-100" id="content">
             <!-- carousel-->
             <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel_container">
                 <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel">
@@ -72,56 +72,53 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <!-- carousel-->
             <!-- login form-->
-            <div class="col-12 col-md-4 px-5 py-5" id="form-container">
-                <div class="row">
+            <div class="col-12 col-md-4 d-flex align-items-center" id="form-container">
+                <div class="row w-100 mx-0">
                     <div class="col-12">
-                        <img id="logo" width="201">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h5 class="bold">INICIO DE SESIÓN</h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <!-- START Login Form -->
-                        <form id="form_login" role="form">
-                            <!-- START Form Control-->
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group form-group-default">
-                                        <label><i class="fa fa-user"></i> Usuario</label>
-                                        <div class="controls">
-                                            <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control" required>
-                                        </div>
+                        <div class="row py-3 mx-0">
+                            <div class="col-12">
+                                <img id="logo" width="200">
+                            </div>
+                        </div>
+                        <div class="row mx-0">
+                            <div class="col-12">
+                                <h5 class="bold">INICIO DE SESIÓN</h5>
+                            </div>
+                        </div>
+                        <!-- START Form Control-->
+                        <div class="row mx-0">
+                            <div class="col-12">
+                                <div class="form-group form-group-default">
+                                    <label><i class="fa fa-user"></i> Usuario</label>
+                                    <div class="controls">
+                                        <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control" required>
                                     </div>
-                                    <!-- END Form Control-->
-                                    <!-- START Form Control-->
-                                    <div class="form-group form-group-default">
-                                        <label><i class="fa fa-lock"></i> Contraseña</label>
-                                        <div class="controls">
-                                            <input type="password" class="form-control" name="password" placeholder="Clave de acceso" required autocomplete>
-                                        </div>
+                                </div>
+                                <!-- END Form Control-->
+                                <!-- START Form Control-->
+                                <div class="form-group form-group-default">
+                                    <label><i class="fa fa-lock"></i> Contraseña</label>
+                                    <div class="controls">
+                                        <input type="password" class="form-control" name="password" placeholder="Clave de acceso" required autocomplete>
                                     </div>
                                 </div>
                             </div>
-                            <!-- START Form Control-->
-                            <div class="row">
-                                <div class="col-12 text-right">
-                                    <label>
-                                        <a href="#" onclick="javascript:$('#recovery_modal').modal('show')" class="text-info small">Necesita
-                                            ayuda para ingresar <i class="fa fa-question-circle"></i> </a>
-                                    </label>
-                                </div>
+                        </div>
+                        <!-- START Form Control-->
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <label>
+                                    <a href="#" onclick="javascript:$('#recovery_modal').modal('show')" class="text-info small">Necesita
+                                        ayuda para ingresar <i class="fa fa-question-circle"></i> </a>
+                                </label>
                             </div>
-                            <!-- END Form Control-->
-                            <div class="row">
-                                <div class="col-12">
-                                    <button class="btn btn-lg btn-complete m-t-10" type="submit">Ingresar</button>
-                                </div>
+                        </div>
+                        <!-- END Form Control-->
+                        <div class="row text-center">
+                            <div class="col-12">
+                                <button class="btn btn-lg bg-institutional m-t-10" id="access">Ingresar</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,7 +134,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
     <!-- Modal -->
     <div class="modal" id="recovery_modal" tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog ">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content-wrapper">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -150,20 +147,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="modal-body">
                             <div class="col-12">
                                 <hr>
-                                <div class="form-group-attached">
-                                    <div class="row">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Escribe
-                                            tu login</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="text" class="form-control" id="user" placeholder="Nombre de usuario." name="username" required>
-                                        </div>
+                                <div class="row">
+                                    <div class="form-group form-group-default required">
+                                        <label>Escribe tu login</label>
+                                        <input type="text" class="form-control" id="user" placeholder="Nombre de usuario." name="username" required>
                                     </div>
-                                    <div class="row my-2">
-                                        <label for="message" class="col-md-2 control-label text-black" style="line-height: 1;">Mensaje
-                                            para el administrador</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group form-group-default">
+                                        <textarea class="form-control" id="message" placeholder="Mensaje para el adminstrador." name="message"></textarea>
+
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +181,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             Ui.putLogo('#logo');
             resize();
 
-            $('#form_login').on('submit', function(event) {
+            $('#access').on('click', function(event) {
                 event.preventDefault();
                 $.ajax({
                     type: 'POST',
@@ -270,6 +263,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 $('.carousel-item > img')
                                     .attr('height', $(window).height() - $("#footer").height())
                                     .attr('width', $("#carousel_container").width());
+                                $('#homepageItems').css('max-height', $(window).height() - $("#footer").height());
                                 $('.carousel-item').first().addClass('active');
                                 $('.carousel-indicators > li').first().addClass('active');
                                 $("#myCarousel").carousel();

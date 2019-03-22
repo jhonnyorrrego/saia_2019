@@ -22,10 +22,10 @@ while ($max_salida > 0) {
     <div class="col">
         <div class="form-group">
             <label class="my-0" for="manager">Responsable</label>
-            <select class="form-control" id="manager" multiple="multiple" placeholder="Quien desea que la realice?"></select>                                
+            <select class="form-control" id="manager" multiple="multiple" placeholder="Quien desea que la realice?"></select>
         </div>
     </div>
-    <div class="col-auto">
+    <div class="col-auto py-3">
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="send_notification">
             <label class="form-check-label" for="send_notification">Desea notificar por email?</label>

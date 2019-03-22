@@ -1,3 +1,19 @@
+<?php
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
+
+while ($max_salida > 0) {
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= '../';
+    $max_salida--;
+}
+
+include_once $ruta_db_superior . 'controllers/autoload.php';
+?>
+<?php if (Documento::canSee($_SESSION["idfuncionario"], $_REQUEST["documentId"])): ?>
 <div class="row mx-0 pt-1" id="acordeon_container">
     <div class="col-12 px-0">
         <div class="mx-0">
@@ -55,9 +71,8 @@
         </div>
     </div>
 </div>
-<script data-params='<?= json_encode($_REQUEST) ?>' id="acordeon_script">
-    $(function(){
-        let baseUrl = $('script[data-baseurl]').data('baseurl');
-        $.getScript(`${baseUrl}views/documento/js/acordeon.js`);
-    })
-</script>
+<script data-params='<?= json_encode($_REQUEST) ?>' id="acordeon_script" src="<?= $ruta_db_superior ?>views/documento/js/acordeon.js"></script>
+<?php else: ?>
+    pantalla  de acceso denegado (pendiente de diseño)
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima vitae soluta nihil modi deleniti quis dolorem iusto iste cumque eaque ullam, praesentium totam natus? Odit fuga distinctio dolores quidem maiores?
+<?php endif; ?>

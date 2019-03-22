@@ -5,8 +5,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-include_once ("db.php");
-include_once ("class.funcionarios.php");
+include_once("db.php");
+include_once("class.funcionarios.php");
 
 $id = @$_GET["id"];
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
@@ -15,27 +15,30 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: text/xml");
 }
 
-echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
+echo ("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 $seleccionado = array();
-if (isset($_REQUEST["seleccionado"]))
+if (isset($_REQUEST["seleccionado"])) {
 	$seleccionado = explode(',', $_REQUEST["seleccionado"]);
+}
 
-$funcionario = usuario_actual("id");
+
+$funcionario = $_SESSION["idfuncionario"];
+
 $datos = busca_datos_administrativos_funcionario($funcionario);
-
+print_r($datos);die();
 if ($id != "") {
 	$valor = $id;
 } else {
 	$id = "NULL";
 }
 if (@$_REQUEST['carga_partes']) {
-    if ($id and $id <> "" && @$_REQUEST["uid"]) {
+	if ($id and $id <> "" && @$_REQUEST["uid"]) {
 
-         echo("<tree id=\"" . $id . "\">\n");
-         echo llena_serie($id);
-         echo("</tree>\n");
-         die();
-    }
+		echo ("<tree id=\"" . $id . "\">\n");
+		echo llena_serie($id);
+		echo ("</tree>\n");
+		die();
+	}
 }
 $categoria = $_REQUEST["categoria"];
 if ($categoria == "") {
@@ -50,7 +53,7 @@ if ($categoria == "") {
 	echo "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"cat3\" nocheckbox=\"1\" >\n";
 	echo llena_serie($id, " and categoria=3 ");
 	echo "</item>\n";
-	echo("</tree>\n");
+	echo ("</tree>\n");
 }
 if ($categoria != "") {
 	echo "\n<tree id=\"0\">\n";
@@ -69,10 +72,11 @@ if ($categoria != "") {
 		echo llena_serie($id, " and categoria=3 ", $padre);
 		echo "</item>\n";
 	}
-	echo("</tree>\n");
+	echo ("</tree>\n");
 }
 
-function llena_serie($serie, $condicion = "", $padre = "") {
+function llena_serie($serie, $condicion = "", $padre = "")
+{
 	global $conn, $datos, $seleccionado, $categoria;
 	$lista_papas = array();
 	$texto = "";
@@ -86,6 +90,7 @@ function llena_serie($serie, $condicion = "", $padre = "") {
 
 	if ($serie == "NULL") {
 		$papas = busca_filtro_tabla("nombre,codigo,idserie,cod_padre, tipo", "serie", "idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre" . " AND  tipo=1" . $tvd, "nombre ASC", $conn);
+			print_r($papas);die();
 	} else {
 		$condicion_nivel = '';
 		$vector_tipo_nivel = array("series" => 1, "subseries" => 2, "tipo_documental" => 3);
@@ -114,15 +119,15 @@ function llena_serie($serie, $condicion = "", $padre = "") {
 	if ($papas["numcampos"] > 0) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			if (!@$_REQUEST["solo_papas"]) {
-			    
-			    if(!$_REQUEST["carga_partes"]){
-				    $hijos = llena_serie($papas[$i]["idserie"]);
-			    }
+
+				if (!$_REQUEST["carga_partes"]) {
+					$hijos = llena_serie($papas[$i]["idserie"]);
+				}
 			}
 			$texto .= ("\n<item style=\"font-family:verdana; font-size:7pt;\" ");
 			$texto .= "text=\"" . ucwords(codifica_caracteres($papas[$i]["nombre"])) . "(" . strtoupper($papas[$i]["codigo"]) . ") \" ";
-			if($_REQUEST["carga_partes"]){
-			    $texto .= " child=\"1\" ";
+			if ($_REQUEST["carga_partes"]) {
+				$texto .= " child=\"1\" ";
 			}
 			if ($papas[$i]['tipo'] != 3) {
 				if (!@$_REQUEST["con_padres"]) {
@@ -133,14 +138,14 @@ function llena_serie($serie, $condicion = "", $padre = "") {
 			}
 			$texto .= " id=\"" . $papas[$i]["idserie"] . "\">" . $hijos;
 			$texto .= ("</item>\n");
-
 		}
 	}
 	return $texto;
 }
 
-function codifica_caracteres($original) {
+function codifica_caracteres($original)
+{
 	$codificada = codifica_encabezado(html_entity_decode($original));
 	return ($codificada);
 }
-?>
+ 

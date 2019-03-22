@@ -13,8 +13,6 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "controllers/autoload.php";
 
-global $conn;
-
 $Response = new stdClass();
 $Response->success = 0;
 $Response->message = "";
@@ -25,18 +23,22 @@ if($_REQUEST['username']){
     ]);
 
     if($total){
-        $busca_administrador = busca_filtro_tabla('email, concat(nombres, " ", apellidos) as administrador', 'vfuncionario_dc a,perfil b', "a.perfil=b.idperfil and lower(b.nombre) = 'admin_interno' and estado=1 and estado_dc=1", '', $conn);
+        $profile = Perfil::ADMIN_INTERNO;
+        $sql = "select * from funcionario where concat(',', perfil, ',') like '%,{$profile},%' and estado=1";
+        $users = Funcionario::findBySql($sql);
         
-        if($busca_administrador['numcampos']){
+        if(count($users)){
             if(isset($_REQUEST['message']) && $_REQUEST['message']){
-                $mensaje = $_REQUEST['message'];
+                $message = $_REQUEST['message'];
             }else{
-                $mensaje = 'Por favor restablecer clave para ingreso al Sistema SAIA del usuario ' . $_REQUEST['username'];
+                $message = 'Por favor restablecer clave para ingreso al Sistema SAIA del usuario ' . $_REQUEST['username'];
             }
 
-            enviar_mensaje('', array('para' => 'email'), array('para' => array($busca_administrador[0]['email'])), 'Restablecer clave de acceso.', $mensaje);
+            foreach ($users as $key => $Funcionario) {
+                enviar_mensaje('', ['para' => 'email'], ['para' => [$Funcionario->email]], 'Restablecer clave de acceso.', $message);
+            }
 
-            $administrador = html_entity_decode($busca_administrador[0]['administrador']);
+            $administrador = html_entity_decode($users[0]->getName());
             $Response->message = "Solicitud realizada, Comuniquese con " . $administrador;
             $Response->success = 1;
         }else{

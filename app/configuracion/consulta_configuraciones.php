@@ -27,6 +27,7 @@ $findConfigurations = StaticSql::search($sql);
 if ($findConfigurations) {
     foreach ($findConfigurations as $key => $configuration) {
         $Object = json_decode($configuration['valor']);
+
         if ($Object->ruta) {
             $tipo_almacenamiento = new SaiaStorage("archivos");
             $binary = StorageUtils::get_binary_file($configuration['valor']);

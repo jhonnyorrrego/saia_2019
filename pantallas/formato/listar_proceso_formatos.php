@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
 echo jquery();
@@ -29,7 +29,6 @@ if (count($request)) {
 <div class="panel-body">
 	<div class="block-nav">
 		<?php
-		$acceso = new Permiso();
 		$texto = '';
 
 		for ($i = 0; $i < $consulta["numcampos"]; $i++) {
@@ -39,13 +38,15 @@ if (count($request)) {
 
 			if ($cuantos_formatos['numcampos'] == 1) {
 				$url = $ruta_db_superior . FORMATOS_CLIENTE . $cuantos_formatos[0]['nombre'] . '/' . $cuantos_formatos[0]['ruta_adicionar'] . "?1=1";
-				$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[0]['nombre']);
+				$ok = PermisoController::moduleAccess("crear_" . $cuantos_formatos[0]['nombre']);
+				
 				if ($ok) {
 					$mostrar = 1;
 				}
 			} elseif ($cuantos_formatos['numcampos']) {
 				for ($j = 0; $j < $cuantos_formatos['numcampos']; $j++) {
-					$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[$j]['nombre']);
+					$ok = PermisoController::moduleAccess("crear_" . $cuantos_formatos[$j]['nombre']);
+					
 					if ($ok) {
 						$url = $ruta_db_superior . 'pantallas/formato/listar_formatos.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
 						$mostrar = 1;

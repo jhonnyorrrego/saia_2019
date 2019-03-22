@@ -593,7 +593,7 @@ class SqlSqlServer extends SQL2 {
             $sql = "UPDATE " . $tabla . " SET " . $campo . " = " . $content . " WHERE " . $condicion;
             $this->ejecutar_sql($sql);
         } elseif ($tipo == "texto") {
-            $contenido = codifica_encabezado(limpia_tabla($contenido));
+            $contenido = codifica_encabezado($contenido);
             $sql = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($contenido)) . "' where $condicion";
             if ($log) {
                 preg_match("/.*=(.*)/", strtolower($condicion), $resultados);

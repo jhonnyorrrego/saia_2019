@@ -96,7 +96,7 @@ $(function(){
         $('#follower_list').empty();
         data.forEach(i => {
             var template = `<div class="row mx-0 py-1">
-                <div class="col-6 px-0 bg-master-lighter" style="border-radius:5px">
+                <div class="col-12 px-0 bg-master-lighter" style="border-radius:5px">
                     <div class="media">
                         <img class="align-self-center ml-1 mr-2 my-2 rounded-circle" src="${baseUrl + i.image}" style="width:32px;height:32px;">
                         <div class="media-body my-2">

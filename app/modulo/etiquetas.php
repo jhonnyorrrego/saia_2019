@@ -23,7 +23,11 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     
     $data = array();
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-    $component = BusquedaComponente::findByName('etiquetados');
+    $BusquedaComponente = BusquedaComponente::findByAttributes(
+        ['nombre' => 'etiquetados'
+    ], [
+        BusquedaComponente::getPrimaryLabel()
+    ]);
     $tags = Etiqueta::findAllByAttributes([
         'estado' => 1,
         'fk_funcionario' => $_REQUEST['iduser']
@@ -33,7 +37,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
         $url = 'views/buzones/index.php?';
         $url .= http_build_query([
             'variable_busqueda' => $Etiqueta->getPK(),
-            'idbusqueda_componente' => $component['idbusqueda_componente']
+            'idbusqueda_componente' => $BusquedaComponente->getPK()
         ]);
 
         $data[] = array(
