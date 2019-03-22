@@ -891,8 +891,8 @@ class GenerarFormato
                 $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
             }
             $texto .= '<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
-                    	<!-- START card -->
-                    	<div class="card card-default">
+                      <!-- START card -->
+                      <div class="card card-default">
                             <div class="card-body">';
             if (!$formato[0]["item"]) {
                 $texto .= '<center><h5 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h5></center>';
@@ -932,7 +932,7 @@ class GenerarFormato
             $listado_campos = array();
             $unico = array();
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $this->idformato, "orden ASC", $conn);
-
+            
             $fun_campos = array();
             for ($h = 0; $h < $campos["numcampos"]; $h++) {
                 if ($campos[$h]["etiqueta_html"] == "arbol") {
@@ -1136,7 +1136,7 @@ class GenerarFormato
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                                         <div class="celda_transparente">
-                                        <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control tiny_' . $nivel_barra;
+                                        <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control';
                             if ($campos[$h]["obligatoriedad"]) {
                                 $texto .= ' required';
                             }
@@ -1561,7 +1561,6 @@ class GenerarFormato
                             $ancho = "";
                             if (!empty($estilo)) {
                                 $tam = $estilo["size"];
-                                $ancho = ' style="width:' . $tam . '%;" ';
                                 $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
                                 
                             }
@@ -1569,9 +1568,9 @@ class GenerarFormato
                             if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
-                            $texto .= '<div class="form-group form-group-default ' . $obligatorio . '" ' . $ancho . ' id="tr_' . $campos[$h]["nombre"] . '">
+                            $texto .= '<div class="form-group form-group-default ' . $obligatorio  . $ancho . '"  id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;", "acute;", $this->codifica($campos[$h]["etiqueta"])) . '</label>
-                                        <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" ' . $ancho . ' size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
+                                        <input class="form-control" ' . " $adicionales $tabindex" . ' type="text"  size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                                        </div>';
                             if ($campos[$h]["mascara"] != "") {
                                 $mascaras++;
@@ -1718,16 +1717,16 @@ class GenerarFormato
             if ($arboles_fancy) {
                 $includes .= '<style>
 ul.fancytree-container {
-	width: 80%;
-	height: 80%;
-	overflow: auto;
-	position: relative;
-	border: none !important;
+  width: 80%;
+  height: 80%;
+  overflow: auto;
+  position: relative;
+  border: none !important;
     outline:none !important;
 }
 span.fancytree-title {
     font-family: verdana;
-	font-size: 7pt;
+  font-size: 7pt;
 }
 span.fancytree-checkbox.fancytree-radio {
     vertical-align: middle;
@@ -1766,24 +1765,24 @@ span.fancytree-expander {
             if ($numero_unicos) {
                 $listado = array();
                 $enmascarar .= '<script type="text/javascript">
-	$(document).ready(function() {';
+  $(document).ready(function() {';
                 for ($k = 0; $k < $numero_unicos; $k++) {
                     $enmascarar .= "$('#" . $unico[0][0] . "').blur(function(){
-	$.ajax({url: '../librerias/validar_unico.php',
-	type:'POST',
-	data:'nombre=unico&valor='+$('#" . $unico[0][0] . "').val()+'&tabla=" . $formato[0]["nombre_tabla"] . "&iddoc=<" . "?php echo $" . "_REQUEST[\"iddoc\"]; ?" . ">',
-	success: function(datos){
-	if(datos==0){
-	alert('El campo " . $unico[0][0] . " debe Ser unico');
-	$('#" . $unico[0][0] . "').val('');
-	$('#" . $unico[0][0] . "').focus();
-	}
-	}
-	});
-	});";
+  $.ajax({url: '../librerias/validar_unico.php',
+  type:'POST',
+  data:'nombre=unico&valor='+$('#" . $unico[0][0] . "').val()+'&tabla=" . $formato[0]["nombre_tabla"] . "&iddoc=<" . "?php echo $" . "_REQUEST[\"iddoc\"]; ?" . ">',
+  success: function(datos){
+  if(datos==0){
+  alert('El campo " . $unico[0][0] . " debe Ser unico');
+  $('#" . $unico[0][0] . "').val('');
+  $('#" . $unico[0][0] . "').focus();
+  }
+  }
+  });
+  });";
                 }
                 $enmascarar .= '});
-	</script>';
+  </script>';
             }
 
             if ($spinner)
@@ -1863,33 +1862,33 @@ span.fancytree-expander {
                                     <meta charset="utf-8" />
                                     <title>.:' . $this->codifica($accion . ' ' . $formato[0]["etiqueta"]) . ':.</title>
                                     <meta name="viewport"
-                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                      content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
                                     <meta content="" name="Cero K" /> ' . $includes . '
-                	<link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                  <link
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link class="main-stylesheet"
-                                	href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
-                                	rel="stylesheet" type="text/css" media="screen">
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
+                                  rel="stylesheet" type="text/css" media="screen">
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                	type="text/javascript"></script>
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
@@ -1897,11 +1896,11 @@ span.fancytree-expander {
                                 <link rel="stylesheet"
                                     href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
-                	</head>
-                	' . $texto . $js_archivos . '
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
+                  </head>
+                  ' . $texto . $js_archivos . '
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 $(".form-group.form-group-default").click(function() {
@@ -1935,7 +1934,7 @@ span.fancytree-expander {
                                 
                             });
                         </script>
-                	</html>';
+                  </html>';
             if ($accion == "editar") {
                 $contenido .= '<?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?' . '>';
             }
@@ -2308,33 +2307,33 @@ span.fancytree-expander {
         $campo = '
     <script>
     $(document).ready(function(){
-	$("' . $selector . '").selectize({
-	    valueField: "value",
-	    labelField: "text",
-	    searchField: "text",
-	persist: false,
-	createOnBlur: true,
-	create: false,
-	maxItems: ' . $tipo . ',
-	load: function(query, callback) {
-	        if (!query.length) return callback();
-	        $.ajax({
-	            url: "' . $parametros->url . '",
-	            type: "POST",
-	            dataType: "json",
-	            data: {
-	                consulta: "' . $consulta64 . '",
-	                valor: query,
-	            },
-	            error: function() {
-	                callback();
-	            },
-	            success: function(res) {
-	                callback(res);
-	            }
-	        });
-	    }
-	});
+  $("' . $selector . '").selectize({
+      valueField: "value",
+      labelField: "text",
+      searchField: "text",
+  persist: false,
+  createOnBlur: true,
+  create: false,
+  maxItems: ' . $tipo . ',
+  load: function(query, callback) {
+          if (!query.length) return callback();
+          $.ajax({
+              url: "' . $parametros->url . '",
+              type: "POST",
+              dataType: "json",
+              data: {
+                  consulta: "' . $consulta64 . '",
+                  valor: query,
+              },
+              error: function() {
+                  callback();
+              },
+              success: function(res) {
+                  callback(res);
+              }
+          });
+      }
+  });
     });';
         $campo .= '</script>';
 
@@ -2364,17 +2363,17 @@ span.fancytree-expander {
                     }
                     
                     var idformato = $(this).attr('data-idformato');
-                	var idcampo = $(this).attr('id');
-                	var paramName = $(this).attr('data-nombre-campo');
-                	var idcampoFormato = $(this).attr('data-idcampo-formato');
-                	var extensiones = $(this).attr('data-extensiones');
-                	
-                	var multiple = false;
-                	var form_uuid = $('#form_uuid').val();
+                  var idcampo = $(this).attr('id');
+                  var paramName = $(this).attr('data-nombre-campo');
+                  var idcampoFormato = $(this).attr('data-idcampo-formato');
+                  var extensiones = $(this).attr('data-extensiones');
+                  
+                  var multiple = false;
+                  var form_uuid = $('#form_uuid').val();
                     var maxFiles = 1;
                     var maxFilesize = $maximo;
-                	if(multiple_text == 'multiple') {
-                	    multiple = true;
+                  if(multiple_text == 'multiple') {
+                      multiple = true;
                         if(tamanoMaximo > upload_max_size){
                             maxFilesize = 200;                           
                         }else{
@@ -2385,60 +2384,60 @@ span.fancytree-expander {
                         }else{
                             maxFiles = archivosMaximo;
                         } 
-                	}
+                  }
                     var opciones = {
                         maxFilesize: maxFilesize,
-                    	ignoreHiddenFiles : true,
-                    	maxFiles : maxFiles,
-                    	acceptedFiles: extensiones,
-                   	addRemoveLinks: true,
-                   	dictRemoveFile: 'Quitar anexo',
-                   	dictMaxFilesExceeded : 'No puede subir mas archivos',
-                   	dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
-                	uploadMultiple: multiple,
-                    	url: upload_url,
-                    	paramName : paramName,
-                    	params : {
-                        	idformato : idformato,
-                        	idcampo_formato : idcampoFormato,
-                        	nombre_campo : paramName,
-                        	uuid : form_uuid
+                      ignoreHiddenFiles : true,
+                      maxFiles : maxFiles,
+                      acceptedFiles: extensiones,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Quitar anexo',
+                    dictMaxFilesExceeded : 'No puede subir mas archivos',
+                    dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
+                  uploadMultiple: multiple,
+                      url: upload_url,
+                      paramName : paramName,
+                      params : {
+                          idformato : idformato,
+                          idcampo_formato : idcampoFormato,
+                          nombre_campo : paramName,
+                          uuid : form_uuid
                         },
                         removedfile : function(file) {
                             if(lista_archivos && lista_archivos[file.upload.uuid]) {
-                            	$.ajax({
-                            	url: upload_url,
-                            	type: 'POST',
-                            	data: {
-                                	accion:'eliminar_temporal',
-                                    	idformato : idformato,
-                                    	idcampo_formato : idcampoFormato,
-                                	archivo: lista_archivos[file.upload.uuid]}
-                            	});
+                              $.ajax({
+                              url: upload_url,
+                              type: 'POST',
+                              data: {
+                                  accion:'eliminar_temporal',
+                                      idformato : idformato,
+                                      idcampo_formato : idcampoFormato,
+                                  archivo: lista_archivos[file.upload.uuid]}
+                              });
                             }
                             if (file.previewElement != null && file.previewElement.parentNode != null) {
                                 file.previewElement.parentNode.removeChild(file.previewElement);
-                            	delete lista_archivos[file.upload.uuid];
-                            	$('#'+paramName).val(Object.values(lista_archivos).join());
+                              delete lista_archivos[file.upload.uuid];
+                              $('#'+paramName).val(Object.values(lista_archivos).join());
                             }
                             return this._updateMaxFilesReachedClass();
                         },
                         success : function(file, response) {
-                        	for (var key in response) {
-                            	if(Array.isArray(response[key])) {
-                                	for(var i=0; i < response[key].length; i++) {
-                                	archivo=response[key][i];
-                                    	if(archivo.original_name == file.upload.filename) {
-                                    	lista_archivos[file.upload.uuid] = archivo.id;
-                                    	}
-                                	}
-                            	} else {
-                            	if(response[key].original_name == file.upload.filename) {
-                                	lista_archivos[file.upload.uuid] = response[key].id;
-                            	}
-                            	}
-                        	}
-                        	$('#'+paramName).val(Object.values(lista_archivos).join());
+                          for (var key in response) {
+                              if(Array.isArray(response[key])) {
+                                  for(var i=0; i < response[key].length; i++) {
+                                  archivo=response[key][i];
+                                      if(archivo.original_name == file.upload.filename) {
+                                      lista_archivos[file.upload.uuid] = archivo.id;
+                                      }
+                                  }
+                              } else {
+                              if(response[key].original_name == file.upload.filename) {
+                                  lista_archivos[file.upload.uuid] = response[key].id;
+                              }
+                              }
+                          }
+                          $('#'+paramName).val(Object.values(lista_archivos).join());
                             if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
                                 $('#dz_campo_'+idcampoFormato).find('label.error').remove()
                             }
@@ -2515,7 +2514,8 @@ span.fancytree-expander {
             $aux2[] = 'min="' . $ini . '"';
             $aux2[] = 'max="' . $fin . '"';
             $aux2[] = 'step=' . $incremento;
-            $ancho = 'style="width:' . $tam . '%;"';
+            $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
+
         } else if (!empty($valor)) {
             $parametros = explode("@", $valor);
             if (is_numeric($parametros[0])) {
@@ -2537,19 +2537,18 @@ span.fancytree-expander {
         }
         $pre = "";
         $post = "";
-        $texto[] = '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<div class="form-group form-group-default ' . $obligatorio . $ancho . '" id="tr_' . $campo["nombre"] . '">';
         $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . '</label>';
         if ($moneda) {
-            $pre = '<div class="input-group" ' . $ancho . '>
+            $pre = '<div class="input-group">
                         <div class="input-group-prepend">
                           <div class="input-group-text">$</div>
                         </div>';
             $post = '</div>';
             $ancho = "";
         }
-        $adicionales .= " $ancho";
         $texto[] = $pre;
-        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '"  value="' . $valor . '">';
+        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex $obligatorio" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '"  value="' . $valor . '">';
         $texto[] = '</div>';
         $texto[] = $post;
         return implode("\n", $texto);
