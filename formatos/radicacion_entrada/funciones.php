@@ -94,6 +94,7 @@ function datos_editar_radicacion($idformato, $iddoc)
     ?>
     <script>
         $(document).ready(function () {
+
             $('[name="tipo_destino"]').click(function () {
                 var tipo = $(this).val();
                 if (tipo == 1) {
@@ -208,7 +209,7 @@ function serie_documental_radicacion($idformato, $iddoc)
     <script>
         $(document).ready(function () {
             //tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
-
+            $('#tr_serie_idserie').hide();
             function onNodeSelect_dependencia_serie(nodeId) {
                 tree_serie_idserie.setCheck(tree_serie_idserie.getAllChecked(), 0);
                 tree_serie_idserie.setCheck(nodeId, 1);
