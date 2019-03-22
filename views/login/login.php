@@ -107,16 +107,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <!-- START Form Control-->
                         <div class="row">
                             <div class="col-12 text-right">
-                                <label>
+                                <label class="pr-3">
                                     <a href="#" onclick="javascript:$('#recovery_modal').modal('show')" class="text-info small">Necesita
                                         ayuda para ingresar <i class="fa fa-question-circle"></i> </a>
                                 </label>
                             </div>
                         </div>
                         <!-- END Form Control-->
-                        <div class="row text-center">
+                        <div class="row mx-0">
                             <div class="col-12">
-                                <button class="btn btn-lg bg-institutional m-t-10" id="access">Ingresar</button>
+                                <button class="btn btn-lg bg-institutional" id="access">Ingresar</button>
                             </div>
                         </div>
                     </div>
