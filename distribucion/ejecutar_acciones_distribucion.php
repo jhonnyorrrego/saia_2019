@@ -29,7 +29,7 @@ function cambiar_mensajero_distribucion() {
         
         $retorno=validar_oriden_destino_distribucion($iddistribucion);
         
-        if($tipo_origen_destino['exito']==1){
+        if($retorno['exito']==1){
             for($i=0;$i<$distribucion['numcampos'];$i++){
                 $diligencia = mostrar_diligencia_distribucion($distribucion[$i]['tipo_origen'], $distribucion[$i]['estado_recogida']);
 
@@ -42,7 +42,7 @@ function cambiar_mensajero_distribucion() {
                         if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {//si es una empresa_transportadora es decir mensajero_empresad
                             $update_adicional = ',mensajero_empresad=1';
                         }
-                        $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . " WHERE iddistribucionin(" . $iddistribucion.")";
+                        $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . " WHERE iddistribucion in(" . $iddistribucion.")";
                         break;
                 }
                 $retorno = array('exito' => 1, 'sql'.$i => $upm);
