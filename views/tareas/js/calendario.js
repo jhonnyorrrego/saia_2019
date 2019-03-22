@@ -121,7 +121,7 @@ $(function() {
                 minHeight: "2.1em",
                 maxHeight: "2.1em",
                 fontSize: "13px",
-                width: 'auto'
+                width: "auto"
             })
             .append(
                 $("<option>", {
@@ -142,5 +142,32 @@ $(function() {
         $(".fc-toolbar")
             .find("button")
             .addClass("btn bg-white");
+    })();
+
+    (function createPicker() {
+        $("#picker").datetimepicker({
+            locale: "es",
+            format: "YYYY-MM-DD",
+            defaultDate: new Date()
+        });
+
+        $("#picker").on("dp.change", function(e) {
+            $("#calendar").fullCalendar("changeView", "agendaDay");
+            $("#calendar").fullCalendar("gotoDate", $(this).val());
+        });
+
+        $(".fc-left").on("click", function() {
+            $("#picker")
+                .data("DateTimePicker")
+                .show();
+        }).addClass('cursor');
+
+        $("*:not(.fc-left)").on("click", function(e) {
+            if (!$(e.target).parents(".fc-left").length) {
+                $("#picker")
+                    .data("DateTimePicker")
+                    .hide();
+            }
+        });
     })();
 });
