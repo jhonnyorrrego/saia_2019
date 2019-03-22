@@ -25,5 +25,7 @@
 	  'Recibe como parametro el iddocumento y el idformato y muestra las novedades de la entrega' // documentation
 	);
 
-	$server->service(file_get_contents("php://input"));
+if ( !isset( $HTTP_RAW_POST_DATA ) ) $HTTP_RAW_POST_DATA =file_get_contents( 'php://input' ); 
+	$server->service($HTTP_RAW_POST_DATA);
+
 ?>

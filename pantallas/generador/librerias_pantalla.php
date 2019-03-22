@@ -875,6 +875,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         $retorno["mensaje"] = "EL formato se actualizó con éxito";
         $retorno["idformato"] = $datos["idformato"];
         $retorno['exito'] = 1;
+        $retorno['editar'] = 1;
     } else {
         $retorno["error"] = "Error al insertar el Formato";
         ;
