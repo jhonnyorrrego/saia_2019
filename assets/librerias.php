@@ -1,5 +1,4 @@
 <?php
-
 /**
  * retorna script para cargar
  * jquery v3.2.1 minificado
@@ -264,33 +263,30 @@ function validate()
 
 /**
  * Incluir libreria para arboles jquery.fancytree
+ * v2.30.0
  * @param string $version
  * @param string $opciones
  * @param string $tema
  * @return string
  */
-function arboles_ft($version = "2.30", $opciones = '', $tema = "lion")
+function arbol($filtro = false)
 {
     global $ruta_db_superior;
-    $ruta = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/';
 
-    $modulos = "";
-    switch ($version) {
-        case "2.24":
-            $version = "2.24.0";
-            $modulos = "src";
-            break;
-        case "2.30":
-            $version = "2.30.0";
-            $modulos = "modules";
-            break;
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/skin-lion/ui.fancytree.min.css';
+    $customCss = $ruta_db_superior . 'views/arbol/css/arbol.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+    $css .= '<link class="main-stylesheet" href="' . $customCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/jquery.fancytree.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    if ($filtro) {
+        $routeModule = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/modules/jquery.fancytree.filter.js';
+        $js .= '<script src="' . $routeModule . '"></script>';
     }
-    $texto = '<link href="' . $ruta . "$version/skin-$tema/ui.fancytree.css" . '" rel="stylesheet">';
-    $texto .= '<script src="' . $ruta . "$version/jquery.fancytree.min.js" . '"></script>';
-    if ($opciones == 'filtro') {
-        $texto .= '<script src="' . $ruta . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
-    }
-    return $texto;
+
+    return $css . $js;
 }
 
 /**
@@ -381,7 +377,8 @@ function select2()
  * el dropzone  v5.5
  * @return void
  */
-function dropzone(){
+function dropzone()
+{
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';

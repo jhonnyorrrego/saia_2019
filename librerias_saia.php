@@ -11,8 +11,6 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $raiz_saia . "assets/librerias.php";
-
 function librerias_jquery($version = "1.7.2")
 {
     global $raiz_saia;
@@ -41,9 +39,9 @@ function librerias_jquery($version = "1.7.2")
             break;
         case "sapi":
             $texto = '<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-        google.load("jquery", "1.7.2");
-</script>';
+                <script type="text/javascript">
+                        google.load("jquery", "1.7.2");
+                </script>';
             return $texto;
     }
     $texto = '<script src="' . $raiz_saia . 'js/jquery/' . $version . '/jquery.js" type="text/javascript"></script>';
@@ -132,18 +130,6 @@ function estilo_bootstrap($version = "saia")
             return $texto;
     }
     $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/' . $version . '/css/bootstrap.css">';
-    return $texto;
-}
-
-function librerias_tabla_bootstrap($toolbar = false)
-{
-    global $raiz_saia;
-
-    $texto = bootstrapTable();
-    if ($toolbar) {
-        $texto .= '<script src="' . $raiz_saia . 'assets/theme/assets/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>';
-    }
-
     return $texto;
 }
 
@@ -236,22 +222,6 @@ function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion")
     if ($opciones == 'filtro') {
         $texto .= '<script src="' . $raiz_saia . 'js/jquery.fancytree/' . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
     }
-    return $texto;
-}
-
-function librerias_tiny()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto = '<script language="javascript" type="text/javascript" src="' . $raiz_saia . 'tinymce/jquery.tinymce.min.js"></script>';
-    return $texto;
-}
-
-function librerias_principal()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto = '<script src="' . $raiz_saia . 'asset/js/main.js" type="text/javascript" charset="utf-8"></script>';
     return $texto;
 }
 
@@ -358,5 +328,3 @@ function librerias_graficos()
     $texto = '<script src="' . $raiz_saia . 'js/echarts/echarts.js"></script>';
     return $texto;
 }
-
-?>
