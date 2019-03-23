@@ -978,9 +978,7 @@ function load_componentes($tipo_retorno) {
     global $conn;
     $texto = '';
     $where = '';
-    $retorno = array(
-        "exito" => 0
-    );
+    $retorno = ["exito" => 0];
     if (@$_REQUEST["categoria"]) {
         $where = " AND lower(categoria)='" . strtolower($_REQUEST["categoria"]) . "'";
     }

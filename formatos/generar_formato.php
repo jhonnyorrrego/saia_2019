@@ -464,13 +464,12 @@ class GenerarFormato
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
-
+           
             $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
                 ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
-                0 == '.$formato[0]['mostrar_pdf'].'
+                0 == ' . $formato[0]['mostrar_pdf'] . '
             )): ?>';
             $validacion_tipo.= '<!DOCTYPE html>
-
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -505,8 +504,7 @@ class GenerarFormato
         return false;
     }
 
-    public function generar_mostrar_pdf()
-    {
+    public function generar_mostrar_pdf(){
         $string = '<?php
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
@@ -592,7 +590,7 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
-            
+
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<style>
         .table.table-condensed thead tr td {
@@ -640,7 +638,7 @@ class GenerarFormato
                         }
                     }
                     $this->exito = 1;
-                    $this->contenido_cuerpo = $cuerpo_formato;                    
+                    $this->contenido_cuerpo = $cuerpo_formato;
                     return true;
                 }
             }
@@ -1361,7 +1359,7 @@ class GenerarFormato
                             }
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                 <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
-                            $texto .= '<div class="form-control"><div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div><br/>';
+                            $texto .= '<div class="form-controls"><div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div><br/>';
                             if ($arreglo[4]) {
                                 if ($arreglo[3]) {
                                     $busqueda = 'tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)';
@@ -1564,6 +1562,8 @@ class GenerarFormato
                             if (!empty($estilo)) {
                                 $tam = $estilo["size"];
                                 $ancho = ' style="width:' . $tam . '%;" ';
+                                $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
+                                
                             }
 
                             if ($campos[$h]["obligatoriedad"] == 1) {
@@ -2356,10 +2356,10 @@ span.fancytree-expander {
                 $('.saia_dz').each(function () {
                     var upload_max_size = $upload_max_size;
                     var maximo = $maximo;
-                    var longitudSolicitada = $(this).attr('data-longitud');
-                    var cantidadSolicitada = $(this).attr('data-cantidad');
+                    var tamanoMaximo = $(this).attr('data-longitud');
+                    var archivosMaximo = $(this).attr('data-cantidad');
                     var multiple_text = $(this).attr('data-multiple');
-                    if(longitudSolicitada > 1){
+                    if(tamanoMaximo > 1){
                          multiple_text = 'multiple';
                     }
                     
@@ -2372,18 +2372,18 @@ span.fancytree-expander {
                 	var multiple = false;
                 	var form_uuid = $('#form_uuid').val();
                     var maxFiles = 1;
-                    var maxFiles = $maximo;
+                    var maxFilesize = $maximo;
                 	if(multiple_text == 'multiple') {
                 	    multiple = true;
-                        if(longitudSolicitada > upload_max_size){
+                        if(tamanoMaximo > upload_max_size){
                             maxFilesize = 200;                           
                         }else{
-                            maxFilesize = longitudSolicitada;
+                            maxFilesize = tamanoMaximo;
                         }
-                        if(cantidadSolicitada > maximo){
+                        if(archivosMaximo > maximo){
                             maxFiles = 10;
                         }else{
-                            maxFiles = cantidadSolicitada;
+                            maxFiles = archivosMaximo;
                         } 
                 	}
                     var opciones = {
@@ -2469,7 +2469,7 @@ span.fancytree-expander {
             $estilo = json_decode($campo["estilo"], true);
 
             $ini = 0;
-            $fin = 1000;
+            $fin = ""; //anteriormente estaba en 1000
             $decimales = 0;
             $incremento = 1;
             $tam = 100;
@@ -2622,22 +2622,18 @@ span.fancytree-expander {
                         $opciones_fecha["maxDate"] = $fin;
                         break;
                     case "actual":
-                        if($opciones["tipo"] == "datetime"){
+                        if ($opciones["tipo"] == "datetime") {
                             $fecha_por_defecto = date("Y-m-d H:i:s");
                         } else if ($opciones["tipo"] == "date") {
                             $fecha_por_defecto = date("Y-m-d");
-                        }                     
+                        }
                         break;
                     case "ant_actual":
-                        if($opciones["tipo"] == "datetime"){
-                            $fecha_por_defecto = date("Y-m-d H:i:s");
-                            $fecha_por_defecto = strtotime('-1 day', strtotime( $fecha_por_defecto));
-                            $fecha_por_defecto = date ('Y-m-d H:i:s' , $fecha_por_defecto );
+                        if ($opciones["tipo"] == "datetime") {
+                            $opciones_fecha["maxDate"] = date("Y-m-d H:i:s");
                         } else if ($opciones["tipo"] == "date") {
-                            $fecha_por_defecto = date("Y-m-d");
-                            $fecha_por_defecto = strtotime('-1 day', strtotime($fecha_por_defecto));
-                            $fecha_por_defecto = date('Y-m-d' , $fecha_por_defecto );
-                        }                     
+                            $opciones_fecha["maxDate"] = date("Y-m-d");
+                        }
                         break;
                     case "not_between":
                         $excluidos = array();
@@ -2720,4 +2716,3 @@ span.fancytree-expander {
         return implode("\n", $texto);
     }
 }
-

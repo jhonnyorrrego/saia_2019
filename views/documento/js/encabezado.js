@@ -135,8 +135,8 @@ $(function() {
         });
     });
 
-    $(document).off("click", "#seguridad");
-    $(document).on("click", "#seguridad", function() {
+    $(document).off("click", "#privacidad");
+    $(document).on("click", "#privacidad", function() {
         let route = $(this).data("url");
         top.topModal({
             url: baseUrl + route,
