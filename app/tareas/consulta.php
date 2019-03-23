@@ -24,21 +24,10 @@ $Response = (object) array(
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $Tarea = new Tarea($_REQUEST['task']);
     $managers = TareaFuncionario::findUsersByType($_REQUEST['task'], 1);
-    $followers = TareaFuncionario::findUsersByType($_REQUEST['task'], 2);
 
-    $data = [];
+    $users = [];
     foreach($managers as $key => $Funcionario){
-        $data['managers'][] = [
-            'id' => $Funcionario->getPK(),
-            'name' => $Funcionario->getName()
-        ];
-    }
-
-    foreach($followers as $key => $Funcionario){
-        $data['followers'][] = [
-            'id' => $Funcionario->getPK(),
-            'name' => $Funcionario->getName()
-        ];
+        $users[] = $Funcionario->getPK();
     }
 
     $Response->success = 1;
@@ -48,7 +37,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             'fecha_final' => $Tarea->fecha_final,
             'descripcion' => $Tarea->descripcion
         ],
-        'users' => $data
+        'users' => $users
     ];
 } else {
     $Response->message = "Debe iniciar sesion";
