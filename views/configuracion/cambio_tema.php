@@ -109,22 +109,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 color_container cursor">
-                                        <div class="b-a b-grey">
-                                            <input class="form-control" type="color" value="#3B4752" id="example-color-input">
-
-                                            <div class="bg-white padding-10 pb-0">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
+                                        <div class="b-a b-grey" id="dinamic_color" style="background:#3B4752">
+                                            <div class="bg-white m-t-45 padding-10">
                                                 <p class="small no-margin pull-left">
-                                                    <input type="radio" name="theme" value="#3B4752" id="color_radio">
-                                                    <span id="color_label">#3B4752</span>
-                                                </p>
-                                                <p class="pull-right m-0">
-                                                    <button class="btn btn-sm" onclick="js:$('input[type=\'color\']').click()">Cambiar</button>
+                                                    <input type="radio" name="theme" value="#3B4752" id="dinamic">
+                                                    <span id="dinamic_label">#3B4752</span>
+                                                    <button class="btn btn-xs py-0" onclick="js:$('input[type=\'color\']').click()">Personalizar</button>
                                                 </p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
+                                    <input class="d-none" type="color" value="#3B4752" id="example-color-input">
                                 </div>
                             </div>
                         </div>
