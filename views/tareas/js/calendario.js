@@ -142,6 +142,11 @@ $(function() {
         $(".fc-toolbar")
             .find("button")
             .addClass("btn bg-white");
+
+        let heightHeader = $(".fc-header-toolbar").height();
+        $(".fc-header-toolbar .fc-right")
+            .height(heightHeader)
+            .addClass("d-flex align-items-center");
     })();
 
     (function createPicker() {
@@ -156,11 +161,13 @@ $(function() {
             $("#calendar").fullCalendar("gotoDate", $(this).val());
         });
 
-        $(".fc-left").on("click", function() {
-            $("#picker")
-                .data("DateTimePicker")
-                .show();
-        }).addClass('cursor');
+        $(".fc-left")
+            .on("click", function() {
+                $("#picker")
+                    .data("DateTimePicker")
+                    .show();
+            })
+            .addClass("cursor");
 
         $("*:not(.fc-left)").on("click", function(e) {
             if (!$(e.target).parents(".fc-left").length) {
