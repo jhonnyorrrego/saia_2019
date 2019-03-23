@@ -100,7 +100,23 @@ class Documento extends Model
     }
 
     /**
-     * funcionalidad a ejecutar posterior a crear un registro
+     * asigna la fecha limite en base a la ultima tarea activa
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-20
+     */
+    public static function setLimitDate($documentId)
+    {
+        $data = DocumentoTarea::getLastStateByTask($documentId);
+
+        return self::executeUpdate(['fecha_limite' => $data['fecha_inicial']], [
+            self::getPrimaryLabel() => $documentId
+        ]);
+    }
+
+    /* funcionalidad a ejecutar posterior a crear un registro
      *
      * @return boolean
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>

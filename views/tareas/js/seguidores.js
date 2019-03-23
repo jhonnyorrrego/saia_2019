@@ -31,7 +31,7 @@ $(function(){
     });
 
     $(document).off('click', '.delete_follower');
-    $(document).on('click','.delete_follower', function () {console.log(12);
+    $(document).on('click','.delete_follower', function () {
         let user = $(this).data('user');
         modifyFollower(user, 1);
     });
