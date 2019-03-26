@@ -50,7 +50,8 @@ $(function () {
             data: function (params) {
                 return {
                     term: params.term,
-                    key: localStorage.getItem('key')
+                    key: localStorage.getItem('key'),
+                    identificator: 'funcionario_codigo'
                 }
             },
             processResults: function (response) {
