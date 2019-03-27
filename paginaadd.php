@@ -5,11 +5,10 @@ $validar_enteros=array("iddoc","key");
 desencriptar_sqli('form_info');
 
 if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
+    if (!$_REQUEST["iddoc"]) {
+        $_REQUEST["iddoc"] = $_REQUEST["key"];
+    }
 	include_once ("views/documento/encabezado.php");
-	if (!$_REQUEST["iddoc"]) {
-		$_REQUEST["iddoc"] = $_REQUEST["key"];
-	}
-	plantilla($_REQUEST["iddoc"]);
 }
 
 include_once("assets/librerias.php");
@@ -45,7 +44,7 @@ if (@$_REQUEST["enlace"]) {
 } else if (@$_REQUEST["enlace2"]) {
 	$x_enlace = $_REQUEST["enlace2"];
 } else if ($_REQUEST["x_enlace"] == "") {
-	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "");
+	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "",$conn);
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
 		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
@@ -255,38 +254,38 @@ INPUT, TEXTAREA, SELECT, body {
 			
 				<div class="form-group" id="tr_doc_asociado">
 					<label class="etiqueta_campo" title="">DOCUMENTO ASOCIADO</label>
-					<div class="form-control">
-					<?php 
-					if ($key) {
-        				$x_id_documento = $key;
-        			} else {
-        				$x_id_documento = 0;
-        			}
-        			if (!is_dir($temporal_usuario)) {
-        				if (!mkdir($temporal_usuario, PERMISOS_CARPETAS)) {
-        					alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
-        				}
-        				volver("1");
-        			}
-        			chmod($temporal_usuario, PERMISOS_CARPETAS);
-        			?>
-        			<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
-					<?php
-					$tabla = "documento";
-					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
-						$tabla = "archivo";
-					}
-					$documento = busca_tabla($tabla, $x_id_documento);
-					if ($documento["numcampos"] && $tabla != "archivo") {
-						echo stripslashes($documento[0]["descripcion"]);
-					} else if ($tabla == "archivo") {
-						echo ($documento[0]["titulo"]);
-					} else {
-						echo ($x_id_documento);
-					}
-					?>
-					</div>
-				</div>
+                </div>
+                <div class="form-group">
+                <?php
+                if ($key) {
+                    $x_id_documento = $key;
+                } else {
+                    $x_id_documento = 0;
+                }
+                if (!is_dir($temporal_usuario)) {
+                    if (!mkdir($temporal_usuario, PERMISOS_CARPETAS)) {
+                        alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
+                    }
+                    volver("1");
+                }
+                chmod($temporal_usuario, PERMISOS_CARPETAS);
+                ?>
+                <input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
+                <?php
+                $tabla = "documento";
+                if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
+                    $tabla = "archivo";
+                }
+                $documento = busca_tabla($tabla, $x_id_documento);
+                if ($documento["numcampos"] && $tabla != "archivo") {
+                    echo stripslashes($documento[0]["descripcion"]);
+                } else if ($tabla == "archivo") {
+                    echo ($documento[0]["titulo"]);
+                } else {
+                    echo ($x_id_documento);
+                }
+                ?>
+                </div>
 				<div class="form-group" id="tr_escanear">
 					<label class="etiqueta_campo" title="">ESCANEAR DE NUEVO</label>
 					<div class="radio radio-success">
