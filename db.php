@@ -1686,7 +1686,7 @@ function redirecciona($location)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/
-function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array(), $asunto, $mensaje, $anexos = array(), $iddoc = 0)
+function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunto, $mensaje, $anexos = [], $iddoc = 0)
 {
     global $conn;
     $ok = 0;
@@ -1839,7 +1839,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
         } else {
             $mail->Subject = $asunto_defecto_correo;
         }
-        $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+        $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_institucional'", "", $conn);
         $admin_saia = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
         $correo_admin = busca_filtro_tabla("email", "funcionario", "login='" . $admin_saia[0]['valor'] . "'", "", $conn);
         $texto_pie = "
