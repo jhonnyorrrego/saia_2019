@@ -50,6 +50,9 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
             //asigno nuevos permisos segun la accion indicada
             switch ($_REQUEST['accion']) {
+                case 'delete':
+                    $output = true;
+                    break;
                 case 'see':
                     $output = newAction(Acceso::ACCION_VER, $userId);
                     break;
@@ -70,8 +73,14 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         }
     } else if ($_REQUEST['private']) {
         switch ($_REQUEST['private']) {
+
             case 'public':
                 $output = Acceso::executeUpdate(['estado' => 1], [
+                    'accion' => Acceso::ACCION_VER_PUBLICO
+                ] + $condition);
+                break;
+            case 'specific':
+                $output = Acceso::executeUpdate(['estado' => 0], [
                     'accion' => Acceso::ACCION_VER_PUBLICO
                 ] + $condition);
                 break;
