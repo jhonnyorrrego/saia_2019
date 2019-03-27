@@ -141,6 +141,7 @@ $(function() {
         top.topModal({
             url: baseUrl + route,
             title: $(this).text(),
+            size: 'modal-lg',
             params: {
                 type: 'TIPO_DOCUMENTO',
                 typeId: documentId

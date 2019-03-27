@@ -15,11 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 ?>
-<?= librerias_arboles_ft("2.24", 'filtro') ?>
-<?= librerias_UI("1.12") ?>
-<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet"
-    type="text/css" media="screen">
-<link href="<?= $ruta_db_superior ?>views/arbol/css/arbol.css" rel="stylesheet" type="text/css">
+<?= arbol() ?>
 <div class="row">
     <div class="col-12">
         <div class="radio radio-complete">
@@ -47,8 +43,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
     <div class="col-12">
         <div class="form-group form-group-default">
             <label>Mensaje</label>
-            <textarea class="form-control" id="message" placeholder="Escriba el mensaje que desea enviar al destino"
-                rows="4"></textarea>
+            <textarea class="form-control" id="message" placeholder="Escriba el mensaje que desea enviar al destino" rows="4"></textarea>
         </div>
     </div>
 </div>
@@ -63,6 +58,5 @@ include_once $ruta_db_superior . "librerias_saia.php";
     </div>
 </div>
 <?= dropzone() ?>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
-<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-params='<?= json_encode($_REQUEST) ?>'></script>
+<?= select2() ?>
+<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-params='<?= json_encode($_REQUEST) ?>'></script> 

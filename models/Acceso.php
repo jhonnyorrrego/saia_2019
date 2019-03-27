@@ -18,6 +18,7 @@ class Acceso extends Model
     protected $accion;
     protected $fecha;
     protected $estado;
+    protected $user;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -46,5 +47,13 @@ class Acceso extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    public function getUser(){
+        if(!$this->user){
+            $this->user = $this->getRelationFk('Funcionario');
+        }
+
+        return $this->user;
     }
 }

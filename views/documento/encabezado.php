@@ -60,7 +60,7 @@ function plantilla($documentId, $transferId = 0)
         'user' => $Transfer->user->getPK(),
         'name' => $Transfer->user->getName()
     ];
-    
+
     $priorityClass = $Documento->prioridad ? 'text-danger' : '';
     ?>
 <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">

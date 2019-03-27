@@ -282,11 +282,11 @@ class Funcionario extends Model
         }
     }
 
-    public static function findAllByTerm($term)
+    public static function findAllByTerm($term, $field = 'idfuncionario')
     {
         $sql = <<<SQL
             SELECT 
-                idfuncionario,nombres,apellidos
+                {$field},idfuncionario,nombres,apellidos
             FROM 
                 funcionario
             WHERE
