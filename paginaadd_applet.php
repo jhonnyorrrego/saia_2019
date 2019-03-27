@@ -30,7 +30,7 @@ if(@$_REQUEST["enlace"])
 else if(@$_REQUEST["enlace2"])
 	$x_enlace=$_REQUEST["enlace2"];
 else if($_REQUEST["x_enlace"] == ""){
-  $documento = busca_filtro_tabla("","documento","iddocumento=".$key,"");
+  $documento = busca_filtro_tabla("","documento","iddocumento=".$key,"",$conn);
   if($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2){
       $x_enlace = "ordenar.php?key=".$key."&accion=mostrar";
   }
