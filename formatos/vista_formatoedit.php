@@ -399,10 +399,10 @@ function EditData($sKey,$conn)
 		$theValue = ($theValue != "") ? " '" . ($theValue) . "'" : "NULL";
 		$fieldList["cuerpo"] = $theValue;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_pie_pagina) : $x_pie_pagina; 
-		$theValue = ($theValue != "") ? " '" .limpia_tabla($theValue) . "'" : "NULL";
+		$theValue = ($theValue != "") ? " '" .$theValue . "'" : "NULL";
 		$fieldList["pie_pagina"] = $theValue;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_margenes) : $x_margenes; 
-		$theValue = ($theValue != "") ? " '" . limpia_tabla($theValue) . "'" : "NULL";
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["margenes"] = $theValue;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_orientacion) : $x_orientacion; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";

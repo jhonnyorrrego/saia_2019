@@ -621,7 +621,7 @@ class SqlPostgres extends SQL2 {
 			pg_query($this->Conn->conn, $sql);
 			// TODO verificar resultado de la insecion $resultado=FALSE;
 		} elseif ($tipo == "texto") {
-			$contenido = codifica_encabezado(limpia_tabla($contenido));
+			$contenido = codifica_encabezado($contenido);
 			$sql = "update $tabla set $campo='" . addslashes(stripslashes($contenido)) . "' where $condicion";
 			if ($log) {
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);

@@ -1,35 +1,36 @@
 <div class="row">
-    <div class="col-3">
+    <div class="col-6 col-md-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="state" value="1">
             <label class="form-check-label">
-                <i class="fa fa-flag text-danger"></i>
+                <i class="f-20 fa fa-check-circle text-success"></i>
                 Realizada
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-md-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="state" value="2">
             <label class="form-check-label">
-                <i class="fa fa-flag text-warning"></i>
-                En espera
+                <i class="f-20 fa fa-pause text-warning"></i>
+                Pendiente
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-md-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="state" value="3">
             <label class="form-check-label">
-                <i class="fa fa-flag"></i>
+                <i class="f-20 fa fa-play-circle text-complete"></i>
                 En proceso
             </label>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-6 col-md-3">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="state" value="4">
             <label class="form-check-label">
+                <i class="f-20 fa fa-times-circle text-danger"></i>
                 Cancelada
             </label>
         </div>

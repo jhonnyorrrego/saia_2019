@@ -2,6 +2,7 @@
 
 class BusquedaComponente extends Model
 {
+    protected $idbusqueda_componente;
     protected $busqueda_idbusqueda;
     protected $tipo;
     protected $conector;
@@ -48,13 +49,5 @@ class BusquedaComponente extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
-    }
-
-    public static function findByName($name){
-        global $conn;
-
-        $findComponent = busca_filtro_tabla("*", "busqueda_componente", "nombre ='" . $name . "'", "", $conn);
-        unset($findComponent['tabla'], $findComponent['sql'], $findComponent['numcampos']);
-        return $findComponent[0];
     }
 }

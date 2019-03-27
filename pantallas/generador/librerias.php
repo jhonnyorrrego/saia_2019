@@ -88,16 +88,19 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
     $acciones = array("a", "e", "b");
     if ($pantalla_campos["numcampos"]) {
         $datos = $_REQUEST;
+      
         $consultarNombre = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}", "", $conn);
         if (!$consultarNombre['numcampos']) {
             $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
             $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 
             $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
-            //die();
+            
             $sql_update = array();
+            $valorArbol = '';
             foreach ($datos as $key => $value) {
                 if (preg_match("/^fs_/", $key)) {
+                   
                     switch ($key) {
                         case 'fs_acciones':
                             if ($value == 'true') {
@@ -108,6 +111,27 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                         case "fs_etiqueta":
                             $retorno["etiqueta"] = $value;
                             break;
+                        case "fs_arbol":
+ 
+                        if($datos['fs_opciones']['url']=='cargo' && $datos['fs_opciones']['checkbox']=='radio'){
+                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;2;1;1;1;1;5';
+                        }else if($datos['fs_opciones']['url']=='cargo' && $datos['fs_opciones']['checkbox']=='checkbox'){
+                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;1;1;1;1;1;5';
+                        }else if($datos['fs_opciones']['url']=='funcionario' && $datos['fs_opciones']['checkbox']=='radio'){
+                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;2;0;1;1;0;0';
+                        }else if($datos['fs_opciones']['url']=='funcionario' && $datos['fs_opciones']['checkbox']=='checkbox') {
+                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;1;0;1;1;0;0';
+                        }else if($datos['fs_opciones']['url']=='dependencia' && $datos['fs_opciones']['checkbox']=='radio'){
+                            $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;2;0;1;1;0;2';
+                        }else if($datos['fs_opciones']['url']== 'dependencia' && $datos['fs_opciones']['checkbox']=='checkbox') {
+                            $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2';
+                        }else if($datos['fs_opciones']['url']== 'serie' && $datos['fs_opciones']['checkbox']=='radio') {
+
+                        } else if ($datos['fs_opciones']['url'] == 'serie' && $datos['fs_opciones']['checkbox'] == 'checkbox') { 
+
+                        } 
+                           
+                        break;
                         case "fs_placeholder":
                             $retorno["placeholder"] = $value;
                             break;
@@ -125,7 +149,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                                 $cantidadElementos = count($elementosGuardados);
                                 $nuevasPosiciones = $elementosGuardados;
 
-                                foreach($value as &$valor) {
+                                foreach($value as $valor) {
                                     if(in_array ( $valor["llave"], $elementosGuardados)) {
                                         continue;
                                     }
@@ -134,10 +158,8 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                                     $valor["llave"] = $cantidadElementos;
                                 }
                             }else{
-                              
                                 $cantidadElementos = count($value);
-                                $nuevasPosiciones = $value;
-                                
+                                $nuevasPosiciones = $value;                               
                                 $i=0;
                                 foreach($value as &$valor) {
                                     $valor["llave"] = $i+1;
@@ -165,11 +187,17 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                             }
                             break;
                     }
+                
                     array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
                 }
             }
+          
             if (count($sql_update)) {
-                $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
+                $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" .$idpantalla_campos;
+                if($valorArbol){
+                    $sqlArboles = "UPDATE campos_formato SET valor = {$valorArbol} WHERE idcampos_formato={$idpantalla_campos}";
+                    phpmkr_query($sqlArboles) or die($sqlArboles);
+                }
                 //$retorno["sql"] = $sql2; // Solo para depurar3
                 phpmkr_query($sql2) or die($sql2);
                 $retorno["exito"] = 1;
@@ -759,7 +787,7 @@ function validarCamposObligatorios($idformato)
                 $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
                 $retorno['exito'] = 0;
             } else {
-                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo')";
+                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo','arbol')";                
                 $camposFormato = StaticSql::search($consultaFormato);
                 if ($camposFormato) {
                     $campos = '';

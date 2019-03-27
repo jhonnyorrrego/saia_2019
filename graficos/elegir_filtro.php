@@ -708,9 +708,9 @@ array_push($listado0,html_entity_decode($datos_llenado[$i][0].",".trim(strip_tag
             <input type="hidden" name="valor'.$indice.'" id="valor'.$indice.'">';
                  
             if($arreglo[4]){
-                   $texto.='Buscar: <input type="text" id="stext_campo'.$indice.'" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),1)"> <img src="../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),0,1)"><img src="../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value))"><img src="../botones/general/siguiente.png"border="0px"></a> 
+                   $texto.='Buscar: <input type="text" id="stext_campo'.$indice.'" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),1)"> <img src="../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),0,1)"><img src="../assets/images/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value))"><img src="../assets/images/siguiente.png"border="0px"></a> 
                           <br />';
                 }
                 $texto.='<div id="esperando_campo'.$indice.'"><img src="../imagenes/cargando.gif"></div><div id="treeboxbox_campo'.$indice.'" height="90%"></div>';

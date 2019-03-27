@@ -2,6 +2,10 @@
 
 class Funcionario extends Model
 {
+    const CEROK = 1;
+    const RADICADOR_SALIDA = 2;
+    const RADICADOR_WEB = 3;
+
     protected $idfuncionario;
     protected $funcionario_codigo;
     protected $login;
@@ -31,6 +35,7 @@ class Funcionario extends Model
     protected $foto_cordenadas;
     protected $ventanilla_radicacion;
     protected $pertenece_nucleo;
+    protected $token;
     protected $dbAttributes;
 
     /**
@@ -76,7 +81,8 @@ class Funcionario extends Model
             'foto_recorte',
             'foto_cordenadas',
             'ventanilla_radicacion',
-            'pertenece_nucleo'
+            'pertenece_nucleo',
+            'token'
         ];
 
         // set the date attributes on the schema
@@ -278,24 +284,17 @@ class Funcionario extends Model
 
     public static function findAllByTerm($term)
     {
-        global $conn;
+        $sql = <<<SQL
+            SELECT 
+                idfuncionario,nombres,apellidos
+            FROM 
+                funcionario
+            WHERE
+                lower(nombres) like '%{$term}%' or
+                apellidos like '%{$term}%'
+SQL;
 
-        $table = self::getTableName();
-        $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%" . $term . "%' or apellidos like '%" . $term . "%'", '', $conn);
-
-        $data = [];
-        if ($findRecords['numcampos']) {
-            for ($row = 0; $row < $findRecords['numcampos']; $row++) {
-                $Instance = new Funcionario();
-                foreach ($findRecords[$row] as $key => $value) {
-                    if (is_string($key) && property_exists(Funcionario, $key)) {
-                        $Instance->$key = $value;
-                    }
-                }
-                $data[] = $Instance;
-            }
-        }
-        return $data;
+        return  self::findBySql($sql);
     }
 
     public static function findByDocumentTransfer($documentId)
@@ -312,8 +311,8 @@ class Funcionario extends Model
         $users = array_unique($users);
         $list = implode(',', $users);
         $sql = "select * from funcionario where funcionario_codigo in ({$list})";
-        $records = Conexion::getConnection()->executeSelect($sql);
-        return self::convertToObjectCollection($records);
+        
+        return self::findBySql($sql);
     }
 
     /**
@@ -325,5 +324,19 @@ class Funcionario extends Model
     {
         $sql = "select * from perfil where idperfil in ({$this->perfil})";
         return Perfil::findBySql($sql);
+    }
+
+    /**
+     * verifica si un token es valido
+     *
+     * @param string $token
+     * @param integer $userId
+     * @return boolean
+     */
+    public function isValidToken($token, $userId){
+        return Funcionario::countRecords([
+            'token' => $token,
+            self::getPrimaryLabel() => $userId
+        ]);
     }
 }

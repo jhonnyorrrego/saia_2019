@@ -187,9 +187,9 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             <!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
                             <div class="container-fluid">
                                 <div class="row" class="span3 offset2" style="float:left">
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span  style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_basico"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
-                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="campos_previa" id="cambiar_campos"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>                                    
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="vista_previa" id="cambiar_vista"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_permiso">Siguiente</button>
                                     <div id="barra_principal_formato" class="barra_principal_formato" style="margin-left:10px; width:85%; display:none">
@@ -632,9 +632,15 @@ $(document).ready(function() {
             }
         }
     });
+    var idpantalla = "<?php echo $idpantalla ?>";
     $("#cambiar_vista").hide();
     $("#generar_pantalla").hide();
-    $("#cambiar_nav").show();
+    if(idpantalla){
+        $("#cambiar_nav").show();
+    }else{
+        $("#enviar_datos_formato").show();
+    }
+    
     $('#cambiar_vista').on('click', function() {
         $("#diseno_formulario_pantalla").removeClass("disabled");
         $("#vista_formulario_pantalla").removeClass("disabled");
@@ -669,9 +675,6 @@ $(document).ready(function() {
      
     });
     
-    $('#cambiar_campos').on('click', function() {
-        $("#pantalla_principal").next().find("a").trigger("click");
-    });
     $('#cambiar_nav').on('click', function() {
         $.ajax({
             type: 'POST',
@@ -696,7 +699,7 @@ $(document).ready(function() {
             }
         });
     });
-    var idpantalla = "<?php echo $idpantalla ?>";
+    
     $("#asignar_funciones-tab").hide();
     $("#pantalla_listar-tab").hide();
     if (idpantalla) {
@@ -1620,7 +1623,7 @@ $(document).ready(function() {
             case 'pantalla_previa-tab':
                 $('#cambiar_vista').hide();
                 $('#cambiar_nav').hide();
-                $('#cambiar_campos').hide();
+                $('#enviar_datos_formato').hide();
                 $("#cambiar_nav_basico").hide();
                 $("#generar_pantalla").hide();
                 $("#cambiar_nav_permiso").show();
@@ -1650,7 +1653,7 @@ $(document).ready(function() {
                 break;
              case 'pantalla_previa-permiso':
                 $('#cambiar_nav').hide();
-                $('#cambiar_campos').hide();
+                $('#enviar_datos_formato').hide();
                 $('#cambiar_vista').hide();
                 $("#cambiar_nav_basico").hide();
                 $("#cambiar_nav_permiso").hide();
@@ -1726,7 +1729,7 @@ $(document).ready(function() {
                 $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
                 $('#cambiar_nav').hide();
                 $('#generar_pantalla').hide();
-                $('#cambiar_campos').hide();
+                $('#enviar_datos_formato').hide();
                 $("#cambiar_nav_basico").hide();
                 $('#cambiar_nav_permiso').hide();
                 $('#cambiar_vista').show();
@@ -1746,7 +1749,7 @@ $(document).ready(function() {
                 $('#funciones_tab').hide();
                 $("#generar_pantalla").hide();
                 $('#cambiar_vista').hide();
-                $('#cambiar_campos').hide();
+                $('#enviar_datos_formato').hide();
                 $('#cambiar_nav_permiso').hide();                
                 if(publicar==1){
                     $('#cambiar_nav').hide();
@@ -1758,7 +1761,7 @@ $(document).ready(function() {
             case 'datos_formulario-tab':
                 tab_acciones = false;
                 $('#componentes_acciones').hide();
-                $('#cambiar_campos').show();
+                $('#enviar_datos_formato').show();
                 $('#cambiar_nav').hide();
                 $('#cambiar_vista').hide();
                 $("#cambiar_nav_basico").hide();

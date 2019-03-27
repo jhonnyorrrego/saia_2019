@@ -30,12 +30,12 @@ echo(librerias_jquery("1.7"));
   	  <br>
 			<input type="text" id="stext" width="200px" size="20" style="font-family: Verdana; font-size: 9px;">
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,1)">
-      <img src="botones/general/anterior.png"border="0px"></a>
+      <img src="assets/images/anterior.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,0,1)"-->
       <!--a href="javascript:void(0)" onclick="tree2.openAllItems(0);find_item_tree(document.getElementById('stext').value,'')"-->
-      <img src="botones/general/buscar.png"border="0px"></a>
+      <img src="assets/images/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value)">
-      <img src="botones/general/siguiente.png"border="0px"></a>
+      <img src="assets/images/siguiente.png"border="0px"></a>
      </span><br><br>
 
 				<div id="treeboxbox_tree2"></div>

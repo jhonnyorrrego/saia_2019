@@ -7448,7 +7448,7 @@ body.rtl .checkbox label::after {
 }
 .form-group-default.form-group-default-select2 > label {
   position: absolute;
-  z-index: 10;
+  z-index: 9999;
   padding: 7px 12px 0 12px;
 }
 .form-group-default.form-group-default-select2 > label.label-lg {

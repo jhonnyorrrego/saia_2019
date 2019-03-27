@@ -209,99 +209,6 @@ function leido($codigo, $llave)
         }
     }
 }
-/*<Clase>
-<Nombre>limpia_tabla</Nombre>
-<Parametros>$tabla: codigo html</Parametros>
-<Responsabilidades>limpiar el codigo html, dejar solo las etiquetas estandar<Responsabilidades>
-<Notas>solo se permiten ciertas etiquetas en los campos de tipo textarea, aqui se quitan los elementos no permitidos</Notas>
-<Excepciones></Excepciones>
-<Salida>codigo html aceptado</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function limpia_tabla($tabla)
-{
-    $max_salida = 6;
-    $ruta_db_superior = $ruta = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta . "db.php")) {
-            $ruta_db_superior = $ruta;
-        }
-        $ruta .= "../";
-        $max_salida--;
-    }
-
-    include_once($ruta_db_superior . "kses-0.2.3/kses.php");
-
-    $allowed = array(
-        'table' => array(
-            'cellpadding' => 1,
-            'cellspacing' => 1,
-            'border' => 1,
-            'align' => 1,
-            'width' => 1,
-            'height' => 1,
-            'style' => 1
-        ),
-        'tr' => array(
-            'width' => 1,
-            'height' => 1
-        ),
-        'td' => array(
-            'valign' => 1,
-            'align' => 1,
-            'rowspan' => 1,
-            'colspan' => 1,
-            'width' => 1,
-            'height' => 1,
-            'class' => array(
-                'maxlen' => 100
-            ),
-            'style' => array()
-        ),
-        'p' => array(
-            'style' => array(
-                'maxlen' => 100
-            )
-        ),
-        'span' => array(
-            'style' => array(
-                'maxlen' => 100
-            )
-        ),
-        'ul' => array(),
-        'ol' => array(),
-        'li' => array(
-            'style' => array(
-                'maxlen' => 100
-            )
-        ),
-        'img' => array(
-            'src' => 1,
-            'alt' => 1,
-            'width' => 1,
-            'height' => 1
-        ),
-        'br' => array(),
-        'b' => array(),
-        'em' => array(),
-        'hr' => array(),
-        'pagebreak' => array(), //<!-- pagebreak -->
-        'strong' => array(),
-        'sup' => array(),
-        'sub' => array(),
-        'a' => array(
-            'href' => 1,
-            'target' => 1
-        )
-    );
-
-    $tabla = stripslashes($tabla);
-    $tabla = str_replace('<!-- pagebreak -->', 'pagebreak', $tabla);
-    $tabla = kses($tabla, $allowed);
-    $tabla = str_replace('pagebreak', '<!-- pagebreak -->', $tabla);
-    return ($tabla);
-}
 
 /*<Clase>
 <Nombre>listar_campos_tabla</Nombre>
@@ -1779,7 +1686,7 @@ function redirecciona($location)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/
-function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array(), $asunto, $mensaje, $anexos = array(), $iddoc = 0)
+function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunto, $mensaje, $anexos = [], $iddoc = 0)
 {
     global $conn;
     $ok = 0;
@@ -1932,7 +1839,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
         } else {
             $mail->Subject = $asunto_defecto_correo;
         }
-        $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+        $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_institucional'", "", $conn);
         $admin_saia = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
         $correo_admin = busca_filtro_tabla("email", "funcionario", "login='" . $admin_saia[0]['valor'] . "'", "", $conn);
         $texto_pie = "
