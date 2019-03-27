@@ -45,7 +45,7 @@ function get_name($userId, $name, $lastName)
     $Funcionario->nombres = $name;
     $Funcionario->apellidos = $lastName;
 
-	return "<a class='kenlace_saia cursor text-complete' enlace='views/funcionario/dashboard.php?key={$userId}' conector='iframe' titulo='{$Funcionario->getName()}'>{$Funcionario->getName()}</a>";
+    return "<a class='kenlace_saia cursor text-complete' enlace='views/funcionario/dashboard.php?key={$userId}' conector='iframe' titulo='{$Funcionario->getName()}'>{$Funcionario->getName()}</a>";
 }
 
 /**
@@ -83,4 +83,21 @@ function user_condition()
 
     return $condition;
 }
- 
+
+function get_image($imgRoute, $userId, $name, $lastName)
+{
+    global $ruta_db_superior;
+
+    include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
+
+    $Funcionario = new Funcionario();
+    $Funcionario->setAttributes([
+        'nombres' => $name,
+        'apellidos' => $lastName,
+        'foto_recorte' => $imgRoute
+    ]);
+    $Funcionario->setPK($userId);
+
+    return roundedImage($Funcionario->getImage('foto_recorte'));
+}
+
