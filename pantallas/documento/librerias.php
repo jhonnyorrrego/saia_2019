@@ -332,7 +332,7 @@ function has_files($documentId, $showCounter = false)
             } else {
                 $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
             }
-        }else if($showCounter){
+        } else if ($showCounter) {
             $response = '<span id="show_files" class="d-none"></span>';
         }
     }
@@ -377,30 +377,40 @@ function documental_type($documentId)
 /**
  * calcula el vencimiento de un documento
  *
- * @param string $date
- * @return string
+ * @param string $date fecha limite del documento
+ * @param integer $documentId
+ * @return void
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-21
  */
-function expiration($date)
+function expiration($date, $documentId)
 {
     if (strtotime($date)) {
-        $Limit = new DateTime($date);
-        $Today = new DateTime();
+        $taskInfo = DocumentoTarea::getLastStateByTask($documentId);
 
-        $diference = dias_habiles_entre_fechas($Today, $Limit);
+        if ($taskInfo['valor'] == TareaEstado::REALIZADA) {
+            $html = '<span class="label label-success btn_expiration action cursor">' . $date . '</span>';
+        } else if ($taskInfo[0][0]) {
+            $Limit = new DateTime($date);
+            $Today = new DateTime();
 
-        if ($diference < 3) {
-            if ($diference == 0) {
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
-            } elseif ($diference == 1) {
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
+            $diference = dias_habiles_entre_fechas($Today, $Limit);
+
+            if ($diference < 2) {
+                if ($diference == 0) {
+                    $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
+                } elseif ($diference == 1) {
+                    $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
+                } else {
+                    $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace ' . abs($diference) . ' días</span>';
+                }
+            } elseif ($diference >= 2 && $diference <= 8) {
+                $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">' . $diference . ' días</span>';
             } else {
-                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace ' . abs($diference) . ' días</span>';
+                $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">' . $diference . ' días</span>';
             }
-        } elseif ($diference >= 3 && $diference <= 8) {
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">' . $diference . ' días</span>';
         } else {
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">' . $diference . ' días</span>';
+            $html = '';
         }
 
         return $html;
@@ -480,7 +490,8 @@ function mostrar_numero_enlace($number, $documentId)
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  * @date 2019-03-15
  */
-function date_formatted($date){
+function date_formatted($date)
+{
     return DateController::convertDate($date);
 }
- 
+

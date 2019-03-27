@@ -1,152 +1,232 @@
 $(function () {
-    let baseUrl = $("script[data-baseurl]").data("baseurl");
-    let language = {
-        errorLoading: function () {
-            return "La carga falló"
-        },
-        inputTooLong: function (e) {
-            var t = e.input.length - e.maximum,
-                n = "Por favor,elimine " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        inputTooShort: function (e) {
-            var t = e.minimum - e.input.length,
-                n = "Por favor,introduzca " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        loadingMore: function () {
-            return "Cargando más resultados…"
-        },
-        maximumSelected: function (e) {
-            var t = "Sólo puede seleccionar " + e.maximum + " elemento";
-            return e.maximum != 1 && (t += "s");
-        },
-        noResults: function () {
-            return "No se encontraron resultados"
-        },
-        searching: function () {
-            return "Buscando…"
-        }
-    };
+    let baseUrl = $('script[data-baseurl]').data('baseurl');
+    let users = null;
+    let root = NaN;
 
-    (function init() {        
-        findData();
-        createAutocomplete();
+    (function init() {
+        if (typeof Users == 'undefined') {
+            $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/users/users.js`, r => {
+                showUserComponent();
+            });
+        } else {
+            showUserComponent();
+        }
     })();
 
-    $('#go_back').on('click', function () {
-        top.closeTopModal();
-    })
+    function showUserComponent() {
+        $('#button_actions').html(buttonActions(0));
 
-    $('#select_responsable').on('change', function (e) {
-        let values = $('#select_responsable').val();
-        $('#user_list').val(values.join(','));
-    });
-
-    $('[name="private"]').on('click', function () {
-        $('#user_container,#edit_container').hide();
-        $('#select_responsable').val(null).trigger('change');
-        $('[name="edit"]').prop('checked', false);
-
-        if ($(this).val() == 3) {
-            $('#user_container').show();
-            
-            if ($("[name='type']").val() != 'TIPO_DOCUMENTO') {
-                $('#edit_container').show();
-            }
-        }
-    });
-
-    $("#permissions").on("submit", function (e) {
-        e.preventDefault();
-
-        $('[name="key"]').val(localStorage.getItem('key'));
-        $.post(
-            `${baseUrl}app/permisos/asignar.php`,
-            $("#permissions").serialize(),
-            function (response) {
-                if (response.success) {
-                    top.notification({
-                        type: "success",
-                        message: response.message
-                    });
-                    top.closeTopModal();
-                } else {
-                    top.notification({
-                        type: "error",
-                        message: response.message
-                    });
-                }
-            },
-            "json"
-        );
-    });
-
-    function createAutocomplete() {
-        $("#select_responsable").select2({
-            minimumInputLength: 3,
-            language: language,
-            ajax: {
-                url: `${baseUrl}app/funcionario/autocompletar.php`,
-                dataType: 'json',
-                data: function (params) {
-                    return {
-                        term: params.term,
-                        key: localStorage.getItem('key')
-                    }
-                },
-                processResults: function (response) {
-                    return response.success ? { results: response.data } : {};
-                }
-            }
+        users = new Users({
+            selector: '#users_component',
+            baseUrl: baseUrl,
+            identificator: 'usuarios_asignar'
         });
     }
 
-    function findData() {
-        $('[name="key"]').val(localStorage.getItem('key'));
+    $('#show_advanced').on('click', function () {
+        $('#advanced').removeClass('d-none');
+        $('#show_advanced').parent().parent().addClass('d-none');
+        findData();
+    });
+
+    $(document).off('click', '.new_accion').on('click', '.new_accion', function () {
+        let data = {
+            key: localStorage.getItem('key'),
+            type: $('#access_type').val(),
+            typeId: $('#access_type_id').val(),
+            accion: $(this).data('type'),
+        };
+
+        if ($(this).data('specific') > 0) {
+            data.users = [$(this).data('specific')];
+        } else {
+            data.users = users.getList();
+            data.notification = $('#send_notification').is(':checked');
+        }
+
+        if (data.users.length) {
+            $.post(
+                `${baseUrl}app/permisos/asignar.php`,
+                data,
+                function (response) {
+                    if (response.success) {
+                        top.notification({
+                            type: 'success',
+                            message: response.message
+                        });
+                        users.cleanList();
+
+                        if ($("#advanced").is(':visible')) {
+                            findData();
+                        }
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        } else {
+            top.notification({
+                type: 'error',
+                message: 'Debe indicar los usuarios'
+            });
+        }
+    });
+
+    $('[name="private"]').on('change', function () {
         $.post(
-            `${baseUrl}app/permisos/consulta_datos_asignar.php`,
-            $("#permissions").serialize(),
+            `${baseUrl}app/permisos/asignar.php`,
+            {
+                key: localStorage.getItem('key'),
+                type: $('#access_type').val(),
+                typeId: $('#access_type_id').val(),
+                private: $(this).data('type')
+            },
             function (response) {
                 if (response.success) {
-                    $(`[name="private"][value=${response.data.type}]`).trigger('click');
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
 
-                    if (response.data.type == 3) {
-                        response.data.users.forEach(userId => {
-                            defaultUsers(userId);
-                        });
-
-                        if (response.data.edit) {
-                            $(':checkbox[name="edit"]').prop('checked', true);
-                        }
-                    }
+                    findData();
                 } else {
                     top.notification({
-                        type: "error",
+                        type: 'error',
                         message: response.message
                     });
                 }
             },
-            "json"
+            'json'
+        );
+
+    });
+
+    function findData() {
+        $.post(
+            `${baseUrl}app/permisos/consulta_datos_asignar.php`,
+            {
+                key: localStorage.getItem('key'),
+                type: $('#access_type').val(),
+                typeId: $('#access_type_id').val()
+            },
+            function (response) {
+                if (response.success) {
+                    $(`[name='private'][data-type='${response.data.type}']`).prop('checked', 'true');
+
+                    createTable(response.data.users);
+                    $('#button_actions').html(buttonActions(0));
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
         );
     }
 
-    function defaultUsers(userId) {
+    function createTable(userList) {
+        checkRootAccess();
+        $('#user_list').html(`
+            <thead>
+                <tr>
+                    <td>Usuario</td>
+                    <td></td>
+                </tr>
+            </thead>
+        `);
+
+        Object.values(userList).forEach(i => {
+            switch (i.action) {
+                case '1':
+                    var icon = 'fa fa-eye';
+                    var className = '';
+                    break;
+                case '2':
+                    var icon = 'fa fa-edit';
+                    var className = '';
+                    break;
+                case '3':
+                    var icon = 'fa fa-legal';
+                    var className = 'd-none';
+                    break;
+            }
+            $('#user_list').append(`
+                <tr>
+                    <td>
+                        ${i.name}
+                        ${buttonActions(i.userId, icon)}
+                    </td>
+                    <td>
+                        <button class="btn btn-link new_accion ${className}" data-type="delete" data-specific="${i.userId}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
+        });
+
+        $('button > i.fa-legal').parent().addClass('disabled');
+    }
+
+    function buttonActions(specific = 0, icon = 'fa fa-ellipsis-v') {
+        if (isNaN(root)) {
+            checkRootAccess();
+        }
+
+        let manager = root ? `<a href="#" class="dropdown-item new_accion" data-type="manager" data-specific="${specific}">
+            <i class="fa fa-legal"></i> Propietario
+        </a>` : '';
+
+        return `<div class="dropdown float-right">
+            <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="${icon}"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                <a href="#" class="dropdown-item new_accion" data-type="see" data-specific="${specific}">
+                    <i class="fa fa-eye"></i> Ver
+                </a>
+                <a href="#" class="dropdown-item new_accion" data-type="edit" data-specific="${specific}">
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+                ${manager}
+            </div>
+        </div>`;
+    }
+
+    function checkRootAccess() {
         $.ajax({
-            type: 'GET',
+            url: `${baseUrl}app/permisos/permiso_funcionario.php`,
+            type: 'POST',
             dataType: 'json',
-            url: `${baseUrl}app/funcionario/autocompletar.php`,
+            async: false,
             data: {
-                defaultUser: userId,
-                key: localStorage.getItem('key')
+                key: localStorage.getItem('key'),
+                sourceReference: $('#access_type').val(),
+                typeId: $('#access_type_id').val(),
             },
             success: function (response) {
-                response.data.forEach(u => {
-                    var option = new Option(u.text, u.id, true, true);
-                    $('#select_responsable').append(option).trigger('change');
-                });
+                if (response.success) {
+                    root = response.data.delete;
 
-                $('#select_responsable').trigger({type: 'select2:select'});
+                    if (!response.data.edit) {
+                        top.closeTopModal();
+                        top.notification({
+                            type: 'error',
+                            message: 'No tienes acceso a la privacidad'
+                        });
+                    }
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
             }
         });
     }

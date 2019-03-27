@@ -74,7 +74,6 @@ $(function() {
         `;
 
         let modal_options = {
-            html: true,
             content: html,
             buttons: {
                 cancel: {

@@ -17,6 +17,7 @@ include_once($ruta_db_superior."db.php");
 <title>Consulta de informaci&oacute;n</title>
 <?php
 ini_set("display_errors",true);
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
@@ -28,7 +29,8 @@ $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbu
 echo(librerias_jquery("1.8"));
 echo(librerias_bootstrap("3.2"));
 
-echo librerias_tabla_bootstrap(true);
+echo bootstrapTable();
+echo '<script src="' . $$ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>';
 
 if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));

@@ -32,28 +32,39 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     ]);
 
     if ($Acceso) { //publico
-        $Response->data->type = 1;
+        $Response->data->type = 'public';
     } else {
-        $records = Acceso::findColumn('fk_funcionario', [
+        $records = Acceso::countRecords([
             'accion' => Acceso::ACCION_VER,
             'estado' => 1,
             'tipo_relacion' => $type,
             'id_relacion' => $_REQUEST['typeId']
         ]);
 
-        if (count($records) > 1) { //usuario especifico
-            $Response->data->type = 3;
-            $Response->data->users = $records;
+        if ($records == 1) { //privado
+            $Response->data->type = 'private';
+        } else {  //usuario especifico
+            $Response->data->type = 'specific';
+        }
+    }
 
-            $total = Acceso::countRecords([
-                'accion' => Acceso::ACCION_EDITAR,
-                'estado' => 1,
-                'tipo_relacion' => $type,
-                'id_relacion' => $_REQUEST['typeId'],
-            ]);
-            $Response->data->edit = $total > 1;
-        } else { //privado
-            $Response->data->type = 2;
+    $data = Acceso::findAllByAttributes([
+        'estado' => 1,
+        'tipo_relacion' => $type,
+        'id_relacion' => $_REQUEST['typeId']
+    ]);
+
+    $Response->data->users = [];
+    foreach ($data as $key => $Acceso) {
+        if($Acceso->fk_funcionario != Funcionario::RADICADOR_SALIDA &&
+            $Acceso->accion > $Response->data->users[$Acceso->fk_funcionario]['action']){
+
+            $Response->data->users[$Acceso->fk_funcionario] = [
+                'id' => $Acceso->getPK(),
+                'userId' => $Acceso->fk_funcionario,
+                'name' => $Acceso->getUser()->getName(),
+                'action' => $Acceso->accion
+            ];
         }
     }
 

@@ -1,34 +1,6 @@
 $(function(){
     let baseUrl = Session.getBaseUrl();
     let params = JSON.parse($('script[data-params]').attr('data-params'));
-    let language = {
-        errorLoading: function () {
-            return "La carga falló" 
-        },
-        inputTooLong: function (e) {
-            var t = e.input.length - e.maximum,
-                n = "Por favor,elimine " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres"; 
-        },
-        inputTooShort: function (e) {
-            var t = e.minimum - e.input.length,
-            n = "Por favor,introduzca " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        loadingMore: function () {
-            return "Cargando más resultados…" 
-        },
-        maximumSelected: function (e) {
-            var t = "Sólo puede seleccionar " + e.maximum + " elemento";
-            return e.maximum != 1 && (t += "s"); 
-        },
-        noResults: function () {
-            return "No se encontraron resultados" 
-        },
-        searching: function () {
-            return "Buscando…" 
-        }
-    };
 
     (function init(){
         findFollowers(params.id);
@@ -36,7 +8,7 @@ $(function(){
     
     $("#follower").select2({
         minimumInputLength: 3,
-        language: language,
+        language: 'es',
         ajax: {
             url: `${baseUrl}app/funcionario/autocompletar.php`,
             dataType: 'json',
@@ -59,7 +31,7 @@ $(function(){
     });
 
     $(document).off('click', '.delete_follower');
-    $(document).on('click','.delete_follower', function () {console.log(12);
+    $(document).on('click','.delete_follower', function () {
         let user = $(this).data('user');
         modifyFollower(user, 1);
     });

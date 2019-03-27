@@ -50,7 +50,7 @@ $(function(){
                     <tr id="${s.id}">
                         <td>${s.date}</td>
                         <td>${s.user}</td>
-                        <td>${s.description}</td>
+                        <td>${s.description || ''}</td>
                         <td>${s.stateLabel}</td>
                     </tr>
                 `);

@@ -6,41 +6,44 @@ var topModalDefaults = {
     centerAlign: true, //true for center align, false for top align
     buttons: {
         success: {
-            label: 'Enviar',
-            class: 'btn btn-complete'
+            label: "Enviar",
+            class: "btn btn-complete"
         },
         cancel: {
-            label: 'Cancelar',
-            class: 'btn btn-danger'
+            label: "Cancelar",
+            class: "btn btn-danger"
         }
     }
 };
 
 function topModal(options) {
-    var modal = $('#dinamic_modal', window.top.document);
-    var modalDialog = modal.find('.modal-dialog');
+    var modal = $("#dinamic_modal", window.top.document);
+    var modalDialog = modal.find(".modal-dialog");
+    var modalBody = modal.find("#modal_body");
     var options = $.extend({}, topModalDefaults, options);
 
     modal.find("#btn_success").off("click");
-    modal.find('#modal_body').html('');
-    modal.find('#modal_title').text(options.title);
-    modalDialog.removeClass('modal-lg modal-sm modal-xl');
+    modalBody.html("");
+    modal.find("#modal_title").text(options.title);
+    modalDialog.removeClass("modal-lg modal-sm modal-xl");
 
     if (options.centerAlign) {
-        modalDialog.addClass('modal-dialog-centered');
+        modalDialog.addClass("modal-dialog-centered");
     } else {
-        modalDialog.removeClass('modal-dialog-centered');
+        modalDialog.removeClass("modal-dialog-centered");
     }
 
-    if ($.inArray(options.size, ['modal-lg', 'modal-sm', 'modal-xl']) != -1) {
-        modalDialog.removeClass('modal-lg modal-sm modal-xl');
+    if ($.inArray(options.size, ["modal-lg", "modal-sm", "modal-xl"]) != -1) {
+        modalDialog.removeClass("modal-lg modal-sm modal-xl");
         modalDialog.addClass(options.size);
     }
 
     if (options.buttons.success || options.buttons.cancel) {
-        modal.find('.modal-footer').show();
+        modal.find(".modal-footer").show();
         if (options.buttons && options.buttons.success) {
-            modal.find("#btn_success").show()
+            modal
+                .find("#btn_success")
+                .show()
                 .text(options.buttons.success.label)
                 .addClass(options.buttons.success.class);
         } else {
@@ -48,38 +51,50 @@ function topModal(options) {
         }
 
         if (options.buttons && options.buttons.cancel) {
-            modal.find("#close_modal").show()
+            modal
+                .find("#close_modal")
+                .show()
                 .text(options.buttons.cancel.label)
                 .addClass(options.buttons.cancel.class)
-                .on('click', function () {
+                .on("click", function() {
                     top.closeTopModal();
                 });
         } else {
             modal.find("#close_modal").hide();
         }
     } else {
-        modal.find('.modal-footer').hide();
+        modal.find(".modal-footer").hide();
     }
 
     if (options.url) {
-        modal.find('#modal_body').load(options.url, options.params, function (response, status, xhr) {
-            if (status == 'success') {
-                modal.find('#modal_body').prepend('<hr class="mt-1">');
+        modalBody.load(options.url, options.params, function(
+            response,
+            status,
+            xhr
+        ) {
+            if (status == "success") {
+                modalBody.prepend('<hr class="mt-1">');
             } else {
-                console.error('failed to load');
-                modal.find('#modal_body').html('');
+                console.error("failed to load");
+                modalBody.html("");
             }
 
             openModal(options);
         });
+    } else if (options.content) {
+        modalBody.prepend('<hr class="mt-1">');
+        modalBody.append(options.content);
+        openModal(options);
     } else {
-        console.error('debe indicar la url');
+        console.error("debe indicar la url");
     }
 }
 
 function openModal(options) {
-    if (!$('#dinamic_modal', window.top.document).is(':visible')) {
-        $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
+    if (!$("#dinamic_modal", window.top.document).is(":visible")) {
+        $("[data-target='#dinamic_modal']", window.top.document).trigger(
+            "click"
+        );
         window.modalOptions = options;
     } else {
         options.oldSource = window.modalOptions;
@@ -92,6 +107,6 @@ function closeTopModal() {
         top.topModal(window.modalOptions.oldSource);
         window.modalOptions = {};
     } else {
-        $('#dinamic_modal', window.top.document).modal('hide');
+        $("#dinamic_modal", window.top.document).modal("hide");
     }
 }

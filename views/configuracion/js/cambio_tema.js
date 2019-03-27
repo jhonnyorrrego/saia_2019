@@ -1,6 +1,23 @@
 $(function() {
     let baseUrl = $("script[data-baseurl]").data("baseurl");
 
+    setTimeout(() => {
+        let color = localStorage.getItem("color");
+        if (!$(`[name='theme'][value='${color}']`).length) {
+            $("#example-color-input").val(color);
+            $("#example-color-input").trigger("change");
+            $(`[name='theme'][value='${color}']`).prop("checked", true);
+        } else {
+            $(`[name='theme'][value='${color}']`).prop("checked", true);
+        }
+    }, 0);
+
+    $("#example-color-input").on("change", function() {
+        $("#dinamic").val($(this).val());
+        $("#dinamic_label").text($(this).val());
+        $("#dinamic_color").css("background", $(this).val());
+    });
+
     $(".color_container").on("click", function() {
         $(":radio").attr("checked", false);
         $(this)

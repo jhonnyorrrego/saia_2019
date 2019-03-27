@@ -33,7 +33,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         'estado' => 1
     ]);
 
-    if($pk){
+    if($pk){        
         $Response->message = "Prioridad asignada";
         $Response->success = 1;
     }else{
