@@ -69,7 +69,7 @@ class Tarea extends Model
     {
         return
             LogController::create(LogAccion::EDITAR, 'TareaLog', $this) &&
-            $this->refreshDocumentLimitDate()();
+            $this->refreshDocumentLimitDate();
     }
 
     /**
