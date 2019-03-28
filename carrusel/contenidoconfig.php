@@ -79,7 +79,6 @@ function pintar_formulario($accion) {
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../js/jquery.spin.js"></script>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>tinymce34/jscripts/tiny_mce/tiny_mce.js"></script>
 <script src="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.js"></script>
 
 <style>

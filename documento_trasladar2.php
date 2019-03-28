@@ -1,6 +1,5 @@
 <?php
 include_once("header.php");
-include_once("formatos/librerias/header_formato.php");
 
 include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("proceso");

@@ -37,7 +37,6 @@ if(isset($_REQUEST["modulo"])&&($_REQUEST["modulo"]!=""))
 <input type='hidden' name='x_serie' id='x_serie'/>
         <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-			<?php include_once($ruta_db_superior."formatos/librerias/header_formato.php"); ?>
 	<input type="hidden" name="idmodulo" id="idmodulo" obligatorio="obligatorio"  value="" >
     <br />
       Buscar:<br><input type="text" id="stext_3" width="200px" size="20">

@@ -269,7 +269,7 @@ function validate()
  * @param string $tema
  * @return string
  */
-function arbol($filtro = false)
+function fancyTree($filtro = false)
 {
     global $ruta_db_superior;
 

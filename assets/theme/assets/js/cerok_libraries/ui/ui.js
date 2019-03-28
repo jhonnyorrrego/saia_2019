@@ -5,32 +5,49 @@ class Ui {
     }
 
     static putLogo(selector) {
-        var logo = localStorage.getItem('logo');
+        var logo = localStorage.getItem("logo");
 
         if (!logo) {
-            $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
-                configurations: ['logo']
-            }, function (response) {
-                if (response.success) {
-                    localStorage.setItem('logo', response.data[0].value);
-                    Ui.putLogo(selector);
-                }
-            }, 'json');
+            $.post(
+                Session.getBaseUrl() +
+                "app/configuracion/consulta_configuraciones.php",
+                {
+                    configurations: ["logo"]
+                },
+                function (response) {
+                    if (response.success) {
+                        localStorage.setItem("logo", response.data[0].value);
+                        Ui.putLogo(selector);
+                    }
+                },
+                "json"
+            );
         } else {
-            $(selector).attr('src', Session.getBaseUrl()+ logo);
+            if (selector == "#client_image") {
+                $(selector).on("load", function () {
+                    $(selector).removeAttr("style");
+                    
+                    if ($(selector).height(40).width() > 130) {
+                        $(selector).removeAttr("style");
+                        $(selector).width(130);
+                    }
+                });
+            }
+
+            $(selector).attr("src", Session.getBaseUrl() + logo);
         }
     }
 
     static putColor() {
-        const color = localStorage.getItem('color');
+        const color = localStorage.getItem("color");
 
         if (color) {
-            $('#instition_style').remove();
-            $('head').append(
-                $('<style>', {
-                    id: 'instition_style',
-                    rel: 'stylesheet',
-                    type: 'text/css',
+            $("#instition_style").remove();
+            $("head").append(
+                $("<style>", {
+                    id: "instition_style",
+                    rel: "stylesheet",
+                    type: "text/css",
                     text: `
                         .btn.bg-institutional:hover{background: ${color} !important;color: #ffff !important; opacity:0.8; border:none}
                         .btn.bg-institutional{border:none}
@@ -40,14 +57,20 @@ class Ui {
                 })
             );
         } else {
-            $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
-                configurations: ['color_institucional']
-            }, function (response) {
-                if (response.success) {
-                    localStorage.setItem('color', response.data[0].value);
-                    Ui.putColor();
-                }
-            }, 'json');
+            $.post(
+                Session.getBaseUrl() +
+                "app/configuracion/consulta_configuraciones.php",
+                {
+                    configurations: ["color_institucional"]
+                },
+                function (response) {
+                    if (response.success) {
+                        localStorage.setItem("color", response.data[0].value);
+                        Ui.putColor();
+                    }
+                },
+                "json"
+            );
         }
     }
 
@@ -61,7 +84,7 @@ class Ui {
                 y1: 0,
                 x2: 70,
                 y2: 70,
-                persistent: true,
+                persistent: true
             });
         }, 500);
     }
@@ -77,7 +100,7 @@ class Ui {
         let windowHeight = Math.ceil($(window).height());
         $("#iframe_workspace").height(windowHeight - headerHeight - 5);
 
-        if (!$("#new_action_mobile_container").is(':hidden')) {
+        if (!$("#new_action_mobile_container").is(":hidden")) {
             $("#new_action_mobile_container").css({
                 top: $("#iframe_workspace").height() - 80,
                 left: $("#iframe_workspace").width() - 80
@@ -89,7 +112,7 @@ class Ui {
 
     static close() {
         Session.close();
-        window.location = Session.getBaseUrl() + 'logout.php';
+        window.location = Session.getBaseUrl() + "logout.php";
     }
 
     static inactiveTime() {
@@ -112,12 +135,12 @@ class Ui {
     }
 
     static setWorkspacePosition() {
-        let breakpoint = localStorage.getItem('breakpoint');
+        let breakpoint = localStorage.getItem("breakpoint");
 
-        if ($.inArray(breakpoint, ['xs', 'sm', 'md']) != -1) {
-            $('#workspace').css('position', 'absolute');
+        if ($.inArray(breakpoint, ["xs", "sm", "md"]) != -1) {
+            $("#workspace").css("position", "absolute");
         } else {
-            $('#workspace').css('position', 'relative');
+            $("#workspace").css("position", "relative");
         }
     }
 }
