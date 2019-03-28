@@ -71,7 +71,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- END MOBILE SIDEBAR TOGGLE -->
             <div class="">
                 <div class="brand inline">
-                    <img alt="logo" id="client_image">
+                    <img alt="logo" id="client_image" style="max-height:40px">
                 </div>
                 <div class="dropdown d-lg-inline-block d-none">
                     <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="new_action">

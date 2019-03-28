@@ -10,11 +10,11 @@ class Ui {
         if (!logo) {
             $.post(
                 Session.getBaseUrl() +
-                    "app/configuracion/consulta_configuraciones.php",
+                "app/configuracion/consulta_configuraciones.php",
                 {
                     configurations: ["logo"]
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         localStorage.setItem("logo", response.data[0].value);
                         Ui.putLogo(selector);
@@ -24,13 +24,11 @@ class Ui {
             );
         } else {
             if (selector == "#client_image") {
-                $(selector).on("load", function() {
+                $(selector).on("load", function () {
                     $(selector).removeAttr("style");
-                    if (
-                        $(selector)
-                            .height(40)
-                            .width() > 130
-                    ) {
+                    console.log($(selector).height(40).width());
+                    
+                    if ($(selector).height(40).width() > 130) {
                         $(selector).removeAttr("style");
                         $(selector).width(130);
                     }
@@ -62,11 +60,11 @@ class Ui {
         } else {
             $.post(
                 Session.getBaseUrl() +
-                    "app/configuracion/consulta_configuraciones.php",
+                "app/configuracion/consulta_configuraciones.php",
                 {
                     configurations: ["color_institucional"]
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         localStorage.setItem("color", response.data[0].value);
                         Ui.putColor();
