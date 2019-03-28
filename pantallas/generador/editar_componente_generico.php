@@ -109,8 +109,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
     <!-- bootstrap datetimepicker for date, time and datetime controls -->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" media="screen" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" />
+    <?= dateTimePicker() ?>
 
     <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
 </head>
