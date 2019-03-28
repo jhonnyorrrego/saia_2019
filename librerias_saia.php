@@ -227,14 +227,8 @@ function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion")
 
 function librerias_tooltips()
 {
-    // http://craigsworks.com/projects/qtip2/
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/jquery.qtip.js" type="text/javascript" charset="utf-8"></script>
-';
-    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/jquery.qtip.css" type="text/css" />';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_tooltips.js"></script>';
-    return $texto;
+    //se elimina el codigo ya que se debe hacer uso de los tooltips de bootstrap
+    return '';
 }
 
 function librerias_acciones_kaiten()

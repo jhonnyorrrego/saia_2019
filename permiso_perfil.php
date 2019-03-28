@@ -12,7 +12,6 @@ include ("header.php");
 <link rel="stylesheet" type="text/css" href="css/dhtmlXTree.css">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
-<?php include_once("formatos/librerias/header_formato.php"); ?>
 <script type="text/javascript">
 <!--	
 $().ready(function() {

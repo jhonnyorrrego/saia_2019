@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 ?>
-<?= arbol() ?>
+<?= fancyTree() ?>
 <div class="row">
     <div class="col-12">
         <div class="radio radio-complete">

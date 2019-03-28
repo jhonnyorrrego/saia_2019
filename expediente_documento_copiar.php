@@ -3,7 +3,6 @@ include_once("header.php");
 
 $iddoc = $_REQUEST["iddoc"];
 
-include_once("formatos/librerias/header_formato.php");
 ?>
 <br><br><br>
 <span class="internos"><img class="imagen_internos" src="botones/comentarios/expediente.png" border="0">&nbsp;&nbsp;COPIAR / MOVER EL DOCUMENTO A UN EXPEDIENTE</span><br><br><br>

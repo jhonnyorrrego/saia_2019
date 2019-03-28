@@ -26,7 +26,6 @@ class Ui {
             if (selector == "#client_image") {
                 $(selector).on("load", function () {
                     $(selector).removeAttr("style");
-                    console.log($(selector).height(40).width());
                     
                     if ($(selector).height(40).width() > 130) {
                         $(selector).removeAttr("style");

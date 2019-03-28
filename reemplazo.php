@@ -162,7 +162,6 @@ function buscar_pendientes($codigo)
   
 if(isset($_REQUEST["formato_adicionar"]))
 {include_once("calendario/calendario.php"); 
- include_once("formatos/librerias/header_formato.php");      
 ?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
