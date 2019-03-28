@@ -436,7 +436,7 @@ if ($formato["numcampos"]) {
   	<input type="hidden" name="idfuncionario" id="idfuncionario" value="<?php echo (usuario_actual("idfuncionario")); ?>">
   	<input type="hidden" name="banderas_formato" id="banderas" value="">
   	<input type="hidden" name="idformato" id="idformato" value="">
-    <button type="button" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span  style="color:fff; background: #48b0f7;">Aceptar</span></button>
+    <!--<button type="button" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span  style="color:fff; background: #48b0f7;">Aceptar</span></button>-->
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if ($_REQUEST["idformato"]) { ?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo ($_REQUEST['idformato']); ?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
@@ -526,11 +526,13 @@ $("document").ready(function(){
                 url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php",
                 data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+nombre_formato,
                 success: function(objeto) {
-                    if(objeto.exito) {
+                    if(objeto.exito && objeto.editar != 1) {
                         notificacion_saia(objeto.mensaje,'success','topCenter',3000);
                         window.parent.location.href = window.parent.location.pathname+"?idformato="+objeto.idformato;
-
-                      } else {
+                      } else if(objeto.exito && objeto.editar == 1) {
+                        $("#pantalla_principal").next().find("a").trigger("click");
+                        notificacion_saia(objeto.mensaje,'success','topCenter',3000);
+                      }else {
                     	notificacion_saia(objeto.error,'error','topCenter',3000);
                     	buttonAcep.removeAttr('disabled');
                     }
@@ -538,7 +540,8 @@ $("document").ready(function(){
     	    });
 		} else {
     	    notificacion_saia('Debe diligenciar los campos obligatorios','warning','topCenter',3000);
-		    $(".error").first().focus();
+        $(".error").first().focus();
+        return false;
 		}
 	});
 
