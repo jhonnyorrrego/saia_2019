@@ -367,17 +367,17 @@ function AddData($conn)
 	// Field encabezado
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_encabezado) : $x_encabezado; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["encabezado"] =limpia_tabla($theValue);
+	$fieldList["encabezado"] =$theValue;
 
 	// Field cuerpo
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_cuerpo) : $x_cuerpo; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["cuerpo"] = limpia_tabla($theValue);
+	$fieldList["cuerpo"] = $theValue;
 
 	// Field pie_pagina
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_pie_pagina) : $x_pie_pagina; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["pie_pagina"] = limpia_tabla($theValue);
+	$fieldList["pie_pagina"] = $theValue;
 
 	// Field margenes
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_margenes) : $x_margenes; 

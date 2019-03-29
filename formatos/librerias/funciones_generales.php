@@ -2833,8 +2833,8 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc)
         ?>
 <td id="td_fk_idexpediente" bgcolor="#F5F5F5">
     <div id="seleccionados"></div> <br /> Buscar: <input tabindex='2' type="text" id="stext_fk_idexpediente" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 1)">
-        <img src="../../botones/general/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../botones/general/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
-        <img src="../../botones/general/siguiente.png" border="0px"></a> <br />
+        <img src="../../assets/images/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../assets/images/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
+        <img src="../../assets/images/siguiente.png" border="0px"></a> <br />
     <div id="esperando_fk_idexpediente">
         <img src="../../imagenes/cargando.gif">
     </div>

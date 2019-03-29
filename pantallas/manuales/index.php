@@ -85,7 +85,7 @@ echo librerias_arboles();
 							<td><strong>VINCULADO A</strong></td>
 							<td>
 							<input  tabindex='2'  type="text" id="stext_cod_padre">
-							<a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),1)"> <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),0,1)"> <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value))"> <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>
+							<a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),1)"> <img src="<?php echo $ruta_db_superior; ?>assets/images/anterior.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),0,1)"> <img src="<?php echo $ruta_db_superior; ?>assets/images/buscar.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value))"> <img src="<?php echo $ruta_db_superior; ?>assets/images/siguiente.png"border="0px"></a>
 							<br/>
 							<input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo $cod_padre;?>">
 							<div id="esperando_cod_padre">

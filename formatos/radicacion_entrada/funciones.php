@@ -244,6 +244,7 @@ function serie_documental_radicacion($idformato, $iddoc)
 
             function onNodeSelect(nodeId,parentId) {
 
+            function onNodeSelect(nodeId,parentId) {
                 var numeral = nodeId.indexOf("#");
                 var padre,dependencia;
                 if (numeral >= 0) {
@@ -274,6 +275,7 @@ function serie_documental_radicacion($idformato, $iddoc)
             }
             $('#tipo_origen1').click(function () {
                 var dependencia = $('#dependencia').val();
+                console.log("tipo_origen click");
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
 
                 function obtener_dependencia(rol) {

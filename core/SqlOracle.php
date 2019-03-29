@@ -555,8 +555,7 @@ class SqlOracle extends SQL2 {
                         alerta("No se pudo modificar el campo.");
                         $resultado = FALSE;
                     } else {
-                        $contenido = limpia_tabla($contenido);
-                        if ($row[strtoupper($campo)] && !$row[strtoupper($campo)]->save(trim((($contenido))))) {
+                        if ($row[strtoupper($campo)] && !$row[strtoupper($campo)]->save(trim($contenido))) {
                             oci_rollback($this->Conn->conn);
                             $resultado = FALSE;
                         } else

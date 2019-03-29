@@ -46,13 +46,19 @@ class Anexo extends Model
     }
 
     /**
-     * evento de base de datos
-     * se ejecuta despues de crear un nuevo registro
-     * @return void
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-18
      */
     protected function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
+        if (AccesoController::setFullAccess(Acceso::TIPO_ANEXO, $this->getPK())) {
+            return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -114,20 +120,21 @@ SQL;
     }
 
     /**
-     * Undocumented function
+     * consulta las versiones anteriores de un anexo
      *
-     * @param [type] $fileId
+     * @param integer $fileId id del anexo referencia
      * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-15
      */
     public function findHistory($fileId)
     {
         $Anexo = new Anexo($fileId);
 
-        if($Anexo->fk_anexo){
-            $sql = "select * from anexo where idanexo <>{$fileId} and (fk_anexo={$Anexo->fk_anexo} or idanexo = {$Anexo->fk_anexo}) order by idanexo desc";
-            $records = StaticSql::search($sql);
-            $response = Anexo::convertToObjectCollection($records);
-        }else{
+        if ($Anexo->fk_anexo) {
+            $sql = "select * from anexo where idanexo <>{$fileId} and fk_anexo={$Anexo->fk_anexo} order by idanexo desc";
+            $response = Anexo::findBySql($sql);
+        } else {
             $response = [];
         }
 

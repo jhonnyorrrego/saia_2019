@@ -211,14 +211,26 @@ function iddoc_no_distribuidos()
 }
 
 /**
- * @return int retorna el funcionario codigo
- * para las cosultas de los buzones
+ * retorna el funcionario codigo del usuario logueado
+ * usado para los reportes
+ *
+ * @return integer
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
 function code_logged_user()
 {
-    return usuario_actual('funcionario_codigo');
+    return $_SESSION['usuario_actual'];
 }
 
+/**
+ * retorna el valor de variable busqueda
+ * usado para los reportes
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
 function variable_busqueda()
 {
     return $_REQUEST['variable_busqueda'];
@@ -234,6 +246,7 @@ function variable_busqueda()
  * @param string $date
  * @param int $transferId
  * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
@@ -261,9 +274,10 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
 }
 
 /**
- *  retorna una imagen redondeada
+ * retorna el html de una imagen redondeada
  * @param string $route ruta de la imagen
  * @return string html de la imagen
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function roundedImage($route)
 {
@@ -300,6 +314,7 @@ function unread($iddocumento, $fecha)
  * @param int $documentId
  * @param boolean $showCounter
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function has_files($documentId, $showCounter = false)
 {
@@ -317,7 +332,7 @@ function has_files($documentId, $showCounter = false)
             } else {
                 $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
             }
-        }else if($showCounter){
+        } else if ($showCounter) {
             $response = '<span id="show_files" class="d-none"></span>';
         }
     }
@@ -329,6 +344,7 @@ function has_files($documentId, $showCounter = false)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function priority($documentId, $priority)
 {
@@ -343,6 +359,7 @@ function priority($documentId, $priority)
  *
  * @param int $documentId
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function documental_type($documentId)
 {
@@ -360,29 +377,40 @@ function documental_type($documentId)
 /**
  * calcula el vencimiento de un documento
  *
- * @param string $date
- * @return string
+ * @param string $date fecha limite del documento
+ * @param integer $documentId
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-21
  */
-function expiration($date)
+function expiration($date, $documentId)
 {
     if (strtotime($date)) {
-        $Limit = new DateTime($date);
-        $Today = new DateTime();
+        $taskInfo = DocumentoTarea::getLastStateByTask($documentId);
 
-        $diference = dias_habiles_entre_fechas($Today, $Limit);
+        if ($taskInfo['valor'] == TareaEstado::REALIZADA) {
+            $html = '<span class="label label-success btn_expiration action cursor">' . $date . '</span>';
+        } else if ($taskInfo[0][0]) {
+            $Limit = new DateTime($date);
+            $Today = new DateTime();
 
-        if ($diference < 3) {
-            if ($diference == 0) {
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
-            } elseif ($diference == 1) {
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
+            $diference = dias_habiles_entre_fechas($Today, $Limit);
+
+            if ($diference < 2) {
+                if ($diference == 0) {
+                    $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
+                } elseif ($diference == 1) {
+                    $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
+                } else {
+                    $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace ' . abs($diference) . ' días</span>';
+                }
+            } elseif ($diference >= 2 && $diference <= 8) {
+                $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">' . $diference . ' días</span>';
             } else {
-                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace ' . abs($diference) . ' días</span>';
+                $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">' . $diference . ' días</span>';
             }
-        } elseif ($diference >= 3 && $diference <= 8) {
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">' . $diference . ' días</span>';
         } else {
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">' . $diference . ' días</span>';
+            $html = '';
         }
 
         return $html;
@@ -394,6 +422,7 @@ function expiration($date)
  *
  * @param string $date
  * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
 function temporality($date)
 {
@@ -451,4 +480,18 @@ function mostrar_numero_enlace($number, $documentId)
 
     return $response;
 }
- 
+
+/**
+ * convierte una fecha con formato 
+ * Y-m-d H:i:s al formato predefinido del sistema
+ *
+ * @param string $date
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-15
+ */
+function date_formatted($date)
+{
+    return DateController::convertDate($date);
+}
+

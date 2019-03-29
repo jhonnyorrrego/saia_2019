@@ -8,7 +8,7 @@ class Ui {
         var logo = localStorage.getItem('logo');
 
         if (!logo) {
-            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
+            $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
                 configurations: ['logo']
             }, function (response) {
                 if (response.success) {
@@ -40,7 +40,7 @@ class Ui {
                 })
             );
         } else {
-            $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
+            $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
                 configurations: ['color_institucional']
             }, function (response) {
                 if (response.success) {

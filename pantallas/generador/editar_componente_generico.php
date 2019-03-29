@@ -69,6 +69,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
 } else {
     alerta("No es posible Editar el Campo");
 }
+
 $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
 ?>
@@ -268,7 +269,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
     global $conn;
     $resp = array();
 
-    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
+    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
 
     if ($campo_formato["numcampos"]) {
         $opciones = json_decode(html_entity_decode($campo_formato[0]["opciones"]), true);
@@ -294,6 +295,9 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
 
         if (preg_match("/p/", $campo_formato[0]["acciones"])) {
             $resp["fs_acciones"] = true;
+        }
+        if ($campo_formato[0]['etiqueta_html'] == 'arbol') {
+            $resp["fs_arbol"] = "arbol_seleccionV2";
         }
 
         $resp["fs_nombre"] = $campo_formato[0]["nombre"];
@@ -328,4 +332,4 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
 }
 
 
-?> 
+ ?>

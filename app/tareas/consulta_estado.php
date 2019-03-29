@@ -15,25 +15,26 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)[
     'data' => [],
     'message' => "",
     'success' => 1,
-);
+];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = TareaEstado::findHistoryByTask($_REQUEST['task']);
+    $states = TareaEstado::findAllByAttributes([
+        'fk_tarea' => $_REQUEST['task']
+    ], [], 'idtarea_estado desc');
 
-    foreach($data as $item){
-        $date = DateController::convertDate($item['fecha'], 'Y-m-d H:i:s', 'd/m/Y H:i a');
+    foreach ($states as $key => $TareaEstado) {
         $Response->data[] = [
-            'id' => $item['idestado_tarea'],
-            'date' => $date,
-            'user' => ucfirst(strtolower($item['nombres'] . ' ' . $item['apellidos'])),
-            'stateLabel' => TareaEstado::getState($item['valor']),
-            'description' => $item['descripcion'],
-            'value' => $item['valor'],
-            'state' => $item['estado']
+            'id' => $TareaEstado->getPK(),
+            'date' => $TareaEstado->getDateAttribute('fecha'),
+            'user' => $TareaEstado->getUser()->getName(),
+            'stateLabel' => TareaEstado::getState($TareaEstado->valor),
+            'description' => $TareaEstado->descripcion,
+            'value' => $TareaEstado->valor,
+            'state' => $TareaEstado->estado
         ];
     }
 } else {
@@ -42,3 +43,4 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
+

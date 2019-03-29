@@ -43,7 +43,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
     $Response->success = 1;
     $Response->data = [
-        'task' => $Tarea->getAttributes(),
+        'task' => [
+            'nombre' => $Tarea->getName(),
+            'fecha_final' => $Tarea->fecha_final,
+            'descripcion' => $Tarea->descripcion
+        ],
         'users' => $data
     ];
 } else {
