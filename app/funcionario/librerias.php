@@ -45,7 +45,7 @@ function get_name($userId, $name, $lastName)
     $Funcionario->nombres = $name;
     $Funcionario->apellidos = $lastName;
 
-    return "<a class='kenlace_saia cursor text-complete' enlace='views/funcionario/dashboard.php?key={$userId}' conector='iframe' titulo='{$Funcionario->getName()}'>{$Funcionario->getName()}</a>";
+    return $Funcionario->getName();
 }
 
 /**
