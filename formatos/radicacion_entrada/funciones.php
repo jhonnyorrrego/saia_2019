@@ -239,7 +239,6 @@ function serie_documental_radicacion($idformato, $iddoc)
                         onNodeSelect(nodos[i],padres[i]);
                     }
                     $('[name="destino"]').val(nodos.join(","));
-                    console.log($('[name="destino"]').val());
                 }
             });
 
@@ -301,9 +300,9 @@ function serie_documental_radicacion($idformato, $iddoc)
 
 }
 
-function buscar_dependencias_principal($iddependencia)
-{
-    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "", $conn);
+function buscar_dependencias_principal($iddependencia){
+    global $conn;
+    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "",$conn);
 
     if ($cod_dep['numcampos']) {
         return (buscar_dependencias_principal($cod_dep[0]["cod_padre"]));
