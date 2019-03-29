@@ -18,21 +18,15 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <?= jquery() ?>
-    <?= bootstrap() ?>
-    <?= theme() ?>
-
     <title>Funcionario</title>
 </head>
 
 <body>
-    <div class="container container-fixed-lg col-12 col-md-8 pt-3">
+    <div class="container container-fixed-lg col-12">
         <!-- START card -->
         <div class="card card-default">
             <div class="card-body">
                 <div class="col-12">
-                    <h6>Crear Funcionario</h6>
                     <p>los campos con <span class="text-danger">*</span> son obligatorios</p>
                 </div>
                 <div class="col-12">
@@ -98,10 +92,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
                             <select class="full-width" id="window_radication" name="ventanilla_radicacion">
                                 <option value="">Seleccione...</option>
                             </select>
-                        </div>
-                        <div class="form-actions">
-                            <input class="btn btn-danger" type="reset" value="Cancelar">
-                            <input class="btn btn-complete" type="submit" value="Crear">
                         </div>
                     </form>
                 </div>

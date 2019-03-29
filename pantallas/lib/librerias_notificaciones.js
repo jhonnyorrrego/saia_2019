@@ -5,7 +5,3 @@ function notificacion_saia(message ,type, location, duration){
     duration: duration
   });
 }
-
-function cerrar_notificaciones_saia(){  
-  top.closeNotifications();
-}

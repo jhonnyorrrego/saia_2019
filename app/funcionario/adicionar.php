@@ -37,7 +37,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $fileParts = explode('.', $fileRoute);
             $fileName = 'firmas/' . $_REQUEST['nit'] . '.' . end($fileParts);
             $content = file_get_contents($ruta_db_superior . $fileRoute);
-            $dbRoute = UtilitiesController::createFileDbRoute($fileName, 'archivos', $content);
+            $dbRoute = TemporalController::createFileDbRoute($fileName, 'archivos', $content);
 
             $Funcionario = new Funcionario();
             $Funcionario->setAttributes($_REQUEST);

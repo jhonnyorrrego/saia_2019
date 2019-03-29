@@ -15,17 +15,12 @@ include_once $ruta_db_superior . "assets/librerias.php";
 <html>
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <?= jquery() ?>
-    <?= bootstrap() ?>
-    <?= theme() ?>
-    <?= select2() ?>
 </head>
 
 <body>
-    <div class=" container-fluid container-fixed-lg col-lg-8">
+    <div class=" container-fluid container-fixed-lg">
         <!-- START card -->
         <div class="card card-default">
             <div class="card-body">
@@ -70,15 +65,14 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         </div>
                     </div>
                     <div class="form-actions">
-                        <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $_REQUEST[" idbusqueda_componente"]; ?>">
+                        <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $_REQUEST["idbusqueda_componente"]; ?>">
                         <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
-                        <button type="button" class="btn btn-complete" id="ksubmit_saia" enlace="<?php echo $ruta_db_superior; ?>pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>
-                        <input class="btn btn-danger" name="commit" type="reset" value="Cancelar">
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <?= select2() ?>
     <script>
         $(function() {
             let baseUrl = '<?= $ruta_db_superior ?>';
@@ -107,9 +101,26 @@ include_once $ruta_db_superior . "assets/librerias.php";
                     $("#ksubmit_saia").trigger('click');
                 }
             });
+
+            $('#btn_success').on('click', function() {
+                $.post(`${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
+                    $("#kformulario_saia").serialize(),
+                    function(data) {
+                        if (data.exito) {
+                            top.successModalEvent(data);
+                            top.closeTopModal();
+                        } else {
+                            top.notification({
+                                message: data.mensaje,
+                                type: 'error'
+                            });
+                        }
+                    },
+                    'json');
+            });
         });
     </script>
+    <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 </body>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 
 </html> 

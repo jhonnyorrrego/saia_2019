@@ -5,8 +5,11 @@ $(function() {
         createFileInput();
         findProfileOptions();
         findWindowRadicationOptions();
-        clearForm();
     })();
+
+    $('#btn_success').on('click', function () {
+        $("#user_form").trigger('submit');
+    });
 
     function createFileInput() {
         $("#file").addClass("dropzone");
@@ -84,13 +87,6 @@ $(function() {
             },
             "json"
         );
-    }
-
-    function clearForm() {
-        setTimeout(() => {
-            $("#user_form").trigger("reset");
-            $("#password_validation").text("")[0].className = "";
-        }, 300);
     }
 
     $("#password").keyup(function() {
@@ -209,7 +205,7 @@ $("#user_form").validate({
                         message: response.message,
                         type: "success"
                     });
-                    window.location = `${baseUrl}views/funcionario/dashboard.php?key=${response.data}`;
+                    top.successModalEvent();
                 } else {
                     top.notification({
                         message: response.message,
