@@ -239,12 +239,12 @@ function serie_documental_radicacion($idformato, $iddoc)
                         onNodeSelect(nodos[i],padres[i]);
                     }
                     $('[name="destino"]').val(nodos.join(","));
-                    console.log($('[name="destino"]').val());
                 }
             });
 
             function onNodeSelect(nodeId,parentId) {
 
+            function onNodeSelect(nodeId,parentId) {
                 var numeral = nodeId.indexOf("#");
                 var padre,dependencia;
                 if (numeral >= 0) {
@@ -275,6 +275,7 @@ function serie_documental_radicacion($idformato, $iddoc)
             }
             $('#tipo_origen1').click(function () {
                 var dependencia = $('#dependencia').val();
+                console.log("tipo_origen click");
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
 
                 function obtener_dependencia(rol) {
@@ -301,9 +302,9 @@ function serie_documental_radicacion($idformato, $iddoc)
 
 }
 
-function buscar_dependencias_principal($iddependencia)
-{
-    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "", $conn);
+function buscar_dependencias_principal($iddependencia){
+    global $conn;
+    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "",$conn);
 
     if ($cod_dep['numcampos']) {
         return (buscar_dependencias_principal($cod_dep[0]["cod_padre"]));
