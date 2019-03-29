@@ -15,7 +15,6 @@ $idcaja = $_REQUEST['idcaja'];
 if (!$idcaja) {
     return;
 }
-
 $Caja=new Caja($idcaja);
 
 $params = [
@@ -23,8 +22,6 @@ $params = [
     'baseUrl' => $ruta_db_superior
 ];
 
-
-include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <div class="row mx-0">
     <div class="col-12">
@@ -112,10 +109,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
 </div>
 
-<script data-params='<?=json_encode($params)?>'>
+<script id="scriptDetalleCaja" data-params='<?=json_encode($params)?>'>
     $(document).ready(function (){
-        var params2 = JSON.parse($('script[data-params]').attr('data-params'));
-
+        var params2 = $("#scriptDetalleCaja").data("params");
+        
         $(".inf").click(function (e) {
             let table=$(this).data("table"); 
             let icon=$(this).hasClass("fa-plus-square");

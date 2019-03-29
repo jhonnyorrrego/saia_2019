@@ -480,7 +480,7 @@ abstract class Model extends StaticSql
         $records = self::search($sql);
 
         $data = [];
-        foreach ($records as $key => $value) {
+        foreach ($records as $value) {
             $data[] = $value[0];
         }
         return $data;

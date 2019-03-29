@@ -20,8 +20,9 @@ class ExpedienteController
         if (!empty($data['idexpediente'])) {
             $Expediente = new Expediente($data['idexpediente']);
             if ($Expediente->estado == 0) {
-                $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                $instance = ExpedienteEli::findBySql($sql,true);
+                $sql = "SELECT * FROM expediente_eli 
+                WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
+                $instance = ExpedienteEli::findBySql($sql);
                 if ($instance) {
                     $ExpedienteDel=$instance[0];
                     $ExpedienteDel->fecha_accion=date("Y-m-d H:i:s");
@@ -56,7 +57,9 @@ class ExpedienteController
             'exito' => 0,
             'message' => ''
         ];
-        if (!empty($data['iddocumentos']) && !empty($data['idexpedientes']) && !empty($data['tipodocumental'])) {
+        if (!empty($data['iddocumentos']) && !empty($data['idexpedientes']) 
+            && !empty($data['tipodocumental'])
+        ) {
             $success = 0;
             $cant = 0;
             foreach ($data['iddocumentos'] as $iddoc) {
@@ -73,7 +76,14 @@ class ExpedienteController
                             'tipo' => 1
                         ];
                         $cant++;
-                        if (ExpedienteDoc::newRecord($attributes)) {
+                        $sql="SELECT count(idexpediente_doc) as cant FROM expediente_doc 
+                        WHERE fk_expediente={$idexp} AND fk_documento={$iddoc} AND tipo=1";
+                        $exist=ExpedientoDoc::search($sql);
+                        if(!$exist[0]['cant']){
+                            if (ExpedienteDoc::newRecord($attributes)) {
+                                $success++;
+                            }
+                        }else{
                             $success++;
                         }
                     }
@@ -144,7 +154,9 @@ class ExpedienteController
             'message' => ''
         ];
         if (!empty($data['idexpediente'])) {
-            $sql = "SELECT idexpediente_directo FROM expediente_directo WHERE fk_funcionario={$_SESSION['idfuncionario']} AND fk_expediente={$data['idexpediente']}";
+            $sql = "SELECT idexpediente_directo FROM expediente_directo 
+            WHERE fk_funcionario={$_SESSION['idfuncionario']} 
+            AND fk_expediente={$data['idexpediente']}";
             $record = StaticSql::search($sql);
             if (!$record) {
                 $Directo = new ExpedienteDirecto();
@@ -282,7 +294,8 @@ class ExpedienteController
                     $success = 0;
 
                     foreach ($data['idfuncionario'] as $user) {
-                        $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=0 AND fk_funcionario={$user}";
+                        $sql = "SELECT identidad_expediente FROM entidad_expediente 
+                        WHERE tipo_funcionario=0 AND fk_funcionario={$user}";
                         foreach ($idExp as $idexpediente) {
                             $cant++;
                             $sql .= " AND fk_expediente={$idexpediente}";
@@ -346,7 +359,9 @@ class ExpedienteController
             'results' => []
         ];
         if ($data['search'] != "") {
-            $sql = "SELECT idfuncionario,nombres,apellidos FROM funcionario WHERE estado=1 and (lower(nombres) like '%{$data['search']}%' OR lower(apellidos) like '%{$data['search']}%' ) ";
+            $sql = "SELECT idfuncionario,nombres,apellidos FROM funcionario 
+            WHERE estado=1 and (lower(nombres) like '%{$data['search']}%' 
+            OR lower(apellidos) like '%{$data['search']}%' ) ";
             if (!empty($data['where'])) {
                 $sql .= $data['where'];
             }
@@ -380,8 +395,11 @@ class ExpedienteController
         ];
         if (!empty($data)) {
             if (!empty($data['idpermiso'])) {
-                $sql = "SELECT ex.* FROM permiso_expediente p,entidad_expediente ex WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente AND p.tipo_funcionario=ex.tipo_funcionario AND p.idpermiso_expediente={$data['idpermiso']}";
-                $instance = EntidadExpediente::findBySql($sql, true);
+                $sql = "SELECT ex.* FROM permiso_expediente p,entidad_expediente ex 
+                WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente 
+                AND p.tipo_funcionario=ex.tipo_funcionario 
+                AND p.idpermiso_expediente={$data['idpermiso']}";
+                $instance = EntidadExpediente::findBySql($sql);
                 if ($instance) {
                     $EntidadExpediente = $instance[0];
                     $EntidadExpediente->setAccessPermits('c', false);
@@ -419,7 +437,10 @@ class ExpedienteController
 
         if (!empty($data)) {
             if (!empty($data['idexpediente'])) {
-                $sql = "SELECT DISTINCT f.nombres,f.apellidos,p.idpermiso_expediente,e.nombre as nombre_expediente FROM permiso_expediente p,funcionario f,expediente e WHERE p.fk_funcionario=f.idfuncionario AND e.idexpediente=p.fk_expediente AND p.tipo_funcionario=0 AND p.fk_entidad=1 AND p.permiso like '%c%'";
+                $sql = "SELECT DISTINCT f.nombres,f.apellidos,p.idpermiso_expediente,e.nombre as nombre_expediente 
+                FROM permiso_expediente p,funcionario f,expediente e 
+                WHERE p.fk_funcionario=f.idfuncionario AND e.idexpediente=p.fk_expediente 
+                AND p.tipo_funcionario=0 AND p.fk_entidad=1 AND p.permiso like '%c%'";
                 if (is_array($data['idexpediente'])) {
                     $sql .= " AND p.fk_expediente in (" . implode(',', $data['idexpediente']) . ")";
                 } else {
@@ -555,7 +576,8 @@ class ExpedienteController
                     $response['exito'] = 1;
 
                     if ($editChildren) {
-                        $sql = "UPDATE expediente SET fk_caja={$Expediente->fk_caja} WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
+                        $sql = "UPDATE expediente SET fk_caja={$Expediente->fk_caja} 
+                        WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
                         StaticSql::query($sql);
                     }
                 }
@@ -585,7 +607,8 @@ class ExpedienteController
         if (!empty($data['idexpediente'])) {
             $Expediente = new Expediente($data['idexpediente']);
             if ($Expediente->estado == 1) {
-                $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
+                $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli 
+                WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
                 $exis = StaticSql::search($sql);
                 if (!$exis[0]['cant']) {
                     $ExpDel = new ExpedienteEli();
@@ -597,7 +620,9 @@ class ExpedienteController
                     ];
                     $ExpDel->setAttributes($attributes);
                     if ($ExpDel->create()) {
-                        $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()} WHERE idexpediente={$data['idexpediente']} OR (cod_arbol like '{$Expediente->cod_arbol}.%' AND estado=1)";
+                        $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()}
+                        WHERE idexpediente={$data['idexpediente']} 
+                        OR (cod_arbol like '{$Expediente->cod_arbol}.%' AND estado=1)";
                         if (StaticSql::query($sql)) {
                             $response['exito'] = 1;
                             $response['message'] = 'Expediente eliminado';
@@ -643,14 +668,16 @@ class ExpedienteController
                         if ($Expadre->estado_cierre == 2) {
                             $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra cerrado';
                         } else {
-                            $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                            $instance = ExpedienteEli::findBySql($sql, true);
+                            $sql = "SELECT * FROM expediente_eli 
+                            WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
+                            $instance = ExpedienteEli::findBySql($sql);
                             if ($instance) {
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_accion = date('Y-m-d H:i:s');
                                 $ExpDel->accion=2;
                                 if ($ExpDel->update()) {
-                                    $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE fk_expediente_eli={$ExpDel->getPK()}";
+                                    $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL 
+                                    WHERE fk_expediente_eli={$ExpDel->getPK()}";
                                     if (StaticSql::query($sql)) {
                                         $response['exito'] = 1;
                                         $response['message'] = 'Expediente restaurado';
@@ -749,7 +776,8 @@ class ExpedienteController
         if ($cant) {
             $ok = 0;
             foreach ($SeriesPadres as $id) {
-                $sql = "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
+                $sql = "SELECT identidad_serie FROM entidad_serie 
+                WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
                 $exist = StaticSql::search($sql);
                 if (!$exist) {
                     $attributesPadre = $attributes;

@@ -23,9 +23,6 @@ $Response = (object)[
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-    $modules = Modulo::findAllByAttributes([
-        'cod_padre' => $parent
-    ], null, 'orden');
 
     if ($grouperParent == 1 && $parent) {
         $Modulo = Modulo::findByAttributes(['nombre' => 'dashboard']);
@@ -38,6 +35,9 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
             'url' => $Modulo->enlace
         ];
     }
+
+    $sql = "SELECT * FROM modulo WHERE cod_padre={$parent} AND tipo<3 ORDER by orden ASC";
+    $modules = Modulo::findBySql($sql);
 
     foreach ($modules as $key => $Modulo) {
         if (PermisoController::moduleAccess($Modulo->nombre)) {

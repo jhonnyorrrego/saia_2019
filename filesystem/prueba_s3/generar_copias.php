@@ -36,7 +36,7 @@ use Aws\S3\S3Client;
 use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Adapter\GoogleCloudStorage;
 
-use Stringy\Stringy as String;
+//use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 

@@ -17,6 +17,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,39 +29,46 @@ include_once $ruta_db_superior . "librerias_saia.php";
     <?= kaiten() ?>
     <?= librerias_acciones_kaiten() ?>
 </head>
+
 <body>
     <div id="container"></div>
 
     <script>
-        $(function(){
-            var baseUrl = '<?= $ruta_db_superior ?>';           
-    
-            $('#container').kaiten({
-                columnWidth : '100%',
-                startup : function(dataFromURL){
+        $(function() {
+            var baseUrl = '<?= $ruta_db_superior ?>';
+            var kaiten = $('#container');
+
+            kaiten.kaiten({
+                columnWidth: '100%',
+                startup: function(dataFromURL) {
                     var panels = JSON.parse('<?= $_REQUEST["panels"] ?>');
-                    
-                    for(panel of panels){
+
+                    for (panel of panels) {
                         panel.url = baseUrl + panel.url;
                         this.kaiten('load', panel);
                     }
-                    
+
                 }
             });
 
-            window.crear_pantalla_busqueda = function(datos,elimina){
-                var panel = $('#container').kaiten("getPanel",1);
+            window.refresKaitenDashboard = function(panelId) {
+                let panel = kaiten.kaiten("getPanel", panelId);
+                kaiten.kaiten('reload', panel);
+            }
+            window.crear_pantalla_busqueda = function(datos, elimina) {
+                var panel = kaiten.kaiten("getPanel", 1);
 
-                if(elimina){
-                    if(typeof(panel) != 'undefined'){
-                        $('#container').kaiten("removeChildren", panel);
+                if (elimina) {
+                    if (typeof(panel) != 'undefined') {
+                        kaiten.kaiten("removeChildren", panel);
                     }
                 }
-                
+
                 datos.url = baseUrl + datos.url;
-                $('#container').kaiten("load",datos);                                                  
+                kaiten.kaiten("load", datos);
             }
         });
     </script>
 </body>
-</html>
+
+</html> 

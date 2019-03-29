@@ -21,10 +21,6 @@ $params = [
 	'responsable' => $Expediente->responsable,
 	'baseUrl' => $ruta_db_superior
 ];
-
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo validate();
-echo select2();
 ?>
 <form id="formularioExp" name="formularioExp" class="form-horizontal">
 	<div class="form-group row">
