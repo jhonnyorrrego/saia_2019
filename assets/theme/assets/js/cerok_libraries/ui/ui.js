@@ -27,7 +27,7 @@ class Ui {
                 $(selector).on("load", function () {
                     $(selector).removeAttr("style");
                     
-                    if ($(selector).height(40).width() > 130) {
+                    if ($(selector).height(47).width() > 130) {
                         $(selector).removeAttr("style");
                         $(selector).width(130);
                     }
@@ -96,9 +96,9 @@ class Ui {
     }
 
     static resizeIframe() {
-        let headerHeight = Math.ceil($("#header").height());
-        let windowHeight = Math.ceil($(window).height());
-        $("#iframe_workspace").height(windowHeight - headerHeight - 5);
+        let headerHeight = $("#iframe_workspace").offset().top;
+        let windowHeight = $(window).height();
+        $("#iframe_workspace").height(windowHeight - headerHeight);
 
         if (!$("#new_action_mobile_container").is(":hidden")) {
             $("#new_action_mobile_container").css({

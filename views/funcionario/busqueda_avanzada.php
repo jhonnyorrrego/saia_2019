@@ -20,10 +20,10 @@ include_once $ruta_db_superior . "assets/librerias.php";
 </head>
 
 <body>
-    <div class=" container-fluid container-fixed-lg">
+    <div class=" container-fluid container-fixed-lg px-0">
         <!-- START card -->
         <div class="card card-default">
-            <div class="card-body">
+            <div class="card-body pb-1">
                 <h6>FILTRAR FUNCIONARIOS</h6>
                 <form id="kformulario_saia" method="post">
                     <div class="form-group form-group-default">
@@ -42,7 +42,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         <input type="hidden" name="bksaiacondicion_apellidos" value="like">
                     </div>
                     <div class="form-group form-group-default">
-                        <label>Nit:</label>
+                        <label>Identificación:</label>
                         <input name="bqsaia_nit" type="text" class="form-control">
                         <input type="hidden" name="bksaiacondicion_nit" value="=">
                     </div>
@@ -54,8 +54,8 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         <input type="hidden" name="bksaiacondicion_perfil" value="like_comas">
                     </div>
                     <div class="form-group">
-                        <label class="pl-1">Estado</label>
-                        <div class="radio radio-success">
+                        <label class="pl-1 mb-0 mt-1">Estado</label>
+                        <div class="radio radio-success my-0">
                             <input type="hidden" name="bksaiacondicion_estado" id="bksaiacondicion_estado" value="=">
 
                             <input type="radio" value="1" name="bqsaia_estado" id="activo">

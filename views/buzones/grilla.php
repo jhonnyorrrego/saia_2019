@@ -90,17 +90,17 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
 </head>
 
 <body>
-    <div class="container-fluid mw-100">
+    <div class="container-fluid mw-100" style="overflow-y:auto;height:100%">
         <div class="row">
             <div class="col-12">
                 <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
-                    <input type="hidden" value="<?php echo ($datos_busqueda[0]['cantidad_registros']); ?>" name="busqueda_total_registros" id="busqueda_registros">
+                    <input type="hidden" value="<?= $datos_busqueda[0]['cantidad_registros'] ?>" name="busqueda_total_registros" id="busqueda_registros">
                     <input type="hidden" name="sord" id="sord" value="desc">
                     <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $componentId ?>">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
-                    <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?php echo (@$_REQUEST["idbusqueda_filtro_temp"]); ?>">
+                    <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?= $_REQUEST["idbusqueda_filtro_temp"] ?>">
                     <input type="hidden" name="busqueda_total_paginas" id="busqueda_total_paginas" value="">
-                    <input type="hidden" value="<?php echo (@$_REQUEST["variable_busqueda"]); ?>" name="variable_busqueda" id="variable_busqueda">
+                    <input type="hidden" value="<?= $_REQUEST["variable_busqueda"] ?>" name="variable_busqueda" id="variable_busqueda">
                     <input type="hidden" name="rows" id="rows" value="20">
                 </form>
             </div>
@@ -203,13 +203,15 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
             var options = $table.bootstrapTable('getOptions');
             paginaActual = options.pageNumber;
 
-            var total = res.records;
-            res.total = total;
+            res.total = res.records;
             if (res.rows) {
                 $.each(res.rows, function(i, row) {
                     row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
                 });
+            } else {
+                res.rows = [];
             }
+
             return res;
         }
 
@@ -278,6 +280,8 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                         let params = getParams(data.url);
                         $('#idbusqueda_componente').val(params.idbusqueda_componente);
                         $('#idbusqueda_filtro_temp').val(params.idbusqueda_filtro_temp);
+                        $('#busqueda_total_paginas').val(null);
+
                         procesamiento_buscar();
                     }
                 });
