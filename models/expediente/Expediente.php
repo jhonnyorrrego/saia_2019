@@ -579,7 +579,9 @@ class Expediente extends Model
      * l: lectura serie,
      * e: editar expediente
      * c: Compartir expediente
+     * v: ver expediente (utilizado para navegar dentro de expedientes sin permisos)
      * d: eliminar expediente
+     * 
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */

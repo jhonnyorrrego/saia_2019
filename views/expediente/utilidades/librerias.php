@@ -217,10 +217,40 @@ function accion_exp_dir( $idexpediente)
 }
 /** AQUI TERMINA LAS FUNCIONES DEL INFO ACCESO DIRECTOS */
 
-function info_expediente_doc($iddocExp)
+/** AQUI EMPIEZA LAS FUNCIONES DEL INFO EXPEDIENTE DOCUMENTO */
+
+function icon_doc( $iddocExp)
 {
     $ExpedienteDoc = new ExpedienteDoc($iddocExp);
     $Documento = $ExpedienteDoc->getRelationFk('Documento');
+
+    $GLOBALS['ExpedienteDoc']= $ExpedienteDoc;
+    $GLOBALS['Documento']= $Documento;
+
+    return "<i class='fa fa-file'></i>";
+}
+
+function descripcion_doc()
+{
+    global $Documento;
+    return $Documento->numero.' - '.$Documento->descripcion;
+}
+
+function propietario_doc()
+{
+    global $Documento;
+    return $Documento->getCreador();
+}
+
+function fecha_creacion_doc()
+{
+    global $Documento;
+    return $Documento->fecha;
+}
+
+function accion_doc( $iddocExp)
+{
+    global $Documento, $ExpedienteDoc;
 
     if ($ExpedienteDoc->tipo == 1) {
         $btn = '<button class="btn mx-1 btn-info" title="Vincular con otro expediente"><i class="fa fa-link"></i></button>
@@ -229,34 +259,12 @@ function info_expediente_doc($iddocExp)
     } else {
         $btn .= '<button class="btn mx-1 btn-info delDoc" data-id="' . $iddocExp . '" title="Eliminar"><i class="fa fa-trash"></i></button>';
     }
-
-    $html = <<<FINHTML
-    <div class ="row mx-0 my-0">
-        <div class="col-1">
-            <i class='float-right fa fa-file'></i>
-        </div>
-
-        <div class="col-3">
-            {$Documento->numero}
-        </div>
-
-        <div class="col-3">
-            {$Documento->getCreador()}
-        </div>
-
-        <div class="col-2">
-            {$Documento->fecha}
-        </div>
-
-        <div class="float-right col-3">
-            <button class="btn mx-1 btn-info cursor kenlace_saia" title="Información del documento" conector = "iframe" enlace = "views/documento/index_acordeon.php?documentId={$Documento->getPK()}" titulo="Rad. {$Documento->numero}"><i class="fa fa-info-circle"></i></button>{$btn}
-        </div>
-    </div> 
-FINHTML;
+    $html="<button class='btn mx-1 btn-info cursor kenlace_saia' title='Información del documento' conector = 'iframe' enlace = 'views/documento/index_acordeon.php?documentId={$Documento->getPK()}' titulo='Rad. {$Documento->numero}'>
+        <i class='fa fa-info-circle'></i>
+    </button>{$btn}";
     return $html;
 }
-
-
+/** TERMINA LAS FUNCIONES DEL INFO EXPEDIENTE DOCUMENTO */
 
 /** TERMINA LAS FUNCIONES DEL INFO */
  

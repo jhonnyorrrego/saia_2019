@@ -15,7 +15,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 $params = (!empty($_REQUEST)) ? $_REQUEST : [];
 
-global $conn;
+$idtable = 'table';
+if (!empty($params['idtable'])) {
+    $idtable = $params['idtable'];
+    unset($params['idtable']);
+}
+
 $sql = "select a.ruta_libreria_pantalla,b.encabezado_componente,info,cantidad_registros from busqueda a,busqueda_componente b where a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente={$_REQUEST['idbusqueda_componente']}";
 $component = StaticSql::search($sql);
 
@@ -40,7 +45,7 @@ $params['nameColumns'] = $nameColumns;
 <div class="container px-0">
     <div class="row sticky-top bg-master-lightest mx-0" style="height:36px" id="header_list"></div>
     <div class="row mx-0" id="content">
-        <table id="table" data-selections=""></table>
+        <table id="<?= $idtable ?>" data-selections=""></table>
     </div>
 </div>
 <script>
@@ -49,7 +54,7 @@ $params['nameColumns'] = $nameColumns;
         var params = <?= json_encode($params); ?>;
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>';
         var UrlsourceData = 'app/busquedas/datosBootstrapTableExp.php';
-        var table = $('#table');
+        var table = $('#<?= $idtable ?>');
 
         table.bootstrapTable({
             url: baseUrl + UrlsourceData,
@@ -66,6 +71,7 @@ $params['nameColumns'] = $nameColumns;
                 table.parents('.bootstrap-table').addClass('w-100');
             },
         });
+
         if (encabezado) {
             $("#header_list").load(baseUrl + encabezado, params, function() {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -74,10 +80,12 @@ $params['nameColumns'] = $nameColumns;
     });
 </script>
 <?php
-if ($component[0]['ruta_libreria_pantalla']) {
-    $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
+if (empty($params['showDocuments'])) {
+    if ($component[0]['ruta_libreria_pantalla']) {
+        $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
-    foreach ($libraries as $librarie) {
-        include_once $ruta_db_superior . $librarie;
+        foreach ($libraries as $librarie) {
+            include_once $ruta_db_superior . $librarie;
+        }
     }
 }

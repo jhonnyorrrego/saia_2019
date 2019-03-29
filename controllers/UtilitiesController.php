@@ -17,11 +17,11 @@ class UtilitiesController
             $temporalRoute = $_SESSION['ruta_temp_funcionario'] . '/' . $fileName;
             $relativeRoute = $ruta_db_superior . $temporalRoute;
 
-            if (!is_file($relativeRoute) || $force) { 
+            if (!is_file($relativeRoute) || $force) {
                 file_put_contents($relativeRoute, $filebinario);
             }
 
-            if(is_file($relativeRoute)){
+            if (is_file($relativeRoute)) {
                 $response->success = 1;
                 $response->route = $temporalRoute;
             }
@@ -140,5 +140,20 @@ class UtilitiesController
             }, ARRAY_FILTER_USE_BOTH);
         }
         return $response;
+    }
+    
+
+    public static function generateFormToken ($formName) {
+        $secret = TOKEN_SECRET;
+        $sid = session_id();
+        $token = md5($secret . $sid . $formName);
+        return $token;
+    }
+
+    public static function verifyFormToken( $formName, $token) {
+        $secret = TOKEN_SECRET;
+        $sid = session_id();
+        $correct = md5($secret . $sid . $formName);
+        return ($token == $correct);
     }
 }
