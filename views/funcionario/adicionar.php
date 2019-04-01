@@ -10,6 +10,11 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
+
+$params = json_encode([
+    'baseUrl' => $ruta_db_superior,
+    'userId' => $_REQUEST['userId']
+]);
 ?>
 <!doctype html>
 <html lang="en">
@@ -83,7 +88,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         </div>
                         <div class="form-group form-group-default form-group-default-select2 required">
                             <label class="">Perfil</label>
-                            <select class="full-width" id="profile" name="perfil">
+                            <select class="full-width" id="profile" name="perfil[]" multiple="multiple">
                                 <option value="">Seleccione...</option>
                             </select>
                         </div>
@@ -101,7 +106,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <?= select2() ?>
     <?= dropzone() ?>
     <?= validate() ?>
-    <script src="<?= $ruta_db_superior ?>views/funcionario/js/adicionar.js" data-baseurl="<?= $ruta_db_superior ?>">
+    <script id="user_script" src="<?= $ruta_db_superior ?>views/funcionario/js/adicionar.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

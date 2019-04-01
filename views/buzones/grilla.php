@@ -30,12 +30,9 @@ $sql = <<<SQL
 SQL;
 $datos_busqueda = StaticSql::search($sql);
 
-$librerias = explode(",", $datos_busqueda[0]["ruta_libreria"]);
-$librerias = $librerias + explode(",", $datos_busqueda[0]["ruta_libreria"]);
-
-foreach ($librerias as $key => $ruta) {
-    include_once $ruta_db_superior . $ruta;
-}
+$phpLibraries = explode(",", $datos_busqueda[0]["ruta_libreria"]);
+$jsLibraries = explode(",", $datos_busqueda[0]["ruta_libreria_pantalla"]);
+$libraries = array_merge($phpLibraries, $jsLibraries);
 
 preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
 if (!empty($valor_campos)) {
@@ -87,6 +84,14 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <?= theme() ?>
 
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/buzones/css/grilla.css">
+
+    <?php
+
+    foreach ($libraries as $key => $ruta) {
+        include_once $ruta_db_superior . $ruta;
+    }
+
+    ?>
 </head>
 
 <body>
@@ -173,7 +178,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <?= icons() ?>
     <?= select2() ?>
     <?= librerias_acciones_kaiten() ?>
-    <script>
+    <script data-baseurl="<?= $ruta_db_superior ?>">
         $.fn.serializeObject = function() {
             var o = {};
             var a = this.serializeArray();

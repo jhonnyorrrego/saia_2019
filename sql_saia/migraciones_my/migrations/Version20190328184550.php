@@ -38,6 +38,7 @@ final class Version20190328184550 extends AbstractMigration
             'estado' => 1,
             'tablas' => 'funcionario',
             'ruta_libreria' => 'app/funcionario/librerias.php',
+            'ruta_libreria_pantalla' => 'views/funcionario/js/librerias.php',
             'tipo_busqueda' => 2
         ]);
 
@@ -57,7 +58,7 @@ final class Version20190328184550 extends AbstractMigration
             'etiqueta' => 'Funcionarios',
             'nombre' => 'funcionario',
             'orden' => 1,
-            'info' => 'Foto|{*get_image@foto_recorte,idfuncionario,nombres,apellidos*}|center|-|Nombre|{*get_name@idfuncionario,nombres,apellidos*}|center|-|Identificacion|{*nit*}|center|-|Login|{*login*}|center|-|Perfil|{*get_profile@perfil*}|center|-|Estado|{*get_state@estado*}|center',
+            'info' => 'Foto|{*get_image@foto_recorte,idfuncionario,nombres,apellidos*}|center|-|Nombre|{*get_name@idfuncionario,nombres,apellidos*}|center|-|Identificacion|{*nit*}|center|-|Login|{*login*}|center|-|Perfil|{*get_profile@perfil*}|center|-|Estado|{*get_state@estado*}|center|-|Opciones|{*options_button@idfuncionario*}|center',
             'estado' => 1,
             'campos_adicionales' => 'nombres,apellidos,login,nit,perfil,estado,foto_recorte',
             'ordenado_por' => 'nombres',
