@@ -4,7 +4,6 @@
 //sesion();
  
 include_once("class.funcionarios.php");
-include_once("formatos/librerias/header_formato.php");
 global $conn;
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>

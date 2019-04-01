@@ -21,8 +21,6 @@ $params = [
     'baseUrl' => $ruta_db_superior,
     'countExpediente' => $Caja->countAllExpediente()
 ];
-
-include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 
 

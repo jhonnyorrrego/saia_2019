@@ -10,6 +10,11 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
+
+$params = json_encode([
+    'baseUrl' => $ruta_db_superior,
+    'userId' => $_REQUEST['userId']
+]);
 ?>
 <!doctype html>
 <html lang="en">
@@ -18,21 +23,15 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <?= jquery() ?>
-    <?= bootstrap() ?>
-    <?= theme() ?>
-
     <title>Funcionario</title>
 </head>
 
 <body>
-    <div class="container container-fixed-lg col-12 col-md-8 pt-3">
+    <div class="container container-fixed-lg col-12">
         <!-- START card -->
         <div class="card card-default">
             <div class="card-body">
                 <div class="col-12">
-                    <h6>Crear Funcionario</h6>
                     <p>los campos con <span class="text-danger">*</span> son obligatorios</p>
                 </div>
                 <div class="col-12">
@@ -89,7 +88,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         </div>
                         <div class="form-group form-group-default form-group-default-select2 required">
                             <label class="">Perfil</label>
-                            <select class="full-width" id="profile" name="perfil">
+                            <select class="full-width" id="profile" name="perfil[]" multiple="multiple">
                                 <option value="">Seleccione...</option>
                             </select>
                         </div>
@@ -99,10 +98,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
                                 <option value="">Seleccione...</option>
                             </select>
                         </div>
-                        <div class="form-actions">
-                            <input class="btn btn-danger" type="reset" value="Cancelar">
-                            <input class="btn btn-complete" type="submit" value="Crear">
-                        </div>
                     </form>
                 </div>
             </div>
@@ -111,7 +106,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <?= select2() ?>
     <?= dropzone() ?>
     <?= validate() ?>
-    <script src="<?= $ruta_db_superior ?>views/funcionario/js/adicionar.js" data-baseurl="<?= $ruta_db_superior ?>">
+    <script id="user_script" src="<?= $ruta_db_superior ?>views/funcionario/js/adicionar.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-echo arbol(true);
+echo fancyTree(true);
 echo bootstrapTable ();
 echo validate();
 ?>

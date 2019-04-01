@@ -132,7 +132,6 @@ if (EW_this.x_fecha_extrema_f.value=='') {
 <link rel="STYLESHEET" type="text/css" href="<?php echo $ruta_db_superior; ?>css/dhtmlXTree.css">
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXTree.js"></script>
-<?php include_once($ruta_db_superior."formatos/librerias/header_formato.php"); ?>
 <form name="cajaedit" id="cajaedit" action="cajaedit.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <p>
 <input type="hidden" name="a_edit" value="U">

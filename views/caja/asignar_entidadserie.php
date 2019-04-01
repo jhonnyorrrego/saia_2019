@@ -46,7 +46,7 @@ $params = [
             <th scope="col">Dependencia</th>
             <th scope="col">Serie</th>
             <th scope="col">Fecha Vinculación</th>
-            <th scope="col">Eliminar</th>
+            <th scope="col">Eliminar Vinculación</th>
           </tr>
         </thead>
         <tbody id="data-table">

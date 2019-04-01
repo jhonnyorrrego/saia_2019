@@ -1,7 +1,6 @@
 <?php
 include_once("db.php");
 include_once("class_transferencia.php");
-include_once("formatos/librerias/header_formato.php");
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type='text/javascript' src='js/jquery.autocomplete.js'></script>

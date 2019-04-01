@@ -36,7 +36,6 @@ $validar_enteros = array(
 desencriptar_sqli("form_info");
 echo (librerias_jquery('1.7'));
 include ("formatos/librerias/estilo_formulario.php");
-include ("formatos/librerias/header_formato.php");
 
 // Get action
 $sAction = @$_POST["a_add"];

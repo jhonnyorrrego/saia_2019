@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "controllers/autoload.php";
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: application/xhtml+xml");
@@ -18,7 +18,7 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 echo("<tree id=\"0\">\n");
 
-$ok = new Permiso();
+$ok = new PermisoController();
 
 //FORMATO radicacion_entrada
 $formato_radicacion = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre='radicacion_entrada'", "", $conn);

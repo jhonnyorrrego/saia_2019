@@ -37,11 +37,7 @@ $params = [
 	'idexpediente' => $idexpediente,
 	'baseUrl' => $ruta_db_superior
 ];
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo validate();
-
 ?>
-
 <div class="row">
     <div class="col-12">               
         <?php if ($Expediente->isResponsable()) : ?>

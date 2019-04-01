@@ -90,7 +90,6 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<?php include ("formatos/librerias/header_formato.php") ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">

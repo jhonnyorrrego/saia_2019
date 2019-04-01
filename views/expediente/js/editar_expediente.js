@@ -78,8 +78,6 @@ $(document).ready(function (){
         },
         submitHandler : function(form) {
             $("#guardarExp").attr('disabled',true);
-            let codPadre=$("#cod_padre").val(); 
-            let idexpediente=$("#idexpediente").val(); 
 
             $.ajax({
                 type : 'POST',

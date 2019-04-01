@@ -1737,7 +1737,7 @@ span.fancytree-expander {
 </style>';
                 $includes .= $this->incluir('$ruta_db_superior . "arboles/crear_arbol_ft.php"', "librerias");
                 $includes .= '<?= jqueryUi() ?>';
-                $includes .= '<?= arbol(true) ?>';
+                $includes .= '<?= fancyTree(true) ?>';
             }
 
             $includes .= $this->incluir('<?= $ruta_db_superior ?>js/title2note.js', "javascript");

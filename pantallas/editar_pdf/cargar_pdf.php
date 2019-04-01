@@ -198,7 +198,6 @@ function cargar_anexos_documento_web($anexos) {
 		</tr>
 	</table>
 </form>
-<script language="javascript" type="text/javascript" src="<?php echo $ruta_db_superior; ?>tinymce34/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		mode : "textareas",

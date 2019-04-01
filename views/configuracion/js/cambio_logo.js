@@ -23,8 +23,9 @@ $(function() {
                             message: response.message
                         });
 
-                        localStorage.setItem('logo', route);
-                        $('#client_image', top.document).attr('src', baseUrl + route);
+                        localStorage.setItem("logo", route);
+
+                        $("#client_image", top.document).attr("src", baseUrl + route);
                         showImage();
                     } else {
                         top.notification({
@@ -82,11 +83,11 @@ $(function() {
         });
     }
 
-    function showImage(route = ''){
-        if(!route){
-            route = localStorage.getItem('logo');
+    function showImage(route = "") {
+        if (!route) {
+            route = localStorage.getItem("logo");
         }
 
-        $('#logo').attr('src', baseUrl + route);
+        $("#logo").attr("src", baseUrl + route);
     }
 });
