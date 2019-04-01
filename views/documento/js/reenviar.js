@@ -138,12 +138,6 @@ $(function () {
                     var option = new Option(u.text, u.id, true, true);
                     $('#select_users').append(option).trigger('change');
                 })
-                $('#select_users').trigger({
-                    type: 'select2:select',
-                    params: {
-                        data: data
-                    }
-                });
             }
         });
     })(params);

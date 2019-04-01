@@ -1,6 +1,5 @@
 <?php
-
-/
+/*
 include_once("db.php");
 include_once("vaciar_tablas.php");
 echo "Ejecutando limpieza, espere un momento por favor<br />";
@@ -60,4 +59,3 @@ $formatos=busca_filtro_tabla("nombre_tabla","formato","","",$conn);
 echo ("Fin de la limpieza");
 
 */
-?>

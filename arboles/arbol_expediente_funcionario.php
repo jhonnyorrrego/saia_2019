@@ -34,7 +34,7 @@ class ExpedienteFuncionario
             'key' => $id
         ];
     }
-/**
+    /**
  * Setea los valores que le lleguen del request
  * para utilizarlos en la clase
  *
@@ -49,6 +49,12 @@ class ExpedienteFuncionario
         } else {
             $this->estadoArchivo = 1;
         }
+
+        if (!empty($data['onlyExp'])) {
+            $this->onlyExp = $data['onlyExp'];
+        } else {
+          $this->onlyExp = 0;
+        }
     }
 
     /**
@@ -57,15 +63,18 @@ class ExpedienteFuncionario
      * @param integer $id
      * @return array
      */
-    public function llenaExpediente(int $id = null):array
+    public function llenaExpediente(int $id = null): array
     {
         if ($id) {
             $this->id = $id;
         }
 
-        $subConsulta = "SELECT DISTINCT v.idexpediente FROM vpermiso_expediente v WHERE (v.estado_archivo={$this->estadoArchivo} AND v.cod_padre={$this->id} AND (v.agrupador =1 OR fk_funcionario={$this->idfuncionario}))";
+        $subConsulta = "SELECT DISTINCT v.idexpediente FROM vpermiso_expediente v 
+        WHERE (v.estado_archivo={$this->estadoArchivo} 
+        AND v.cod_padre={$this->id} 
+        AND (v.agrupador =1 OR fk_funcionario={$this->idfuncionario}))";
         $sql = "SELECT * FROM expediente WHERE idexpediente IN ({$subConsulta})";
-        $records = Expediente::findBySql($sql, true);
+        $records = Expediente::findBySql($sql);
 
         $objetoJson = [];
         if ($records) {
@@ -91,13 +100,26 @@ class ExpedienteFuncionario
                     'fk_serie' => $Expediente->fk_serie,
                     'fk_entidad_serie' => $Expediente->fk_entidad_serie
                 ];
-                
-                if(!$cerrado){
+
+                if (!$cerrado) {
+                    $okPerm=false;
+                    if ($this->onlyExp && $Expediente->getAccessUser('a')){
+                        $okPerm=true;
+                        if($Expediente->agrupador==0 || $Expediente->agrupador==3) {
+                            $item['checkbox'] = true;
+                        }
+                    }
+
                     $item["lazy"] = $Expediente->hasChild();
                     if ($item["lazy"]) {
+                        if($Expediente->agrupador==2 && $okPerm){
+                            if(!$Expediente->hasChild(2)){
+                                $item['checkbox'] = true;
+                            }
+                        }
                         $item["children"] = $this->llenaExpediente($item['key']);
-                    } else if ($Expediente->agrupador == 0) {
-                        $item["children"] = $this->llenaTipoDocumental($Expediente);
+                    } else if (!$this->onlyExp && $Expediente->agrupador == 0) {
+                        $item["children"] = $this->llenaTipoDocumental($Expediente);                        
                     }
                 }
                 $objetoJson[] = $item;
@@ -105,31 +127,36 @@ class ExpedienteFuncionario
         }
         return $objetoJson;
     }
-/**
+    /**
  * Muestra los tipos documentales vinculados al expedientep
  *
  * @param Expediente $Expediente :Instancia del expediente
  * @return array
  * @author Andres.Agudelo <andres.agudelo@cerok.com>
  */
-    public function llenaTipoDocumental(Expediente $Expediente):array
+    public function llenaTipoDocumental(Expediente $Expediente): array
     {
-        $sql = "SELECT * FROM serie WHERE tipo=3 AND estado=1 AND cod_padre={$Expediente->fk_serie}";
-        $records = Serie::findBySql($sql, true);
+        $sql = "SELECT * FROM serie WHERE tipo=3 AND estado=1 
+        AND cod_padre={$Expediente->fk_serie}";
+        
+        $records = Serie::findBySql($sql);
         $objetoJson = [];
         if ($records) {
             foreach ($records as $Serie) {
                 $item = [];
 
-                if(PermisoSerie::hasAccessUser($Expediente->fk_dependencia,$Serie->getPK(),'a')){
+                if (PermisoSerie::hasAccessUser(
+                    $Expediente->fk_dependencia,
+                    $Serie->getPK(), 'a')
+                ) {
                     $item['checkbox'] = true;
                     $text = $Serie->nombre;
-                }else{
-                    $text = $Serie->nombre.' (Sin permiso)';
+                } else {
+                    $text = $Serie->nombre . ' (Sin permiso)';
                     $item['checkbox'] = false;
                 }
                 $item['title'] = $text;
-                $item['key'] =$Serie->getPK().'-'.$Expediente->getPK();
+                $item['key'] = $Serie->getPK() . '-' . $Expediente->getPK();
                 $item['data'] = [
                     'fk_expediente' => (int)$Expediente->getPK(),
                     'fk_serie' => (int)$Serie->getPK(),
@@ -140,6 +167,5 @@ class ExpedienteFuncionario
         }
         return $objetoJson;
     }
-
 }
-?>
+ 

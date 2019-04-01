@@ -108,7 +108,7 @@ class PermisoSerie extends Model
     public static function hasAccessUser(int $fk_dependencia, int $fk_serie, string $permiso = 'a') : bool
     {
         $sql = "SELECT permiso FROM vpermiso_serie WHERE idserie={$fk_serie} AND fk_dependencia={$fk_dependencia} AND permiso like '%{$permiso}%' AND idfuncionario={$_SESSION['idfuncionario']}";
-        return self::findBySql($sql) ? true : false;
+        return self::findBySql($sql,false) ? true : false;
     }
 
 }

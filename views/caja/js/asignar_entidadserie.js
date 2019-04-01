@@ -20,7 +20,7 @@ $(document).ready(function (){
                                 <td>${row.nombreDependencia}</td>
                                 <td>${row.nombreSerie}</td>
                                 <td>${row.fechaCreacion}</td>
-                                <td><button class="btn btn-danger" data-id="${row.idcaja_entidadserie}"><i class="fa fa-trash"></i></button></td>
+                                <td><button class="btn btn-danger delBtn" data-id="${row.idcaja_entidadserie}"><i class="fa fa-unlink"></i></button></td>
                             </tr>`;
                             $("#data-table").append(tr);
                         });
@@ -46,11 +46,14 @@ $(document).ready(function (){
     }
     loadTable();
 
-    $(document).off("click", ".btn-danger");
-    $(document).on("click",".btn-danger",function(){
+    $(document).off("click", ".delBtn");
+    $(document).on("click",".delBtn",function(){
         var idvinculo = $(this).data("id");
 
         top.confirm({
+            drag: false,
+            overlay: true,
+            close: false,
             type: 'error',
             message: 'Está seguro de desvincular la Dependencia/serie?',
             position: 'center',

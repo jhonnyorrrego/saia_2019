@@ -13,7 +13,12 @@ var topModalDefaults = {
             label: "Cancelar",
             class: "btn btn-danger"
         }
-    }
+    },
+    beforeShow: function (event) { return true; }, //evento ejecutado antes de mostrar
+    afterShow: function (event) { return true; },//evento ejecutado despues de mostrar
+    beforeHide: function (event) { return true; },//evento ejecutado antes de cerrar
+    afterHide: function (event) { return true; },//evento ejecutado despues de cerrar
+    onSuccess: function () { return true; }
 };
 
 function topModal(options) {
@@ -21,6 +26,8 @@ function topModal(options) {
     var modalDialog = modal.find(".modal-dialog");
     var modalBody = modal.find("#modal_body");
     var options = $.extend({}, topModalDefaults, options);
+
+    setEvents(options, modal);
 
     modal.find("#btn_success").off("click");
     modalBody.html("");
@@ -56,7 +63,8 @@ function topModal(options) {
                 .show()
                 .text(options.buttons.cancel.label)
                 .addClass(options.buttons.cancel.class)
-                .on("click", function() {
+                .off("click")
+                .on("click", function () {
                     top.closeTopModal();
                 });
         } else {
@@ -67,7 +75,7 @@ function topModal(options) {
     }
 
     if (options.url) {
-        modalBody.load(options.url, options.params, function(
+        modalBody.load(options.url, options.params, function (
             response,
             status,
             xhr
@@ -90,6 +98,24 @@ function topModal(options) {
     }
 }
 
+function setEvents(options, modal) {
+    modal.off('show.bs.modal').on('show.bs.modal', function (e) {
+        options.beforeShow(e);
+    });
+
+    modal.off('shown.bs.modal').on('shown.bs.modal', function (e) {
+        options.afterShow(e);
+    });
+
+    modal.off('hide.bs.modal').on('hide.bs.modal', function (e) {
+        options.beforeHide(e);
+    });
+
+    modal.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+        options.afterHide(e);
+    });
+}
+
 function openModal(options) {
     if (!$("#dinamic_modal", window.top.document).is(":visible")) {
         $("[data-target='#dinamic_modal']", window.top.document).trigger(
@@ -109,4 +135,8 @@ function closeTopModal() {
     } else {
         $("#dinamic_modal", window.top.document).modal("hide");
     }
+}
+
+function successModalEvent(data) {
+    window.modalOptions.onSuccess(data);
 }
