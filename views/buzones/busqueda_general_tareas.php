@@ -21,8 +21,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SAIA - SGDEA</title>
-
-    <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 
 <body>
@@ -59,9 +57,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="col-12">
                             <div class="form-group form-group-default">
                                 <label>Nombre de la tarea:</label>
-                                <input type="hidden" name="bksaiacondicion_a@nombre" id="bksaiacondicion_a@nombre" value="like">
+                                <input type="hidden" name="bksaiacondicion_a@nombre" value="like">
                                 <input type="hidden" name="bqsaiaenlace_a@nombre" id="bqsaiaenlace_a@nombre" value="y" />
-                                <input class="form-control" name="bqsaia_a@nombre" type="text">
+                                <input class="form-control" name="bqsaia_a@nombre" type="text" id="task_name">
                             </div>
 
                         </div>
@@ -110,7 +108,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
                     </div>
                     <div class="form-group">
-                        <button type="reset" class="btn btn-danger">Limpiar</button>
+                        <button type="button" class="btn btn-danger" id="clear">Limpiar</button>
                         <button type="submit" class="btn btn-complete">Buscar</button>
                     </div>
                 </form>
@@ -118,8 +116,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <?= select2() ?>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>
+    <?= dateTimePicker() ?>
     <script src="<?= $ruta_db_superior ?>views/buzones/js/busqueda_general_tareas.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 
