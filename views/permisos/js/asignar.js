@@ -146,24 +146,28 @@ $(function () {
                 case '1':
                     var icon = 'fa fa-eye';
                     var className = '';
+                    var tooltip = 'Ver';
                     break;
                 case '2':
                     var icon = 'fa fa-edit';
                     var className = '';
+                    var tooltip = 'Editar';
                     break;
                 case '3':
                     var icon = 'fa fa-legal';
                     var className = 'd-none';
+                    var tooltip = 'Responsable';
                     break;
             }
             $('#user_list').append(`
                 <tr>
                     <td>
                         ${i.name}
-                        ${buttonActions(i.userId, icon)}
+                        ${buttonActions(i.userId, icon, tooltip)}
                     </td>
                     <td>
-                        <button class="btn btn-link new_accion ${className}" data-type="delete" data-specific="${i.userId}">
+                        <button class="btn btn-link new_accion ${className}" data-type="delete" 
+                            data-specific="${i.userId}" data-toggle="tooltip" data-placement="bottom" title="Eliminar">
                             <i class="fa fa-trash"></i>
                         </button>
                     </td>
@@ -174,7 +178,7 @@ $(function () {
         $('button > i.fa-legal').parent().addClass('disabled');
     }
 
-    function buttonActions(specific = 0, icon = 'fa fa-ellipsis-v') {
+    function buttonActions(specific = 0, icon = 'fa fa-unlock-alt', tooltip = '') {
         if (isNaN(root)) {
             checkRootAccess();
         }
@@ -184,7 +188,8 @@ $(function () {
         </a>` : '';
 
         return `<div class="dropdown float-right">
-            <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-toggle="tooltip" data-placement="bottom" title="${tooltip}">
                 <i class="${icon}"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
