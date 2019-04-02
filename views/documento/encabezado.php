@@ -176,7 +176,6 @@ function plantilla($documentId, $transferId = 0)
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
 <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
 <?php
-
 }
 
 if (isset($_REQUEST['documentId'])) {
