@@ -10,18 +10,16 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "controllers/autoload.php");
 
-$files = Anexos::findAllByAttributes([
-    'documento_iddocumento' => 8338
-], [], 'idanexos desc', 0 , 3);
+$files = Anexo::findAllByAttributes([], [], 'idanexo desc', 0 , 3);
 
 foreach ($files as $key => $Anexos) {
-    $save = TemporalController::createTemporalFile($Anexos->ruta, $Anexos->tipo);
+    $save = TemporalController::createTemporalFile($Anexos->ruta, $Anexos->extension);
     if($save->success){
-        $tipo = $Anexos->tipo;
-        $$tipo = $ruta_db_superior . $save->route;
+        $extension = $Anexos->extension;
+        $$extension = $ruta_db_superior . $save->route;
     }
 
-    var_dump($Anexos->tipo);
+    var_dump($Anexos->extension);
 }
 
 ?>
