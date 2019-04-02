@@ -217,7 +217,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     url: baseUrl + 'app/funcionario/solicitar_cambio_clave.php',
                     dataType: 'json',
                     data: $("#recovery_form").serialize(),
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('#buttons,#spiner').toggleClass('d-none');
                     },
                     success: function(response) {
@@ -241,6 +241,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     }
                 });
             });
+
+            $("[name='username'],[name='password']").on('keyup', function(e) {
+                if (e.keyCode == 13) {
+                    $('#access').trigger('click');
+                }
+            })
 
             (function checkDirectory() {
                 $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
