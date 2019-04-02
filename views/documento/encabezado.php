@@ -152,6 +152,7 @@ function plantilla($documentId, $transferId = 0)
             <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
         </div>
         <div class="col-auto d-none d-md-block">
+            <!-- muestra la fecha de vencimiento -->
             <?= expiration($Documento->fecha_limite, $documentId) ?>
         </div>
     </div>
