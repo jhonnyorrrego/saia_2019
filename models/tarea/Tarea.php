@@ -125,7 +125,8 @@ class Tarea extends Model
         return $color;
     }
 
-    public function setDefaultState(){
+    public function setDefaultState()
+    {
         return TareaEstado::newRecord([
             'fk_funcionario' => $_SESSION['idfuncionario'],
             'fk_tarea' => $this->getPK(),
@@ -147,10 +148,26 @@ class Tarea extends Model
      */
     public static function findBetweenDates($userId, $initialDate, $finalDate, $type)
     {
-        $tables = self::getTableName() . ' a,' . TareaFuncionario::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='" . $finalDate . "'", '', $conn);
+        $initial = StaticSql::getDateFormat('a.fecha_inicial', 'Y-m-d H:i:s');
+        $final =  StaticSql::getDateFormat('a.fecha_final', 'Y-m-d H:i:s');
+        $sql = <<<SQL
+            SELECT
+                a.* 
+            FROM
+                tarea a 
+            JOIN
+                tarea_funcionario b
+            ON
+                a.idtarea = b.fk_tarea
+            WHERE
+                b.estado=1 AND
+                b.fk_funcionario = {$userId} AND
+                b.tipo= {$type} AND
+                {$initial} >='{$initialDate}' AND
+                {$final} <= '{$finalDate}'
+SQL;
 
-        return self::convertToObjectCollection($findRecords);
+        return self::findBySql($sql);
     }
 
     /**
@@ -201,6 +218,5 @@ SQL;
 SQL;
         $record = StaticSql::search($sql);
         return $record[0]['total'];
- 
-   }
+    }
 }

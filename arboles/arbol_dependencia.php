@@ -25,6 +25,7 @@ class ArbolDependencia
     private $expandir = 0;
     private $condicion_ad = '';
     public $checkbox = 1;
+    public $fields = 1;
 
     public $enableCheck = false;
     public $depserie = 0;
@@ -62,7 +63,7 @@ class ArbolDependencia
             $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
             $this->cantSel = count($this->seleccionados);
         }
-        
+
         if (!empty($this->parametros["excluidos"])) {
             $this->condicion_ad .= " and iddependencia not in (" . $this->parametros["excluidos"] . ")";
         }
@@ -73,6 +74,10 @@ class ArbolDependencia
 
         if (isset($this->parametros["checkbox"])) {
             $this->checkbox = $this->parametros["checkbox"];
+        }
+
+        if (isset($this->parametros["fields"])) {
+            $this->fields = $this->parametros["fields"];
         }
     }
 
@@ -86,7 +91,6 @@ class ArbolDependencia
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
-
                 $item = [];
 
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
@@ -98,6 +102,7 @@ class ArbolDependencia
                 $item["extraClasses"] = "estilo-dependencia";
                 $item["title"] = $text;
                 $item["key"] = $papas[$i]["iddependencia"];
+                $item["checkbox"] = $this->checkbox;
 
                 if ($this->expandir == 1) {
                     $item["expanded"] = true;
@@ -108,8 +113,13 @@ class ArbolDependencia
                         $item["selected"] = true;
                     }
                 }
-               
-                $item["checkbox"] = $this->checkbox;
+
+                if ($this->fields) {
+                    foreach ($this->fields as $field) {
+                        $item['data'][$field] = $papas[$i][$field];
+                    }
+                }
+
                 $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $conn);
                 if ($hijos[0]["cant"]) {
                     $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"], $enableCheck);

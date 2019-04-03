@@ -29,33 +29,23 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <table id="treegrid">
+                <table id="treegrid" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>#</th>
-                            <th></th>
-                            <th>Key</th>
-                            <th>Like</th>
+                            <th>Código</th>
+                            <th>Logo</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="alignRight"></td>
-                            <td class="alignCenter">
-                                <input type="checkbox" name="like">
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
     <?= fancyTree(true) ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-fancytree/2.30.0/modules/jquery.fancytree.table.js"></script>
+    <script src="<?= $ruta_db_superior ?>views/dependencia/js/listado.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 
 </html> 
