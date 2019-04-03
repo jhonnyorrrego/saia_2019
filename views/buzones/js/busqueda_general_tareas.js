@@ -1,33 +1,5 @@
 $(function () {
     let baseUrl = $("script[data-baseurl]").data("baseurl");
-    let language = {
-        errorLoading: function () {
-            return "La carga falló"
-        },
-        inputTooLong: function (e) {
-            var t = e.input.length - e.maximum,
-                n = "Por favor,elimine " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        inputTooShort: function (e) {
-            var t = e.minimum - e.input.length,
-                n = "Por favor,introduzca " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        loadingMore: function () {
-            return "Cargando más resultados…"
-        },
-        maximumSelected: function (e) {
-            var t = "Sólo puede seleccionar " + e.maximum + " elemento";
-            return e.maximum != 1 && (t += "s");
-        },
-        noResults: function () {
-            return "No se encontraron resultados"
-        },
-        searching: function () {
-            return "Buscando…"
-        }
-    };
 
     (function init() {
         $('#filtro_usuario, #filtro_fecha').select2();
@@ -35,6 +7,14 @@ $(function () {
         createAutocomplete();
         findComponent();
     })();
+
+    $('#clear').on('click', function () {
+        $('#filtro_usuario').val(1).trigger('change');
+        $('#task_name').val('');
+        $('#select_responsable').val(null).trigger('change');
+        $('#fecha_inicial').data("DateTimePicker").clear();
+        $('#fecha_final').data("DateTimePicker").clear();
+    });
 
     $("#find_tasks_form").on("submit", function (e) {
         e.preventDefault();
@@ -73,7 +53,7 @@ $(function () {
                 break;
             case '2':
                 defaultUser();
-                $('#user_container').show();
+                $('#user_container').hide();
                 break;
             case '3':
                 $('#user_container').show();
@@ -93,7 +73,7 @@ $(function () {
             millisecond: 0
         });
 
-        switch (e.params.data.id) {            
+        switch (e.params.data.id) {
             case '2':
                 var initial = today.clone();
                 var final = today.clone();
@@ -126,7 +106,7 @@ $(function () {
         }
     });
 
-    $('#select_responsable').on('select2:select', function (e) {
+    $('#select_responsable').on('select2:select change', function (e) {
         let values = $('#select_responsable').val();
         $('#user_list').val(values.join(','));
     });
@@ -186,7 +166,7 @@ $(function () {
     function createAutocomplete() {
         $("#select_responsable").select2({
             minimumInputLength: 3,
-            language: language,
+            language: 'es',
             ajax: {
                 url: `${baseUrl}app/funcionario/autocompletar.php`,
                 dataType: 'json',

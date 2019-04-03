@@ -32,4 +32,19 @@ class UtilitiesController
         }
         return $response;
     }
+    
+
+    public static function generateFormToken ($formName) {
+        $secret = TOKEN_SECRET;
+        $sid = session_id();
+        $token = md5($secret . $sid . $formName);
+        return $token;
+    }
+
+    public static function verifyFormToken( $formName, $token) {
+        $secret = TOKEN_SECRET;
+        $sid = session_id();
+        $correct = md5($secret . $sid . $formName);
+        return ($token == $correct);
+    }
 }

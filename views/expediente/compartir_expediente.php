@@ -35,16 +35,12 @@ $params = [
   'idexpediente'=>$idexpediente,
   'baseUrl'=> $ruta_db_superior
 ];
-
-include_once $ruta_db_superior . 'assets/librerias.php';
-echo validate();
-echo select2();
 ?>
     
 <div class="row mx-0">
   <div class="col-12">
 
-      <form id="formularioExp" name="formularioExp" class="form-horizontal">
+      <form id="formularioExp" name="formularioExp" action="#" class="form-horizontal">
         <div class="form-group row">
           <label for="nombre" class="col-md-3 control-label">Nombre del funcionario</label>
           <div class="col-md-9">
@@ -56,7 +52,7 @@ echo select2();
         <div class="row">
             <div class="col-md-12">
               <input type="hidden" id="idexpediente" name="idexpediente" value="<?= $ids; ?>">
-            <button class="btn btn-complete" id="guardarPermiso">Compartir</button>
+            <button class="btn btn-complete" type="submit" id="guardarPermiso">Compartir</button>
           </div>
         </div>
       </form>

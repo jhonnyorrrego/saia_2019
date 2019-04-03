@@ -27,12 +27,13 @@ $component = StaticSql::search($sql);
 <script>
     $(function() {
         var baseUrl = $("script[data-baseurl]").data('baseurl');
-        var params = JSON.parse('<?= json_encode($params); ?>');
-        var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
+        var params = <?= json_encode($params); ?>;
+        var encabezado = '<?= $component[0]["encabezado_componente"] ?>';
+        var UrlsourceData = 'app/busquedas/datosBootstrapTable.php';
         var table = $('#table');
 
         table.bootstrapTable({
-            url: `${baseUrl}app/busquedas/datosBootstrapTable.php`,
+            url: baseUrl + UrlsourceData,
             queryParams: function(queryParams) {
                 queryParams = $.extend(queryParams, params);
                 return queryParams;
@@ -127,9 +128,7 @@ $component = StaticSql::search($sql);
         }
 
         if (encabezado) {
-            $("#header_list").load(baseUrl + encabezado, {
-                idbusqueda_componente: params.idbusqueda_componente
-            }, function() {
+            $("#header_list").load(baseUrl + encabezado, params, function() {
                 $('[data-toggle="tooltip"]').tooltip();
             });
         }

@@ -25,7 +25,7 @@ class EventoNotificacion extends Model {
 	}
 
 	public static function getAll($limit = 0, $asArray = false) {
-		if($limit) {
+		/*if($limit) {
 			$records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
 		} else {
 			$records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
@@ -38,6 +38,6 @@ class EventoNotificacion extends Model {
 			$response = null;
 		}
 
-		return $response;
+		return $response;*/
 	}
 }

@@ -1,0 +1,46 @@
+.table thead tr th:first-child{
+    padding-left: 0px !important;
+}
+
+#barra_exportar_ppal {
+    margin-right: 50px;
+}
+
+.progress {
+    margin-bottom: 0px;
+}
+
+.pagination-detail {
+    font-size: 10px;
+}
+
+.page-size {
+    font-size: 10px;
+}
+
+.pagination {
+    font-size: 10px;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+select.btn {
+    border: 2px lightgray solid;
+}
+
+.table thead tr th {
+    color: darkslategray;
+}
+
+.page-item.active .page-link {
+    background-color: #48b0f7;
+    border-color: #48b0f7;
+}

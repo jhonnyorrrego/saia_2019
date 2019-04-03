@@ -13,6 +13,13 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "controllers/autoload.php";
 
 /**
+ * las funciones indicadas posteriormente son
+ * usadas para el reporte de funcionarios
+ * 
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ */
+
+/**
  * consulta los nombre del perfil
  *
  * @param string $perfil  campo perfil de funcionario
@@ -45,7 +52,7 @@ function get_name($userId, $name, $lastName)
     $Funcionario->nombres = $name;
     $Funcionario->apellidos = $lastName;
 
-    return "<a class='kenlace_saia cursor text-complete' enlace='views/funcionario/dashboard.php?key={$userId}' conector='iframe' titulo='{$Funcionario->getName()}'>{$Funcionario->getName()}</a>";
+    return $Funcionario->getName();
 }
 
 /**
@@ -84,6 +91,17 @@ function user_condition()
     return $condition;
 }
 
+/**
+ * muestra la imagen del funcionario
+ *
+ * @param string $imgRoute
+ * @param integer $userId
+ * @param string $name
+ * @param string $lastName
+ * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-04-01
+ */
 function get_image($imgRoute, $userId, $name, $lastName)
 {
     global $ruta_db_superior;
@@ -101,3 +119,26 @@ function get_image($imgRoute, $userId, $name, $lastName)
     return roundedImage($Funcionario->getImage('foto_recorte'));
 }
 
+/**
+ * retorna el dropdown de opciones
+ *
+ * @param integer $userId
+ * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-04-01
+ */
+function options_button($userId)
+{
+    return <<<HTML
+        <div class="dropdown">
+            <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                <a href="#" class="dropdown-item new_action" data-type="edit" data-id="{$userId}">
+                    <i class="fa fa-edit"></i> Editar
+                </a>
+            </div>
+        </div>
+HTML;
+}
