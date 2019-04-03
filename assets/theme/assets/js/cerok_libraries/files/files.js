@@ -69,8 +69,8 @@ class Files {
     createDropzone() {
         if (!this.options.dropzone.init) {
             let instance = this;
-            instance.options.dropzone.init = function() {
-                this.on("success", function(file, response) {
+            instance.options.dropzone.init = function () {
+                this.on("success", function (file, response) {
                     response = JSON.parse(response);
 
                     if (response.success) {
@@ -108,7 +108,7 @@ class Files {
     createEvents() {
         let instance = this;
 
-        $("#upload_file").on("click", function() {
+        $("#upload_file").on("click", function () {
             if (instance._loadedFiles.length) {
                 instance.save($("#file_description").val());
             } else {
@@ -119,16 +119,16 @@ class Files {
             }
         });
 
-        this.getStopButton().on("click", function() {
+        this.getStopButton().on("click", function () {
             instance.reset();
         });
 
         $(document).off("click", ".show_options");
-        $(document).on("click", ".show_options", function() {
+        $(document).on("click", ".show_options", function () {
             let parentNode = $(this).parent();
             $.post(
                 `${
-                    instance.options.baseUrl
+                instance.options.baseUrl
                 }app/permisos/permiso_funcionario.php`,
                 {
                     key: localStorage.getItem("key"),
@@ -136,7 +136,7 @@ class Files {
                         instance.options.sourceReference || "TIPO_ANEXO",
                     typeId: $(this).data("id")
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         if (!response.data.edit) {
                             parentNode.find('[data-type="upload"]').hide();
@@ -178,7 +178,7 @@ class Files {
         $(document).on(
             "click",
             '.file_option:not(".show_options")',
-            function() {
+            function () {
                 switch ($(this).data("type")) {
                     case "upload":
                         instance.upload($(this).data("id"));
@@ -203,7 +203,7 @@ class Files {
 
         instance
             .getTable()
-            .on("expand-row.bs.table", function(event, index, row, $detail) {
+            .on("expand-row.bs.table", function (event, index, row, $detail) {
                 if (row.version > 1) {
                     instance.expand(row, $detail);
                 } else {
@@ -215,32 +215,34 @@ class Files {
 
         instance
             .getTable()
-            .on("click-cell.bs.table", function(
-                event,
-                field,
-                value,
-                row,
-                $element
-            ) {
+            .on("click-cell.bs.table", function (event, field, value, row, $element) {
                 if (field == "etiqueta") {
-                    let visor = "viewer_img.php";
                     switch (row.extension) {
                         case "pdf":
-                            visor = "viewer_annotate.php";
+                            var viewer = "viewer_annotate.php";
                             break;
-                        case "xls":
-                            visor = "viewer_xls.php";
+                        case "xlsx":
+                        case "docx":
+                        case "pptx":
+                            var viewer = "viewer_kuku.php";
+                            break;
+                        default:
+                            var viewer = "viewer_img.php";
                             break;
                     }
 
                     top.topModal({
-                        url: `${instance.options.baseUrl}views/visor/${visor}`,
-                        params: {},
-                        size: "modal-xl",
-                        title: "Anexo",
-                        centerAlign: false,
+                        url: `${instance.options.baseUrl}views/visor/iframe_viewer.php`,
+                        params: {
+                            viewer: viewer,
+                            type: instance.options.sourceReference,
+                            typeId: row.id,
+                            key: localStorage.getItem('key')
+                        },
+                        size: 'modal-xl',
+                        title: 'Anexo',
                         buttons: {}
-                    });
+                    })
                 }
             });
     }
@@ -287,7 +289,7 @@ class Files {
         return {
             classes: "table table-sm table-hover mt-0",
             theadClasses: "thead-light",
-            queryParams: function(queryParams) {
+            queryParams: function (queryParams) {
                 queryParams.sortOrder = "desc";
                 queryParams.fileId = row.id;
                 queryParams.key = localStorage.getItem("key");
@@ -328,7 +330,7 @@ class Files {
                 url: "",
                 sidePagination: "server",
                 queryParamsType: "other",
-                queryParams: function(queryParams) {
+                queryParams: function (queryParams) {
                     queryParams.key = localStorage.getItem("key");
                     return queryParams;
                 },
@@ -354,7 +356,7 @@ class Files {
                 ],
                 detailView: true
             },
-            save: function(description, files) {
+            save: function (description, files) {
                 console.log(arguments);
             }
         };
@@ -363,19 +365,19 @@ class Files {
     static OptionButttons(value, row, index) {
         return [
             `<span data-id="${
-                row.id
+            row.id
             }" class="file_option show_options fa fa-chevron-circle-down cursor f-20"><br></span>`,
             `<span data-type="edit" data-id="${
-                row.id
+            row.id
             }" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
             `<span data-type="upload" data-id="${
-                row.id
+            row.id
             }" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
             `<span data-type="delete" data-id="${
-                row.id
+            row.id
             }" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
             `<span data-type="access" data-id="${
-                row.id
+            row.id
             }" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`
         ].join("");
     }
@@ -439,7 +441,7 @@ class Files {
             buttons: [
                 [
                     "<button><b>YES</b></button>",
-                    function(instance, toast) {
+                    function (instance, toast) {
                         if (filesInstance.options.delete(key)) {
                             instance.hide(
                                 { transitionOut: "fadeOut" },
@@ -453,7 +455,7 @@ class Files {
                 ],
                 [
                     "<button>NO</button>",
-                    function(instance, toast) {
+                    function (instance, toast) {
                         instance.hide(
                             { transitionOut: "fadeOut" },
                             toast,

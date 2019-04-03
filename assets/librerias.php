@@ -406,3 +406,16 @@ function jsPanel()
     return $css . $js;
 }
 
+function kuku()
+{
+    global $ruta_db_superior;
+
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/docxjs/DocxJS.bundle.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/celljs/CellJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/slidejs/SlideJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $js;
+}
