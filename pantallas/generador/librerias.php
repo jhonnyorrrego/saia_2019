@@ -320,6 +320,7 @@ function kma_valor_campo($datos, $tiqueta_html)
             $texto_opc["funcionario"] = "arboles/arbol_funcionario.php?idcampofun=1";
             $texto_opc["dependencia"] = "arboles/arbol_dependencia.php";
             $texto_opc["cargo"] = "arboles/arbol_cargo.php";
+            $texto_opc["rol"] = "arboles/arbol_funcionario.php";
             $texto_opc["serie"] = "arboles/arbol_serie.php";
 
             if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
