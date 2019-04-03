@@ -247,12 +247,7 @@ function librerias_acciones_kaiten()
 function librerias_notificaciones()
 {
     global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
+    $texto = '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
     return $texto;
 }
 
