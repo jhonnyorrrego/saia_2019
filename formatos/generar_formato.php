@@ -2346,7 +2346,7 @@ span.fancytree-expander {
         $upload_max_size = str_replace("M", "", ini_get('upload_max_filesize'));
         $maximo = str_replace("M", "", return_megabytes($upload_max_size));
         $js_archivos = "<script type='text/javascript'>
-            var upload_url = '../../dropzone/cargar_archivos_formato.php';
+            var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
             var lista_archivos = new Object();

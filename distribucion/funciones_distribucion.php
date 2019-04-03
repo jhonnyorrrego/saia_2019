@@ -390,8 +390,7 @@ function ver_estado_distribucion($estado_distribucion)
     return ($array_estado_distribucion[$estado_distribucion]);
 }
 
-function mostrar_diligencia_distribucion($tipo_origen, $estado_recogida)
-{//Diligencia
+function mostrar_diligencia_distribucion($tipo_origen, $estado_recogida){ //Diligencia
     if ($estado_recogida == 'estado_recogida') {
         $estado_recogida = 0;
     }
@@ -447,64 +446,72 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
     return ($nombre_ruta_distribucion);
 }
 
-function select_mensajeros_ruta_distribucion($iddistribucion)
-{//Mensajero
+function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
     global $conn;
 
-    $datos_distribucion = busca_filtro_tabla("tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
-    $atributos_input = ' style="width:200px;" class="form-control select_mensajeros_ditribucion" name="select_mensajeros_ditribucion_' . $iddistribucion . '" id="select_mensajeros_ditribucion_' . $iddistribucion . '" iddistribucion="' . $iddistribucion . '"';
+    $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
 
     $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
-    $upd = '';
+
     switch ($diligencia) {
         case 'RECOGIDA' :
-            $select_mensajeros = generar_select_mensajeros_distribucion($atributos_input, $datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['mensajero_origen'], $datos_distribucion[0]['mensajero_origen'],$iddistribucion);
+            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['mensajero_origen'], $datos_distribucion[0]['mensajero_destino'], 0,$iddistribucion,$diligencia);
             break;
         case 'ENTREGA':
-            $select_mensajeros = generar_select_mensajeros_distribucion($atributos_input, $datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['ruta_destino'], $datos_distribucion[0]['mensajero_destino'], $datos_distribucion[0]['mensajero_empresad'],$iddistribucion);
+            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['ruta_destino'], $datos_distribucion[0]['mensajero_destino'], $datos_distribucion[0]['mensajero_empresad'],$iddistribucion,$diligencia);
             break;
-    }//fin switch
+    } //fin switch
 
     return ($select_mensajeros);
 }
 
-function generar_select_mensajeros_distribucion($atributos_input, $tipo, $idft_ruta_distribucion = 0, $selected = 0, $empresa_transportadora = 0, $iddistribucion)
-{
+function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion,$diligencia){
     global $conn;
-
     $html = '';
-    if ($tipo == 1) {//internos
-        if ($selected) {//mensajeros de la ruta de distribucion
-            /*$mensajeros_ruta = busca_filtro_tabla("b.mensajero_ruta", "ft_ruta_distribucion a, ft_funcionarios_ruta b", "a.idft_ruta_distribucion=b.ft_ruta_distribucion AND estado_mensajero=1 AND a.idft_ruta_distribucion=" . $idft_ruta_distribucion, "", $conn);
-            $cnombre_mensajero = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $mensajeros_ruta[0]['mensajero_ruta'], "", $conn);*/
-
-            $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
-
-            $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
-            $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
-        } else {//si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
-            $html .= '<label> No tiene mensajero asignado</label>';
-        } //FIN: //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
-    } else {//externos
-        if ($selected) {
-            if ($empresa_transportadora) {
-                $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $empresa_transportadora, "", $conn);
-
-                $html = '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$empresa_transportadora.'-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
+    if ($tipo_origen == 1) { //internos
+        if($diligencia=='RECOGIDA'){
+            if($mensajero_origen){
+                $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_origen=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
+                $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
+                $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
             } else {
-                $array_concat = array(
-                    "nombres",
-                    "' '",
-                    "apellidos"
-                );
-                $cadena_concat = concatenar_cadena_sql($array_concat);
-                $mensajeros_externos = busca_filtro_tabla("iddependencia_cargo as id," . $cadena_concat . " AS nombre", "vfuncionario_dc", "lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1 and iddependencia_cargo=" . $selected, "", $conn);
-                $html = '<label>' . $mensajeros_externos[0]['nombre'] . '-i</label>';
+                $html .= '<label> No tiene mensajero asignado</label>';
             }
-        } else {//si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
+        }elseif ($diligencia == 'ENTREGA'){
+            if($mensajero_destino && $tipo_destino==2){
+                $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
+                $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
+                $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
+            } elseif($empresa_transportadora && $tipo_destino==1){
+                $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
+                $html = '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$mensajero_destino.'-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
+            } else{
+                $html .= '<label> No tiene mensajero asignado</label>';
+            }
+        }
+    } else {//externos
+        if($empresa_transportadora){
+            $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
+            $html = '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$mensajero_destino.'-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
+        }elseif ($mensajero_destino) {
+            $array_concat = array(
+                "nombres",
+                "' '",
+                "apellidos"
+            );
+            $cadena_concat = concatenar_cadena_sql($array_concat);
+            $mensajeros_externos = busca_filtro_tabla("iddependencia_cargo as id," . $cadena_concat . " AS nombre,cargo", "vfuncionario_dc", "iddependencia_cargo=" . $mensajero_destino, "", $conn);
+            if($mensajeros_externos[0]['cargo']=="Mensajero"){
+                $tipo_mensajero="i";
+            }else{
+                $tipo_mensajero="e";
+            }
+            $html = '<label>' . $mensajeros_externos[0]['nombre'] . '-'.$tipo_mensajero.'</label>';
+        } else { //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
             $html .= '<label> No tiene mensajero asignado</label>';
         }
-    }//FIN: externos
+    } //FIN: externos
+    //return $tipo_origen." - ".$tipo_destino." - ". $mensajero_origen." - ". $mensajero_destino." - ". $empresa_transportadora." - ". $iddistribucion." - ".$diligencia;
     return ($html);
 }
 
