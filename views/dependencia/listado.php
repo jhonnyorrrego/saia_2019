@@ -23,10 +23,23 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <?= jqueryUi() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
+    <?= icons() ?>
 </head>
 
 <body>
     <div class="container-fluid">
+        <div class="row pt-3">
+            <div class="col-3">
+                <div class="input-group transparent">
+                    <input id="search" type="text" class="form-control" placeholder="Buscar..." autocomplete="off">
+                    <div class="input-group-append ">
+                        <span class="input-group-text transparent">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <table id="treegrid" class="table table-bordered">

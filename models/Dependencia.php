@@ -5,13 +5,18 @@ class Dependencia extends Model
     protected $iddependencia;
     protected $codigo;
     protected $nombre;
+    protected $fecha_ingreso;
     protected $cod_padre;
     protected $tipo;
     protected $estado;
+    protected $codigo_tabla;
+    protected $extension;
+    protected $ubicacion_dependencia;
+    protected $logo;
+    protected $orden;
     protected $codigo_arbol;
-    
+    protected $descripcion;
     protected $dbAttributes;
-
     protected $DependenciaPadre;
 
     function __construct($id = null)
@@ -36,15 +41,18 @@ class Dependencia extends Model
      *
      * @return void
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @lastModification jhon sebastian valencia <jhon.valencia@cerok.com> 2019-04-04
      */
     protected function afterCreate()
     {
-        $cod_arbol = $this->iddependencia;
-        $padre = $this->getCodPadre();
-        if ($padre) {
-            $cod_arbol = $padre->codigo_arbol . '.' . $this->iddependencia;
+        $Dependencia = $this->getParent();
+
+        if ($Dependencia) {
+            $code = $Dependencia->codigo_arbol . '.' . $this->getPK();
+        } else {
+            $code = $this->getPK();
         }
-        $this->codigo_arbol = $cod_arbol;
+        $this->codigo_arbol = $code;
         return $this->update();
     }
     /**
@@ -60,13 +68,15 @@ class Dependencia extends Model
         );
         return $estado[$this->estado];
     }
+
     /**
      * retorna la instancia de la dependencia padre
      *
      * @return void
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @lastModification jhon sebastian valencia <jhon.valencia@cerok.com> 2019-04-04
      */
-    public function getCodPadre()
+    public function getParent()
     {
         if ($this->cod_padre) {
             if (!$this->DependenciaPadre) {
@@ -77,5 +87,4 @@ class Dependencia extends Model
         }
         return $this->DependenciaPadre;
     }
-
 }
