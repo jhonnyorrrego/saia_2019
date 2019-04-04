@@ -24,9 +24,20 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $Dependencia = new Dependencia($_REQUEST['id']);
 
     if ($Dependencia) {
-        $image = TemporalController::createTemporalFile($Dependencia->logo, '', true);
+        $image = TemporalController::createTemporalFile($Dependencia->logo, uniqid(), true);
         $Response->data = $Dependencia->getAttributes();
-        $Response->data['logo'] = $image->success ? $image->route : '';
+        $Response->data['key'] = $Dependencia->getPK();
+
+        if ($image->success) {
+            $Response->data['logo'] = [
+                'name' => 'logo',
+                'route' => $image->route,
+                'size' => filesize($ruta_db_superior . $image->route)
+            ];
+        } else {
+            $Response->data['logo'] = null;
+        }
+
         $Response->success = 1;
     } else {
         $Dependencia->message = "No se encuentra la dependencia";

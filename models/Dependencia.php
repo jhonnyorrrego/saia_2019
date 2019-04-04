@@ -26,14 +26,24 @@ class Dependencia extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)['safe' => [
-            'codigo',
-            'nombre',
-            'cod_padre',
-            'tipo',
-            'estado',
-            'codigo_arbol'
-        ]];
+        $this->dbAttributes = (object)[
+            'safe' => [
+                'codigo',
+                'nombre',
+                'fecha_ingreso',
+                'cod_padre',
+                'tipo',
+                'estado',
+                'codigo_tabla',
+                'extension',
+                'ubicacion_dependencia',
+                'logo',
+                'orden',
+                'codigo_arbol',
+                'descripcion'
+            ],
+            'date' => 'fecha_ingreso'
+        ];
     }
     /**
      * Se ejecuta despues de crear la dependencia

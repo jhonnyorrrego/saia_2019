@@ -1,5 +1,6 @@
 $(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
+    $('#table_container').height($(window).height() - $('#table_container').offset().top - 20);
 
     $("#treegrid").fancytree({
         extensions: ["filter", "table"],
@@ -33,9 +34,14 @@ $(function () {
             var node = data.node,
                 $tdList = $(node.tr).find(">td");
 
+            let image = !node.data.logo ? '' : $('<img>', {
+                src: baseUrl + node.data.logo,
+                width: '100'
+            });
+
             $tdList.eq(0).text(node.data.codigo);
-            $tdList.eq(1).text(node.data.logo);
-            $tdList.eq(3).text(node.data.estado ? 'Activo' : 'Inactivo');
+            $tdList.eq(1).html(image);
+            $tdList.eq(3).text(+node.data.estado ? 'Activo' : 'Inactivo');
             $tdList.eq(4).html(`<div class="dropdown d-lg-inline-block d-none">
                 <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v fa-2x"></i>
@@ -84,7 +90,7 @@ $(function () {
             onSuccess: function () {
                 top.closeTopModal();
                 let tree = $("#treegrid").fancytree("getTree");
-                tree.reload();    
+                tree.reload();
             }
         })
     });

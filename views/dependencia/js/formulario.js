@@ -1,15 +1,16 @@
 $(function () {
     let params = $('#area_script').data('params');
     let baseUrl = params.baseUrl;
+    let myDropzone = null;
 
     (function init() {
-        createTree(params.parent);
         createFileInput();
-
         $('#type_select').select2();
 
         if (params.id) {
             findData(params.id);
+        } else {
+            createTree(params.parent);
         }
     })();
 
@@ -34,10 +35,22 @@ $(function () {
     }
 
     function fillForm(data) {
-        console.log(data);
+        for (let attribute in data) {
+            let e = $(`[name='${attribute}']`);
+            if (e.length && attribute != 'estado' && attribute != 'logo') {
+                e.val(data[attribute]).trigger('change');
+            } else if (attribute == 'estado') {
+                $(`[name='estado'][value=${data.estado}]`).prop('checked', true);
+            } else if (attribute == 'logo') {
+                $(`[name='logo']`).val(data.logo.route);
+                setImage(data.logo);
+            }
+        }
+
+        createTree(data.cod_padre, [data.key]);
     }
 
-    function createTree(parentId) {
+    function createTree(parentId, unSelectables = []) {
         $('#areas_tree').fancytree({
             icon: false,
             checkbox: true,
@@ -45,7 +58,8 @@ $(function () {
             source: {
                 url: `${baseUrl}arboles/arbol_dependencia.php`,
                 data: {
-                    expandir: 1
+                    expandir: 1,
+                    unSelectables: unSelectables
                 },
             },
             init: function () {
@@ -94,6 +108,13 @@ $(function () {
                 });
             }
         });
+    }
+
+    function setImage(mockFile) {
+        myDropzone.removeAllFiles();
+        myDropzone.emit("addedfile", mockFile);
+        myDropzone.emit("thumbnail", mockFile, baseUrl + mockFile.route);
+        myDropzone.emit("complete", mockFile);
     }
 });
 
@@ -144,7 +165,8 @@ $("#area_form").validate({
         let params = $("#area_script").data('params');
         let data = $("#area_form").serialize();
         data = data + '&' + $.param({
-            key: localStorage.getItem("key")
+            key: localStorage.getItem("key"),
+            id: params.id
         });
 
         $.post(

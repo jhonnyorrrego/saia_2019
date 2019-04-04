@@ -40,18 +40,27 @@ include_once $ruta_db_superior . "assets/librerias.php";
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="table_container" style="overflow-y:auto">
             <div class="col-12">
                 <table id="treegrid" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>Logo</th>
-                            <th>Nombre</th>
-                            <th>Estado</th>
-                            <th>Opciones</th>
+                            <th class="text-center bold text-dark">Código</th>
+                            <th class="text-center bold text-dark">Logo</th>
+                            <th class="text-center bold text-dark">Nombre</th>
+                            <th class="text-center bold text-dark">Estado</th>
+                            <th class="text-center bold text-dark">Opciones</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-dark"></td>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-center" style="padding:8px"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -61,4 +70,4 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <script src="<?= $ruta_db_superior ?>views/dependencia/js/listado.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 
-</html> 
+</html>

@@ -47,7 +47,7 @@ $params = json_encode([
                         </div>
                         <div class="row">
                             <div class="col-12 mb-2">
-                                <div id="areas_tree">Areas</div>
+                                <div id="areas_tree">Area superior</div>
                                 <input type="hidden" name="cod_padre" class="required">
                             </div>
                         </div>
@@ -69,7 +69,7 @@ $params = json_encode([
                         </div>
                         <div class="form-group form-group-default">
                             <label>Ubicación:</label>
-                            <input name="ubicacion" type="text" class="form-control">
+                            <input name="ubicacion_dependencia" type="text" class="form-control">
                         </div>
                         <div class="form-group form-group-default">
                             <label>Descripción:</label>

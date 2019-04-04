@@ -37,7 +37,12 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
     if ($Dependencia->save()) {
         $Response->success = 1;
-        $Response->message = "Area creada";
+
+        if ($_REQUEST['id']) {
+            $Response->message = "Datos actualizados";
+        } else {
+            $Response->message = "Area creada";
+        }
     } else {
         $Response->message = "Error al guardar";
     }

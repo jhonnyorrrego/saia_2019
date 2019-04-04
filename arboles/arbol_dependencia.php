@@ -79,6 +79,10 @@ class ArbolDependencia
         if (isset($this->parametros["fields"])) {
             $this->fields = $this->parametros["fields"];
         }
+
+        if (isset($this->parametros["unSelectables"])) {
+            $this->unSelectables = $this->parametros["unSelectables"];
+        }
     }
 
     private function llena_dependencia($id)
@@ -116,8 +120,21 @@ class ArbolDependencia
 
                 if ($this->fields) {
                     foreach ($this->fields as $field) {
-                        $item['data'][$field] = $papas[$i][$field];
+                        if ($field != 'logo') {
+                            $item['data'][$field] = $papas[$i][$field];
+                        } else {
+                            $image = TemporalController::createTemporalFile($papas[$i][$field], uniqid(), true);
+                            if ($image->success) {
+                                $item['data'][$field] = $image->route;
+                            } else {
+                                $item['data'][$field] = '';
+                            }
+                        }
                     }
+                }
+
+                if ($this->unSelectables && in_array($papas[$i]["iddependencia"], $this->unSelectables)) {
+                    $item["unselectableStatus"] = true;
                 }
 
                 $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $conn);
