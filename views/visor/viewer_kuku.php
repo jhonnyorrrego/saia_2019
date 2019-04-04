@@ -24,21 +24,21 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </head>
 
 <body>
-    <div class="container main-container">
-        <button id="pdf">pdf</button>
-        <button id="xlsx">xlsx</button>
-        <button id="pptx">pptx</button>
-        <button id="docx">docx</button>
-        <button id="view-btn">Get File button</button>
+    <div class="container">
+        <div class="row my-1" id="tool_row">
+            <div class="col-12">
+                <button class="btn" id="prev-btn">prev button</button>
+                <button class="btn" id="next-btn">next button</button>
+                <button class="btn" id="zoom-in-btn">zoom in button</button>
+                <button class="btn" id="zoom-out-btn">zoom out button</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="kuku-viewer-node" class="mw-100 h-100" style="border:1px solid #eee;"></div>
+            </div>
+        </div>
 
-        <!--control button-->
-        <button id="prev-btn">prev button</button>
-        <button id="next-btn">next button</button>
-
-        <button id="zoom-in-btn">zoom in button</button>
-        <button id="zoom-out-btn">zoom out button</button>
-
-        <div id="kuku-viewer-node" style="width:1000px; height: 500px; border:1px solid #eee; margin: 20px 0;"></div>
     </div>
 
     <?= kuku() ?>

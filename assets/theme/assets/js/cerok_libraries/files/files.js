@@ -231,18 +231,30 @@ class Files {
                             break;
                     }
 
-                    top.topModal({
-                        url: `${instance.options.baseUrl}views/visor/iframe_viewer.php`,
-                        params: {
-                            viewer: viewer,
-                            type: instance.options.sourceReference,
-                            typeId: row.id,
-                            key: localStorage.getItem('key')
+                    let url = `${instance.options.baseUrl}views/visor/${viewer}?`;
+                    url += $.param({
+                        viewer: viewer,
+                        type: instance.options.sourceReference,
+                        typeId: row.id,
+                        key: localStorage.getItem('key')
+                    });
+
+                    jsPanel.ziBase = 10000;
+                    jsPanel.create({
+                        headerTitle: 'Anexo',
+                        iconfont: 'fa',
+                        theme: 'dark',
+                        contentOverflow: 'hidden',
+                        position: {
+                            my: "center-top",
+                            at: "center-top"
                         },
-                        size: 'modal-xl',
-                        title: 'Anexo',
-                        buttons: {}
-                    })
+                        contentSize: {
+                            width: $(window).width() * 0.8,
+                            height: $(window).height() * 0.8,
+                        },
+                        content: '<iframe src="' + url + '" style="width: 100%; height: 100%; border:none;"></iframe>',
+                    });
                 }
             });
     }
@@ -389,6 +401,8 @@ class Files {
             console.error("Debe cargar la libreria bootstrap table");
         } else if (!$(selector).length) {
             console.error("no se encuentra el elemento", selector);
+        } else if (typeof jsPanel == 'undefined') {
+            console.error("Debe cargar la libreria jspanel");
         } else {
             return true;
         }
