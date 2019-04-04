@@ -26,7 +26,7 @@ class Ui {
             if (selector == "#client_image") {
                 $(selector).on("load", function () {
                     $(selector).removeAttr("style");
-                    
+
                     if ($(selector).height(47).width() > 130) {
                         $(selector).removeAttr("style");
                         $(selector).width(130);
@@ -116,7 +116,7 @@ class Ui {
     }
 
     static inactiveTime() {
-        /*var t;
+        var t;
         document.onclick = resetTimer;
     
         function logout() {
@@ -131,7 +131,7 @@ class Ui {
         function resetTimer() {
             clearTimeout(t);
             t = setTimeout(logout, 3600000)
-        }*/
+        }
     }
 
     static setWorkspacePosition() {
@@ -141,6 +141,17 @@ class Ui {
             $("#workspace").css("position", "absolute");
         } else {
             $("#workspace").css("position", "relative");
+        }
+    }
+
+    static bindServiceWorker() {
+        if (navigator.serviceWorker) {
+            let route = Session.getBaseUrl() + 'sw.js';
+            navigator.serviceWorker.register(route).then(function (registration) {
+                console.log('ServiceWorker registration successful with scope:', registration.scope);
+            }).catch(function (error) {
+                console.log('ServiceWorker registration failed:', error);
+            });
         }
     }
 }

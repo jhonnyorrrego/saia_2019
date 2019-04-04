@@ -7,11 +7,14 @@ $(document).ready(function () {
     var $nextbutton = $("#next-btn");
     var $zoomInbutton = $("#zoom-in-btn");
     var $zoomOutbutton = $("#zoom-out-btn");
-    $('#viewer_script').removeAttr('data-params');
-
+    
     var instance = null, fileType = null;
     var docxJS = null, cellJS = null, slideJS = null, pdfJS = null;
+    
+    $('#viewer_script').removeAttr('data-params');
 
+    let kukuParent = $kukuNode.parent()
+    kukuParent.height($(window).height() - kukuParent.offset().top - 20)
     var documentParser = function (fileURL) {
         fileType = getInstanceOfFileType(fileURL);
 

@@ -1,0 +1,23 @@
+{
+    "short_name": "Saia",
+    "name": "Sistema de gestión documental",
+    "icons": [
+        {
+            "src": "assets/images/4848.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        },
+        {
+            "src": "assets/images/9696.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "assets/images/192192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        }
+    ],
+    "start_url": "index.php",
+    "display": "standalone"
+}
