@@ -18,6 +18,8 @@
             "sizes": "192x192"
         }
     ],
-    "start_url": "index.php",
-    "display": "standalone"
+    "start_url": "views/login/login.php",
+    "display": "standalone",
+    "theme_color": "#2196F3",
+   "background_color" : "#2196f3"
 }
