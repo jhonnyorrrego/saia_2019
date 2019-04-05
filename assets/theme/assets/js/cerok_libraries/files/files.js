@@ -218,23 +218,25 @@ class Files {
             .on("click-cell.bs.table", function (event, field, value, row, $element) {
                 if (field == "etiqueta") {
                     switch (row.extension) {
-                        case "pdf":
-                            var viewer = "viewer_annotate.php";
-                            break;
                         case "xlsx":
                         case "docx":
                         case "pptx":
                             var viewer = "viewer_kuku.php";
                             break;
+                        case "pdf":
+                            var viewer = "viewer_annotate_pdf.php";
+                            var type = 'TIPO_ANEXO_PDF'
+                            break;
                         default:
-                            var viewer = "viewer_img.php";
+                            var viewer = "viewer_annotate_image.php";
+                            var type = 'TIPO_ANEXO_IMAGEN'
                             break;
                     }
 
                     let url = `${instance.options.baseUrl}views/visor/${viewer}?`;
                     url += $.param({
                         viewer: viewer,
-                        type: instance.options.sourceReference,
+                        type: type,
                         typeId: row.id,
                         key: localStorage.getItem('key')
                     });
@@ -251,7 +253,7 @@ class Files {
                         },
                         contentSize: {
                             width: $(window).width() * 0.8,
-                            height: $(window).height() * 0.8,
+                            height: $(window).height() * 0.9,
                         },
                         content: '<iframe src="' + url + '" style="width: 100%; height: 100%; border:none;"></iframe>',
                     });

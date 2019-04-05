@@ -237,7 +237,7 @@
                             url: `${baseUrl}app/visor/consulta_notas.php`,
                             data: {
                                 key: localStorage.getItem("key"),
-                                type: "NOTA_DOCUMENTO",
+                                type: "TIPO_DOCUMENTO",
                                 typeId: params.iddoc
                             },
                             success: function(response) {
@@ -629,7 +629,7 @@
                     {
                         key: localStorage.getItem("key"),
                         uuid: uuid,
-                        type: "NOTA_DOCUMENTO",
+                        type: "TIPO_DOCUMENTO",
                         typeId: params.iddoc
                     },
                     function(response) {
@@ -651,7 +651,7 @@
                         key: localStorage.getItem("key"),
                         uuid: uuid,
                         annotation: annotation,
-                        type: "NOTA_DOCUMENTO",
+                        type: "TIPO_DOCUMENTO",
                         typeId: params.iddoc
                     },
                     function(response) {
@@ -679,7 +679,7 @@
                             `${baseUrl}app/visor/guardar_nota.php`,
                             {
                                 key: localStorage.getItem("key"),
-                                type: "NOTA_DOCUMENTO",
+                                type: "TIPO_DOCUMENTO",
                                 typeId: params.iddoc,
                                 annotation: annotation,
                                 comment: comment

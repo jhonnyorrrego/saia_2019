@@ -15,8 +15,10 @@ class VisorNota extends Model
     protected $page;
     protected $dbAttributes;
 
-    const NOTA_DOCUMENTO = 1;
-    const NOTA_PAGINA = 2;
+    const TIPO_DOCUMENTO = 1;
+    const TIPO_PAGINA = 2;
+    const TIPO_ANEXO_PDF = 3;
+    const TIPO_ANEXO_IMAGEN = 4;
 
     function __construct($id = null)
     {
