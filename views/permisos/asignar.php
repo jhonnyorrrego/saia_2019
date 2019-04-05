@@ -57,6 +57,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
 </div>
-<?= arbol() ?>
+<?= fancyTree() ?>
 <?= select2() ?>
 <script src="<?= $ruta_db_superior ?>views/permisos/js/asignar.js"></script> 

@@ -63,9 +63,9 @@ final class Version20190227220453 extends AbstractMigration
             'etiqueta' => 'Funcionarios',
             'nombre' => 'funcionario',
             'orden' => 1,
-            'info' => 'Nombre|{*get_name@idfuncionario,nombres,apellidos*}|center|-|Identificacion|{*nit*}|center|-|Login|{*login*}|center|-|Perfil|{*get_profile@perfil*}|center|-|Estado|{*get_state@estado*}|center',
+            'info' => 'Foto|{*get_image@foto_recorte,idfuncionario,nombres,apellidos*}|center|-|Nombre|{*get_name@idfuncionario,nombres,apellidos*}|center|-|Identificacion|{*nit*}|center|-|Login|{*login*}|center|-|Perfil|{*get_profile@perfil*}|center|-|Estado|{*get_state@estado*}|center',
             'estado' => 1,
-            'campos_adicionales' => 'idfuncionario,nombres,apellidos,login,nit,perfil,estado',
+            'campos_adicionales' => 'idfuncionario,nombres,apellidos,login,nit,perfil,estado,foto_recorte',
             'ordenado_por' => 'nombres',
             'direccion' => 'asc',
             'busqueda_avanzada' => 'views/funcionario/busqueda_avanzada.php',
@@ -95,6 +95,7 @@ final class Version20190227220453 extends AbstractMigration
         ]);
 
         $this->addSql("delete from funcionario where login is null or login=''");
+        $this->addSql("update funcionario set foto_recorte=NULL");
     }
 
     public function down(Schema $schema) : void

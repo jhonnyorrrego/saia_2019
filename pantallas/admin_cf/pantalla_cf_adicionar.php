@@ -12,7 +12,6 @@ include_once($ruta_db_superior."db.php");
 
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 include_once($ruta_db_superior."assets/librerias.php");
 
 ?>

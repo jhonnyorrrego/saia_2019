@@ -384,7 +384,7 @@ class Serie extends Model
         $response=[];
         $codArbol=str_replace('.',',',$this->cod_arbol);
         $sql="SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
-        $records=$this->findBySql($sql);
+        $records=$this->findBySql($sql,false);
         if($records){
             $etiq=[];
             foreach ($records as $record) {

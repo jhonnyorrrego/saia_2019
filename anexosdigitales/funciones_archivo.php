@@ -290,7 +290,7 @@ function acciones_anexos_usuario($idfunc, $idanexo, $limita_accion = NULL, $num 
 				if (@$_REQUEST['tipo'] != 5) {
 
 					$ruta64 = base64_encode($anexo[0]["ruta"]);
-					$resultado .= '<a title="Ver" class="" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 1000, height: 600,contentId:\'cuerpo_paso\', preserveContent:false} )" href="' . $ruta . 'pantallas/documento/visor_pdf.php?ruta=' . $ruta64 . '" border="0px"><img title="Descargar" src="' . $ruta . 'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>';
+					//$resultado .= '<a title="Ver" class="" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 1000, height: 600,contentId:\'cuerpo_paso\', preserveContent:false} )" href="' . $ruta . 'pantallas/documento/visor_pdf.php?ruta=' . $ruta64 . '" border="0px"><img title="Descargar" src="' . $ruta . 'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>';
 
 					$resultado .= '<a href="' . $ruta . 'anexosdigitales/parsea_accion_archivo.php?idanexo=' . $idanexo . '&accion=descargar" border="0px"><img title="Descargar" src="' . $ruta . 'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>';
 				}

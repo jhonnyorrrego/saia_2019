@@ -1,0 +1,199 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Render Example | Kukudocs JS Document Viewer</title>
+    <meta name="author" content="KUKUDOCS">
+    <meta name="description" content="An example of Extract width kukudocs js document viewer">
+</head>
+<body>
+
+<p style="font-size:24px; margin: 50px 0;"> Example of Extract width kukudocs js document viewer </p>
+
+<div class="container main-container">
+    <input id="files" type="file" name="files[]" multiple="false">
+    <button id="view-btn">view button</button>
+
+    <!--control button-->
+    <button id="extract-text-all-btn">extract text All Page button</button>
+    <button id="extract-text-btn">extract text button</button>
+    <button id="extract-html-all-btn">extract html All button</button>
+    <button id="extract-html-btn">extract html button</button>
+
+    <div id="kuku-viewer-node" style="width:1000px; height: 500px; border:1px solid #eee; margin: 20px 0;"></div>
+    <div id="kuku-extract-node" style="width:1000px; height: 500px; border:1px solid #eee; margin: 20px 0; background-color:#eee;"></div>
+
+</div>
+
+
+<script type="text/javascript" src="../scripts/_lib/jquery.1.12.3.min.js"></script>
+<script type="text/javascript" src="../scripts/docxjs/DocxJS.bundle.min.js"></script>
+<script type="text/javascript" src="../scripts/celljs/CellJS.bundle.min.js"></script>
+<script type="text/javascript" src="../scripts/slidejs/SlideJS.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var $kukuNode = $("#kuku-viewer-node");
+        var $kukuExtractNode = $("#kuku-extract-node");
+        var $files = $("#files");
+        var $button = $("#view-btn");
+        var $extractTextAllBtn = $("#extract-text-all-btn");
+        var $extractTextBtn = $("#extract-text-btn");
+        var $extractHTMLAllBtn = $("#extract-html-all-btn");
+        var $extractHTMLBtn = $("#extract-html-btn");
+
+        var instance = null, fileType = null;
+        var docxJS = null, cellJS = null, slideJS = null;
+
+        var documentParser = function (file) {
+            fileType = getInstanceOfFileType(file);
+
+            if (fileType) {
+                if (instance) {
+                    /** destroy API
+                     *  structure : destory(callback) **/
+                    instance.destroy();
+                }
+
+                if (fileType === 'docx') {
+                    if (!docxJS) {
+                        docxJS = new DocxJS();
+                    }
+                    instance = docxJS;
+                } else if (fileType === 'xlsx') {
+                    if (!cellJS) {
+                        cellJS = new CellJS();
+                    }
+                    instance = cellJS;
+                } else if (fileType === 'pptx') {
+                    if (!slideJS) {
+                        slideJS = new SlideJS();
+                    }
+                    instance = slideJS;
+                }
+
+                if (instance) {
+                    /** parse API
+                     *  structure : parse(file, successCallbackFn, errorCallbackFn) **/
+                    instance.parse(file,
+                        function () {
+                            /** render API
+                             *  structure : render(element, callbackFn, pageId) **/
+                            instance.render($kukuNode[0], function () {
+                            });
+                        },
+                        function () {
+                            console.log('document js viewer parsing error');
+                        });
+                } else {
+                    console.log('no support files');
+                }
+            } else {
+                console.log('no support files');
+            }
+        };
+
+        //Utils
+        var stopEvent = function (e) {
+            if (e.preventDefault) e.preventDefault();
+            if (e.stopPropagation) e.stopPropagation();
+            e.returnValue = false;
+            e.cancelBubble = true;
+            e.stopped = true;
+        };
+
+        var getInstanceOfFileType = function (file) {
+            var fileExtension = null;
+            if (file) {
+                var fileName = file.name;
+                fileExtension = fileName.split('.').pop();
+            }
+            return fileExtension;
+        };
+
+        //Event
+        var selectFile = null;
+        $files.on('change', function (e) {
+            stopEvent(e);
+            selectFile = e.target.files[0];
+        });
+        $button.on('click', function (e) {
+            stopEvent(e);
+
+            if (selectFile) {
+                documentParser(selectFile);
+            } else {
+                alert('no selected file');
+            }
+        });
+
+        $extractTextBtn.on('click', function (e) {
+            stopEvent(e);
+            if (instance) {
+                /** extractText API
+                 *  structure : extractText(isAll, callbackFn) **/
+
+                instance.extractText(false, function(text){
+                    console.log(text);
+                    text = text.replace(new RegExp('\r?\n','g'), '<br />');
+                    $kukuExtractNode.html(text);
+                });
+            }
+        });
+        $extractTextAllBtn.on('click', function (e) {
+            stopEvent(e);
+            if (instance) {
+                if (fileType === 'docx') {
+                    instance.extractText(false, function(text){
+                        text = text.replace(new RegExp('\r?\n','g'), '<br />');
+                        $kukuExtractNode.html(text);
+                    });
+                }else if(fileType === 'xlsx' || fileType === 'pptx'){
+                    instance.extractText(true, function(textes){
+                        console.log(textes);
+                        $kukuExtractNode.empty();
+                        $.each(textes, function(){
+                            var text = this.replace(new RegExp('\r?\n','g'), '<br />');
+                            $kukuExtractNode.append(text);
+                        });
+                    });
+                }
+            }
+        });
+        $extractHTMLBtn.on('click', function (e) {
+            stopEvent(e);
+            if (instance) {
+                /** extractHTMLText API
+                 *  structure : extractHTMLText(isAll, callbackFn) **/
+
+                instance.extractHTMLText(false, function(text){
+                    console.log(text);
+                    text = text.replace(new RegExp('\r?\n','g'), '<br />');
+                    $kukuExtractNode.html(text);
+                });
+            }
+        });
+        $extractHTMLAllBtn.on('click', function (e) {
+            stopEvent(e);
+            if (instance) {
+                if (fileType === 'docx') {
+                    instance.extractHTMLText(false, function(text){
+                        text = text.replace(new RegExp('\r?\n','g'), '<br />');
+                        $kukuExtractNode.html(text);
+                    });
+                }else if(fileType === 'xlsx' || fileType === 'pptx'){
+                    instance.extractHTMLText(true, function(textes){
+                        console.log(textes);
+                        $kukuExtractNode.empty();
+                        $.each(textes, function(){
+                            var text = this.replace(new RegExp('\r?\n','g'), '<br />');
+                            $kukuExtractNode.append(text);
+                        });
+                    });
+                }
+
+            }
+        });
+    });
+</script>
+</body>
+</html>

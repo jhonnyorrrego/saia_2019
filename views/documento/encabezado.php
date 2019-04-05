@@ -135,25 +135,25 @@ function plantilla($documentId, $transferId = 0)
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-auto col-md mt-2 pr-0">
-            <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>' data-toggle="tooltip" data-placement="bottom" title="Prioridad">
-                <i class='fa fa-flag  <?= $priorityClass ?>'></i>
-            </span>
-            <?= has_files($documentId, true) ?>
-            <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
-                <span class="badge badge-important counter" id="comments_counter"></span>
-            </span>
-            <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
-                <span class="badge badge-important counter" id="tasks_counter"></span>
-            </span>
-            <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
-                <span class="badge badge-important counter" id="documents_counter"></span>
-            </span>
+            <div class="col-auto col-md mt-2 pr-0">
+                <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>' data-toggle="tooltip" data-placement="bottom" title="Prioridad">
+                    <i class='fa fa-flag  <?= $priorityClass ?>'></i>
+                </span>
+                <?= has_files($documentId, true) ?>
+                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
+                    <span class="badge badge-important counter" id="comments_counter"></span>
+                </span>
+                <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
+                    <span class="badge badge-important counter" id="tasks_counter"></span>
+                </span>
+                <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
+                    <span class="badge badge-important counter" id="documents_counter"></span>
+                </span>
                 <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
             </div>
             <div class="col-auto d-none d-md-block">
-                <?= expiration($Documento->fecha_limite,$documentId) ?>
+                <!-- muestra la fecha de vencimiento -->
+                <?= expiration($Documento->fecha_limite, $documentId) ?>
             </div>
         </div>
         <div class="row mx-0 px-1">
@@ -174,10 +174,13 @@ function plantilla($documentId, $transferId = 0)
             <div id="fab"></div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
-    <?php
-
+    <div class="row mx-0 px-1">
+        <div id="fab"></div>
+    </div>
+</div>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
+<script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
+<?php
 }
 
 if (isset($_REQUEST['documentId'])) {

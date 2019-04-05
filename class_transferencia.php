@@ -2078,7 +2078,6 @@ function dependencias_asistentes($padre)
  */
 function arbol_serie($condicion_adicional = '')
 {
-    include_once("formatos/librerias/header_formato.php");
     echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>

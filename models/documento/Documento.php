@@ -171,4 +171,14 @@ class Documento extends Model
 
         return $access;
     }
+
+    /**
+     * @return  string Nombre del Creador
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getCreador()
+    {
+        $Funcionario = $this->getRelationFk('Funcionario', 'ejecutor');
+        return $Funcionario->getName();
+    }
 }

@@ -6,7 +6,7 @@ include_once '../../StorageUtils.php';
 
 use Gaufrette\Filesystem;
 
-use Stringy\Stringy as String;
+//use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 

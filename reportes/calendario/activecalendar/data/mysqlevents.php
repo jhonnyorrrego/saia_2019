@@ -54,8 +54,8 @@ Please uncomment the following SQL Statement if the Date Field saves the date as
 Connect to Database and send the query
 ********************************************************************************
 */
-$conID=@mysqli_connect($dbhost, $dbuser, $dbpass));
-@((bool)mysqli_query( $conID, "USE " . $dbname));
+$conID=mysqli_connect($dbhost, $dbuser, $dbpass);
+(bool)mysqli_query( $conID, "USE " . $dbname);
 $sqlID=@mysqli_query($conID, $SQL);
 /*
 ********************************************************************************

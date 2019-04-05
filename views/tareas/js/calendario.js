@@ -170,7 +170,7 @@ $(function() {
             .addClass("cursor");
 
         $("*:not(.fc-left)").on("click", function(e) {
-            if (!$(e.target).parents(".fc-left").length) {
+            if ($('.fc-left').length && !$(e.target).parents(".fc-left").length) {
                 $("#picker")
                     .data("DateTimePicker")
                     .hide();
