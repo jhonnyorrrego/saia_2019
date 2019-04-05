@@ -23,31 +23,42 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <?= jqueryUi() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
+    <?= icons() ?>
 </head>
 
 <body>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row pt-3">
+            <div class="col-3">
+                <div class="input-group transparent">
+                    <input id="search" type="text" class="form-control" placeholder="Buscar..." autocomplete="off">
+                    <div class="input-group-append ">
+                        <span class="input-group-text transparent">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="table_container" style="overflow-y:auto">
             <div class="col-12">
-                <table id="treegrid">
+                <table id="treegrid" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>#</th>
-                            <th></th>
-                            <th>Key</th>
-                            <th>Like</th>
+                            <th class="text-center bold text-dark">Código</th>
+                            <th class="text-center bold text-dark">Logo</th>
+                            <th class="text-center bold text-dark">Nombre</th>
+                            <th class="text-center bold text-dark">Estado</th>
+                            <th class="text-center bold text-dark">Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="alignRight"></td>
-                            <td class="alignCenter">
-                                <input type="checkbox" name="like">
-                            </td>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-dark"></td>
+                            <td class="text-center" style="padding:8px"></td>
+                            <td class="text-center" style="padding:8px"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,6 +67,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
     </div>
     <?= fancyTree(true) ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-fancytree/2.30.0/modules/jquery.fancytree.table.js"></script>
+    <script src="<?= $ruta_db_superior ?>views/dependencia/js/listado.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 
-</html> 
+</html>
