@@ -9,7 +9,7 @@ DTSTAMP:20190330T100152Z
 ATTENDEE;RSVP=TRUE;CN=Webner;X-NUM-GUESTS=0:MAILTO:test@test.com
 DESCRIPTION:Location Name: lugar
 nersolutions.com\nInstructor Name: Webner Solution \nInstructor Email: abc@webners.com\nInstructor Bio: Webner Solution\nWebner Solution
-DTSTART:20190330T173000Z
+DTSTART:20190330T180000Z
 DTEND:20190330T183000Z
 LOCATION:
 ORGANIZER;CN=webnersolutions ;SENT-BY=”MAILTO:abc@webners.com”:MAILTO:

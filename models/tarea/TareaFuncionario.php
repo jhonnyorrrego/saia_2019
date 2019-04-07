@@ -2,6 +2,10 @@
 
 class TareaFuncionario extends Model
 {
+    const TIPO_RESPONSABLE = 1;
+    const TIPO_SEGUIDOR = 1;
+    const TIPO_CREADOR = 3;
+
     protected $idtarea_funcionario;
     protected $fk_funcionario;
     protected $fk_tarea;
@@ -81,6 +85,14 @@ class TareaFuncionario extends Model
         return $data;
     }
 
+    /**
+     * busca los funcionarios de una tarea
+     * por el tipo de relacion.
+     *
+     * @param intenger $taskId
+     * @param integer $type
+     * @return void
+     */
     public static function findUsersByType($taskId, $type)
     {
         $sql = <<<SQL
@@ -96,6 +108,14 @@ SQL;
         return Funcionario::findBySql($sql);
     }
 
+    /**
+     * inactiva todas las relaciones de la tarea
+     * segun el tipo de relacion indicada
+     *
+     * @param integer $taskId
+     * @param integer $type
+     * @return void
+     */
     public static function inactiveRelationsByTask($taskId, $type)
     {
         self::executeUpdate([

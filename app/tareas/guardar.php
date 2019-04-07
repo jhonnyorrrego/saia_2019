@@ -31,12 +31,26 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     ]);
 
     if ($Tarea->save()) {
-        TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 3);
-        TareaFuncionario::assignUser($Tarea->getPk(), [$_REQUEST['key']], 3);
+        TareaFuncionario::inactiveRelationsByTask(
+            $Tarea->getPK(),
+            TareaFuncionario::TIPO_CREADOR
+        );
+        TareaFuncionario::assignUser(
+            $Tarea->getPk(),
+            [$_REQUEST['key']],
+            TareaFuncionario::TIPO_CREADOR
+        );
 
         if (isset($_REQUEST['managers'])) {
-            TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 1);
-            TareaFuncionario::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+            TareaFuncionario::inactiveRelationsByTask(
+                $Tarea->getPK(),
+                TareaFuncionario::TIPO_RESPONSABLE
+            );
+            TareaFuncionario::assignUser(
+                $Tarea->getPk(),
+                $_REQUEST['managers'],
+                TareaFuncionario::TIPO_RESPONSABLE
+            );
         }
 
         if (!empty($_REQUEST['documentId'])) {
@@ -52,13 +66,13 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 $Response->message = "Error al crear enlace";
                 $Response->success = 0;
             } else {
-                sendNotification();
+                sendNotification($Tarea);
                 $Response->message = $_REQUEST['task'] ? "Datos actualizados" : "Tarea creada";
                 $Response->data = $Tarea->getPK();
                 $Response->success = 1;
             }
         } else {
-            sendNotification();
+            sendNotification($Tarea);
             $Response->message = $_REQUEST['task'] ? "Datos actualizados" : "Tarea creada";
             $Response->data = $Tarea->getPK();
             $Response->success = 1;
@@ -72,18 +86,45 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
 echo json_encode($Response);
 
-function sendNotification()
+function sendNotification($Tarea)
 {
     if ($_REQUEST['notification']) {
-        $users = $_REQUEST['managers'] ?? [$_REQUEST['key']];
-        $ids = implode(',', $users);
-        $sql = "select email from funcionario where idfuncionario in({$ids})";
-        $records = StaticSql::search($sql);
+        $users = TareaFuncionario::findUsersByType(
+            $Tarea->getPK(),
+            TareaFuncionario::TIPO_RESPONSABLE
+        );
 
         $emails = [];
-        foreach ($records as $value) {
-            $emails[] = $value['email'];
+        foreach ($users as $Funcionario) {
+            $emails[] = $Funcionario->email;
         }
-        enviar_mensaje('', ['para' => 'email'], ['para' => $emails], 'Nueva tarea asignada', $_REQUEST['name']);
+
+        $icsRoute = generateIcs($Tarea);
+        enviar_mensaje(
+            '',
+            ['para' => 'email'],
+            ['para' => $emails],
+            'Nueva tarea asignada',
+            $Tarea->getName() . ' - ' . $Tarea->descripcion,
+            [$icsRoute]
+        );
     }
+}
+
+function generateIcs($Tarea)
+{
+    global $ruta_db_superior;
+
+    $properties = [
+        'description' => $Tarea->descripcion,
+        'dtstart' => $Tarea->fecha_inicial,
+        'dtend' => $Tarea->fecha_final,
+        'summary' => $Tarea->getName()
+    ];
+
+    $ics = new IcsController ($properties);
+    $content = $ics->to_string();
+
+    $route = $ruta_db_superior . $_SESSION['ruta_temp_funcionario'] . '/tarea.ics';
+    return file_put_contents($route, $content) ? $route : '';
 }
