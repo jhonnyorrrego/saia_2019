@@ -7,18 +7,24 @@ $(document).ready(function () {
     var $nextbutton = $("#next-btn");
     var $zoomInbutton = $("#zoom-in-btn");
     var $zoomOutbutton = $("#zoom-out-btn");
-    
+
     var instance = null, fileType = null;
     var docxJS = null, cellJS = null, slideJS = null, pdfJS = null;
-    
+
     $('#viewer_script').removeAttr('data-params');
 
     let kukuParent = $kukuNode.parent()
-    kukuParent.height($(window).height() - kukuParent.offset().top - 20)
+    $(window).resize(function(){
+        kukuParent.height($(window).height() - kukuParent.offset().top - 20);
+    });
+    $(window).trigger('resize');
+
     var documentParser = function (fileURL) {
         fileType = getInstanceOfFileType(fileURL);
 
         if (fileType) {
+            $prevbutton.show();
+            $nextbutton.show();
             if (instance) {
                 /** destroy API
                  *  structure : destory(callback) **/
@@ -26,6 +32,8 @@ $(document).ready(function () {
             }
 
             if (fileType === 'docx') {
+                $prevbutton.hide();
+                $nextbutton.hide();
                 if (!docxJS) {
                     docxJS = new DocxJS();
                 }
@@ -94,6 +102,7 @@ $(document).ready(function () {
                              *  structure : render(element, callbackFn, pageId) **/
                             instance.render($kukuNode[0], function () {
                                 /*** After Renderer Logic ***/
+                                $('#loader').remove();
                             });
                         },
                         function () {
@@ -211,6 +220,10 @@ $(document).ready(function () {
     });
 
     (function find() {
+        $kukuNode.html($('<div>', {
+            class: 'progress-circle-indeterminate',
+            id: 'loader'
+        }));
         $.post(`${baseUrl}app/temporal/crear_anexo.php`, params, function (response) {
             if (response.success) {
                 documentParser(baseUrl + response.data);

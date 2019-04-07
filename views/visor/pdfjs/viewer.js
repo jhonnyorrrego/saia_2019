@@ -11410,7 +11410,7 @@
           items.editor.addEventListener('click', function () {
             let params = JSON.parse(document.querySelector('script[data-params]').dataset.params);
             let baseUrl = document.querySelector('script[data-baseurl]').dataset.baseurl;
-            let route = baseUrl + 'views/visor/viewer_annotate.php?';
+            let route = baseUrl + 'views/visor/viewer_annotate_pdf.php?';
             params.pdfRoute = sessionStorage.getItem('pdfRoute');
 
             let stringParams = Object.keys(params).map(function (k) {
