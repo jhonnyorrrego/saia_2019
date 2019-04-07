@@ -119,10 +119,11 @@ function generateIcs($Tarea)
         'description' => $Tarea->descripcion,
         'dtstart' => $Tarea->fecha_inicial,
         'dtend' => $Tarea->fecha_final,
-        'summary' => $Tarea->getName()
+        'summary' => $Tarea->getName(),
+        'organizer' => usuario_actual('email')
     ];
 
-    $ics = new IcsController ($properties);
+    $ics = new IcsController($properties);
     $content = $ics->to_string();
 
     $route = $ruta_db_superior . $_SESSION['ruta_temp_funcionario'] . '/tarea.ics';

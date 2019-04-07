@@ -40,7 +40,8 @@
  *   or https://).
  */
 
-class IcsController {
+class IcsController
+{
   const DT_FORMAT = 'Ymd\THis';
 
   protected $properties = array();
@@ -50,14 +51,17 @@ class IcsController {
     'dtstart',
     'location',
     'summary',
-    'url'
+    'url',
+    'organizer'
   );
 
-  public function __construct($props) {
+  public function __construct($props)
+  {
     $this->set($props);
   }
 
-  public function set($key, $val = false) {
+  public function set($key, $val = false)
+  {
     if (is_array($key)) {
       foreach ($key as $k => $v) {
         $this->set($k, $v);
@@ -69,12 +73,14 @@ class IcsController {
     }
   }
 
-  public function to_string() {
+  public function to_string()
+  {
     $rows = $this->build_props();
     return implode("\r\n", $rows);
   }
 
-  private function build_props() {
+  private function build_props()
+  {
     // Build ICS properties - add header
     $ics_props = array(
       'BEGIN:VCALENDAR',
@@ -86,7 +92,7 @@ class IcsController {
 
     // Build ICS properties - add header
     $props = array();
-    foreach($this->properties as $k => $v) {
+    foreach ($this->properties as $k => $v) {
       $props[strtoupper($k . ($k === 'url' ? ';VALUE=URI' : ''))] = $v;
     }
 
@@ -106,12 +112,16 @@ class IcsController {
     return $ics_props;
   }
 
-  private function sanitize_val($val, $key = false) {
-    switch($key) {
+  private function sanitize_val($val, $key = false)
+  {
+    switch ($key) {
       case 'dtend':
       case 'dtstamp':
       case 'dtstart':
         $val = $this->format_timestamp($val);
+        break;
+      case 'organizer':
+        $this->addOrganizer($val);
         break;
       default:
         $val = $this->escape_string($val);
@@ -120,12 +130,19 @@ class IcsController {
     return $val;
   }
 
-  private function format_timestamp($timestamp) {
+  function addOrganizer($val)
+  {
+    return ":MAILTO:{$val}";
+  }
+
+  private function format_timestamp($timestamp)
+  {
     $dt = new DateTime($timestamp);
     return $dt->format(self::DT_FORMAT);
   }
 
-  private function escape_string($str) {
-    return preg_replace('/([\,;])/','\\\$1', $str);
+  private function escape_string($str)
+  {
+    return preg_replace('/([\,;])/', '\\\$1', $str);
   }
 }
