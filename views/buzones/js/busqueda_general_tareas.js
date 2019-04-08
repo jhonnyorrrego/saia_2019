@@ -9,7 +9,7 @@ $(function () {
     })();
 
     $('#clear').on('click', function () {
-        $('#filtro_usuario').val(1).trigger('change');
+        $('#filtro_usuario,#filtro_fecha').val(1).trigger('change');
         $('#task_name').val('');
         $('#select_responsable').val(null).trigger('change');
         $('#fecha_inicial').data("DateTimePicker").clear();

@@ -205,7 +205,7 @@ $(function() {
             async: false,
             data: {
                 key: key,
-                type: "NOTA_PAGINA",
+                type: "TIPO_PAGINA",
                 typeId: $("#content-wrapper").attr("data-page")
             },
             success: function(response) {
@@ -294,7 +294,7 @@ $(function() {
             `${params.baseUrl}app/visor/editar_nota.php`,
             {
                 key: localStorage.getItem("key"),
-                type: "NOTA_PAGINA",
+                type: "TIPO_PAGINA",
                 typeId: $("#content-wrapper").attr("data-page"),
                 uuid: annotationId,
                 annotation: {
@@ -324,7 +324,7 @@ $(function() {
             async: false,
             data: {
                 key: key,
-                type: "NOTA_PAGINA",
+                type: "TIPO_PAGINA",
                 typeId: $("#content-wrapper").attr("data-page"),
                 annotation: annotation,
                 comment: {

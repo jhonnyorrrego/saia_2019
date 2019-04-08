@@ -15,16 +15,19 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => [],
     'message' => "",
     'success' => 1,
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = TareaFuncionario::findUsersByType($_REQUEST['task'], 2);
+    $data = TareaFuncionario::findUsersByType(
+        $_REQUEST['task'],
+        TareaFuncionario::TIPO_SEGUIDOR
+    );
 
-    foreach($data as $key => $Funcionario){
+    foreach ($data as $key => $Funcionario) {
         $data[$key] = [
             'image' => $Funcionario->getImage('foto_recorte'),
             'label' => $Funcionario->getName() . ' - ' . $Funcionario->getLogin(),

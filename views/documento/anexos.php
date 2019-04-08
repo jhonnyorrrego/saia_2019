@@ -39,7 +39,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
 </div>
+<?= jsPanel() ?>
 <?= dropzone() ?>
 <?= bootstrapTable() ?>
-<?= bootstrapTableEditable() ?>
 <script src="<?= $ruta_db_superior ?>views/documento/js/anexos.js" data-fileparams='<?= json_encode($_REQUEST) ?>'></script>

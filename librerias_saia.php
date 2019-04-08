@@ -245,8 +245,9 @@ function librerias_acciones_kaiten()
 
 function librerias_notificaciones()
 {
-    //se elimina el codigo ya que se debe hacer uso de top.notification
-    return '';
+    global $raiz_saia;
+    $texto = '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
+    return $texto;
 }
 
 function librerias_datepicker_bootstrap()

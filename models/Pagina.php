@@ -1,7 +1,4 @@
 <?php
-
-use function GuzzleHttp\json_decode;
-
 class Pagina extends Model
 {
     protected $id_documento;
