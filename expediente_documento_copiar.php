@@ -3,7 +3,6 @@ include_once("header.php");
 
 $iddoc = $_REQUEST["iddoc"];
 
-include_once("formatos/librerias/header_formato.php");
 ?>
 <br><br><br>
 <span class="internos"><img class="imagen_internos" src="botones/comentarios/expediente.png" border="0">&nbsp;&nbsp;COPIAR / MOVER EL DOCUMENTO A UN EXPEDIENTE</span><br><br><br>
@@ -30,11 +29,11 @@ $doc=busca_filtro_tabla("","documento","iddocumento=$iddoc","",$conn);
 <span class="phpmaker">
 			      Buscar:<br><input type="text" id="stext" width="200px" size="20">      
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
-      <img src="botones/general/anterior.png"border="0px"></a>
+      <img src="assets/images/anterior.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
-      <img src="botones/general/buscar.png"border="0px"></a>
+      <img src="assets/images/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
-      <img src="botones/general/siguiente.png"border="0px"></a>
+      <img src="assets/images/siguiente.png"border="0px"></a>
 <br /><br />
 				<div id="treeboxbox_tree2"></div></span>
 				<script type="text/javascript">

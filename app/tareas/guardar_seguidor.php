@@ -25,7 +25,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $data = [
         'fk_tarea' => $_REQUEST['taskId'],
         'fk_funcionario' => $_REQUEST['user'],
-        'tipo' => 2
+        'tipo' => TareaFuncionario::TIPO_SEGUIDOR
     ];
     $TareaFuncionario = TareaFuncionario::findByAttributes($data);
     

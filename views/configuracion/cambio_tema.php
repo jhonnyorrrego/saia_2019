@@ -109,22 +109,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-md-6 color_container cursor">
-                                        <div class="b-a b-grey">
-                                            <input class="form-control" type="color" value="#3B4752" id="example-color-input">
-
-                                            <div class="bg-white padding-10 pb-0">
+                                    <div class="col-xl-4 col-md-6 sm-m-b-15 color_container cursor">
+                                        <div class="b-a b-grey" id="dinamic_color" style="background:#3B4752">
+                                            <div class="bg-white m-t-45 padding-10">
                                                 <p class="small no-margin pull-left">
-                                                    <input type="radio" name="theme" value="#3B4752" id="color_radio">
-                                                    <span id="color_label">#3B4752</span>
-                                                </p>
-                                                <p class="pull-right m-0">
-                                                    <button class="btn btn-sm" onclick="js:$('input[type=\'color\']').click()">Cambiar</button>
+                                                    <input type="radio" name="theme" value="#3B4752" id="dinamic">
+                                                    <span id="dinamic_label">#3B4752</span>
+                                                    <button class="btn btn-xs py-0" onclick="js:$('input[type=\'color\']').click()">Personalizar</button>
                                                 </p>
                                                 <div class="clearfix"></div>
                                             </div>
                                         </div>
                                     </div>
+                                    <input class="d-none" type="color" value="#3B4752" id="example-color-input">
                                 </div>
                             </div>
                         </div>
@@ -134,57 +131,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
     </div>
-    <script>
-        $(function() {
-            var baseUrl = '<?= $ruta_db_superior ?>';
-
-            $("input[type='color']").on('change', function(){
-                $('#color_radio').val($(this).val());
-                $('#color_label').text($(this).val());
-            })
-
-            $(".color_container").on('click', function() {
-                $(":radio").attr('checked', false);
-                $(this).find('input:radio').attr('checked', true);
-            });
-
-            $("#saveColor").on('click', function() {
-                var color = $("[name='theme']:checked").val();
-
-                if (color) {
-                    $.post(baseUrl + 'app/configuracion/actualizar_color.php', {
-                        color: color
-                    }, function(response) {
-                        if (response.success) {
-                            top.notification({
-                                message: response.message,
-                                type: 'success'
-                            });
-
-                            let style = `
-                              .bg-institutional{background: ${color} !important;color: #ffff !important}
-                              .text-institutional{color: ${color} !important;}
-                            `;
-                            $('#instition_style', window.top.document).text(style);
-                            window.top.localStorage.setItem('color', color);
-                        } else {
-                            top.notification({
-                                message: response.message,
-                                type: 'error',
-                                title: 'Error!'
-                            });
-                        }
-                    }, 'json');
-                } else {
-                    top.notification({
-                        message: 'Debe Seleccionar un color',
-                        type: 'error',
-                        title: 'Error!'
-                    });
-                }
-            })
-        });
-    </script>
+    <script data-baseurl="<?= $ruta_db_superior ?>" src="<?= $ruta_db_superior ?>views/configuracion/js/cambio_tema.js"></script>
 </body>
 
 </html> 

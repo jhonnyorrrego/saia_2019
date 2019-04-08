@@ -2,34 +2,6 @@ $(function () {
     let baseUrl = Session.getBaseUrl();
     let params = $('script[data-params]').data('params');
     let loadedFiles = [];
-    let language = {
-        errorLoading: function () {
-            return "La carga falló"
-        },
-        inputTooLong: function (e) {
-            var t = e.input.length - e.maximum,
-                n = "Por favor,elimine " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        inputTooShort: function (e) {
-            var t = e.minimum - e.input.length,
-                n = "Por favor,introduzca " + t + " car";
-            return t == 1 ? n += "ácter" : n += "acteres";
-        },
-        loadingMore: function () {
-            return "Cargando más resultados…"
-        },
-        maximumSelected: function (e) {
-            var t = "Sólo puede seleccionar " + e.maximum + " elemento";
-            return e.maximum != 1 && (t += "s");
-        },
-        noResults: function () {
-            return "No se encontraron resultados"
-        },
-        searching: function () {
-            return "Buscando…"
-        }
-    };
 
     let myDropzone = new Dropzone("#dropzone", {
         url: `${baseUrl}app/temporal/cargar_anexos.php`,
@@ -71,14 +43,15 @@ $(function () {
 
     $("#select_users").select2({
         minimumInputLength: 3,
-        language: language,
+        language: 'es',
         ajax: {
             url: `${baseUrl}app/funcionario/autocompletar.php`,
             dataType: 'json',
             data: function (params) {
                 return {
                     term: params.term,
-                    key: localStorage.getItem('key')
+                    key: localStorage.getItem('key'),
+                    identificator: 'funcionario_codigo'
                 }
             },
             processResults: function (response) {
@@ -120,7 +93,7 @@ $(function () {
                         type: 'success',
                         message: response.message
                     });
-                    $('#close_modal').trigger('click');
+                    top.closeTopModal();
                 } else {
                     top.notification({
                         type: 'error',
@@ -165,13 +138,7 @@ $(function () {
                     var option = new Option(u.text, u.id, true, true);
                     $('#select_users').append(option).trigger('change');
                 })
-                $('#select_users').trigger({
-                    type: 'select2:select',
-                    params: {
-                        data: data
-                    }
-                });
             }
-        })
+        });
     })(params);
 });

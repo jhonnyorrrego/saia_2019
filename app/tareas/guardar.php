@@ -15,31 +15,45 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0,
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $Tarea = new Tarea($_REQUEST['task'] ?? NULL);
+    $Tarea = new Tarea($_REQUEST['task'] ?? null);
     $Tarea->setAttributes([
         'nombre' => $_REQUEST['name'],
         'fecha_inicial' => $_REQUEST['initialDate'],
         'fecha_final' => $_REQUEST['finalDate'],
         'descripcion' => $_REQUEST['description']
     ]);
-    
-    if($Tarea->save()){
-        TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 3);
-        TareaFuncionario::assignUser($Tarea->getPk(), [$_REQUEST['key']], 3);
 
-        if(isset($_REQUEST['managers'])){
-            TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 1);
-            TareaFuncionario::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+    if ($Tarea->save()) {
+        TareaFuncionario::inactiveRelationsByTask(
+            $Tarea->getPK(),
+            TareaFuncionario::TIPO_CREADOR
+        );
+        TareaFuncionario::assignUser(
+            $Tarea->getPk(),
+            [$_REQUEST['key']],
+            TareaFuncionario::TIPO_CREADOR
+        );
+
+        if (isset($_REQUEST['managers'])) {
+            TareaFuncionario::inactiveRelationsByTask(
+                $Tarea->getPK(),
+                TareaFuncionario::TIPO_RESPONSABLE
+            );
+            TareaFuncionario::assignUser(
+                $Tarea->getPk(),
+                $_REQUEST['managers'],
+                TareaFuncionario::TIPO_RESPONSABLE
+            );
         }
 
-        if(!empty($_REQUEST['documentId'])){
+        if (!empty($_REQUEST['documentId'])) {
             $pk = DocumentoTarea::newRecord([
                 'fk_tarea' => $Tarea->getPK(),
                 'fk_documento' => $_REQUEST['documentId'],
@@ -48,20 +62,22 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 'estado' => 1
             ]);
 
-            if(!$pk){
+            if (!$pk) {
                 $Response->message = "Error al crear enlace";
                 $Response->success = 0;
-            }else{
+            } else {
+                sendNotification($Tarea);
                 $Response->message = $_REQUEST['task'] ? "Datos actualizados" : "Tarea creada";
                 $Response->data = $Tarea->getPK();
                 $Response->success = 1;
             }
-        }else{
+        } else {
+            sendNotification($Tarea);
             $Response->message = $_REQUEST['task'] ? "Datos actualizados" : "Tarea creada";
             $Response->data = $Tarea->getPK();
             $Response->success = 1;
         }
-    }else{
+    } else {
         $Response->message = "Error al guardar";
     }
 } else {
@@ -69,3 +85,47 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
+
+function sendNotification($Tarea)
+{
+    if ($_REQUEST['notification']) {
+        $users = TareaFuncionario::findUsersByType(
+            $Tarea->getPK(),
+            TareaFuncionario::TIPO_RESPONSABLE
+        );
+
+        $emails = [];
+        foreach ($users as $Funcionario) {
+            $emails[] = $Funcionario->email;
+        }
+
+        $icsRoute = generateIcs($Tarea);
+        enviar_mensaje(
+            '',
+            ['para' => 'email'],
+            ['para' => $emails],
+            'Nueva tarea asignada',
+            $Tarea->getName() . ' - ' . $Tarea->descripcion,
+            [$icsRoute]
+        );
+    }
+}
+
+function generateIcs($Tarea)
+{
+    global $ruta_db_superior;
+
+    $properties = [
+        'description' => $Tarea->descripcion,
+        'dtstart' => $Tarea->fecha_inicial,
+        'dtend' => $Tarea->fecha_final,
+        'summary' => $Tarea->getName(),
+        'organizer' => usuario_actual('email')
+    ];
+
+    $ics = new IcsController($properties);
+    $content = $ics->to_string();
+
+    $route = $ruta_db_superior . $_SESSION['ruta_temp_funcionario'] . '/tarea.ics';
+    return file_put_contents($route, $content) ? $route : '';
+}

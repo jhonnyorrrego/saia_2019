@@ -122,14 +122,29 @@ $(function() {
     });
 
     /////// MENU INTERMEDIO ////////
-    $(document).off("click", "#crear_tarea,#etiquetar");
-    $(document).on("click", "#crear_tarea,#etiquetar", function() {
+    $(document).off("click", "#crear_tarea,#etiquetar,#asignar_responsable");
+    $(document).on("click", "#crear_tarea,#etiquetar,#asignar_responsable", function() {
         let route = $(this).data("url");
         top.topModal({
             url: baseUrl + route,
             title: $(this).text(),
             params: {
                 documentId: documentId
+            },
+            buttons: {}
+        });
+    });
+
+    $(document).off("click", "#privacidad");
+    $(document).on("click", "#privacidad", function() {
+        let route = $(this).data("url");
+        top.topModal({
+            url: baseUrl + route,
+            title: $(this).text(),
+            size: 'modal-lg',
+            params: {
+                type: 'TIPO_DOCUMENTO',
+                typeId: documentId
             },
             buttons: {}
         });
@@ -146,18 +161,6 @@ $(function() {
     $(document).off("click", "#anexos");
     $(document).on("click", "#anexos", function() {
         $("#show_files").click();
-    });
-
-    $(document).on('click', '#asignar_responsable', function () {
-        let route = $(this).data('url');
-        top.topModal({
-            url: baseUrl + route,
-            title: 'Seguidores',
-            params: {
-                documentId: documentId
-            },
-            buttons: {}
-        })    
     });
     /////// FIN MENU INTERMEDIO /////
     window.addEventListener(

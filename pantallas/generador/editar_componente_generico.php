@@ -69,6 +69,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
 } else {
     alerta("No es posible Editar el Campo");
 }
+
 $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
 ?>
@@ -108,8 +109,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
     <!-- bootstrap datetimepicker for date, time and datetime controls -->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" media="screen" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" />
+    <?= dateTimePicker() ?>
 
     <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
 </head>
@@ -268,7 +268,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
     global $conn;
     $resp = array();
 
-    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
+    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
 
     if ($campo_formato["numcampos"]) {
         $opciones = json_decode(html_entity_decode($campo_formato[0]["opciones"]), true);
@@ -294,6 +294,9 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
 
         if (preg_match("/p/", $campo_formato[0]["acciones"])) {
             $resp["fs_acciones"] = true;
+        }
+        if ($campo_formato[0]['etiqueta_html'] == 'arbol') {
+            $resp["fs_arbol"] = "arbol_seleccionV2";
         }
 
         $resp["fs_nombre"] = $campo_formato[0]["nombre"];
@@ -328,4 +331,4 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
 }
 
 
-?> 
+ ?>

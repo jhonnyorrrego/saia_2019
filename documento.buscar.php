@@ -260,11 +260,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stext2" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_func2">
                         <img src="imagenes/cargando.gif">
                       </div>
@@ -363,11 +363,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stext" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_func">
                         <img src="imagenes/cargando.gif">
                       </div>
@@ -446,11 +446,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stext_total" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree_St.findItem(document.getElementById('stext_total').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_func_st">
                         <img src="imagenes/cargando.gif">
                       </div>
@@ -591,11 +591,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stexttrans" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_trans">
                         <img src="imagenes/cargando.gif">
                       </div>
@@ -652,11 +652,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stexttrans2" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_trans2">
                         <img src="imagenes/cargando.gif">
                       </div>
@@ -721,11 +721,11 @@ function codificar_repetidos(lista)
                       <br>
                       <input type="text" id="stext3" width="200px" size="20">
                       <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,1)">
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                        <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
                       <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,0,1)">
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                        <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
                       <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value)">
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                        <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
                       <div id="esperando_func3">
                         <img src="imagenes/cargando.gif">
                       </div>

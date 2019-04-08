@@ -44,7 +44,9 @@ class Tarea extends Model
      */
     protected function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'TareaLog', $this);
+        return
+            LogController::create(LogAccion::CREAR, 'TareaLog', $this) &&
+            $this->setDefaultState();
     }
 
     /**
@@ -65,7 +67,29 @@ class Tarea extends Model
      */
     protected function afterUpdate()
     {
-        return LogController::create(LogAccion::EDITAR, 'TareaLog', $this);
+        return
+            LogController::create(LogAccion::EDITAR, 'TareaLog', $this) &&
+            $this->refreshDocumentLimitDate();
+    }
+
+    /**
+     * refresca la fecha limite del documento enlazado
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-21
+     */
+    public function refreshDocumentLimitDate()
+    {
+        $DocumentoTarea = DocumentoTarea::findByAttributes(['fk_tarea' => $this->getPK()]);
+
+        if ($DocumentoTarea) {
+            $response = Documento::setLimitDate($DocumentoTarea->fk_documento);
+        } else {
+            $response = true;
+        }
+
+        return $response;
     }
 
     /**
@@ -75,30 +99,60 @@ class Tarea extends Model
      */
     public function getName()
     {
-        return ucfirst(trim(strtolower($this->nombre)));
+        return ucfirst(trim(strtolower(html_entity_decode($this->nombre))));
     }
 
     /**
-     * calcular el color de la tarea
+     * calcula el color de la tarea
      *
      * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-08
      */
     public function getColor()
     {
-        $Limit = new DateTime($this->fecha_final);
-        $Today = new DateTime();
+        $TareaEstado = TareaEstado::findByAttributes([
+            'fk_tarea' => $this->getPK(),
+            'estado' => 1
+        ]);
 
-        $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
+        if ($TareaEstado->valor != TareaEstado::REALIZADA) {
+            $Limit = new DateTime($this->fecha_final);
+            $Today = new DateTime();
 
-        if ($diference < 3) {
-            $color = '#dc3545';
-        } elseif ($diference >= 3 && $diference <= 8) {
-            $color = '#ffc107';
-        } else {
-            $color = '#17a2b8';
+            $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
+
+            if ($diference < 2) {
+                $color = '#dc3545';
+            } elseif ($diference >= 2 && $diference <= 8) {
+                $color = '#ffc107';
+            } else {
+                $color = '#17a2b8';
+            }
+        } else { //tarea realizada
+            $color = '#10CFBD';
         }
 
         return $color;
+    }
+
+    /**
+     * crea el estado pendiente para la tarea
+     * cuando se crea
+     *
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-08
+     */
+    public function setDefaultState()
+    {
+        return TareaEstado::newRecord([
+            'fk_funcionario' => $_SESSION['idfuncionario'],
+            'fk_tarea' => $this->getPK(),
+            'fecha' => date('Y-m-d H:i:s'),
+            'estado' => 1,
+            'valor' => TareaEstado::PENDIENTE
+        ]);
     }
 
     /**
@@ -113,12 +167,26 @@ class Tarea extends Model
      */
     public static function findBetweenDates($userId, $initialDate, $finalDate, $type)
     {
-        global $conn;
+        $initial = StaticSql::getDateFormat('a.fecha_inicial', 'Y-m-d H:i:s');
+        $final =  StaticSql::getDateFormat('a.fecha_final', 'Y-m-d H:i:s');
+        $sql = <<<SQL
+            SELECT
+                a.* 
+            FROM
+                tarea a 
+            JOIN
+                tarea_funcionario b
+            ON
+                a.idtarea = b.fk_tarea
+            WHERE
+                b.estado=1 AND
+                b.fk_funcionario = {$userId} AND
+                b.tipo= {$type} AND
+                {$initial} >='{$initialDate}' AND
+                {$final} <= '{$finalDate}'
+SQL;
 
-        $tables = self::getTableName() . ' a,' . TareaFuncionario::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='" . $finalDate . "'", '', $conn);
-
-        return self::convertToObjectCollection($findRecords);
+        return self::findBySql($sql);
     }
 
     /**

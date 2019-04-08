@@ -1,7 +1,4 @@
 <?php
-
-use function GuzzleHttp\json_decode;
-
 class Pagina extends Model
 {
     protected $id_documento;
@@ -53,7 +50,7 @@ class Pagina extends Model
     public function getTemporalRoute()
     {
         $prefix = 'pagina' . $this->getPK();
-        $image = UtilitiesController::createTemporalFile($this->ruta, $prefix, true);
+        $image = TemporalController::createTemporalFile($this->ruta, $prefix, true);
         return $image->success ? $image->route : false;
     }
 }

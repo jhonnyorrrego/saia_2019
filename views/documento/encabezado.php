@@ -39,13 +39,13 @@ function getTransfer($transferId)
 
 
 /**
- *  pinta en el encabezado con la 
+ *  pinta en el encabezado con la
  *  informaciobndel documento
- * 
+ *
  * @param int $documentId  identificador del documento
  * @param int $idtransferencia identificador de la
  *      transferencia en caso de venir de un buzon
- * 
+ *
  * @return string html del encabezado
  */
 function plantilla($documentId, $transferId = 0)
@@ -60,7 +60,7 @@ function plantilla($documentId, $transferId = 0)
         'user' => $Transfer->user->getPK(),
         'name' => $Transfer->user->getName()
     ];
-    
+
     $priorityClass = $Documento->prioridad ? 'text-danger' : '';
     ?>
 <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">
@@ -149,10 +149,10 @@ function plantilla($documentId, $transferId = 0)
             <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
                 <span class="badge badge-important counter" id="documents_counter"></span>
             </span>
-            <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
-        </div>
-        <div class="col-auto d-none d-md-block">
-            <?= expiration($Documento->fecha_limite) ?>
+            </div>
+            <div class="col-auto d-none d-md-block">
+                <?= expiration($Documento->fecha_limite,$documentId) ?>
+            </div>
         </div>
     </div>
     <div class="row mx-0 px-1">

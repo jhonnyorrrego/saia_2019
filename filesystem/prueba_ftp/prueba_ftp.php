@@ -5,7 +5,7 @@ include_once '../SaiaStorage.php';
 use Gaufrette\Filesystem;
 use Gaufrette\Adapter\Ftp as FtpAdapter;
 
-use Stringy\Stringy as String;
+//use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 

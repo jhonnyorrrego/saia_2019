@@ -12,7 +12,6 @@ include ("header.php");
 <link rel="stylesheet" type="text/css" href="css/dhtmlXTree.css">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
-<?php include_once("formatos/librerias/header_formato.php"); ?>
 <script type="text/javascript">
 <!--	
 $().ready(function() {
@@ -73,11 +72,11 @@ echo $x_perfil_idperfilList."</select>";
         </td></tr></table>
           Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
           <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
-          <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+          <img src="assets/images/anterior.png" border="0px" alt="Anterior"></a>
           <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,0,1)">
-          <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+          <img src="assets/images/buscar.png" border="0px" alt="Buscar"></a>
           <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value)">
-          <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a>
+          <img src="assets/images/siguiente.png" border="0px" alt="Siguiente"></a>
         <div id="esperando_modulo">
         <img src="imagenes/cargando.gif"></div>
         <div id="treeboxbox_tree3"></div>

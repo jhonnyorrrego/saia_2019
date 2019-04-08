@@ -13,7 +13,7 @@ include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior . "pantallas/qr/librerias.php");
 include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
-
+include_once $ruta_db_superior . 'controllers/autoload.php';
 /* ADICIONAR */
 
 function mostrar_radicado_entrada($idformato, $iddoc)
@@ -56,9 +56,9 @@ function datos_editar_radicacion($idformato, $iddoc)
                 $('#tr_tipo_mensajeria').hide();
                 $('[name="tipo_mensajeria"]').removeClass('required');
 
-                //$('#fecha_oficio_entrada').addClass('required');
-                $('#fecha_oficio_entrada').removeClass('required');
-                $('#tr_fecha_oficio_entrada').show();
+                //$('#fecha_documento').addClass('required');
+                $('#fecha_documento').removeClass('required');
+                $('#tr_fecha_documento').show();
                 $('#tr_numero_oficio').show();
                 $('#persona_natural').addClass('required');
                 $('#tr_persona_natural').show();
@@ -77,8 +77,8 @@ function datos_editar_radicacion($idformato, $iddoc)
             $('#area_responsable').addClass('required');
             $('#tr_tipo_destino').show();
 
-            $('#fecha_oficio_entrada').removeClass('required');
-            $('#tr_fecha_oficio_entrada').hide();
+            $('#fecha_documento').removeClass('required');
+            $('#tr_fecha_documento').hide();
             $('#tr_numero_oficio').hide();
             $('#persona_natural').removeClass('required');
             $('#tr_persona_natural').hide();
@@ -94,6 +94,7 @@ function datos_editar_radicacion($idformato, $iddoc)
     ?>
     <script>
         $(document).ready(function () {
+
             $('[name="tipo_destino"]').click(function () {
                 var tipo = $(this).val();
                 if (tipo == 1) {
@@ -140,7 +141,7 @@ function quitar_descripcion_entrada($idformato, $iddoc)
         $('#formulario_formatos').validate({
             ignore: [],
             submitHandler: function (form) {
-                var fecha = $("#fecha_oficio_entrada").val().split(" ");
+                var fecha = $("#fecha_documento").val().split(" ");
                 var f = new Date();
                 var dia = f.getDate();
                 var mes = (f.getMonth() + 1);
@@ -153,8 +154,8 @@ function quitar_descripcion_entrada($idformato, $iddoc)
                 var fecha2 = f.getFullYear() + "-" + mes + "-" + dia;
 
                 if (fecha[0] > fecha2) {
-                    $("#fecha_oficio_entrada").after("<font color='red'>La fecha es mayor a la de hoy</font>");
-                    $("#fecha_oficio_entrada").focus();
+                    $("#fecha_documento").after("<font color='red'>La fecha es mayor a la de hoy</font>");
+                    $("#fecha_documento").focus();
                     $('#continuar').css('display', 'inherit');
                     $('#continuar').next('input').hide();
                     return false;
@@ -208,7 +209,7 @@ function serie_documental_radicacion($idformato, $iddoc)
     <script>
         $(document).ready(function () {
             //tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
-
+            $('#tr_serie_idserie').hide();
             function onNodeSelect_dependencia_serie(nodeId) {
                 tree_serie_idserie.setCheck(tree_serie_idserie.getAllChecked(), 0);
                 tree_serie_idserie.setCheck(nodeId, 1);
@@ -221,44 +222,58 @@ function serie_documental_radicacion($idformato, $iddoc)
             var cargado = [<?php echo ($cargo); ?>];
             cargado.push(dependencia_principal);
 
-            tree_destino.setOnCheckHandler(onNodeSelect);
+            //tree_destino.setOnCheckHandler(onNodeSelect);
+            $("#treebox_destino").fancytree({
 
-            function onNodeSelect(nodeId) {
+                select: function(event, data) {
+                    // Display list of selected nodes
+                    var selNodes = data.tree.getSelectedNodes();
+                    var nodos = [];
+                    var padres = [];
+                    // convert to title/key array
+                    var selKeys = $.map(selNodes, function(node){
+                        nodos.push(node.key);
+                        padres.push(data.node.getParent().key);
+                    });
+                    for (var i = 0; i < nodos.length; i++) {
+                        onNodeSelect(nodos[i],padres[i]);
+                    }
+                    $('[name="destino"]').val(nodos.join(","));
+                }
+            });
 
-                var seleccionados = tree_destino.getAllChecked();
-
+            function onNodeSelect(nodeId,parentId) {
                 var numeral = nodeId.indexOf("#");
-
+                var padre,dependencia;
                 if (numeral >= 0) {
-                    var padre = tree_destino.getParentId(nodeId);
-                    padre = padre.replace("#", "");
-                    var dependencia = nodeId.replace("#", "");
+                    padre = parentId.replace("#", "");
+                    dependencia = nodeId.replace("#", "");
                 } else {
 
-                    var dependencia = tree_destino.getParentId(nodeId);
-                    var padre = tree_destino.getParentId(dependencia);
-
+                    dependencia = parentId;
+                    padre = $("#treebox_destino").fancytree("getTree").getNodeByKey(dependencia).getParent().key;
                     if (padre == 0) {  //SOLO PARA SU ORGANIZACION
                         padre = '<?php echo ($dependencia_maestra[0]['iddependencia']); ?>';
                     }
 
-                    padre = padre.replace("#", "");
-                    dependencia = dependencia.replace("#", "");
+                   padre = padre.replace("#", "");
+                   dependencia = dependencia.replace("#", "");
                 }
 
                 var parametro_adicional = '';
                 if (dependencia == '<?php echo ($dependencia_maestra[0]['iddependencia']); ?>') {
                     parametro_adicional = '&carga_partes_dependencia=1';
                 }
-
+                /*TODO: Actualizar arbol de expedientes, desarrollo pendiente de andres agudelo
                 tree_serie_idserie.setXMLAutoLoading("<?php echo ($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia=" + dependencia + parametro_adicional);
+
                 tree_serie_idserie.smartRefreshItem("d" + padre);
-                tree_serie_idserie.openItem("d" + padre); //ARBOL: expande nodo hasta el item indicado
+                tree_serie_idserie.openItem("d" + padre); //ARBOL: expande nodo hasta el item indicado*/
 
             }
-
             $('#tipo_origen1').click(function () {
                 var dependencia = $('#dependencia').val();
+                console.log("tipo_origen click");
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
 
                 function obtener_dependencia(rol) {
@@ -285,9 +300,9 @@ function serie_documental_radicacion($idformato, $iddoc)
 
 }
 
-function buscar_dependencias_principal($iddependencia)
-{
-    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "", $conn);
+function buscar_dependencias_principal($iddependencia){
+    global $conn;
+    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "",$conn);
 
     if ($cod_dep['numcampos']) {
         return (buscar_dependencias_principal($cod_dep[0]["cod_padre"]));
@@ -330,19 +345,28 @@ function tipo_radicado_radicacion($idformato, $iddoc)
             $("[name='requiere_recogida']:checked").trigger("change");
 
 
-    <?php
-    $permiso_mod = new Permiso();
-    $ok_permiso_radicacion_externa = $permiso_mod->acceso_modulo_perfil("permiso_radicacion_externa");
-    if (!$ok_permiso_radicacion_externa) {
-        ?>
-                $('#tipo_origen0').parent().hide();
-                $('#tipo_origen1').attr('checked', true);
-                $('[name="tipo_origen"]').click();
-                tipo_origen(2);
-        <?php
+            <?php
+            if (!PermisoController::moduleAccess("permiso_radicacion_externa")) {
+                ?>
+                    $('#tipo_origen0').attr('disabled',true);
+                    $('#tipo_origen1').attr('checked', true);
+                    $('#tipo_origen1').click();
+                    tipo_origen(2);
+                <?php
 
-    }
-    ?>
+            }
+            ?>
+            $("#treebox_area_responsable").fancytree({
+
+                select: function(event, data){
+                    var selNodes = data.tree.getSelectedNodes();
+                    var selKeys = $.map(selNodes, function(node){
+                        refrescar_arbol_tipo_documental_funcionario_responsable(node.key,data.node.getParent().key);
+                        $("[name='area_responsable']").val(node.key);
+                    });
+                }
+            });
+
 
         });
         function tipo_origen(tipo) {
@@ -365,9 +389,9 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#tr_tipo_mensajeria').hide();
                 $('[name="tipo_mensajeria"]').removeClass('required');
 
-                //$('#fecha_oficio_entrada').addClass('required');
-                $('#fecha_oficio_entrada').removeClass('required');
-                $('#tr_fecha_oficio_entrada').show();
+                //$('#fecha_documento').addClass('required');
+                $('#fecha_documento').removeClass('required');
+                $('#tr_fecha_documento').show();
                 $('#tr_numero_oficio').show();
                 $('#persona_natural').addClass('required');
                 $('#tr_persona_natural').show();
@@ -386,8 +410,8 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#area_responsable').addClass('required');
                 $('#tr_tipo_destino').show();
 
-                $('#fecha_oficio_entrada').removeClass('required');
-                $('#tr_fecha_oficio_entrada').hide();
+                $('#fecha_documento').removeClass('required');
+                $('#tr_fecha_documento').hide();
                 $('#tr_numero_oficio').hide();
                 $('#persona_natural').removeClass('required');
                 $('#tr_persona_natural').hide();
@@ -434,21 +458,15 @@ function tipo_radicado_radicacion($idformato, $iddoc)
             }
         }
 
-        tree_area_responsable.setOnCheckHandler(refrescar_arbol_tipo_documental_funcionario_responsable);
-
-        function refrescar_arbol_tipo_documental_funcionario_responsable() {
-    <?php
-    $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
-    ?>
+        function refrescar_arbol_tipo_documental_funcionario_responsable(nodeId, parentId) {
+            <?php
+            $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
+            ?>
+            var dependencia,padre;
             if ($("input:radio[name=tipo_origen]:checked").val() == 2 && $("input:radio[name=tipo_destino]:checked").val() == 1) {
-
-
-                var seleccionado = tree_area_responsable.getAllChecked();
-                seleccionado = parseInt(seleccionado);
-                if (seleccionado) {
-                    var dependencia = tree_area_responsable.getParentId(seleccionado);
-                    var padre = tree_area_responsable.getParentId(dependencia);
-
+                if (nodeId) {
+                    dependencia = parentId;
+                    padre = $("#treebox_area_responsable").fancytree("getTree").getNodeByKey(dependencia).getParent().key;
                     if (padre == 0) {  //SOLO PARA SU ORGANIZACION
                         padre = '<?php echo ($dependencia_maestra[0]['iddependencia']); ?>';
                     }
@@ -469,17 +487,15 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 
         }
 
-
-
         function seleccionar_interno_actual(seleccionar) {
-
             if (seleccionar) {
                 seleccion_reponsable_actual();
-                tree_area_responsable.setOnLoadingEnd(seleccion_reponsable_actual);
+                //tree_area_responsable.setOnLoadingEnd(seleccion_reponsable_actual);
             } else {
-                tree_area_responsable.setCheck(tree_area_responsable.getAllChecked(), false);
-                tree_area_responsable.closeAllItems(); //ARBOL: cierra todo el arbol
-                $('#area_responsable').val('');
+                //tree_area_responsable.setCheck(tree_area_responsable.getAllChecked(), false);
+                $("#treebox_area_responsable").fancytree("getTree").expandAll(false);
+                //tree_area_responsable.closeAllItems(); //ARBOL: cierra todo el arbol
+
             }
         }
 
@@ -488,19 +504,21 @@ function tipo_radicado_radicacion($idformato, $iddoc)
             var lista_iddependencia_cargo = '<?php echo ($lista_iddependencia_cargo); ?>';
             var vector_iddependencia_cargo = lista_iddependencia_cargo.split(',');
 
-            var sin_open = undefined;
-
-            var iddependencia_cargo = parseInt(vector_iddependencia_cargo[0]);
-            sin_open = tree_area_responsable.openItem(iddependencia_cargo); //ARBOL: expande nodo hasta el item indicado
-            tree_area_responsable.setCheck(iddependencia_cargo, true);
-
-            var str = tree_area_responsable.getAllChecked();
-
-            var long = str.length;
-            for (i = 0; i < long; i++) {
-                str = str.replace(",", "");
+            expandNode($("#treebox_area_responsable").fancytree("getRootNode"),2);
+            $("#treebox_area_responsable").fancytree("getTree").getNodeByKey(vector_iddependencia_cargo[0]).setSelected(true);
+        }
+        function expandNode(node, depth) {
+            // Expand this node
+            node.setExpanded(true);
+            // Reduce the depth count
+            depth--;
+            // If we need to go deeper
+            if (depth > 0) {
+                for (var i = 0; i < node.children.length; i++) {
+                    // Go recursive on child nodes
+                    expandNode(node.children[i], depth);
+                }
             }
-            $('#area_responsable').val(str);
         }
     </script>
     <?php
@@ -525,7 +543,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
 
-    $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_documento", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_documento", "Y-m-d") . " AS fecha_documento," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
     $documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
@@ -593,7 +611,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                 </tr>
                 <tr>
                     <td style='border:none;'><strong>FECHA DEL DOCUMENTO:</strong></td>
-                    <td style='border:none;'>" . $datos[0]['fecha_oficio_entrada'] . "</td>
+                    <td style='border:none;'>" . $datos[0]['fecha_documento'] . "</td>
                     <td style='border:none;'><strong>ANEXOS F&Iacute;SICOS:</strong></td>
                     <td style='border:none;'>" . $datos[0]['descripcion_anexos'] . "</td>
                     
@@ -642,7 +660,7 @@ function obtener_informacion_proveedor($idformato, $iddoc)
             if ($info[0]["empresa"]) {
                 $texto[] = "<b>Empresa:</b>" . $info[0]["empresa"];
             }
-            return implode(", &nbsp;", $texto);
+            echo implode(", &nbsp;", $texto);
         }
     } else {
         $array_concat = array(
@@ -658,7 +676,7 @@ function obtener_informacion_proveedor($idformato, $iddoc)
                 $texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
                 $texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
                 $texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
-                return implode("<br />", $texto);
+                echo implode("<br />", $texto);
             }
         }
     }
@@ -795,9 +813,9 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
 function actualizar_campos_documento($idformato, $iddoc)
 {
     global $conn;
-    $datos = busca_filtro_tabla("persona_natural,anexos_fisicos,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos,fecha_documento", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
     if ($datos["numcampos"]) {
-        $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='anexos_fisicos'", "", $conn);
+        $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "", $conn);
         $valores = array();
         if ($campo_formato["numcampos"]) {
             $filas = explode(";", $campo_formato[0]["valor"]);
@@ -810,7 +828,7 @@ function actualizar_campos_documento($idformato, $iddoc)
         if ($datos[0]["persona_natural"]) {
             $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
         }
-        $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["anexos_fisicos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
+        $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["descripcion_anexos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_documento"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
     }
     return;

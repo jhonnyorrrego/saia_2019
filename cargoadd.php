@@ -31,7 +31,6 @@ $validar_enteros = array(
 desencriptar_sqli("form_info");
 echo (librerias_jquery('1.7'));
 include ("formatos/librerias/estilo_formulario.php");
-include ("formatos/librerias/header_formato.php");
 
 // Get action
 $sAction = @$_POST["a_add"];
@@ -330,13 +329,13 @@ function arbol_cargos($campo) {
  Buscar:
 <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25">
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)">
-	<img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" border="0px">
+	<img src="<?php echo $ruta_db_superior; ?>assets/images/anterior.png" border="0px">
 </a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),0,1)">
-	<img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" border="0px">
+	<img src="<?php echo $ruta_db_superior; ?>assets/images/buscar.png" border="0px">
 </a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
-	<img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" border="0px">
+	<img src="<?php echo $ruta_db_superior; ?>assets/images/siguiente.png" border="0px">
 </a>
 <br />
 <div id="esperando_<?php echo $campo; ?>">

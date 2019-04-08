@@ -22,13 +22,17 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $Anexo = new Anexo($_REQUEST['fileId']);
+    if ($_REQUEST['type'] == 'TIPO_ANEXO') {
+        $Anexo = new Anexo($_REQUEST['fileId']);
+    } else {
+        $Anexo = new Anexos($_REQUEST['fileId']);
+    }
     $Anexo->setAttributes($_REQUEST['fields']);
 
-    if($Anexo->save()){
+    if ($Anexo->save()) {
         $Response->success = 1;
         $Response->message = "Registro actualizado";
-    }else{
+    } else {
         $Response->message = "Error al actualizar";
     }
 } else {
@@ -36,3 +40,4 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
+

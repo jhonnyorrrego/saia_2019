@@ -875,6 +875,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         $retorno["mensaje"] = "EL formato se actualizó con éxito";
         $retorno["idformato"] = $datos["idformato"];
         $retorno['exito'] = 1;
+        $retorno['editar'] = 1;
     } else {
         $retorno["error"] = "Error al insertar el Formato";
         ;
@@ -978,9 +979,7 @@ function load_componentes($tipo_retorno) {
     global $conn;
     $texto = '';
     $where = '';
-    $retorno = array(
-        "exito" => 0
-    );
+    $retorno = ["exito" => 0];
     if (@$_REQUEST["categoria"]) {
         $where = " AND lower(categoria)='" . strtolower($_REQUEST["categoria"]) . "'";
     }

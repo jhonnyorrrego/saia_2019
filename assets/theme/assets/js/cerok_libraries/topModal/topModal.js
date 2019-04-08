@@ -1,86 +1,142 @@
 var topModalDefaults = {
     url: "", // url to open
     params: {}, //params for url ej: baseUrl
-    html: false, //for show specific html
-    content: '', //string to put on modal
     size: "", //'modal-lg', 'modal-sm' , 'modal-xl'
     title: "", //title for modal
     centerAlign: true, //true for center align, false for top align
     buttons: {
         success: {
-            label: 'Enviar',
-            class: 'btn btn-complete'
+            label: "Enviar",
+            class: "btn btn-complete"
         },
         cancel: {
-            label: 'Cancelar',
-            class: 'btn btn-danger'
+            label: "Cancelar",
+            class: "btn btn-danger"
         }
-    }
+    },
+    beforeShow: function (event) { return true; }, //evento ejecutado antes de mostrar
+    afterShow: function (event) { return true; },//evento ejecutado despues de mostrar
+    beforeHide: function (event) { return true; },//evento ejecutado antes de cerrar
+    afterHide: function (event) { return true; },//evento ejecutado despues de cerrar
+    onSuccess: function () { return true; }
 };
 
-function topModal(options){
-    var modal = $('#dinamic_modal', window.top.document);
-    var modalDialog = modal.find('.modal-dialog');
+function topModal(options) {
+    var modal = $("#dinamic_modal", window.top.document);
+    var modalDialog = modal.find(".modal-dialog");
+    var modalBody = modal.find("#modal_body");
     var options = $.extend({}, topModalDefaults, options);
 
-    modal.find("#btn_success").off("click");
-    modal.find('#modal_body').html('');
-    modal.find('#modal_title').text(options.title);
-    modalDialog.removeClass('modal-lg modal-sm modal-xl');
+    setEvents(options, modal);
 
-    if(options.centerAlign){
-        modalDialog.addClass('modal-dialog-centered');
-    }else{
-        modalDialog.removeClass('modal-dialog-centered');
+    modal.find("#btn_success").off("click");
+    modalBody.html("");
+    modal.find("#modal_title").text(options.title);
+    modalDialog.removeClass("modal-lg modal-sm modal-xl");
+
+    if (options.centerAlign) {
+        modalDialog.addClass("modal-dialog-centered");
+    } else {
+        modalDialog.removeClass("modal-dialog-centered");
     }
-    
-    if ($.inArray(options.size, ['modal-lg', 'modal-sm', 'modal-xl']) != -1) {
-        modalDialog.removeClass('modal-lg modal-sm modal-xl');
+
+    if ($.inArray(options.size, ["modal-lg", "modal-sm", "modal-xl"]) != -1) {
+        modalDialog.removeClass("modal-lg modal-sm modal-xl");
         modalDialog.addClass(options.size);
     }
 
     if (options.buttons.success || options.buttons.cancel) {
-        modal.find('.modal-footer').show();
-        if(options.buttons && options.buttons.success){
-            modal.find("#btn_success").show()
+        modal.find(".modal-footer").show();
+        if (options.buttons && options.buttons.success) {
+            modal
+                .find("#btn_success")
+                .show()
                 .text(options.buttons.success.label)
                 .addClass(options.buttons.success.class);
-        }else{
+        } else {
             modal.find("#btn_success").hide();
         }
-    
-        if(options.buttons && options.buttons.cancel){
-            modal.find("#close_modal").show()
+
+        if (options.buttons && options.buttons.cancel) {
+            modal
+                .find("#close_modal")
+                .show()
                 .text(options.buttons.cancel.label)
-                .addClass(options.buttons.cancel.class);
-        }else{
+                .addClass(options.buttons.cancel.class)
+                .off("click")
+                .on("click", function () {
+                    top.closeTopModal();
+                });
+        } else {
             modal.find("#close_modal").hide();
-        }        
+        }
     } else {
-        modal.find('.modal-footer').hide();
+        modal.find(".modal-footer").hide();
     }
 
-    if(options.url && !options.html){
-        modal.find('#modal_body').load(options.url, options.params,function(response, status, xhr){
-            if (status == 'success'){                
-                modal.find('#modal_body').prepend('<hr class="mt-1">');
-            }else{
-                console.error('failed to load');
-                modal.find('#modal_body').html('');
+    if (options.url) {
+        modalBody.load(options.url, options.params, function (
+            response,
+            status,
+            xhr
+        ) {
+            if (status == "success") {
+                modalBody.prepend('<hr class="mt-1">');
+            } else {
+                console.error("failed to load");
+                modalBody.html("");
             }
 
-            openModal();
+            openModal(options);
         });
-    }else if(options.html && options.content){
-        modal.find('#modal_body').html(options.content);
-        modal.find('#modal_body').prepend('<hr>');
-        
-        openModal();
+    } else if (options.content) {
+        modalBody.prepend('<hr class="mt-1">');
+        modalBody.append(options.content);
+        openModal(options);
+    } else {
+        console.error("debe indicar la url");
     }
 }
 
-function openModal() {
-    if (!$('#dinamic_modal', window.top.document).is(':visible')) {
-        $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
+function setEvents(options, modal) {
+    modal.off('show.bs.modal').on('show.bs.modal', function (e) {
+        options.beforeShow(e);
+    });
+
+    modal.off('shown.bs.modal').on('shown.bs.modal', function (e) {
+        options.afterShow(e);
+    });
+
+    modal.off('hide.bs.modal').on('hide.bs.modal', function (e) {
+        options.beforeHide(e);
+    });
+
+    modal.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+        options.afterHide(e);
+    });
+}
+
+function openModal(options) {
+    if (!$("#dinamic_modal", window.top.document).is(":visible")) {
+        $("[data-target='#dinamic_modal']", window.top.document).trigger(
+            "click"
+        );
+        window.modalOptions = options;
+    } else {
+        options.oldSource = window.modalOptions;
+        window.modalOptions = options;
     }
+}
+
+function closeTopModal() {
+    if (window.modalOptions && window.modalOptions.oldSource) {
+        top.topModal(window.modalOptions.oldSource);
+        window.modalOptions = {};
+    } else {
+        $("#dinamic_modal", window.top.document).modal("hide");
+    }
+}
+
+function successModalEvent(data) {
+    window.modalOptions.onSuccess(data);
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * retorna script para cargar
  * jquery v3.2.1 minificado
@@ -264,33 +263,30 @@ function validate()
 
 /**
  * Incluir libreria para arboles jquery.fancytree
+ * v2.30.0
  * @param string $version
  * @param string $opciones
  * @param string $tema
  * @return string
  */
-function arboles_ft($version = "2.30", $opciones = '', $tema = "lion")
+function fancyTree($filtro = false)
 {
     global $ruta_db_superior;
-    $ruta = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/';
 
-    $modulos = "";
-    switch ($version) {
-        case "2.24":
-            $version = "2.24.0";
-            $modulos = "src";
-            break;
-        case "2.30":
-            $version = "2.30.0";
-            $modulos = "modules";
-            break;
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/skin-lion/ui.fancytree.min.css';
+    $customCss = $ruta_db_superior . 'views/arbol/css/arbol.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+    $css .= '<link class="main-stylesheet" href="' . $customCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/jquery.fancytree.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    if ($filtro) {
+        $routeModule = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/modules/jquery.fancytree.filter.js';
+        $js .= '<script src="' . $routeModule . '"></script>';
     }
-    $texto = '<link href="' . $ruta . "$version/skin-$tema/ui.fancytree.css" . '" rel="stylesheet">';
-    $texto .= '<script src="' . $ruta . "$version/jquery.fancytree.min.js" . '"></script>';
-    if ($opciones == 'filtro') {
-        $texto .= '<script src="' . $ruta . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
-    }
-    return $texto;
+
+    return $css . $js;
 }
 
 /**
@@ -305,34 +301,6 @@ function topModal()
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $js;
-}
-
-/**
- * incluye las librerias necesarias
- * para la pantalla del topModal
- *
- * @param array $data
- * @return string <script> incluye las librerias
- * cuando el documento esta listo
- */
-function librariesForTopModal($data)
-{
-    $data = implode('', $data);
-    $libraries = str_replace('</script>', '<\/script>', $data);
-
-    return "<script type='text/javascript'>
-        div = $('<div>').append('" . $libraries . "');
-
-        $.each(div.children(), function(i, e){
-            if(e.href){
-                $('head').append(e);
-            }else if(e.src){
-                $('body').append(e);
-            }
-        });
-
-        delete div;
-    </script>";
 }
 
 function bpmnModeler()
@@ -381,7 +349,8 @@ function select2()
  * el dropzone  v5.5
  * @return void
  */
-function dropzone(){
+function dropzone()
+{
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';
@@ -391,4 +360,62 @@ function dropzone(){
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
+}
+
+/**
+ * retorna los enlaces para incluir
+ * datetimepicker v4.17.47
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-03-20
+ */
+function dateTimePicker()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    $routeLanguage = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js';
+    $language = '<script type="text/javascript" src="' . $routeLanguage . '"></script>';
+
+    return $css . $js . $language;
+}
+
+/**
+ * retorna los enlaces para incluir
+ * jspanel v4.6.0
+ *
+ * @return string
+ * @date 2019-04-02
+ */
+function jsPanel()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
+
+function kuku()
+{
+    global $ruta_db_superior;
+
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/docxjs/DocxJS.bundle.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/celljs/CellJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/slidejs/SlideJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $js;
 }

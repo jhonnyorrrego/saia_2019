@@ -31,7 +31,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
         $Documento = new Documento($_REQUEST['documentId']);
         $route = $Documento->estado . '/' . date('Y-m-d') . '/' . $_REQUEST['documentId'] . '/anexos/' . $storageName;
-        $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
+        $dbRoute = TemporalController::createFileDbRoute($route, 'archivos', $content);
 
         $Anexos = new Anexos();
         $Anexos->setAttributes([
@@ -50,11 +50,19 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
             $Anexos->setAttributes([
                 'version' => ++$OldRecord->version,
-                'fk_anexos' => $OldRecord->getPK()
+                'fk_anexos' => $OldRecord->fk_anexos
             ]);
         }
 
         if ($Anexos->save()) {
+            if(!$Anexos->fk_anexos){
+                Anexos::executeUpdate([
+                    'fk_anexos' => $Anexos->getPK()
+                ], [
+                    Anexos::getPrimaryLabel() => $Anexos->getPK()
+                ]);
+            }
+
             $data[] = $Anexos->getPK();
         }
     }

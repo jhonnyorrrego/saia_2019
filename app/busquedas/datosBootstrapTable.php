@@ -48,13 +48,8 @@ $data = array(
     'total' => $output->records,
     'rows' => array()
 );
-
-$i = 0;
 foreach ($output->rows as $key => $value) {
-    $data['rows'][$i]['info'] = $value->info;
-    $data['rows'][$i]['id'] = (int)$value->llave;
-    $i++;
+    $data['rows'][$key]['id'] = (int)$value->llave;
+    $data['rows'][$key]['info'] = $value->info;
 }
-
 echo json_encode($data);
-

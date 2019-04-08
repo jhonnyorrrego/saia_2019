@@ -10,10 +10,11 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
 
-function cambiar_mensajero_distribucion() {
+function cambiar_mensajero_distribucion()
+{
     global $conn;
     $retorno = array(
         'exito' => 0,
@@ -21,32 +22,45 @@ function cambiar_mensajero_distribucion() {
     );
 
     $iddistribucion = @$_REQUEST['iddistribucion'];
-    
+
     if ($iddistribucion) {
-        
+
         $vector_mensajero_nuevo = explode('-', @$_REQUEST['mensajero']);
         $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "", $conn);
-        
-        $retorno=validar_oriden_destino_distribucion($iddistribucion);
-        
-        if($tipo_origen_destino['exito']==1){
-            for($i=0;$i<$distribucion['numcampos'];$i++){
+
+        $retorno = validar_oriden_destino_distribucion($iddistribucion);
+
+        if ($retorno['exito'] == 1) {
+            for ($i = 0; $i < $distribucion['numcampos']; $i++) {
                 $diligencia = mostrar_diligencia_distribucion($distribucion[$i]['tipo_origen'], $distribucion[$i]['estado_recogida']);
 
                 switch ($diligencia) {
                     case 'RECOGIDA' :
-                        $upm = " UPDATE  distribucion SET mensajero_origen=" . $vector_mensajero_nuevo[0] . " WHERE iddistribucion in(" . $iddistribucion.")";
+                        if($vector_mensajero_nuevo[1] == 'e'){
+                            $retorno = array('exito' => 0, 'msn' => "No es posible asignar un mensajero externo o transportadora para la recogida");
+                        }else {
+                            $upm = " UPDATE  distribucion SET mensajero_origen=" . $vector_mensajero_nuevo[0] . " WHERE iddistribucion in(" . $iddistribucion . ")";
+                            $retorno = array('exito' => 1, 'sql' . $i => $upm);
+                            phpmkr_query($upm) or die(json_encode($retorno));
+                        }
                         break;
                     case 'ENTREGA' :
                         $update_adicional = ',mensajero_empresad=0';
-                        if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {//si es una empresa_transportadora es decir mensajero_empresad
+                        if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {
+                            $retorno["msn"] = "No es posible asignar un mensajero externo";
+                            $retorno["exito"] = 0;
+                        } elseif ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e') { //si es una empresa_transportadora es decir mensajero_empresad
                             $update_adicional = ',mensajero_empresad=1';
+                            $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . ",mensajero_empresad=1 WHERE iddistribucion in(" . $iddistribucion . ")";
+                            $retorno = array('exito' => 1, 'sql' . $i => $upm);
+                            phpmkr_query($upm) or die(json_encode($retorno));
+                        } elseif ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'i'){
+                            $upm = "UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . ",mensajero_empresad=0 WHERE iddistribucion in(" . $iddistribucion . ")";
+                            $retorno = array('exito' => 1, 'sql' . $i => $upm);
+                            phpmkr_query($upm) or die(json_encode($retorno));
                         }
-                        $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . " WHERE iddistribucionin(" . $iddistribucion.")";
                         break;
                 }
-                $retorno = array('exito' => 1, 'sql'.$i => $upm);
-                phpmkr_query($upm) or die(json_encode($retorno));
             }
         }
     } else {
@@ -54,42 +68,47 @@ function cambiar_mensajero_distribucion() {
     }
     return ($retorno);
 }
-function validar_oriden_destino_distribucion($distribucion){
-    $cantidad=count(explode(",",$distribucion));
+
+function validar_oriden_destino_distribucion($distribucion)
+{
+    global $conn;
+    $cantidad = count(explode(",", $distribucion));
     $retorno = array(
         'exito' => 0,
         'msn' => "",
         'tipo_origen' => 0,
         'tipo_destino' => 0,
     );
-    $tipo_origen_externo=busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-    $tipo_origen_interno=busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
-    
-    if($tipo_origen_externo[0]['cantidad']==$cantidad || $tipo_origen_interno[0]['cantidad']==$cantidad){
-        if($tipo_origen_externo[0]['cantidad']==$cantidad){
-            $retorno['tipo_origen']=1;
-        }else{
-            $retorno['tipo_origen']=1;
-        }
-        $tipo_destino_externo=busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-        $tipo_destino_interno=busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+    $tipo_origen_externo = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
+    $tipo_origen_interno = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
 
-        if($tipo_destino_externo[0]['cantidad']==$cantidad || $tipo_destino_interno[0]['cantidad']==$cantidad){
-            if($tipo_destino_externo[0]['cantidad']==$cantidad){
-                $retorno['tipo_destino']=1;
-            }else{
-                $retorno['tipo_destino']=1;
+    if ($tipo_origen_externo[0]['cantidad'] == $cantidad || $tipo_origen_interno[0]['cantidad'] == $cantidad) {
+        if ($tipo_origen_externo[0]['cantidad'] == $cantidad) {
+            $retorno['tipo_origen'] = 1;
+        } else {
+            $retorno['tipo_origen'] = 1;
+        }
+        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+
+        if ($tipo_destino_externo[0]['cantidad'] == $cantidad || $tipo_destino_interno[0]['cantidad'] == $cantidad) {
+            if ($tipo_destino_externo[0]['cantidad'] == $cantidad) {
+                $retorno['tipo_destino'] = 1;
+            } else {
+                $retorno['tipo_destino'] = 1;
             }
-            $retorno['exito']=1;
-        }else{
+            $retorno['exito'] = 1;
+        } else {
             $retorno["msn"] = "Todas las distribuciones deben ser de destino externo o interno.";
         }
-    }else{
+    } else {
         $retorno["msn"] = "Todas las distribuciones deben ser de origen externo o interno.";
     }
     return $retorno;
 }
-function finalizar_distribucion() {
+
+function finalizar_distribucion()
+{
     global $conn;
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
@@ -126,7 +145,8 @@ function finalizar_distribucion() {
 
 //fin function finalizar_distribucion()
 
-function confirmar_recepcion_distribucion() {
+function confirmar_recepcion_distribucion()
+{
     global $conn;
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
@@ -143,7 +163,8 @@ function confirmar_recepcion_distribucion() {
 
 //fin function confirmar_recepcion_distribucion()
 
-function finalizar_entrega_personal() {
+function finalizar_entrega_personal()
+{
     global $conn;
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
@@ -163,6 +184,6 @@ function finalizar_entrega_personal() {
 
 if (@$_REQUEST['ejecutar_accion']) {
     $retorno = $_REQUEST['ejecutar_accion']();
-    echo( json_encode($retorno));
+    echo(json_encode($retorno));
 }
 ?>

@@ -29,11 +29,11 @@ function mostrar_funcionarios($campo)
  Buscar: 
 <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25">
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)"> 
-  <img src="botones/general/anterior.png"border="0px"></a>                   
+  <img src="assets/images/anterior.png"border="0px"></a>                   
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),0,1)">
-  <img src="botones/general/buscar.png"border="0px"></a>                                              
+  <img src="assets/images/buscar.png"border="0px"></a>                                              
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
-  <img src="botones/general/siguiente.png"border="0px"></a>                            <br />
+  <img src="assets/images/siguiente.png"border="0px"></a>                            <br />
 <div id="esperando_<?php echo $campo; ?>">
   <img src="imagenes/cargando.gif">
 </div>
@@ -162,7 +162,6 @@ function buscar_pendientes($codigo)
   
 if(isset($_REQUEST["formato_adicionar"]))
 {include_once("calendario/calendario.php"); 
- include_once("formatos/librerias/header_formato.php");      
 ?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>

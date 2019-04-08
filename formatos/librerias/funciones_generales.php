@@ -116,10 +116,12 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
                     $fila
                 );
             } else {
-                $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "", $conn);
-                $lista = array(
-                    $codigos[0]["funcionario_codigo"]
-                );
+                if($fila){
+                    $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "", $conn);
+                    $lista = array(
+                        $codigos[0]["funcionario_codigo"]
+                    );
+                }
             }
         } else {
             $lista = buscar_funcionarios(str_replace("#", "", $fila));
@@ -2013,9 +2015,11 @@ function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
             switch ($tipo_arbol) {
                 case "funcionario":
                     //Funcionarios
-                    $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
-                    if ($datos["numcampos"]) {
-                        $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+                    if($fila){
+                        $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+                        if ($datos["numcampos"]) {
+                            $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+                        }
                     }
                     break;
                 case "serie":
@@ -2829,8 +2833,8 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc)
         ?>
 <td id="td_fk_idexpediente" bgcolor="#F5F5F5">
     <div id="seleccionados"></div> <br /> Buscar: <input tabindex='2' type="text" id="stext_fk_idexpediente" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 1)">
-        <img src="../../botones/general/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../botones/general/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
-        <img src="../../botones/general/siguiente.png" border="0px"></a> <br />
+        <img src="../../assets/images/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../assets/images/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
+        <img src="../../assets/images/siguiente.png" border="0px"></a> <br />
     <div id="esperando_fk_idexpediente">
         <img src="../../imagenes/cargando.gif">
     </div>

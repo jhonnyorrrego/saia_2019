@@ -29,6 +29,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= icons() ?>
+    <link rel="manifest" href="<?= $ruta_db_superior ?>manifest.json">
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
@@ -71,7 +72,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- END MOBILE SIDEBAR TOGGLE -->
             <div class="">
                 <div class="brand inline">
-                    <img alt="logo" height="47px" id="client_image">
+                    <img alt="logo" id="client_image" style="max-height:40px">
                 </div>
                 <div class="dropdown d-lg-inline-block d-none">
                     <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="new_action">
@@ -96,14 +97,32 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="input-group transparent">
                         <div class="input-group-prepend">
                             <span class="input-group-text transparent">
-                                <i class="fa fa-search"></i>
+                                <div class="dropdown">
+                                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </span>
+                                    <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                                        <a href="#" class="dropdown-item finder_option" data-type="document">
+                                            <i class="fa fa-file"></i> Documento
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="task">
+                                            <i class="fa fa-calendar-o"></i> Tarea
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="folder">
+                                            <i class="fa fa-folder-open"></i> Expediente
+                                        </a>
+                                        <a href="#" class="dropdown-item finder_option" data-type="file">
+                                            <i class="fa fa-paperclip"></i> Anexos
+                                        </a>
+                                    </div>
+                                </div>
                             </span>
                         </div>
                         <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:250px">
                         <div class="input-group-append ">
                             <span class="input-group-text transparent">
                                 <i class="fa fa-times pr-3" id="clean_finder"></i>
-                                <i class="fa fa-chevron-down" id="show_filters"></i>
+                                <i class="fa fa-search"></i>
                             </span>
                         </div>
                     </div>
@@ -265,7 +284,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <div class="modal-body" id="modal_body"></div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" id="close_modal"></button>
+                    <button type="button" id="close_modal"></button>
                     <button type="submit" id="btn_success"></button>
                 </div>
             </div>
@@ -300,6 +319,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             if (localStorage.getItem('key') > 0) {
                 Ui.putColor();
                 Ui.inactiveTime();
+                Ui.bindServiceWorker();
 
                 $('[data-toggle="tooltip"]').tooltip();
             }

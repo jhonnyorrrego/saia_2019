@@ -46,14 +46,15 @@ function info_caja($idcaja)
         }
     }
     $data = [
-        "idbusqueda_componente" => $idcompCajaExp,
-        "idcaja" => $idcaja
+        'idbusqueda_componente' => $idcompCajaExp,
+        'idcaja' => $idcaja
     ];
     $params = http_build_query($data);
 
+    $btn='';
     if ($idcompCajaExp) {
         if ($Caja->isResponsable()) {
-            $btn .= '<button class="btn btn-info mx-1 delCaja" data-id="' . $idcaja . '" data-componente="' . $idcomp . '" title="Mover a la papelera"><i class="fa fa-recycle"></i></button>';
+            $btn .= '<button class="btn btn-info mx-1 delCaja" data-id="' . $idcaja . '" title="Mover a la papelera"><i class="fa fa-recycle"></i></button>';
         }
     $html .= <<<FINHTML
     <div class ="row mx-0 my-0">
@@ -61,7 +62,7 @@ function info_caja($idcaja)
             <i class='{$Caja->getIcon()}'></i>
         </div>
 
-        <div class ="col-3 cursor kenlace_saia" conector = "iframe" enlace = "views/caja/index.php?'{$params}" titulo = "{$Caja->codigo}">
+        <div class ="col-3 cursor kenlace_saia" conector = "iframe" enlace = "views/caja/index.php?{$params}" titulo = "{$Caja->codigo}">
             {$Caja->codigo}
         </div>
 
@@ -74,7 +75,7 @@ function info_caja($idcaja)
         </div>
 
         <div class="float-right col-3">
-            {$btn}<button class="btn btn-info mx-1 infoCaja" data-id="{$idcaja}" data-componente="{$idcomp}" title="Información de la caja"><i class="fa fa-info-circle"></i></button>
+            {$btn}<button class="btn btn-info mx-1 infoCaja" data-id="{$idcaja}" title="Información de la caja"><i class="fa fa-info-circle"></i></button>
         </div>
     </div> 
 FINHTML;
@@ -130,7 +131,7 @@ function info_caja_expediente($idexpediente)
             </div>
 
             <div class="float-right col-3">
-                <button class="btn btn-info infoExp" data-id="{$idexpediente}" data-componente="{$idcomp}" title="Información del expediente"><i class="fa fa-info-circle"></i></button>
+                <button class="btn btn-info infoExp" data-id="{$idexpediente}" title="Información del expediente"><i class="fa fa-info-circle"></i></button>
             </div>
         </div> 
 FINHTML;

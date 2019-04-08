@@ -1,19 +1,32 @@
-$(function() {
-    let baseUrl = $("script[data-baseurl]").data("baseurl");
+$(function () {
+    let params = $("#user_script").data('params');
+    let baseUrl = params.baseUrl;
+    let myDropzone = null;
+
+    $("#user_script").removeAttr('data-params');
 
     (function init() {
         createFileInput();
         findProfileOptions();
         findWindowRadicationOptions();
-        clearForm();
+
+        if (params.userId) {
+            find(params.userId);
+        }
     })();
+
+    $('#btn_success').on('click', function () {
+        $("#user_form").trigger('submit');
+    });
 
     function createFileInput() {
         $("#file").addClass("dropzone");
-        let dropzone = new Dropzone("#file", {
+        myDropzone = new Dropzone("#file", {
             url: `${baseUrl}app/temporal/cargar_anexos.php`,
             dictDefaultMessage:
                 "Haga clic para elegir un archivo o Arrastre acá el archivo.",
+            addRemoveLinks: true,
+            dictRemoveFile: 'Eliminar anexo',
             maxFilesize: 3,
             maxFiles: 1,
             dictFileTooBig: "Tamaño máximo {{maxFilesize}} MB",
@@ -23,8 +36,8 @@ $(function() {
                 dir: "firma_funcionario"
             },
             paramName: "file",
-            init: function() {
-                this.on("success", function(file, response) {
+            init: function () {
+                this.on("success", function (file, response) {
                     response = JSON.parse(response);
 
                     if (response.success) {
@@ -46,7 +59,7 @@ $(function() {
             {
                 key: localStorage.getItem("key")
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         $("#profile").append(
@@ -69,7 +82,7 @@ $(function() {
             {
                 key: localStorage.getItem("key")
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         $("#window_radication").append(
@@ -86,16 +99,54 @@ $(function() {
         );
     }
 
-    function clearForm() {
-        setTimeout(() => {
-            $("#user_form").trigger("reset");
-            $("#password_validation").text("")[0].className = "";
-        }, 300);
-    }
-
-    $("#password").keyup(function() {
+    $("#password").keyup(function () {
         checkStrength("#password_validation", $(this).val());
     });
+
+    function find(userId) {
+        $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`, {
+            key: localStorage.getItem('key'),
+            type: 'edit',
+            userId: userId
+        }, function (response) {
+            if (response.success) {
+                fillForm(response.data);
+            } else {
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                });
+            }
+        }, 'json');
+    }
+
+    function fillForm(data) {
+        for (let name in data) {
+            switch (name) {
+                case 'perfil':
+                    $(`[name="perfil[]"]`).val(data[name].split(',')).change();
+                    break;
+                case 'firma':
+                    setImage(data[name]);
+                    break;
+
+                default:
+                    let e = $(`[name="${name}"]`);
+
+                    if (e.length) {
+                        e.val(data[name]).trigger('change');
+                    }
+                    break;
+            }
+        }
+    }
+
+    function setImage(mockFile) {
+        myDropzone.removeAllFiles();
+        myDropzone.emit("addedfile", mockFile);
+        myDropzone.emit("thumbnail", mockFile, baseUrl + mockFile.route);
+        myDropzone.emit("complete", mockFile);
+    }
 
     function checkStrength(selector, password) {
         var strength = 0;
@@ -182,7 +233,7 @@ $("#user_form").validate({
             required: "Campo requerido"
         }
     },
-    errorPlacement: function(error, element) {
+    errorPlacement: function (error, element) {
         let node = element[0];
 
         if (
@@ -195,21 +246,30 @@ $("#user_form").validate({
             error.insertAfter(element);
         }
     },
-    submitHandler: function(form) {
-        let baseUrl = $("script[data-baseurl]").data("baseurl");
+    submitHandler: function (form) {
+        let params = $("#user_script").data('params');
         let data = $("#user_form").serialize();
-        data += `&key=${localStorage.getItem("key")}`;
+        data = data + '&' + $.param({
+            key: localStorage.getItem("key"),
+            userId: params.userId
+        });
+
+        if (params.userId) {
+            var route = `${params.baseUrl}app/funcionario/editar.php`;
+        } else {
+            var route = `${params.baseUrl}app/funcionario/adicionar.php`
+        }
 
         $.post(
-            `${baseUrl}app/funcionario/adicionar.php`,
+            route,
             data,
-            function(response) {
+            function (response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,
                         type: "success"
                     });
-                    window.location = `${baseUrl}views/funcionario/dashboard.php?key=${response.data}`;
+                    top.successModalEvent();
                 } else {
                     top.notification({
                         message: response.message,

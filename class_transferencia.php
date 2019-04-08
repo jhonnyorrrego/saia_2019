@@ -82,54 +82,6 @@ function dependencias($padre)
 
 /*
  * <Clase>
- * <Nombre>minusculas</Nombre>
- * <Parametros>$texto:texto que se desea pasar a minusculas</Parametros>
- * <Responsabilidades>Pasa un texto a minúsculas<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function minusculas($texto)
-{
-    $vocales = array('&AACUTE', '&EACUTE', '&IACUTE', '&OACUTE', '&UACUTE', '&NTILDE;');
-    $reemplazo = array('&aacute', '&eacute', '&iacute', '&oacute', '&uacute', '&ntilde;');
-    $texto_nuevo = strtolower($texto);
-    for ($i = 0; $i < count($vocales); $i++) {
-        $texto_nuevo = str_replace($vocales[$i], $reemplazo[$i], $texto_nuevo);
-    }
-    return ($texto_nuevo);
-}
-
-/*
- * <Clase>
- * <Nombre>usuarioactual
- * <Parametros>$campo-campo de la tabla funcionario que desea consultar
- * <Responsabilidades>consulta todos los datos del funcionario logueado
- * y devuelve el campo con nombre igual a $campo
- * <Notas>
- * <Excepciones>que el contenido de $campo no sea un campo de la tabla funcionario
- * <Salida>valor del campo con nombre $campo
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-function usuarioactual($campo)
-{
-    global $conn;
-    $usuactual = $_SESSION["usuario_actual"];
-    if ($usuactual != "") {
-        $dato = busca_filtro_tabla("A.*,A.idfuncionario AS id", "funcionario A", "A.funcionario_codigo='" . $usuactual . "'", "", $conn);
-        if ($dato != "")
-            return ($dato[0][$campo]);
-    }
-    alerta("<b>ATENCI&Oacute;N</b><br>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador", 'error');
-    redirecciona("logout.php");
-}
-
-/*
- * <Clase>
  * <Nombre>prepara_sql
  * <Parametros>$arreglo-matriz con los valores a formatear; $separador-caracter
  * con el cual quiero separar los campos
@@ -195,7 +147,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
         $arreglo["estado"] = "'ACTIVO'";
     $arreglo["fecha_creacion"] = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
 
-	// VENTANILLA RADICACION
+    // VENTANILLA RADICACION
     $ventanilla_radicacion = usuario_actual('ventanilla_radicacion');
     if (!$ventanilla_radicacion) {
         $ventanilla_radicacion = 0;
@@ -238,7 +190,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
             $tipo_almacenamiento = $config[0]["valor"];
         } else
             $tipo_almacenamiento = "archivo";
-		// Si no encuentra el registro en configuracion almacena en archivo
+        // Si no encuentra el registro en configuracion almacena en archivo
         if ($tipo_almacenamiento == "archivo") {
             $archivos = explode(",", $archivos);
             foreach ($archivos as $nombre) {
@@ -351,7 +303,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     $idtransferencia = array();
     sort($destino);
 
-	/* REEMPLAZOS NUEVOS */
+    /* REEMPLAZOS NUEVOS */
     $funcionarios = $destino;
     foreach ($funcionarios as $key => $valor) {
         $retorno = obtener_reemplazo($valor, 1);
@@ -359,7 +311,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
             $destino[$key] = $retorno['funcionario_codigo'][0];
         }
     }
-	// TERMINA REEMPLAZOS
+    // TERMINA REEMPLAZOS
 
     $idarchivo = $datos["archivo_idarchivo"];
     if (!isset($datos["ruta_idruta"])) {
@@ -367,10 +319,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     }
     if (array_key_exists("origen", $datos)) {
         $origen = $datos["origen"];
-    } else if (@$_SESSION["usuario_actual"]) {
-        $origen = $_SESSION["usuario_actual"];
     } else {
-        $origen = usuario_actual("funcionario_codigo");
+        $origen = $_SESSION["usuario_actual"];
     }
 
     $doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
@@ -381,7 +331,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     }
     llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
 
-	//Cuando ingresan demasiado texto en las notas
+    //Cuando ingresan demasiado texto en las notas
     $texto_notas = "";
     if (in_array("notas", array_keys($adicionales))) {
         $cant_texto = strlen($adicionales["notas"]);
@@ -436,7 +386,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     if ($texto_notas != "") {
                         guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', $conn, 0);
                     }
-
                 } else if ($datos["nombre"] == "POR_APROBAR") {
                     if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
                         $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
@@ -751,9 +700,9 @@ function mostrar_estado_proceso($idformato, $iddoc)
                 if (!$resultado[$k])
                     continue;
                 $fila = $resultado[$k];
-                if ($fila["tipo_origen"] == 5) {// rol
+                if ($fila["tipo_origen"] == 5) { // rol
                     $cargos = busca_filtro_tabla("distinct cargo.nombre", "cargo,dependencia_cargo", "cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=" . $fila["origen"], "", $conn);
-                } elseif ($fila["tipo_origen"] == 1) {// funcionario_codigo
+                } elseif ($fila["tipo_origen"] == 1) { // funcionario_codigo
                     $cargos = busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='" . $fila["fecha"] . "' and fecha_final>='" . $fila["fecha"] . "' and funcionario_codigo='" . $fila["origen"] . "' AND dependencia_cargo.estado=1", "", $conn);
                     if (!$cargos["numcampos"])
                         $cargos = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='" . $fila["origen"] . "'", "fecha desc", $conn);
@@ -783,11 +732,10 @@ function mostrar_estado_proceso($idformato, $iddoc)
 
                         echo "<p class='my-0'><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br /></p>";
                         if ($cargos["numcampos"]) {
-                            for ($h = 0; $h < $cargos["numcampos"]; $h++){
-                                echo "<p><b>".formato_cargo($cargos[$h]["nombre"]) . "</b></p><br/>";
+                            for ($h = 0; $h < $cargos["numcampos"]; $h++) {
+                                echo "<p><b>" . formato_cargo($cargos[$h]["nombre"]) . "</b></p><br/>";
                             }
-                              
-                        }else{
+                        } else {
                             echo "</p>";
                         }
                         if ($iniciales == ($fila["funcionario_codigo"]))
@@ -798,7 +746,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
 							<br /><p class='my-0'><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b></p><br />";
                         if ($cargos["numcampos"]) {
                             for ($h = 0; $h < $cargos["numcampos"]; $h++)
-                                echo "<p><b>".formato_cargo($cargos[$h]["nombre"]) . "</b></p></br>";
+                                echo "<p><b>" . formato_cargo($cargos[$h]["nombre"]) . "</b></p></br>";
                         } else {
                             echo "</p>";
                         }
@@ -807,12 +755,12 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo "</td>";
                     }
                     $firmas++;
-                } elseif ($fila["obligatorio"] == 2) {// Revisado
+                } elseif ($fila["obligatorio"] == 2) { // Revisado
                     if ($fila["nombre"] == "POR_APROBAR")
                         $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
                     elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
                         $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
-                } elseif ($fila["obligatorio"] == 5) {// Firma externa
+                } elseif ($fila["obligatorio"] == 5) { // Firma externa
                     if ($firmas == 0) {
                         echo "<tr>";
                         $fila_abierta = 1;
@@ -866,7 +814,6 @@ function mostrar_estado_proceso($idformato, $iddoc)
             echo "</td></tr>";
         }
         echo "</table><br/>";
-
     }
 
     if ($_REQUEST["tipo"] == 1 && $ocultar_confirmar) {
@@ -1065,6 +1012,8 @@ function radicar_plantilla()
             return (json_encode($retorno));
         }
     } else {
+        Documento::setPermissions($_POST["iddoc"]);
+        
         $formato = busca_filtro_tabla("", "formato", "nombre_tabla LIKE '" . @$_POST["tabla"] . "'", "", $conn);
         $banderas = array();
         if ($formato["numcampos"]) {
@@ -1099,7 +1048,7 @@ function radicar_plantilla()
                 if ($radicador["numcampos"]) {
                     $aux_destino[0] = $radicador[0]["funcionario_codigo"];
                     $datos["ruta_creador_documento"] = 1;
-					// TODO: Utilizado para las firmas tipo SVG (Para el funcionario creador)
+                    // TODO: Utilizado para las firmas tipo SVG (Para el funcionario creador)
                     transferir_archivo_prueba($datos, $aux_destino, $adicionales);
                 }
             }
@@ -1133,7 +1082,7 @@ function enrutar_documento($url = "", $documentId)
 {
     global $ruta_db_superior;
 
-	// webservice utilitie
+    // webservice utilitie
     if (isset($_REQUEST["no_redirecciona"])) {
         return $_REQUEST['iddoc'] ? $_REQUEST['iddoc'] : $documentId;
     }
@@ -1143,7 +1092,6 @@ function enrutar_documento($url = "", $documentId)
             'documentId' => $documentId
         ]);
         $url = $ruta_db_superior . "views/documento/index_acordeon.php?" . $params;
-
     }
 
     redirecciona($url);
@@ -1169,8 +1117,8 @@ function crear_pretexto($asunto, $contenido)
     phpmkr_query($sql);
     $idpretexto = phpmkr_insert_id();
     guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto", $conn);
-	// Guardo la relacion de la plantilla con el suaurio
-    $idfuncionario = usuarioactual("idfuncionario");
+    // Guardo la relacion de la plantilla con el suaurio
+    $idfuncionario = $_SESSION["idfuncionario"];
     $campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
     $valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
     $sql = "INSERT INTO entidad_pretexto(" . $campos . ") VALUES (" . $valores . ") ";
@@ -1211,24 +1159,24 @@ function ejecutoradd($sKey)
 
         if ($repetido["numcampos"] > 0)
             return ($sKey);
-        else {// comprobar si existe la nacionalidad -----
+        else { // comprobar si existe la nacionalidad -----
             $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
 
             if (!$pais["numcampos"]) {
                 phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')", $conn);
                 $x_nacionalidad = phpmkr_insert_id();
             }
-			// --------------------------------------------
+            // --------------------------------------------
             phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')", $conn) or error("NO SE INSERTO REMITENTE");
             return (phpmkr_insert_id());
         }
-    } else {// comprobar si existe la nacionalidad -----
+    } else { // comprobar si existe la nacionalidad -----
         $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
         if (!$pais["numcampos"]) {
             phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')", $conn);
             $x_nacionalidad = phpmkr_insert_id();
         }
-		// --------------------------------------------
+        // --------------------------------------------
         phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('" . (($x_nombre)) . "','" . $x_identificacion . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ")", $conn) or error("NO SE INSERTO REMITENTE");
         $idejecutor = phpmkr_insert_id();
 
@@ -1237,7 +1185,7 @@ function ejecutoradd($sKey)
             return (phpmkr_insert_id());
         }
     }
-	// die();
+    // die();
     return (true);
 }
 
@@ -1290,7 +1238,6 @@ function guardar_documento($iddoc, $tipo = 0)
     }
 
     if ($idformato) {
-        $ltareas = array();
         $larchivos = array();
         $where = "formato_idformato=" . $idformato . " AND (banderas NOT LIKE '%pk%' OR banderas IS NULL)";
         if ($i) {
@@ -1298,7 +1245,7 @@ function guardar_documento($iddoc, $tipo = 0)
         }
         $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
 
-        for ($j = 0; $j < $lcampos["numcampos"]; $j++) {// si el valor es un array
+        for ($j = 0; $j < $lcampos["numcampos"]; $j++) { // si el valor es un array
             if (is_array($_REQUEST[$lcampos[$j]["nombre"]]) && $lcampos[$j]["etiqueta_html"] != "archivo") {
                 array_push($valores, "'" . implode(',', @$_REQUEST[$lcampos[$j]["nombre"]]) . "'");
                 array_push($campos, $lcampos[$j]["nombre"]);
@@ -1322,7 +1269,7 @@ function guardar_documento($iddoc, $tipo = 0)
                             array_push($valores, "'$form_uuid'");
                             unset($_REQUEST[$lcampos[$j]["nombre"]]);
                         }
-						// $_REQUEST[$lcampos[$j]["nombre"]] = 0;
+                        // $_REQUEST[$lcampos[$j]["nombre"]] = 0;
                         break;
                 }
                 if (isset($_REQUEST[$lcampos[$j]["nombre"]])) {
@@ -1330,10 +1277,10 @@ function guardar_documento($iddoc, $tipo = 0)
                         case "TEXT":
                             $_REQUEST[$lcampos[$j]["nombre"]] = str_replace("'", "&#39;", stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
                             if ($tipo == 1 && $lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             } elseif ($lcampos[$j]["longitud"] < 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 array_push($valores, "'" . @$_REQUEST[$lcampos[$j]["nombre"]] . "'");
                                 array_push($campos, $lcampos[$j]["nombre"]);
                             }
@@ -1441,7 +1388,7 @@ function guardar_documento($iddoc, $tipo = 0)
                     switch (strtoupper($lcampos[$j]["tipo_dato"])) {
                         case "TEXT":
                             if ($lcampos[$j]["longitud"] >= 4000) {
-                                $contenido = limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
+                                $contenido = $_REQUEST[$lcampos[$j]["nombre"]];
                                 guardar_lob($lcampos[$j]["nombre"], $tabla, "documento_iddocumento=" . $iddoc, $contenido, "texto", $conn);
                             }
                             break;
@@ -1469,10 +1416,10 @@ function guardar_documento($iddoc, $tipo = 0)
                 phpmkr_query($del);
             }
             alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el formato..", 'error', 5000);
-			//die($sql);
+            //die($sql);
             redirecciona($ruta_db_superior . "vacio.php");
         }
-    } elseif ($tipo == 1) {// cuando voy a editar
+    } elseif ($tipo == 1) { // cuando voy a editar
         $update = array();
         for ($i = 0; $i < count($campos); $i++) {
             $update[] = $campos[$i] . "=" . $valores[$i];
@@ -1483,7 +1430,7 @@ function guardar_documento($iddoc, $tipo = 0)
 
         if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "") {
             $valid_ruta = busca_filtro_tabla("idruta,origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "idruta asc", $conn);
-			// TODO: Se valida si cambio la dependencia del creador para actualizar la ruta (Firma SVG)
+            // TODO: Se valida si cambio la dependencia del creador para actualizar la ruta (Firma SVG)
             if ($valid_ruta["numcampos"] == 1 && $valid_ruta[0]["tipo_origen"] == 5 && $valid_ruta[0]["origen"] != $_REQUEST["dependencia"]) {
                 $update_ruta = "UPDATE ruta SET origen=" . $_REQUEST["dependencia"] . " WHERE idruta=" . $valid_ruta[0]["idruta"];
                 phpmkr_query($update_ruta) or die("Error al actualizar la ruta del documento");
@@ -1499,10 +1446,6 @@ function guardar_documento($iddoc, $tipo = 0)
     }
     actualizar_datos_documento($idformato, $iddoc);
 
-    if (count($ltareas)) {
-        include_once("asignaciones/funciones.php");
-        asignar_tarea_a_documento($iddoc, $ltareas);
-    }
     return ($insertado);
 }
 
@@ -1573,9 +1516,9 @@ function llamar_buscar_ruta()
 function buscar_funcionario_ruta($tipo_ruta, $dato, $usuario)
 {
     global $conn;
-	// busco la informacion de cargo,funcionario y dependencia del usuario actual
+    // busco la informacion de cargo,funcionario y dependencia del usuario actual
     $inf_funcionario = busca_cargofuncionario(2, $usuario, '');
-	// miro que tipo de ruta es
+    // miro que tipo de ruta es
     if ($tipo_ruta == "serie")
         $filtro = "tipo_documental_idtipo_documental=" . $dato;
     if ($tipo_ruta == "documento")
@@ -1629,9 +1572,9 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
 {
     global $conn;
     $ruta = "";
-	// busco en la ruta el id del nodo con los ceros en origen y destino (para la factura)
+    // busco en la ruta el id del nodo con los ceros en origen y destino (para la factura)
     $idnodo = busca_filtro_tabla("A.orden", "ruta A", "A.origen=0 and A.destino<>0 and A.tipo_documental_idtipo_documental=" . $serie, "A.orden", $conn);
-    if ($idnodo["numcampos"] > 0) {// busco los nodos siguientes en la ruta
+    if ($idnodo["numcampos"] > 0) { // busco los nodos siguientes en la ruta
         $campos = "distinct A.idruta,A.origen,A.destino,A.condicion_transferencia,A.tipo_origen,A.tipo_destino,A.orden,A.obligatorio";
         $where = "A.tipo_documental_idtipo_documental=" . $serie;
         $where .= " and A.orden>=" . $idnodo[0]["orden"];
@@ -1642,9 +1585,9 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
                 $ruta[$i]["tipo_origen"] = 1;
             }
         }
-    } else {// busco el usuario en la ruta por serie
+    } else { // busco el usuario en la ruta por serie
         $encontrado = buscar_funcionario_ruta("serie", $serie, $destino);
-        if ($encontrado == "-1") {// busco el usuario en la ruta por iddocumento
+        if ($encontrado == "-1") { // busco el usuario en la ruta por iddocumento
             $encontrado = buscar_funcionario_ruta("documento", $iddoc, $destino);
             if ($encontrado == "-1") {
                 $enlace = '<div align=center>
@@ -1660,13 +1603,13 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
                  <input type=button value="Actualizar" onclick="window.location.reload();">
                  </div> ';
                 echo ($enlace);
-            } else {// busco el resto de la ruta por iddocumento
+            } else { // busco el resto de la ruta por iddocumento
                 $campos = "distinct idruta,origen,destino,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio";
                 $where = "documento_iddocumenot=" . $iddoc;
                 $where .= " and orden>=" . $encontrado;
                 $ruta = busca_filtro_tabla($campos, "ruta", $where, "orden", $conn);
             }
-        } else {// busco el resto de la ruta por serie
+        } else { // busco el resto de la ruta por serie
             $campos = "distinct idruta,origen,destino,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio";
             $where = "tipo_documental_idtipo_documental=" . $serie;
             $where .= " and orden>=" . $encontrado;
@@ -1674,7 +1617,7 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
         }
     }
     $i = 0;
-	// busco la informaci�n de los funcionarios que van en la ruta usando el destino,origen,tipo destino,tipo origen
+    // busco la informaci�n de los funcionarios que van en la ruta usando el destino,origen,tipo destino,tipo origen
     if ($ruta["numcampos"] > 0) {
         for ($i = 0; $i < $ruta["numcampos"]; $i++) {
             $nombre_origen = "";
@@ -1750,7 +1693,7 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
                 $nombre_destino .= " (activo)";
             else
                 $nombre_destino .= " (inactivo)";
-			// vector con la ruta
+            // vector con la ruta
             $enrutados[$i]["origen"] = $datos_origen[0]["funcionario_codigo"];
             $enrutados[$i]["tipo_origen"] = $ruta[$i]["tipo_origen"];
             $enrutados[$i]["destino"] = $datos_destino[0]["funcionario_codigo"];
@@ -1778,7 +1721,7 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
  * <Post-condiciones>si todo est� bien llama a transferir_archivo_prueba
  */
 function verificar_ruta($fila, $id_documento)
-{// verifico que est�n bien los nodos
+{ // verifico que est�n bien los nodos
     $error = 0;
     $mensaje = "";
 
@@ -1800,7 +1743,7 @@ function verificar_ruta($fila, $id_documento)
             $mensaje .= "El origen y el destino deben ser diferentes (nodo $i)<br/>";
         }
     }
-	// si hubo alg�n error muestro la ruta en pantalla y espero verificaci�n
+    // si hubo alg�n error muestro la ruta en pantalla y espero verificaci�n
     if ($error == 1) {
         echo $mensaje;
         echo "<form name='form1' action='class_transferencia.php' method='post' >";
@@ -1849,7 +1792,7 @@ function verificar_ruta($fila, $id_documento)
             $i++;
         }
         echo "</table><input type=button value='Continuar' onclick='location=\"class_transferencia.php?funcion=llamar_buscar_ruta&iddoc=" . $_POST["iddoc"] . "\";'>";
-    }// si todo est� bien hago la transferencia
+    } // si todo est� bien hago la transferencia
     else {
         $datos = array();
         $adicionales = array();
@@ -2030,7 +1973,7 @@ function devolucion()
 
     $documento = busca_filtro_tabla("", "documento", "iddocumento=" . $datos["archivo_idarchivo"], "", $conn);
 
-	// NUEVO DESARROLLO DEVOLVER
+    // NUEVO DESARROLLO DEVOLVER
 
     $sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO'";
     phpmkr_query($sql2);
@@ -2057,7 +2000,7 @@ function devolucion()
     phpmkr_query($sql7);
 
     llama_funcion_accion($datos["archivo_idarchivo"], $idformato[0]["idformato"], "devolver", "POSTERIOR");
-	// FIN NUEVO DESARROLLO DEVOLVER
+    // FIN NUEVO DESARROLLO DEVOLVER
 
     if ($_REQUEST["retornar"] == 1) {
         return true;
@@ -2081,7 +2024,7 @@ function devolucion()
 function revisar_fechas($estado)
 {
     global $conn;
-	// convierto el estado a mayusculas
+    // convierto el estado a mayusculas
     $estado = strtoupper($estado);
     if ($estado == "GESTION") {
         $from = "(select iddocumento,fecha+decode(dias,'',dias_entrega,dias)-sysdate as faltantes from documento A,serie B where A.estado='APROBADO' and A.serie=idserie)";
@@ -2135,13 +2078,12 @@ function dependencias_asistentes($padre)
  */
 function arbol_serie($condicion_adicional = '')
 {
-    include_once("formatos/librerias/header_formato.php");
     echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="assets/images/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2"></div>
 	<script type="text/javascript">
@@ -2200,6 +2142,5 @@ if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) != "") {
     } else {
         $funcion();
     }
-
 }
-?>
+ 
