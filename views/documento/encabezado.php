@@ -73,17 +73,17 @@ function plantilla($documentId, $transferId = 0)
                 <span class="cursor fa fa-angle-double-down" id="show_tree"></span>
             </div>
             <div class="col-auto text-center my-auto pr-2">
-            <span class="fa fa-mail-reply px-1 cursor" id="reply">
-                <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Responder</label>
-            </span>
-                <span class="fa fa-share px-1 d-none d-md-inline cursor" id="resend">
-                <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Reenviar</label>
-            </span>
-                <div class="dropdown d-inline px-0">
-                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
-                    &nbsp;<i class="fa fa-flash"></i>
-                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Dar trámite</label>
+                <span class="fa fa-mail-reply px-1 cursor" id="reply">
+                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Responder</label>
                 </span>
+                <span class="fa fa-share px-1 d-none d-md-inline cursor" id="resend">
+                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Reenviar</label>
+                </span>
+                <div class="dropdown d-inline px-0">
+                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
+                        &nbsp;<i class="fa fa-flash"></i>
+                        <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Dar trámite</label>
+                    </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <a href="#" class="dropdown-item new_add" data-type="comunication">
                             <i class="fa fa-file-text-o"></i> Gestionar con comunicación oficial
@@ -100,9 +100,9 @@ function plantilla($documentId, $transferId = 0)
                     </div>
                 </div>
                 <div class="dropdown d-inline px-1">
-                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
-                    &nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;
-                </span>
+                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
+                        &nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;
+                    </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end" id="module_items"></div>
                 </div>
             </div>
@@ -117,9 +117,9 @@ function plantilla($documentId, $transferId = 0)
                     <div class="col px-1">
                         <div class="row" style="line-height:1.5">
                             <div class="col-12">
-                            <span class="bold">
-                                <?= $Documento->numero ?> - <?= $userInfo['name'] ?>
-                            </span>
+                                <span class="bold">
+                                    <?= $Documento->numero ?> - <?= $userInfo['name'] ?>
+                                </span>
                             </div>
                         </div>
                         <div class="row" style="line-height:1.5;font-size:11px">
@@ -134,56 +134,51 @@ function plantilla($documentId, $transferId = 0)
                         </div>
                     </div>
                 </div>
+                <div class="col-auto col-md mt-2 pr-0">
+                    <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>' data-toggle="tooltip" data-placement="bottom" title="Prioridad">
+                        <i class='fa fa-flag  <?= $priorityClass ?>'></i>
+                    </span>
+                    <?= has_files($documentId, true) ?>
+                    <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
+                        <span class="badge badge-important counter" id="comments_counter"></span>
+                    </span>
+                    <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
+                        <span class="badge badge-important counter" id="tasks_counter"></span>
+                    </span>
+                    <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
+                        <span class="badge badge-important counter" id="documents_counter"></span>
+                    </span>
+                    <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
+                </div>
+                <div class="col-auto d-none d-md-block">
+                    <!-- muestra la fecha de vencimiento -->
+                    <?= expiration($Documento->fecha_limite, $documentId) ?>
+                </div>
             </div>
-            <div class="col-auto col-md mt-2 pr-0">
-                <span id="priority_flag" class='my-0 text-center cursor f-20 px-1' data-key='<?= $documentId ?>' data-toggle="tooltip" data-placement="bottom" title="Prioridad">
-                    <i class='fa fa-flag  <?= $priorityClass ?>'></i>
-                </span>
-                <?= has_files($documentId, true) ?>
-                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
-                    <span class="badge badge-important counter" id="comments_counter"></span>
-                </span>
-                <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
-                    <span class="badge badge-important counter" id="tasks_counter"></span>
-                </span>
-                <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
-                    <span class="badge badge-important counter" id="documents_counter"></span>
-                </span>
-                <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
+            <div class="row mx-0 px-1">
+                <div class="col px-0">
+                    <span class="m-0">
+                        <?= $Documento->descripcion ?>
+                    </span>
+                </div>
             </div>
-            <div class="col-auto d-none d-md-block">
-                <!-- muestra la fecha de vencimiento -->
-                <?= expiration($Documento->fecha_limite, $documentId) ?>
+            <div class="row mx-0 px-1">
+                <div class="col-12 px-0 mx-0">
+                    <p style="line-height:1;">
+                        <?= $Transfer->notas ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row mx-0 px-1">
+                <div id="fab"></div>
             </div>
         </div>
-        <div class="row mx-0 px-1">
-            <div class="col px-0">
-            <span class="m-0">
-                <?= $Documento->descripcion ?>
-            </span>
-            </div>
-        </div>
-        <div class="row mx-0 px-1">
-            <div class="col-12 px-0 mx-0">
-                <p style="line-height:1;">
-                    <?= $Transfer->notas ?>
-                </p>
-            </div>
-        </div>
-        <div class="row mx-0 px-1">
-            <div id="fab"></div>
-        </div>
-    </div>
-    <div class="row mx-0 px-1">
-        <div id="fab"></div>
-    </div>
-</div>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
-<script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
-<?php
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
+        <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
+    <?php
 }
 
 if (isset($_REQUEST['documentId'])) {
     plantilla($_REQUEST['documentId'], $_REQUEST['transferId']);
 }
-?> 
+?>

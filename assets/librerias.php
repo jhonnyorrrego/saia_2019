@@ -385,3 +385,37 @@ function dateTimePicker()
 
     return $css . $js . $language;
 }
+
+/**
+ * retorna los enlaces para incluir
+ * jspanel v4.6.0
+ *
+ * @return string
+ * @date 2019-04-02
+ */
+function jsPanel()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
+
+function kuku()
+{
+    global $ruta_db_superior;
+
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/docxjs/DocxJS.bundle.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/celljs/CellJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $routeJs = $ruta_db_superior . 'visorjs/scripts/slidejs/SlideJS.bundle.min.js';
+    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $js;
+}

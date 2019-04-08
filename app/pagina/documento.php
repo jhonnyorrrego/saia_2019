@@ -26,7 +26,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         'id_documento' => $_REQUEST['documentId']
     ]);
 
-    if(count($pages)){
+    if($pages){
         foreach($pages as $key => $Pagina){
             $Response->data [] = [
                 'id' => $Pagina->getPK(),

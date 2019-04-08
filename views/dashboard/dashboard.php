@@ -29,6 +29,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= icons() ?>
+    <link rel="manifest" href="<?= $ruta_db_superior ?>manifest.json">
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
@@ -318,6 +319,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             if (localStorage.getItem('key') > 0) {
                 Ui.putColor();
                 Ui.inactiveTime();
+                Ui.bindServiceWorker();
 
                 $('[data-toggle="tooltip"]').tooltip();
             }

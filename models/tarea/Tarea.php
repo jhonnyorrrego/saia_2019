@@ -103,28 +103,47 @@ class Tarea extends Model
     }
 
     /**
-     * calcular el color de la tarea
+     * calcula el color de la tarea
      *
      * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-08
      */
     public function getColor()
     {
-        $Limit = new DateTime($this->fecha_final);
-        $Today = new DateTime();
+        $TareaEstado = TareaEstado::findByAttributes([
+            'fk_tarea' => $this->getPK(),
+            'estado' => 1
+        ]);
 
-        $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
+        if ($TareaEstado->valor != TareaEstado::REALIZADA) {
+            $Limit = new DateTime($this->fecha_final);
+            $Today = new DateTime();
 
-        if ($diference < 2) {
-            $color = '#dc3545';
-        } elseif ($diference >= 2 && $diference <= 8) {
-            $color = '#ffc107';
-        } else {
-            $color = '#17a2b8';
+            $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
+
+            if ($diference < 2) {
+                $color = '#dc3545';
+            } elseif ($diference >= 2 && $diference <= 8) {
+                $color = '#ffc107';
+            } else {
+                $color = '#17a2b8';
+            }
+        } else { //tarea realizada
+            $color = '#10CFBD';
         }
 
         return $color;
     }
 
+    /**
+     * crea el estado pendiente para la tarea
+     * cuando se crea
+     *
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-08
+     */
     public function setDefaultState()
     {
         return TareaEstado::newRecord([
