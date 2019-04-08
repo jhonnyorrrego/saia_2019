@@ -37,11 +37,11 @@ class PermisoController
      */
     function __construct()
     {
-        global $usuario_actual, $conn;
-        if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
-            salir("La sesi&oacute;n ha expirado, por favor ingrese de nuevo.");
-        $this->login = @$_SESSION["LOGIN" . LLAVE_SAIA];
+        global $conn;
+        
+        $this->login = $_SESSION["LOGIN" . LLAVE_SAIA];
         $this->conn = $conn;
+        
         if ($this->acceso_root()) {
             $this->idfuncionario = 0;
             $this->funcionario_codigo = 0;

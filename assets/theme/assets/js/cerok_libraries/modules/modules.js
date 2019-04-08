@@ -1,6 +1,6 @@
 class Modules {
-    constructor(iduser, grouperSelector, listSelector) {
-        if (this.setAttributes(iduser, grouperSelector, listSelector)) {
+    constructor(token, iduser, grouperSelector, listSelector) {
+        if (this.setAttributes(token, iduser, grouperSelector, listSelector)) {
             this.find(0);
         } else {
             console.error("invalid arguments");
@@ -8,9 +8,10 @@ class Modules {
         }
     }
 
-    setAttributes(iduser, grouperSelector, listSelector) {
-        if (iduser && grouperSelector && listSelector) {
+    setAttributes(token, iduser, grouperSelector, listSelector) {
+        if (token && iduser && grouperSelector && listSelector) {
             this.baseUrl = Session.getBaseUrl();
+            this.token = token;
             this.user = iduser;
             this._grouperSelector = grouperSelector;
             this._listSelector = listSelector;
@@ -36,6 +37,14 @@ class Modules {
 
     get user() {
         return this._iduser;
+    }
+
+    set token(token) {
+        this._token = token;
+    }
+
+    get token() {
+        return this._token;
     }
 
     set modules(data) {
@@ -79,11 +88,12 @@ class Modules {
             $.get(
                 this.baseUrl + url,
                 {
-                    iduser: this.user,
+                    key: this.user,
+                    token: this.token,
                     parent: idmodule,
                     grouper: grouper
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         if (response.data.length) {
                             parentModule.childs = response.data;
@@ -152,20 +162,20 @@ class Modules {
         this.groupers.forEach((g, i) => {
             row.append(`
                 <div class="col-12 col-md-auto grouper cursor text-center p-1" id="${
-                    g.idmodule
+                g.idmodule
                 }">
                     <table class="mx-auto">
                         <tbody>
                             <tr>
                                 <td class="align-middle ${
-                                    backgrounds[i]
-                                }" style="height: 100px;width: 100px;">
+                backgrounds[i]
+                }" style="height: 100px;width: 100px;">
                                     <i class="${
-                                        g.icon
-                                    } w-100 py-2" style="font-size:2.5rem"></i>
+                g.icon
+                } w-100 py-2" style="font-size:2.5rem"></i>
                                     <span class="d-block text-truncate" title="${
-                                        g.name
-                                    }">${g.name}</span>
+                g.name
+                }">${g.name}</span>
                                 </td>
                             </tr>
                         </tbody>

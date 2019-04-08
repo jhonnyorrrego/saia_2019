@@ -1,11 +1,12 @@
 $(function(){
-    let iduser = localStorage.getItem("key");;
+    let token = localStorage.getItem("token");;
+    let key = localStorage.getItem("key");;
     let grouperSelector = "#appMenu";
     let listSelector = "#module_list";
     var xDown = null;
     var yDown = null;
     
-    var modules = new Modules(iduser, grouperSelector, listSelector);
+    var modules = new Modules(token, key, grouperSelector, listSelector);
 
     $(document).on('click', '.grouper', function(){    
         let idmodule = $(this).attr('id');

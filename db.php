@@ -21,22 +21,10 @@ defineGlobalVars();
  */
 function defineGlobalVars()
 {
-    if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-        session_start();
-        ob_start();
-    }
-
     $GLOBALS['sql'] = '';
     $GLOBALS['conn'] = phpmkr_db_connect();
-    $GLOBALS['usuactual'] = $_SESSION['LOGIN' . LLAVE_SAIA] ?? '';
-
-    if (!empty($GLOBALS['usuactual'])) {
-        if (empty($_SESSION['usuario_actual']) || empty($_SESSION['idfuncionario'])) {
-            setSessionUserData();
-        }
-
-        setTemporalRoute();
-    } elseif (!empty($_REQUEST['idfunc'])) { //Utilizado para la generacion del PDF
+    
+    if (!empty($_REQUEST['idfunc'])) { //Utilizado para la generacion del PDF
         include_once 'pantallas/lib/librerias_cripto.php';
 
         $encryptedUserId = decrypt_blowfish($_REQUEST['idfunc'], LLAVE_SAIA_CRYPTO);
@@ -2922,7 +2910,11 @@ function salir($texto, $login = "")
     $conn->Conn->Desconecta();
     session_unset();
     session_destroy();
-    unset($_COOKIE["PHPSESSID"]);
+
+    if (isset($_COOKIE['PHPSESSID'])) {
+        unset($_COOKIE['PHPSESSID']);
+        setcookie('PHPSESSID', '', time() - 3600, '/');
+    }
 
     echo "<script language='javascript'>
         top.window.location='" . PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php';

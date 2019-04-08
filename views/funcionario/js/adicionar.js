@@ -106,6 +106,7 @@ $(function () {
     function find(userId) {
         $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`, {
             key: localStorage.getItem('key'),
+            token: localStorage.getItem('token'),
             type: 'edit',
             userId: userId
         }, function (response) {

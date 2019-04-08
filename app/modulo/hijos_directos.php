@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -17,10 +18,10 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $Response = (object)[
     'data' => [],
     'message' => '',
-    'success' => 1
+    'success' => 0
 ];
 
-if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
+if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
 
@@ -56,9 +57,9 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
             ];
         }
     }
+    $Response->success = 1;
 } else {
     $Response->message = 'Debe iniciar session';
-    $Response->success = 0;
 }
 
 echo json_encode($Response);

@@ -13,7 +13,9 @@ class Session {
                 dataType: 'json',
                 url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
                 data: {
-                    type: 'session'
+                    type: 'session',
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key')
                 },
                 async: false,
                 success: function (response) {
@@ -63,12 +65,13 @@ class Session {
     static check(baseUrl) {
         var access = false;
 
-        if (localStorage.getItem('key') > 0) {
+        if (localStorage.getItem('token')) {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
                 url: `${baseUrl}app/funcionario/verificar_session.php`,
                 data: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key')
                 },
                 async: false,
