@@ -80,11 +80,7 @@ $(function() {
                     let newParams = JSON.stringify({ id: response.data });
                     $("script[data-params]").attr("data-params", newParams);
                     $(".tasktab.disabled").removeClass("disabled");
-                    $("#iframe_workspace")
-                        .contents()
-                        .find(".fc-refresh-button")
-                        .trigger("click");
-
+                    top.successModalEvent();
                     defineButtonLabel();
                 } else {
                     top.notification({

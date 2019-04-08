@@ -21,6 +21,7 @@ $(function(){
                 
                 findState(params.id);
                 $('#state_description').val('');
+                top.successModalEvent();
             }
         }, 'json')
     });

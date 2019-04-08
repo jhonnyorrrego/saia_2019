@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let baseUrl = $("script[data-baseurl]").data("baseurl");
 
     $("#calendar").fullCalendar({
@@ -13,13 +13,13 @@ $(function() {
         customButtons: {
             refresh: {
                 icon: "clockwise-arrow",
-                click: function() {
+                click: function () {
                     $("#calendar").fullCalendar("refetchEvents");
                 }
             },
             select: {
                 icon: "clockwise-arrow",
-                click: function() {
+                click: function () {
                     console.log(1);
                 }
             }
@@ -28,23 +28,23 @@ $(function() {
             left: "title",
             right: "select prev,next,refresh month,agendaWeek,agendaDay,today"
         },
-        select: function(start, end) {
+        select: function (start, end) {
             let params = {
                 initialTime: start.format("YYYY-MM-DD HH:mm:ss"),
                 finalTime: end.format("YYYY-MM-DD HH:mm:ss")
             };
             modalTask(params);
         },
-        eventDrop: function(event) {
+        eventDrop: function (event) {
             updateTask(event);
         },
-        eventResize: function(event) {
+        eventResize: function (event) {
             updateTask(event);
         },
-        eventClick: function(event) {
+        eventClick: function (event) {
             modalTask({ id: event.id });
         },
-        events: function(start, end, timezone, callback) {
+        events: function (start, end, timezone, callback) {
             $.ajax({
                 url: `${baseUrl}app/tareas/funcionario.php`,
                 dataType: "json",
@@ -54,14 +54,14 @@ $(function() {
                     finalDate: end.format("YYYY-MM-DD HH:mm:ss"),
                     key: localStorage.getItem("key")
                 },
-                success: function(response) {
+                success: function (response) {
                     callback(response.data);
                 }
             });
         }
     });
 
-    $(document).on("change", "#changeCalendarParams", function(event) {
+    $(document).on("change", "#changeCalendarParams", function (event) {
         $("#calendar").fullCalendar("refetchEvents");
     });
 
@@ -82,7 +82,10 @@ $(function() {
             title: "Tarea",
             centerAlign: false,
             size: "modal-lg",
-            buttons: {}
+            buttons: {},
+            onSuccess: function () {
+                $(".fc-refresh-button").trigger("click");
+            }
         };
 
         top.topModal(options);
@@ -100,7 +103,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 task: event.id
             },
-            function(response) {
+            function (response) {
                 if (!response.success) {
                     top.notification({
                         type: "error",
@@ -156,20 +159,20 @@ $(function() {
             defaultDate: new Date()
         });
 
-        $("#picker").on("dp.change", function(e) {
+        $("#picker").on("dp.change", function (e) {
             $("#calendar").fullCalendar("changeView", "agendaDay");
             $("#calendar").fullCalendar("gotoDate", $(this).val());
         });
 
         $(".fc-left")
-            .on("click", function() {
+            .on("click", function () {
                 $("#picker")
                     .data("DateTimePicker")
                     .show();
             })
             .addClass("cursor");
 
-        $("*:not(.fc-left)").on("click", function(e) {
+        $("*:not(.fc-left)").on("click", function (e) {
             if ($('.fc-left').length && !$(e.target).parents(".fc-left").length) {
                 $("#picker")
                     .data("DateTimePicker")
