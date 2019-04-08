@@ -90,7 +90,7 @@ $RCMAIL->action = $startup['action'];
 
 // try to log in
 if ($RCMAIL->task == 'login' && $RCMAIL->action == 'login') {
-    $request_valid = $_SESSION['temp'] && $RCMAIL->check_request();
+    $request_valid = $_SESSION['temp'] &&  $_SESSION['request_token'];
 
     // purge the session in case of new login when a session already exists
     $RCMAIL->kill_session();
