@@ -6,12 +6,12 @@ class JwtController
     private static $secret_key = LLAVE_SAIA;
     private static $encrypt = ['HS256'];
 
-    public static function SignIn($data)
+    public static function SignIn($data, $duration)
     {
         $time = time();
         $token = [
             'iat' => $time,
-            'exp' => $time + (60 * 60 * 24),
+            'exp' => $time + $duration,
             'aud' => self::Aud(),
             'data' => $data
         ];
@@ -31,11 +31,18 @@ class JwtController
             self::$encrypt
         );
 
-        if (
-            $decode->aud !== self::Aud() ||
-            $decode->data->id != $userId ||
-            $decode->data->id != $_SESSION['idfuncionario']
-        ) {
+        if ($decode->data->web_service) {
+            $access = 
+                empty($decode->aud) ||
+                $decode->data->id != $userId;
+        } else {
+            $access =
+                $decode->aud !== self::Aud() ||
+                $decode->data->id != $userId ||
+                $decode->data->id != SessionController::getValue('idfuncionario');
+        }
+
+        if ($access) {
             throw new Exception("Invalid user logged in.");
         } else {
             return true;

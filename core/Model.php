@@ -496,7 +496,8 @@ abstract class Model extends StaticSql
     public static function countRecords(array $conditions = [])
     {
         $condition = self::createCondition($conditions);
-        $sql = "select count(*) as total from " . self::getTableName() . " where  "  . $condition;
+        $condition = $condition ? " where "  . $condition : '';
+        $sql = "select count(*) as total from " . self::getTableName() . $condition;
         $record = self::search($sql);
 
         return $record[0]['total'];

@@ -77,18 +77,7 @@ function get_state($state)
  */
 function user_condition()
 {
-    $Configuracion = Configuracion::findByAttributes([
-        'tipo' => 'usuario',
-        'nombre' => 'login_administrador'
-    ]);
-
-    if ($Configuracion && $Configuracion->valor == $_SESSION["LOGIN" . LLAVE_SAIA]) {
-        $condition = '1=1';
-    } else {
-        $condition = "login <> '{$Configuracion->valor}'";
-    }
-
-    return $condition;
+    return !SessionController::isRoot() ? Funcionario::excludeCondition() : '1=1';
 }
 
 /**

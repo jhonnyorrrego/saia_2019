@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -45,7 +43,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
                 $data = array_filter($Funcionario->getAttributes(), function ($key) {
                     return in_array($key, [
                         'nit', 'nombres', 'apellidos', 'login', 'clave', 'direccion',
-                        'telefono', 'email', 'perfil', 'ventanilla_radicacion'
+                        'telefono', 'email', 'perfil', 'ventanilla_radicacion', 'estado'
                     ]);
                 }, ARRAY_FILTER_USE_KEY);
 

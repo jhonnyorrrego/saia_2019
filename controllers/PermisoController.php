@@ -57,7 +57,7 @@ class PermisoController
             }
         }
         if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
-            salir("No se Puede Encontrar el Funcionario para Permisos");
+            SessionController::logout("No se Puede Encontrar el Funcionario para Permisos");
         else
             alerta("No se Puede Encontrar el Funcionario para Permisos");
         return (false);

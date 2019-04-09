@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -14,23 +12,23 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
-include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 
 if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
-    $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
+    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
     $actualRow = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
-
     $dataParams = [
-        'idfunc' => $idfuncionario,
         'page' => $_REQUEST['pageNumber'],
         'rows' => $_REQUEST['pageSize'],
-        'actual_row' => $actualRow
+        'actual_row' => $actualRow,
+        'key' => $Funcionario->getPK(),
+        'token' => FuncionarioController::generateToken($Funcionario, 5, true),
+        'ws' => 1
     ];
+
     unset($_REQUEST['pageNumber'], $_REQUEST['pageSize']);
-
-    $params = array_merge($dataParams, $_REQUEST);
-
-    $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda_exp.php?' . http_build_query($params);
+    $params = array_merge($_REQUEST, $dataParams);
+    $query = http_build_query($params);
+    $url = PROTOCOLO_CONEXION . RUTA_PDF . "/pantallas/busquedas/servidor_busqueda_exp.php?{$query}";
 
     if ($_REQUEST['debug']) {
         echo '<pre>';

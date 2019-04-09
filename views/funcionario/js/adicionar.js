@@ -130,7 +130,9 @@ $(function () {
                 case 'firma':
                     setImage(data[name]);
                     break;
-
+                case 'estado':
+                    $(`[name="estado"][value="${data[name]}"]`).attr('checked', true);
+                    break;
                 default:
                     let e = $(`[name="${name}"]`);
 
@@ -252,6 +254,7 @@ $("#user_form").validate({
         let data = $("#user_form").serialize();
         data = data + '&' + $.param({
             key: localStorage.getItem("key"),
+            token: localStorage.getItem("token"),
             userId: params.userId
         });
 

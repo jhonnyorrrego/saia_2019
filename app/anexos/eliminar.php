@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -25,10 +23,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $Anexo = new Anexo($_REQUEST['fileId']);
     $Anexo->eliminado = 1;
 
-    if($Anexo->save()){
+    if ($Anexo->save()) {
         $Response->success = 1;
         $Response->message = "Registro eliminado";
-    }else{
+    } else {
         $Response->message = "Error al eliminar";
     }
 } else {
