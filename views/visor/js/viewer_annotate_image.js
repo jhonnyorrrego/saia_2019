@@ -2,13 +2,15 @@ $(function() {
     let params = $("script[data-pages-params]").data("pagesParams");
     let key = localStorage.getItem("key");
     let annotations = [];
+console.log(params);
 
     (function getPages() {
         $.post(
-            `${params.baseUrl}app/pagina/documento.php`,
+            `${params.baseUrl}app/visor/calcular_ruta_imagen.php`,
             {
                 key: key,
-                documentId: params.id
+                typeId: params.typeId,
+                type: params.type
             },
             function(response) {
                 if (response.success) {
@@ -205,7 +207,7 @@ $(function() {
             async: false,
             data: {
                 key: key,
-                type: "TIPO_PAGINA",
+                type: params.type,
                 typeId: $("#content-wrapper").attr("data-page")
             },
             success: function(response) {
@@ -294,7 +296,7 @@ $(function() {
             `${params.baseUrl}app/visor/editar_nota.php`,
             {
                 key: localStorage.getItem("key"),
-                type: "TIPO_PAGINA",
+                type: params.type,
                 typeId: $("#content-wrapper").attr("data-page"),
                 uuid: annotationId,
                 annotation: {
@@ -324,7 +326,7 @@ $(function() {
             async: false,
             data: {
                 key: key,
-                type: "TIPO_PAGINA",
+                type: params.type,
                 typeId: $("#content-wrapper").attr("data-page"),
                 annotation: annotation,
                 comment: {

@@ -22,18 +22,22 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $pages = Pagina::findAllByAttributes([
-        'id_documento' => $_REQUEST['documentId']
-    ]);
+    switch ($_REQUEST['type']) {
+        case 'TIPO_PAGINA':
+            $pages = Pagina::findAllByAttributes([
+                'id_documento' => $_REQUEST['typeId']
+            ]);
 
-    if($pages){
-        foreach($pages as $key => $Pagina){
-            $Response->data [] = [
-                'id' => $Pagina->getPK(),
-                'route' => $Pagina->getTemporalRoute()
-            ];
-        }
-    }else{
+            foreach ($pages as $key => $Pagina) {
+                $Response->data[] = [
+                    'id' => $Pagina->getPK(),
+                    'route' => $Pagina->getTemporalRoute()
+                ];
+            }
+            break;
+    }
+
+    if (!$Response->data) {
         $Response->message = 'No existen paginas';
     }
 } else {

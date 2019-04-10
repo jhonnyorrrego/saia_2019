@@ -26,6 +26,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $route = $Anexo->ruta;
             $force = true;
             break;
+        case 'TIPO_ANEXOS_PDF':
+            $Anexo = new Anexos($_REQUEST['typeId']);
+            $route = $Anexo->ruta;
+            $force = true;
+            break;
         default:
             if ($_REQUEST['actualizar_pdf']) {
                 include_once $ruta_db_superior . 'class_impresion_' . $_REQUEST['exportar'] . '.php';
