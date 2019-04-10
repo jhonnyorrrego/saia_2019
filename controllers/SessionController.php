@@ -56,7 +56,7 @@ class SessionController
     public function checkRootAccess()
     {
         if (self::$data) {
-            return self::$data["idfuncionario"] == $this->admin;
+            return self::$data && self::$data["idfuncionario"] == $this->admin;
         } else {
             throw new Exception("invalid session", 1);
         }
@@ -132,6 +132,14 @@ class SessionController
     public static function getId()
     {
         return session_id();
+    }
+
+    public static function hasActiveSession(){
+        if($_SESSION){
+            self::$data = $_SESSION;
+        }
+
+        return self::$data['idfuncionario'] ?? 0;
     }
 
     public static function logout($message = '')

@@ -74,15 +74,16 @@ class FuncionarioController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-09
      */
-    public static function saveAccess($login, $userId){
+    public static function saveAccess(){
         LogAcceso::newRecord([
-            'login' => $login,
+            'login' => SessionController::getLogin(),
             'iplocal' => UtilitiesController::getRealIP(),
             'ipremota' => UtilitiesController::remoteServer(),
             'exito' => 1,
             'fecha' => date('Y-m-d H:i:s'),
-            'funcionario_idfuncionario' => $userId,
-            'idsesion_php' => SessionController::getId()
+            'funcionario_idfuncionario' => SessionController::getValue('idfuncionario'),
+            'idsesion_php' => SessionController::getId(),
+            'token' => SessionController::getValue('token')
         ]);
     }
 

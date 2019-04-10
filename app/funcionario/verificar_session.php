@@ -13,7 +13,13 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
+if (!JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
+    $check = false;
+} else {
+    $check = LogAcceso::checkActiveToken($_REQUEST['token']);
+}
+
 echo json_encode([
-    'data' => JwtController::check($_REQUEST['token'], $_REQUEST['key']),
+    'data' => $check,
     'success' => 1
 ]);

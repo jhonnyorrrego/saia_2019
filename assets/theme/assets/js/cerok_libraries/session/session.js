@@ -7,7 +7,11 @@ class Session {
     init() {
         let session = this;
 
-        if (!localStorage.getItem('user')) {
+        if (
+            !localStorage.getItem('user') &&
+            localStorage.getItem('token') &&
+            localStorage.getItem('key')
+        ) {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
@@ -67,7 +71,7 @@ class Session {
 
         if (localStorage.getItem('token')) {
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 url: `${baseUrl}app/funcionario/verificar_session.php`,
                 data: {
