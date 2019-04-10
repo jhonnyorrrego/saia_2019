@@ -515,6 +515,8 @@ class GenerarFormato
 
         $params = [
             "iddoc" => $documentId,
+            "type" => "TIPO_DOCUMENTO",
+            "typeId" => $documentId,
             "exportar" => $record[0]["exportar"],
             "ruta" => base64_encode($record[0]["pdf"]),
             "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
