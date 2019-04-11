@@ -85,7 +85,7 @@ class Modules {
             let instance = this;
             let grouper = parentModule.type == 0 ? 1 : 0;
 
-            $.get(
+            $.post(
                 this.baseUrl + url,
                 {
                     key: this.user,

@@ -116,8 +116,15 @@ class Session {
 
     static defineGlobalChecker() {
         top.window.checkSession = function () {
-            if (!localStorage.getItem('key')) {
+            if (!localStorage.getItem('key') || !localStorage.getItem('token')) {
                 window.location = Session.getBaseUrl() + 'views/login/login.php';
+            }
+        }
+
+        top.window.checkLogoutResponse = function (xhr) {
+            if (xhr.status == 200 && xhr.responseText.indexOf('logout') != -1) {
+                let node = $(xhr.responseText);
+                eval(node.html());
             }
         }
     }

@@ -6,6 +6,15 @@ class JwtController
     private static $secret_key = LLAVE_SAIA;
     private static $encrypt = ['HS256'];
 
+    /**
+     * crea el token
+     *
+     * @param array $data informacion a guardar en el token
+     * @param integer $duration tiempo de vida 
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-11
+     */
     public static function SignIn($data, $duration)
     {
         $time = time();
@@ -19,7 +28,17 @@ class JwtController
         return JWT::encode($token, self::$secret_key);
     }
 
-    public static function Check($token, $userId)
+    /**
+     * verifica si el token es valido
+     *
+     * @param string $token
+     * @param integer $userId idfuncionario a verfificar    
+     * @param boolean $logout cerrar sesion en caso de fallar
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-11
+     */
+    public static function Check($token, $userId, $logout = true)
     {
         if (empty($token)) {
             throw new Exception("Invalid token supplied.");
@@ -32,23 +51,36 @@ class JwtController
         );
 
         if ($decode->data->web_service) {
-            $access = 
+            $access =
                 empty($decode->aud) ||
                 $decode->data->id != $userId;
         } else {
             $access =
                 $decode->aud !== self::Aud() ||
                 $decode->data->id != $userId ||
-                $decode->data->id != SessionController::getValue('idfuncionario');
+                $decode->data->id != SessionController::hasActiveSession() ||
+                !LogAcceso::checkActiveToken($token);
         }
 
         if ($access) {
-            throw new Exception("Invalid user logged in.");
+            if ($logout) {
+                SessionController::logout("Debe iniciar sesión");
+            } else {
+                throw new Exception("Debe iniciar sesión");
+            }
         } else {
             return true;
         }
     }
 
+    /**
+     * obtiene la informacion almacenada en el token
+     *
+     * @param string $token
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-11
+     */
     public static function GetData($token)
     {
         return JWT::decode(
@@ -58,6 +90,14 @@ class JwtController
         )->data;
     }
 
+    /**
+     * genera un string para validar el uso del token 
+     * en el mismo navegador donde se generó
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-11
+     */
     private static function Aud()
     {
         $aud = '';

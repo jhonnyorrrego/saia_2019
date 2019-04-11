@@ -131,3 +131,7 @@ function options_button($userId)
         </div>
 HTML;
 }
+
+function close_session_button($login){
+    return "<button class='btn btn-danger close_session' data-login='{$login}'>Cerrar</button>";    
+}

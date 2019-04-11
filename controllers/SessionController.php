@@ -2,6 +2,11 @@
 
 class SessionController
 {
+    /**
+     * tiempo de vida de la sesion
+     */
+    const TIME_LIFE = 86400; //1 DIA
+    
     private static $data;
     private $admin = Funcionario::CEROK;
 
@@ -58,6 +63,7 @@ class SessionController
         if (self::$data) {
             return self::$data && self::$data["idfuncionario"] == $this->admin;
         } else {
+            alerta(123);
             throw new Exception("invalid session", 1);
         }
     }
@@ -152,7 +158,7 @@ class SessionController
         session_destroy();
         self::$data = [];
 
-        echo "<script language='javascript'>
+        echo "<script language='javascript' data-reference='logout'>
             let message = '" . $message . "';
 
             if(message) {
@@ -167,5 +173,6 @@ class SessionController
                 top.window.location='" . PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php';
             }
         </script>";
+        exit;
     }
 }

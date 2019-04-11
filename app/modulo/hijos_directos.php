@@ -19,7 +19,9 @@ $Response = (object)[
     'success' => 0
 ];
 
-if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
 
@@ -56,8 +58,8 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
         }
     }
     $Response->success = 1;
-} else {
-    $Response->message = 'Debe iniciar session';
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

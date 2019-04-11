@@ -38,7 +38,10 @@ $(function(){
     });
 
     document.getElementById('iframe_workspace').addEventListener('load', function () {
-        let script = $('<script>').append(`$(document).ajaxSend(() => top.window.checkSession());`);
+        let script = $('<script>').append(`
+            $(document).ajaxSend(() => top.window.checkSession());
+            $(document).ajaxError((e,xhr) => top.window.checkLogoutResponse(xhr));
+        `);
         $(this).contents().find('body').prepend(script)
     });
 
