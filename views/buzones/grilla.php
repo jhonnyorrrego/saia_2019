@@ -389,7 +389,9 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                             "order": params.order,
                             "cantidad_total": $("#busqueda_total_paginas").val(),
                             "sidx": params.sort,
-                            "sord": params.order
+                            "sord": params.order,
+                            "key": localStorage.getItem("key"),
+                            "token": localStorage.getItem("token")
                         };
                         $.extend(data, q);
                         return data;

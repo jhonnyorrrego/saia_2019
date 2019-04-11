@@ -1,6 +1,10 @@
 var cacheName = 'saiaCache';
 var filesToCache = [
-    'views/dashboard/dashboard.php'
+    'views/dashboard/dashboard.php',
+    'assets/theme/assets/plugins/moment/moment-with-locales.min.js',
+    'assets/theme/assets/plugins/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0',
+    'assets/theme/pages/js/pages.min.js',
+    'assets/theme/pages/css/pages.css'
 ];
 
 self.addEventListener('install', function (e) {

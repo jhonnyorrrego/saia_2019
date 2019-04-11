@@ -106,6 +106,7 @@ $(function () {
     function find(userId) {
         $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`, {
             key: localStorage.getItem('key'),
+            token: localStorage.getItem('token'),
             type: 'edit',
             userId: userId
         }, function (response) {
@@ -129,7 +130,9 @@ $(function () {
                 case 'firma':
                     setImage(data[name]);
                     break;
-
+                case 'estado':
+                    $(`[name="estado"][value="${data[name]}"]`).attr('checked', true);
+                    break;
                 default:
                     let e = $(`[name="${name}"]`);
 
@@ -251,6 +254,7 @@ $("#user_form").validate({
         let data = $("#user_form").serialize();
         data = data + '&' + $.param({
             key: localStorage.getItem("key"),
+            token: localStorage.getItem("token"),
             userId: params.userId
         });
 

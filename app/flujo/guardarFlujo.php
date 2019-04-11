@@ -1,5 +1,4 @@
 <?php
-
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';

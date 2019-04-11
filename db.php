@@ -21,62 +21,12 @@ defineGlobalVars();
  */
 function defineGlobalVars()
 {
-    if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+    if (!$_SESSION) {
         session_start();
-        ob_start();
     }
 
     $GLOBALS['sql'] = '';
     $GLOBALS['conn'] = phpmkr_db_connect();
-    $GLOBALS['usuactual'] = $_SESSION['LOGIN' . LLAVE_SAIA] ?? '';
-
-    if (!empty($GLOBALS['usuactual'])) {
-        if (empty($_SESSION['usuario_actual']) || empty($_SESSION['idfuncionario'])) {
-            setSessionUserData();
-        }
-
-        setTemporalRoute();
-    } elseif (!empty($_REQUEST['idfunc'])) { //Utilizado para la generacion del PDF
-        include_once 'pantallas/lib/librerias_cripto.php';
-
-        $encryptedUserId = decrypt_blowfish($_REQUEST['idfunc'], LLAVE_SAIA_CRYPTO);
-        $findLogin = busca_filtro_tabla('login', 'funcionario', 'estado=1 and idfuncionario=' . $encryptedUserId, '', $GLOBALS['conn']);
-        if ($findLogin['numcampos']) {
-            logear_funcionario_webservice($findLogin[0]["login"]);
-        }
-    }
-}
-
-/**
- * define los valores de session
- * que le pertenecen al usuario actual
- *
- * @return boolean
- */
-function setSessionUserData()
-{
-    global $conn, $usuactual;
-
-    $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$usuactual}'", '', $conn);
-    $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
-    $_SESSION["idfuncionario"] = $findUser[0]['idfuncionario'];
-
-    return $findUser['numcampos'] > 0;
-}
-
-/**
- * define la ruta temporal del usuario
- * en la variable session
- *
- * @return true
- */
-function setTemporalRoute()
-{
-    global $usuactual;
-
-    $_SESSION["ruta_temp_funcionario"] = 'temporal/temporal_' . strtolower($usuactual);
-
-    return true;
 }
 
 /**
@@ -88,12 +38,14 @@ function setTemporalRoute()
  */
 function logear_funcionario_webservice($login)
 {
-    $GLOBALS['usuactual'] = $login;
+    global $conn;
+
+    $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$login}'", '', $conn);
     $_SESSION["LOGIN" . LLAVE_SAIA] = $login;
     $_SESSION["conexion_remota"] = 1;
-
-    setSessionUserData();
-    setTemporalRoute();
+    $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
+    $_SESSION["idfuncionario"] = $findUser[0]['idfuncionario'];
+    $_SESSION["ruta_temp_funcionario"] = 'temporal/temporal_' . strtolower($login);
 
     return true;
 }
@@ -2376,7 +2328,6 @@ function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo
  */
 function agrega_boton2($nombre = "Boton", $imagen = "../../botones/configuracion/default.gif", $dir = "#", $destino = "_self", $texto = "", $acceso = "", $modulo = "", $click = "")
 {
-    global $usuactual;
     global $conn;
     $acceso = 1;
     if ($modulo != "") {
@@ -2728,120 +2679,6 @@ function compara_fechas($fecha_control, $fecha_inicial)
     return $conn->compara_fechas($fecha_control, $fecha_inicial);
 }
 
-/*<Clase>
-<Nombre>getRealIP</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Busca la ip real de la maquina cliente<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Ip real</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-/*Modificaciones que se realizan para Almacenar y manejar Sesion*/
-function getRealIP()
-{
-    if (@$_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-        $client_ip = servidor_remoto();
-        // los proxys van añadiendo al final de esta cabecera
-        // las direcciones ip que van "ocultando". Para localizar la ip real
-        // del usuario se comienza a mirar por el principio hasta encontrar
-        // una dirección ip que no sea del rango privado. En caso de no
-        // encontrarse ninguna se toma como valor el REMOTE_ADDR
-        $entries = preg_split('[, ]', $_SERVER['HTTP_X_FORWARDED_FOR']);
-        reset($entries);
-        while (list(, $entry) = each($entries)) {
-            $entry = trim($entry);
-            if (preg_match("/^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/", $entry, $ip_list)) {
-                $private_ip = array(
-                    '/^0\./',
-                    '/^127\.0\.0\.1/',
-                    '/^192\.168\..*/',
-                    '/^172\.((1[6-9])|(2[0-9])|(3[0-1]))\..*/',
-                    '/^10\..*/'
-                );
-                $found_ip = preg_replace($private_ip, $client_ip, $ip_list[1]);
-                if ($client_ip != $found_ip) {
-                    $client_ip = $found_ip;
-                    break;
-                }
-            }
-        }
-    } else {
-        $client_ip = servidor_remoto();
-    }
-    return $client_ip;
-}
-/*<Clase>
-<Nombre>almacenar_sesion</Nombre>
-<Parametros>$exito:variable que indica si el logueo tuvo exito o no;$login:login del usuario que intenta loguearse</Parametros>
-<Responsabilidades>Guarda en la bd el registro de los intentos de ingreso a saia<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function almacenar_sesion($exito, $login)
-{
-    global $conn;
-    $_SESSION["idsesion_php"] = session_id();
-    $datos = array();
-    if ($login == "") {
-        $login = usuario_actual("login");
-        $id = usuario_actual("idfuncionario");
-    } else {
-        $id = $_SESSION["idfuncionario"] ?? null;
-    }
-    $iplocal = getRealIP();
-    $ipremoto = servidor_remoto();
-    if ($iplocal == "" || $ipremoto == "") {
-        if ($iplocal == "") {
-            $iplocal = $ipremoto;
-        } else {
-            $ipremoto = $iplocal;
-        }
-    }
-    if (!$exito) {
-        $intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
-        if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) { //Desarrollo de validacion de intentos al loguearse
-            if (!$intentos[0]["intento_login"]) {
-                $consecutivo = 1;
-            } else {
-                $consecutivo = $intentos[0]["intento_login"] + 1;
-            }
-            $sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-            $conn->Ejecutar_Sql($sql2);
-            $configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
-            if ($consecutivo >= $configuracion[0]["valor"]) {
-                $correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
-                $sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-                $conn->Ejecutar_Sql($sql3);
-                $sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-                $conn->Ejecutar_Sql($sql4);
-                $datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
-            }
-        }
-        $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-        $conn->Ejecutar_Sql($sql);
-    } else {
-        $sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
-        $conn->Ejecutar_Sql($sql2);
-
-        $idsesion = ultima_sesion($login);
-        if ($idsesion == "") {
-            session_regenerate_id();
-            $_SESSION["idsesion_php"] = session_id();
-            $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-            $datos["mensaje"] = "Sesion creada";
-            $conn->Ejecutar_Sql($sql);
-        } else {
-            $datos["mensaje"] = "Sesion ya existe";
-        }
-    }
-    return ($datos);
-}
-
 /**
  * obtiene un attributo del 
  * usuario logueado
@@ -2851,83 +2688,22 @@ function almacenar_sesion($exito, $login)
  */
 function usuario_actual($campo)
 {
-    global $usuactual, $conn;
+    global $conn;
 
     if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-        salir("Su sesión ha expirado, por favor ingrese de nuevo.");
-    } else if (!empty($usuactual)) {
-        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+        SessionController::logout("Su sesión ha expirado, por favor ingrese de nuevo.");
+    } else {
+        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario A", "A.login='" . $_SESSION["LOGIN" . LLAVE_SAIA] . "'", "", $conn);
         if ($dato["numcampos"]) {
             if ($dato[0]["estado"] == 1) {
                 return $dato[0][$campo];
             } else {
-                salir("El funcionario se encuentra inactivo", $usuactual);
+                SessionController::logout("El funcionario se encuentra inactivo", $_SESSION["LOGIN" . LLAVE_SAIA]);
             }
         } else {
-            salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+            SessionController::logout("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
         }
     }
-}
-
-function ultima_sesion($login)
-{
-    global $conn;
-    $iplocal = getRealIP();
-    $ipremoto = servidor_remoto();
-    $conexion = $conn->Ejecutar_sql("Select idlog_acceso FROM log_acceso WHERE iplocal='" . $iplocal . "' AND ipremota='" . $ipremoto . "' AND fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "' ORDER BY fecha DESC");
-    if ($conexion->num_rows) {
-        $dato = $conn->sacar_fila();
-        return ($dato["idlog_acceso"]);
-    }
-    return ("");
-}
-
-/*
-<Clase>
-<Nombre>salir
-<Parametros>$texto: texto que saldr�en pantalla
-<Responsabilidades>Sacar la razon de la salida del sistema, redireccionando a la pagina de login
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function salir($texto, $login = "")
-{
-    global $usuactual, $conn;
-    if ($login != "") {
-        $iplocal = getRealIP();
-        $ipremoto = servidor_remoto();
-        if ($_SESSION["conexion_remota"] == 1) {
-            $conexion = $conn->Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "' ORDER BY fecha DESC");
-            $sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "'";
-        } else {
-            $conexion = $conn->Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' ORDER BY fecha DESC");
-            $sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='" . $login . "'";
-        }
-        if ($conexion->num_rows) {
-            $conn->Ejecutar_sql($sql);
-
-            $temp = phpmkr_fetch_array($conexion);
-            for ($i = 0; $temp; $temp = phpmkr_fetch_array($conexion), $i++) {
-                session_id($temp["idsesion_php"]);
-                session_start();
-                session_destroy();
-                session_commit();
-            }
-        }
-    }
-    $usuactual = "";
-    $conn->Conn->Desconecta();
-    session_unset();
-    session_destroy();
-    unset($_COOKIE["PHPSESSID"]);
-
-    echo "<script language='javascript'>
-        top.window.location='" . PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php';
-    </script>";
-    exit();
 }
 
 /*
@@ -3024,22 +2800,6 @@ function crear_destino($destino)
     return ($destino);
 }
 
-/*<Clase>
-<Nombre>servidor_remoto</Nombre>
-<Parametros></Parametros>
-<Responsabilidades><Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function servidor_remoto()
-{
-    $client_ip = "unknown";
-    $client_ip = (!empty($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : ((!empty($_ENV['REMOTE_ADDR'])) ? $_ENV['REMOTE_ADDR'] : "unknown");
-    return ($client_ip);
-}
 /*Fin de manejo de sesion*/
 /*
 <Clase>

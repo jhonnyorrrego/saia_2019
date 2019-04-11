@@ -147,7 +147,7 @@ class Tarea extends Model
     public function setDefaultState()
     {
         return TareaEstado::newRecord([
-            'fk_funcionario' => $_SESSION['idfuncionario'],
+            'fk_funcionario' => SessionController::getValue('idfuncionario'),
             'fk_tarea' => $this->getPK(),
             'fecha' => date('Y-m-d H:i:s'),
             'estado' => 1,

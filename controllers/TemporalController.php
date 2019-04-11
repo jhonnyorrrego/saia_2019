@@ -1,6 +1,32 @@
 <?php
 class TemporalController
 {
+    public static function cleanDirectory($dir, $remove = false)
+    {
+        if (is_dir($dir)) {
+
+            if (!$dh = @opendir($dir)) {
+                return;
+            }
+            while (false !== ($obj = readdir($dh))) {
+                if ($obj == '.' || $obj == '..') {
+                    continue;
+                }
+                if (!@unlink($dir . '/' . $obj)) {
+                    borrar_archivos_carpeta($dir . '/' . $obj, true);
+                }
+            }
+            closedir($dh);
+
+            if ($remove) { //elimina la carpeta
+                @rmdir($dir);
+            }
+        } else {
+            mkdir($dir, PERMISOS_CARPETAS, true);
+        }
+    }
+
+
     public static function createTemporalFile($dbString, $prefix = '', $force = false)
     {
         global $ruta_db_superior;
@@ -17,11 +43,11 @@ class TemporalController
             $temporalRoute = $_SESSION['ruta_temp_funcionario'] . '/' . $fileName;
             $relativeRoute = $ruta_db_superior . $temporalRoute;
 
-            if (!is_file($relativeRoute) || $force) { 
+            if (!is_file($relativeRoute) || $force) {
                 file_put_contents($relativeRoute, $filebinario);
             }
 
-            if(is_file($relativeRoute)){
+            if (is_file($relativeRoute)) {
                 $response->success = 1;
                 $response->route = $temporalRoute;
             }
@@ -109,5 +135,4 @@ class TemporalController
         }
         return $dir_anexos;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 class Funcionario extends Model
 {
     const CEROK = 1;
@@ -338,5 +337,38 @@ SQL;
             'token' => $token,
             self::getPrimaryLabel() => $userId
         ]);
+    }
+
+    public static function excludeCondition(){
+        $users = [
+            self::CEROK,
+            self::RADICADOR_SALIDA,
+            self::RADICADOR_WEB
+        ];
+
+        return " idfuncionario not in(" . implode(',', $users) . ") ";
+    }
+
+    public static function checkAdition(){
+        $exclude = self::excludeCondition();
+        $sql = <<<SQL
+            select
+                count(*) as total 
+            from 
+                funcionario
+            where
+                {$exclude}
+                AND
+                estado = 1
+SQL;
+        $row = StaticSql::search($sql);
+        $total = $row[0]['total'];
+        
+        $Configuracion = Configuracion::findByAttributes([
+            'nombre' => 'numero_usuarios'
+        ]);
+        $limit = $Configuracion->getValue();
+        
+        return $limit > $total;
     }
 }

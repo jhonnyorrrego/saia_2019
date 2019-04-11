@@ -1,5 +1,4 @@
 <?php
-
 class FacturaXML {
     private $archivo;
     private $contenido;
