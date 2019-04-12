@@ -222,6 +222,7 @@ class Files {
                         case "docx":
                         case "pptx":
                             var viewer = "viewer_kuku.php";
+                            var type = 'TIPO_ANEXO';
                             break;
                         case "pdf":
                             var viewer = "viewer_annotate_pdf.php";

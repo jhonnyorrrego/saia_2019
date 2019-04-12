@@ -25,7 +25,8 @@ class UserInformation{
         let baseUrl = this.baseUrl;
         $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`,{
             key: this.user,
-            type: 'userInformation'
+            type: 'userInformation',
+            token: localStorage.getItem('token')
         }, function(response){
             if(response.success){
                 for(let attribute in response.data){
