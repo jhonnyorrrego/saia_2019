@@ -2,7 +2,6 @@ $(function() {
     let params = $("script[data-pages-params]").data("pagesParams");
     let key = localStorage.getItem("key");
     let annotations = [];
-console.log(params);
 
     (function getPages() {
         $.post(
@@ -64,7 +63,7 @@ console.log(params);
             $("#item_parent,#comment-wrapper").height(
                 $("#content-wrapper img").height()
             );
-        }, 0);
+        }, 50);
 
         findNotes();
         annotations.forEach(a => {
@@ -150,8 +149,6 @@ console.log(params);
         });
 
         $("#comment-wrapper").removeClass("d-none");
-        $("#content-wrapper").scrollLeft(container.position().left);
-        console.log($("#content-wrapper")[0].clientWidth);
         
         $("#comment_input")
             .parent()
@@ -245,7 +242,7 @@ console.log(params);
     }
 
     function annotationTemplate(annotation) {
-        return `<span class='fa fa-file text-warning f-20 annotation cursor' data-key='${
+        return `<span class='fa fa-file text-warning fa-2x annotation cursor' data-key='${
             annotation.uuid
         }'></span>`;
     }

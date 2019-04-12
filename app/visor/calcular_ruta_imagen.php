@@ -35,6 +35,22 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 ];
             }
             break;
+        case 'TIPO_ANEXO_IMAGEN':
+            $Anexo = new Anexo($_REQUEST['typeId']);
+            $image = TemporalController::createTemporalFile($Anexo->ruta);
+            $Response->data[] = [
+                'id' => $Anexo->getPK(),
+                'route' => $image->route
+            ];
+            break;
+        case 'TIPO_ANEXOS_IMAGEN':
+            $Anexo = new Anexos($_REQUEST['typeId']);
+            $image = TemporalController::createTemporalFile($Anexo->ruta);
+            $Response->data[] = [
+                'id' => $Anexo->getPK(),
+                'route' => $image->route
+            ];
+            break;
     }
 
     if (!$Response->data) {
