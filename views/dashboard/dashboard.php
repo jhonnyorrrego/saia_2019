@@ -295,7 +295,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.min.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
 
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />

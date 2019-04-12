@@ -4,7 +4,10 @@ var filesToCache = [
     'assets/theme/assets/plugins/moment/moment-with-locales.min.js',
     'assets/theme/assets/plugins/font-awesome/fonts/fontawesome-webfont.woff2?v=4.7.0',
     'assets/theme/pages/js/pages.min.js',
-    'assets/theme/pages/css/pages.css'
+    'assets/theme/pages/css/pages.min.css',
+    'assets/theme/assets/plugins/jquery/jquery-3.2.1.min.js',
+    'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css',
+    'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js'
 ];
 
 self.addEventListener('install', function (e) {
