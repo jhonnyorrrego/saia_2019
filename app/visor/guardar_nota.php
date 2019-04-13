@@ -20,15 +20,15 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $annotation = (object)$_REQUEST['annotation'];
+    $annotation = $_REQUEST['annotation'];
     $comment = $_REQUEST['comment'];
     eval('$type = VisorNota::' . $_REQUEST['type'] . ';');
 
     $VisorNota = VisorNota::findByAttributes([
         'tipo_relacion' => $type,
         'idrelacion' => $_REQUEST['typeId'],
-        'uuid' => $annotation->uuid,
-        'page' => $annotation->page
+        'uuid' => $annotation['uuid'],
+        'page' => $annotation['page']
     ]);
 
     if(!$VisorNota){

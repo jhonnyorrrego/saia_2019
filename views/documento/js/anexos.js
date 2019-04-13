@@ -90,8 +90,9 @@ $(function () {
     }
 
     $('#show_pages').on('click', function () {
-        $('#pages_container').load(`${baseUrl}views/pagina/pagina.php`, {
-            documentId: params.documentId
+        $('#pages_container').load(`${baseUrl}views/visor/viewer_annotate_image.php`, {
+            typeId: params.documentId,
+            type: 'TIPO_PAGINA'
         });
     });
 });

@@ -226,11 +226,19 @@ class Files {
                             break;
                         case "pdf":
                             var viewer = "viewer_annotate_pdf.php";
-                            var type = 'TIPO_ANEXO_PDF'
+                            if (instance.options.sourceReference == 'TIPO_ANEXO') {
+                                var type = 'TIPO_ANEXO_PDF';
+                            } else {
+                                var type = 'TIPO_ANEXOS_PDF';
+                            }
                             break;
                         default:
                             var viewer = "viewer_annotate_image.php";
-                            var type = 'TIPO_ANEXO_IMAGEN'
+                            if (instance.options.sourceReference == 'TIPO_ANEXO') {
+                                var type = 'TIPO_ANEXO_IMAGEN';
+                            } else {
+                                var type = 'TIPO_ANEXOS_IMAGEN';
+                            }
                             break;
                     }
 
