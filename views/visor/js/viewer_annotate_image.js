@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let params = $("script[data-pages-params]").data("pagesParams");
     let key = localStorage.getItem("key");
     let annotations = [];
@@ -11,7 +11,7 @@ $(function() {
                 typeId: params.typeId,
                 type: params.type
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     if (response.data.length) {
                         createThumbnails(response.data);
@@ -32,24 +32,24 @@ $(function() {
         );
     })();
 
-    $("button.thumbnails").on("click", function() {
+    $("button.thumbnails").on("click", function () {
         $("#thumbnails").toggleClass("d-none");
     });
 
-    $("#add_comment").on("click", function() {
+    $("#add_comment").on("click", function () {
         $("#content-wrapper img").css("cursor", "crosshair");
         $(':button.active').removeClass('active');
         $(this).addClass('active');
     });
 
-    $("#cursor_tool").on("click", function() {
+    $("#cursor_tool").on("click", function () {
         $("#content-wrapper img").css("cursor", "");
         $(':button.active').removeClass('active');
         $(this).addClass('active');
     });
 
     $(document).off("click", ".page_thumbnail");
-    $(document).on("click", ".page_thumbnail", function() {
+    $(document).on("click", ".page_thumbnail", function () {
         $("#content-wrapper")
             .html($(this).html())
             .attr("data-page", $(this).data("page"));
@@ -63,7 +63,13 @@ $(function() {
             $("#item_parent,#comment-wrapper").height(
                 $("#content-wrapper img").height()
             );
-        }, 50);
+
+            $('#pages_iframe', window.parent.document).height(
+                $("#content-wrapper img").height() +
+                $("#content-wrapper img").offset().top +
+                20
+            );
+        }, 300);
 
         findNotes();
         annotations.forEach(a => {
@@ -82,7 +88,7 @@ $(function() {
     });
 
     $(document).off("click", "#content-wrapper img");
-    $(document).on("click", "#content-wrapper img", function(e) {
+    $(document).on("click", "#content-wrapper img", function (e) {
         $(".annotation")
             .parent()
             .css("border", "");
@@ -117,7 +123,7 @@ $(function() {
     });
 
     $(document).off("keyup", "#comment_input");
-    $(document).on("keyup", "#comment_input", function(e) {
+    $(document).on("keyup", "#comment_input", function (e) {
         if (e.keyCode == 13 && $("#comment_input").val().length) {
             let commentContent = $(this).val();
             let position = {
@@ -136,7 +142,7 @@ $(function() {
     });
 
     $(document).off("click", ".annotation");
-    $(document).on("click", ".annotation", function(e) {
+    $(document).on("click", ".annotation", function (e) {
         $("#thumbnails").addClass("d-none");
         $(".annotation")
             .parent()
@@ -149,7 +155,7 @@ $(function() {
         });
 
         $("#comment-wrapper").removeClass("d-none");
-        
+
         $("#comment_input")
             .parent()
             .remove();
@@ -161,10 +167,10 @@ $(function() {
             containment: "#content-wrapper",
             scroll: true,
             cursor: "crosshair",
-            start: function(event, ui) {
+            start: function (event, ui) {
                 $("#comment-wrapper").addClass("d-none");
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
                 editAnnotation(ui.position, annotationId);
             }
         });
@@ -207,7 +213,7 @@ $(function() {
                 type: params.type,
                 typeId: $("#content-wrapper").attr("data-page")
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     annotations = response.data;
                     output = true;
@@ -244,7 +250,7 @@ $(function() {
     function annotationTemplate(annotation) {
         return `<span class='fa fa-file text-warning fa-2x annotation cursor' data-key='${
             annotation.uuid
-        }'></span>`;
+            }'></span>`;
     }
 
     function generateAnnotationId(relationId) {
@@ -267,7 +273,7 @@ $(function() {
             userData: {
                 id: localStorage.getItem("key")
             },
-            source: function() {
+            source: function () {
                 findNotes();
                 let comments = annotations.filter(
                     a => a.class == "Comment" && a.annotation == annotationId
@@ -279,7 +285,7 @@ $(function() {
                     return c;
                 });
             },
-            save: function(comment) {
+            save: function (comment) {
                 let annotation = annotations.find(
                     a => a.uuid == annotationId && a.class == "annotation"
                 );
@@ -301,7 +307,7 @@ $(function() {
                     y: position.top
                 }
             },
-            function(response) {
+            function (response) {
                 if (!response.success) {
                     top.notification({
                         type: "error",
@@ -333,7 +339,7 @@ $(function() {
                     content: content
                 }
             },
-            success: function(response) {
+            success: function (response) {
                 if (!response.success) {
                     top.notification({
                         type: "error",

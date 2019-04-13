@@ -222,10 +222,10 @@ class Files {
                         case "docx":
                         case "pptx":
                             var viewer = "viewer_kuku.php";
-                            var type = 'TIPO_ANEXO';
+                            var type = instance.options.sourceReference;
                             break;
                         case "pdf":
-                            var viewer = "viewer_annotate_pdf.php";
+                            var viewer = "viewer_annotate_pdf.php";                                                        
                             if (instance.options.sourceReference == 'TIPO_ANEXO') {
                                 var type = 'TIPO_ANEXO_PDF';
                             } else {
