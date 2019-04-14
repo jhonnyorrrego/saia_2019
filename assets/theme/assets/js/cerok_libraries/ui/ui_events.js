@@ -6,6 +6,7 @@ $(function () {
 
     (function init() {
         if (session.user) {
+            Ui.loadDashboard();
             Ui.putLogo("#client_image");
             Ui.showUserInfo(session.user);
             Ui.resizeIframe();

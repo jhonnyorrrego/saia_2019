@@ -51,8 +51,9 @@ function createThumbnails()
     global $ruta_db_superior;
 
     $color = $_REQUEST['color'];
-    $sizes = [48, 96, 192];
+    $sizes = [48, 96, 192, 512];
     $imagine = new Imagine\Gd\Imagine();
+    chmod($ruta_db_superior . 'assets/images', 0777);
 
     foreach ($sizes as $key => $value) {
         $image = $imagine

@@ -2,6 +2,7 @@ $(function () {
     var baseUrl = Session.getBaseUrl();
     Ui.putColor();
     Ui.putLogo('#logo');
+    Ui.bindServiceWorker();
     resize();
 
     $("[name='username'],[name='password']").on('keyup', function (e) {
