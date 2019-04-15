@@ -31,7 +31,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="row bg-white m-0 p-0 h-100" id="content">
             <!-- carousel-->
             <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel_container">
-                <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel">
+                <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel" data-wrap="false">
                     <!-- Indicators -->
                     <ol class="carousel-indicators" id="indicators"></ol>
                     <div class="carousel-inner mx-0 px-0" id="homepageItems"></div>

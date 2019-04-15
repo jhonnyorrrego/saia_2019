@@ -73,6 +73,8 @@ $(function () {
         });
     });
 
+
+
     (function checkDirectory() {
         $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
             configurations: ['validar_acceso_ldap']
@@ -92,33 +94,68 @@ $(function () {
                 dataType: 'json',
                 success: function (response) {
                     if (!$("#homepageItems").children().length) {
-                        var data = '',
-                            indicator = '';
-
-                        for (var i = 0; i < response.data.length; i++) {
-                            data += `
-                                    <div class="carousel-item mx-0 px-0">
-                                        <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
-                                        <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                                            <h3 class="text-white" style="opacity: 1">` + response.data[i].title + `</h3>
-                                            <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
-                                        </div>
-                                    </div>`;
-                            indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
-                        }
-
-                        $('#homepageItems').append(data);
-                        $('#indicators').append(indicator);
-                        $('.carousel-item > img')
-                            .attr('height', $(window).height() - $("#footer").height())
-                            .attr('width', $("#carousel_container").width());
-                        $('#homepageItems').css('max-height', $(window).height() - $("#footer").height());
-                        $('.carousel-item').first().addClass('active');
-                        $('.carousel-indicators > li').first().addClass('active');
-                        $("#myCarousel").carousel();
+                        paintCarousel(response.data);
                     }
                 }
             });
+        }
+    }
+
+    function paintCarousel(data) {
+        var items = '',
+            indicators = '';
+
+        for (var i = 0; i < data.length; i++) {
+            items += `
+            <div class="carousel-item mx-0 px-0">
+                <img src="${baseUrl + data[i].image}" alt="..." class="carousel_image">
+                <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
+                    <h3 class="text-white" style="opacity: 1">${data[i].title}</h3>
+                    <p class="text-white" style="opacity: 1">${data[i].content}<p>
+                </div>
+            </div>`;
+            indicators += `<li data-target="#myCarousel" data-slide-to="${i}"></li>`;
+        }
+
+        $('#homepageItems').html(items);
+        $('#indicators').html(indicators);
+        $('.carousel-item').first().addClass('active');
+        $('.carousel-indicators > li').first().addClass('active');
+        let maxHeight = $(window).height() - $('#footer').height();
+        let maxWidth = $(window).width() - $('#form-container').width();
+        $('#carousel_container,#homepageItems').height(maxHeight).width(maxWidth);
+
+        $('.carousel_image').first().on('load', function () {
+            resizeCarouselImage($(this), maxHeight, maxWidth);
+        });
+
+        $("#myCarousel").carousel();
+        $('#myCarousel').on('slide.bs.carousel', function (e) {
+            let image = $(e.relatedTarget).find('img');
+            resizeCarouselImage(image, maxHeight, maxWidth);
+
+            if (!$(e.relatedTarget).is(':visible')) {
+                $(e.relatedTarget).show();
+            }
+        }).on('slid.bs.carousel', function (e) {
+            if (e.direction == 'left') {
+                $('.carousel-item.active').prev().hide();
+            } else {
+                $('.carousel-item.active').next().hide();
+            }
+        });
+    }
+
+    function resizeCarouselImage(image, maxHeight, maxWidth) {
+        $('.carousel-item').removeClass('d-flex justify-content-center');
+        $('#homepageItems').removeClass('d-flex align-items-center');
+        console.log(image.width(), image.height(), image);
+        if (image.width() > image.height()) {
+            image.css('width', maxWidth);
+            $('#homepageItems').addClass('d-flex align-items-center');
+        } else {
+            image.css('height', maxHeight);
+            image.parent().addClass('d-flex justify-content-center');
         }
     }
 
