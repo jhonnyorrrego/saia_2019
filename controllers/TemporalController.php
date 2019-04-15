@@ -1,6 +1,7 @@
 <?php
 class TemporalController
 {
+    public static $saiaDir = 'temporal/saia';
     /**
      * limpia una carpeta
      *
@@ -61,7 +62,7 @@ class TemporalController
         if ($filebinario) {
             $json = json_decode($dbString);
             $fileName = $prefix . basename($json->ruta);
-            $temporalRoute = SessionController::getValue('ruta_temp_funcionario') . '/' . $fileName;
+            $temporalRoute = SessionController::getTemporalDir() . '/' . $fileName;
             $relativeRoute = $ruta_db_superior . $temporalRoute;
 
             if (!is_file($relativeRoute) || $force) {
