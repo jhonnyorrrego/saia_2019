@@ -32,7 +32,7 @@ $params = json_encode([
         <div class="card card-default mb-0">
             <div class="card-body py-2">
                 <form id="user_form">
-                    <p>los campos con <span class="text-danger">*</span> son obligatorios</p>
+                    <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
                     <div class="form-group form-group-default required">
                         <label>Identificacion:</label>
                         <input name="nit" type="text" class="form-control">
@@ -45,8 +45,8 @@ $params = json_encode([
                         <label>Apellidos:</label>
                         <input name="apellidos" type="text" class="form-control">
                     </div>
-                    <div class="form-group form-group-default">
-                        <label>Usuario:</label>
+                    <div class="form-group form-group-default required">
+                        <label>Nombre de usuario:</label>
                         <input name="login" type="text" class="form-control">
                     </div>
                     <div class="form-group form-group-default required">

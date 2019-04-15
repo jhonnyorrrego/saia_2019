@@ -33,7 +33,7 @@ $params = json_encode([
         <div class="card card-default mb-0">
             <div class="card-body py-2">
                 <form id="area_form">
-                    <p>los campos con <span class="text-danger">*</span> son obligatorios</p>
+                    <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
                     <div class="form-group form-group-default required">
                         <label>Código:</label>
                         <input name="codigo" type="text" class="form-control">

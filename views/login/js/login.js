@@ -149,7 +149,7 @@ $(function () {
     function resizeCarouselImage(image, maxHeight, maxWidth) {
         $('.carousel-item').removeClass('d-flex justify-content-center');
         $('#homepageItems').removeClass('d-flex align-items-center');
-        console.log(image.width(), image.height(), image);
+        
         if (image.width() > image.height()) {
             image.css('width', maxWidth);
             $('#homepageItems').addClass('d-flex align-items-center');

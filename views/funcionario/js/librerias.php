@@ -46,7 +46,17 @@
                 onSuccess: function() {
                     top.closeTopModal();
                     $('#tabla_resultados').bootstrapTable("refresh");
-                }
+                },
+                buttons: {
+                    success: {
+                        label: "Guardar cambios",
+                        class: "btn btn-complete"
+                    },
+                    cancel: {
+                        label: "Cancelar",
+                        class: "btn btn-danger"
+                    }
+                },
             })
         }
     });

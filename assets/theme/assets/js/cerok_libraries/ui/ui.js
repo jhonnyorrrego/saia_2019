@@ -6,7 +6,6 @@ class Ui {
 
     static loadDashboard(){
         let url = localStorage.getItem('dashboard');
-        console.log(url,1, localStorage);
         
         if(url){
             url = Session.getBaseUrl() + atob(url);
@@ -41,6 +40,8 @@ class Ui {
                         $(selector).removeAttr("style");
                         $(selector).width(130);
                     }
+
+                    $(this).removeClass('d-none');
                 });
             }
 

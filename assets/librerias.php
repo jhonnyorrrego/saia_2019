@@ -23,7 +23,7 @@ function jqueryUi()
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
-    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
 }
@@ -49,10 +49,10 @@ function jsBootstrap()
     global $ruta_db_superior;
 
     $routePopper = $ruta_db_superior . 'assets/theme/assets/plugins/popper/umd/popper.min.js';
-    $popper = '<script defer src="' . $routePopper . '" type="text/javascript"></script>';
+    $popper = '<script src="' . $routePopper . '" type="text/javascript"></script>';
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js';
-    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $popper . $js;
 }
@@ -161,10 +161,10 @@ function jsTheme()
     global $ruta_db_superior;
 
     $routeM = $ruta_db_superior . 'assets/theme/assets/plugins/modernizr.custom.js';
-    $modernizr = '<script defer type="text/javascript" src="' . $routeM . '"></script>';
+    $modernizr = '<script type="text/javascript" src="' . $routeM . '"></script>';
 
     $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.min.js';
-    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $modernizr . $js;
 }
@@ -228,7 +228,7 @@ function breakpoint()
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/breakpoint/if-b4-breakpoint.js';
-    return '<script defer type="text/javascript" src="' . $route . '"></script>';
+    return '<script type="text/javascript" src="' . $route . '"></script>';
 }
 
 /**

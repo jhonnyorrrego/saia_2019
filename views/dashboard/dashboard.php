@@ -71,7 +71,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- END MOBILE SIDEBAR TOGGLE -->
             <div class="">
                 <div class="brand inline">
-                    <img alt="logo" id="client_image" style="max-height:40px">
+                    <img alt="logo" id="client_image" style="max-height:40px" class="d-none">
                 </div>
                 <div class="dropdown d-lg-inline-block d-none">
                     <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="new_action">
@@ -293,25 +293,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jquery() ?>
     <?= jsBootstrap() ?>
     <?= jqueryUi() ?>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <?= jsTheme() ?>
     
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
 
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js" type="text/javascript"></script>
 
     <?= breakpoint() ?>
-    <script defer data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/modules.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
-    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
+    <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/modules.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
     <?= topModal() ?>
     <?= moment() ?>
     <script>
