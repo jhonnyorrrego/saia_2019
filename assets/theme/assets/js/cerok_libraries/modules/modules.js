@@ -102,6 +102,13 @@ class Modules {
                                 idmodule,
                                 parentModule
                             );
+
+                            if(idmodule === 0){
+                                let module = response.data.find(m => m.type == 1);
+                                localStorage.setItem('dashboard', btoa(module.url));
+                                instance.showDashboard(module.url);
+                            }
+
                             instance.show(idmodule);
                         }
                     }
@@ -200,6 +207,11 @@ class Modules {
         });
 
         return { list: list };
+    }
+
+    showDashboard(route){
+        route = this.baseUrl + route;
+        document.getElementById('iframe_workspace').src = route;
     }
 
     static findModule(modules, idmodule) {

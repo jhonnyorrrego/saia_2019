@@ -23,33 +23,43 @@ function jqueryUi()
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
-    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
 }
 
 /**
  * retorna los enlaces css y js
- * de bootstrap v4.1.0 minificados
+ * de bootstrap v4.3.1 minificados
  */
 function bootstrap()
+{
+    $css = cssBootstrap();
+    $js = jsBootstrap();
+
+    return $css . $js;
+}
+
+/**
+ * retorna los enlaces js de bootstrap
+ * v4.3.1 minificados
+ */
+function jsBootstrap()
 {
     global $ruta_db_superior;
 
     $routePopper = $ruta_db_superior . 'assets/theme/assets/plugins/popper/umd/popper.min.js';
-    $popper = '<script src="' . $routePopper . '" type="text/javascript"></script>';
-
-    $css = cssBootstrap();
+    $popper = '<script defer src="' . $routePopper . '" type="text/javascript"></script>';
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js';
-    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
 
-    return $popper . $css . $js;
+    return $popper . $js;
 }
 
 /**
  * retorna el enlace al archivo css de bootstrap
- * v4.1.0 minificado
+ * v4.3.1 minificado
  * @return string
  */
 function cssBootstrap()
@@ -125,18 +135,38 @@ function notificacion()
 
 function theme()
 {
+    $css = cssTheme();
+    $js = jsTheme();
+
+    return $css . $js;
+}
+
+/**
+ * retorna los estilos del tema
+ */
+function cssTheme()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.min.css';
+    return '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+}
+
+/**
+ * retorna el js necesario para 
+ * implementar el tema
+ */
+function jsTheme()
+{
     global $ruta_db_superior;
 
     $routeM = $ruta_db_superior . 'assets/theme/assets/plugins/modernizr.custom.js';
-    $modernizr = '<script type="text/javascript" src="' . $routeM . '"></script>';
-
-    $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.min.css';
-    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+    $modernizr = '<script defer type="text/javascript" src="' . $routeM . '"></script>';
 
     $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.min.js';
-    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '<script defer type="text/javascript" src="' . $routeJs . '"></script>';
 
-    return $modernizr . $css . $js;
+    return $modernizr . $js;
 }
 
 /**
@@ -198,7 +228,7 @@ function breakpoint()
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/breakpoint/if-b4-breakpoint.js';
-    return '<script type="text/javascript" src="' . $route . '"></script>';
+    return '<script defer type="text/javascript" src="' . $route . '"></script>';
 }
 
 /**
