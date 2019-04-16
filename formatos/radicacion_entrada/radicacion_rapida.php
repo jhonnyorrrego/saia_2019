@@ -32,15 +32,14 @@ include_once $ruta_db_superior . "librerias_saia.php";
 <body>
 	<div class="container-fluid p-3">
 		<div class="row justify-content-md-center">
-			<div class="col-12 col-md-7">
+			<div class="col-12 col-md-4">
 				<div class="card card-default mb-0">
 					<div class="card-body py-2">
 						<form method="POST" id="form_radicacion_rapida" action="<?= $ruta_db_superior ?>colilla.php">
-							<input type="hidden" id="generar_consecutivo" name="generar_consecutivo">
 							<input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
 							<input type="hidden" name="enlace2" id="enlace2" value="formatos/radicacion_entrada/radicacion_rapida.php">
-		
-							<h4>Generar Sello</h4>
+
+							<h5 class="bold">Generar Sello</h5>
 							<p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
 							<div class="form-group form-group-default required">
 								<label>Seleccione Tipo de Radicación:</label>
@@ -48,6 +47,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 									<img src="<?= $ruta_db_superior ?>imagenes/cargando.gif">
 								</div>
 								<div id="treeboxbox_tree_equipos" class="arbol_saia"></div>
+								<input type="hidden" id="generar_consecutivo" name="generar_consecutivo" class="required">
 							</div>
 							<div class="form-group form-group-default required">
 								<label>Descripción General:</label>
@@ -125,20 +125,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 				document.poppedLayer.style.visibility = "visible";
 			}
 			$("#form_radicacion_rapida").validate({
-				ignore: [],
-				submitHandler: function(form) {
-					if (!$('#generar_consecutivo').val().length) {
-						top.notification({
-							message: "De seleccionar una opción para radicar!",
-							type: "warning",
-							duration: "2500"
-						});
-
-						return false;
-					}
-					
-					form.submit();
-				}
+				ignore: []
 			});
 		});
 	</script>

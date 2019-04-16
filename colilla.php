@@ -1,6 +1,7 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,12 +9,14 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "class_transferencia.php");
-include_once ($ruta_db_superior . FORMATOS_SAIA . "/librerias/funciones_formatos_generales.php");
-include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 
-function generar_ingreso_formato($nombre_formato) {
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "class_transferencia.php";
+include_once $ruta_db_superior . FORMATOS_SAIA . "/librerias/funciones_formatos_generales.php";
+include_once $ruta_db_superior . "pantallas/qr/librerias.php";
+
+function generar_ingreso_formato($nombre_formato)
+{
 	global $conn;
 	$retorno = array("exito" => 0);
 
@@ -21,19 +24,19 @@ function generar_ingreso_formato($nombre_formato) {
 
 	if ($nombre_formato == 'radicacion_salida') {
 		$nombre_formato = 'radicacion_entrada';
-		$entrad=0;
-	}else if($nombre_formato == 'radicacion_entrada'){
-		$entrad=1;
+		$entrad = 0;
+	} else if ($nombre_formato == 'radicacion_entrada') {
+		$entrad = 1;
 	}
 	$formato = busca_filtro_tabla("f.*,cf.nombre as nombre_campo, cf.*", "formato f, campos_formato cf", "f.nombre='" . $nombre_formato . "' AND f.idformato=cf.formato_idformato AND cf.obligatoriedad=1 and cf.nombre not in ('encabezado','firma','dependencia','documento_iddocumento','serie_idserie','idft_" . $nombre_formato . "') and cf.etiqueta_html not in ('etiqueta','archivo')", "", $conn);
 
 	if ($formato["numcampos"]) {
-		$contador_exc=array("radicacion_entrada","radicacion_salida");
-		if(!in_array($nombre_formato, $contador_exc)){
-			$contador=busca_filtro_tabla("nombre","contador","idcontador=".$formato[0]["contador_idcontador"],"",$conn);
-			if($contador["numcampos"]){
-				$nombre_radicado=$contador[0]["nombre"];
-			}else{
+		$contador_exc = array("radicacion_entrada", "radicacion_salida");
+		if (!in_array($nombre_formato, $contador_exc)) {
+			$contador = busca_filtro_tabla("nombre", "contador", "idcontador=" . $formato[0]["contador_idcontador"], "", $conn);
+			if ($contador["numcampos"]) {
+				$nombre_radicado = $contador[0]["nombre"];
+			} else {
 				$retorno['msn'] = "Error al consultar el tipo de radicado";
 				return $retorno;
 			}
@@ -51,11 +54,11 @@ function generar_ingreso_formato($nombre_formato) {
 					$_REQUEST[$formato[$i]["nombre_campo"]] = 0;
 				}
 			}
-			if($nombre_formato=="radicacion_entrada"){
-				if($entrad==1){
-					$_REQUEST["tipo_origen"]=1;
-				}else{
-					$_REQUEST["tipo_origen"]=2;
+			if ($nombre_formato == "radicacion_entrada") {
+				if ($entrad == 1) {
+					$_REQUEST["tipo_origen"] = 1;
+				} else {
+					$_REQUEST["tipo_origen"] = 2;
 				}
 			}
 
@@ -106,25 +109,21 @@ function generar_ingreso_formato($nombre_formato) {
 	return $retorno;
 }
 
-function validar_confirmacion_salida($consecutivo, $enlace, $enlace2) {
+function validar_confirmacion_salida($consecutivo, $enlace, $enlace2)
+{
 	global $conn;
 	$enlace_redireccion = $enlace;
 	$enlace = str_replace("|", "&", $enlace);
 	?>
 	<script>
-		//var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
-		ingreso=1;
-		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>&colilla_vertical=<?php echo $_REQUEST['colilla_vertical'];?>","_self");
-		}else{
-			window.open("<?php echo $enlace2;?>","_self");
-		}
+		window.open("colilla.php?consecutivo=<?php echo $consecutivo; ?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion; ?>&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>&colilla_vertical=<?php echo $_REQUEST['colilla_vertical']; ?>", "_self");
 	</script>
 	<?php
 	die();
 }
 
-function validar_confirmacion() {
+function validar_confirmacion()
+{
 	global $conn;
 	$cantidad = busca_filtro_tabla("", "configuracion a", "a.nombre='cantidad_confirmacion'", "", $conn);
 	$por_ingresar = busca_filtro_tabla("count(*) as cant", "documento a", "lower(a.estado)='iniciado' AND a.tipo_radicado=1", "", $conn);
@@ -138,11 +137,11 @@ function validar_confirmacion() {
 		$cadena = implode("&", $datos_url);
 		?>
 		<script>
-			var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
-			if(ingreso){
-				window.open("colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
-			}else{
-				window.open("<?php echo $enlace;?>","_self");
+			var ingreso = confirm("Esta seguro de generar un nuevo radicado?");
+			if (ingreso) {
+				window.open("colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>", "_self");
+			} else {
+				window.open("<?php echo $enlace; ?>", "_self");
 			}
 		</script>
 		<?php
@@ -169,10 +168,10 @@ if (@$_REQUEST["doc"] || @$_REQUEST["key"]) {
 	} else {
 		$formato = 'radicacion_entrada';
 	}
-	$info_retorno=generar_ingreso_formato($formato);
-	if($info_retorno["exito"]==1){
-		$doc =$info_retorno["iddoc"];
-	}else{
+	$info_retorno = generar_ingreso_formato($formato);
+	if ($info_retorno["exito"] == 1) {
+		$doc = $info_retorno["iddoc"];
+	} else {
 		alerta($info_retorno["msn"]);
 		volver();
 		die();
@@ -180,7 +179,7 @@ if (@$_REQUEST["doc"] || @$_REQUEST["key"]) {
 }
 $plantilla = busca_filtro_tabla("", "documento a, formato b", "lower(plantilla)=b.nombre AND iddocumento=" . $doc, "", $conn);
 $datos = busca_filtro_tabla("dependencia,numero,tipo_radicado," . fecha_db_obtener("A.fecha", 'Y-m-d H:i') . " AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado", "documento A, " . $plantilla[0]["nombre_tabla"] . " B", "A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento", "", $conn);
-$dependencia_creador=busca_filtro_tabla("b.codigo,a.nombres,a.apellidos","vfuncionario_dc a, dependencia b","b.iddependencia=a.iddependencia AND a.iddependencia_cargo=".$datos[0]['dependencia'],"",$conn);
+$dependencia_creador = busca_filtro_tabla("b.codigo,a.nombres,a.apellidos", "vfuncionario_dc a, dependencia b", "b.iddependencia=a.iddependencia AND a.iddependencia_cargo=" . $datos[0]['dependencia'], "", $conn);
 
 $ejecutor["numcampos"] = '';
 $atras = "1";
@@ -213,7 +212,7 @@ if ($_REQUEST["mostrar_formato"]) {
 }
 if ($doc <> FALSE) {
 	//$ejecutor = busca_filtro_tabla("nombre AS nombre, empresa", "ejecutor A,datos_ejecutor B", "A.idejecutor=B.ejecutor_idejecutor AND iddatos_ejecutor=" . $datos[0]["ejecutor"], "", $conn);
-    $ejecutor = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "funcionario_codigo=" . $datos[0]["ejecutor"], "", $conn);
+	$ejecutor = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "funcionario_codigo=" . $datos[0]["ejecutor"], "", $conn);
 	$radicador1 = busca_filtro_tabla("nombres,apellidos", "digitalizacion,funcionario", "funcionario=funcionario_codigo and documento_iddocumento=$doc", "", $conn);
 	$radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos", "buzon_salida A,funcionario B,dependencia_cargo C,dependencia D", "A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'", "A.idtransferencia ASC", $conn);
 	$responsable = busca_filtro_tabla("B.nombres,B.apellidos", "documento A,funcionario B", "A.ejecutor=B.funcionario_codigo AND iddocumento=" . $doc, "", $conn);
@@ -243,26 +242,24 @@ if ($doc <> FALSE) {
 		else
 			$origen = ucwords(strtolower($responsable[0]["nombres"] . " " . $responsable[0]["apellidos"]));
 		$destino = $usu;
-
 	} else if ($datos[0]["tipo_radicado"] == 2) {
 		$numero_folios = busca_filtro_tabla("", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
 		$tipo_radicacion = 'I';
 		$origen = ucwords(strtolower($responsable[0]["nombres"] . " " . $responsable[0]["apellidos"]));
-		$destino = $ejecutor[0]["nombres"].' '.$ejecutor[0]["apellidos"];
+		$destino = $ejecutor[0]["nombres"] . ' ' . $ejecutor[0]["apellidos"];
 	} else {
 		$origen = ucwords(strtolower($responsable[0]["nombres"] . " " . $responsable[0]["apellidos"]));
 		$destino = $radicador[0]["nombres"] . " " . $radicador[0]["apellidos"];
 	}
 
 
-  $distribuciones=busca_filtro_tabla("tipo_origen,origen,tipo_destino,destino","distribucion","documento_iddocumento=".$doc,"",$conn);
-  if($distribuciones['numcampos']){
-  	include_once($ruta_db_superior.'distribucion/funciones_distribucion.php');
+	$distribuciones = busca_filtro_tabla("tipo_origen,origen,tipo_destino,destino", "distribucion", "documento_iddocumento=" . $doc, "", $conn);
+	if ($distribuciones['numcampos']) {
+		include_once($ruta_db_superior . 'distribucion/funciones_distribucion.php');
 
-	$origen=retornar_origen_destino_distribucion($distribuciones[0]['tipo_origen'],$distribuciones[0]['origen']);
-	$destino=retornar_origen_destino_distribucion($distribuciones[0]['tipo_destino'],$distribuciones[0]['destino']);
-
-  } //fin if $distribuciones['numcampos']
+		$origen = retornar_origen_destino_distribucion($distribuciones[0]['tipo_origen'], $distribuciones[0]['origen']);
+		$destino = retornar_origen_destino_distribucion($distribuciones[0]['tipo_destino'], $distribuciones[0]['destino']);
+	} //fin if $distribuciones['numcampos']
 
 
 	$anexos = busca_filtro_tabla("count(*) AS cantidad", "anexos", "documento_iddocumento=" . $doc, "", $conn);
@@ -277,8 +274,8 @@ if ($doc <> FALSE) {
 	$nombre_empresa = "EMPRESA";
 	$logo_empresa = "";
 	$datos_fecha = $datos[0]['fecha_oracle'];
-	$info_fec=explode(" ",$datos_fecha);
-	$fecha=date_parse($info_fec[0]);
+	$info_fec = explode(" ", $datos_fecha);
+	$fecha = date_parse($info_fec[0]);
 	$datos_numero = $datos[0]['numero'];
 	$datos_asunto = $datos[0]['descripcion'];
 	$codigo_empresa = '';
@@ -287,23 +284,23 @@ if ($doc <> FALSE) {
 		$empresa = busca_filtro_tabla("A.nombre, A.valor", "configuracion A", "A.tipo='empresa'", "A.nombre", $conn);
 
 		for ($i = 0; $i < $empresa["numcampos"]; $i++) {
-			switch($empresa[$i]["nombre"]) {
-				case "nombre" :
+			switch ($empresa[$i]["nombre"]) {
+				case "nombre":
 					$nombre_empresa = $empresa[$i]["valor"];
 					break;
-				case "logo" :
+				case "logo":
 					$logo_empresa = $empresa[$i]["valor"];
 					break;
-				case "logo_colilla" :
-					$logo_colilla=$empresa[$i]["valor"];
+				case "logo_colilla":
+					$logo_colilla = $empresa[$i]["valor"];
 					break;
-				case "web" :
+				case "web":
 					$web_empresa = $empresa[$i]["valor"];
 					break;
-				case "codigo_empresa" :
+				case "codigo_empresa":
 					$codigo_empresa = $empresa[$i]["valor"];
 					break;
-				default :
+				default:
 					break;
 			}
 		}
@@ -313,13 +310,13 @@ if ($doc <> FALSE) {
 			$target = "centro";
 		}
 
-		$qr="";
-        $tamano_qr=70;
-		if($_REQUEST['colilla_vertical']==1){
-		    $tamano_qr=30;
-        }
-		if($datos[0]["numero"]){
-			$qr=mostrar_codigo_qr(0, $doc, 1, 40, 40);
+		$qr = "";
+		$tamano_qr = 70;
+		if ($_REQUEST['colilla_vertical'] == 1) {
+			$tamano_qr = 30;
+		}
+		if ($datos[0]["numero"]) {
+			$qr = mostrar_codigo_qr(0, $doc, 1, 40, 40);
 		}
 
 		$validar_impresion = busca_filtro_tabla("valor", "configuracion", "lower(nombre) LIKE'imprimir_colilla_automatico'", "", $conn);
@@ -328,225 +325,226 @@ if ($doc <> FALSE) {
 		} else {
 			abrir_url($enlace, '_self');
 		}
-?>
-<html>
-	<head>
-		<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.9.1.custom.min.css" />
-		<script src="js/jquery-1.8.2.js"></script>
-		<script src="js/jquery-ui-1.8rc3.custom.min.js"></script>
+		?>
+		<html>
 
-		<style type="text/css">
-			td {
-				font-family: VERDANA;
-				font-size: 6px;
-				height: 0px;
-				border: 0px solid;
-				vertical-align: top;
-				padding-left: 1px;
+		<head>
+			<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.9.1.custom.min.css" />
+			<script src="js/jquery-1.8.2.js"></script>
+			<script src="js/jquery-ui-1.8rc3.custom.min.js"></script>
+
+			<style type="text/css">
+				td {
+					font-family: VERDANA;
+					font-size: 6px;
+					height: 0px;
+					border: 0px solid;
+					vertical-align: top;
+					padding-left: 1px;
+				}
+
+				.colilla-vertical {
+					writing-mode: vertical-lr;
+				}
+			</style>
+			<script language="javascript">
+				function comando_documento(sComando) {
+					if (!document.execCommand) {
+						alert("Función no disponible en su explorador");
+						return false;
+					}
+					document.execCommand(sComando);
+				}
+
+				function imprime(atras) {
+					window.focus();
+					var url = "<?php echo $enlace; ?>";
+					window.print();
+					if (url != "") {
+						window.open("<?php echo $enlace; ?>", "<?php echo $target; ?>", "scrollbars=no");
+					} else {
+						window.history.go(-atras);
+					}
+				}
+			</script>
+		</head>
+		<?php
+
+		if ($_REQUEST['colilla_vertical'] == 1) {
+			?>
+
+			<body <?php echo (@$imprimir_colilla); ?>><br />
+				<div class="colilla-vertical">
+					<table align="right" border="0px" cellspacing="0" cellpadding="2" style="border-collapse:collapse; margin-right: 5px;">
+						<tr>
+							<td><?php echo ($qr); ?></td>
+
+							<!--?php echo ($logo_colilla!="") ? '<img src="'.$logo_colilla.'" style="width:140;height:20;"><br/><br/>' : '' ; ?-->
+							<td>
+								<?php
+								if (@$datos[0]['estado'] == 'INICIADO' && strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
+									$origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
+									$datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
+									if ($datos_radicacion_entrada[0]['tipo_origen'] == 1 || @$_REQUEST['radicado_rapido'] == 'radicacion_entrada') {
+										?>
+										<b>Recibido Por: <?php echo ($origen); ?></b><br />
+									<?php
+								} else {
+									?>
+										<b>Origen: <?php echo ($origen); ?></b><br />
+									<?php
+								}
+							} else {
+								if (strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
+									$datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
+									if ($datos_radicacion_entrada[0]['tipo_origen'] == 1) {
+										$origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
+										?>
+											<b>Recibido Por: <?php echo ($origen); ?></b><br />
+										<?php
+									} else {
+										?>
+											<b>Origen: <?php echo ($origen); ?></b><br />
+										<?php
+									}
+								} else {
+									?>
+										<b>Origen: <?php echo ($origen); ?></b><br />
+									<?php
+								}
+							}
+							?>
+								<?php if ((($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2) && $datos[0]['plantilla'] == 'radicacion_entrada') || $datos[0]['plantilla'] == 'pqrsf') { ?>
+									<b><?php
+										if (@$_REQUEST['descripcion_general']) {
+											$suspensivos = '';
+											$cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+											if (strlen($cadena) > 30) {
+												$suspensivos = '...';
+											}
+											echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
+										} else {
+											$suspensivos = '';
+											$cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+											if (strlen($cadena) > 30) {
+												$suspensivos = '...';
+											}
+
+											echo $cadena . $suspensivos;
+										} ?></b><br />
+								<?php } ?>
+								<b>Fecha: <?php echo $datos_fecha; ?></b><br />
+								<?php if ($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2 && $datos[0]['plantilla'] != 'pqrsf') { ?>
+									<b><span style="font-size: 7px">Rad: <?php echo ($info_fec[0] . "-" . $datos[0]["numero"] . "-" . $tipo_radicacion); ?></span></b>
+								<?php } else { ?>
+									<b><span style="font-size: 7px">Rad: <?php echo ($dependencia_creador[0]['codigo'] . "-" . $datos[0]["numero"] . "-" . $fecha["year"]); ?></span></b>
+								<?php } ?><br />
+								<strong><?php echo ($nombre_empresa); ?></strong>
+							</td>
+							<td>
+								<strong><span>El radicado no implica su aceptaci&oacute;n</b></span></strong><br>
+								<?php
+								if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
+									?>
+									<b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
+								<?php
+							}
+							?>
+
+
+							<td>
+						</tr>
+					</table>
+				</div>
+			</body>
+		<?php
+	} else {
+		?>
+
+			<body <?php echo (@$imprimir_colilla); ?>><br />
+				<table align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse; margin-right: 5px;">
+					<tr>
+						<td><?php echo ($qr); ?></td>
+						<td><strong><?php echo ($nombre_empresa); ?></strong><br /><br />
+							<!--?php echo ($logo_colilla!="") ? '<img src="'.$logo_colilla.'" style="width:140;height:20;"><br/><br/>' : '' ; ?-->
+							<?php if ($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2 && $datos[0]['plantilla'] != 'pqrsf') { ?>
+								<b><span style="font-size: 7px">Rad: <?php echo ($info_fec[0] . "-" . $datos[0]["numero"] . "-" . $tipo_radicacion); ?></span></b>
+							<?php } else { ?>
+								<b><span style="font-size: 7px">Rad: <?php echo ($dependencia_creador[0]['codigo'] . "-" . $datos[0]["numero"] . "-" . $fecha["year"]); ?></span></b>
+							<?php } ?><br />
+							<b>Fecha: <?php echo $datos_fecha; ?></b><br />
+
+							<?php if ((($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2) && $datos[0]['plantilla'] == 'radicacion_entrada') || $datos[0]['plantilla'] == 'pqrsf') { ?>
+								<b><?php
+									if (@$_REQUEST['descripcion_general']) {
+										$suspensivos = '';
+										$cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+										if (strlen($cadena) > 30) {
+											$suspensivos = '...';
+										}
+										echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
+									} else {
+										$suspensivos = '';
+										$cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+										if (strlen($cadena) > 30) {
+											$suspensivos = '...';
+										}
+										echo substr($cadena, 0, 60) . $suspensivos;
+									} ?></b><br />
+							<?php }
+
+						if (@$datos[0]['estado'] == 'INICIADO' && strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
+							$origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
+							$datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
+							if ($datos_radicacion_entrada[0]['tipo_origen'] == 1 || @$_REQUEST['radicado_rapido'] == 'radicacion_entrada') {
+								?>
+									<b>Recibido Por: <?php echo ($origen); ?></b><br />
+								<?php
+							} else {
+								?>
+									<b>Origen: <?php echo ($origen); ?></b><br />
+								<?php
+							}
+						} else {
+							if (strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
+								$datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
+								if ($datos_radicacion_entrada[0]['tipo_origen'] == 1) {
+									$origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
+									?>
+										<b>Recibido Por: <?php echo ($origen); ?></b><br />
+									<?php
+								} else {
+									?>
+										<b>Origen: <?php echo ($origen); ?></b><br />
+									<?php
+								}
+							} else {
+								?>
+									<b>Origen: <?php echo ($origen); ?></b><br />
+								<?php
+							}
+						}
+						if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
+							?>
+								<b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
+							<?php
+						}
+						?>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><br />
+							<center><b><span style="font-size: 8px">El radicado no implica su aceptaci&oacute;n</b></span></center>
+						</td>
+					</tr>
+				</table>
+			</body><?php
 			}
-            .colilla-vertical {
-                writing-mode: vertical-lr;
-            }
+			?>
 
-
-
-		</style>
-        <script language="javascript">
-            function comando_documento(sComando) {
-                if (!document.execCommand) {
-                    alert("Función no disponible en su explorador");
-                    return false;
-                }
-                document.execCommand(sComando);
-            }
-            function imprime(atras) {
-                window.focus();
-                var url = "<?php echo $enlace; ?>";
-                window.print();
-                if (url != "") {
-                    window.open("<?php echo $enlace; ?>","<?php echo $target; ?>","scrollbars=no");
-                } else {
-                    window.history.go(-atras);
-                }
-            }
-        </script>
-	</head>
-    <?php
-
-        if($_REQUEST['colilla_vertical']==1) {
-            ?>
-            <body <?php echo(@$imprimir_colilla); ?> ><br/>
-            <div class="colilla-vertical">
-                <table align="right" border="0px" cellspacing="0" cellpadding="2"
-                       style="border-collapse:collapse; margin-right: 5px;">
-                    <tr>
-                        <td><?php echo($qr); ?></td>
-
-                        <!--?php echo ($logo_colilla!="") ? '<img src="'.$logo_colilla.'" style="width:140;height:20;"><br/><br/>' : '' ; ?-->
-                        <td>
-                            <?php
-                            if (@$datos[0]['estado'] == 'INICIADO' && strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
-                                $origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
-                                $datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
-                                if ($datos_radicacion_entrada[0]['tipo_origen'] == 1 || @$_REQUEST['radicado_rapido'] == 'radicacion_entrada') {
-                                    ?>
-                                    <b>Recibido Por: <?php echo($origen); ?></b><br/>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <b>Origen: <?php echo($origen); ?></b><br/>
-                                    <?php
-                                }
-                            } else {
-                                if (strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
-                                    $datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
-                                    if ($datos_radicacion_entrada[0]['tipo_origen'] == 1) {
-                                        $origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
-                                        ?>
-                                        <b>Recibido Por: <?php echo($origen); ?></b><br/>
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <b>Origen: <?php echo($origen); ?></b><br/>
-                                        <?php
-                                    }
-                                } else {
-                                    ?>
-                                    <b>Origen: <?php echo($origen); ?></b><br/>
-                                    <?php
-                                }
-                            }
-                            ?>
-                            <?php if ((($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2) && $datos[0]['plantilla'] == 'radicacion_entrada') || $datos[0]['plantilla'] == 'pqrsf') { ?>
-                                <b><?php
-                                    if (@$_REQUEST['descripcion_general']) {
-                                        $suspensivos = '';
-                                        $cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
-                                        if (strlen($cadena) > 30) {
-                                            $suspensivos = '...';
-                                        }
-                                        echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
-                                    } else {
-                                        $suspensivos = '';
-                                        $cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
-                                        if (strlen($cadena) > 30) {
-                                            $suspensivos = '...';
-                                        }
-                                        
-                                        echo $cadena . $suspensivos;
-                                    } ?></b><br/>
-                            <?php } ?>
-                            <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
-                            <?php if ($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2 && $datos[0]['plantilla'] != 'pqrsf') { ?>
-                                <b><span style="font-size: 7px">Rad: <?php echo($info_fec[0] . "-" . $datos[0]["numero"] . "-" . $tipo_radicacion); ?></span></b>
-                            <?php } else { ?>
-                                <b><span style="font-size: 7px">Rad: <?php echo($dependencia_creador[0]['codigo'] . "-" . $datos[0]["numero"] . "-" . $fecha["year"]); ?></span></b>
-                            <?php } ?><br/>
-                            <strong><?php echo($nombre_empresa); ?></strong>
-                        </td>
-                        <td>
-                            <strong><span>El radicado no implica su aceptaci&oacute;n</b></span></strong><br>
-                            <?php
-                            if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
-                                ?>
-                                <b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
-                                <?php
-                            }
-                            ?>
-
-
-                        <td>
-                    </tr>
-                </table>
-            </div>
-            </body>
-            <?php
-        }else{
-        ?>
-    <body <?php echo(@$imprimir_colilla); ?>><br/>
-    <table align="right" border="0px" cellspacing="0" cellpadding="0"
-           style="border-collapse:collapse; margin-right: 5px;">
-        <tr>
-            <td><?php echo($qr); ?></td>
-            <td><strong><?php echo($nombre_empresa); ?></strong><br/><br/>
-                <!--?php echo ($logo_colilla!="") ? '<img src="'.$logo_colilla.'" style="width:140;height:20;"><br/><br/>' : '' ; ?-->
-                <?php if ($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2 && $datos[0]['plantilla'] != 'pqrsf') { ?>
-                    <b><span style="font-size: 7px">Rad: <?php echo($info_fec[0] . "-" . $datos[0]["numero"] . "-" . $tipo_radicacion); ?></span></b>
-                <?php } else { ?>
-                    <b><span style="font-size: 7px">Rad: <?php echo($dependencia_creador[0]['codigo'] . "-" . $datos[0]["numero"] . "-" . $fecha["year"]); ?></span></b>
-                <?php } ?><br/>
-                <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
-
-                <?php if ((($datos[0]["tipo_radicado"] == 1 || $datos[0]["tipo_radicado"] == 2) && $datos[0]['plantilla'] == 'radicacion_entrada') || $datos[0]['plantilla'] == 'pqrsf') { ?>
-                    <b><?php
-                        if (@$_REQUEST['descripcion_general']) {
-                            $suspensivos = '';
-                            $cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
-                            if (strlen($cadena) > 30) {
-                                $suspensivos = '...';
-                            }
-                            echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
-                        } else {
-                            $suspensivos = '';
-                            $cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
-                            if (strlen($cadena) > 30) {
-                                $suspensivos = '...';
-                            }
-                            echo substr($cadena, 0, 60) . $suspensivos;
-                        } ?></b><br/>
-                <?php }
-
-                if (@$datos[0]['estado'] == 'INICIADO' && strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
-                    $origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
-                    $datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
-                    if ($datos_radicacion_entrada[0]['tipo_origen'] == 1 || @$_REQUEST['radicado_rapido'] == 'radicacion_entrada') {
-                        ?>
-                        <b>Recibido Por: <?php echo($origen); ?></b><br/>
-                        <?php
-                    } else {
-                        ?>
-                        <b>Origen: <?php echo($origen); ?></b><br/>
-                        <?php
-                    }
-                } else {
-                    if (strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
-                        $datos_radicacion_entrada = busca_filtro_tabla("tipo_origen", "ft_radicacion_entrada", "documento_iddocumento=" . $doc, "", $conn);
-                        if ($datos_radicacion_entrada[0]['tipo_origen'] == 1) {
-                            $origen = ucwords(strtolower($dependencia_creador[0]["nombres"] . " " . $dependencia_creador[0]["apellidos"]));
-                            ?>
-                            <b>Recibido Por: <?php echo($origen); ?></b><br/>
-                            <?php
-                        } else {
-                            ?>
-                            <b>Origen: <?php echo($origen); ?></b><br/>
-                            <?php
-                        }
-                    } else {
-                        ?>
-                        <b>Origen: <?php echo($origen); ?></b><br/>
-                        <?php
-                    }
-                }
-                if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
-                    ?>
-                    <b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
-                    <?php
-                }
-                ?>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2"><br/>
-                <center><b><span style="font-size: 8px">El radicado no implica su aceptaci&oacute;n</b></span></center>
-            </td>
-        </tr>
-    </table>
-        </body><?php
-    }
-        ?>
-</html>
-<?php
-	}
+		</html>
+	<?php
+}
 }
 ?>
