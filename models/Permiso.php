@@ -1,10 +1,12 @@
 <?php
 
-class PermisoPerfil extends Model
+class Permiso extends Model
 {
-    protected $idpermiso_perfil;
+    protected $idpermiso;
+    protected $funcionario_idfuncionario;
+    protected $accion;
     protected $modulo_idmodulo;
-    protected $perfil_idperfil;
+    protected $tipo;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -19,8 +21,10 @@ class PermisoPerfil extends Model
     {
         $this->dbAttributes = (object)[
             'safe' => [
+                'funcionario_idfuncionario',
+                'accion',
                 'modulo_idmodulo',
-                'perfil_idperfil'
+                'tipo'
             ],
             'date' => []
         ];

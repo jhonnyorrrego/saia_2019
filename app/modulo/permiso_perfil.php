@@ -22,10 +22,35 @@ $Response = (object)[
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $Modulo = new Modulo($_REQUEST['module']);
-    
+    if (!$_REQUEST['module']) {
+        throw new Exception("Debe indicar el modulo", 1);
+    }
 
+    if (!$_REQUEST['profile']) {
+        throw new Exception("Debe indicar el perfil", 1);
+    }
+    //elimino la relacion anterior para evitar consultar la existencia
+    $delete = PermisoPerfil::executeDelete([
+        'modulo_idmodulo' => $_REQUEST['module'],
+        'perfil_idperfil' => $_REQUEST['profile']
+    ]);
 
+    if ($_REQUEST['add']) {
+        $pk = PermisoPerfil::newRecord([
+            'modulo_idmodulo' => $_REQUEST['module'],
+            'perfil_idperfil' => $_REQUEST['profile']
+        ]);
+
+        if (!$pk) {
+            throw new Exception("Error al guardar", 1);
+        }
+
+        $Response->message = "Permiso asignado";
+    } else if (!$delete) {
+        throw new Exception("Error al eliminar", 1);
+    } else {
+        $Response->message = "Permiso eliminado";
+    }
 
     $Response->success = 1;
 } catch (\Throwable $th) {

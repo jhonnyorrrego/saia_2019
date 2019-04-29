@@ -63,7 +63,6 @@ class SessionController
         if (self::$data) {
             return self::$data && self::$data["idfuncionario"] == $this->admin;
         } else {
-            alerta(123);
             throw new Exception("invalid session", 1);
         }
     }

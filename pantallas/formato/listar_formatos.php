@@ -53,14 +53,14 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
                             $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';
                             $enlace_adicionar .= http_build_query($_REQUEST + ['idformato' => $lista_formatos[$i]['idformato']]);
                             ?>
-                    <tr>
-                        <td>
-                            <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe">
-                                <?= $etiqueta ?>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
+                            <tr>
+                                <td>
+                                    <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe">
+                                        <?= $etiqueta ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     <?php endfor; ?>
                 </table>
             </div>
@@ -68,4 +68,4 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
     </div>
 </body>
 
-</html> 
+</html>

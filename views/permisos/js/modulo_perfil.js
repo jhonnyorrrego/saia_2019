@@ -33,7 +33,7 @@ $(function () {
 
             $tdList.eq(1).html($('<input>', {
                 type: 'checkbox',
-                dataId: node.key,
+                'data-id': node.key,
                 checked: node.selected
             }));
         }
@@ -45,7 +45,7 @@ $(function () {
     });
 
     $(document).on('click', ':checkbox', function () {
-        addPermission($(this).data('id'), $(this).is('checked'));
+        addPermission($(this).data('id'), $(this).is(':checked'));
     });
 
     $('#profile').on('select2:select', function () {
@@ -58,63 +58,32 @@ $(function () {
     });
 
     function addPermission(moduleId, add) {
-        $.post(`${baseUrl}app/modulo/permiso_perfil.php`, {
-            key: localStorage.getItem('key'),
-            token: localStorage.getItem('token'),
-            module: moduleId,
-            add: add
-        }, function (response) {
-            if (response.success) {
-                if (response.data) {
-                    showModal()
-                } else {
+        if ($('#profile').val()) {
+            $.post(`${baseUrl}app/modulo/permiso_perfil.php`, {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                module: moduleId,
+                add: add ? 1 : 0,
+                profile: $('#profile').val()
+            }, function (response) {
+                if (response.success) {
                     top.notification({
                         type: 'success',
                         message: response.message
                     });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
                 }
-            } else {
-                top.notification({
-                    type: 'error',
-                    message: response.message
-                });
-            }
-        }, 'json');
-    }
-
-    function showModal(moduleId) {
-        top.confirm({
-            id: "question",
-            type: "info",
-            message: "Habilitar creación del formato",
-            position: "center",
-            timeout: 0,
-            buttons: [
-                [
-                    "<button><b>Si</b></button>",
-                    function (instance, toast) {
-                        addPermission(moduleId, true);
-                        instance.hide(
-                            { transitionOut: "fadeOut" },
-                            toast,
-                            "button"
-                        );
-                    },
-                    true
-                ],
-                [
-                    "<button>NO</button>",
-                    function (instance, toast) {
-                        addPermission(moduleId, false);
-                        instance.hide(
-                            { transitionOut: "fadeOut" },
-                            toast,
-                            "button"
-                        );
-                    }
-                ]
-            ]
-        });
+            }, 'json');
+        } else {
+            top.notification({
+                type: 'error',
+                message: 'Debe indicar un perfil'
+            });
+        }
     }
 
     function findProfileOptions() {
