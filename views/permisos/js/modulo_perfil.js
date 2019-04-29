@@ -57,6 +57,13 @@ $(function () {
         });
     });
 
+    $('#profile_settings').on('click', function () {
+        top.topModal({
+            url: `${baseUrl}views/permisos/perfiles.php`,
+            title: 'Perfiles',
+        });
+    });
+
     function addPermission(moduleId, add) {
         if ($('#profile').val()) {
             $.post(`${baseUrl}app/modulo/permiso_perfil.php`, {
