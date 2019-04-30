@@ -363,12 +363,10 @@ function priority($documentId, $priority)
  */
 function documental_type($documentId)
 {
-    global $conn;
+    $Documento = new Documento($documentId);
 
-    $findSerie = busca_filtro_tabla('LOWER(b.nombre)', 'documento a,serie b', 'a.serie = b.idserie and a.iddocumento=' . $documentId, '', $conn);
-
-    if ($findSerie['numcampos'] && $findSerie[0][0]) {
-        return '<span class="hint-text">' . ucfirst($findSerie[0][0]) . '</span>';
+    if ($Documento) {
+        return '<span class="hint-text">' . $Documento->getSerie()->nombre . '</span>';
     } else {
         return '';
     }
