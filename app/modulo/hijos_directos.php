@@ -25,7 +25,7 @@ try {
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
 
-    if ($grouperParent == 1 && $parent) {
+    if ($grouperParent == 1 || $parent == 0) {
         $Modulo = Modulo::findByAttributes(['nombre' => 'dashboard']);
         $Response->data[] = [
             'idmodule' => $Modulo->getPK(),

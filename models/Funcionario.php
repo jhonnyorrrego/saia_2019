@@ -113,11 +113,11 @@ class Funcionario extends Model
      */
     public function getBasicInformation()
     {
-        return array(
+        return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
             'cutedPhoto' => $this->getImage('foto_recorte')
-        );
+        ];
     }
 
     /**
@@ -187,7 +187,7 @@ class Funcionario extends Model
     }
 
     /**
-     * create a temporal image
+     * obtiene una foto del funcionario
      *
      * @param string $image attribute for find ej . foto_recorte foto_original
      * @param boolean $force omit if the temporal image exist
@@ -198,36 +198,11 @@ class Funcionario extends Model
     {
         global $ruta_db_superior;
 
-        $tempRoute = $ruta_db_superior . $this->getTemporalRoute();
-        $Storage = new SaiaStorage("archivos");
-        $Image = json_decode($this->$image);
-
-        if (is_object($Image)) {
-            if ($Storage->get_filesystem()->has($Image->ruta)) {
-                $binary = StorageUtils::get_binary_file($this->$image);
-
-                if (!is_dir($tempRoute)) {
-                    mkdir($tempRoute, 0777);
-                }
-
-                $route = explode('/', $Image->ruta);
-                $fileName = end($route);
-                $finalRoute = $tempRoute . '/' . $fileName;
-
-                if (!is_file($finalRoute) || $force) {
-                    $file = fopen($finalRoute, 'w+');
-
-                    if ($file) {
-                        $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                        fwrite($file, $content);
-                        fclose($file);
-                    }
-                }
-
-                return $this->getTemporalRoute() . '/' . $fileName;
-            }
-        } else if($image != 'firma'){
+        if ($this->$image) {
+            return TemporalController::createTemporalFile($this->$image, '', $force)->route;
+        } else if ($image != 'firma') {
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
+            $tempRoute = $ruta_db_superior . $this->getTemporalRoute();
 
             $name = strtok($this->nombres, " ") . ' ' . strtok($this->apellidos, " ");
             $avatar = $avatar
@@ -235,10 +210,6 @@ class Funcionario extends Model
                 ->background('#48b0f7')
                 ->color('#fff')
                 ->generate();
-
-            if (!is_dir($tempRoute)) {
-                mkdir($tempRoute, 0777);
-            }
 
             $fileName = 'avatar.jpg';
             $avatar->save($tempRoute . '/' . $fileName);
@@ -248,8 +219,9 @@ class Funcionario extends Model
                 'extension' => 'jpg',
             );
 
-            if ($this->updateImage($imageData, $image))
+            if ($this->updateImage($imageData, $image)){
                 return $this->getImage($image, true);
+            }
         }
     }
 
@@ -263,22 +235,15 @@ class Funcionario extends Model
      */
     public function updateImage($image, $attribute)
     {
-        $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extension'];
+        $fileName = "{$attribute}-{$this->nit}.{$image['extension']}";
+        $this->$attribute = TemporalController::createFileDbRoute(
+            "fotos/{$fileName}",
+            "imagenes",
+            $image['binary']
+        );
 
-        $tipo_almacenamiento = new SaiaStorage("imagenes");
-        $content = $tipo_almacenamiento->almacenar_contenido($ruta, $image['binary'], false);
-
-        if ($content) {
-            $this->$attribute = json_encode(array(
-                "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
-                "ruta" => $ruta
-            ));
-
-            $this->save();
-            return $this->$attribute;
-        } else {
-            return false;
-        }
+        $this->save();
+        return $this->$attribute;
     }
 
     public static function findAllByTerm($term, $field = 'idfuncionario')
@@ -310,7 +275,7 @@ SQL;
         $users = array_unique($users);
         $list = implode(',', $users);
         $sql = "select * from funcionario where funcionario_codigo in ({$list})";
-        
+
         return self::findBySql($sql);
     }
 
@@ -332,14 +297,16 @@ SQL;
      * @param integer $userId
      * @return boolean
      */
-    public function isValidToken($token, $userId){
+    public function isValidToken($token, $userId)
+    {
         return Funcionario::countRecords([
             'token' => $token,
             self::getPrimaryLabel() => $userId
         ]);
     }
 
-    public static function excludeCondition(){
+    public static function excludeCondition()
+    {
         $users = [
             self::CEROK,
             self::RADICADOR_SALIDA,
@@ -349,7 +316,8 @@ SQL;
         return " idfuncionario not in(" . implode(',', $users) . ") ";
     }
 
-    public static function checkAdition(){
+    public static function checkAdition()
+    {
         $exclude = self::excludeCondition();
         $sql = <<<SQL
             select
@@ -363,12 +331,12 @@ SQL;
 SQL;
         $row = StaticSql::search($sql);
         $total = $row[0]['total'];
-        
+
         $Configuracion = Configuracion::findByAttributes([
             'nombre' => 'numero_usuarios'
         ]);
         $limit = $Configuracion->getValue();
-        
+
         return $limit > $total;
     }
 }

@@ -63,7 +63,6 @@ class SessionController
         if (self::$data) {
             return self::$data && self::$data["idfuncionario"] == $this->admin;
         } else {
-            alerta(123);
             throw new Exception("invalid session", 1);
         }
     }
@@ -129,6 +128,20 @@ class SessionController
     }
 
     /**
+     * retorna la carpeta temporal en caso de tenenr sesion
+     * de otro modo retorna la ruta temporal para saia
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-12
+     */
+    public static function getTemporalDir(){
+        return self::hasActiveSession() ?
+            self::getValue('ruta_temp_funcionario') :
+            TemporalController::$saiaDir;
+    }
+
+    /**
      * retorna el id de la sesion
      *
      * @return void
@@ -140,6 +153,13 @@ class SessionController
         return session_id();
     }
 
+    /**
+     * verifica si tiene una sesion activa
+     *
+     * @return integer idfuncionario de la sesion
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-12
+     */
     public static function hasActiveSession(){
         if($_SESSION){
             self::$data = $_SESSION;
@@ -148,6 +168,14 @@ class SessionController
         return self::$data['idfuncionario'] ?? 0;
     }
 
+    /**
+     * cierra la sesion en el sistema
+     *
+     * @param string $message mensaje a mostrar 
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-12
+     */
     public static function logout($message = '')
     {
         FuncionarioController::saveLogout();

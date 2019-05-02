@@ -14,40 +14,16 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta charset="utf-8" />
     <title>SAIA - SGDEA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta content="" name="description" />
-    <meta content="" name="author" />
-
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
-    <?= jquery() ?>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js" data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl"></script>
-    <script>
-        if (Session.check("<?= $ruta_db_superior ?>")) {
-            window.location = Session.getBaseUrl() + 'views/dashboard/dashboard.php';
-        }
-    </script>
-    <?= bootstrap() ?>
-    <?= theme() ?>
-    <?= icons() ?>
-    <?= breakpoint() ?>
-
-    <script type="text/javascript">
-        window.onload = function() {
-            // fix for windows 8
-            if (navigator.appVersion.indexOf("Windows NT 6.2") != -1)
-                document.head.innerHTML += '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/pages/css/windows.chrome.fix.css" />'
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#48b0f7">
+    <meta name="description" content="sistema de gestión documental">
+    <link rel="manifest" href="<?= $ruta_db_superior ?>manifest.json">
 </head>
 
 <body class="bg-white">
@@ -55,7 +31,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="row bg-white m-0 p-0 h-100" id="content">
             <!-- carousel-->
             <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel_container">
-                <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel">
+                <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel" data-wrap="false">
                     <!-- Indicators -->
                     <ol class="carousel-indicators" id="indicators"></ol>
                     <div class="carousel-inner mx-0 px-0" id="homepageItems"></div>
@@ -77,7 +53,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="col-12">
                         <div class="row py-3 mx-0">
                             <div class="col-12">
-                                <img id="logo" width="200">
+                                <img id="logo" width="200" alt="SAIA">
                             </div>
                         </div>
                         <div class="row mx-0">
@@ -89,17 +65,21 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="row mx-0">
                             <div class="col-12">
                                 <div class="form-group form-group-default">
-                                    <label><i class="fa fa-user"></i> Usuario</label>
+                                    <label for="username" class="text-dark">
+                                        <i class="fa fa-user"></i> Usuario
+                                    </label>
                                     <div class="controls">
-                                        <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control" required>
+                                        <input id="username" type="text" name="username" placeholder="Nombre de Usuario" class="form-control" required>
                                     </div>
                                 </div>
                                 <!-- END Form Control-->
                                 <!-- START Form Control-->
                                 <div class="form-group form-group-default">
-                                    <label><i class="fa fa-lock"></i> Contraseña</label>
+                                    <label for="password" class="text-dark">
+                                        <i class="fa fa-lock"></i> Contraseña
+                                    </label>
                                     <div class="controls">
-                                        <input type="password" class="form-control" name="password" placeholder="Clave de acceso" required autocomplete>
+                                        <input id="password" type="password" class="form-control" name="password" placeholder="Clave de acceso" required autocomplete>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +96,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <!-- END Form Control-->
                         <div class="row mx-0">
                             <div class="col-12">
-                                <button class="btn btn-lg bg-institutional" id="access">Ingresar</button>
+                                <button class="btn btn-lg btn-complete bg-institutional" id="access">Ingresar</button>
                             </div>
                         </div>
                     </div>
@@ -124,7 +104,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <!-- END Login Right Container-->
         </div>
-        <div class="row mx-0 px-0 bg-institutional fixed-bottom" id="footer">
+        <div class="row mx-0 px-0 btn-complete bg-institutional fixed-bottom" id="footer">
             <div class="col-12">
                 <p class="text-left text-white my-auto"><b>© 2019 CERO K. Todos los derechos reservados.</b></p>
             </div>
@@ -174,9 +154,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <!-- modal -->
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/login/js/login.js"></script>    
+    <script>
+        if (
+            localStorage.getItem('token') &&
+            localStorage.getItem('key')
+        ) {
+            window.location = '<?= $ruta_db_superior ?>views/dashboard/dashboard.php';
+        }
+    </script>
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= icons() ?>
+    <?= breakpoint() ?>
+    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js" data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl"></script>
+    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>
+    <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
+    <script defer src="<?= $ruta_db_superior ?>views/login/js/login.js"></script>
 </body>
 
-</html> 
+</html>

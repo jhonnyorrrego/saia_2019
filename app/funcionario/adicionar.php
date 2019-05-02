@@ -58,13 +58,6 @@ try {
     $Funcionario->firma = $dbRoute;
     $Funcionario->perfil = implode(',', $_REQUEST['perfil']);
 
-    if (!$Funcionario->login) {
-        $login = strtolower($Funcionario->nombres)[0];
-        $login .= '.' . strtok(strtolower($Funcionario->apellidos), ' ');
-        $login .= rand(0, 1000);
-        $Funcionario->login = $login;
-    }
-
     if (!$Funcionario->save()) {
         throw new Exception("Error al guardar", 1);
     }

@@ -86,11 +86,4 @@ $(function(){
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
     }
-
-    let interval = window.setInterval(() => {
-        if ($(listSelector).find(".module_link").length){
-            $(listSelector).find(".module_link").first().trigger("click");
-            clearInterval(interval);
-        }
-    }, 50);
 });

@@ -465,7 +465,7 @@ class Files {
             timeout: 0,
             buttons: [
                 [
-                    "<button><b>YES</b></button>",
+                    "<button><b>Si</b></button>",
                     function (instance, toast) {
                         if (filesInstance.options.delete(key)) {
                             instance.hide(

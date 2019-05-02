@@ -92,6 +92,10 @@ include_once $ruta_db_superior . "db.php";
             background-color: #48b0f7;
             border-color: #48b0f7;
         }
+
+        .table thead tr th:first-child {
+            padding-left: 0px !important;
+        }
     </style>
 </head>
 
@@ -155,7 +159,9 @@ include_once $ruta_db_superior . "db.php";
             ?>
                 <button class="btn btn-secondary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Descargar" id="boton_exportar_excel" style=""><i class="fa fa-download"></i></button>
 
-                <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe></div>
+                <div class="pull-right d-none" valign="middle">
+                    <iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe>
+                </div>
                 <?php
                 $llave = null;
                 preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
@@ -265,6 +271,8 @@ include_once $ruta_db_superior . "db.php";
         $(".select_mensajeros_ditribucion").select2();
         $table.bootstrapTable({
             method: 'get',
+            classes: "table table-hover table-bordered mt-0",
+            theadClasses: "thead-light",
             cache: false,
             height: getHeight(),
             striped: true,
@@ -288,11 +296,11 @@ include_once $ruta_db_superior . "db.php";
                 columns: 'fa-th-list',
                 advancedSearchIcon: 'fa-search'
             },
-            rowStyle: function rowStyle(row, index) {
+            rowStyle: () => {
                 return {
-                    classes: 'text-nowrap another-class',
+                    classes: 'text-nowrap',
                     css: {
-                        "font-size": "10px"
+                        "font-size": "11px"
                     }
                 };
             },
@@ -410,6 +418,7 @@ include_once $ruta_db_superior . "db.php";
                 var ruta_file = "<?php echo ($ruta_temporal); ?>/reporte_<?php echo ($datos_busqueda[0]["nombre"] . '_' . date('Ymd') . '.xls'); ?>";
                 var url = "exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia=" + ruta_file + "&rows=" + $("#busqueda_registros").val() * 4 + "&actual_row=0&variable_busqueda=" + $("#variable_busqueda").val() + "&idbusqueda_filtro_temp=<?php echo (@$_REQUEST['idbusqueda_filtro_temp']); ?>&idbusqueda_filtro=<?php echo (@$_REQUEST['idbusqueda_filtro']); ?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']); ?>";
                 window.open(url, "iframe_exportar_saia");
+                $('#iframe_exportar_saia').parent().removeClass('d-none');
             } else {
                 notificacion_saia('<b>ATENCI&Oacute;N</b><br>No hay registros para exportar', 'warning', '', 2000);
             }
