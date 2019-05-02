@@ -98,6 +98,15 @@ $params = json_encode([
                                 <option value="">Seleccione...</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="pl-1 mb-0 mt-1">Estado</label>
+                            <div class="radio radio-success my-0">
+                                <input type="radio" value="1" name="estado" id="activo" checked>
+                                <label for="activo">Activo</label>
+                                <input type="radio" value="0" name="estado" id="inactivo">
+                                <label for="inactivo">Inactivo</label>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

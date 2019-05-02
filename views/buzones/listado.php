@@ -31,11 +31,15 @@ $component = StaticSql::search($sql);
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>';
         var UrlsourceData = 'app/busquedas/datosBootstrapTable.php';
         var table = $('#table');
+        var sessionVars = {
+            key: localStorage.getItem('key'),
+            token: localStorage.getItem('token')
+        };
 
         table.bootstrapTable({
             url: baseUrl + UrlsourceData,
             queryParams: function(queryParams) {
-                queryParams = $.extend(queryParams, params);
+                queryParams = $.extend(queryParams, params, sessionVars);
                 return queryParams;
             },
             sidePagination: 'server',

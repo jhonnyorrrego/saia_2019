@@ -133,7 +133,7 @@ function theme()
     $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.min.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $modernizr . $css . $js;

@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 

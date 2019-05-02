@@ -7,13 +7,19 @@ class Session {
     init() {
         let session = this;
 
-        if (!localStorage.getItem('user')) {
+        if (
+            !localStorage.getItem('user') &&
+            localStorage.getItem('token') &&
+            localStorage.getItem('key')
+        ) {
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
                 url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
                 data: {
-                    type: 'session'
+                    type: 'session',
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key')
                 },
                 async: false,
                 success: function (response) {
@@ -63,12 +69,13 @@ class Session {
     static check(baseUrl) {
         var access = false;
 
-        if (localStorage.getItem('key') > 0) {
+        if (localStorage.getItem('token')) {
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 url: `${baseUrl}app/funcionario/verificar_session.php`,
                 data: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key')
                 },
                 async: false,
@@ -109,8 +116,15 @@ class Session {
 
     static defineGlobalChecker() {
         top.window.checkSession = function () {
-            if (!localStorage.getItem('key')) {
+            if (!localStorage.getItem('key') || !localStorage.getItem('token')) {
                 window.location = Session.getBaseUrl() + 'views/login/login.php';
+            }
+        }
+
+        top.window.checkLogoutResponse = function (xhr) {
+            if (xhr.status == 200 && xhr.responseText.indexOf('logout') != -1) {
+                let node = $(xhr.responseText);
+                eval(node.html());
             }
         }
     }

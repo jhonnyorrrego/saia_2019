@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 use Imagine\Image\Box;
 use Imagine\Image\Point;

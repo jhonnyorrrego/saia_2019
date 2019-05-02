@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -12,19 +10,18 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
+
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
     'data' => new stdClass(),
     'message' => "",
-    'success' => 1
+    'success' => 0
 ];
 
-if (isset($_REQUEST['type'], $_SESSION['idfuncionario'])) {
-
+if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     if (isset($_REQUEST['key']) && $_REQUEST['key'] != $_SESSION['idfuncionario']) {
         $Response->message = "Debe iniciar sesion";
-        $Response->success = 0;
     } else {
         switch ($_REQUEST['type']) {
             case 'session':
@@ -46,7 +43,7 @@ if (isset($_REQUEST['type'], $_SESSION['idfuncionario'])) {
                 $data = array_filter($Funcionario->getAttributes(), function ($key) {
                     return in_array($key, [
                         'nit', 'nombres', 'apellidos', 'login', 'clave', 'direccion',
-                        'telefono', 'email', 'perfil', 'ventanilla_radicacion'
+                        'telefono', 'email', 'perfil', 'ventanilla_radicacion', 'estado'
                     ]);
                 }, ARRAY_FILTER_USE_KEY);
 
@@ -60,13 +57,13 @@ if (isset($_REQUEST['type'], $_SESSION['idfuncionario'])) {
                 break;
             default:
                 $Response->message = 'tipo indefinido';
-                $Response->success = 0;
                 break;
         }
+
+        $Response->success = $Response->data ? 1 : 0;
     }
 } else {
     $Response->message = "Debe iniciar sesion";
-    $Response->success = 0;
 }
 
 echo json_encode($Response);
