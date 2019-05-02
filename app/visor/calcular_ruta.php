@@ -20,40 +20,42 @@ $Response = (object)array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if ($_REQUEST['iddoc']) {
-        if($_REQUEST['actualizar_pdf']){
-            include_once $ruta_db_superior . 'class_impresion_' . $_REQUEST['exportar'] . '.php';
-            
-            $Documento = new Documento($_REQUEST['iddoc']);
-            $jsonRoute = json_decode($Documento->pdf);
-        }else{
-            $jsonRoute = json_decode(base64_decode($_REQUEST['ruta']));
-        }
+    switch ($_REQUEST['type']) {
+        case 'TIPO_ANEXO_PDF':
+            $Anexo = new Anexo($_REQUEST['typeId']);
+            $route = $Anexo->ruta;
+            $force = true;
+            break;
+        case 'TIPO_ANEXOS_PDF':
+            $Anexo = new Anexos($_REQUEST['typeId']);
+            $route = $Anexo->ruta;
+            $force = true;
+            break;
+        default:
+            if ($_REQUEST['actualizar_pdf']) {
+                include_once $ruta_db_superior . 'class_impresion_' . $_REQUEST['exportar'] . '.php';
 
-        if (is_object($jsonRoute)) {
-            $temporalFile = $_SESSION["ruta_temp_funcionario"] . '/' . strtolower(basename($jsonRoute->ruta));
-            $relativeRoute = $ruta_db_superior . $temporalFile;
-
-            if ($_REQUEST['actualizar_pdf'] || !is_file($relativeRoute)) {
-                $content = StorageUtils::get_file_content(json_encode($jsonRoute));
-                if($content){
-                    file_put_contents($relativeRoute, $content);
-                }
-                
-                if (!is_file($relativeRoute)) {
-                    $Response->message = "Error al generar el PDF";
-                }
+                $Documento = new Documento($_REQUEST['iddoc']);
+                $route = $Documento->pdf;
+            } else {
+                $route = base64_decode($_REQUEST['ruta']);
             }
 
-            if(is_file($relativeRoute)){
-                $Response->data = $temporalFile;
-                $Response->success = 1;
-            }
+            $force = $_REQUEST['actualizar_pdf'];
+            break;
+    }
+
+    if ($route) {
+        $image = TemporalController::createTemporalFile($route);
+
+        if ($image->success && is_file($ruta_db_superior . $image->route)) {
+            $Response->data = $image->route;
+            $Response->success = 1;
         } else {
-            $Response->message = "Error al resolver la ruta del pdf";
+            $Response->message = "Error al generar el archivo";
         }
     } else {
-        $Response->message = "documento invalido";
+        $Response->message = "Error al resolver la ruta del pdf";
     }
 } else {
     $Response->message = "Debe iniciar sesion";

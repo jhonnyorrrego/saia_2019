@@ -90,8 +90,12 @@ $(function () {
     }
 
     $('#show_pages').on('click', function () {
-        $('#pages_container').load(`${baseUrl}views/pagina/pagina.php`, {
-            documentId: params.documentId
+        let route = `${baseUrl}views/visor/viewer_annotate_image.php?`;
+        route += $.param({
+            typeId: params.documentId,
+            type: 'TIPO_PAGINA'
         });
+
+        $('#pages_iframe').attr('src', route);
     });
 });

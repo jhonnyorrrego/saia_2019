@@ -10,12 +10,14 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
+include_once $ruta_db_superior . 'assets/librerias.php';
+
 $jsParams = json_encode([
     'baseUrl' => $ruta_db_superior,
-    'id' => $_REQUEST['documentId']
+    'typeId' => $_REQUEST['typeId'],
+    'type' => $_REQUEST['type']
 ]);
 
-include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,6 +26,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta charset="utf-8" />
     <title>PDFJSAnnotate</title>
     <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/shared/toolbar.css" />
+
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= icons() ?>
+    <?= jqueryUi() ?>
 </head>
 
 <body>
@@ -54,8 +62,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <script src="<?= $ruta_db_superior; ?>assets/theme/assets/js/cerok_libraries/comments/comments.js" type="text/javascript"></script>
-    <?= jqueryUi() ?>
-    <script src="<?= $ruta_db_superior; ?>views/pagina/js/pagina.js" data-pages-params='<?= $jsParams ?>' type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior; ?>views/visor/js/viewer_annotate_image.js" data-pages-params='<?= $jsParams ?>' type="text/javascript"></script>
 </body>
 
 </html> 
