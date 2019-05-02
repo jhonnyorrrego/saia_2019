@@ -38,6 +38,10 @@ class Documento extends Model
     protected $prioridad;
     protected $dbAttributes;
 
+    //relations
+    protected $User;
+    protected $Serie;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -173,12 +177,41 @@ class Documento extends Model
     }
 
     /**
-     * @return  string Nombre del Creador
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * obtiene una instancia del funcionario del campo ejeuctor
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
      */
-    public function getCreador()
+    public function getUser()
     {
-        $Funcionario = $this->getRelationFk('Funcionario', 'ejecutor');
-        return $Funcionario->getName();
+        if (!$this->User) {
+            $this->User = $this->getRelationFk('Funcionario', 'ejecutor');
+        }
+
+        return $this->User;
+    }
+
+    /**
+     * obtiene una instancia de la serie asociada
+     * en caso de no tener genera una con el nombre 
+     * sin asignar
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getSerie()
+    {
+        if ($this->serie) {
+            if (!$this->Serie) {
+                $this->Serie = $this->getRelationFk('Serie', 'serie');
+            }
+        } else {
+            $this->Serie = new Serie();
+            $this->Serie->nombre = 'Sin asignar';
+        }
+
+        return $this->Serie;
     }
 }
