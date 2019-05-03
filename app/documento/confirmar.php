@@ -14,18 +14,22 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
-    'data' => [],
-    'message' => '',
-    'success' => 0
+    'rows' => [],
+    'total' => ''
 ];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if (!$_REQUEST['documentId']) {
+        throw new Exception("Documento invalido", 1);
+    }
+
     include_once $ruta_db_superior . 'class_transferencia.php';
     aprobar($_REQUEST['documentId']);
     $Response->success = 1;
-} else {
-    $Response->message = "Debe iniciar sesion";
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
-

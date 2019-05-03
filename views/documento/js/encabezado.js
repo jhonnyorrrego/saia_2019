@@ -258,6 +258,7 @@ $(function () {
             `${baseUrl}app/documento/eventos_fab.php`,
             {
                 key: localStorage.getItem("key"),
+                token: localStorage.getItem("token"),
                 documentId: documentId
             },
             function (response) {
@@ -318,7 +319,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.managers.route, "_self");
+                        seeManagers()
                     }
                 });
             }
@@ -363,6 +364,7 @@ $(function () {
             `${baseUrl}app/documento/confirmar.php`,
             {
                 key: localStorage.getItem("key"),
+                token: localStorage.getItem("token"),
                 documentId: documentId
             },
             function (response) {
@@ -382,6 +384,17 @@ $(function () {
             },
             "json"
         );
+    }
+
+    function seeManagers() {
+        top.topModal({
+            url: `${baseUrl}views/documento/responsables.php`,
+            params: {
+                documentId: documentId
+            },
+            title: 'Ruta actual asignada al documento',
+            buttons: {}
+        })
     }
 
     function findMenu() {
