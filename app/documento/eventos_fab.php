@@ -15,94 +15,118 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)array(
     'data' => [],
-    'message' => "",
+    'message' => '',
     'success' => 0
 );
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    global $conn;
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $userCode = $_SESSION["usuario_actual"]; //funcionario_codigo
-    $documentId = $_REQUEST['documentId'];
-    $seePreviousManagers = false;
-    $seeManagers = false;
-    $editButton = false;
-    $returnButton = false;
-    $confirmButton = true;
-
-    $permissions = array();
-    $findPermissions = busca_filtro_tabla("", "permiso_documento", "funcionario='" . $userCode . "' AND documento_iddocumento=" . $documentId, "", $conn);
-    if ($findPermissions["numcampos"]) {
-        $permissions = explode(",", $findPermissions[0]["permisos"]);
+    if (!$_REQUEST['documentId']) {
+        throw new Exception('Documento invalido', 1);
     }
 
-    $findManager = busca_filtro_tabla("destino,estado,plantilla", "buzon_entrada,documento", "iddocumento=archivo_idarchivo and archivo_idarchivo=" . $documentId, "buzon_entrada.idtransferencia asc", $conn);
+    $userCode = SessionController::getValue('usuario_actual'); //funcionario_codigo
+    $documentId = $_REQUEST['documentId'];
 
-    if ($findManager["numcampos"]) {
-        if ($findManager[0]["estado"] == "ACTIVO") {
-            $seePreviousManagers = true;
-        }
+    $sql = <<<SQL
+        SELECT
+            destino,
+            estado
+        FROM
+            buzon_entrada a JOIN
+            documento b
+            ON
+                b.iddocumento = a.archivo_idarchivo
+        WHERE
+            archivo_idarchivo = {$documentId}
+        ORDER BY
+            a.idtransferencia ASC
+SQL;
+    $findMaker = StaticSql::search($sql, 0, 1)[0];
 
-        if (in_array("m", $permissions)) {
-            if (!$_REQUEST["vista"]) {
-                $editButton = true;
-            }
-        }
+    $editButton = Documento::canEdit($userCode, $documentId);
+    $seeManagers = $findMaker['estado'] == 'ACTIVO' &&
+        Acceso::findByAttributes([
+            'accion' => Acceso::ACCION_ELIMINAR,
+            'estado' => 1,
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId
+        ]);
+    $returnButton = false;
+    $confirmButton = false;
 
-        $findCurrent = busca_filtro_tabla("A.idtransferencia as idtrans,A.destino,A.ruta_idruta", "buzon_entrada A", "A.activo=1 and A.archivo_idarchivo=" . $documentId . " and (A.nombre='POR_APROBAR') and A.destino='" . $userCode . "'", "A.idtransferencia", $conn);
-        if ($findCurrent["numcampos"]) {
-            $findPrevious = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $findCurrent[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $documentId . " and origen='" . $userCode . "'", "", $conn);
-        }
+    $sql = <<<SQL
+        SELECT destino
+        FROM buzon_entrada
+        WHERE
+            activo = 1 AND
+            archivo_idarchivo = {$documentId} AND 
+            nombre = 'POR_APROBAR' AND
+            destino= {$userCode}
+        ORDER BY idtransferencia
+SQL;
+    $findCurrent = StaticSql::search($sql);
 
-        if ($findManager["numcampos"] > 0 && $findManager[0]["destino"] != $userCode) {
+    if ($findCurrent[0]['destino'] == $userCode) {
+        $confirmButton = true;
+        if ($findMaker['destino'] == $userCode) {
+            $returnButton = false;
+        } else {
             $returnButton = true;
         }
-
-        if ($findCurrent[0]["destino"] != $userCode || $findPrevious["numcampos"]) {
-            $seeManagers = false;
-            if ($seePreviousManagers && in_array("r", $permissions)) {
-                $seeManagers = true;
-            }
-            $confirmButton = false;
-            $returnButton = false;
-        }
-        if ($seePreviousManagers && in_array("r", $permissions)) {
-            if ($_REQUEST["vista"] == "") {
-                $seeManagers = true;
-            }
-        }
     }
 
-    $sql = "select a.idformato,a.nombre,a.ruta_editar from formato a join documento b on lower(a.nombre) = lower(b.plantilla) where b.iddocumento = {$documentId}";
+    $sql = <<<SQL
+        SELECT 
+            a.idformato,
+            a.nombre,
+            a.ruta_editar
+        FROM
+            formato a JOIN
+            documento b ON
+            lower(a.nombre) = lower(b.plantilla)
+        WHERE
+            b.iddocumento = {$documentId}
+SQL;
     $formato = StaticSql::search($sql);
 
-    $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . '/' . $formato[0]['ruta_editar'];
-    $editRoute .= '?' . http_build_query([
-        'iddoc' => $documentId,
-        'idformato' => $formato[0]['idformato']
-    ]);
+    if ($editButton) {
+        $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . '/' . $formato[0]['ruta_editar'];
+        $editRoute .= '?' . http_build_query([
+            'iddoc' => $documentId,
+            'idformato' => $formato[0]['idformato']
+        ]);
+    }
+
+    if ($returnButton) {
+        $returnRoute = $ruta_db_superior . 'class_transferencia.php?';
+        $returnRoute .= http_build_query([
+            'iddoc' => $documentId,
+            'funcion' => 'formato_devolucion'
+        ]);
+    }
 
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
-        "managers" => [
+        'managers' => [
             'see' => $seeManagers,
-            'route' => "{$ruta_db_superior}mostrar_ruta.php?doc={$documentId}"
         ],
-        "edit" => [
+        'edit' => [
             'see' =>  $editButton,
-            'route' => $editRoute
+            'route' => $editRoute ?? ''
         ],
-        "return" => [
+        'return' => [
             'see' =>  $returnButton,
-            'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=formato_devolucion"
+            'route' => $returnRoute ?? ''
         ],
-        "confirm" => [
+        'confirm' => [
             'see' =>  $confirmButton
         ]
     ];
     $Response->success = 1;
-} else {
-    $Response->message = "Debe iniciar sesion";
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

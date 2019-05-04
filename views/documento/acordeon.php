@@ -13,7 +13,10 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 ?>
-<?php if (Documento::canSee($_SESSION["idfuncionario"], $_REQUEST["documentId"])): ?>
+<?php if (Documento::canSee(
+    SessionController::getValue('idfuncionario'),
+    $_REQUEST["documentId"]
+)): ?>
 <div class="row mx-0 pt-1" id="acordeon_container">
     <div class="col-12 px-0">
         <div class="mx-0">

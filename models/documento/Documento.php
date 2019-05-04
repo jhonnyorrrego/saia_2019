@@ -173,7 +173,45 @@ class Documento extends Model
             ]);
         }
 
-        return $access;
+        return $access > 0;
+    }
+
+    /**
+     * determina si un usuario tiene acceso 
+     * a editar un documento por acceso y por edicion continua
+     *
+     * @param integer $userId
+     * @param integer $documentId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-02
+     */
+    public static function canEdit($userId, $documentId)
+    {
+        $access = Acceso::countRecords([
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'estado' => 1,
+            'accion' => Acceso::ACCION_EDITAR
+        ]);
+
+        if (!$access) {
+            $sql = <<<SQL
+                SELECT 
+                    tipo_edicion
+                FROM
+                    documento a JOIN
+                    formato b
+                    ON
+                        lower(a.plantilla) = lower(b.nombre)
+                WHERE
+                    a.iddocumento = {$documentId}
+SQL;
+            $query = self::search($sql);
+            $access = $query[0]['tipo_edicion'];
+        }
+
+        return $access > 0;
     }
 
     /**
