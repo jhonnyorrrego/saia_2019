@@ -9,6 +9,10 @@ class Respuesta extends Model
     protected $idbuzon;
     protected $plantilla;
     protected $dbAttributes;
+    
+    //relations
+    protected $Origin;
+    protected $Destination;
 
     function __construct($id = null){
         return parent::__construct($id);
@@ -34,5 +38,35 @@ class Respuesta extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * obtiene la instancia del documento origen
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getOrigin(){
+        if(!$this->Origin){
+            $this->Origin = $this->getRelationFk('Documento', 'origen');
+        }
+
+        return $this->Origin;
+    }
+
+    /**
+     * obtiene la instancia del documento destino
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getDestination(){
+        if(!$this->Destination){
+            $this->Destination = $this->getRelationFk('Documento', 'destino');
+        }
+
+        return $this->Destination;
     }
 }

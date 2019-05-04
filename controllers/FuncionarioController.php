@@ -25,7 +25,8 @@ class FuncionarioController
             'iplocal' => UtilitiesController::getRealIP(),
             'ipremota' => UtilitiesController::remoteServer(),
             'exito' => 0,
-            'fecha' => date('Y-m-d H:i:s')
+            'fecha' => date('Y-m-d H:i:s'),
+            'token' => ''
         ]);
         return $log && $Funcionario->save();
     }

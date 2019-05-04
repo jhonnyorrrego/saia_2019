@@ -42,7 +42,7 @@ $(function () {
             $tdList.eq(0).text(node.data.codigo);
             $tdList.eq(1).html(image);
             $tdList.eq(3).text(+node.data.estado ? 'Activo' : 'Inactivo');
-            $tdList.eq(4).html(`<div class="dropdown d-lg-inline-block d-none">
+            $tdList.eq(4).html(`<div class="dropdown">
                 <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v fa-2x"></i>
                 </button>

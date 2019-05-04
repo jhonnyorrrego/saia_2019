@@ -213,6 +213,9 @@ $("#user_form").validate({
         },
         ventanilla_radicacion: {
             required: true
+        },
+        login: {
+            required: true
         }
     },
     messages: {
@@ -234,6 +237,9 @@ $("#user_form").validate({
         },
         ventanilla_radicacion: {
             required: "Campo requerido"
+        },
+        login: {
+            required: "Debe indicar un nombre de usuario"
         }
     },
     errorPlacement: function (error, element) {

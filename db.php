@@ -2242,7 +2242,7 @@ function alerta($message, $type = 'success', $duration = 3000)
 <Pre-condiciones>
 <Post-condiciones>
  */
-function volver($back)
+function volver($back = "1")
 {
     echo '<script type="text/javascript">
         window.history.go(-' . $back . ');

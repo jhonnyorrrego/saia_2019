@@ -26,14 +26,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta content="" name="description" />
     <meta content="" name="author" />
-    <?= jquery() ?>
-    <?= bootstrap() ?>
+    <?= cssBootstrap() ?>
+    <?= cssTheme() ?>
     <?= icons() ?>
     <link rel="manifest" href="<?= $ruta_db_superior ?>manifest.json">
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
-    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="fixed-header">
@@ -72,7 +71,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- END MOBILE SIDEBAR TOGGLE -->
             <div class="">
                 <div class="brand inline">
-                    <img alt="logo" id="client_image" style="max-height:40px">
+                    <img alt="logo" id="client_image" style="max-height:40px" class="d-none">
                 </div>
                 <div class="dropdown d-lg-inline-block d-none">
                     <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="new_action">
@@ -291,13 +290,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <!-- /.modal-dialog -->
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
+    <?= jquery() ?>
+    <?= jsBootstrap() ?>
     <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
+    <?= jsTheme() ?>
+    
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
-
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
 

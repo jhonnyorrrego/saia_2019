@@ -239,7 +239,7 @@ function descripcion_doc()
 function propietario_doc()
 {
     global $Documento;
-    return $Documento->getCreador();
+    return $Documento->getUser()->getName();
 }
 
 function fecha_creacion_doc()
