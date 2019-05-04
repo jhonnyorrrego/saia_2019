@@ -392,6 +392,7 @@ $(function () {
             params: {
                 documentId: documentId
             },
+            size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {}
         })

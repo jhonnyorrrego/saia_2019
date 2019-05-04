@@ -2,43 +2,47 @@ $(function () {
     let params = $('script[data-route]').data('route');
     $('script[data-route]').removeAttr('data-route');
 
-    (function init() {
-        findRoute();
-    })()
-
-    $('#save_route').on('click', function () {
-        $.post(
-            `${params.baseUrl}app/documento/guardar_ruta.php`,
-            {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                documentId: params.documentId
-            },
-            function (response) {
-                if (response.success) {
-                    
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
-                }
-            },
-            'json'
-        );
+    $('#route_type').on('select2:select', function () {
+        hideRoutes();
+        switch (+$(this).val()) {
+            case 1:
+                showRadicationRoute();
+                break;
+            case 2:
+                showApprobationRoute();
+                break;
+            case 3:
+                showRadicationRoute();
+                showApprobationRoute();
+                break;
+            default:
+                hideRoutes();
+                break;
+        }
     });
 
-    function findRoute() {
+    (function init() {
+        $('#route_type').select2();
+        $('#route_type').val(3).trigger('change').trigger('select2:select');
+    })();
+    
+    function hideRoutes() {
+        $('#radication_route_container,#approbation_route_container').hide();
+    }
+
+    function showRadicationRoute() {
         $.post(
-            `${params.baseUrl}app/documento/responsables.php`,
+            `${params.baseUrl}app/documento/rutas.php`,
             {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token'),
-                documentId: params.documentId
+                documentId: params.documentId,
+                type: 'radication'
             },
             function (response) {
                 if (response.success) {
-                    createTable(response.data);
+                    createRadicationTable(response.data);
+                    $('#radication_route_container').show();
                 } else {
                     top.notification({
                         type: 'error',
@@ -50,76 +54,101 @@ $(function () {
         );
     }
 
-    function createTable(data) {
-        let routes = [];
-        data.forEach((v) => {
-            $('#table_body').append(
+    function createRadicationTable(data){
+        $('#radication_route_container table > tbody').remove();
+        $('#radication_route_container table').append($('<tbody>'))
+
+        let tbody = $('#radication_route_container tbody');
+        data.forEach(e => {
+            tbody.append(
                 $('<tr>').append(
-                    $('<td>').text(v.origin),
-                    $('<td>').text(v.destination),
-                    $('<td>').html(data.length  ? createRadios(v.firm_type, v.id) : ''),
+                    $('<td>').text(e.order),
+                    $('<td>').text(e.destination),
+                    $('<td>').append(
+                        $('<select>', {
+                            class: 'full-width'
+                        }).append(
+                            $('<option>',{
+                                value: 1,
+                                text: 'a'
+                            }),
+                            $('<option>',{
+                                value: 2,
+                                text: 'b'
+                            }),
+                            $('<option>',{
+                                value: 3,
+                                text: 'c'
+                            }),
+                            $('<option>',{
+                                value: 4,
+                                text: 'd'
+                            })
+                        )
+                        .val(e.firm_type)
+                        .trigger('change')
+                    )
                 )
             );
-            routes.push(v.id);
         });
 
-        $('#table_body').append(
-            $('<input>', {
-                type: 'hidden',
-                value: routes.join(','),
-                name: 'routes'
-            })
+        $('#radication_route_container select').select2();
+    }
+
+    function showApprobationRoute() {
+        $.post(
+            `${params.baseUrl}app/documento/rutas.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: params.documentId,
+                type: 'approbation'
+            },
+            function (response) {
+                if (response.success) {
+                    createApprobationTable(response.data);
+                    $('#approbation_route_container').show();
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
         );
     }
 
-    function createRadios(selected, routeId) {
-        return $('<div>', {
-            class: 'radio radio-success'
-        }).append(
-            $('<input>', {
-                type: 'radio',
-                checked: selected == 1,
-                value: 1,
-                id: 'visible_firm',
-                name: 'state_' + routeId
-            }),
-            $('<label>', {
-                for: 'visible_firm',
-                text: 'Firma visible'
-            }),
-            $('<input>', {
-                type: 'radio',
-                checked: selected == 2,
-                value: 2,
-                id: 'check',
-                name: 'state_' + routeId
-            }),
-            $('<label>', {
-                for: 'check',
-                text: 'Revisado'
-            }),
-            $('<input>', {
-                type: 'radio',
-                checked: selected == 5,
-                value: 5,
-                id: 'external_firm',
-                name: 'state_' + routeId
-            }),
-            $('<label>', {
-                for: 'external_firm',
-                text: 'Firma externa'
-            }),
-            $('<input>', {
-                type: 'radio',
-                checked: selected == 0,
-                value: 0,
-                id: 'none',
-                name: 'state_' + routeId
-            }),
-            $('<label>', {
-                for: 'none',
-                text: 'Ninguna'
-            })            
-        );
+    function createApprobationTable(data){
+        $('#approbation_route_container table > tbody').remove();
+        $('#approbation_route_container table').append($('<tbody>'))
+
+        let tbody = $('#approbation_route_container tbody');
+        data.forEach((e, i) => {
+            tbody.append(
+                $('<tr>').append(
+                    $('<td>').text(e.order),
+                    $('<td>').text(e.destination),
+                    $('<td>').append(
+                        $('<select>', {
+                            class: 'full-width'
+                        }).append(
+                            $('<option>',{
+                                value: 'visto bueno',
+                                text: 'Visto bueno'
+                            }),
+                            $('<option>',{
+                                value: 'Aprobar',
+                                text: 'Aprobar'
+                            })                            
+                        )
+                        .val(e.action)
+                        .trigger('change')
+                    )
+                )
+            );
+        });
+
+        $('#approbation_route_container select').select2();
     }
 })

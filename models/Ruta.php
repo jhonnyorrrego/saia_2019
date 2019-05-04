@@ -2,6 +2,7 @@
 
 class Ruta extends Model
 {
+    protected $idruta;
     protected $transferencia_idtransferencia;
     protected $tipo_origen;
     protected $tipo_destino;
@@ -11,7 +12,6 @@ class Ruta extends Model
     protected $orden;
     protected $obligatorio;
     protected $idtipo_documental;
-    protected $idruta;
     protected $idenlace_nodo;
     protected $firma_externa;
     protected $fecha;

@@ -95,6 +95,10 @@ final class Version20190503210358 extends AbstractMigration
             'length' => 11,
             'notnull' => true
         ]);
+        $table->addColumn('fk_ruta_documento', 'integer', [
+            'length' => 11,
+            'notnull' => true
+        ]);
         $table->addColumn('fk_funcionario', 'integer', [
             'length' => 11,
             'notnull' => true

@@ -15,51 +15,47 @@ $params = json_encode([
 	'baseUrl' => $ruta_db_superior,
 	'documentId' => $_REQUEST['documentId']
 ]);
+include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
-</head>
-
-<body>
-	<div class="container-fluid px-0">
-		<div class="row mx-0 px-0">
-			<div class="col-12 table-responsive px-0">
-				<table class="table table-bordered table-striped">
-					<thead class="thead-light">
-						<tr>
-							<th class="text-center bold">De</th>
-							<th class="text-center bold">Para</th>
-							<th class="text-center bold">Opciones de firma</th>
-						</tr>
-					</thead>
-					<tbody id="table_body"></tbody>
-					<tfoot>
-						<tr>
-							<td colspan="3">
-								<button class="btn btn-complete btn-block" id="save_route">Guardar</button>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
-		</div>
-		<div class="row mx-0 px-0 pt-2">
-			<div class="col">
-				<button class="btn btn-warning btn-sm" id="save_route">Reasignar Responsables</button>
-			</div>
-			<div class="col">
-				<button class="btn btn-success btn-sm" id="save_route">Firma única de quien prepara</button>
-			</div>
+<div class="row">
+	<div class="col">
+		<div class="form-group form-group-default form-group-default-select2 required">
+			<label class="">Tipo de ruta</label>
+			<select class="full-width" id="route_type">
+				<option value="">Seleccione...</option>
+				<option value="1">Radicación</option>
+				<option value="2">Aprobación</option>
+				<option value="3">Radicación / Aprobación</option>
+			</select>
 		</div>
 	</div>
-	<script src="<?= $ruta_db_superior ?>views/documento/js/responsables.js" data-route='<?= $params ?>'></script>
-</body>
-
-</html>
+</div>
+<div class="row">
+	<div class="col-12" id="radication_route_container" style="display:none">
+		<table class="table table-condensed table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th class="text-center bold">Orden</th>
+					<th class="text-center bold">Funcionario</th>
+					<th class="text-center bold">Tipo firma</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="col-12" id="approbation_route_container" style="display:none">
+		<table class="table table-condensed table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th class="text-center bold">Orden</th>
+					<th class="text-center bold">Funcionario</th>
+					<th class="text-center bold">Acción</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<?= select2() ?>
+<script src="<?= $ruta_db_superior ?>views/documento/js/responsables.js" data-route='<?= $params ?>'></script>
