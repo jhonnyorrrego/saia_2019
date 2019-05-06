@@ -178,7 +178,7 @@ include_once $ruta_db_superior . "db.php";
 
             </div>
             <table id="tabla_resultados" data-height="" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
-                <thead style="font-size: 12px;">
+                <thead style="font-size: 11px;">
                     <tr>
                         <th data-field="state" data-checkbox="true"></th>
                         <?php
@@ -212,7 +212,7 @@ include_once $ruta_db_superior . "db.php";
                                 $ordenable = 'data-sortable="true"';
                             }
 
-                            echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>');
+                            echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '><center><strong>' . $detalle_info[0] . '</strong></center></th>');
                         }
                         ?>
                     </tr>
