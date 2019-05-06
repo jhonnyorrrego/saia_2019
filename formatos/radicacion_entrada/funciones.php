@@ -603,7 +603,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
                 </tr>
                     <tr>
-                        <td style='border:none;'><strong>NO. OFICIO:</strong></td>
+                        <td style='border:none;'><strong>NO. DOCUMENTO:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
                         <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
                         <td px-0 style='border:none;'>" . $empresa_transportadora . "</td>
