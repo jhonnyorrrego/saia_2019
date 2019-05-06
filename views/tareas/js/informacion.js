@@ -23,7 +23,8 @@ $(function() {
             data: function(params) {
                 return {
                     term: params.term,
-                    key: localStorage.getItem("key")
+                    key: localStorage.getItem("key"),
+                    token: localStorage.getItem("token")
                 };
             },
             processResults: function(response) {
@@ -135,7 +136,8 @@ $(function() {
             url: `${baseUrl}app/funcionario/autocompletar.php`,
             data: {
                 defaultUser: userId,
-                key: localStorage.getItem("key")
+                key: localStorage.getItem("key"),
+                token: localStorage.getItem("token")
             },
             success: function(response) {
                 response.data.forEach(u => {

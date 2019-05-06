@@ -62,7 +62,8 @@ class Users {
                 data: function (params) {
                     return {
                         term: params.term,
-                        key: localStorage.getItem('key')
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem("token")
                     }
                 },
                 processResults: function (response) {
@@ -111,6 +112,7 @@ class Users {
                 url: `${options.baseUrl}app/funcionario/autocompletar.php`,
                 data: {
                     key: localStorage.getItem('key'),
+                    token: localStorage.getItem("token"),
                     defaultUser: userId
                 },
                 success: function (response) {

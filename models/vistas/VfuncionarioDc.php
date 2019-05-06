@@ -1,0 +1,148 @@
+<?php
+class VfuncionarioDc extends Funcionario
+{
+    protected $idfuncionario;
+    protected $funcionario_codigo;
+    protected $login;
+    protected $nombres;
+    protected $apellidos;
+    protected $firma;
+    protected $estado;
+    protected $fecha_ingreso;
+    protected $clave;
+    protected $nit;
+    protected $perfil;
+    protected $debe_firmar;
+    protected $mensajeria;
+    protected $email;
+    protected $sistema;
+    protected $tipo;
+    protected $ultimo_pwd;
+    protected $direccion;
+    protected $telefono;
+    protected $cargo;
+    protected $idcargo;
+    protected $tipo_cargo;
+    protected $estado_cargo;
+    protected $dependencia;
+    protected $estado_dep;
+    protected $codigo;
+    protected $tipo_dep;
+    protected $iddependencia;
+    protected $creacion_dep;
+    protected $cod_padre;
+    protected $extension;
+    protected $ubicacion_dependencia;
+    protected $logo;
+    protected $iddependencia_cargo;
+    protected $estado_dc;
+    protected $fecha_inicial;
+    protected $fecha_final;
+    protected $creacion_dc;
+    protected $tipo_dc;
+    protected $dbAttributes;
+
+    /**
+     * @param int $id value for idfuncionario attribute
+     * @author jhon.valencia@cerok.com
+     */
+    function __construct($id = null)
+    {
+        return parent::__construct($id);
+    }
+
+    /**
+     * define values for dbAttributes
+     */
+    protected function defineAttributes()
+    {
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'idfuncionario',
+            'funcionario_codigo',
+            'login',
+            'nombres',
+            'apellidos',
+            'firma',
+            'estado',
+            'fecha_ingreso',
+            'clave',
+            'nit',
+            'perfil',
+            'debe_firmar',
+            'mensajeria',
+            'email',
+            'sistema',
+            'tipo',
+            'ultimo_pwd',
+            'direccion',
+            'telefono',
+            'cargo',
+            'idcargo',
+            'tipo_cargo',
+            'estado_cargo',
+            'dependencia',
+            'estado_dep',
+            'codigo',
+            'tipo_dep',
+            'iddependencia',
+            'creacion_dep',
+            'cod_padre',
+            'extension',
+            'ubicacion_dependencia',
+            'logo',
+            'iddependencia_cargo',
+            'estado_dc',
+            'fecha_inicial',
+            'fecha_final',
+            'creacion_dc',
+            'tipo_dc'
+        ];
+
+        // set the date attributes on the schema
+        $dateAttributes = [
+            'fecha_ingreso',
+            'ultimo_pwd',
+            'fecha_fin_inactivo'
+        ];
+
+        $this->dbAttributes = (object)[
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes,
+            'primary' => 'idfuncionario'
+        ];
+    }
+
+    /**
+     * @return  string the complete name formatted
+     * @author jhon.valencia@cerok.com
+     */
+    public function getName()
+    {
+        $name = $this->nombres . ' ' . $this->apellidos . ' - ' . $this->cargo;
+        $name = trim(strtolower(html_entity_decode($name)));
+        $name = ucwords($name);
+        return $name;
+    }
+
+
+    public static function findAllByTerm($term, $field = 'idfuncionario')
+    {
+        $sql = <<<SQL
+        SELECT 
+            {$field},idfuncionario,nombres,apellidos,cargo
+        FROM 
+            vfuncionario_dc
+        WHERE
+            (
+                lower(nombres) like '%{$term}%' OR
+                apellidos like '%{$term}%' OR
+                cargo like '%{$term}%'
+            ) AND
+            estado = 1 AND
+            estado_dc = 1                 
+SQL;
+
+        return  self::findBySql($sql);
+    }
+}
