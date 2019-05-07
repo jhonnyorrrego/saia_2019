@@ -203,7 +203,7 @@ function procesar_factura($archivo_face) {
             "archivo" => $archivo_face
         ));
 
-        $datos_factura["num_factura"] = $factura->numeroFactura();
+        $datos_factura["num_factura"] = "'" . $factura->numeroFactura() . "'";
         $datos_factura["fecha_factura"] = fecha_db_almacenar($factura->fechaExpedicion(), "Y-m-d H:i:s");
         $datos_factura["items"] = $factura->items();
 
@@ -264,6 +264,7 @@ function registar_factura($info_factura) {
 function mover_correo_buzon($info_correo) {
     $email = busca_filtro_tabla("email,email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
     // $cstr = "{" . SERVIDOR_CORREO_IMAP . ":" . PUERTO_SERVIDOR_CORREO . "/imap/ssl}";
+    
     $cstr = "{" . ltrim(SERVIDOR_CORREO_IMAP, "ssl://") . ":" . PUERTO_SERVIDOR_CORREO . "/ssl/novalidate-cert}";
     $imapStream = imap_open($cstr, $email[0]['email'], $email[0]['email_contrasena']) or die("No es posible conectar al servidor de correo: " . imap_last_error());
 

@@ -20,11 +20,10 @@ include_once $ruta_db_superior . "assets/librerias.php";
 </head>
 
 <body>
-    <div class=" container-fluid container-fixed-lg px-0">
+    <div class=" container-fluid px-0">
         <!-- START card -->
-        <div class="card card-default">
-            <div class="card-body pb-1">
-                <h6>FILTRAR FUNCIONARIOS</h6>
+        <div class="card card-default mb-0">
+            <div class="card-body py-2">
                 <form id="kformulario_saia" method="post">
                     <div class="form-group form-group-default">
                         <label>Usuario:</label>

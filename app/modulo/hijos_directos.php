@@ -1,5 +1,4 @@
 <?php
-session_start();
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -17,14 +16,16 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $Response = (object)[
     'data' => [],
     'message' => '',
-    'success' => 1
+    'success' => 0
 ];
 
-if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
 
-    if ($grouperParent == 1 && $parent) {
+    if ($grouperParent == 1 || $parent == 0) {
         $Modulo = Modulo::findByAttributes(['nombre' => 'dashboard']);
         $Response->data[] = [
             'idmodule' => $Modulo->getPK(),
@@ -56,9 +57,9 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
             ];
         }
     }
-} else {
-    $Response->message = 'Debe iniciar session';
-    $Response->success = 0;
+    $Response->success = 1;
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

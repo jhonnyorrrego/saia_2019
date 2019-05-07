@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -12,18 +10,21 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
+
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
-    'data' => new stdClass(),
-    'message' => "",
+    'data' => [],
+    'message' => '',
     'success' => 0
 ];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     $fileRoute = $_REQUEST['firma'];
     $userId = $_REQUEST['userId'];
-    unset($_REQUEST['firma'], $_REQUEST['key'], $_REQUEST['userId']);
+    unset($_REQUEST['firma'], $_REQUEST['key'], $_REQUEST['userId'], $_REQUEST['token']);
 
     $fileParts = explode('.', $fileRoute);
     $fileName = 'firmas/' . $_REQUEST['nit'] . '.' . end($fileParts);
@@ -31,6 +32,20 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $dbRoute = TemporalController::createFileDbRoute($fileName, 'archivos', $content);
 
     $Funcionario = new Funcionario($userId);
+
+    if($Funcionario->login != $_REQUEST['login']){
+        $exist = Funcionario::countRecords(['login' => $_REQUEST['login']]);
+
+        if($exist){
+            throw new Exception("Ya existe un usuario {$_REQUEST['login']}", 1);
+        }
+    }
+
+    if ($Funcionario->clave != $_REQUEST['clave']) {
+        $Funcionario->clave = CriptoController::encrypt_md5($_REQUEST['clave']);
+    }
+    unset($_REQUEST['clave']);
+
     $Funcionario->setAttributes($_REQUEST);
     $Funcionario->firma = $dbRoute;
     $Funcionario->perfil = implode(',', $_REQUEST['perfil']);
@@ -39,10 +54,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $Response->message = "Usuario actualizado";
         $Response->success = 1;
     } else {
-        $Response->message = 'Error al guardar';
+        throw new Exception("Error al guardar", 1);
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
+
 
 echo json_encode($Response);

@@ -1,5 +1,4 @@
 <?php
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 

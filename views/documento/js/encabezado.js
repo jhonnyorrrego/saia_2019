@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let baseUrl = $("[data-baseurl]").data("baseurl");
     let documentId = $("[data-documentid]").data("documentid");
 
@@ -11,40 +11,74 @@ $(function() {
         $('[data-toggle="tooltip"]').tooltip();
     })();
 
-    $("#go_back").on("click", function() {
+    $("#go_back").on("click", function () {
         $("#mailbox,#right_workspace").toggleClass("d-none");
     });
 
-    $("#show_comments").on("click", function() {
-        let options = {
-            url: `${baseUrl}views/documento/comentarios.php`,
-            params: {
-                documentId: documentId
-            },
-            title: "Comentarios",
-            size: "modal-lg",
-            buttons: {}
-        };
-        top.topModal(options);
-    });
+    $(document)
+        .off("click", "#show_comments,#discutir_documento")
+        .on("click", "#show_comments,#discutir_documento", function () {
+            let options = {
+                url: `${baseUrl}views/documento/comentarios.php`,
+                params: {
+                    documentId: documentId
+                },
+                title: "Comentarios",
+                size: "modal-lg",
+                buttons: {}
+            };
+            top.topModal(options);
+        });
 
-    $(document).off("click", "#resend,#reenviar");
-    $(document).on("click", "#resend,#reenviar", function() {
-        transferModal(1);
-    });
+    $(document)
+        .off("click", "#show_documents,#vincular_otro_documento")
+        .on("click", "#show_documents,#vincular_otro_documento", function () {
+            let iframe = $('<iframe>', {
+                src: `${baseUrl}views/documento/vinculados.php?documentId=${documentId}`
+            }).css({
+                width: '100%',
+                height: '100%',
+                border: 'none',
+            });
 
-    $(document).off("click", "#reply,#responder");
-    $(document).on("click", "#reply,#responder", function() {
-        let userInfo = $("#userInfo").data("info");
-        transferModal(2, userInfo);
-    });
+            jsPanel.ziBase = 10000;
+            jsPanel.create({
+                headerTitle: 'Documentos vinculados',
+                iconfont: 'fa',
+                theme: 'dark',
+                contentOverflow: 'hidden',
+                position: {
+                    my: "center-top",
+                    at: "center-top"
+                },
+                contentSize: {
+                    width: $(window).width() * 0.8,
+                    height: $(window).height() * 0.9,
+                },
+                content: iframe.prop('outerHTML')
+            });
+        });
 
-    $(document).off("click", "#responder_todos");
-    $(document).on("click", "#responder_todos", function() {
-        transferModal(3);
-    });
+    $(document)
+        .off("click", "#resend,#reenviar")
+        .on("click", "#resend,#reenviar", function () {
+            transferModal(1);
+        });
 
-    $("#show_tree").on("click", function() {
+    $(document)
+        .off("click", "#reply,#responder")
+        .on("click", "#reply,#responder", function () {
+            let userInfo = $("#userInfo").data("info");
+            transferModal(2, userInfo);
+        });
+
+    $(document)
+        .off("click", "#responder_todos")
+        .on("click", "#responder_todos", function () {
+            transferModal(3);
+        });
+
+    $("#show_tree").on("click", function () {
         let options = {
             url: `${baseUrl}views/arbol/proceso_formato.php`,
             params: {
@@ -62,7 +96,7 @@ $(function() {
         top.topModal(options);
     });
 
-    $("#show_task").on("click", function() {
+    $("#show_task").on("click", function () {
         let options = {
             url: `${baseUrl}views/tareas/lista_documento.php`,
             params: {
@@ -79,7 +113,7 @@ $(function() {
         top.topModal(options);
     });
 
-    $("#priority_flag").on("click", function() {
+    $("#priority_flag").on("click", function () {
         let flag = $("#priority_flag i"),
             priority = flag.hasClass("text-danger") ? 0 : 1,
             key = localStorage.getItem("key");
@@ -91,7 +125,7 @@ $(function() {
                 selections: documentId,
                 key: key
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,
@@ -122,50 +156,52 @@ $(function() {
     });
 
     /////// MENU INTERMEDIO ////////
-    $(document).off("click", "#crear_tarea,#etiquetar,#asignar_responsable");
-    $(document).on("click", "#crear_tarea,#etiquetar,#asignar_responsable", function() {
-        let route = $(this).data("url");
-        top.topModal({
-            url: baseUrl + route,
-            title: $(this).text(),
-            params: {
-                documentId: documentId
-            },
-            buttons: {}
+    $(document)
+        .off("click", "#crear_tarea,#etiquetar,#asignar_responsable")
+        .on("click", "#crear_tarea,#etiquetar,#asignar_responsable", function () {
+            let route = $(this).data("url");
+            top.topModal({
+                url: baseUrl + route,
+                title: $(this).text(),
+                params: {
+                    documentId: documentId
+                },
+                buttons: {}
+            });
         });
-    });
 
-    $(document).off("click", "#privacidad");
-    $(document).on("click", "#privacidad", function() {
-        let route = $(this).data("url");
-        top.topModal({
-            url: baseUrl + route,
-            title: $(this).text(),
-            size: 'modal-lg',
-            params: {
-                type: 'TIPO_DOCUMENTO',
-                typeId: documentId
-            },
-            buttons: {}
+    $(document)
+        .off("click", "#privacidad")
+        .on("click", "#privacidad", function () {
+            let route = $(this).data("url");
+            top.topModal({
+                url: baseUrl + route,
+                title: $(this).text(),
+                size: 'modal-lg',
+                params: {
+                    type: 'TIPO_DOCUMENTO',
+                    typeId: documentId
+                },
+                buttons: {}
+            });
         });
-    });
 
-    $(document).off("click", "#actualizar_pdf");
-    $(document).on("click", "#actualizar_pdf", function() {
-        let route = $("#acordeon_container").attr("data-location");
-        route += "&actualizar_pdf=1";
+    $(document)
+        .off("click", "#actualizar_pdf")
+        .on("click", "#actualizar_pdf", function () {
+            let route = $("#acordeon_container").attr("data-location");
+            route += "&actualizar_pdf=1";
 
-        $("#view_document").load(baseUrl + route);
-    });
+            $("#view_document").load(baseUrl + route);
+        });
 
-    $(document).off("click", "#anexos");
-    $(document).on("click", "#anexos", function() {
+    $(document).off("click", "#anexos").on("click", "#anexos", function () {
         $("#show_files").click();
     });
     /////// FIN MENU INTERMEDIO /////
     window.addEventListener(
         "orientationchange",
-        function() {
+        function () {
             setTimeout(() => {
                 toggleGoBack();
             }, 500);
@@ -173,7 +209,7 @@ $(function() {
         false
     );
 
-    $(window).resize(function() {
+    $(window).resize(function () {
         toggleGoBack();
     });
 
@@ -224,7 +260,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 documentId: documentId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     showFab(response.data);
                 } else {
@@ -249,7 +285,7 @@ $(function() {
                         style: "fa fa-check",
                         html: ""
                     },
-                    onClick: function() {
+                    onClick: function () {
                         confirmDocument();
                     }
                 });
@@ -265,7 +301,7 @@ $(function() {
                         style: "fa fa-edit",
                         html: ""
                     },
-                    onClick: function() {
+                    onClick: function () {
                         window.open(actions.edit.route, "_self");
                     }
                 });
@@ -281,7 +317,7 @@ $(function() {
                         style: "fa fa-users",
                         html: ""
                     },
-                    onClick: function() {
+                    onClick: function () {
                         window.open(actions.managers.route, "_self");
                     }
                 });
@@ -297,7 +333,7 @@ $(function() {
                         style: "fa fa-backward",
                         html: ""
                     },
-                    onClick: function() {
+                    onClick: function () {
                         window.open(actions.return.route, "_self");
                     }
                 });
@@ -329,7 +365,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 documentId: documentId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     let route = baseUrl + "views/documento/acordeon.php";
                     $("#acordeon_container")
@@ -355,7 +391,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 documentId: documentId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     createMenu(response.data);
                 } else {
@@ -392,7 +428,7 @@ $(function() {
                 key: localStorage.getItem("key"),
                 documentId: documentId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     showCounters(response.data);
                 } else {
@@ -406,16 +442,16 @@ $(function() {
         );
     }
 
-    function showCounters(data){
-        if(data.comments){
+    function showCounters(data) {
+        if (data.comments) {
             $('#comments_counter').text(data.comments);
         }
 
-        if(data.tasks){
+        if (data.tasks) {
             $('#tasks_counter').text(data.tasks);
         }
 
-        if(data.documents){
+        if (data.documents) {
             $('#documents_counter').text(data.documents);
         }
     }

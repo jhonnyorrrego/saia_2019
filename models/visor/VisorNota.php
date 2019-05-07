@@ -18,7 +18,9 @@ class VisorNota extends Model
     const TIPO_DOCUMENTO = 1;
     const TIPO_PAGINA = 2;
     const TIPO_ANEXO_PDF = 3;
-    const TIPO_ANEXO_IMAGEN = 4;
+    const TIPO_ANEXOS_PDF = 4;
+    const TIPO_ANEXO_IMAGEN = 5;
+    const TIPO_ANEXOS_IMAGEN = 6;
 
     function __construct($id = null)
     {

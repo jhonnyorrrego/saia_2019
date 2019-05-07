@@ -11,16 +11,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
 $userCode = $_SESSION["usuario_actual"]; //funcionario_codigo
 
 function getTransfer($transferId)
 {
-    global $conn, $userCode;
+    global $userCode;
 
     if ($transferId) {
-        $findTransfer = busca_filtro_tabla('*', 'buzon_salida', 'idtransferencia =' . $transferId, '', $conn);
+        $findTransfer = StaticSql::search("select * from buzon_salida where idtransferencia = {$transferId}");
         if ($findTransfer[0]['origen'] == $userCode) {
             $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
         } else {
@@ -146,7 +147,7 @@ function plantilla($documentId, $transferId = 0)
             <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
                 <span class="badge badge-important counter" id="tasks_counter"></span>
             </span>
-            <span class="px-1 cursor fa fa-chain notification f-20" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
+            <span class="px-1 cursor fa fa-chain notification f-20" id="show_documents" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
                 <span class="badge badge-important counter" id="documents_counter"></span>
             </span>
             </div>
@@ -173,6 +174,7 @@ function plantilla($documentId, $transferId = 0)
         <div id="fab"></div>
     </div>
 </div>
+<?= jsPanel() ?>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
 <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
 <?php

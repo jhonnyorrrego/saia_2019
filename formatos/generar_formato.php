@@ -515,6 +515,8 @@ class GenerarFormato
 
         $params = [
             "iddoc" => $documentId,
+            "type" => "TIPO_DOCUMENTO",
+            "typeId" => $documentId,
             "exportar" => $record[0]["exportar"],
             "ruta" => base64_encode($record[0]["pdf"]),
             "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
@@ -1568,9 +1570,9 @@ class GenerarFormato
                             if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
-                            $texto .= '<div class="form-group form-group-default ' . $obligatorio  . $ancho . '"  id="tr_' . $campos[$h]["nombre"] . '">
+                            $texto .= '<div class="form-group ' .  $ancho . '"  id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;", "acute;", $this->codifica($campos[$h]["etiqueta"])) . '</label>
-                                        <input class="form-control" ' . " $adicionales $tabindex" . ' type="text"  size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
+                                        <input class="form-control" ' . $obligatorio . " $adicionales $tabindex" . ' type="text"  size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                                        </div>';
                             if ($campos[$h]["mascara"] != "") {
                                 $mascaras++;
@@ -2537,7 +2539,7 @@ span.fancytree-expander {
         }
         $pre = "";
         $post = "";
-        $texto[] = '<div class="form-group form-group-default ' . $obligatorio . $ancho . '" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<div class="form-group ' . $obligatorio . $ancho . '" id="tr_' . $campo["nombre"] . '">';
         $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . '</label>';
         if ($moneda) {
             $pre = '<div class="input-group">

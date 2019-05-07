@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_formato.php";
@@ -32,17 +32,18 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
     }
     $_REQUEST["ejecutar_datos_pantalla"]($_REQUEST, @$_REQUEST["tipo_retorno"]);
 }
-if($_REQUEST['permisosFormato']){
-    permisosFormato($_REQUEST['idformato'],$_REQUEST['idperfil'],$_REQUEST['nombreFormato']);
+if ($_REQUEST['permisosFormato']) {
+    permisosFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
 }
 
-if ($_REQUEST['eliminarPermisoFormato']) {    
+if ($_REQUEST['eliminarPermisoFormato']) {
     eliminarPermisoFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
 }
 
-function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
-    global $conn,$ruta_db_superior;
-    $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);   
+function load_pantalla($idpantalla, $generar_archivo = "", $accion = '')
+{
+    global $conn, $ruta_db_superior;
+    $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
     $campos_excluir = array(
         "dependencia",
         "documento_iddocumento",
@@ -64,114 +65,119 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
     }
     $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
     $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla . $condicion_adicional, "B.orden", $conn);
-    
+
     $texto = '';
-    if($pantalla['numcampos']){
+    if ($pantalla['numcampos']) {
         for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
             $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
             $texto .= $cadena["codigo_html"];
-           
         }
-     
+
         $texto = str_replace("? >", "?" . ">", $texto);
         $texto = str_replace("< ?php ", "<" . "?php", $texto);
-    }  
-  
+    }
+
     return $texto;
 }
 
-function carga_vista_previa($idFormato) {
-    global $conn,$ruta_db_superior;
-    
-    include_once $ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php";
-    
-    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo","formato","idformato=".$idFormato,"",$conn);
+function carga_vista_previa($idFormato)
+{
+    global $conn, $ruta_db_superior;
+
+    include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
+
+    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo", "formato", "idformato=" . $idFormato, "", $conn);
     $encabezado = '';
     $contenido_formato = '';
     $piePagina = '';
 
-    if($consultaDatos['numcampos']){
-        if($consultaDatos[0]['encabezado']){
-            $consultaEncabezados = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["encabezado"],"",$conn);  
-            if($consultaEncabezados['numcampos']){
-                $encabezado = $consultaEncabezados[0]['contenido']; 
-                $contenidoEncabezado = buscar_funciones_generador($encabezado, $idFormato);          
-            }            
-        } 
-        if($consultaDatos[0]['cuerpo']){
-            $excluirFunciones=1;
-            $contenidoFormato = buscar_funciones_generador($consultaDatos[0]['cuerpo'], $idFormato, $excluirFunciones); 
-        }   
-        if($consultaDatos[0]['pie_pagina']){
-            $consultaPie = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["pie_pagina"],"",$conn);
-            if($consultaPie['numcampos']){
+    if ($consultaDatos['numcampos']) {
+        if ($consultaDatos[0]['encabezado']) {
+            $consultaEncabezados = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $consultaDatos[0]["encabezado"], "", $conn);
+            if ($consultaEncabezados['numcampos']) {
+                $encabezado = $consultaEncabezados[0]['contenido'];
+                $contenidoEncabezado = buscar_funciones_generador($encabezado, $idFormato);
+            }
+        }
+        if ($consultaDatos[0]['cuerpo']) {
+            $excluirFunciones = 1;
+            $contenidoFormato = buscar_funciones_generador($consultaDatos[0]['cuerpo'], $idFormato, $excluirFunciones);
+        }
+        if ($consultaDatos[0]['pie_pagina']) {
+            $consultaPie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $consultaDatos[0]["pie_pagina"], "", $conn);
+            if ($consultaPie['numcampos']) {
                 $piePagina = $consultaPie[0]['contenido'];
-                $contenidoPie = buscar_funciones_generador($piePagina, $idFormato);  
-            }                                     
+                $contenidoPie = buscar_funciones_generador($piePagina, $idFormato);
+            }
         }
 
-        $tableCuerpo = "<div style='padding:20px;'>".$contenidoEncabezado."</div><div style='padding:20px;'>".$contenidoFormato."</div><div style='padding:20px;'>".$contenidoPie."</div>";
-        return $tableCuerpo;                       
-    }       
+        $tableCuerpo = "<div style='padding:20px;'>" . $contenidoEncabezado . "</div><div style='padding:20px;'>" . $contenidoFormato . "</div><div style='padding:20px;'>" . $contenidoPie . "</div>";
+        return $tableCuerpo;
+    }
 }
 
-function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
-    global $conn,$ruta_db_superior;
-    $iddoc=1;
-    $tipo=1;
-    $nombreFunciones = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cuerpo, $resultadoFunciones);  
-   
-    if ($nombreFunciones !== FALSE) {          
+function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0)
+{
+    global $conn, $ruta_db_superior;
+    $iddoc = 1;
+    $tipo = 1;
+    $nombreFunciones = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cuerpo, $resultadoFunciones);
+
+    if ($nombreFunciones !== FALSE) {
         $patronesBusqueda = str_replace(array(
             "{*",
             "*}"
-        ), "", $resultadoFunciones[0]);        
+        ), "", $resultadoFunciones[0]);
     }
-   
+
     foreach ($patronesBusqueda as $key => $nombreFuncion) {
-    
-        if($excluirFunciones==1 && $nombreFuncion =='mostrar_estado_proceso'){
-            $rutaContenido = $ruta_db_superior."firmas/faltante.jpg";
-            $contenidoFuncion ="<img src={$rutaContenido} width='109' />";            
-        }else if($excluirFunciones==1 && $nombreFuncion !='mostrar_codigo_qr'){
-            $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";        
-        }else if($excluirFunciones==1 && $nombreFuncion =='mostrar_codigo_qr'){
+
+        if ($excluirFunciones == 1 && $nombreFuncion == 'mostrar_estado_proceso') {
+            $rutaContenido = $ruta_db_superior . "firmas/faltante.jpg";
+            $contenidoFuncion = "<img src={$rutaContenido} width='109' />";
+        } else if ($excluirFunciones == 1 && $nombreFuncion != 'mostrar_codigo_qr') {
+            $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
+        } else if ($excluirFunciones == 1 && $nombreFuncion == 'mostrar_codigo_qr') {
             $imagenQr = busca_filtro_tabla("valor", "configuracion", "nombre='qr_formato'", "", $conn);
             if ($imagenQr["numcampos"]) {
-                $tipo_almacenamiento = new SaiaStorage("archivos");             
-                $ruta_imagen = json_decode($imagenQr[0]["valor"]);               
+                $tipo_almacenamiento = new SaiaStorage("archivos");
+                $ruta_imagen = json_decode($imagenQr[0]["valor"]);
                 if (is_object($ruta_imagen)) {
-                    if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+                    if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                         $ruta_imagen = json_encode($ruta_imagen);
                         $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
                     }
                 }
             }
-            $rutaContenido = $ruta_db_superior."imagenes/qrFormato.png";
-            $contenidoFuncion ="<img src={$archivo_binario} width='109' />";            
-        }else{
-            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo,"width"); 
+            $rutaContenido = $ruta_db_superior . "imagenes/qrFormato.png";
+            $contenidoFuncion = "<img src={$archivo_binario} width='109' />";
+        } else {
+            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato, $iddoc, $tipo, "width");
         }
-   
-        $cuerpo = str_replace("{*".$nombreFuncion."*}", $contenidoFuncion, $cuerpo);              
+
+        $cuerpo = str_replace("{*" . $nombreFuncion . "*}", $contenidoFuncion, $cuerpo);
     }
 
     return $cuerpo;
 }
-function echo_load_pantalla($idpantalla, $tipo_retorno) {
+function echo_load_pantalla($idpantalla, $tipo_retorno)
+{
     echo (load_pantalla($idpantalla));
 }
 
-function ordenar_pantalla_campos($nuevo_orden) {
+function ordenar_pantalla_campos($nuevo_orden)
+{
     global $conn;
     $pantalla_campos = explode(",", $nuevo_orden);
-    print_r($_REQUEST);die();
+    print_r($_REQUEST);
+    die();
     $i = 0;
     $consultarOrden = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$idFormato} and orden <> 0", "", $conn);
-    print_r($consultarOrden);die();
+    print_r($consultarOrden);
+    die();
     foreach ($pantalla_campos as $key => $valor) {
         $cadena = str_replace("pc_", "", $valor);
-       if ($cadena != 'list_one') {
+        if ($cadena != 'list_one') {
             /* $sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena; */
             $sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
             $i++;
@@ -180,14 +186,15 @@ function ordenar_pantalla_campos($nuevo_orden) {
     }
 }
 
-function adicionar_datos_formato($datos, $tipo_retorno = 1) {
+function adicionar_datos_formato($datos, $tipo_retorno = 1)
+{
     global $ruta_db_superior;
 
     $retorno = array(
         "mensaje" => "Error al tratar de generar el adicionar de la pantalla",
         "exito" => 0
     );
-  
+
     if ($datos["nombre_formato"] == "") {
         $nombre_formato_automatico = strtolower($datos["etiqueta"]);
         $nombre_formato_automatico = preg_replace("/formato/", "", $nombre_formato_automatico); // se reemplaza la palabra formato por vacio
@@ -224,7 +231,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
     } else {
         $datos["nombre"] = trim($datos["nombre_formato"]);
         unset($datos["nombre_formato"]);
-        
+
         if (empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
             $retorno["mensaje"] = "Nombre del formato incorrecto: " . $datos["nombre"];
             echo (json_encode($retorno));
@@ -239,7 +246,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
         $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
     }
-   
+
     $fieldList = array();
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -289,7 +296,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
     $theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
     $fieldList["contador_idcontador"] = $theValue;
     // reinicio del contador
-    
+
     if ($fieldList["contador_idcontador"]) {
         $reinicio = 0;
         if ($datos["reiniciar_contador"])
@@ -299,7 +306,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         guardar_traza($sql, "ft_" . $datos["nombre"]);
         phpmkr_query($sql, $conn);
     }
-   
+
     // Field Serie_idserie
     if ($datos["serie_idserie"] == "") { // crear la serie con el nombre del formato
         $nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administracion%formatos'", "", $conn);
@@ -334,7 +341,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         $fieldList["serie_idserie"] = $theValue;
     }
 
-    if(!empty($datos["mostrar_tipodoc_pdf"])) {
+    if (!empty($datos["mostrar_tipodoc_pdf"])) {
         $fieldList["mostrar_tipodoc_pdf"] = $datos["mostrar_tipodoc_pdf"];
     } else {
         $fieldList["mostrar_tipodoc_pdf"] = 0;
@@ -436,7 +443,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     phpmkr_query($sql_if) or die("Falla al ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_if);
 
     $idformato = phpmkr_insert_id();
-    
+
     if (!empty($idformato)) {
         if ($x_flujo_idflujo != 0) {
             generar_campo_flujo($idformato, $x_flujo_idflujo);
@@ -457,7 +464,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
         $sql_icf1 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
-        
+
         guardar_traza($sql_icf1, "ft_" . $datos["nombre"]);
         phpmkr_query($sql_icf1) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_icf1);
     }
@@ -474,14 +481,14 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
      */
 
     if ($idformato) {
-        $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);        
+        $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);
         $retorno["mensaje"] = "EL formato se guardó con éxito";
         $retorno["idformato"] = $idformato;
         $retorno['exito'] = 1;
     } else {
         $retorno["error"] = "Error al insertar el Formato";
-    }   
-   
+    }
+
     if ($tipo_retorno == 1) {
         echo json_encode($retorno);
     } else {
@@ -489,7 +496,8 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     }
 }
 
-function crear_campo_bpmni($idpantalla) {
+function crear_campo_bpmni($idpantalla)
+{
     if (!$idpantalla)
         $idpantalla = @$_REQUEST["idpantalla"];
     $campo = busca_filtro_tabla("", "pantalla_campos a", "a.pantalla_idpantalla=" . $idpantalla . " and nombre='fk_idbpmni'", "", $conn);
@@ -514,7 +522,8 @@ function crear_campo_bpmni($idpantalla) {
     }
 }
 
-function verificar_datos_clase_padre($idpantalla, $clase) {
+function verificar_datos_clase_padre($idpantalla, $clase)
+{
     $where = '';
     $lcamposh = array();
     $datos_clase = busca_filtro_tabla("", "pantalla", "idpantalla=" . $clase, "", $conn);
@@ -555,7 +564,8 @@ function verificar_datos_clase_padre($idpantalla, $clase) {
     }
 }
 
-function eliminar_datos_clase_padre($idpantalla, $clase) {
+function eliminar_datos_clase_padre($idpantalla, $clase)
+{
     $dato_clase = busca_filtro_tabla("", "pantalla", "idpantalla=" . $clase, "", $conn);
     if ($clase && $idpantalla) {
         $campos_clase_padre = busca_filtro_tabla("", "pantalla_campos", "pantalla_idpantalla = " . $clase, "", $conn);
@@ -572,7 +582,7 @@ function eliminar_datos_clase_padre($idpantalla, $clase) {
 
 function buscarPapaCategoria($idcategoriaFormato)
 {
-   
+
     if (is_array($idcategoriaFormato) !== false) {
         $idcategoriaFormato = implode(",", $idcategoriaFormato);
     }
@@ -591,7 +601,8 @@ function buscarPapaCategoria($idcategoriaFormato)
     }
 }
 
-function editar_datos_formato($datos, $tipo_retorno = 1) {
+function editar_datos_formato($datos, $tipo_retorno = 1)
+{
     global $ruta_db_superior;
     $retorno = [
         "mensaje" => "Error al tratar de generar el adicionar de la pantalla",
@@ -609,10 +620,10 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $buscar_formato = busca_filtro_tabla("", "formato", "idformato=" . $datos["idformato"], "", $conn);
         if ($buscar_formato["numcampos"]) {
             $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
-            $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn); 
+            $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
             $datos["nombre"] = $buscar_formato[0]["nombre"];
-            if(empty($datos['cod_padre'])){
-                
+            if (empty($datos['cod_padre'])) {
+
                 /*$consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
                 if($consultaPadre['numcampos']){
                     $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
@@ -630,25 +641,24 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                     $retorno['exito'] = 0;
                     echo json_encode($retorno);
                     die(); 
-                }*/
-            }else{
+                }*/ } else {
                 if ($consultaDocumentos['numcampos']) {
-                $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
-                $retorno['exito'] = 0;
-                echo json_encode($retorno);
-                die(); 
+                    $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
+                    $retorno['exito'] = 0;
+                    echo json_encode($retorno);
+                    die();
                 }
             }
         }
     }
-    if($_REQUEST['fk_categoria_formato']){
+    if ($_REQUEST['fk_categoria_formato']) {
         $datos['fk_categoria_formato'] = buscarPapaCategoria($_REQUEST['fk_categoria_formato']);
-        $datos['fk_categoria_formato'] = $datos['fk_categoria_formato'] .",". $_REQUEST['fk_categoria_formato'];
+        $datos['fk_categoria_formato'] = $datos['fk_categoria_formato'] . "," . $_REQUEST['fk_categoria_formato'];
         $datos['fk_categoria_formato'] = explode(',', $datos['fk_categoria_formato']);
         $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
         $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
     }
-   
+
     $fieldList = array();
     // Field Banderas
     if (is_array($datos["banderas"]))
@@ -662,7 +672,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 
     // Field etiqueta
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["etiqueta"]) : $datos["etiqueta"];
-    if(!empty($thevalue)) {
+    if (!empty($thevalue)) {
         $fieldList["etiqueta"] = htmlentities($theValue);
     }
 
@@ -739,7 +749,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $fieldList["serie_idserie"] = $theValue;
     }
 
-    if(isset($datos["mostrar_tipodoc_pdf"]) && isset($datos["mostrar_tipodoc_pdf"]) && !empty($datos["mostrar_tipodoc_pdf"])) {
+    if (isset($datos["mostrar_tipodoc_pdf"]) && isset($datos["mostrar_tipodoc_pdf"]) && !empty($datos["mostrar_tipodoc_pdf"])) {
         $fieldList["mostrar_tipodoc_pdf"] = $datos["mostrar_tipodoc_pdf"];
     } else {
         $fieldList["mostrar_tipodoc_pdf"] = 0;
@@ -801,10 +811,10 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     }
 
     // Field cod_padre
-    
+
     $theValue = ($datos["cod_padre"] != 0) ? intval($datos["cod_padre"]) : 0;
     $fieldList["cod_padre"] = $theValue;
-    
+
 
     // Field Tipo Edicion continua
     $theValue = ($datos["tipo_edicion"] != 0) ? intval($datos["tipo_edicion"]) : 0;
@@ -837,7 +847,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     $strsql = "UPDATE formato SET ";
     $strsql_array = array();
     foreach ($fieldList as $key => $value) {
-        if($key == "etiqueta" && (empty($value) || preg_match("/NULL/", $value))) {
+        if ($key == "etiqueta" && (empty($value) || preg_match("/NULL/", $value))) {
             continue;
         }
         array_push($strsql_array, $key . " = " . $value);
@@ -877,8 +887,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         $retorno['exito'] = 1;
         $retorno['editar'] = 1;
     } else {
-        $retorno["error"] = "Error al insertar el Formato";
-        ;
+        $retorno["error"] = "Error al insertar el Formato";;
     }
 
     if ($tipo_retorno == 1) {
@@ -888,11 +897,12 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     }
 }
 
-function editar_datos_pantalla($datos, $tipo_retorno = 1) {
+function editar_datos_pantalla($datos, $tipo_retorno = 1)
+{
     global $conn;
     if ($datos["idpantalla"]) {
         $pantalla_actual = busca_filtro_tabla("", "pantalla A, pantalla_campos B", "A.idpantalla=B.pantalla_idpantalla AND B.pantalla_idpantalla=" . $datos["idpantalla"], "", $conn);
-        $sql_update_datos_pantalla = "UPDATE pantalla SET nombre='" . $datos['nombre'] . "', librerias = '" . $datos['librerias'] . "', etiqueta = '" . $datos['etiqueta'] . "', funcionario_idfuncionario='" . $_SESSION['idfuncionario']. "', ayuda='" . $datos['ayuda'] . "',banderas='" . $datos['banderas'] . "' ,tiempo_autoguardado ='" . $datos['tiempo'] . "',tipo_pantalla='" . $datos["tipo_pantalla"] . "',ruta_pantalla='" . $datos["ruta_pantalla"] . "',cod_padre='" . $datos["cod_padre"] . "',clase='" . $datos["clase"] . "', prefijo='" . $datos["prefijo"] . "', ruta_almacenamiento='" . $datos["ruta_almacenamiento"] . "',aprobacion_automatica='" . $datos["aprobacion_automatica"] . "',fk_idpantalla_categoria = '" . $datos["fk_categoria_formato"] . "',versionar='" . $datos["versionar"] . "',accion_eliminar='" . $datos["accion_eliminar"] . "' WHERE idpantalla =" . $datos['idpantalla'];
+        $sql_update_datos_pantalla = "UPDATE pantalla SET nombre='" . $datos['nombre'] . "', librerias = '" . $datos['librerias'] . "', etiqueta = '" . $datos['etiqueta'] . "', funcionario_idfuncionario='" . $_SESSION['idfuncionario'] . "', ayuda='" . $datos['ayuda'] . "',banderas='" . $datos['banderas'] . "' ,tiempo_autoguardado ='" . $datos['tiempo'] . "',tipo_pantalla='" . $datos["tipo_pantalla"] . "',ruta_pantalla='" . $datos["ruta_pantalla"] . "',cod_padre='" . $datos["cod_padre"] . "',clase='" . $datos["clase"] . "', prefijo='" . $datos["prefijo"] . "', ruta_almacenamiento='" . $datos["ruta_almacenamiento"] . "',aprobacion_automatica='" . $datos["aprobacion_automatica"] . "',fk_idpantalla_categoria = '" . $datos["fk_categoria_formato"] . "',versionar='" . $datos["versionar"] . "',accion_eliminar='" . $datos["accion_eliminar"] . "' WHERE idpantalla =" . $datos['idpantalla'];
         phpmkr_query($sql_update_datos_pantalla);
         // crear_campo_padre($datos['idpantalla'],$datos["cod_padre"]);
         // crear_campo_bpmni($datos['idpantalla']);
@@ -901,7 +911,7 @@ function editar_datos_pantalla($datos, $tipo_retorno = 1) {
             $sql2 = "INSERT INTO pantalla_campos(pantalla_idpantalla,tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $datos["idpantalla"] . ",'" . $datos["nombre"] . "','id" . $datos["nombre"] . "','Identificador " . $datos["etiqueta"] . "','INT','11',0,'','a','Identificador " . $datos["etiqueta"] . "','','pk','hidden',0,0,'id" . $datos["nombre"] . "')";
             phpmkr_query($sql2) or die($sql2);
         }
-        
+
         if ($pantalla_actual["numcampos"]) {
             if ($datos["clase"] != $pantalla_actual[0]["clase"]) {
                 eliminar_datos_clase_padre($datos["idpantalla"], $pantalla_actual[0]["clase"]);
@@ -941,7 +951,8 @@ function editar_datos_pantalla($datos, $tipo_retorno = 1) {
     }
 }
 
-function crear_campo_padre($idpantalla, $idpadre) {
+function crear_campo_padre($idpantalla, $idpadre)
+{
     if (!$idpadre)
         $idpadre = @$_REQUEST["idpadre"];
     if (!$idpantalla)
@@ -975,7 +986,8 @@ function crear_campo_padre($idpantalla, $idpadre) {
     }
 }
 
-function load_componentes($tipo_retorno) {
+function load_componentes($tipo_retorno)
+{
     global $conn;
     $texto = '';
     $where = '';
@@ -1015,7 +1027,8 @@ function load_componentes($tipo_retorno) {
     }
 }
 
-function llena_componentes($nombre) {
+function llena_componentes($nombre)
+{
     global $conn;
     $texto = '';
     $componentes = busca_filtro_tabla("idpantalla_componente, clase, etiqueta", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "etiqueta ASC", $conn);
@@ -1030,7 +1043,8 @@ function llena_componentes($nombre) {
     return ($texto);
 }
 
-function generar_adicionar($idpantalla, $tipo_retorno) {
+function generar_adicionar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $retorno = array(
         "mensaje" => "Error al tratar de generar el adicionar de la pantalla",
@@ -1065,7 +1079,8 @@ function generar_adicionar($idpantalla, $tipo_retorno) {
     }
 }
 
-function generar_atributos($campos_pantalla) {
+function generar_atributos($campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     foreach ($tablas as $key => $valor) {
@@ -1080,7 +1095,8 @@ function generar_atributos($campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_constructor($pantalla, $campos_pantalla) {
+function generar_constructor($pantalla, $campos_pantalla)
+{
     global $conn;
     $texto_pantalla = '';
     $texto_pantalla .= 'public function __construct(){' . "\n";
@@ -1103,7 +1119,8 @@ $this->nombre_pantalla=' . $pantalla[0]["nombre"] . ';
     return ($texto_pantalla);
 }
 
-function generar_destructor($pantalla) {
+function generar_destructor($pantalla)
+{
     global $conn;
     $texto_pantalla = '';
     $texto_pantalla .= 'public function __destruct(){';
@@ -1117,7 +1134,8 @@ function generar_destructor($pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_set($pantalla, $campos_pantalla) {
+function generar_metodo_set($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     $texto_pantalla .= ' public function set_' . $pantalla[0]["nombre"] . '($validar=1,$set_type="request",$data=null){
@@ -1265,7 +1283,8 @@ function generar_metodo_set($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_insert_busqueda_temp($pantalla, $campos_pantalla) {
+function generar_metodo_insert_busqueda_temp($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     $texto_pantalla .= 'public function insert_busqueda_temp_' . $pantalla[0]["nombre"] . '($validar=1){
@@ -1356,7 +1375,8 @@ function generar_metodo_insert_busqueda_temp($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_validar_insert() {
+function generar_metodo_validar_insert()
+{
     $texto_pantalla = '';
     $texto_pantalla .= 'public function validar_insert(){' . "\n";
     $texto_pantalla .= 'if(isset($_SESSION["key_formulario_saia"])){
@@ -1376,7 +1396,8 @@ else {
     return ($texto_pantalla);
 }
 
-function generar_metodo_existe($pantalla, $campos_pantalla) {
+function generar_metodo_existe($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $texto_pantalla .= 'public function existe_' . $pantalla[0]["nombre"] . '(){';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
@@ -1393,7 +1414,8 @@ function generar_metodo_existe($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_get_campos($pantalla, $campos_pantalla) {
+function generar_metodo_get_campos($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     $texto_pantalla .= 'public function get_campos_' . $pantalla[0]["nombre"] . '() {' . "\n";
@@ -1409,7 +1431,8 @@ function generar_metodo_get_campos($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_get_campo($pantalla, $campos_pantalla) {
+function generar_metodo_get_campo($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     foreach ($tablas as $key => $valor) {
@@ -1427,7 +1450,8 @@ function generar_metodo_get_campo($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_get_valor($pantalla, $campos_pantalla) {
+function generar_metodo_get_valor($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $tablas = extrae_campo($campos_pantalla, "tabla", "U,L");
     foreach ($tablas as $key => $valor) {
@@ -1445,7 +1469,8 @@ function generar_metodo_get_valor($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_update($pantalla, $campos_pantalla) {
+function generar_metodo_update($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $texto_parametro = array();
     $texto_cuerpo = '';
@@ -1514,7 +1539,8 @@ return($retorno);' . "\n";
     return ($texto_pantalla);
 }
 
-function generar_metodo_delete($pantalla, $campos_pantalla) {
+function generar_metodo_delete($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $texto_parametro = array();
     $texto_cuerpo = '';
@@ -1569,7 +1595,8 @@ return($retorno);' . "\n";
     return ($texto_pantalla);
 }
 
-function generar_metodo_get($pantalla, $campos_pantalla) {
+function generar_metodo_get($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $texto_parametro = array();
     $texto_cuerpo = '';
@@ -1602,7 +1629,8 @@ function generar_metodo_get($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_ejecutar_acciones($pantalla, $campos_pantalla) {
+function generar_metodo_ejecutar_acciones($pantalla, $campos_pantalla)
+{
     $texto_pantalla = '';
     $texto_parametro = array();
 
@@ -1613,7 +1641,8 @@ function generar_metodo_ejecutar_acciones($pantalla, $campos_pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_clase($idpantalla, $tipo_retorno) {
+function generar_clase($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     $texto_clase = '';
@@ -1696,7 +1725,8 @@ function generar_clase($idpantalla, $tipo_retorno) {
     }
 }
 
-function importar_funciones_externas_clase($pantalla) {
+function importar_funciones_externas_clase($pantalla)
+{
     $texto_pantalla = '';
     // print_r($pantalla);
     if ($pantalla[0]["librerias"] != "") {
@@ -1710,7 +1740,8 @@ function importar_funciones_externas_clase($pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_pantalla_libreria($idpantalla, $tipo_retorno) {
+function generar_pantalla_libreria($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     $retorno = array(
@@ -1759,13 +1790,15 @@ function generar_pantalla_libreria($idpantalla, $tipo_retorno) {
     }
 }
 
-function generar_ruta_superior() {
+function generar_ruta_superior()
+{
     $texto = '<' . '?php
   $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } ?' . '>';
     return ($texto);
 }
 
-function generar_version_pantalla($idpantalla, $tipo_retorno) {
+function generar_version_pantalla($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior;
     $pantalla = busca_filtro_tabla("", "pantalla", "idpantalla=" . $idpantalla, "", $conn);
     $ruta_origen = $pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"];
@@ -1773,7 +1806,7 @@ function generar_version_pantalla($idpantalla, $tipo_retorno) {
     if (is_dir($ruta_db_superior . $ruta_origen)) {
         $archivo_zip = $pantalla[0]["nombre"] . "_" . $pantalla[0]["version"] . ".zip";
         crear_destino($ruta_db_superior . $ruta_destino);
-        include_once ($ruta_db_superior . "pantallas/generador/lib/librerias_zip.php");
+        include_once($ruta_db_superior . "pantallas/generador/lib/librerias_zip.php");
         $retorno = comprimir_zip($ruta_origen, $ruta_destino, $archivo_zip, 0);
         if ($retorno["exito"] == 1) {
             $sql2 = "UPDATE pantalla SET version=" . ($pantalla[0]["version"] + 1) . " WHERE idpantalla=" . $pantalla[0]["idpantalla"];
@@ -1790,7 +1823,8 @@ function generar_version_pantalla($idpantalla, $tipo_retorno) {
     }
 }
 
-function encabezado_pantalla($pantalla) {
+function encabezado_pantalla($pantalla)
+{
     $texto_pantalla = generar_ruta_superior();
     $texto_pantalla .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
     $texto_pantalla .= incluir_libreria_saia('pantallas/lib/librerias_componentes.php', "php");
@@ -1821,7 +1855,8 @@ function encabezado_pantalla($pantalla) {
 }
 
 // /2-Posterior 1->anterior 3->error
-function bloque_codigo_funciones($pantalla, $accion, $momento = 2, $bloque_actual = "php") {
+function bloque_codigo_funciones($pantalla, $accion, $momento = 2, $bloque_actual = "php")
+{
     $texto_pantalla = '';
     $funciones = busca_filtro_tabla("", "pantalla_funcion A,pantalla_funcion_exe B", "A.idpantalla_funcion=B.fk_idpantalla_funcion AND B.pantalla_idpantalla=" . $pantalla[0]["idpantalla"] . " AND lower(B.accion)='" . strtolower($accion) . "' AND A.tipo_funcion='php' AND momento=" . $momento, "B.orden", $conn);
     if ($funciones["numcampos"]) {
@@ -1867,7 +1902,8 @@ function bloque_codigo_funciones($pantalla, $accion, $momento = 2, $bloque_actua
     return ($texto_pantalla);
 }
 
-function footer_pantalla($pantalla, $accion) {
+function footer_pantalla($pantalla, $accion)
+{
     $texto_pantalla = '';
     $texto_pantalla .= '<input type="hidden" name="key_formulario_saia" value="<' . '?php echo(generar_llave_md5_saia());?' . '>">';
     $texto_pantalla .= '<input type="hidden" name="fk_idbpmni" value="<' . '?php echo($_REQUEST["bpmni"]);?' . '>">';
@@ -1919,7 +1955,8 @@ function footer_pantalla($pantalla, $accion) {
     return ($texto_pantalla);
 }
 
-function footer_pantalla_mostrar($pantalla) {
+function footer_pantalla_mostrar($pantalla)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     if ($pantalla[0]["tipo_pantalla"] == 2) {
@@ -1956,7 +1993,8 @@ function footer_pantalla_mostrar($pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_metodo_validar_retorno_pantalla() {
+function generar_metodo_validar_retorno_pantalla()
+{
     $texto = 'public function validar_retorno_pantalla($retorno,$retorno_temp){
     if($retorno_temp && $retorno_temp->operador_exito){
       if($retorno_temp->operador_exito==1)
@@ -1978,7 +2016,8 @@ function generar_metodo_validar_retorno_pantalla() {
 }
 
 // se encarga de asignar los valores a los campos ocultos del adicionar de las pantallas ejemplo: ejecutor, tipo_radicado
-function generar_valores_campos_ocultos_obligatorios($pantalla) {
+function generar_valores_campos_ocultos_obligatorios($pantalla)
+{
     global $conn;
 
     $texto = '';
@@ -1987,7 +2026,8 @@ function generar_valores_campos_ocultos_obligatorios($pantalla) {
     return ($texto);
 }
 
-function generar_validaciones_formulario($pantalla, $funcion_default, $accion = "") {
+function generar_validaciones_formulario($pantalla, $funcion_default, $accion = "")
+{
     $campos_pantalla = busca_filtro_tabla("", "pantalla_campos A", "A.pantalla_idpantalla=" . $pantalla[0]["idpantalla"] . " AND A.nombre<>'id" . $pantalla[0]["nombre"] . "'", "orden", $conn);
     $texto_pantalla = '';
     $texto_pantalla .= '<script type="text/javascript">';
@@ -2083,7 +2123,8 @@ $.ajax({
     return ($texto_pantalla);
 }
 
-function incluir_libreria_saia($ruta_archivo, $tipo_archivo, $incluir_tag = 1, $encabezado_pie = "") {
+function incluir_libreria_saia($ruta_archivo, $tipo_archivo, $incluir_tag = 1, $encabezado_pie = "")
+{
     global $librerias_incluidas;
     if (!in_array($ruta_archivo, $librerias_incluidas) || $encabezado_pie == 1) {
         switch ($tipo_archivo) {
@@ -2110,7 +2151,8 @@ function incluir_libreria_saia($ruta_archivo, $tipo_archivo, $incluir_tag = 1, $
     return;
 }
 
-function encabezado_pantalla_adicionar($pantalla) {
+function encabezado_pantalla_adicionar($pantalla)
+{
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia($pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"] . "/class_" . $pantalla[0]["nombre"] . ".php", "php");
 
@@ -2131,7 +2173,8 @@ function encabezado_pantalla_adicionar($pantalla) {
     return ($texto_pantalla);
 }
 
-function encabezado_pantalla_buscar($pantalla) {
+function encabezado_pantalla_buscar($pantalla)
+{
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia($pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"] . "/class_" . $pantalla[0]["nombre"] . ".php", "php");
 
@@ -2152,7 +2195,8 @@ function encabezado_pantalla_buscar($pantalla) {
     return ($texto_pantalla);
 }
 
-function encabezado_pantalla_mostrar($pantalla) {
+function encabezado_pantalla_mostrar($pantalla)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia($pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"] . "/class_" . $pantalla[0]["nombre"] . ".php", "php");
@@ -2182,7 +2226,8 @@ function encabezado_pantalla_mostrar($pantalla) {
     return ($texto_pantalla);
 }
 
-function encabezado_pantalla_formatos($pantalla, $librerias_encabezado) {
+function encabezado_pantalla_formatos($pantalla, $librerias_encabezado)
+{
     global $ruta_db_superior, $librerias_incluidas;
     $texto_pantalla = '';
     $pantalla_adicional = busca_filtro_tabla("", "pantalla_pdf a", "fk_idpantalla=" . $pantalla[0]["idpantalla"], "", $conn);
@@ -2290,7 +2335,8 @@ function encabezado_pantalla_formatos($pantalla, $librerias_encabezado) {
     return ($texto_pantalla);
 }
 
-function incluir_librerias_encabezado_pie($pantalla) {
+function incluir_librerias_encabezado_pie($pantalla)
+{
     global $conn, $ruta_db_superior;
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia('pantallas/lib/librerias_componentes.php', "php");
@@ -2310,7 +2356,8 @@ function incluir_librerias_encabezado_pie($pantalla) {
     return ($texto_pantalla);
 }
 
-function encabezado_pantalla_editar($pantalla) {
+function encabezado_pantalla_editar($pantalla)
+{
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia($pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"] . "/class_" . $pantalla[0]["nombre"] . ".php", "php");
 
@@ -2335,7 +2382,8 @@ function encabezado_pantalla_editar($pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_editar($idpantalla, $tipo_retorno) {
+function generar_editar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior;
     $retorno = array(
         "exito" => 0
@@ -2371,7 +2419,8 @@ function generar_editar($idpantalla, $tipo_retorno) {
     }
 }
 
-function encabezado_pantalla_eliminar($pantalla) {
+function encabezado_pantalla_eliminar($pantalla)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     $texto_pantalla .= incluir_libreria_saia($pantalla[0]["ruta_pantalla"] . "/" . $pantalla[0]["nombre"] . "/class_" . $pantalla[0]["nombre"] . ".php", "php");
@@ -2397,7 +2446,8 @@ function encabezado_pantalla_eliminar($pantalla) {
     return ($texto_pantalla);
 }
 
-function generar_eliminar($idpantalla, $tipo_retorno) {
+function generar_eliminar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $retorno = array(
         "mensaje" => "Error al tratar de generar el mostrar de la pantalla",
@@ -2431,7 +2481,8 @@ function generar_eliminar($idpantalla, $tipo_retorno) {
     }
 }
 
-function footer_pantalla_eliminar($pantalla) {
+function footer_pantalla_eliminar($pantalla)
+{
     global $ruta_db_superior;
     $texto_pantalla = '';
     $librerias_pantalla = busca_filtro_tabla("", "pantalla_include A, pantalla_libreria B", "A.fk_idpantalla_libreria=B.idpantalla_libreria AND A.pantalla_idpantalla=" . $pantalla[0]["idpantalla"] . " AND lugar_incluir='footer' AND A.acciones_include like '%e%'", "A.orden", $conn);
@@ -2478,7 +2529,8 @@ function footer_pantalla_eliminar($pantalla) {
     return ($texto_pantalla);
 }
 
-function validar_indices_pantalla($pantalla, $campos_pantalla, $tablas) {
+function validar_indices_pantalla($pantalla, $campos_pantalla, $tablas)
+{
     global $conn;
     $llaves = array(
         "pk",
@@ -2503,7 +2555,8 @@ function validar_indices_pantalla($pantalla, $campos_pantalla, $tablas) {
     }
 }
 
-function generar_tablas($idpantalla, $tipo_retorno) {
+function generar_tablas($idpantalla, $tipo_retorno)
+{
     global $conn;
     $pantalla = busca_filtro_tabla("", "pantalla A", "A.idpantalla=" . $idpantalla, "", $conn);
     $campos_base = busca_filtro_tabla("", "pantalla_campos", "pantalla_idpantalla=" . $idpantalla . " AND tabla<>''", "", $conn);
@@ -2517,7 +2570,8 @@ function generar_tablas($idpantalla, $tipo_retorno) {
     }
 }
 
-function validar_tablas_pantalla($pantalla, $campos_base, $tablas) {
+function validar_tablas_pantalla($pantalla, $campos_base, $tablas)
+{
     global $conn;
     $retorno = array();
     $retorno["exito"] = 1;
@@ -2607,7 +2661,8 @@ function validar_tablas_pantalla($pantalla, $campos_base, $tablas) {
     return ($retorno);
 }
 
-function generar_buscar($idpantalla, $tipo_retorno) {
+function generar_buscar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $retorno = array(
         "mensaje" => "Error al tratar de generar el buscar de la pantalla",
@@ -2645,7 +2700,8 @@ function generar_buscar($idpantalla, $tipo_retorno) {
     }
 }
 
-function parsear_pantalla_mostrar($pantalla, $request_procesar) {
+function parsear_pantalla_mostrar($pantalla, $request_procesar)
+{
     global $ruta_db_superior;
     $retorno = array(
         "exito" => 0
@@ -2700,7 +2756,8 @@ function parsear_pantalla_mostrar($pantalla, $request_procesar) {
     return ($texto);
 }
 
-function generar_mostrar($idpantalla, $tipo_retorno) {
+function generar_mostrar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $retorno = array(
         "mensaje" => "Error al tratar de generar el mostrar de la pantalla",
@@ -2758,7 +2815,8 @@ function generar_mostrar($idpantalla, $tipo_retorno) {
     }
 }
 
-function guardar_encabezado_pie($idpantalla, $encabezado, $pie) {
+function guardar_encabezado_pie($idpantalla, $encabezado, $pie)
+{
     global $conn, $ruta_db_superior;
     $buscar = busca_filtro_tabla("", "pantalla_encabezado a", "a.fk_idpantalla=" . $idpantalla, "", $conn);
     if (!$buscar["numcampos"]) {
@@ -2769,7 +2827,8 @@ function guardar_encabezado_pie($idpantalla, $encabezado, $pie) {
     phpmkr_query($sql1);
 }
 
-function generar_listar($idpantalla, $tipo_retorno) {
+function generar_listar($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $sql1 = '';
     $retorno = new stdClass();
@@ -2861,7 +2920,8 @@ function generar_listar($idpantalla, $tipo_retorno) {
     }
 }
 
-function generar_modulo($idpantalla, $tipo_retorno) {
+function generar_modulo($idpantalla, $tipo_retorno)
+{
     $pantalla = busca_filtro_tabla("", "pantalla", "idpantalla=" . $idpantalla, "", $conn);
     $mensaje = "error al tratar de generar el m&oacute;dulo relacionado con la pantalla";
     $err_code = 0;
@@ -2890,7 +2950,8 @@ function generar_modulo($idpantalla, $tipo_retorno) {
     }
 }
 
-function vincular_librerias_componente($pantalla) {
+function vincular_librerias_componente($pantalla)
+{
     $campos_pantalla = busca_filtro_tabla("", "pantalla_campos A, pantalla_componente B", "A.etiqueta_html=B.nombre AND A.pantalla_idpantalla=" . $pantalla[0]["idpantalla"], "", $conn);
     for ($i = 0; $i < $campos_pantalla["numcampos"]; $i++) {
         $librerias = explode(",", $campos_pantalla[$i]["librerias"]);
@@ -2910,7 +2971,8 @@ function vincular_librerias_componente($pantalla) {
     }
 }
 
-function validar_nombre_pantalla($datos, $tipo_retorno) {
+function validar_nombre_pantalla($datos, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
     $retorno = new stdClass();
     $retorno->existe = 0;
@@ -2922,7 +2984,8 @@ function validar_nombre_pantalla($datos, $tipo_retorno) {
     echo (json_encode($retorno));
 }
 
-function vincular_libreria_pantalla($datos, $tipo_retorno) {
+function vincular_libreria_pantalla($datos, $tipo_retorno)
+{
     global $ruta_db_superior, $conn;
 
     $retorno = array();
@@ -2958,59 +3021,49 @@ function vincular_libreria_pantalla($datos, $tipo_retorno) {
     echo (json_encode($retorno));
 }
 
-function crear_modulo_formato($idformato) {
-    global $conn;
-    $idmodulo = 0;
-    $datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,ruta_mostrar,ruta_adicionar", "vpantalla_formato", "idformato=" . $idformato, "", $conn);
-    // este modulo debe estar creado y debe ser el modulo principal para visualizar los formatos del menu documentos
-    $modulo_formato = busca_filtro_tabla("", "modulo", "(nombre = 'modulo_formatos')", "", $conn);
-    
-    $papa = null;
-    if ($modulo_formato["numcampos"]) {
-        $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
-        if (!$submodulo_formato["numcampos"]) {
-            $padre = busca_filtro_tabla("idmodulo", "vpantalla_formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-            
-            if ($padre["numcampos"] > 0) {
-                $papa = $padre[0]["idmodulo"];
-            } else {
-                $papa = $modulo_formato[0]["idmodulo"];
-            }
-            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','" . $papa . "','1')";
-            phpmkr_query($sql, $conn) or die("Error al crear el modulo: $sql");
-            $modulo_id = phpmkr_insert_id();
-           
-            $sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . $_SESSION['idfuncionario'] . "'," . $modulo_id . ")";
-            
-            phpmkr_query($sql) or die("Error al crear los permisos: $sql");
-            
-        } else {
-            $padre = busca_filtro_tabla("idmodulo", "vpantalla_formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-            if ($padre["numcampos"] > 0) {
-                $papa = $padre[0]["idmodulo"];
-            } else {
-                $papa = $modulo_formato[0]["idmodulo"];
-            }
-            $sql = "update modulo set nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
-            phpmkr_query($sql, $conn);
-            $modulo_id = $submodulo_formato[0]["idmodulo"];
-        }
+/**
+ * crea el modulo de un formato
+ *
+ * @param integer $idformato
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-04-29
+ */
+function crear_modulo_formato($idformato)
+{
+    //formato al que se le genera el modulo
+    $Formato = new Formato($idformato);
+    //valido si el formato ya tiene un modulo
+    $exist = Modulo::countRecords([
+        'nombre' => 'crear_' . $Formato->nombre
+    ]);
+
+    if ($exist) {
+        Modulo::executeUpdate([
+            'etiqueta' => $Formato->etiqueta
+        ], [
+            'nombre' => 'crear_' . $Formato->nombre
+        ]);
+    } else {
+        $Modulo = Modulo::findByAttributes(['nombre' => 'modulo_formatos']);
+
+        $moduleId = Modulo::newRecord([
+            'nombre' => 'crear_' . $Formato->nombre,
+            'tipo' => 2,
+            'etiqueta' => $Formato->etiqueta,
+            'enlace' => 'formatos/' . $Formato->nombre . '/' . $Formato->ruta_adicionar,
+            'cod_padre' => $Modulo->getPK()
+        ]);
+
+        Permiso::newRecord([
+            'funcionario_idfuncionario' => SessionController::getValue('idfuncionario'),
+            'modulo_idmodulo' => $moduleId
+        ]);
     }
-    $modulo_crear = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
-    if ($modulo_crear["numcampos"]) {
-        $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
-        if (!$submodulo_formato["numcampos"]) {
-            if(empty($papa)) {
-                $papa = $modulo_crear[0]["idmodulo"];
-            }
-            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $papa . "','1')";
-            phpmkr_query($sql, $conn);
-        }
-    }
-    return $modulo_id;
 }
 
-function generar_archivos_ignorados($idpantalla, $tipo_retorno) {
+function generar_archivos_ignorados($idpantalla, $tipo_retorno)
+{
     global $ruta_db_superior;
     $retorno = array(
         "mensaje" => "Error al tratar de ignorar los archivos ignorados de la pantalla",
@@ -3056,10 +3109,11 @@ function generar_archivos_ignorados($idpantalla, $tipo_retorno) {
     }
 }
 
-function insertar_anexo_formato($idformato, $form_uuid, $idanexos) {
+function insertar_anexo_formato($idformato, $form_uuid, $idanexos)
+{
     global $conn, $ruta_db_superior;
-    require_once ($ruta_db_superior . 'StorageUtils.php');
-    require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
+    require_once($ruta_db_superior . 'StorageUtils.php');
+    require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
     $ok = 0;
     $larchivos = array();
     if ($idformato != "") {
@@ -3160,7 +3214,8 @@ function insertar_anexo_formato($idformato, $form_uuid, $idanexos) {
     return ($retorno);
 }
 
-function quitar_preposiciones_articulos($texto) {
+function quitar_preposiciones_articulos($texto)
+{
     $separarTexto = explode(" ", $texto);
 
     /*
@@ -3241,7 +3296,8 @@ function quitar_preposiciones_articulos($texto) {
     return $resultado;
 }
 
-function validar_nombres($texto) {
+function validar_nombres($texto)
+{
     // buscar si existe el nombre
     global $conn;
     $cant = strlen($texto);
@@ -3266,50 +3322,51 @@ function validar_nombres($texto) {
     return $nuevo_texto;
 }
 
-function consultarPermisosPerfil(){
+function consultarPermisosPerfil()
+{
     global $conn;
-    $permisos='';
-    $consultaPermisos = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A","", "A.nombre ASC",$conn);
-    if($consultaPermisos['numcampos']){
-        $permisos ='<div>';
-        for ($i=0; $i < $consultaPermisos['numcampos'] ; $i++) {
-            $permisos.= "<label class='checkbox inline'>
+    $permisos = '';
+    $consultaPermisos = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC", $conn);
+    if ($consultaPermisos['numcampos']) {
+        $permisos = '<div>';
+        for ($i = 0; $i < $consultaPermisos['numcampos']; $i++) {
+            $permisos .= "<label class='checkbox inline'>
             <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}'> {$consultaPermisos[$i]["nombre"]}
             </label>";
         }
-        $permisos.= '</div>';
+        $permisos .= '</div>';
     }
     return $permisos;
 }
 
-function permisosFormato($idformato,$idperfil,$nombreFormato){
+function permisosFormato($idformato, $idperfil, $nombreFormato)
+{
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
-    $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ","",$conn);
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
     $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
     phpmkr_query($eliminarPermisos);
-    if($consultaModulo['numcampos']){
-        for ($i=0; $i < count($idperfil) ; $i++) {
+    if ($consultaModulo['numcampos']) {
+        for ($i = 0; $i < count($idperfil); $i++) {
             $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil[$i]},'lame','lame','lame')";
             phpmkr_query($guardarPermiso);
             $retorno['exito'] = 1;
-            $retorno['mensaje'] = 'permisos asignados correctamente'; 
+            $retorno['mensaje'] = 'permisos asignados correctamente';
         }
     }
     return  $retorno;
 }
 
-function eliminarPermisoFormato($idformato, $nombreFormato){
+function eliminarPermisoFormato($idformato, $nombreFormato)
+{
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
     $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
     $deletePermisos = phpmkr_query($eliminarPermisos);
-    if($deletePermisos){
+    if ($deletePermisos) {
         $retorno['exito'] = 1;
         //$retorno['mensaje'] = 'permisos eliminados correctamente';
     }
     return $retorno;
 }
-
-?>

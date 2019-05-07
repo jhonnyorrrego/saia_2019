@@ -1,6 +1,7 @@
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
@@ -8,8 +9,17 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once $ruta_db_superior . "db.php";
-usuario_actual("login");
+
+include_once $ruta_db_superior . "controllers/autoload.php";
+
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+    $data = JwtController::GetData($_REQUEST['token']);
+    $Funcionario = new Funcionario($data->id);
+    new SessionController($Funcionario);
+} catch (\Throwable $th) {
+    die("invalid access");
+}
 
 // pagina actual inicia en 1
 $page = (int)$_REQUEST['page'] ? $_REQUEST["page"] : 1;
@@ -306,11 +316,11 @@ if (!$_REQUEST['onlyCount']) {
                     }
                 }
                 $listado_funciones = parsear_datos_plantilla_visual($info_base, implode(",", $lcampos));
-                
+
                 for ($i = 0; $i < $result["numcampos"]; $i++) {
                     $response['rows'][$i] = [];
                     $response['rows'][$i]['llave'] = $result[$i][$llave];
-                    
+
                     unset($listado_campos);
                     $listado_campos = array();
 
@@ -344,7 +354,7 @@ if (!$_REQUEST['onlyCount']) {
                             }
                         }
                     }
-                    
+
                     if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
                         $response['rows'][$i]['info'] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'></div>";
                         $response['rows'][$i]['info'] = str_replace("\n", "", str_replace("\r", "", $info));
@@ -360,7 +370,7 @@ if (!$_REQUEST['onlyCount']) {
         $response['exito'] = 3;
         $response['mensaje'] = "No existen registros";
     }
-}else {
+} else {
     $response['exito'] = 1;
 }
 echo json_encode($response);
@@ -423,4 +433,3 @@ function incluir_librerias_busqueda($elemento, $indice)
     global $ruta_db_superior;
     include_once($ruta_db_superior . $elemento);
 }
- 

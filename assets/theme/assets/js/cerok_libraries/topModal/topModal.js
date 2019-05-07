@@ -1,4 +1,5 @@
 var topModalDefaults = {
+    content: "", //string with especific content to show
     url: "", // url to open
     params: {}, //params for url ej: baseUrl
     size: "", //'modal-lg', 'modal-sm' , 'modal-xl'
@@ -94,7 +95,7 @@ function topModal(options) {
         modalBody.append(options.content);
         openModal(options);
     } else {
-        console.error("debe indicar la url");
+        console.error("must set some source");
     }
 }
 

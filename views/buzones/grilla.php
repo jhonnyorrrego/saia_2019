@@ -57,7 +57,8 @@ if ($datos_busqueda[0]["busqueda_avanzada"]) {
 if ($datos_busqueda[0]["enlace_adicionar"]) {
     $datos_busqueda[0]["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
     $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$datos_busqueda[0]["enlace_adicionar"]}'>
-        <i class='fa fa-plus'></i> Adicionar
+        <i class='fa fa-plus'></i>
+        <span class='d-none d-sm-inline'>Adicionar</span>
     </button>";
 }
 
@@ -95,7 +96,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
 </head>
 
 <body>
-    <div class="container-fluid mw-100" style="overflow-y:auto;height:100%">
+    <div class="container-fluid mw-100 px-3" style="overflow-y:auto;height:100%">
         <div class="row">
             <div class="col-12">
                 <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
@@ -120,7 +121,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     <button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
                         <i class="fa fa-download"></i>
                     </button>
-                    <div class="pull-right" valign="middle">
+                    <div class="pull-right d-none" valign="middle">
                         <iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe>
                     </div>
                 </div>
@@ -223,6 +224,8 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
         $(document).ready(function() {
             $table.bootstrapTable({
                 method: 'get',
+                classes: "table table-hover table-bordered mt-0",
+                theadClasses: "thead-light",
                 cache: false,
                 height: getHeight(),
                 striped: true,
@@ -246,15 +249,14 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     columns: 'fa-th-list',
                     advancedSearchIcon: 'fa-search'
                 },
-                rowStyle: function rowStyle(row, index) {
+                rowStyle: () => {
                     return {
-                        classes: 'text-nowrap another-class',
+                        classes: 'text-nowrap',
                         css: {
-                            "font-size": "10px"
+                            "font-size": "11px"
                         }
                     };
                 },
-
             });
 
             $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', () => {
@@ -389,7 +391,9 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                             "order": params.order,
                             "cantidad_total": $("#busqueda_total_paginas").val(),
                             "sidx": params.sort,
-                            "sord": params.order
+                            "sord": params.order,
+                            "key": localStorage.getItem("key"),
+                            "token": localStorage.getItem("token")
                         };
                         $.extend(data, q);
                         return data;
@@ -414,6 +418,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     var ruta_file = "<?= $ruta_temporal; ?>/reporte_<?= $datos_busqueda[0]["nombre"] . '_' . date('Ymd') . '.xls' ?>";
                     var url = "<?= $ruta_db_superior ?>pantallas/busquedas/exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?= $componentId ?>&page=1&exportar_saia=excel&ruta_exportar_saia=" + ruta_file + "&rows=" + $("#busqueda_registros").val() * 4 + "&actual_row=0&variable_busqueda=" + $("#variable_busqueda").val() + "&idbusqueda_filtro_temp=<?php echo (@$_REQUEST['idbusqueda_filtro_temp']); ?>&idbusqueda_filtro=<?php echo (@$_REQUEST['idbusqueda_filtro']); ?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']); ?>";
                     window.open(url, "iframe_exportar_saia");
+                    $('#iframe_exportar_saia').parent().removeClass('d-none');
                 } else {
                     top.notification({
                         message: 'ATENCIÓN! No hay registros para exportar',
@@ -425,4 +430,4 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     </script>
 </body>
 
-</html> 
+</html>

@@ -1,4 +1,5 @@
 temporal*/**
+assets/images/logo_saia_*
 html2ps/**/cache
 tcpdf/**/cache
 phpqrcode/**/cache
