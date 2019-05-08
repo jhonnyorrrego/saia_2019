@@ -32,7 +32,8 @@ try {
     $sql = <<<SQL
         SELECT
             destino,
-            estado
+            estado,
+            numero
         FROM
             buzon_entrada a JOIN
             documento b
@@ -107,10 +108,19 @@ SQL;
         ]);
     }
 
+    if ($seeManagers) {
+        $managersRoute = 'views/documento/responsables.php?';
+        $managersRoute .= http_build_query([
+            'documentId' => $documentId,
+            'number' => $findMaker['numero']
+        ]);
+    }
+
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
         'managers' => [
             'see' => $seeManagers,
+            'route' => $managersRoute
         ],
         'edit' => [
             'see' =>  $editButton,

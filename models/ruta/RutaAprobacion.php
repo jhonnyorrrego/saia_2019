@@ -2,6 +2,9 @@
 
 class RutaAprobacion extends Model
 {
+    const TIPO_VISTO_BUENO = 1;
+    const TIPO_APROBAR = 2;
+
     protected $idruta_aprobacion;
     protected $orden;
     protected $fk_ruta_documento;

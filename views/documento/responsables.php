@@ -13,7 +13,8 @@ while ($max_salida > 0) {
 
 $params = json_encode([
 	'baseUrl' => $ruta_db_superior,
-	'documentId' => $_REQUEST['documentId']
+	'documentId' => $_REQUEST['documentId'],
+	'number' => $_REQUEST['number']
 ]);
 include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
@@ -36,12 +37,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 			<span class="text-complete float-right py-2 toggle_forms">
 				<i class="fa fa-2x fa-plus-circle cursor"></i>
 			</span>
-			<table class="table table-condensed table-striped">
+			<table class="table table-striped">
 				<thead class="thead-light">
 					<tr>
 						<th class="text-center bold">Orden</th>
 						<th class="text-center bold">Funcionario</th>
 						<th class="text-center bold">Tipo firma</th>
+						<th class="text-center bold"></th>
 					</tr>
 				</thead>
 			</table>
@@ -49,18 +51,36 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	</div>
 	<div class="row">
 		<div class="col-12" id="approbation_route_container" style="display:none">
-			<span class="text-complete float-right py-2 toggle_forms">
-				<i class="fa fa-2x fa-plus-circle cursor"></i>
-			</span>
-			<table class="table table-condensed table-striped">
+			<div class="py-2">
+				<div class="form-group float-left pl-2">
+					<label class="pl-1 mb-0 mt-1">Flujo de Aprobación</label>
+					<div class="radio radio-success my-0">
+						<input type="radio" value="1" name="flow" id="serie" checked>
+						<label for="serie">Serie</label>
+						<input type="radio" value="0" name="flow" id="parallel">
+						<label for="parallel">Paralelo</label>
+					</div>
+				</div>
+
+				<span class="text-complete float-right py-2 toggle_forms">
+					<i class="fa fa-2x fa-plus-circle cursor"></i>
+				</span>
+			</div>
+			<table class="table table-striped">
 				<thead class="thead-light">
 					<tr>
 						<th class="text-center bold">Orden</th>
 						<th class="text-center bold">Funcionario</th>
 						<th class="text-center bold">Acción</th>
+						<th class="text-center bold"></th>
 					</tr>
 				</thead>
 			</table>
+		</div>
+	</div>
+	<div class="row pt-3">
+		<div class="col-12 text-right">
+			<button class="btn btn-complete" id="save_routes">Guardar</button>
 		</div>
 	</div>
 </div>

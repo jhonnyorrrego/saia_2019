@@ -18,7 +18,7 @@ class Ruta extends Model
     protected $documento_iddocumento;
     protected $destino;
     protected $condicion_transferencia;
-    protected $clas;
+    protected $clase;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -67,7 +67,9 @@ class Ruta extends Model
     {
         switch ($this->tipo_origen) {
             case 1: // Funcionario
-                $response = new Funcionario($this->origen);
+                $response = Funcionario::findByAttributes([
+                    'funcionario_codigo' => $this->origen
+                ]);
                 break;
             case 5: //dependencia_cargo
                 $sql = <<<SQL
@@ -101,7 +103,9 @@ SQL;
     {
         switch ($this->tipo_destino) {
             case 1: // Funcionario
-                $response = new Funcionario($this->destino);
+                $response = Funcionario::findByAttributes([
+                    'funcionario_codigo' => $this->origen
+                ]);
                 break;
             case 5: //dependencia_cargo
                 $sql = <<<SQL
@@ -121,5 +125,31 @@ SQL;
         }
 
         return $response;
+    }
+
+    /**
+     * busca la ruta de radicacion vigente del documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-07
+     */
+    public static function findActiveRoute($documentId)
+    {
+        $type = RutaDocumento::TIPO_RADICACION;
+        $sql = <<<SQL
+            SELECT a.*
+            FROM
+                ruta a JOIN
+                ruta_documento b ON
+                    a.fk_ruta_documento = b.idruta_documento
+            WHERE
+                b.fk_documento = {$documentId} AND
+                b.estado = 1 AND
+                b.tipo = {$type}
+SQL;
+
+        return self::findBySql($sql);
     }
 }

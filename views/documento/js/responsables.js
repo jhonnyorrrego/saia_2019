@@ -26,6 +26,23 @@ $(function () {
         }
     });
 
+    $(document)
+        .off('select2:select', '.select_action')
+        .on('select2:select', '.select_action', function () {
+            let tr = $(this).parents('tr').first();
+            let data = tr.data('info');
+            data.action = $(this).val();
+            tr.attr('data-info', JSON.stringify(data));
+        });
+
+    $(document)
+        .off('click', '.remove_row')
+        .on('click', '.remove_row', function () {
+            let table = $(this).parents('table');
+            $(this).parents('tr').first().remove();
+            generateNewOrder(table);
+        });
+
     $('#save_item').on('click', function () {
         let user = $('#manager').val();
         let action = $('#firm_type_container').is(':visible') ?
@@ -43,7 +60,7 @@ $(function () {
                     message: 'Debe indicar una acción'
                 });
             } else {
-                let user = $('#manager').select2('data')[0].text;
+                let user = $('#manager').select2('data')[0];
                 if (routeType == 1 || routeType == 3) {
                     addRadicationItem(user, action[0]);
                 } else {
@@ -55,10 +72,54 @@ $(function () {
         }
     });
 
+    $('#save_routes').on('click', function () {
+        let data = [];
+        let rows = $('#radication_route_container').is(':visible') ?
+            $('#radication_route_container tbody tr') :
+            $('#approbation_route_container tbody tr');
+
+        rows.each(function () {
+            data.push($(this).data('info'))
+        });
+
+        $.post(
+            `${params.baseUrl}app/documento/guardar_ruta.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: params.documentId,
+                type: routeType,
+                data: data,
+                flow: $('[name="flow"]').val()
+            },
+            function (response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    });
+
     (function init() {
+        //hideApprobationType();
         createSelects();
         createAutocomplete();
     })();
+
+    function hideApprobationType() {
+        if (!+params.number) {
+            $('#route_type').find('[value="2"]').remove();
+        }
+    }
 
     function hideRoutes() {
         $('#radication_route_container,#approbation_route_container').hide();
@@ -90,19 +151,22 @@ $(function () {
 
     function createRadicationTable(data) {
         $('#radication_route_container table > tbody').remove();
-        $('#radication_route_container table').append($('<tbody>'))
+        $('#radication_route_container table').append(
+            $('<tbody>').css('cursor', 'move')
+        );
 
         let tbody = $('#radication_route_container tbody');
         data.forEach(e => {
-            let data = {
+            let item = {
                 order: e.order,
                 user: e.destination,
                 action: e.firm_type
             };
-            tbody.append(generateRadicationItem(data));
+            tbody.append(generateRadicationItem(item));
         });
 
         $('#radication_route_container select').select2();
+        addSortPlugin($('#radication_route_container table'));
     }
 
     function showApprobationRoute() {
@@ -130,43 +194,35 @@ $(function () {
     }
 
     function createApprobationTable(data) {
+
         $('#approbation_route_container table > tbody').remove();
-        $('#approbation_route_container table').append($('<tbody>'))
+        $('#approbation_route_container table').append(
+            $('<tbody>').css('cursor', 'move')
+        )
 
         let tbody = $('#approbation_route_container tbody');
-        data.forEach((e, i) => {
-            tbody.append(
-                $('<tr>').append(
-                    $('<td>').text(e.order),
-                    $('<td>').text(e.destination),
-                    $('<td>').append(
-                        $('<select>', {
-                            class: 'full-width'
-                        }).append(
-                            $('<option>', {
-                                value: 'visto bueno',
-                                text: 'Visto bueno'
-                            }),
-                            $('<option>', {
-                                value: 'Aprobar',
-                                text: 'Aprobar'
-                            })
-                        )
-                            .val(e.action)
-                            .trigger('change')
-                    )
-                )
-            );
+        data.forEach(e => {
+            let item = {
+                order: e.order,
+                user: e.destination,
+                action: e.action
+            };
+            tbody.append(generateApprobationItem(item));
         });
 
         $('#approbation_route_container select').select2();
+        addSortPlugin($('#approbation_route_container table'));
     }
 
     function addRadicationItem(user, action) {
         let tbody = $('#radication_route_container tbody');
         let data = {
             order: tbody.find('tr').length + 1,
-            user,
+            user: {
+                type: "5",
+                typeId: user.id,
+                name: user.text
+            },
             action
         }
         tbody.append(generateRadicationItem(data));
@@ -174,7 +230,18 @@ $(function () {
     }
 
     function addApprobationItem(user, action) {
-        console.log(arguments);
+        let tbody = $('#approbation_route_container tbody');
+        let data = {
+            order: tbody.find('tr').length + 1,
+            user: {
+                type: "5",
+                typeId: user.id,
+                name: user.text
+            },
+            action
+        }
+        tbody.append(generateApprobationItem(data));
+        $('#approbation_route_container select').select2();
     }
 
     function createSelects() {
@@ -209,11 +276,13 @@ $(function () {
 
     function generateRadicationItem(data) {
         return $('<tr>').append(
-            $('<td>').text(data.order),
-            $('<td>').text(data.user),
+            $('<td>', {
+                class: 'text-center'
+            }).text(data.order),
+            $('<td>').text(data.user.name),
             $('<td>').append(
                 $('<select>', {
-                    class: 'full-width'
+                    class: 'full-width select_action'
                 }).append(
                     $('<option>', {
                         value: 3,
@@ -238,12 +307,61 @@ $(function () {
                     $('<option>', {
                         value: 5,
                         text: 'Firma externa'
-                    }),
+                    })
                 )
                     .val(data.action)
                     .trigger('change')
+            ),
+            $('<td>', {
+                class: 'remove_row text-center'
+            }).append(
+                $('<span>', {
+                    class: 'cursor fa fa-trash f-20'
+                })
             )
-        );
+        ).attr('data-info', JSON.stringify({
+            type: data.user.type,
+            typeId: data.user.typeId,
+            action: data.action,
+            order: data.order
+        }));
+    }
+
+    function generateApprobationItem(data) {
+        return $('<tr>', {
+            class: 'text-center'
+        }).append(
+            $('<td>').text(data.order),
+            $('<td>').text(data.user.name),
+            $('<td>').append(
+                $('<select>', {
+                    class: 'full-width select_action'
+                }).append(
+                    $('<option>', {
+                        value: '1',
+                        text: 'Visto bueno'
+                    }),
+                    $('<option>', {
+                        value: '2',
+                        text: 'Aprobar'
+                    })
+                )
+                    .val(data.action)
+                    .trigger('change')
+            ),
+            $('<td>', {
+                class: 'remove_row'
+            }).append(
+                $('<span>', {
+                    class: 'cursor fa fa-trash f-20'
+                })
+            )
+        ).attr('data-info', JSON.stringify({
+            type: data.user.type,
+            typeId: data.user.typeId,
+            action: data.action,
+            order: data.order
+        }));
     }
 
     function toggleForms() {
@@ -262,4 +380,22 @@ $(function () {
                 .trigger('change');
         }
     }
-})
+
+    function generateNewOrder(table) {
+        table.find('tbody tr').each(function (i) {
+            let data = $(this).data('info');
+            data.order = i + 1;
+            $(this).attr('data-info', JSON.stringify(data));
+            $(this).find('td:first').text(data.order);
+        });
+    }
+
+    function addSortPlugin(table) {
+        table.find('tbody').sortable({
+            update: function (event, ui) {
+                generateNewOrder($(this).parent());
+            }
+        });
+    }
+
+});

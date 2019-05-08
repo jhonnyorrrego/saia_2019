@@ -28,16 +28,17 @@ try {
 	}
 
 	if ($_REQUEST['type'] == 'radication') {
-		$routes = Ruta::findAllByAttributes([
-			'documento_iddocumento' => $_REQUEST['documentId'],
-			'tipo' => 'ACTIVO'
-		], [], 'idruta asc');
+		$routes = Ruta::findActiveRoute($_REQUEST['documentId']);
 
 		foreach ($routes as $key => $Ruta) {
 			$Response->data[] = [
 				'id' => $Ruta->getPK(),
-				'order' => $key,
-				'destination' => $Ruta->getDestination()->getName(),
+				'order' => $key + 1,
+				'destination' => [
+					'type' => $Ruta->tipo_origen,
+					'typeId' => $Ruta->origen,
+					'name' => $Ruta->getOrigin()->getName()
+				],
 				'firm_type' => $Ruta->obligatorio
 			];
 		}
@@ -48,14 +49,18 @@ try {
 			$Response->data[] = [
 				'id' => $RutaAprobacion->getPK(),
 				'order' => $RutaAprobacion->orden,
-				'destination' => $RutaAprobacion->getUser()->getName(),
+				'destination' => [
+					'name' => $RutaAprobacion->getUser()->getName(),
+					'type' => 1,
+					'typeId' => $RutaAprobacion->fk_funcionario
+				],
 				'action' => $RutaAprobacion->tipo_accion
 			];
 		}
 	}
 
 	$Response->success = 1;
-} catch (hrowable $th) {
+} catch (Throwable $th) {
 	$Response->message = $th->getMessage();
 }
 

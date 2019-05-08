@@ -319,7 +319,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        seeManagers()
+                        seeManagers(actions.managers.route)
                     }
                 });
             }
@@ -386,12 +386,9 @@ $(function () {
         );
     }
 
-    function seeManagers() {
+    function seeManagers(route) {
         top.topModal({
-            url: `${baseUrl}views/documento/responsables.php`,
-            params: {
-                documentId: documentId
-            },
+            url: baseUrl + route,
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {}
