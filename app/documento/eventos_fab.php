@@ -47,13 +47,13 @@ SQL;
     $findMaker = StaticSql::search($sql, 0, 1)[0];
 
     $editButton = Documento::canEdit($userCode, $documentId);
-    $seeManagers = $findMaker['estado'] == 'ACTIVO' &&
-        Acceso::findByAttributes([
-            'accion' => Acceso::ACCION_ELIMINAR,
-            'estado' => 1,
-            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
-            'id_relacion' => $documentId
-        ]);
+    $seeManagers = Acceso::findByAttributes([
+        'accion' => Acceso::ACCION_ELIMINAR,
+        'estado' => 1,
+        'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+        'id_relacion' => $documentId,
+        'fk_funcionario' => SessionController::getValue('idfuncionario')
+    ]);
     $returnButton = false;
     $confirmButton = false;
 

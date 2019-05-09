@@ -90,7 +90,7 @@ $(function () {
                 documentId: params.documentId,
                 type: routeType,
                 data: data,
-                flow: $('[name="flow"]').val()
+                flow: $('[name="flow"]:checked').val()
             },
             function (response) {
                 if (response.success) {
@@ -110,13 +110,16 @@ $(function () {
     });
 
     (function init() {
-        //hideApprobationType();
+        hideApprobationType();
         createSelects();
         createAutocomplete();
     })();
 
     function hideApprobationType() {
-        if (!+params.number) {
+        if (+params.number) {
+            $('#route_type').find('[value="1"]').remove();
+            $('#route_type').find('[value="3"]').remove();
+        } else {
             $('#route_type').find('[value="2"]').remove();
         }
     }
@@ -248,7 +251,9 @@ $(function () {
         $("#route_type,#firm_type_select,#action_type_select").select2({
             placeholder: "Seleccione..",
         });
-        $('#route_type').val(3).trigger('change').trigger('select2:select');
+
+        let firstValue = $('#route_type').find('option:eq(1)').val();
+        $('#route_type').val(firstValue).trigger('change').trigger('select2:select');
     }
 
     function createAutocomplete() {

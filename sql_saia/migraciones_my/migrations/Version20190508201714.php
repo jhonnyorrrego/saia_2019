@@ -19,8 +19,32 @@ final class Version20190508201714 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        $table = $schema->getTable('ruta_documento');
 
+        $table->addColumn('tipo_flujo', 'integer', [
+            'length' => 1,
+            'notnull' => true
+        ]);
+
+    }
+
+
+    public function preUp(Schema $schema): void
+    {
+        date_default_timezone_set("America/Bogota");
+
+        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
+            $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+    }
+
+    public function preDown(Schema $schema): void
+    {
+        date_default_timezone_set("America/Bogota");
+
+        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
+            $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
     }
 
     public function down(Schema $schema) : void

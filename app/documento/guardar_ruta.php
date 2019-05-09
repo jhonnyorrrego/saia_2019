@@ -28,20 +28,32 @@ try {
         throw new Exception('Documento invalido', 1);
     }
 
+    $documentId = $_REQUEST['documentId'];
+    $data = $_REQUEST['data'];
+
     switch ($_REQUEST['type']) {
         case '1': //ruta radicacion
-            createRadicationRoute($_REQUEST['documentId'], $_REQUEST['data']);
+            createRadicationRoute($documentId, $data);
             $Response->message = 'Ruta de radicación asignada';
             break;
         case '2': //ruta aprobacion
-            createApprobationRoute($_REQUEST['documentId'], $_REQUEST['data'], $_REQUEST['flow']);
+            createApprobationRoute($documentId, $data, $_REQUEST['flow']);
+
+            if ($_REQUEST['flow'] == RutaDocumento::FlUJO_PARALELO) {
+                sendAllDocuments($documentId, $data);
+            } else if ($_REQUEST['flow'] == RutaDocumento::FLUJO_SERIE) {
+                sendToFirstUser($documentId, $data[0]);
+            }
+
             $Response->message = 'Ruta de aprobación asignada';
             break;
         case '3': //ruta radicacion / aprobacion
-            createBothRoutes($_REQUEST['documentId'], $_REQUEST['data']);
+            createBothRoutes($documentId, $data);
             $Response->message = 'Rutas asignadas';
             break;
     }
+
+    addPermissions($documentId, $data);
 
     $Response->success = 1;
 } catch (Throwable $th) {
@@ -49,6 +61,44 @@ try {
 }
 
 echo json_encode($Response);
+
+
+function addPermissions($documentId, $data)
+{
+    $date = date('Y-m-d H:i:s');
+
+    foreach ($data as $key => $row) {
+        if ($row['type'] == 5) { //iddependencia_cargo
+            $VfuncionarioDc = VfuncionarioDc::findByAttributes([
+                'iddependencia_cargo' => $row['typeId']
+            ]);
+            $fk_funcionario =  $VfuncionarioDc->getPK();
+        } else { //funcionario_codigo
+            $Funcionario = Funcionario::findByAttributes([
+                'funcionario_codigo' => $row['typeId']
+            ]);
+            $fk_funcionario = $Funcionario->getPK();
+        }
+
+        Acceso::executeUpdate([
+            'estado' => 0
+        ], [
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'fk_funcionario' => $fk_funcionario,
+            'accion' => Acceso::ACCION_VER
+        ]);
+
+        Acceso::newRecord([
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'fk_funcionario' => $fk_funcionario,
+            'accion' => Acceso::ACCION_VER,
+            'fecha' => $date,
+            'estado' => 1
+        ]);
+    }
+}
 
 /**
  * crea la nueva ruta de aprobacion
@@ -77,8 +127,11 @@ function createApprobationRoute($documentId, $data, $flow)
                 'iddependencia_cargo' => $row['typeId']
             ]);
             $fk = $VfuncionarioDc->getPK();
-        } else if ($row['type'] == 1) { //idfuncionario
-            $fk = $row['typeId'];
+        } else if ($row['type'] == 1) { //funcionario_codigo
+            $Funcionario = Funcionario::findByAttributes([
+                'funcionario_codigo' => $row['typeId']
+            ]);
+            $fk = $Funcionario->getPK();
         } else {
             throw new Exception("tipo de ralacion invalido", 1);
         }
@@ -87,7 +140,8 @@ function createApprobationRoute($documentId, $data, $flow)
             'orden' => $row['order'],
             'fk_funcionario' => $fk,
             'tipo_accion' => $row['action'],
-            'fk_ruta_documento' => $fk_ruta_documento
+            'fk_ruta_documento' => $fk_ruta_documento,
+            'tipo_flujo' => $flow
         ]);
     }
 }
@@ -103,7 +157,7 @@ function createApprobationRoute($documentId, $data, $flow)
  * @date 2019-05-08
  */
 function createRadicationRoute($documentId, $data)
-{    
+{
     $route = [];
     foreach ($data as $row) {
         $route[] = [
@@ -112,7 +166,7 @@ function createRadicationRoute($documentId, $data)
             'tipo' => $row['type']
         ];
     }
-    
+
     insertar_ruta($route, $documentId, 0);
 }
 
@@ -125,7 +179,8 @@ function createRadicationRoute($documentId, $data)
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  * @date 2019-05-08
  */
-function createBothRoutes($documentId, $data){
+function createBothRoutes($documentId, $data)
+{
     $approbationRoute = [];
     foreach ($data as $row) {
         $approbationRoute[] = [
@@ -136,6 +191,70 @@ function createBothRoutes($documentId, $data){
         ];
     }
 
-    createApprobationRoute($documentId, $approbationRoute, 1);//en serie
+    createApprobationRoute($documentId, $approbationRoute, RutaDocumento::FLUJO_SERIE);
     createRadicationRoute($documentId, $data);
+}
+
+/**
+ * realiza las trasnsferencias a todos los funcionarios
+ * ya que se usa para tipo flujo paralelo
+ *
+ * @param integer $documentId
+ * @param array $data
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function sendAllDocuments($documentId, $data)
+{
+    $Documento = new Documento($documentId);
+    $Formato = $Documento->getFormat();
+
+    $roles = $codes = [];
+    foreach ($data as $key => $row) {
+        if ($row['type'] == 5) { //iddependencia_cargo
+            $roles[] = $row['typeId'];
+        } else if ($row['typ e'] == 1) { //funcionario_codigo
+            $codes[] = $row['typeId'];
+        }
+    }
+
+    $destination = implode('@', $codes);
+    transferencia_automatica($Formato->getPK(), $documentId, $destination, 3, 'Transferencia de aprobación');
+
+    $destination = implode('@', $roles);
+    transferencia_automatica($Formato->getPK(), $documentId, $destination, 1, 'Transferencia de aprobación');
+}
+
+/**
+ * realiza la trasnsferencia al primer usuario
+ * de la ruta de aprobacion si es diferente del usuario logueado
+ *
+ * @param integer $documentId
+ * @param array $data
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function sendToFirstUser($documentId, $data)
+{
+    $Documento = new Documento($documentId);
+    $Formato = $Documento->getFormat();
+
+    if ($data['type'] == 5) { //iddependencia_cargo
+        $VfuncionarioDc = VfuncionarioDc::findByAttributes([
+            'iddependencia_cargo' => $data['typeId']
+        ]);
+        $code = $VfuncionarioDc->funcionario_codigo;
+        $type = 1;
+    } else {
+        $type = 3;
+        $code = $data['typeId'];
+    }
+
+    if ($code == SessionController::getValue('usuario_actual')) {
+        return;
+    }
+
+    transferencia_automatica($Formato->getPK(), $documentId, $data['typeId'], $type, 'Transferencia de aprobación');
 }

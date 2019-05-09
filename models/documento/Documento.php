@@ -41,6 +41,7 @@ class Documento extends Model
     //relations
     protected $User;
     protected $Serie;
+    protected $Format;
 
     function __construct($id = null)
     {
@@ -251,5 +252,23 @@ SQL;
         }
 
         return $this->Serie;
+    }
+
+    /**
+     * obtiene una instancia del formato correspondiente
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
+    public function getFormat()
+    {
+        if (!$this->Format) {
+            $this->Format = Formato::findByAttributes([
+                'nombre' => strtolower($this->plantilla)
+            ]);
+        }
+
+        return $this->Format;
     }
 }

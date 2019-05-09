@@ -5,10 +5,14 @@ class RutaDocumento extends Model
     const TIPO_RADICACION = 1;
     const TIPO_APROBACION = 2;
 
+    const FlUJO_PARALELO = 0;
+    const FLUJO_SERIE = 1;
+
     protected $idruta_documento;
     protected $tipo;
     protected $estado;
     protected $fk_documento;
+    protected $tipo_flujo;
     protected $dbAttributes;
 
     //utilities
@@ -28,7 +32,8 @@ class RutaDocumento extends Model
             'safe' => [
                 'tipo',
                 'estado',
-                'fk_documento'
+                'fk_documento',
+                'tipo_flujo'
             ],
             'date' => []
         ];
