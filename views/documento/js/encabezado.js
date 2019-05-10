@@ -368,7 +368,7 @@ $(function () {
                     html: ""
                 },
                 // "top-left" || "top-right" || "bottom-left" || "bottom-right"
-                position: "top-right",
+                position: "bottom-right",
                 // "horizontal" || "vertical"
                 direction: "horizontal",
                 buttons: buttons
