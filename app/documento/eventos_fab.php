@@ -26,77 +26,23 @@ try {
         throw new Exception('Documento invalido', 1);
     }
 
-    $userCode = SessionController::getValue('usuario_actual'); //funcionario_codigo
     $documentId = $_REQUEST['documentId'];
-
-    $sql = <<<SQL
-        SELECT
-            destino,
-            estado,
-            numero
-        FROM
-            buzon_entrada a JOIN
-            documento b
-            ON
-                b.iddocumento = a.archivo_idarchivo
-        WHERE
-            archivo_idarchivo = {$documentId}
-        ORDER BY
-            a.idtransferencia ASC
-SQL;
-    $findMaker = StaticSql::search($sql, 0, 1)[0];
-
-    $editButton = Documento::canEdit($userCode, $documentId);
-    $seeManagers = Acceso::findByAttributes([
-        'accion' => Acceso::ACCION_ELIMINAR,
-        'estado' => 1,
-        'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
-        'id_relacion' => $documentId,
-        'fk_funcionario' => SessionController::getValue('idfuncionario')
-    ]);
-    $returnButton = false;
-    $confirmButton = false;
-
-    $sql = <<<SQL
-        SELECT destino
-        FROM buzon_entrada
-        WHERE
-            activo = 1 AND
-            archivo_idarchivo = {$documentId} AND 
-            nombre = 'POR_APROBAR' AND
-            destino= {$userCode}
-        ORDER BY idtransferencia
-SQL;
-    $findCurrent = StaticSql::search($sql);
-
-    if ($findCurrent[0]['destino'] == $userCode) {
-        $confirmButton = true;
-        if ($findMaker['destino'] == $userCode) {
-            $returnButton = false;
-        } else {
-            $returnButton = true;
-        }
-    }
-
-    $sql = <<<SQL
-        SELECT 
-            a.idformato,
-            a.nombre,
-            a.ruta_editar
-        FROM
-            formato a JOIN
-            documento b ON
-            lower(a.nombre) = lower(b.plantilla)
-        WHERE
-            b.iddocumento = {$documentId}
-SQL;
-    $formato = StaticSql::search($sql);
+    $Documento = new Documento($documentId);
+    $userCode = SessionController::getValue('usuario_actual'); //funcionario_codigo
+    $userId = SessionController::getValue('idfuncionario');
+    $routes = BuzonEntrada::findActiveRoute($documentId);
+    $editButton = Documento::canEdit($userId, $documentId);
+    $seeManagers = canEditRoute($documentId);
+    $returnButton = canReturn($userCode, $routes);
+    $confirmButton = canConfirm($routes, $Documento);
+    $rejectButton = canReject($userId, $Documento);
 
     if ($editButton) {
-        $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . '/' . $formato[0]['ruta_editar'];
+        $Formato = $Documento->getFormat();
+        $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . '/' . $Formato->ruta_editar;
         $editRoute .= '?' . http_build_query([
             'iddoc' => $documentId,
-            'idformato' => $formato[0]['idformato']
+            'idformato' => $Formato->getPK()
         ]);
     }
 
@@ -112,7 +58,7 @@ SQL;
         $managersRoute = 'views/documento/responsables.php?';
         $managersRoute .= http_build_query([
             'documentId' => $documentId,
-            'number' => $findMaker['numero']
+            'number' => $Documento->numero
         ]);
     }
 
@@ -132,6 +78,9 @@ SQL;
         ],
         'confirm' => [
             'see' =>  $confirmButton
+        ],
+        'reject' => [
+            'see' => $rejectButton
         ]
     ];
     $Response->success = 1;
@@ -140,3 +89,101 @@ SQL;
 }
 
 echo json_encode($Response);
+
+/**
+ * verifica si un usuario tiene acceso
+ * al boton de devolver
+ *
+ * @param integer $userCode funcionario_codigo
+ * @param array $routes ruta activa en buzon entrada de un documento
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canReturn($userCode, $routes)
+{
+    $response = false;
+
+    if (!$routes[0]->activo) { //el primer funcionario no puede devolver
+        foreach ($routes as $BuzonEntrada) {
+            if ($BuzonEntrada->activo) {
+                //el destino de buzon_entrada siempre es funcionario_codigo
+                //por error en insertar ruta :'(
+                $response = $BuzonEntrada->destino == $userCode;
+                break;
+            }
+        }
+    }
+
+    return $response;
+}
+
+/**
+ * verifica si un usuario tiene acceso
+ * al boton de confirmar
+ *
+ * @param integer $userCode funcionario_codigo
+ * @param array $routes ruta activa en buzon entrada de un documento
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canConfirm($routes, $Documento)
+{
+    $userCode = SessionController::getValue('usuario_actual');
+    $response = false;
+
+    if (!$Documento->numero) {
+        foreach ($routes as $BuzonEntrada) {
+            if ($BuzonEntrada->activo) {
+                //el destino de buzon_entrada siempre es funcionario_codigo
+                //por error en insertar ruta :'(
+                $response = $BuzonEntrada->destino == $userCode;
+                break;
+            }
+        }
+    } else {
+        $userId = SessionController::getValue('idfuncionario');
+        $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+
+        foreach ($routes as $RutaAprobacion) {
+            if (!$RutaAprobacion->ejecucion) {
+                //el destino de buzon_entrada siempre es funcionario_codigo
+                //por error en insertar ruta :'(
+                $response = $RutaAprobacion->fk_funcionario == $userId;
+                break;
+            }
+        }
+    }
+
+    return $response;
+}
+
+/**
+ * verifica si el funcionario logueado
+ * puede reasignar la ruta
+ *
+ * @param integer $documentId
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canEditRoute($documentId)
+{
+    return Acceso::countRecords([
+        'accion' => Acceso::ACCION_ELIMINAR,
+        'estado' => 1,
+        'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+        'id_relacion' => $documentId,
+        'fk_funcionario' => SessionController::getValue('idfuncionario')
+    ]) > 0;
+}
+
+function canReject($userId, $Documento)
+{
+    if (!$Documento->numero) {
+        return false;
+    } else {
+        return true;
+    }
+}

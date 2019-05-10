@@ -14,8 +14,9 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
-    'rows' => [],
-    'total' => ''
+    'data' => [],
+    'message' => "",
+    'success' => 0
 ];
 
 try {
@@ -25,8 +26,19 @@ try {
         throw new Exception("Documento invalido", 1);
     }
 
-    include_once $ruta_db_superior . 'class_transferencia.php';
-    aprobar($_REQUEST['documentId']);
+    if ($_REQUEST['reject']) {
+        echo '<pre>';
+        var_dump('Rechazar');
+        echo '</pre>';
+        exit;
+        //rechazar en la ruta de aprob
+    } else {
+        //confirmar en la ruta de aprob
+        //verificar si tiene numero y no hacer lo de abajo
+        include_once $ruta_db_superior . 'class_transferencia.php';
+        aprobar($_REQUEST['documentId']);
+    }
+
     $Response->success = 1;
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();

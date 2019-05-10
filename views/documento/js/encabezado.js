@@ -276,6 +276,22 @@ $(function () {
         if (actions.showFab) {
             let buttons = [];
 
+            if (actions.reject.see) {
+                buttons.push({
+                    button: {
+                        style: "small orange",
+                        html: ""
+                    },
+                    icon: {
+                        style: "fa fa-times",
+                        html: ""
+                    },
+                    onClick: function () {
+                        confirmDocument(false);
+                    }
+                });
+            }
+
             if (actions.confirm.see) {
                 buttons.push({
                     button: {
@@ -287,7 +303,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        confirmDocument();
+                        confirmDocument(true);
                     }
                 });
             }
@@ -359,13 +375,14 @@ $(function () {
         }
     }
 
-    function confirmDocument() {
+    function confirmDocument(accept) {
         $.post(
             `${baseUrl}app/documento/confirmar.php`,
             {
                 key: localStorage.getItem("key"),
                 token: localStorage.getItem("token"),
-                documentId: documentId
+                documentId: documentId,
+                reject: !accept ? 1 : 0
             },
             function (response) {
                 if (response.success) {

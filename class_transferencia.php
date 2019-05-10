@@ -390,7 +390,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     $fk_ruta_documento = RutaDocumento::newRecord([
                         'tipo' => RutaDocumento::TIPO_RADICACION,
                         'estado' => 1,
-                        'fk_documento' => $idarchivo
+                        'fk_documento' => $idarchivo,
+                        'tipo_flujo' => RutaDocumento::FLUJO_SERIE
                     ]);
                     if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
                         $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio,fk_ruta_documento) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1,{$fk_ruta_documento})";

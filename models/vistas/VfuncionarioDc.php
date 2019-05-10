@@ -124,8 +124,17 @@ class VfuncionarioDc extends Funcionario
         $name = ucwords($name);
         return $name;
     }
-
-
+    
+    /**
+     * realiza una busqueda donde el nombre, apellidos o cargo
+     * se parezcan a una palabra
+     *
+     * @param string $term palabra a buscar
+     * @param string $field columna identificadora para la respuesta
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
         $sql = <<<SQL
@@ -144,5 +153,17 @@ class VfuncionarioDc extends Funcionario
 SQL;
 
         return  self::findBySql($sql);
+    }
+
+    /**
+     * retorna una instancia filtrada por el iddependencia_cargo
+     *
+     * @param integer $roleId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
+    public static function findByRole($roleId){
+        return self::findByAttributes(['iddependencia_cargo' => $roleId]);
     }
 }

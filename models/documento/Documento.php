@@ -193,7 +193,8 @@ class Documento extends Model
             'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
             'id_relacion' => $documentId,
             'estado' => 1,
-            'accion' => Acceso::ACCION_EDITAR
+            'accion' => Acceso::ACCION_EDITAR,
+            'fk_funcionario' => $userId
         ]);
 
         if (!$access) {

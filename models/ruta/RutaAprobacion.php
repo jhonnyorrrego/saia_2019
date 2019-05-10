@@ -74,6 +74,7 @@ class RutaAprobacion extends Model
                 b.estado = 1 AND
                 b.fk_documento = {$documentId}                
 SQL;
+
         return self::findBySql($sql);
     }
 }

@@ -118,7 +118,8 @@ function createApprobationRoute($documentId, $data, $flow)
     $fk_ruta_documento = RutaDocumento::newRecord([
         'fk_documento' => $documentId,
         'tipo' => RutaDocumento::TIPO_APROBACION,
-        'estado' => 1
+        'estado' => 1,
+        'tipo_flujo' => RutaDocumento::TIPO_APROBACION
     ]);
 
     foreach ($data as $row) {
