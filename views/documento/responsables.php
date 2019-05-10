@@ -81,6 +81,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<div class="row pt-3">
 		<div class="col-12 text-right">
 			<button class="btn btn-complete" id="save_routes">Guardar</button>
+			<div class="float-right progress-circle-indeterminate" id="spiner" style="display:none"></div>
 		</div>
 	</div>
 </div>

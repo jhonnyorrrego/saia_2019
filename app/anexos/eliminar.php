@@ -5,6 +5,7 @@ $ruta_db_superior = $ruta = '';
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -13,14 +14,21 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
+$Response = (object)[
     'data' => new stdClass(),
-    'message' => "",
+    'message' => '',
     'success' => 0
-);
+];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $Anexo = new Anexo($_REQUEST['fileId']);
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if ($_REQUEST['type'] == 'TIPO_ANEXO') {
+        $Anexo = new Anexo($_REQUEST['fileId']);
+    } else {
+        $Anexo = new Anexos($_REQUEST['fileId']);
+    }
+
     $Anexo->eliminado = 1;
 
     if ($Anexo->save()) {
@@ -29,8 +37,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     } else {
         $Response->message = "Error al eliminar";
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

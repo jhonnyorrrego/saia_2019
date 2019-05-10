@@ -82,6 +82,7 @@ $(function () {
             data.push($(this).data('info'))
         });
 
+        $('#save_routes,#spiner').toggle();
         $.post(
             `${params.baseUrl}app/documento/guardar_ruta.php`,
             {
@@ -98,11 +99,16 @@ $(function () {
                         type: 'success',
                         message: response.message
                     });
+                    top.successModalEvent();
+
+                    $('#save_routes,#spiner').toggle();
                 } else {
                     top.notification({
                         type: 'error',
                         message: response.message
                     });
+
+                    $('#spiner').hide();
                 }
             },
             'json'
@@ -183,6 +189,12 @@ $(function () {
             },
             function (response) {
                 if (response.success) {
+                    if (response.data.flow_type) {
+                        $(`[name="flow"][value=${response.data.flow_type}]`).trigger('click');
+                        delete response.data.flow_type;
+                        response.data = Object.values(response.data);
+                    }
+
                     createApprobationTable(response.data);
                     $('#approbation_route_container').show();
                 } else {

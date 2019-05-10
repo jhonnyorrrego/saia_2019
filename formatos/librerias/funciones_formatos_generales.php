@@ -113,10 +113,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
 
     if ($ruta2) {
         if ($ruta2[0]['tipo'] == 5) {
-            $VfuncionarioDc = VfuncionarioDc::findAllByAttributes([
-                'idddependencia_cargo' => $ruta2[0]['funcionario']
-            ]);
-
+            $VfuncionarioDc = VfuncionarioDc::findByRole($ruta2[0]['funcionario']);
             $userId = $VfuncionarioDc->funcionario_codigo;
         } else {
             $userId = $ruta2[0]['funcionario'];

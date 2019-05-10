@@ -356,6 +356,7 @@ $(function () {
                 });
             }
 
+            $('#fab').empty();
             new Fab({
                 selector: "#fab",
                 button: {
@@ -367,7 +368,7 @@ $(function () {
                     html: ""
                 },
                 // "top-left" || "top-right" || "bottom-left" || "bottom-right"
-                position: "bottom-right",
+                position: "top-right",
                 // "horizontal" || "vertical"
                 direction: "horizontal",
                 buttons: buttons
@@ -408,7 +409,10 @@ $(function () {
             url: baseUrl + route,
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
-            buttons: {}
+            buttons: {},
+            onSuccess: function () {
+                findActions();
+            }
         })
     }
 
