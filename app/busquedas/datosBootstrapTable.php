@@ -14,7 +14,8 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
-    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
+    $userId = SessionController::getValue('idfuncionario');
+    $Funcionario = new Funcionario($userId);
     $actualRow = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
     $dataParams = [
         'page' => $_REQUEST['pageNumber'],
