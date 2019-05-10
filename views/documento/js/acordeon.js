@@ -60,7 +60,8 @@ $(function () {
     function getFormatInformation() {
         $.post(`${baseUrl}app/formato/consulta_rutas.php`, {
             documentId: params.documentId,
-            key: localStorage.getItem('key')
+            key: localStorage.getItem('key'),
+            token: localStorage.getItem('token')
         }, function (response) {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route, function () {
@@ -95,7 +96,7 @@ $(function () {
         let sizeDocument = localStorage.getItem('breakpoint');
         setValores(sizeDocument);
     }
-   
+
     function setValores(sizeDocument) {
         var xsFont = parseFloat(sizeFont);
 
@@ -171,7 +172,7 @@ $(function () {
         var sizeH = parseFloat($("#logoEmpresa").attr("width"));
         if (sizeDocument == 'xs') {
             sizeImg = sizeImg * 2.5;
-            $("#logoEmpresa").css("width", sizeImg + "px");        
+            $("#logoEmpresa").css("width", sizeImg + "px");
         } else if (sizeDocument == 'sm' && widthAct < '8') {
             sizeImg = sizeImg * 2;
             $("#logoEmpresa").css("width", sizeImg + "%");

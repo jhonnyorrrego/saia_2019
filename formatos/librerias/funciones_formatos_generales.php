@@ -1,7 +1,7 @@
 <?php
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
@@ -9,9 +9,12 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 
-function listado_hijos_formato($idformato, $iddoc) {
+include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
+
+function listado_hijos_formato($idformato, $iddoc)
+{
     global $conn;
     if ($idformato) {
         $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
@@ -41,12 +44,13 @@ function listado_hijos_formato($idformato, $iddoc) {
                 $enlace_adicionar .= "<br /><br />";
             }
             $texto .= $enlace_adicionar . listar_formato_hijo2($lcampos, $tabla, $campo_enlace, $id, $orden);
-            echo($texto);
+            echo ($texto);
         }
     }
 }
 
-function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden) {
+function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden)
+{
     global $conn, $idformato;
     $where = "";
     $condicion = " AND B.estado<>'ELIMINADO'";
@@ -88,43 +92,74 @@ function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden) {
     return ($texto);
 }
 
-/* <Clase>
-  <Nombre>Insertar Ruta</Nombre>
-  <Parametros>$ruta:Arreglo con los funcionarios(funcionario_codigo) que se deben incluir en la ruta y el tipo de firma en cada componente como un arreglo ej: $ruta=array(array([funcionario]=>10,[tipo_firma]=>1),array([funcionario]=>2,["tipo_firma"]=>0)) en este caso queda en la ruta el funcionario 10 que debe firmar y el funcionario 2 que no firma;$iddoc:Id del documento:$firma1: Si el primero de la ruta debe o no firmar</Parametros>
-  <Responsabilidades>Crear la ruta del documento<Responsabilidades>
-  <Notas></Notas>
-  <Excepciones></Excepciones>
-  <Salida></Salida>
-  <Pre-condiciones>El radicador de salida se adiciona en la funcion<Pre-condiciones>
-  <Post-condiciones>Ruta completa del documento<Post-condiciones>
-  </Clase> */
-
-function insertar_ruta($ruta2, $iddoc, $firma1 = 1) {
+/**
+ * crea la nueva ruta de radicacion para un documento
+ *
+ * @param array $ruta2 [
+ *    [
+ *        funcionario: funcionario_codigo, iddependencia_cargo
+ *        tipo_firma: 1 => firma , 0 => no firma
+ *        tipo => 1 => funcionario_codigo, 5 => iddependencia_cargo
+ *    ]
+ * ]
+ * @param integer $iddoc iddocumento
+ * @param integer $firma1
+ * @return void
+ * @date 2019
+ */
+function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
+{
     global $conn;
-    $ruta = array();
+
+    if ($ruta2) {
+        if ($ruta2[0]['tipo'] == 5) {
+            $VfuncionarioDc = VfuncionarioDc::findAllByAttributes([
+                'idddependencia_cargo' => $ruta2[0]['funcionario']
+            ]);
+
+            $userId = $VfuncionarioDc->funcionario_codigo;
+        } else {
+            $userId = $ruta2[0]['funcionario'];
+        }
+    }
+
+    if (!$ruta2 || $userId != SessionController::getValue('usuario_actual')) {
+        $ruta = [];
+        array_push($ruta, [
+            "funcionario" => SessionController::getValue('usuario_actual'),
+            "tipo_firma" => $firma1,
+            "tipo" => 1
+        ]);
+        $ruta = array_merge($ruta, $ruta2);
+    } else {
+        $ruta = $ruta2; // :'(
+    }
+
+    RutaDocumento::inactiveByType($iddoc, RutaDocumento::TIPO_RADICACION);
+
+    //nueva relacion de ruta con el documento
+    $fk_ruta_documento = RutaDocumento::newRecord([
+        'fk_documento' => $iddoc,
+        'tipo' => RutaDocumento::TIPO_RADICACION,
+        'estado' => 1,
+        'tipo_flujo' => RutaDocumento::FLUJO_SERIE
+    ]);
+
+    $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "", $conn);
     array_push($ruta, array(
-        "funcionario" => $_SESSION["usuario_actual"],
-        "tipo_firma" => $firma1,
+        "funcionario" => $radicador[0]["funcionario_codigo"],
+        "tipo_firma" => 0,
         "tipo" => 1
     ));
-    $ruta = array_merge($ruta, $ruta2);
-    if (count($ruta) > 0) {
-        $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "", $conn);
-        array_push($ruta, array(
-            "funcionario" => $radicador[0]["funcionario_codigo"],
-            "tipo_firma" => 0,
-            "tipo" => 1
-        ));
-        phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array(
-                    "'ELIMINA_'",
-                    "nombre"
-                )) . " where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
-        phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array(
-                    "'ELIMINA_'",
-                    "nombre"
-                )) . " WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
-        phpmkr_query("delete from ruta where documento_iddocumento=" . $iddoc);
-    }
+    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array(
+        "'ELIMINA_'",
+        "nombre"
+    )) . " where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+    phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array(
+        "'ELIMINA_'",
+        "nombre"
+    )) . " WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
+    phpmkr_query("delete from ruta where documento_iddocumento=" . $iddoc);
 
     for ($i = 0; $i < count($ruta) - 1; $i++) {
         if (!isset($ruta[$i]["tipo_firma"])) {
@@ -179,7 +214,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1) {
             }
         }
 
-        $sql = "insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio,idenlace_nodo) values('" . $ruta[$i + 1]["funcionario"] . "','" . $ruta[$i]["funcionario"] . "','$iddoc','POR_APROBAR'," . $ruta[$i]["tipo"] . "," . $ruta[$i + 1]["tipo"] . ",$i," . $ruta[$i]["tipo_firma"] . ",'" . @$ruta[$i]["paso_actividad"] . "')";
+        $sql = "insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio,idenlace_nodo,fk_ruta_documento) values('" . $ruta[$i + 1]["funcionario"] . "','" . $ruta[$i]["funcionario"] . "','$iddoc','POR_APROBAR'," . $ruta[$i]["tipo"] . "," . $ruta[$i + 1]["tipo"] . ",$i," . $ruta[$i]["tipo_firma"] . ",'" . @$ruta[$i]["paso_actividad"] . "',{$fk_ruta_documento})";
         phpmkr_query($sql);
         $idruta = phpmkr_insert_id();
         $fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s');
@@ -200,7 +235,8 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1) {
   <Post-condiciones><Post-condiciones>
   </Clase> */
 
-function validar_digitalizacion_formato($idformato, $iddoc) {
+function validar_digitalizacion_formato($idformato, $iddoc)
+{
     global $conn, $ruta_db_superior;
     if ($_REQUEST["digitalizacion"] == 1) {
         redirecciona($ruta_db_superior . "paginaadd.php?&key=" . $iddoc . "&x_enlace=mostrar");
@@ -218,7 +254,8 @@ function validar_digitalizacion_formato($idformato, $iddoc) {
   <Post-condiciones><Post-condiciones>
   </Clase> */
 
-function digitalizar_formato($idformato, $iddoc) {
+function digitalizar_formato($idformato, $iddoc)
+{
     global $conn;
     echo '<div class="form-group" id="tr_digitalizacion">
             <label class = "etiqueta_campo" title = "">DESEA DIGITALIZAR?</label>
@@ -237,24 +274,25 @@ function digitalizar_formato($idformato, $iddoc) {
 
 /* * ** */
 
-function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false) {
+function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false)
+{
     $f0 = strtotime($fecha_principal);
     $f1 = strtotime($fecha_secundaria);
     //if ($f0 < $f1) { $tmp = $f1; $f1 = $f0; $f0 = $tmp; }
     $resultado = ($f0 - $f1);
     switch ($obtener) {
-        default :
+        default:
             break;
-        case "MINUTOS" :
+        case "MINUTOS":
             $resultado = $resultado / 60;
             break;
-        case "HORAS" :
+        case "HORAS":
             $resultado = $resultado / 60 / 60;
             break;
-        case "DIAS" :
+        case "DIAS":
             $resultado = $resultado / 60 / 60 / 24;
             break;
-        case "SEMANAS" :
+        case "SEMANAS":
             $resultado = $resultado / 60 / 60 / 24 / 7;
             break;
     }
@@ -262,5 +300,3 @@ function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 
         $resultado = round($resultado);
     return $resultado;
 }
-
-?>

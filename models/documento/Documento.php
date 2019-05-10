@@ -41,6 +41,7 @@ class Documento extends Model
     //relations
     protected $User;
     protected $Serie;
+    protected $Format;
 
     function __construct($id = null)
     {
@@ -173,7 +174,46 @@ class Documento extends Model
             ]);
         }
 
-        return $access;
+        return $access > 0;
+    }
+
+    /**
+     * determina si un usuario tiene acceso 
+     * a editar un documento por acceso y por edicion continua
+     *
+     * @param integer $userId
+     * @param integer $documentId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-02
+     */
+    public static function canEdit($userId, $documentId)
+    {
+        $access = Acceso::countRecords([
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'estado' => 1,
+            'accion' => Acceso::ACCION_EDITAR,
+            'fk_funcionario' => $userId
+        ]);
+
+        if (!$access) {
+            $sql = <<<SQL
+                SELECT 
+                    tipo_edicion
+                FROM
+                    documento a JOIN
+                    formato b
+                    ON
+                        lower(a.plantilla) = lower(b.nombre)
+                WHERE
+                    a.iddocumento = {$documentId}
+SQL;
+            $query = self::search($sql);
+            $access = $query[0]['tipo_edicion'];
+        }
+
+        return $access > 0;
     }
 
     /**
@@ -213,5 +253,23 @@ class Documento extends Model
         }
 
         return $this->Serie;
+    }
+
+    /**
+     * obtiene una instancia del formato correspondiente
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
+    public function getFormat()
+    {
+        if (!$this->Format) {
+            $this->Format = Formato::findByAttributes([
+                'nombre' => strtolower($this->plantilla)
+            ]);
+        }
+
+        return $this->Format;
     }
 }

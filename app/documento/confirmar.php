@@ -15,17 +15,33 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
     'data' => [],
-    'message' => '',
+    'message' => "",
     'success' => 0
 ];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    include_once $ruta_db_superior . 'class_transferencia.php';
-    aprobar($_REQUEST['documentId']);
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if (!$_REQUEST['documentId']) {
+        throw new Exception("Documento invalido", 1);
+    }
+
+    if ($_REQUEST['reject']) {
+        echo '<pre>';
+        var_dump('Rechazar');
+        echo '</pre>';
+        exit;
+        //rechazar en la ruta de aprob
+    } else {
+        //confirmar en la ruta de aprob
+        //verificar si tiene numero y no hacer lo de abajo
+        include_once $ruta_db_superior . 'class_transferencia.php';
+        aprobar($_REQUEST['documentId']);
+    }
+
     $Response->success = 1;
-} else {
-    $Response->message = "Debe iniciar sesion";
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
-

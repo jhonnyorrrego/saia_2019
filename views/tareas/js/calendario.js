@@ -146,10 +146,12 @@ $(function () {
             .find("button")
             .addClass("btn bg-white");
 
-        let heightHeader = $(".fc-header-toolbar").height();
-        $(".fc-header-toolbar .fc-right")
-            .height(heightHeader)
-            .addClass("d-flex align-items-center");
+        setTimeout(() => {
+            let heightHeader = $(".fc-header-toolbar").height();
+            $(".fc-header-toolbar .fc-right")
+                .height(heightHeader)
+                .addClass("d-flex align-items-center");
+        }, 300);
     })();
 
     (function createPicker() {
