@@ -1,5 +1,4 @@
 <?php
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -10,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
     logear_funcionario_webservice($_REQUEST["LOGIN"]);
@@ -20,7 +19,6 @@ include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php";
 include_once $ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php";
 include_once $ruta_db_superior . "pantallas/documento/class_documento_elastic.php";
 include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
-include_once $ruta_db_superior . "pantallas/lib/librerias_notificaciones.php";
 
 if (isset($_REQUEST["archivo"]) && !empty($_REQUEST["archivo"])) {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
@@ -294,78 +292,17 @@ class GenerarFormato
         }
     }
 
-    /*
-     * <Clase>
-     * <Nombre>es_indice</Nombre>
-     * <Parametros>$campo:nombre del campo;$tabla:nombre de la tabla;$indice:vector donde se guarda la informacion consultada</Parametros>
-     * <Responsabilidades>Verifca si en la tabla y el campo elegidos existe algun indice<Responsabilidades>
-     * <Notas></Notas>
-     * <Excepciones></Excepciones>
-     * <Salida></Salida>
-     * <Pre-condiciones><Pre-condiciones>
-     * <Post-condiciones><Post-condiciones>
-     * </Clase>
-     */
-
-    private function es_indice($campo, $tabla, $indice)
-    {
-        global $conn;
-        $indice = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla) . " WHERE Column_name LIKE '" . $campo . "'", $conn);
-        if (!$indice["numcampos"]) {
-            return (false);
-        }
-        return true;
-    }
-
-    /*
-     * <Clase>
-     * <Nombre>maximo_valor</Nombre>
-     * <Parametros>$valor:valor asignado por configuraciï¿½n;$maximo:valor mï¿½ximo aceptado por el tipo de dato</Parametros>
-     * <Responsabilidades>Valida si el valor que se estï¿½ asignando al tipo de dato estï¿½ en el rango permitido, si no lo estï¿½ devuelve el mï¿½ximo<Responsabilidades>
-     * <Notas></Notas>
-     * <Excepciones></Excepciones>
-     * <Salida>devuelve el nï¿½mero mï¿½ximo permitido</Salida>
-     * <Pre-condiciones><Pre-condiciones>
-     * <Post-condiciones><Post-condiciones>
-     * </Clase>
-     */
-
-    private function maximo_valor($valor, $maximo)
-    {
-        if ($valor > $maximo || $valor == "NULL")
-            return ($maximo);
-        else
-            return ($valor);
-    }
-
     public function crear_formato_mostrar()
     {
         global $conn;
 
         $include_formato = '';
         $texto = '';
-        $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
+        $formato = busca_filtro_tabla("*", "formato", "idformato=" . $this->idformato, "", $conn);
         if ($formato["numcampos"]) {
-            $contenido_detalles = '';
-
-            if (strpos($formato[0]["banderas"], "acordeon") !== false) {
-                $contenido_detalles .= '<frameset cols="410,*" >';
-                $contenido_detalles .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'librerias/formato_detalles.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
-            } else {
-                $contenido_detalles .= '<frameset cols="250,*" >';
-                $contenido_detalles .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'arboles/arbolformato_documento.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
-            }
-            $contenido_detalles .= '<frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto"></frameset>';
-
-            if (!crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
-                alerta("No es posible crear el Archivo de detalles");
-            }
-
             $archivos = 0;
             $texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
-            $librerias = array();
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $this->idformato, "", $conn);
-            $lcampos = extrae_campo($campos, "nombre", "U");
 
             for ($i = 0; $i < $campos["numcampos"]; $i++) {
                 if ($campos[$i]["etiqueta_html"] == "autocompletar") {
@@ -383,9 +320,7 @@ class GenerarFormato
 
             $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $this->idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato asc", $conn);
 
-
             for ($i = 0; $i < $funciones["numcampos"]; $i++) {
-                $ruta_orig = "";
                 // saco el primer formato de la lista de la funcion (formato inicial)
                 $form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
                 if ($form_origen["numcampos"]) {
@@ -455,61 +390,64 @@ class GenerarFormato
                 $texto = str_replace($funciones[$i]["nombre"], $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
             }
 
-            $includes = '';
-            $includes .= $this->incluir("'../../librerias_saia.php'", "librerias");
+            $includes = $this->incluir("'../../librerias_saia.php'", "librerias");
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
             $includes .= $this->incluir("'../../class_transferencia.php'", "librerias");
-            if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
+            if (!empty($formato[0]["librerias"])) {
                 $includes .= $this->incluir("'" . $formato[0]["librerias"] . "'", "librerias", 1);
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 
-            $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
-                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
-                0 == ' . $formato[0]['mostrar_pdf'] . '
-            )): 
-                include_once "../../controllers/autoload.php";
-                try {
-                    JwtController::check($_REQUEST["token"], $_REQUEST["key"]);
-                    $data = JwtController::GetData($_REQUEST["token"]);
-                    if ($data->web_service) {
-                        $Funcionario = new Funcionario($data->id);
-                        new SessionController($Funcionario);
-                    }
-                } catch (\Throwable $th) {
-                    die("invalid access");
-                }            
-            ?>';
-            $validacion_tipo .= '<!DOCTYPE html>
-                        <html>
-                            <head>
-                                <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-                                <meta charset="utf-8" />
-                                <meta name="viewport"
-                                    content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-                                <meta name="apple-mobile-web-app-capable" content="yes">
-                                <meta name="apple-touch-fullscreen" content="yes">
-                                <meta name="apple-mobile-web-app-status-bar-style" content="default">
-                                <meta content="" name="description" />
-                                <meta content="" name="Cero K" />' . $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $validacion_tipo .= '<?php else: ?>';
-            $validacion_tipo .= $this->generar_mostrar_pdf();
-            $validacion_tipo .= '<?php endif; ?>';
+            $content = <<<CODE
+<?php
+include_once "../../controllers/autoload.php";
 
-            $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
+try {
+    JwtController::check(\$_REQUEST["token"], \$_REQUEST["key"]);
+    \$data = JwtController::GetData(\$_REQUEST["token"]);
+    if (\$data->web_service) {
+        \$Funcionario = new Funcionario(\$data->id);
+        new SessionController(\$Funcionario);
+    }
+} catch (\Throwable \$th) {
+    die("invalid access");
+}
+
+if(!\$_REQUEST['actualizar_pdf'] && (
+    (\$_REQUEST["tipo"] && \$_REQUEST["tipo"] == 5) ||
+    0 == {$formato[0]['mostrar_pdf']}
+)): ?>
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+            <meta charset="utf-8" />
+            <meta name="viewport"
+                content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+            <meta name="apple-mobile-web-app-capable" content="yes">
+            <meta name="apple-touch-fullscreen" content="yes">
+            <meta name="apple-mobile-web-app-status-bar-style" content="default">
+            <meta content="" name="description" />
+            <meta content="" name="Cero K" />' . {$includes} . {$texto} . {$this->incluir_libreria("footer_nuevo.php", "librerias")}
+<?php else: ?>
+    {$this->generar_mostrar_pdf()}
+<?php endif; ?>
+CODE;
+
+            $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $content);
             if ($mostrar !== false) {
-                notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
+                alerta("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
                 $this->exito = 1;
                 $this->mensaje = "Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
-                return (true);
+                return true;
             } else {
-                notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
+                alerta("Error al crear el archivo " . dirname($mostrar), "error", 5000);
                 $this->exito = 0;
                 $this->mensaje = "Error al crear el archivo";
             }
         } else {
-            notificaciones("Formato NO encontrado ", "error", 5000);
+            alerta("Formato NO encontrado ", "error", 5000);
             $this->exito = 0;
             $this->mensaje = "Formato no encontrado";
         }
@@ -1952,16 +1890,15 @@ span.fancytree-expander {
             if ($accion == "editar") {
                 $contenido .= '<?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?' . '>';
             }
-            include_once($ruta_db_superior . "pantallas/lib/librerias_notificaciones.php");
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
             if ($mostrar !== false) {
-                notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
+                alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
                 $this->exito = 1;
                 $this->mensaje = "Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
                 return (true);
             } else {
-                notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
+                alerta("Error al crear el archivo " . dirname($mostrar), "error", 5000);
                 $this->exito = 0;
                 $this->mensaje = "Error al crear el archivo " . dirname($mostrar);
                 return (false);
@@ -1969,7 +1906,7 @@ span.fancytree-expander {
         } else {
             $this->exito = 0;
             $this->mensaje = "Formato No encontrado";
-            notificaciones("Formato NO encontrado ", "error", 5000);
+            alerta("Formato NO encontrado ", "error", 5000);
             return (false);
         }
     }
@@ -2171,8 +2108,7 @@ span.fancytree-expander {
             "editar_" . $formato[0]['nombre'] . ".php",
             "buscar_" . $formato[0]['nombre'] . ".php",
             "buscar_" . $formato[0]['nombre'] . "2.php",
-            "mostrar_" . $formato[0]['nombre'] . ".php",
-            "detalles_mostrar_" . $formato[0]['nombre'] . ".php"
+            "mostrar_" . $formato[0]['nombre'] . ".php"
         );
         crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", implode("\n", $data));
         /*
@@ -2228,7 +2164,7 @@ span.fancytree-expander {
                 $campos_adicionar = array_diff($campos, $campos_edit);
                 $campos_adicionar = array_unique($campos_adicionar);
             } else {
-                notificaciones("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo", "error", 5000);
+                alerta("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo", "error", 5000);
             }
         }
         $tadd = "";
@@ -2238,7 +2174,7 @@ span.fancytree-expander {
         $ted .= implode(",", $campos_editar);
         $tod .= implode(",", $campos_otrosf);
         if ($campos_otrosf != "") {
-            notificaciones("Existen otros Formatos Vinculados ", "error", 5000);
+            alerta("Existen otros Formatos Vinculados ", "error", 5000);
         }
         $adicionales = "";
         if (@$_REQUEST["pantalla"] == "tiny") {
