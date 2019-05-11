@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 global $conn;
@@ -102,7 +102,8 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
     </style>
     <?php endif; ?>
     <?php
-        leido($_SESSION["usuario_actual"], $iddocumento);
+        $userCode = SessionController::getValue('usuario_actual');
+        leido($userCode, $iddocumento);
 
         if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
             if (!empty($_REQUEST["vista"])) {

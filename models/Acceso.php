@@ -18,8 +18,10 @@ class Acceso extends Model
     protected $accion;
     protected $fecha;
     protected $estado;
-    protected $user;
     protected $dbAttributes;
+
+    //relation
+    protected $User;
 
     function __construct($id = null)
     {
@@ -49,11 +51,18 @@ class Acceso extends Model
         ];
     }
 
+    /**
+     * obtiene una instancia del funcionario relacionado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
     public function getUser(){
-        if(!$this->user){
-            $this->user = $this->getRelationFk('Funcionario');
+        if(!$this->User){
+            $this->User = $this->getRelationFk('Funcionario');
         }
 
-        return $this->user;
+        return $this->User;
     }
 }

@@ -51,6 +51,7 @@ $(function () {
                 return {
                     term: params.term,
                     key: localStorage.getItem('key'),
+                    token: localStorage.getItem("token"),
                     identificator: 'funcionario_codigo'
                 }
             },
@@ -119,12 +120,14 @@ $(function () {
         if (parseInt(params.type) == 2) {
             var data = {
                 defaultUser: params.userInfo.user,
-                key: localStorage.getItem('key')
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem("token")
             };
         } else if (parseInt(params.type) == 3) {
             var data = {
                 documentId: params.documentId,
-                key: localStorage.getItem('key')
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem("token")
             };
         }
 

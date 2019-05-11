@@ -387,10 +387,16 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', $conn, 0);
                     }
                 } else if ($datos["nombre"] == "POR_APROBAR") {
+                    $fk_ruta_documento = RutaDocumento::newRecord([
+                        'tipo' => RutaDocumento::TIPO_RADICACION,
+                        'estado' => 1,
+                        'fk_documento' => $idarchivo,
+                        'tipo_flujo' => RutaDocumento::FLUJO_SERIE
+                    ]);
                     if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
-                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
+                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio,fk_ruta_documento) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1,{$fk_ruta_documento})";
                     } else {
-                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
+                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio,fk_ruta_documento) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1, {$fk_ruta_documento})";
                     }
                     phpmkr_query($sql) or die("No se puede Generar una Ruta: $sql");
                     $idruta = phpmkr_insert_id();

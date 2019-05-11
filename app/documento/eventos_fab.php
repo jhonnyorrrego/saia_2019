@@ -15,94 +15,207 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)array(
     'data' => [],
-    'message' => "",
+    'message' => '',
     'success' => 0
 );
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    global $conn;
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $userCode = $_SESSION["usuario_actual"]; //funcionario_codigo
+    if (!$_REQUEST['documentId']) {
+        throw new Exception('Documento invalido', 1);
+    }
+
     $documentId = $_REQUEST['documentId'];
-    $seePreviousManagers = false;
-    $seeManagers = false;
-    $editButton = false;
-    $returnButton = false;
-    $confirmButton = true;
+    $Documento = new Documento($documentId);
+    $userCode = SessionController::getValue('usuario_actual'); //funcionario_codigo
+    $userId = SessionController::getValue('idfuncionario');
+    $routes = BuzonEntrada::findActiveRoute($documentId);
+    $editButton = Documento::canEdit($userId, $documentId);
+    $seeManagers = canEditRoute($documentId);
+    $returnButton = !$Documento->numero && canReturn($userCode, $routes);
+    $confirmButton = canConfirm($routes, $Documento);
+    $rejectButton = $Documento->numero && canReject($userId, $Documento);
 
-    $permissions = array();
-    $findPermissions = busca_filtro_tabla("", "permiso_documento", "funcionario='" . $userCode . "' AND documento_iddocumento=" . $documentId, "", $conn);
-    if ($findPermissions["numcampos"]) {
-        $permissions = explode(",", $findPermissions[0]["permisos"]);
+    if ($editButton) {
+        $Formato = $Documento->getFormat();
+        $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . '/' . $Formato->ruta_editar;
+        $editRoute .= '?' . http_build_query([
+            'iddoc' => $documentId,
+            'idformato' => $Formato->getPK()
+        ]);
     }
 
-    $findManager = busca_filtro_tabla("destino,estado,plantilla", "buzon_entrada,documento", "iddocumento=archivo_idarchivo and archivo_idarchivo=" . $documentId, "buzon_entrada.idtransferencia asc", $conn);
-
-    if ($findManager["numcampos"]) {
-        if ($findManager[0]["estado"] == "ACTIVO") {
-            $seePreviousManagers = true;
-        }
-
-        if (in_array("m", $permissions)) {
-            if (!$_REQUEST["vista"]) {
-                $editButton = true;
-            }
-        }
-
-        $findCurrent = busca_filtro_tabla("A.idtransferencia as idtrans,A.destino,A.ruta_idruta", "buzon_entrada A", "A.activo=1 and A.archivo_idarchivo=" . $documentId . " and (A.nombre='POR_APROBAR') and A.destino='" . $userCode . "'", "A.idtransferencia", $conn);
-        if ($findCurrent["numcampos"]) {
-            $findPrevious = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $findCurrent[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $documentId . " and origen='" . $userCode . "'", "", $conn);
-        }
-
-        if ($findManager["numcampos"] > 0 && $findManager[0]["destino"] != $userCode) {
-            $returnButton = true;
-        }
-
-        if ($findCurrent[0]["destino"] != $userCode || $findPrevious["numcampos"]) {
-            $seeManagers = false;
-            if ($seePreviousManagers && in_array("r", $permissions)) {
-                $seeManagers = true;
-            }
-            $confirmButton = false;
-            $returnButton = false;
-        }
-        if ($seePreviousManagers && in_array("r", $permissions)) {
-            if ($_REQUEST["vista"] == "") {
-                $seeManagers = true;
-            }
-        }
+    if ($returnButton) {
+        $returnRoute = $ruta_db_superior . 'class_transferencia.php?';
+        $returnRoute .= http_build_query([
+            'iddoc' => $documentId,
+            'funcion' => 'formato_devolucion'
+        ]);
     }
 
-    $sql = "select a.idformato,a.nombre,a.ruta_editar from formato a join documento b on lower(a.nombre) = lower(b.plantilla) where b.iddocumento = {$documentId}";
-    $formato = StaticSql::search($sql);
-
-    $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . '/' . $formato[0]['ruta_editar'];
-    $editRoute .= '?' . http_build_query([
-        'iddoc' => $documentId,
-        'idformato' => $formato[0]['idformato']
-    ]);
+    if ($seeManagers) {
+        $managersRoute = 'views/documento/responsables.php?';
+        $managersRoute .= http_build_query([
+            'documentId' => $documentId,
+            'number' => $Documento->numero
+        ]);
+    }
 
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
-        "managers" => [
+        'managers' => [
             'see' => $seeManagers,
-            'route' => "{$ruta_db_superior}mostrar_ruta.php?doc={$documentId}"
+            'route' => $managersRoute
         ],
-        "edit" => [
+        'edit' => [
             'see' =>  $editButton,
-            'route' => $editRoute
+            'route' => $editRoute ?? ''
         ],
-        "return" => [
+        'return' => [
             'see' =>  $returnButton,
-            'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=formato_devolucion"
+            'route' => $returnRoute ?? ''
         ],
-        "confirm" => [
+        'confirm' => [
             'see' =>  $confirmButton
+        ],
+        'reject' => [
+            'see' => $rejectButton
         ]
     ];
     $Response->success = 1;
-} else {
-    $Response->message = "Debe iniciar sesion";
+} catch (\Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
+
+/**
+ * verifica si un usuario tiene acceso
+ * al boton de devolver
+ *
+ * @param integer $userCode funcionario_codigo
+ * @param array $routes ruta activa en buzon entrada de un documento
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canReturn($userCode, $routes)
+{
+    $response = false;
+
+    if (!$routes[0]->activo) { //el primer funcionario no puede devolver
+        foreach ($routes as $BuzonEntrada) {
+            if ($BuzonEntrada->activo) {
+                //el destino de buzon_entrada siempre es funcionario_codigo
+                //por error en insertar ruta :'(
+                $response = $BuzonEntrada->destino == $userCode;
+                break;
+            }
+        }
+    }
+
+    return $response;
+}
+
+/**
+ * verifica si un usuario tiene acceso
+ * al boton de confirmar
+ *
+ * @param integer $userCode funcionario_codigo
+ * @param array $routes ruta activa en buzon entrada de un documento
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canConfirm($routes, $Documento)
+{
+    $userCode = SessionController::getValue('usuario_actual');
+    $response = false;
+
+    if (!$Documento->numero) { //ruta de radicacion
+        foreach ($routes as $BuzonEntrada) {
+            if ($BuzonEntrada->activo) {
+                //el destino de buzon_entrada siempre es funcionario_codigo
+                //por error en insertar ruta :'(
+                $response = $BuzonEntrada->destino == $userCode;
+                break;
+            }
+        }
+    } else { //ruta de aprobacion
+        $userId = SessionController::getValue('idfuncionario');
+        $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+        $RutaDocumento = RutaDocumento::findByAttributes([
+            'fk_documento' => $Documento->getPK(),
+            'estado' => 1,
+            'tipo' => RutaDocumento::TIPO_APROBACION
+        ]);
+
+        if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
+            foreach ($routes as $RutaAprobacion) {
+                if (!$RutaAprobacion->ejecucion) {
+                    $response = $RutaAprobacion->fk_funcionario == $userId;
+                    break;
+                }
+            }
+        } else { //paralelo
+            foreach ($routes as $RutaAprobacion) {
+                if ($RutaAprobacion->fk_funcionario == $userId) {
+                    $response = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    return $response;
+}
+
+/**
+ * verifica si el funcionario logueado
+ * puede reasignar la ruta
+ *
+ * @param integer $documentId
+ * @return boolean
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-05-09
+ */
+function canEditRoute($documentId)
+{
+    return Acceso::countRecords([
+        'accion' => Acceso::ACCION_ELIMINAR,
+        'estado' => 1,
+        'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+        'id_relacion' => $documentId,
+        'fk_funcionario' => SessionController::getValue('idfuncionario')
+    ]) > 0;
+}
+
+function canReject($userId, $Documento)
+{
+    $response = false;
+    $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+    $RutaDocumento = RutaDocumento::findByAttributes([
+        'fk_documento' => $Documento->getPK(),
+        'estado' => 1,
+        'tipo' => RutaDocumento::TIPO_APROBACION
+    ]);
+
+    if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
+        foreach ($routes as $RutaAprobacion) {
+            if (!$RutaAprobacion->ejecucion) {
+                $response = $RutaAprobacion->fk_funcionario == $userId;
+                break;
+            }
+        }
+    } else { //paralelo
+        foreach ($routes as $RutaAprobacion) {
+            if ($RutaAprobacion->fk_funcionario == $userId) {
+                $response = true;
+                break;
+            }
+        }
+    }
+
+    return $response;
+}
