@@ -276,6 +276,22 @@ $(function () {
         if (actions.showFab) {
             let buttons = [];
 
+            if (actions.reject.see) {
+                buttons.push({
+                    button: {
+                        style: "small orange",
+                        html: ""
+                    },
+                    icon: {
+                        style: "fa fa-times",
+                        html: ""
+                    },
+                    onClick: function () {
+                        confirmDocument(false);
+                    }
+                });
+            }
+
             if (actions.confirm.see) {
                 buttons.push({
                     button: {
@@ -287,7 +303,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        confirmDocument();
+                        confirmDocument(true);
                     }
                 });
             }
@@ -319,7 +335,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        seeManagers()
+                        seeManagers(actions.managers.route)
                     }
                 });
             }
@@ -340,6 +356,7 @@ $(function () {
                 });
             }
 
+            $('#fab').empty();
             new Fab({
                 selector: "#fab",
                 button: {
@@ -359,13 +376,14 @@ $(function () {
         }
     }
 
-    function confirmDocument() {
+    function confirmDocument(accept) {
         $.post(
             `${baseUrl}app/documento/confirmar.php`,
             {
                 key: localStorage.getItem("key"),
                 token: localStorage.getItem("token"),
-                documentId: documentId
+                documentId: documentId,
+                reject: !accept ? 1 : 0
             },
             function (response) {
                 if (response.success) {
@@ -386,15 +404,15 @@ $(function () {
         );
     }
 
-    function seeManagers() {
+    function seeManagers(route) {
         top.topModal({
-            url: `${baseUrl}views/documento/responsables.php`,
-            params: {
-                documentId: documentId
-            },
+            url: baseUrl + route,
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
-            buttons: {}
+            buttons: {},
+            onSuccess: function () {
+                findActions();
+            }
         })
     }
 

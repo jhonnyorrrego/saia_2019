@@ -464,12 +464,24 @@ class GenerarFormato
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
-           
+
             $validacion_tipo = '<?php if(!$_REQUEST["actualizar_pdf"] && (
                 ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
                 0 == ' . $formato[0]['mostrar_pdf'] . '
-            )): ?>';
-            $validacion_tipo.= '<!DOCTYPE html>
+            )): 
+                include_once "../../controllers/autoload.php";
+                try {
+                    JwtController::check($_REQUEST["token"], $_REQUEST["key"]);
+                    $data = JwtController::GetData($_REQUEST["token"]);
+                    if ($data->web_service) {
+                        $Funcionario = new Funcionario($data->id);
+                        new SessionController($Funcionario);
+                    }
+                } catch (\Throwable $th) {
+                    die("invalid access");
+                }            
+            ?>';
+            $validacion_tipo .= '<!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -504,7 +516,8 @@ class GenerarFormato
         return false;
     }
 
-    public function generar_mostrar_pdf(){
+    public function generar_mostrar_pdf()
+    {
         $string = '<?php
         include_once "../../controllers/autoload.php";
         include_once "../../pantallas/lib/librerias_cripto.php";
@@ -934,7 +947,7 @@ class GenerarFormato
             $listado_campos = array();
             $unico = array();
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $this->idformato, "orden ASC", $conn);
-            
+
             $fun_campos = array();
             for ($h = 0; $h < $campos["numcampos"]; $h++) {
                 if ($campos[$h]["etiqueta_html"] == "arbol") {
@@ -1563,8 +1576,7 @@ class GenerarFormato
                             $ancho = "";
                             if (!empty($estilo)) {
                                 $tam = $estilo["size"];
-                                $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
-                                
+                                $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
                             }
 
                             if ($campos[$h]["obligatoriedad"] == 1) {
@@ -2516,8 +2528,7 @@ span.fancytree-expander {
             $aux2[] = 'min="' . $ini . '"';
             $aux2[] = 'max="' . $fin . '"';
             $aux2[] = 'step=' . $incremento;
-            $ancho = ' col-md-'.$tam.' col-lg-'.$tam.' col-xl-'.$tam.'';
-
+            $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
         } else if (!empty($valor)) {
             $parametros = explode("@", $valor);
             if (is_numeric($parametros[0])) {

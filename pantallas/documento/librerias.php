@@ -319,7 +319,10 @@ function unread($iddocumento, $fecha)
 function has_files($documentId, $showCounter = false)
 {
     if ($documentId) {
-        $files = Anexos::countRecords(['documento_iddocumento' => $documentId]);
+        $files = Anexos::countRecords([
+            'documento_iddocumento' => $documentId,
+            'eliminado' => 0
+        ]);
         $pages = Pagina::countRecords(['id_documento' => $documentId]);
 
         if ($files || $pages) {

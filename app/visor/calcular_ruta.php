@@ -5,6 +5,7 @@ $ruta_db_superior = $ruta = '';
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -13,13 +14,15 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
+$Response = (object)[
     'data' => new stdClass(),
-    'message' => "",
+    'message' => '',
     'success' => 0
-);
+];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     switch ($_REQUEST['type']) {
         case 'TIPO_ANEXO_PDF':
             $Anexo = new Anexo($_REQUEST['typeId']);
@@ -33,6 +36,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             break;
         default:
             if ($_REQUEST['actualizar_pdf']) {
+                $userId = SessionController::getValue('idfuncionario');
+                $Funcionario = new Funcionario($userId);
+                $_REQUEST['token'] = FuncionarioController::generateToken($Funcionario, 5, true);
+
                 include_once $ruta_db_superior . 'class_impresion_' . $_REQUEST['exportar'] . '.php';
 
                 $Documento = new Documento($_REQUEST['iddoc']);
@@ -46,7 +53,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     }
 
     if ($route) {
-        $image = TemporalController::createTemporalFile($route);
+        $image = TemporalController::createTemporalFile($route, '', $force);
 
         if ($image->success && is_file($ruta_db_superior . $image->route)) {
             $Response->data = $image->route;
@@ -57,8 +64,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     } else {
         $Response->message = "Error al resolver la ruta del pdf";
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
+
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

@@ -17,6 +17,8 @@ class Anexo extends Model
     protected $user;
     protected $log;
     protected $dbAttributes;
+    
+    //utilities
     public $clone;
 
     function __construct($id = null)

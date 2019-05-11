@@ -4364,7 +4364,10 @@
 
     //find pdf route
     function findRoute(params, baseUrl) {
-      let data = Object.assign({ key: localStorage.getItem('key') }, params);
+      let data = Object.assign({
+        key: localStorage.getItem('key'),
+        token: localStorage.getItem('token')
+      }, params);
       let documentId = '';
 
       $.ajax({
