@@ -285,18 +285,15 @@ function componente_ejecutor($idcampo, $iddoc)
         );
     // $parametros=explode("@",$campo[0]["valor"]);
     $campos = explode(",", $parametros[2]);
-    $alto_movil = 40 * (count($campos) + 6);
-    $alto_escritorio = 35 * (count($campos) + 6);
-    echo '
-                <iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto_movil . 'px"></iframe>
-                <script>
-                $( document ).ready(function() {
-                    let breakpoint = localStorage.getItem(\'breakpoint\');
-                    if(breakpoint != "xs" || breakpoint != "xs"){
-                        $("#frame_' . $campo[0]["nombre"] . '").attr("height",' . $alto_escritorio . ');
-                    }
+    echo '<iframe border=0 frameborder="0" style="background: #FFFFFF;" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" ></iframe>
+            <script>
+                $( document ).ready(function() {               
+                    $(window).resize(function(){
+                       document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
+                       document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
+                    });
                 });
-                </script>';
+            </script>';
 }
 
 /*
