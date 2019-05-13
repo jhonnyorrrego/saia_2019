@@ -19,37 +19,37 @@
                                     <meta charset="utf-8" />
                                     <title>.:EDITAR SOLICITUD DE PRESTAMO:.</title>
                                     <meta name="viewport"
-                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                      content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?= pace() ?>
+                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
-                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?=  ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
-                	<link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
+                  <link
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link class="main-stylesheet"
-                                	href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
-                                	rel="stylesheet" type="text/css" media="screen">
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
+                                  rel="stylesheet" type="text/css" media="screen">
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                	type="text/javascript"></script>
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
@@ -57,20 +57,21 @@
                                 <link rel="stylesheet"
                                     href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script> 
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script> 
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script> 
-                	</head>
-                	<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
-                    	<!-- START card -->
-                    	<div class="card card-default">
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script> 
+                  </head>
+                  <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
+                      <!-- START card -->
+                      <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">SOLICITUD DE PRESTAMO</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],412,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="form-group form-group-default required"  id="tr_highslide_1926201103">
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="form-group "  id="tr_highslide_1926201103">
                                         <label title="">HIGHSLIDE</label>
-                                        <input class="form-control"  maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="highslide_1926201103" name="highslide_1926201103" required value="<?php echo(mostrar_valor_campo('highslide_1926201103',412,$_REQUEST['iddoc'])); ?>">
+                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="highslide_1926201103" name="highslide_1926201103" required value="<?php echo(mostrar_valor_campo('highslide_1926201103',412,$_REQUEST['iddoc'])); ?>">
                                        </div><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(412,5104,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_fecha"><label title="">FECHA DE SOLICITUD</label><?php fecha_formato(412,5111,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_transferencia_presta"><label title="">EXPEDIENTE VINCULADO*</label><?php guardar_expedientes_prestamos(412,5205,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_observaciones">
                                         <label title="">OBSERVACIONES*</label>
-                                        <div class="celda_transparente"><textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('observaciones',412,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group  required" id="tr_documento_archivo">
+                                        <div class="celda_transparente">
+                                        <textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('observaciones',412,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group  required" id="tr_documento_archivo">
                             <label title="">UBICACI&Oacute;N DEL DOCUMENTO*</label><?php genera_campo_listados_editar(412,5114,$_REQUEST['iddoc']);?><label id="-error" class="error" f or="documento_archivo" style="display: none;"></label><br></div><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_solicitud_prestamo" value="<?php echo(mostrar_valor_campo('idft_solicitud_prestamo',412,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_fecha_prestamo_rep">
 <label for="fecha_prestamo_rep">FECHA REQUERIDA PARA PRESTAMO</label>
 
@@ -115,80 +116,99 @@
                                             <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=412&idcampo=5116" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
                                             objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
                                             outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-                                            </div>'; ?></div></div><?php validar_fecha_prestamo(412,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5113'); ?>"><input type="hidden" name="formato" value="412"><tr><td colspan='2'><?php submit_formato(412,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
-            var upload_url = '../../dropzone/cargar_archivos_formato.php';
+                                            </div>'; ?></div></div><?php validar_fecha_prestamo(412,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5113'); ?>"><input type="hidden" name="formato" value="412"><tr><td colspan='2'><?php submit_formato(412,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("412-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+            var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
             var lista_archivos = new Object();
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
+                    var upload_max_size = 5;
+                    var maximo = 5;
+                    var tamanoMaximo = $(this).attr('data-longitud');
+                    var archivosMaximo = $(this).attr('data-cantidad');
+                    var multiple_text = $(this).attr('data-multiple');
+                    if(tamanoMaximo > 1){
+                         multiple_text = 'multiple';
+                    }
+                    
                     var idformato = $(this).attr('data-idformato');
-                	var idcampo = $(this).attr('id');
-                	var paramName = $(this).attr('data-nombre-campo');
-                	var idcampoFormato = $(this).attr('data-idcampo-formato');
-                	var extensiones = $(this).attr('data-extensiones');
-                	var multiple_text = $(this).attr('data-multiple');
-                	var multiple = false;
-                	var form_uuid = $('#form_uuid').val();
-                	var maxFiles = 1;
-                	if(multiple_text == 'multiple') {
-                	multiple = true;
-                	maxFiles = 10;
-                	}
+                  var idcampo = $(this).attr('id');
+                  var paramName = $(this).attr('data-nombre-campo');
+                  var idcampoFormato = $(this).attr('data-idcampo-formato');
+                  var extensiones = $(this).attr('data-extensiones');
+                  
+                  var multiple = false;
+                  var form_uuid = $('#form_uuid').val();
+                    var maxFiles = 1;
+                    var maxFilesize = 5;
+                  if(multiple_text == 'multiple') {
+                      multiple = true;
+                        if(tamanoMaximo > upload_max_size){
+                            maxFilesize = 200;                           
+                        }else{
+                            maxFilesize = tamanoMaximo;
+                        }
+                        if(archivosMaximo > maximo){
+                            maxFiles = 10;
+                        }else{
+                            maxFiles = archivosMaximo;
+                        } 
+                  }
                     var opciones = {
-                        maxFilesize: 2,
-                    	ignoreHiddenFiles : true,
-                    	maxFiles : maxFiles,
-                    	acceptedFiles: extensiones,
-                   	addRemoveLinks: true,
-                   	dictRemoveFile: 'Quitar anexo',
-                   	dictMaxFilesExceeded : 'No puede subir mas archivos',
-                   	dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
-                	uploadMultiple: multiple,
-                    	url: upload_url,
-                    	paramName : paramName,
-                    	params : {
-                        	idformato : idformato,
-                        	idcampo_formato : idcampoFormato,
-                        	nombre_campo : paramName,
-                        	uuid : form_uuid
+                        maxFilesize: maxFilesize,
+                      ignoreHiddenFiles : true,
+                      maxFiles : maxFiles,
+                      acceptedFiles: extensiones,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Quitar anexo',
+                    dictMaxFilesExceeded : 'No puede subir mas archivos',
+                    dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
+                  uploadMultiple: multiple,
+                      url: upload_url,
+                      paramName : paramName,
+                      params : {
+                          idformato : idformato,
+                          idcampo_formato : idcampoFormato,
+                          nombre_campo : paramName,
+                          uuid : form_uuid
                         },
                         removedfile : function(file) {
                             if(lista_archivos && lista_archivos[file.upload.uuid]) {
-                            	$.ajax({
-                            	url: upload_url,
-                            	type: 'POST',
-                            	data: {
-                                	accion:'eliminar_temporal',
-                                    	idformato : idformato,
-                                    	idcampo_formato : idcampoFormato,
-                                	archivo: lista_archivos[file.upload.uuid]}
-                            	});
+                              $.ajax({
+                              url: upload_url,
+                              type: 'POST',
+                              data: {
+                                  accion:'eliminar_temporal',
+                                      idformato : idformato,
+                                      idcampo_formato : idcampoFormato,
+                                  archivo: lista_archivos[file.upload.uuid]}
+                              });
                             }
                             if (file.previewElement != null && file.previewElement.parentNode != null) {
                                 file.previewElement.parentNode.removeChild(file.previewElement);
-                            	delete lista_archivos[file.upload.uuid];
-                            	$('#'+paramName).val(Object.values(lista_archivos).join());
+                              delete lista_archivos[file.upload.uuid];
+                              $('#'+paramName).val(Object.values(lista_archivos).join());
                             }
                             return this._updateMaxFilesReachedClass();
                         },
                         success : function(file, response) {
-                        	for (var key in response) {
-                            	if(Array.isArray(response[key])) {
-                                	for(var i=0; i < response[key].length; i++) {
-                                	archivo=response[key][i];
-                                    	if(archivo.original_name == file.upload.filename) {
-                                    	lista_archivos[file.upload.uuid] = archivo.id;
-                                    	}
-                                	}
-                            	} else {
-                            	if(response[key].original_name == file.upload.filename) {
-                                	lista_archivos[file.upload.uuid] = response[key].id;
-                            	}
-                            	}
-                        	}
-                        	$('#'+paramName).val(Object.values(lista_archivos).join());
+                          for (var key in response) {
+                              if(Array.isArray(response[key])) {
+                                  for(var i=0; i < response[key].length; i++) {
+                                  archivo=response[key][i];
+                                      if(archivo.original_name == file.upload.filename) {
+                                      lista_archivos[file.upload.uuid] = archivo.id;
+                                      }
+                                  }
+                              } else {
+                              if(response[key].original_name == file.upload.filename) {
+                                  lista_archivos[file.upload.uuid] = response[key].id;
+                              }
+                              }
+                          }
+                          $('#'+paramName).val(Object.values(lista_archivos).join());
                             if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
                                 $('#dz_campo_'+idcampoFormato).find('label.error').remove()
                             }
@@ -231,4 +251,4 @@
                                 
                             });
                         </script>
-                	</html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
+                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

@@ -151,9 +151,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">NOMBRE DE MENSAJERO</td><input type="hidden" name="bksaiacondicion_nombre_mensajero" id="bksaiacondicion_nombre_mensajero" value="like"><td bgcolor="#F5F5F5"><div id="esperando_nombre_mensajero"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(272,3126,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_nombre_mensajero" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_nombre_mensajero.findItem((document.getElementById('stext_nombre_mensajero').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_nombre_mensajero" height="90%"></div><input type="hidden" maxlength="255"  name="nombre_mensajero" id="nombre_mensajero"   value="" ><label style="display:none" class="error" for="nombre_mensajero">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

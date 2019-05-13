@@ -1,4 +1,19 @@
-<?php if(($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) || 0 == 0): ?><!DOCTYPE html>
+<?php if(!$_REQUEST["actualizar_pdf"] && (
+                ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
+                0 == 0
+            )): 
+                include_once "../../controllers/autoload.php";
+                try {
+                    JwtController::check($_REQUEST["token"], $_REQUEST["key"]);
+                    $data = JwtController::GetData($_REQUEST["token"]);
+                    if ($data->web_service) {
+                        $Funcionario = new Funcionario($data->id);
+                        new SessionController($Funcionario);
+                    }
+                } catch (\Throwable $th) {
+                    die("invalid access");
+                }            
+            ?><!DOCTYPE html>
                         <html>
                             <head>
                                 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -43,6 +58,8 @@
 
         $params = [
             "iddoc" => $documentId,
+            "type" => "TIPO_DOCUMENTO",
+            "typeId" => $documentId,
             "exportar" => $record[0]["exportar"],
             "ruta" => base64_encode($record[0]["pdf"]),
             "usuario" => encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
