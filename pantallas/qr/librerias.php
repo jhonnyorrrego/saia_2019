@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "db.php";
 
 function mostrar_codigo_qr_encabezado($idformato, $iddoc)
 {
@@ -17,33 +17,30 @@ function mostrar_codigo_qr_encabezado($idformato, $iddoc)
 
 function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $height = 80)
 {
-	global $conn, $ruta_db_superior;
-	if (isset($_REQUEST["height_qr"])) {
-		$height = $_REQUEST["height_qr"];
-	}
-	if (isset($_REQUEST["width_qr"])) {
-		$width = $_REQUEST["height_qr"];
-	}
+	global $conn;
+
 	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$img = '';
 	$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
+
 	if ($codigo_qr['numcampos']) {
 		$ruta_qr = json_decode($codigo_qr[0]['ruta_qr']);
 		if (is_object($ruta_qr)) {
 			if ($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)) {
 				$archivo_binario = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-				$img = '<img id="qr" src="' . $archivo_binario . '"width="' . $width . 'px" height="' . $height . 'px" >';
+				$img = "<img src='{$archivo_binario}' width='{$width}px' height='{$height}px'>";
 			}
 		}
 	}
-	if ($img == '') {
+
+	if (!$img) {
 		$respuesta = generar_codigo_qr($idformato, $iddoc);
 		if ($respuesta["exito"]) {
 			$ruta_qr = json_decode($respuesta['ruta_qr']);
 			if (is_object($ruta_qr)) {
 				if ($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)) {
 					$archivo_binario = StorageUtils::get_binary_file($respuesta['ruta_qr']);
-					$img = '<img id="qr" src="' . $archivo_binario . '" width="' . $width . 'px" height="' . $height . 'px" >';
+					$img = "<img src='{$archivo_binario}' width='{$width}px' height='{$height}px'>";
 				}
 			}
 		} else {
@@ -171,4 +168,3 @@ function generar_qr_datos($filename, $datos, $matrixPointSize = 2, $errorCorrect
 	}
 	return $retorno;
 }
-?>
