@@ -8,12 +8,13 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+return true;
 include_once ($ruta_db_superior ."db.php");
 include_once ($ruta_db_superior . "assets/librerias.php");
 echo jquery();
 echo bootstrap();
 echo jqueryUi();
-echo icons();
+echo icons(); 
 ?>
 <link href="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="../../assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
