@@ -1,7 +1,7 @@
 <?php
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
@@ -9,8 +9,9 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 $incluidos = array();
 
 function imagen_firma_faltante()
@@ -216,28 +217,26 @@ function nombre_proceso($doc)
         return ("");
 }
 
-function logo_empresa($idformato, $iddoc = 0,$tipo=null,$width = null)
+function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
 {
-    global $conn, $ruta_db_superior;
+    global $conn;
+
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
     if ($logo["numcampos"]) {
         $tipo_almacenamiento = new SaiaStorage("archivos");
-        // $tipo_almacenamiento = new SaiaStorage("archivos");
         $ruta_imagen = json_decode($logo[0]["valor"]);
+
         if (is_object($ruta_imagen)) {
             if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                 $ruta_imagen = json_encode($ruta_imagen);
                 $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
-                if($width){
-                    $img = '<img src="' . $archivo_binario . '" width="80px" />';
-                }else{
-                    $img = '<img class="img-responsive" id="logoEmpresa" src="' . $archivo_binario . '" width="20%" />';
-                }
-                return $img;
+
+                return '<img src="' . $archivo_binario . '" width="80px">';
             }
         }
-    } else
-        return ("");
+    } else {
+        return "";
+    }
 }
 
 function logo_encabezado()
@@ -439,5 +438,3 @@ function mostrar_total_paginas($idformato, $iddoc)
         }
     }
 }
-
-?>
