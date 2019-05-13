@@ -18,7 +18,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <div class="col-12" id="task_files"></div>
 </div>
 
-<?= jsPanel() ?>
 <?= dropzone() ?>
 <?= bootstrapTable() ?>
 <script src="<?= $ruta_db_superior ?>views/tareas/js/anexos.js"></script> 

@@ -440,9 +440,9 @@ function kuku()
 {
     global $ruta_db_superior;
 
-    $routeJs = $ruta_db_superior . 'visorjs/scripts/docxjs/DocxJS.bundle.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kukudocs/docxjs/DocxJS.bundle.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
-    $routeJs = $ruta_db_superior . 'visorjs/scripts/celljs/CellJS.bundle.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kukudocs/celljs/CellJS.bundle.min.js';
     $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
     $routeJs = $ruta_db_superior . 'visorjs/scripts/slidejs/SlideJS.bundle.min.js';
     $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';

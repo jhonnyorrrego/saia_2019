@@ -22,6 +22,16 @@ var topModalDefaults = {
     onSuccess: function () { return true; }
 };
 
+var topJsPanelDefaults = {
+    iconfont: 'fa',
+    theme: 'dark',
+    contentOverflow: 'hidden',
+    position: {
+        my: "center-top",
+        at: "center-top"
+    }
+};
+
 function topModal(options) {
     var modal = $("#dinamic_modal", window.top.document);
     var modalDialog = modal.find(".modal-dialog");
@@ -140,4 +150,24 @@ function closeTopModal() {
 
 function successModalEvent(data) {
     window.modalOptions.onSuccess(data);
+}
+
+function topJsPanel(options) {
+    if (typeof top.jsPanel == 'undefined') {
+        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
+        top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.css`, function (r) {
+            $('head').append($('<style>').html(r));
+            top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.js`, function () {
+                showJsPanel(options);
+            })
+        })
+    } else {
+        showJsPanel(options);
+    }
+}
+
+function showJsPanel(options) {
+    options = $.extend({}, topJsPanelDefaults, options);
+    jsPanel.ziBase = 10000;
+    jsPanel.create(options);
 }

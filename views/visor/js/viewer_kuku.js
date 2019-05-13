@@ -54,7 +54,7 @@ $(document).ready(function () {
                 }
                 instance = pdfJS;
 
-                instance.setCMapUrl('cmaps/');
+                instance.setCMapUrl('../cmaps/');
             }
 
             if (instance) {
