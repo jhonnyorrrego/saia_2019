@@ -38,6 +38,26 @@ class Configuracion extends Model
     }
 
     /**
+     * retorna el valor de la configuracion
+     * validando si está encriptado
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-09
+     */
+    public function getValue()
+    {
+        if ($this->encrypt) {
+            $response = CriptoController::decrypt_blowfish($this->valor);
+        } else {
+            $response = $this->valor;
+        }
+
+        return $response;
+    }
+
+
+    /**
      * Recibe una lista de nombres y devuelve un arreglo de objetos
      * @param array $nombres
      * @return Configuracion[]

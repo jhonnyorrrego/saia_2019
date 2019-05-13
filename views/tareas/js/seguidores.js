@@ -15,7 +15,8 @@ $(function(){
             data: function (params) {
                 return {
                     term: params.term,
-                    key: localStorage.getItem('key')
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem("token")
                 }
             },
             processResults: function (response) {                                

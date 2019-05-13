@@ -222,14 +222,23 @@ class Files {
                         case "docx":
                         case "pptx":
                             var viewer = "viewer_kuku.php";
+                            var type = instance.options.sourceReference;
                             break;
                         case "pdf":
                             var viewer = "viewer_annotate_pdf.php";
-                            var type = 'TIPO_ANEXO_PDF'
+                            if (instance.options.sourceReference == 'TIPO_ANEXO') {
+                                var type = 'TIPO_ANEXO_PDF';
+                            } else {
+                                var type = 'TIPO_ANEXOS_PDF';
+                            }
                             break;
                         default:
                             var viewer = "viewer_annotate_image.php";
-                            var type = 'TIPO_ANEXO_IMAGEN'
+                            if (instance.options.sourceReference == 'TIPO_ANEXO') {
+                                var type = 'TIPO_ANEXO_IMAGEN';
+                            } else {
+                                var type = 'TIPO_ANEXOS_IMAGEN';
+                            }
                             break;
                     }
 
@@ -241,16 +250,8 @@ class Files {
                         key: localStorage.getItem('key')
                     });
 
-                    jsPanel.ziBase = 10000;
-                    jsPanel.create({
+                    top.topJsPanel({
                         headerTitle: 'Anexo',
-                        iconfont: 'fa',
-                        theme: 'dark',
-                        contentOverflow: 'hidden',
-                        position: {
-                            my: "center-top",
-                            at: "center-top"
-                        },
                         contentSize: {
                             width: $(window).width() * 0.8,
                             height: $(window).height() * 0.9,
@@ -403,8 +404,6 @@ class Files {
             console.error("Debe cargar la libreria bootstrap table");
         } else if (!$(selector).length) {
             console.error("no se encuentra el elemento", selector);
-        } else if (typeof jsPanel == 'undefined') {
-            console.error("Debe cargar la libreria jspanel");
         } else {
             return true;
         }
@@ -456,7 +455,7 @@ class Files {
             timeout: 0,
             buttons: [
                 [
-                    "<button><b>YES</b></button>",
+                    "<button><b>Si</b></button>",
                     function (instance, toast) {
                         if (filesInstance.options.delete(key)) {
                             instance.hide(

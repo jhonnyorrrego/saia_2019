@@ -4,6 +4,15 @@ class Ui {
         $("#user_name").text(user.name);
     }
 
+    static loadDashboard(){
+        let url = localStorage.getItem('dashboard');
+        
+        if(url){
+            url = Session.getBaseUrl() + atob(url);
+            $('#iframe_workspace').attr('src', url)
+        }
+    }
+
     static putLogo(selector) {
         var logo = localStorage.getItem("logo");
 
@@ -31,6 +40,8 @@ class Ui {
                         $(selector).removeAttr("style");
                         $(selector).width(130);
                     }
+
+                    $(this).removeClass('d-none');
                 });
             }
 
@@ -56,6 +67,7 @@ class Ui {
                     `
                 })
             );
+            $("[name='theme-color']").attr('content', color);
         } else {
             $.post(
                 Session.getBaseUrl() +

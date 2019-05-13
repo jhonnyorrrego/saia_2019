@@ -33,7 +33,7 @@ function link_editar_funcion($idformato,$iddoc){
 function cargar_destinos_carta($idformato,$idcampo,$iddoc=NULL)
 {global $conn;
  echo '<script>
- $("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><a href="#" id="carga_respuesta" anterior="'.$_REQUEST["anterior"].'" >Cargar Remitente Origen</a></td><td><a href="#" id="exportar_remitentes" >Exportar Remitentes</a></td><td><a href="carga_remitentes.php?opcion=3&campo=destinos" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )" style="text-decoration:underline;">Importar Remitentes</a></td></tr></table>\');
+ $("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><!--a href="#" id="carga_respuesta" anterior="'.$_REQUEST["anterior"].'" >Cargar Remitente Origen</a--></td><td><!--a href="#" id="exportar_remitentes" >Exportar Remitentes</a--></td><td><a href="carga_remitentes.php?opcion=3&campo=destinos" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )" style="text-decoration:underline;">Importar Remitentes</a></td></tr></table>\');
     </script>';
 }
 

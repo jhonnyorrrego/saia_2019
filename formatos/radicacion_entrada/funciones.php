@@ -573,9 +573,6 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         padding-top: 2px;
         padding-bottom: 2px;            
     }
-    .table.table-condensed {
-        table-layout: auto;
-    }
 
     </style>
         <div class="row">
@@ -603,7 +600,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
                 </tr>
                     <tr>
-                        <td style='border:none;'><strong>NO. OFICIO:</strong></td>
+                        <td style='border:none;'><strong>NO. DOCUMENTO:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
                         <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
                         <td px-0 style='border:none;'>" . $empresa_transportadora . "</td>
@@ -699,9 +696,6 @@ function mostrar_copia_electronica($idformato, $iddoc)
         .table.table-condensed thead tr td {
         padding-top: 2px;
         padding-bottom: 2px;            
-    }
-    .table.table-condensed {
-        table-layout: auto;
     }
 
     </style>';

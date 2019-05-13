@@ -32,14 +32,15 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <div class="tab-pane " id="document_pages">
                     <div class="row">
-                        <div class="col-12 px-0" id="pages_container"></div>
+                        <div class="col-12 px-0" id="pages_container">
+                            <iframe frameborder="0" width="100%" id="pages_iframe"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?= jsPanel() ?>
 <?= dropzone() ?>
 <?= bootstrapTable() ?>
 <script src="<?= $ruta_db_superior ?>views/documento/js/anexos.js" data-fileparams='<?= json_encode($_REQUEST) ?>'></script>

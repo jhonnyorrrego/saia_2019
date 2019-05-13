@@ -27,9 +27,9 @@ include_once $ruta_db_superior . "assets/librerias.php";
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row pt-3">
-            <div class="col-3">
+    <div class="container-fluid mw-100 px-3">
+        <div class="row mx-0 pt-3">
+            <div class="col-auto px-0">
                 <div class="input-group transparent">
                     <input id="search" type="text" class="form-control" placeholder="Buscar..." autocomplete="off">
                     <div class="input-group-append ">
@@ -40,8 +40,8 @@ include_once $ruta_db_superior . "assets/librerias.php";
                 </div>
             </div>
         </div>
-        <div class="row" id="table_container" style="overflow-y:auto">
-            <div class="col-12">
+        <div class="row mx-0" id="table_container" style="overflow-y:auto">
+            <div class="col-12 px-0">
                 <table id="treegrid" class="table table-bordered">
                     <thead>
                         <tr>

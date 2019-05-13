@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -31,7 +29,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
         if ($update) {
             $Response->success = 1;
-            $Response->message = "Prioridad asignada";
+            $Response->message = $priority ?
+                "Prioridad asignada" : "Prioridad eliminada";
         } else {
             $Response->message = "Error al asignar prioridad";
         }

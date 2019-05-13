@@ -38,6 +38,11 @@ class Documento extends Model
     protected $prioridad;
     protected $dbAttributes;
 
+    //relations
+    protected $User;
+    protected $Serie;
+    protected $Format;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -169,16 +174,102 @@ class Documento extends Model
             ]);
         }
 
-        return $access;
+        return $access > 0;
     }
 
     /**
-     * @return  string Nombre del Creador
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * determina si un usuario tiene acceso 
+     * a editar un documento por acceso y por edicion continua
+     *
+     * @param integer $userId
+     * @param integer $documentId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-02
      */
-    public function getCreador()
+    public static function canEdit($userId, $documentId)
     {
-        $Funcionario = $this->getRelationFk('Funcionario', 'ejecutor');
-        return $Funcionario->getName();
+        $access = Acceso::countRecords([
+            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
+            'id_relacion' => $documentId,
+            'estado' => 1,
+            'accion' => Acceso::ACCION_EDITAR,
+            'fk_funcionario' => $userId
+        ]);
+
+        if (!$access) {
+            $sql = <<<SQL
+                SELECT 
+                    tipo_edicion
+                FROM
+                    documento a JOIN
+                    formato b
+                    ON
+                        lower(a.plantilla) = lower(b.nombre)
+                WHERE
+                    a.iddocumento = {$documentId}
+SQL;
+            $query = self::search($sql);
+            $access = $query[0]['tipo_edicion'];
+        }
+
+        return $access > 0;
+    }
+
+    /**
+     * obtiene una instancia del funcionario del campo ejeuctor
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getUser()
+    {
+        if (!$this->User) {
+            $this->User = $this->getRelationFk('Funcionario', 'ejecutor');
+        }
+
+        return $this->User;
+    }
+
+    /**
+     * obtiene una instancia de la serie asociada
+     * en caso de no tener genera una con el nombre 
+     * sin asignar
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getSerie()
+    {
+        if ($this->serie) {
+            if (!$this->Serie) {
+                $this->Serie = $this->getRelationFk('Serie', 'serie');
+            }
+        } else {
+            $this->Serie = new Serie();
+            $this->Serie->nombre = 'Sin asignar';
+        }
+
+        return $this->Serie;
+    }
+
+    /**
+     * obtiene una instancia del formato correspondiente
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
+    public function getFormat()
+    {
+        if (!$this->Format) {
+            $this->Format = Formato::findByAttributes([
+                'nombre' => strtolower($this->plantilla)
+            ]);
+        }
+
+        return $this->Format;
     }
 }

@@ -1,5 +1,4 @@
 <?php
-include_once("../../db.php");
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0)
@@ -11,85 +10,60 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-include_once ($ruta_db_superior . "assets/librerias.php");
-echo jquery();
-echo bootstrap();
 
-?>
-<link href="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
-<link class="main-stylesheet" href="../../assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+include_once($ruta_db_superior . "db.php");
 
-<?php
-$texto='<script type="text/javascript">      
-    $("#pais_ejecutor_'.$_REQUEST["campo"].'").change(function(){
-      actualiza_ciudad_'.$_REQUEST["campo"].'($("#pais_ejecutor_'.$_REQUEST["campo"].'").find('."':selected'".').val(),0);
-    });
-    $("#departamento_ejecutor_'.$_REQUEST["campo"].'").change(function(){
-      actualiza_ciudad_'.$_REQUEST["campo"].'($("#pais_ejecutor_'.$_REQUEST["campo"].'").find('."':selected'".').val(),$("#departamento_ejecutor_'.$_REQUEST["campo"].'").find('."':selected'".').val());
-    }); 
-    function actualiza_ciudad_'.$_REQUEST["campo"].'(pais,departamento){
-      $.ajax({
-        type:'."'POST'".',
-        url:'."'".$ruta_db_superior."formatos/librerias/generar_ciudades.php'".',
-        data:'."'pais='+pais+'&departamento='+departamento+'&campo=".$_REQUEST["campo"]."',".'
-        success: function(datos,exito){
-        $("#div_titulo_ejecutor").find(".select2").remove();
-        $("#div_seleccionados_multiple").find(".select2").remove();
-          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").empty();
-          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").append(datos);
-        }
-      });
-    }
-  </script>
-  <script src="../../assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
-<script src="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-<script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>
-<script src="../../assets/theme/pages/js/pages.js"></script>';
-$paises=busca_filtro_tabla("","pais","","",$conn);
-$texto.='<div class="col-auto px-1"><select data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
-for($i=0;$i<$paises["numcampos"];$i++){
-  $texto.='<option value="'.$paises[$i]["idpais"].'"';
-  if($paises[$i]["idpais"]==@$_REQUEST["pais"])
-    $texto.=" SELECTED ";
-  $texto.=">".$paises[$i]["nombre"].'</option>';  
-}
-$texto.='</select></div><div class="col-auto px-1">';
-if(@$_REQUEST["pais"]){
-  $pais=$_REQUEST["pais"];
-}
-else{
-  $pais=$paises[0]["idpais"];
-}
-$departamentos=busca_filtro_tabla("","departamento","pais_idpais=".$pais,"lower(nombre)",$conn);
-$texto.='<select data-init-plugin="select2" name="departamento_ejecutor_'.$_REQUEST["campo"].'" id="departamento_ejecutor_'.$_REQUEST["campo"].'">';
-if($departamentos["numcampos"]){
-  
-  for($i=0;$i<$departamentos["numcampos"];$i++){
-    $texto.='<option value="'.$departamentos[$i]["iddepartamento"].'"';
-    if($departamentos[$i]["iddepartamento"]==$_REQUEST["departamento"])
-     $texto.=" SELECTED ";
-    $texto.=">".$departamentos[$i]["nombre"].'</option>';  
+if(isset($_POST["ciudad"])){
+  $pais=busca_filtro_tabla("idpais,nombre","pais","lower(nombre) LIKE '%".strtolower((html_entity_decode(($_POST["pais"]))))."%'","",$conn);
+  if($pais["numcampos"] != 0){
+    $idpais = $pais[0]["idpais"];
+  }else{
+    phpmkr_query("INSERT INTO pais (nombre) VALUES ('" . $_POST["pais"] . "')",$conn);
+    $idpais = phpmkr_insert_id();
   }
-  $texto.='</select></div><div class="col-auto px-1">';
-  if(@$_REQUEST["departamento"]){
-    $departamento=$_REQUEST["departamento"];
+
+  $dep = busca_filtro_tabla("iddepartamento","departamento","lower(nombre) LIKE '%" . strtolower($_POST["provincia"]) . "%' and pais_idpais = " . $idpais,"",$conn); 
+  if($dep["numcampos"] != 0){ 
+    $iddep = $dep[0]["iddepartamento"];
   }
   else{ 
-    $departamento=$departamentos[0]["iddepartamento"];
-  }  
-  $municipios=busca_filtro_tabla("","municipio","departamento_iddepartamento=".$departamento,"lower(nombre)",$conn);
-  if($municipios["numcampos"]){
-    $texto.='<select data-init-plugin="select2" name="'.$_REQUEST["campo"].'" id="'.$_REQUEST["campo"].'">';
-    for($i=0;$i<$municipios["numcampos"];$i++){
-      $texto.='<option value="'.$municipios[$i]["idmunicipio"].'"';
-      $texto.=">".$municipios[$i]["nombre"].'</option>';  
-    }   
-    $texto.='</select></div><div class="col-auto px-1"><span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Otro</span></div></div>';
+    phpmkr_query("INSERT INTO departamento (nombre,pais_idpais) VALUES ('" . $_POST['provincia'] . "', " . $idpais .")",$conn);
+    $iddep = phpmkr_insert_id();
+  }      
+
+  $municipio = busca_filtro_tabla("idmunicipio","municipio","lower(nombre) LIKE '%" . strtolower($_POST["ciudad"]) . "%' and departamento_iddepartamento = " . $iddep,"",$conn);
+  if($dep["numcampos"] != 0){
+    $idmun = $municipio[0]["idmunicipio"];
+  }else{
+    phpmkr_query("INSERT INTO municipio (nombre,departamento_iddepartamento) VALUES ('" . $_POST['ciudad'] . "', " . $iddep . " )",$conn);
+    $idmun = phpmkr_insert_id(); 
   }
+   
+}else if(isset($_REQUEST["ubicacion"])){
+  $info ='';
+  $pais = busca_filtro_tabla("idpais,nombre","pais","","nombre asc",$conn);
+  $info .='<option value="0">Por favor seleccione</option>';
+  for ($i=0; $i < $pais["numcampos"] ; $i++) { 
+    $info .= '<option value="'.  $pais[$i]['idpais'] .'">' . $pais[$i]['nombre'] . '</option>';
+  }
+  echo($info);
+}else if(isset($_REQUEST["pais"])){
+  $info ='';
+  $departamento = busca_filtro_tabla("iddepartamento,nombre","departamento","pais_idpais = " . $_REQUEST["pais"],"nombre asc",$conn);
+  $info .='<option value="0">Por favor seleccione</option>';
+  for ($i=0; $i < $departamento["numcampos"] ; $i++) { 
+    $info .= '<option value="'.  $departamento[$i]['iddepartamento'] .'">' . $departamento[$i]['nombre'] . '</option>';
+  }
+  echo($info);
+}else if(isset($_REQUEST["departamento"])){
+  $info ='';
+  $departamento = busca_filtro_tabla("idmunicipio,nombre","municipio","departamento_iddepartamento = " . $_REQUEST["departamento"],"nombre asc",$conn);
+  $info .='<option value="0">Por favor seleccione</option>';
+  for ($i=0; $i < $departamento["numcampos"] ; $i++) { 
+    $info .= '<option value="'.  $departamento[$i]['idmunicipio'] .'">' . $departamento[$i]['nombre'] . '</option>';
+  }
+  echo($info);
 }
-else{
-  $texto.='<option value="0">Por favor seleccione otro</option></select></div></div></div></div>';
-}
-echo($texto);
+
 ?>
+

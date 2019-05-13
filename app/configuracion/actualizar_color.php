@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -53,8 +51,9 @@ function createThumbnails()
     global $ruta_db_superior;
 
     $color = $_REQUEST['color'];
-    $sizes = [48, 96, 192];
+    $sizes = [48, 96, 192, 512];
     $imagine = new Imagine\Gd\Imagine();
+    chmod($ruta_db_superior . 'assets/images', 0777);
 
     foreach ($sizes as $key => $value) {
         $image = $imagine
@@ -70,8 +69,29 @@ function createThumbnails()
             ->save("{$ruta_db_superior}assets/images/logo_saia_{$value}x{$value}.png");
     }
 
-    $content = file_get_contents($ruta_db_superior . 'manifest.json');
-    $json = json_decode($content);
+    $json = (object) [
+        "short_name"=> "Saia",
+        "name"=> "Sistema de gestión documental",
+        "icons"=> [
+            [
+                "src"=> "assets/images/logo_saia_48x48.png",
+                "type"=> "image/png",
+                "sizes"=> "48x48"
+            ],
+            [
+                "src"=> "assets/images/logo_saia_96x96.png",
+                "type"=> "image/png",
+                "sizes"=> "96x96"
+            ],
+            [
+                "src"=> "assets/images/logo_saia_192x192.png",
+                "type"=> "image/png",
+                "sizes"=> "192x192"
+            ]
+        ],
+        "start_url"=> "views/dashboard/dashboard.php",
+        "display"=> "standalone",
+    ];
     $json->theme_color = $color;
     $json->background_color = $color;
     file_put_contents($ruta_db_superior . 'manifest.json', json_encode($json));

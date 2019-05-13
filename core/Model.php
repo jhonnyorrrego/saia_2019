@@ -496,7 +496,8 @@ abstract class Model extends StaticSql
     public static function countRecords(array $conditions = [])
     {
         $condition = self::createCondition($conditions);
-        $sql = "select count(*) as total from " . self::getTableName() . " where  "  . $condition;
+        $condition = $condition ? " where "  . $condition : '';
+        $sql = "select count(*) as total from " . self::getTableName() . $condition;
         $record = self::search($sql);
 
         return $record[0]['total'];
@@ -671,11 +672,17 @@ abstract class Model extends StaticSql
      *
      * @param string $sql sentencia a ejecutar
      * @param boolean $getInstance retornar instancias del modelo
+     * @param integer $offset limite inferior de la consulta
+     * @param integer $limit limite superior de la consulta
      * @return void
      */
-    public static function findBySql(string $sql, $getInstance = true)
-    {
-        $data = self::search($sql);
+    public static function findBySql(
+        string $sql,
+        $getInstance = true,
+        $offset = null,
+        $limit = null
+    ) {
+        $data = self::search($sql, $offset, $limit);
         if ($getInstance) {
             $className = get_called_class();
             $data = $className::convertToObjectCollection($data);

@@ -1,6 +1,20 @@
 var cacheName = 'saiaCache';
 var filesToCache = [
-    'views/dashboard/dashboard.php'
+    'views/dashboard/dashboard.php',
+    'assets/theme/assets/plugins/jquery/jquery-3.2.1.min.js',
+    'assets/theme/assets/plugins/popper/umd/popper.min.js',
+    'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css',
+    'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js',
+    'assets/theme/assets/plugins/modernizr.custom.js',
+    'assets/theme/pages/js/pages.min.js',
+    'assets/theme/pages/css/pages.min.css',
+    'assets/theme/assets/plugins/moment/moment-with-locales.min.js',
+    'assets/theme/assets/plugins/moment/moment.min.js',
+    'assets/theme/assets/plugins/font-awesome/css/font-awesome.css',
+    'assets/theme/assets/js/cerok_libraries/breakpoint/if-b4-breakpoint.js',
+    'assets/theme/assets/js/cerok_libraries/session/session.js',
+    'assets/theme/assets/js/cerok_libraries/notifications/topNotification.js',
+    'assets/theme/assets/js/cerok_libraries/ui/ui.js'
 ];
 
 self.addEventListener('install', function (e) {

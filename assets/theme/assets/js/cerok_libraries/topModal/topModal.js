@@ -1,4 +1,5 @@
 var topModalDefaults = {
+    content: "", //string with especific content to show
     url: "", // url to open
     params: {}, //params for url ej: baseUrl
     size: "", //'modal-lg', 'modal-sm' , 'modal-xl'
@@ -19,6 +20,16 @@ var topModalDefaults = {
     beforeHide: function (event) { return true; },//evento ejecutado antes de cerrar
     afterHide: function (event) { return true; },//evento ejecutado despues de cerrar
     onSuccess: function () { return true; }
+};
+
+var topJsPanelDefaults = {
+    iconfont: 'fa',
+    theme: 'dark',
+    contentOverflow: 'hidden',
+    position: {
+        my: "center-top",
+        at: "center-top"
+    }
 };
 
 function topModal(options) {
@@ -94,7 +105,7 @@ function topModal(options) {
         modalBody.append(options.content);
         openModal(options);
     } else {
-        console.error("debe indicar la url");
+        console.error("must set some source");
     }
 }
 
@@ -139,4 +150,24 @@ function closeTopModal() {
 
 function successModalEvent(data) {
     window.modalOptions.onSuccess(data);
+}
+
+function topJsPanel(options) {
+    if (typeof top.jsPanel == 'undefined') {
+        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
+        top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.css`, function (r) {
+            $('head').append($('<style>').html(r));
+            top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.js`, function () {
+                showJsPanel(options);
+            })
+        })
+    } else {
+        showJsPanel(options);
+    }
+}
+
+function showJsPanel(options) {
+    options = $.extend({}, topJsPanelDefaults, options);
+    jsPanel.ziBase = 10000;
+    jsPanel.create(options);
 }

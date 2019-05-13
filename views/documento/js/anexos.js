@@ -64,11 +64,13 @@ $(function () {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: `${baseUrl}app/anexos_documento/eliminar.php`,
+                    url: `${baseUrl}app/anexos/eliminar.php`,
                     async: false,
                     data: {
                         key: localStorage.getItem('key'),
-                        fileId: key
+                        token: localStorage.getItem('token'),
+                        fileId: key,
+                        type: this.sourceReference
                     },
                     success: function (response) {
                         if (response.success) {
@@ -90,8 +92,12 @@ $(function () {
     }
 
     $('#show_pages').on('click', function () {
-        $('#pages_container').load(`${baseUrl}views/pagina/pagina.php`, {
-            documentId: params.documentId
+        let route = `${baseUrl}views/visor/viewer_annotate_image.php?`;
+        route += $.param({
+            typeId: params.documentId,
+            type: 'TIPO_PAGINA'
         });
+
+        $('#pages_iframe').attr('src', route);
     });
 });

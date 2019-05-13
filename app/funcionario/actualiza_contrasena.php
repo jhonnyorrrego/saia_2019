@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
@@ -24,9 +23,9 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $Funcionario = new Funcionario($_SESSION['idfuncionario']);
     $password = $Funcionario->getPassword();
 
-    if($password == md5(md5($_REQUEST['actual']))){
+    if($password == CriptoController::encrypt_md5($_REQUEST['actual'])){
         $Funcionario->setAttributes(array(
-            'clave' => md5(md5($_REQUEST['new']))
+            'clave' => CriptoController::encrypt_md5($_REQUEST['new'])
         ));
         
         if ($Funcionario->update()) {

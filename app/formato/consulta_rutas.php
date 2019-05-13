@@ -1,12 +1,11 @@
 <?php
-session_start();
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -16,25 +15,36 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)[
-    'success' => 1,
-    'data' => [],
-    'message' => ''
+    'data' => new stdClass(),
+    'message' => '',
+    'success' => 0
 ];
 
-if(isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']){
-    global $conn;
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $findDocument = busca_filtro_tabla('lower(plantilla) as plantilla,b.*', 'documento a, formato b', 'lower(a.plantilla) = lower(b.nombre) and a.iddocumento=' . $_REQUEST['documentId'], '', $conn);
-    $template = $findDocument[0]['plantilla'];
+    if (!$_REQUEST['documentId']) {
+        throw new Exception('Documento invalido', 1);
+    }
+
+    $Documento = new Documento($_REQUEST['documentId']);
+    $Formato = $Documento->getFormat();
+    $template = strtolower($Documento->plantilla);
+    $queryParams = http_build_query([
+        "iddoc" => $_REQUEST['documentId'],
+        "key" => $_REQUEST["key"],
+        "token" => $_REQUEST["token"]
+    ]);
 
     $Response->data = [
-        'ruta_mostrar' => "formatos/{$template}/{$findDocument[0]['ruta_mostrar']}?iddoc={$_REQUEST['documentId']}" ,
-        'ruta_editar' => "formatos/{$template}/{$findDocument[0]['ruta_editar']}",
-        'ruta_adicionar' => "formatos/{$template}/{$findDocument[0]['ruta_adicionar']}"
+        'ruta_mostrar' => "formatos/{$template}/{$Formato->ruta_mostrar}?" . $queryParams,
+        'ruta_editar' => "formatos/{$template}/{$Formato->ruta_editar}",
+        'ruta_adicionar' => "formatos/{$template}/{$Formato->ruta_adicionar}"
     ];
-}else{
-    $Response->success = 0;
-    $Response->message = "Debe iniciar sesion";
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

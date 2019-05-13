@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
@@ -24,7 +23,7 @@ $userId = base64_decode(base64_decode($_REQUEST['token']));
 if (Funcionario::isValidToken($_REQUEST['token'], $userId)) {
     $update = Funcionario::executeUpdate([
         'token' => $_REQUEST['token'] . 'invalid',
-        'clave' => md5(md5($_REQUEST['new']))
+        'clave' => CriptoController::encrypt_md5($_REQUEST['new'])
     ], [
         Funcionario::getPrimaryLabel() => $userId
     ]);

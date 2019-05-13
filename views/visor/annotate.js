@@ -108,8 +108,7 @@
         var params = JSON.parse(
             document.querySelector("script[data-params]").dataset.params
         );
-        var baseUrl = document.querySelector("script[data-baseurl]").dataset
-            .baseurl;
+        var baseUrl = document.querySelector("script[data-baseurl]").dataset.baseurl;
         var adapter = new PDFJSAnnotate.LocalStoreAdapter();
         var PAGE_HEIGHT = void 0;
         var NUM_PAGES = 0;
@@ -158,7 +157,10 @@
         //find pdf route
         function findRoute(params, baseUrl) {
             let data = Object.assign(
-                { key: localStorage.getItem("key") },
+                {
+                    key: localStorage.getItem("key"),
+                    token: localStorage.getItem('token')
+                },
                 params
             );
             let documentId = "";
@@ -237,8 +239,8 @@
                             url: `${baseUrl}app/visor/consulta_notas.php`,
                             data: {
                                 key: localStorage.getItem("key"),
-                                type: "TIPO_DOCUMENTO",
-                                typeId: params.iddoc
+                                type: params.type,
+                                typeId: params.typeId
                             },
                             success: function(response) {
                                 if (response.success) {
@@ -629,8 +631,8 @@
                     {
                         key: localStorage.getItem("key"),
                         uuid: uuid,
-                        type: "TIPO_DOCUMENTO",
-                        typeId: params.iddoc
+                        type: params.type,
+                        typeId: params.typeId
                     },
                     function(response) {
                         if (!response.success) {
@@ -651,8 +653,8 @@
                         key: localStorage.getItem("key"),
                         uuid: uuid,
                         annotation: annotation,
-                        type: "TIPO_DOCUMENTO",
-                        typeId: params.iddoc
+                        type: params.type,
+                        typeId: params.typeId
                     },
                     function(response) {
                         if (!response.success) {
@@ -679,8 +681,8 @@
                             `${baseUrl}app/visor/guardar_nota.php`,
                             {
                                 key: localStorage.getItem("key"),
-                                type: "TIPO_DOCUMENTO",
-                                typeId: params.iddoc,
+                                type: params.type,
+                                typeId: params.typeId,
                                 annotation: annotation,
                                 comment: comment
                             },

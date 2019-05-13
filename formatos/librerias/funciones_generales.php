@@ -1,6 +1,7 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
@@ -8,9 +9,10 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones_cliente.php");
-include_once($ruta_db_superior . "class_transferencia.php");
+
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_cliente.php";
+include_once $ruta_db_superior . "class_transferencia.php";
 
 function retornar_seleccionados($valor)
 {
@@ -116,7 +118,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
                     $fila
                 );
             } else {
-                if($fila){
+                if ($fila) {
                     $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "", $conn);
                     $lista = array(
                         $codigos[0]["funcionario_codigo"]
@@ -285,18 +287,16 @@ function componente_ejecutor($idcampo, $iddoc)
         );
     // $parametros=explode("@",$campo[0]["valor"]);
     $campos = explode(",", $parametros[2]);
-    $alto_movil = 40 * (count($campos) + 6);
-    $alto_escritorio = 35 * (count($campos) + 6);
-    echo '
-                <iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto_movil . 'px"></iframe>
-                <script>
-                $( document ).ready(function() {
-                    let breakpoint = localStorage.getItem(\'breakpoint\');
-                    if(breakpoint != "xs" || breakpoint != "xs"){
-                        $("#frame_' . $campo[0]["nombre"] . '").attr("height",' . $alto_escritorio . ');
-                    }
+    echo '<iframe border=0 frameborder="0" style="background: #FFFFFF;" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" ></iframe>
+            <script>
+                $( document ).ready(function() {               
+                    $(window).resize(function(){
+                       console.log("1");
+                       document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
+                       document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
+                    });
                 });
-                </script>';
+            </script>';
 }
 
 /*
@@ -465,17 +465,17 @@ function listar_dependencias($idformato, $nombre_campo, $iddoc)
 function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 {
     ?>
-<tr>
-    <td title="Adjuntar archivos relacionados con el documento" width="21%" class="encabezado"><span>ADJUNTAR ANEXOS</span></td>
-    <td bgcolor="#F5F5F5"><iframe src="../../upload.php?iddoc=<?php echo $iddoc; ?>" width="500" height="50" frameborder=0 scrolling="no" marginwidth=0> </iframe> </font>
-    </td>
-</tr>
-<tr>
-    <td title="Lista de archivos anexos" width="21%" class="encabezado">
-        ARCHIVOS ANEXOS:</td>
-    <td bgcolor="#F5F5F5"><iframe name='listar_archivos' id='listar_archivos' src="../../listar_anexos.php?iddoc=<?php echo $iddoc; ?>" width="100%" height="100%" frameborder=0 scrolling="no" marginwidth=0>
-        </iframe></td>
-</tr>
+    <tr>
+        <td title="Adjuntar archivos relacionados con el documento" width="21%" class="encabezado"><span>ADJUNTAR ANEXOS</span></td>
+        <td bgcolor="#F5F5F5"><iframe src="../../upload.php?iddoc=<?php echo $iddoc; ?>" width="500" height="50" frameborder=0 scrolling="no" marginwidth=0> </iframe> </font>
+        </td>
+    </tr>
+    <tr>
+        <td title="Lista de archivos anexos" width="21%" class="encabezado">
+            ARCHIVOS ANEXOS:</td>
+        <td bgcolor="#F5F5F5"><iframe name='listar_archivos' id='listar_archivos' src="../../listar_anexos.php?iddoc=<?php echo $iddoc; ?>" width="100%" height="100%" frameborder=0 scrolling="no" marginwidth=0>
+            </iframe></td>
+    </tr>
 <?php
 
 }
@@ -677,34 +677,34 @@ function anexos_fisicos($idformato, $idcampo, $iddoc = null)
 {
     global $conn;
     ?>
-<td bgcolor="#F5F5F5">
-    <?php
-    $anexos_fisicos = array();
-    $anexos_fisicos["numcampos"] = 0;
-    if ($iddoc != null) {
-        $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
-        $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "", $conn);
-        if ($anexos_fisicos["numcampos"]) {
-            $listado_anexos = explode(",", $anexos_fisicos[0]["anexos_fisicos"]);
-        }
-    }
-    ?>
-    <input type="hidden" name="anexos_fisicos" id="anexos_fisicos" value="<?php
-                                                                            if ($anexos_fisicos["numcampos"]) {
-                                                                                echo $anexos_fisicos[0]["anexos_fisicos"];
-                                                                            }
-                                                                            ?>">
-    <input type=button value="Adicionar Anexo F&iacute;sico" onclick="adicionar_anexo();"> <input type=button value="Borrar Anexos F&iacute;sicos" onclick="document.getElementById('anexos_fisicos').value = ''; document.getElementById('mostrar_archivos2').innerHTML = '';">
-    <div id=mostrar_archivos2>
+    <td bgcolor="#F5F5F5">
         <?php
-        if ($anexos_fisicos[0]["anexos_fisicos"] != "") {
-            $cont = count($listado_anexos);
-            for ($i = 0; $cont && $i < $cont; $i++)
-                echo ("<LI>" . $listado_anexos[$i] . "</LI>");
+        $anexos_fisicos = array();
+        $anexos_fisicos["numcampos"] = 0;
+        if ($iddoc != null) {
+            $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
+            $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+            if ($anexos_fisicos["numcampos"]) {
+                $listado_anexos = explode(",", $anexos_fisicos[0]["anexos_fisicos"]);
+            }
         }
         ?>
-    </div>
-</td>
+        <input type="hidden" name="anexos_fisicos" id="anexos_fisicos" value="<?php
+                                                                                if ($anexos_fisicos["numcampos"]) {
+                                                                                    echo $anexos_fisicos[0]["anexos_fisicos"];
+                                                                                }
+                                                                                ?>">
+        <input type=button value="Adicionar Anexo F&iacute;sico" onclick="adicionar_anexo();"> <input type=button value="Borrar Anexos F&iacute;sicos" onclick="document.getElementById('anexos_fisicos').value = ''; document.getElementById('mostrar_archivos2').innerHTML = '';">
+        <div id=mostrar_archivos2>
+            <?php
+            if ($anexos_fisicos[0]["anexos_fisicos"] != "") {
+                $cont = count($listado_anexos);
+                for ($i = 0; $cont && $i < $cont; $i++)
+                    echo ("<LI>" . $listado_anexos[$i] . "</LI>");
+            }
+            ?>
+        </div>
+    </td>
 <?php
 
 }
@@ -1378,9 +1378,9 @@ function formatea_campo($valor, $tipo, $llenado, $opciones)
                 }
             }
         } else {
-            
+
             $llenado = json_decode($opciones, true);
-            if($llenado){
+            if ($llenado) {
                 if ($tipo == 'radio' || $tipo == 'select') {
                     return recursiveFind($llenado, $valor);
                 } else if ($tipo == 'checkbox') {
@@ -1576,39 +1576,39 @@ function submit_formato($formato, $iddoc = null)
      <div>';
     }
     ?>
-<script>
-    $(document).ready(function() {
-        $("#continuar").click(function() {
-            var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
-            var size = elementos.length;
-            if (size) {
-                $.each(elementos, function(i, val) {
-                    var contenido_textarea = tinyMCE.get($(val).attr('id')).getContent();
-                    $("#" + $(val).attr('id')).val(contenido_textarea);
-                });
-            }
-            /*if($('#formulario_formatos').validate({ignore:""})){
-             $("#continuar").hide();
-             $("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
-             }
-             }*/
-            $("#formulario_formatos").validate({
-                ignore: [],
-                submitHandler: function(form) {
-                    // disable your button here
-                    $("#continuar").hide();
-                    $("#continuar").after('<button class="btn btn-success" disabled="true" value="Enviando..." id="boton_enviando">Enviando...</button>');
-                    form.submit();
-                },
-                invalidHandler: function() {
-                    // re-enable the button here as validation has failed
-                    $("#continuar").show();
-                    $("#boton_enviando").remove();
+    <script>
+        $(document).ready(function() {
+            $("#continuar").click(function() {
+                var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
+                var size = elementos.length;
+                if (size) {
+                    $.each(elementos, function(i, val) {
+                        var contenido_textarea = tinyMCE.get($(val).attr('id')).getContent();
+                        $("#" + $(val).attr('id')).val(contenido_textarea);
+                    });
                 }
+                /*if($('#formulario_formatos').validate({ignore:""})){
+                 $("#continuar").hide();
+                 $("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
+                 }
+                 }*/
+                $("#formulario_formatos").validate({
+                    ignore: [],
+                    submitHandler: function(form) {
+                        // disable your button here
+                        $("#continuar").hide();
+                        $("#continuar").after('<button class="btn btn-success" disabled="true" value="Enviando..." id="boton_enviando">Enviando...</button>');
+                        form.submit();
+                    },
+                    invalidHandler: function() {
+                        // re-enable the button here as validation has failed
+                        $("#continuar").show();
+                        $("#boton_enviando").remove();
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 <?php
 
 }
@@ -2015,7 +2015,7 @@ function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
             switch ($tipo_arbol) {
                 case "funcionario":
                     //Funcionarios
-                    if($fila){
+                    if ($fila) {
                         $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
                         if ($datos["numcampos"]) {
                             $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
@@ -2171,8 +2171,7 @@ function listar_select_padres($tabla)
 
             echo ('<tr ><td class="encabezado">' . strtoupper($etiqueta[0][0]) . '</td><td bgcolor="#F5F5F5">');
             echo ('<select name="' . $tabla . '" obligatorio="obligatorio">');
-            for ($i = 0; $i < $valores["numcampos"]; $i++) {
-                {
+            for ($i = 0; $i < $valores["numcampos"]; $i++) { {
                     $mostrar = array_values($valores[$i]);
                     $mostrar = array_unique($mostrar);
                     $mostrar = implode(" ", $mostrar);
@@ -2831,71 +2830,71 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc)
             $seleccionado = $datos[0]["expediente"];
         }
         ?>
-<td id="td_fk_idexpediente" bgcolor="#F5F5F5">
-    <div id="seleccionados"></div> <br /> Buscar: <input tabindex='2' type="text" id="stext_fk_idexpediente" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 1)">
-        <img src="../../assets/images/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../assets/images/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
-        <img src="../../assets/images/siguiente.png" border="0px"></a> <br />
-    <div id="esperando_fk_idexpediente">
-        <img src="../../imagenes/cargando.gif">
-    </div>
-    <div id="treeboxbox_fk_idexpediente" height="90%"></div>
-    <input type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo ($seleccionado); ?>"> <label style="display: none" class="error" for="fk_idexpediente">Campo obligatorio.</label>
-    <script type="text/javascript">
-        var browserType;
-        if (document.layers) {
-            browserType = "nn4"
-        }
-        if (document.all) {
-            browserType = "ie"
-        }
-        if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-            browserType = "gecko"
-        }
-        tree_fk_idexpediente = new dhtmlXTreeObject("treeboxbox_fk_idexpediente", "100%", "100%", 0);
-        tree_fk_idexpediente.setImagePath("../../imgs/");
-        tree_fk_idexpediente.enableIEImageFix(true);
-        tree_fk_idexpediente.enableCheckBoxes(1);
-        tree_fk_idexpediente.setOnLoadingStart(cargando_fk_idexpediente);
-        tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
-        tree_fk_idexpediente.enableSmartXMLParsing(true);
-        tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1<?php echo ($adicional); ?>");
-        tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
+        <td id="td_fk_idexpediente" bgcolor="#F5F5F5">
+            <div id="seleccionados"></div> <br /> Buscar: <input tabindex='2' type="text" id="stext_fk_idexpediente" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 1)">
+                <img src="../../assets/images/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../assets/images/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
+                <img src="../../assets/images/siguiente.png" border="0px"></a> <br />
+            <div id="esperando_fk_idexpediente">
+                <img src="../../imagenes/cargando.gif">
+            </div>
+            <div id="treeboxbox_fk_idexpediente" height="90%"></div>
+            <input type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo ($seleccionado); ?>"> <label style="display: none" class="error" for="fk_idexpediente">Campo obligatorio.</label>
+            <script type="text/javascript">
+                var browserType;
+                if (document.layers) {
+                    browserType = "nn4"
+                }
+                if (document.all) {
+                    browserType = "ie"
+                }
+                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                    browserType = "gecko"
+                }
+                tree_fk_idexpediente = new dhtmlXTreeObject("treeboxbox_fk_idexpediente", "100%", "100%", 0);
+                tree_fk_idexpediente.setImagePath("../../imgs/");
+                tree_fk_idexpediente.enableIEImageFix(true);
+                tree_fk_idexpediente.enableCheckBoxes(1);
+                tree_fk_idexpediente.setOnLoadingStart(cargando_fk_idexpediente);
+                tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
+                tree_fk_idexpediente.enableSmartXMLParsing(true);
+                tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1<?php echo ($adicional); ?>");
+                tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
 
-        function onNodeSelect_fk_idexpediente(nodeId) {
-            seleccionados = tree_fk_idexpediente.getAllChecked();
-            nuevo = seleccionados.replace(/\,{2,}(d)*/gi, ",");
-            nuevo = nuevo.replace(/\,$/gi, "");
-            document.getElementById("fk_idexpediente").value = nuevo;
-        }
+                function onNodeSelect_fk_idexpediente(nodeId) {
+                    seleccionados = tree_fk_idexpediente.getAllChecked();
+                    nuevo = seleccionados.replace(/\,{2,}(d)*/gi, ",");
+                    nuevo = nuevo.replace(/\,$/gi, "");
+                    document.getElementById("fk_idexpediente").value = nuevo;
+                }
 
-        function fin_cargando_fk_idexpediente() {
-            if (browserType == "gecko")
-                document.poppedLayer =
-                eval('document.getElementById("esperando_fk_idexpediente")');
-            else if (browserType == "ie")
-                document.poppedLayer =
-                eval('document.getElementById("esperando_fk_idexpediente")');
-            else
-                document.poppedLayer =
-                eval('document.layers["esperando_fk_idexpediente"]');
-            document.poppedLayer.style.display = "none";
-        }
+                function fin_cargando_fk_idexpediente() {
+                    if (browserType == "gecko")
+                        document.poppedLayer =
+                        eval('document.getElementById("esperando_fk_idexpediente")');
+                    else if (browserType == "ie")
+                        document.poppedLayer =
+                        eval('document.getElementById("esperando_fk_idexpediente")');
+                    else
+                        document.poppedLayer =
+                        eval('document.layers["esperando_fk_idexpediente"]');
+                    document.poppedLayer.style.display = "none";
+                }
 
-        function cargando_fk_idexpediente() {
-            if (browserType == "gecko")
-                document.poppedLayer =
-                eval('document.getElementById("esperando_fk_idexpediente")');
-            else if (browserType == "ie")
-                document.poppedLayer =
-                eval('document.getElementById("esperando_fk_idexpediente")');
-            else
-                document.poppedLayer =
-                eval('document.layers["esperando_fk_idexpediente"]');
-            document.poppedLayer.style.display = "";
-        }
-    </script>
-</td>
-<?php
+                function cargando_fk_idexpediente() {
+                    if (browserType == "gecko")
+                        document.poppedLayer =
+                        eval('document.getElementById("esperando_fk_idexpediente")');
+                    else if (browserType == "ie")
+                        document.poppedLayer =
+                        eval('document.getElementById("esperando_fk_idexpediente")');
+                    else
+                        document.poppedLayer =
+                        eval('document.layers["esperando_fk_idexpediente"]');
+                    document.poppedLayer.style.display = "";
+                }
+            </script>
+        </td>
+    <?php
 
 }
 }
@@ -3371,4 +3370,4 @@ function fecha_documento($idformato, $iddoc)
     }
     echo $fecha_creacion;
 }
-?> 
+?>

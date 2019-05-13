@@ -1,7 +1,6 @@
 <?php
-
 use Symfony\Component\DependencyInjection\Tests\Compiler\E;
-session_start();
+
 
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
