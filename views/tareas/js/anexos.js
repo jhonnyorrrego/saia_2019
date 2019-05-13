@@ -89,7 +89,9 @@ $(function () {
                     async: false,
                     data: {
                         key: localStorage.getItem('key'),
-                        fileId: key
+                        token: localStorage.getItem('token'),
+                        fileId: key,
+                        type: this.sourceReference
                     },
                     success: function (response) {
                         if (response.success) {

@@ -64,11 +64,13 @@ $(function () {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: `${baseUrl}app/anexos_documento/eliminar.php`,
+                    url: `${baseUrl}app/anexos/eliminar.php`,
                     async: false,
                     data: {
                         key: localStorage.getItem('key'),
-                        fileId: key
+                        token: localStorage.getItem('token'),
+                        fileId: key,
+                        type: this.sourceReference
                     },
                     success: function (response) {
                         if (response.success) {

@@ -258,6 +258,7 @@ $(function () {
             `${baseUrl}app/documento/eventos_fab.php`,
             {
                 key: localStorage.getItem("key"),
+                token: localStorage.getItem("token"),
                 documentId: documentId
             },
             function (response) {
@@ -275,6 +276,22 @@ $(function () {
         if (actions.showFab) {
             let buttons = [];
 
+            if (actions.reject.see) {
+                buttons.push({
+                    button: {
+                        style: "small orange",
+                        html: ""
+                    },
+                    icon: {
+                        style: "fa fa-times",
+                        html: ""
+                    },
+                    onClick: function () {
+                        confirmDocument(false);
+                    }
+                });
+            }
+
             if (actions.confirm.see) {
                 buttons.push({
                     button: {
@@ -286,7 +303,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        confirmDocument();
+                        confirmDocument(true);
                     }
                 });
             }
@@ -318,7 +335,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.managers.route, "_self");
+                        seeManagers(actions.managers.route)
                     }
                 });
             }
@@ -339,6 +356,7 @@ $(function () {
                 });
             }
 
+            $('#fab').empty();
             new Fab({
                 selector: "#fab",
                 button: {
@@ -358,12 +376,14 @@ $(function () {
         }
     }
 
-    function confirmDocument() {
+    function confirmDocument(accept) {
         $.post(
             `${baseUrl}app/documento/confirmar.php`,
             {
                 key: localStorage.getItem("key"),
-                documentId: documentId
+                token: localStorage.getItem("token"),
+                documentId: documentId,
+                reject: !accept ? 1 : 0
             },
             function (response) {
                 if (response.success) {
@@ -382,6 +402,18 @@ $(function () {
             },
             "json"
         );
+    }
+
+    function seeManagers(route) {
+        top.topModal({
+            url: baseUrl + route,
+            size: 'modal-xl',
+            title: 'Ruta actual asignada al documento',
+            buttons: {},
+            onSuccess: function () {
+                findActions();
+            }
+        })
     }
 
     function findMenu() {

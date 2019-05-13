@@ -127,7 +127,7 @@ class Funcionario extends Model
     public function getName()
     {
         $name = $this->nombres . ' ' . $this->apellidos;
-        $name = trim(strtolower($name));
+        $name = trim(strtolower(html_entity_decode($name)));
         $name = ucwords($name);
         return $name;
     }
@@ -219,7 +219,7 @@ class Funcionario extends Model
                 'extension' => 'jpg',
             );
 
-            if ($this->updateImage($imageData, $image)){
+            if ($this->updateImage($imageData, $image)) {
                 return $this->getImage($image, true);
             }
         }
@@ -257,6 +257,7 @@ class Funcionario extends Model
                 lower(nombres) like '%{$term}%' or
                 apellidos like '%{$term}%'
 SQL;
+
 
         return  self::findBySql($sql);
     }

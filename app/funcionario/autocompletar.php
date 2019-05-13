@@ -1,38 +1,47 @@
 <?php
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
     $max_salida--;
 }
+
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
-    'data' => [],
+$Response = (object)[
+    'data' => new stdClass(),
     'message' => '',
-    'success' => 0,
-);
+    'success' => 0
+];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     $identificator = !empty($_REQUEST['identificator']) ? $_REQUEST['identificator'] : 'idfuncionario';
     if (isset($_REQUEST['term'])) {
-        $funcionarios = Funcionario::findAllByTerm($_REQUEST['term'], $identificator);
+        $roles = $_REQUEST['roles'] ?? 0;
+
+        if ($roles) {
+            $users = VfuncionarioDc::findAllByTerm($_REQUEST['term'], $identificator);
+        } else {
+            $users = Funcionario::findAllByTerm($_REQUEST['term'], $identificator);
+        }
     } else if (!empty($_REQUEST['defaultUser'])) {
-        $funcionarios[] = new Funcionario($_REQUEST['defaultUser']);
+        $users[] = new Funcionario($_REQUEST['defaultUser']);
     } else if (!empty($_REQUEST['documentId'])) {
-        $funcionarios = Funcionario::findByDocumentTransfer($_REQUEST['documentId']);
+        $users = Funcionario::findByDocumentTransfer($_REQUEST['documentId']);
     }
 
-    if ($funcionarios) {
+    if ($users) {
         $data = [];
 
-        foreach ($funcionarios as $Funcionario) {
+        foreach ($users as $Funcionario) {
             $id = !empty($_REQUEST['identificator']) ?
                 $Funcionario->__get($identificator) : $Funcionario->getPK();
 
@@ -47,8 +56,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     } else {
         $Response->message = "No se encontraron registros";
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
