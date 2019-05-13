@@ -291,6 +291,7 @@ function componente_ejecutor($idcampo, $iddoc)
             <script>
                 $( document ).ready(function() {               
                     $(window).resize(function(){
+                       console.log("1");
                        document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
                        document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
                     });

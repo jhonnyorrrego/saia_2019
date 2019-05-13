@@ -72,7 +72,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_cargo">Cargo</label>
-                        <input type="text" placeholder="Cargo" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
+                        <input type="text" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -81,7 +81,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_direccion">Dirección</label>
-                        <input type="text" placeholder="Dirección" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
+                        <input type="text" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -90,7 +90,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Teléfono</label>
-                        <input type="text" placeholder="Teléfono" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
+                        <input type="text" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -99,7 +99,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_email">Email</label>
-                        <input type="text" placeholder="Email" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
+                        <input type="text" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -129,7 +129,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_cargo">Cargo</label>
-                        <input type="text" placeholder="Cargo" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
+                        <input type="text" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -138,7 +138,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_direccion">Dirección</label>
-                        <input type="text" placeholder="Dirección" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
+                        <input type="text" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -147,7 +147,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Teléfono</label>
-                        <input type="text" placeholder="Teléfono" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
+                        <input type="text" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -156,7 +156,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Contacto</label>
-                        <input type="text" placeholder="Contacto" class="form-control" id="contacto_ejecutor" name="contacto_ejecutor" value="">
+                        <input type="text" class="form-control" id="contacto_ejecutor" name="contacto_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -165,7 +165,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_email">Email</label>
-                        <input type="text" placeholder="Email" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
+                        <input type="text" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -181,7 +181,7 @@ function campoJuridica($campos){
                 <div class="form-group form-group-default-select2 pb-md-0 pt-md-0" id="div_select_titulo_ejecutor">
                     <label class="mb-0" id="label_' . $nombre . '">Titulo</label>
                     <select class="full-width" name="titulo_ejecutor" id="titulo_ejecutor">
-                    <option value="" selected>Seleccione Título</option>';
+                    <option value="" >Seleccione...</option>';
                     
                     $titulos = array('Doctor', 'Doctora', 'Ingeniero', 'Ingeniera', "Se&ntilde;or", "Se&ntilde;ora");
                     for ($i = 0; $i < count($titulos); $i++) {
@@ -196,7 +196,7 @@ function campoJuridica($campos){
                             $("#titulo_ejecutor").select2();
                             $("#otro_titulo_ejecutor").click(function() {
                             $("#div_select_titulo_ejecutor").empty();
-                            $("#div_select_titulo_ejecutor").append(' . "'" . '<label id="label_' . $nombre . '">' . $nombre .':</label><input class="form-control" type="text"  name="titulo_ejecutor" id="titulo_ejecutor" value="">' . "'" . ');
+                            $("#div_select_titulo_ejecutor").append(' . "'" . '<label class="pb-0" id="label_' . $nombre . '">' . $nombre .':</label><input class="form-control" type="text"  name="titulo_ejecutor" id="titulo_ejecutor" value="">' . "'" . ');
                     });	
                     </script>
             </div>';

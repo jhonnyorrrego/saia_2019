@@ -37,11 +37,13 @@ foreach($campos AS $key=>$valor){
     <?= librerias_notificaciones() ?>	
     <?= select2() ?>	
   </head>
-  <body>
+  <body style="background:white">
     <div>
-      <div style="background:white" class="col-12">
+      <div style="background:white" class="col-12 pl-0">
         <div class="form-group">
           <form name="form1" id="form1">
+          <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
+          <input type="hidden" id="idejecutor" name="idejecutor_temp" value="">
 			<?php
               	if(!empty($_REQUEST['iddoc'])){
 					$destinos=busca_filtro_tabla($_REQUEST["campo_autocompletar"],$_REQUEST["tabla"],"documento_iddocumento=" . $_REQUEST["iddoc"],"",$conn);
@@ -55,27 +57,23 @@ foreach($campos AS $key=>$valor){
 
                 if(!empty($_REQUEST["destinos"])){
                     $lista=busca_filtro_tabla("iddatos_ejecutor,nombre","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(".$_REQUEST["destinos"].")","nombre",$conn);
-                  	if($_REQUEST["tipo"]!='unico'){
-                  		for($i=0;$i<$lista["numcampos"];$i++){
-                  			echo "<div class='datos_ejecutor' id='de_".$lista[$i]["iddatos_ejecutor"]."' >".$lista[$i]["nombre"]."</div>";
-                    	}
-              	  	}
                 } 
 
                 if($_REQUEST["tipo"]=="multiple"){
               ?>
                   <div id="div_seleccionados_multiple" class="row">
                     <div class="col-md-6">
-                      <div class="form-group form-group-default form-group-default-select2">
-                        <label for="estado_actualizacion" >Seleccionados:</label>
-                          <select style="width:80%;" id="estado_actualizacion" name="seleccionados_ejecutor" varios="true">
+                      <div class="form-group form-group-default-select2">
+                        <label class="mb-0" for="estado_actualizacion" >Seleccionados:</label>
+                          <select style="width:90%;" id="estado_actualizacion" name="seleccionados_ejecutor" varios="true">
                             <option value="0">Listado de Seleccionados...</option>
                             <?php
                               if(isset($lista)&&$lista["numcampos"]){
+                                echo("<optgroup label='Listado de Seleccionados'>");
                                 for($i=0;$i<$lista["numcampos"];$i++){
-                                  echo "<optgroup label='Listado de Seleccionados'>
-                                   <option value='".$lista[$i]["iddatos_ejecutor"]."'>".$lista[$i]["nombre"]."</option></optgroup>";
+                                  echo "<option value='".$lista[$i]["iddatos_ejecutor"]."'>".$lista[$i]["nombre"]."</option>";
                                 }
+                                echo("</optgroup>");
                               }
                             ?>
                           </select>
@@ -109,7 +107,7 @@ foreach($campos AS $key=>$valor){
                         <span id="borrar_todos" class="label label-success"  style="cursor:pointer">Quitar todos</span>
                       </div>
                       <div class="pl-sm-3 pl-md-1">
-                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Actualizar datos</span>
+                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Seleccionar datos</span>
                       </div>
                     </div>
                     <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
@@ -126,11 +124,10 @@ foreach($campos AS $key=>$valor){
                           <span id="borrar_todos" class="label label-success"  style="cursor:pointer">Quitar todos</span>
                       </div> 
                       <div class="pl-1"> 
-                        <span id="actualizar"  class="label label-success"  style="cursor:pointer">Actualizar datos</span>
+                        <span id="actualizar"  class="label label-success"  style="cursor:pointer">Seleccionar datos</span>
                       </div> 
                     </div>
-                    <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
-                    <input type="hidden" id="idejecutor" name="idejecutor_temp" value="">
+                    
                   </div>
               <?php
                 }
@@ -283,6 +280,8 @@ foreach($campos AS $key=>$valor){
                     });
                   }
                 });
+                $("#"+window.frames.name+"",window.parent.document).height(100);
+                $("#"+window.frames.name+"",window.parent.document).height($(document).height());
               }
             });
           });
