@@ -68,7 +68,6 @@ $params = [
         </div>
     </div>
 
-    <?= jsPanel() ?>
     <?= select2() ?>
     <?= bootstrapTable() ?>
     <script id="script_documents" src="<?= $ruta_db_superior ?>views/documento/js/vinculados.js" data-documents='<?= json_encode($params) ?>'></script>

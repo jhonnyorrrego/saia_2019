@@ -1,7 +1,7 @@
 $(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
-    let sizeFont = 0;
+    let baseFontSize = 0;
 
     (function init() {
         getFormatInformation();
@@ -50,6 +50,20 @@ $(function () {
         showTab('#filestab_accordion');
     });
 
+    $(window).resize(function () {
+        changeDocumentDimensions()
+    });
+
+    window.addEventListener(
+        "orientationchange",
+        function () {
+            setTimeout(() => {
+                changeDocumentDimensions();
+            }, 500);
+        },
+        false
+    );
+
     function showTab(selector) {
         $("#accordion [role='tabcard']").removeClass('show');
         $("#accordion [aria-expanded='true']").attr('aria-expanded', 'false').addClass('collapsed');
@@ -66,8 +80,7 @@ $(function () {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route, function () {
                 $('#acordeon_container').attr('data-location', response.data.ruta_mostrar);
-                sizeFont = $('#documento').find("p").css("font-size")
-                setSize();
+                changeDocumentDimensions();
             });
         }, 'json');
     }
@@ -82,106 +95,52 @@ $(function () {
         $('#document_header').load(route);
     }
 
-    window.addEventListener("orientationchange", function () {
-        setTimeout(() => {
-            setSize();
-        }, 500);
-    }, false);
+    function changeDocumentDimensions() {
+        if (!baseFontSize) {
+            baseFontSize = $('#documento').css('font-size');
+            baseFontSize = +baseFontSize.replace('px', '');
+        }
+        
+        let breakpoint = localStorage.getItem('breakpoint');
+        let newFontSize = 0;
 
-    $(window).resize(function () {
-        setSize();
-    });
+        if (breakpoint == 'md' || breakpoint == 'lg') {
+            newFontSize = baseFontSize;
+        } else {
+            let mdBreakPoint = 992;
+            let windowWidth = $(window).width();
+            /**
+             * 992 -> baseFontSize
+             * windowWidth -> ?
+             */
+            newFontSize = (windowWidth * baseFontSize) / mdBreakPoint;           
+        }
 
-    function setSize() {
-        let sizeDocument = localStorage.getItem('breakpoint');
-        setValores(sizeDocument);
+        $('#documento').css('font-size', newFontSize);
+        /**
+         * baseFontSize -> 100
+         * newFontSize -> ?
+         */
+        let relation = (newFontSize * 100) / baseFontSize;
+        changeImageSize(relation);
     }
 
-    function setValores(sizeDocument) {
-        var xsFont = parseFloat(sizeFont);
-
-        if (sizeDocument == 'sm') {
-            var widthIni = 668;
-        } else if (sizeDocument == 'xs') {
-            var widthIni = 480;
-        } else if (sizeDocument == 'xl') {
-            var widthIni = 960;
-        }
-
-        var widthAct = parseFloat($(".page_content").css('width')) * xsFont / widthIni;
-        var qrHeight = $("#qr").height();
-        var width = $("#qr").width();
-        if (sizeDocument == 'xs' || sizeDocument == 'sm') {
-            $('#documento').css("font-size", widthAct + "px");
-            $('#documento').find("p").css("font-size", widthAct + "px")
-        }
-
-        $('#documento').find("img")
-
-        var contenidoImg = $("#documento").find("img:not('#qr,#logoEmpresa')");
-        var contenidoQr = $("#documento").find('#qr');
-        var contenidoLogo = $("#documento").find('#logoEmpresa');
-        redimensionarQr(sizeDocument, widthAct);
-        redimensionarLgEmpresa(sizeDocument, widthAct);
-        contenidoImg.each(function (i) {
-            var sizeImg = parseFloat($(this).attr("width"));
-
-            if (sizeImg >= 50 && sizeDocument != 'xl') {
-                sizeImg = sizeImg * 1.1;
-            } else if (sizeImg <= 50 && sizeDocument == 'xl' && widthAct < '10') {
-                sizeImg = sizeImg * 0.7;
-            } else if (sizeImg <= 50 && sizeDocument == 'xl' && widthAct > '10') {
-                sizeImg = sizeImg * 0.5;
-            } else if (sizeImg <= 50 && sizeDocument == 'lg') {
-                sizeImg = sizeImg * 1.2;
+    function changeImageSize(relation) {
+        $("#documento img").each(function () {
+            if (!$(this).attr('data-basedimensions')) {
+                $(this).attr('data-basedimensions', JSON.stringify({
+                    width: $(this).width(),
+                    height: $(this).height()
+                }));
             }
-            else if (sizeImg <= 50 && sizeDocument == 'xs') {
-                sizeImg = sizeImg * 1.4;
-            }
-            else if (sizeImg <= 50 && sizeDocument == 'sm') {
-                sizeImg = sizeImg * 1.4;
-            } else if (sizeImg <= 50 && sizeDocument == 'md') {
-                sizeImg = sizeImg * 1.5;
-            }
-            $(this).css("width", sizeImg + "%");
+
+            let dimensions = JSON.parse($(this).attr('data-basedimensions'));
+            /**
+             * 100 -> baseDimension
+             * relation -> ?
+             */
+            $(this).width((relation * dimensions.width) / 100);
+            $(this).height((relation * dimensions.height) / 100);
         });
-    }
-    function redimensionarQr(sizeDocument, widthAct) {
-        var sizeImg = parseFloat($("#qr").attr("width"));
-        var sizeH = parseFloat($("#qr").attr("width"));
-        if (sizeDocument == 'xs') {
-            sizeImg = sizeImg * 0.7;
-            sizeH = sizeH * 0.7;
-            $("#qr").css("width", sizeImg + "%");
-            $("#qr").css("height", sizeH + "%");
-        } else if (sizeDocument == 'sm' && widthAct > '9') {
-            sizeImg = sizeImg * 0.5;
-            sizeH = sizeH * 0.8;
-            $("#qr").css("width", sizeImg + "%");
-            $("#qr").css("height", sizeH + "%");
-        }
-        else if (sizeDocument == 'sm' && widthAct < '8') {
-            sizeImg = sizeImg * 0.9;
-            sizeH = sizeH * 0.4;
-            $("#qr").css("width", sizeImg + "%");
-            $("#qr").css("height", sizeH + "%");
-        }
-    }
-    function redimensionarLgEmpresa(sizeDocument, widthAct) {
-        var sizeImg = parseFloat($("#logoEmpresa").attr("width"));
-        var sizeH = parseFloat($("#logoEmpresa").attr("width"));
-        if (sizeDocument == 'xs') {
-            sizeImg = sizeImg * 2.5;
-            $("#logoEmpresa").css("width", sizeImg + "px");
-        } else if (sizeDocument == 'sm' && widthAct < '8') {
-            sizeImg = sizeImg * 2;
-            $("#logoEmpresa").css("width", sizeImg + "%");
-        } else if (sizeDocument == 'xl' && widthAct < 10) {
-            sizeImg = sizeImg * 1.3;
-            $("#logoEmpresa").css("width", sizeImg + "%");
-        } else if (sizeDocument == 'xl' && widthAct > 10) {
-            sizeImg = sizeImg * 1.1;
-            $("#logoEmpresa").css("width", sizeImg + "%");
-        }
     }
 });

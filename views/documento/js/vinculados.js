@@ -155,16 +155,8 @@ $(function () {
             border: 'none',
         });
 
-        jsPanel.ziBase = 10000;
-        jsPanel.create({
+        top.topJsPanel({
             headerTitle: 'Documento',
-            iconfont: 'fa',
-            theme: 'dark',
-            contentOverflow: 'hidden',
-            position: {
-                my: "center-top",
-                at: "center-top"
-            },
             contentSize: {
                 width: $(window).width() * 0.8,
                 height: $(window).height() * 0.9,
