@@ -22,7 +22,7 @@ $Response = (object)[
 try {
     $session_userId = SessionController::hasActiveSession();
     if (
-        isset($_REQUEST['user'], $_REQUEST['password'], $_REQUEST['token']) &&
+        isset($_REQUEST['user'], $_REQUEST['password']) &&
         !$session_userId
     ) {
         $exist = Funcionario::countRecords(['login' => $_REQUEST['user']]);
@@ -47,7 +47,7 @@ SQL;
             if (
                 $row['estado'] == 1 &&
                 $row['estado_dc'] == 1 &&
-                $row['fecha_final'] >= $DateTimeNow->format('Y-m-d')
+                $row['fecha_final'] >= date('Y-m-d')
             ) {
                 $active = $row;
                 break;
