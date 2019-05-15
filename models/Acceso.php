@@ -65,4 +65,24 @@ class Acceso extends Model
 
         return $this->User;
     }
+
+    /**
+     * verifica si un usuario es el responsable de
+     *
+     * @param integer $type tipo de relacion . TIPO_DOCUMENTO
+     * @param integer $typeId identificador  . iddocumento
+     * @param integer $userId idusuario a validar
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-14
+     */
+    public static function isManager($type, $typeId, $userId){
+        return Acceso::countRecords([
+            'tipo_relacion' => $type,
+            'id_relacion' => $typeId,
+            'estado' => 1,
+            'accion' => Acceso::ACCION_ELIMINAR,
+            'fk_funcionario' => $userId
+        ]) > 0;
+    }
 }

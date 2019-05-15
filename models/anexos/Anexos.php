@@ -20,6 +20,7 @@ class Anexos extends Model
     protected $fk_anexos;
     protected $descripcion;
     protected $eliminado;
+    protected $versionamiento;
     protected $user;
     protected $log;
     protected $dbAttributes;
@@ -51,7 +52,8 @@ class Anexos extends Model
                 'fk_funcionario',
                 'fk_anexos',
                 'descripcion',
-                'eliminado'
+                'eliminado',
+                'versionamiento'
             ],
             'date' => ['fecha_anexo', 'fecha']
         ];

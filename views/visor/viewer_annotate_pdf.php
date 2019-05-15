@@ -26,7 +26,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/shared/toolbar.css" />
     <link rel="stylesheet" type="text/css"
         href="<?= $ruta_db_superior ?>views/visor/shared/pdf_viewer.css" />
-    <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/annotate.css" />
+    <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>views/visor/css/annotate.css" />
 </head>
 
 <body>
@@ -81,7 +81,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>views/visor/shared/pdf.js"></script>
     <script src="<?= $ruta_db_superior ?>views/visor/shared/pdf_viewer.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/comments/comments.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/visor/annotate.js"
+    <script src="<?= $ruta_db_superior ?>views/visor/js/annotate.js"
         data-params='<?= json_encode($_REQUEST) ?>' data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 

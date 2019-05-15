@@ -27,14 +27,12 @@ try {
         throw new Exception("Documento invalido", 1);
     }
 
-    $Documento = new Documento($_REQUEST['documentId']);
-    if ($Documento->numero) { // es una ejecucion de la ruta de aprobacion
-        $RutaDocumento = RutaDocumento::findByAttributes([
-            'fk_documento' => $Documento->getPK(),
-            'estado' => 1,
-            'tipo' => RutaDocumento::TIPO_APROBACION
-        ]);
-    }
+    $Documento = new Documento($_REQUEST['documentId']);    
+    $RutaDocumento = RutaDocumento::findByAttributes([
+        'fk_documento' => $Documento->getPK(),
+        'estado' => 1,
+        'tipo' => RutaDocumento::TIPO_APROBACION
+    ]);
 
     if ($_REQUEST['reject']) {
         RutaAprobacion::executeUpdate([
@@ -49,13 +47,15 @@ try {
             sendDocument($Documento);
         }
     } else {
-        RutaAprobacion::executeUpdate([
-            'ejecucion' => RutaAprobacion::EJECUCION_APROBAR,
-            'fecha_ejecucion' => date('Y-m-d H:i:s')
-        ], [
-            'fk_funcionario' => $_REQUEST['key'],
-            'fk_ruta_documento' => $RutaDocumento->getPK()
-        ]);
+        if ($RutaDocumento) {
+            RutaAprobacion::executeUpdate([
+                'ejecucion' => RutaAprobacion::EJECUCION_APROBAR,
+                'fecha_ejecucion' => date('Y-m-d H:i:s')
+            ], [
+                'fk_funcionario' => $_REQUEST['key'],
+                'fk_ruta_documento' => $RutaDocumento->getPK()
+            ]);
+        }
 
         //confirmar en la ruta de aprob
         //verificar si tiene numero y no hacer lo de abajo

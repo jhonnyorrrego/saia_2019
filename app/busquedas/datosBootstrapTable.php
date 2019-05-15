@@ -29,7 +29,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     unset($_REQUEST['pageNumber'], $_REQUEST['pageSize']);
     $params = array_merge($_REQUEST, $dataParams);
     $query = http_build_query($params);
-    $url = PROTOCOLO_CONEXION . RUTA_PDF . "/pantallas/busquedas/servidor_busqueda_exp.php?{$query}";
+    $url = PROTOCOLO_CONEXION . RUTA_PDF . "/pantallas/busquedas/servidor_busqueda_exp.php?" . $query;
 
     if ($_REQUEST['debug']) {
         echo '<pre>';
