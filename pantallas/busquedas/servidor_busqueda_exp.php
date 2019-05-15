@@ -13,10 +13,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "controllers/autoload.php";
 
 try {
-    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
-    $data = JwtController::GetData($_REQUEST['token']);
-    $Funcionario = new Funcionario($data->id);
-    new SessionController($Funcionario);
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);    
 } catch (\Throwable $th) {
     die("invalid access");
 }

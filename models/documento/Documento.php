@@ -189,28 +189,12 @@ class Documento extends Model
      */
     public static function canEdit($userId, $documentId)
     {
-        $access = Acceso::countRecords([
-            'tipo_relacion' => Acceso::TIPO_DOCUMENTO,
-            'id_relacion' => $documentId,
-            'estado' => 1,
-            'accion' => Acceso::ACCION_EDITAR,
-            'fk_funcionario' => $userId
-        ]);
+        $Documento = new self($documentId);
+        $access = $Documento->estado == 'ACTIVO' &&
+            Acceso::isManager(Acceso::TIPO_DOCUMENTO, $documentId, $userId);
 
         if (!$access) {
-            $sql = <<<SQL
-                SELECT 
-                    tipo_edicion
-                FROM
-                    documento a JOIN
-                    formato b
-                    ON
-                        lower(a.plantilla) = lower(b.nombre)
-                WHERE
-                    a.iddocumento = {$documentId}
-SQL;
-            $query = self::search($sql);
-            $access = $query[0]['tipo_edicion'];
+            $access = $Documento->getFormat()->tipo_edicion;
         }
 
         return $access > 0;
@@ -265,9 +249,7 @@ SQL;
     public function getFormat()
     {
         if (!$this->Format) {
-            $this->Format = Formato::findByAttributes([
-                'nombre' => strtolower($this->plantilla)
-            ]);
+            $this->Format = self::getRelationFk('Formato', 'formato_idformato');
         }
 
         return $this->Format;

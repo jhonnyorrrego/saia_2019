@@ -1,6 +1,7 @@
 $(function () {
     let baseUrl = $("[data-baseurl]").data("baseurl");
     let documentId = $("[data-documentid]").data("documentid");
+    let fabActions = new Object();
 
     (function init() {
         toggleGoBack();
@@ -147,18 +148,79 @@ $(function () {
         );
     });
 
+    window.addEventListener(
+        "orientationchange",
+        function () {
+            setTimeout(() => {
+                toggleGoBack();
+            }, 500);
+        },
+        false
+    );
+
+    $(window).resize(function () {
+        toggleGoBack();
+    });
+
     /////// MENU INTERMEDIO ////////
     $(document)
         .off("click", "#crear_tarea,#etiquetar,#asignar_responsable")
         .on("click", "#crear_tarea,#etiquetar,#asignar_responsable", function () {
             let route = $(this).data("url");
             top.topModal({
-                url: baseUrl + route,
+                url: `${baseUrl + route}`,
                 title: $(this).text(),
                 params: {
                     documentId: documentId
                 },
                 buttons: {}
+            });
+        });
+
+    $(document)
+        .off("click", "#solicitar_aprobacion")
+        .on("click", "#solicitar_aprobacion", function () {
+            seeManagers();
+        });
+
+    $(document)
+        .off("click", "#crear_nueva_version")
+        .on("click", "#crear_nueva_version", function () {
+            top.confirm({
+                id: "question",
+                type: "warning",
+                title: "Versionar!",
+                message: "Está seguro de versionar este documento?",
+                position: "center",
+                timeout: 0,
+                buttons: [
+                    [
+                        "<button><b>Si</b></button>",
+                        function (instance, toast) {
+                            storage();
+                            top.notification({
+                                type: 'info',
+                                message: 'Esto puede tardar un momento'
+                            });
+                            instance.hide(
+                                { transitionOut: "fadeOut" },
+                                toast,
+                                "button"
+                            );
+                        },
+                        true
+                    ],
+                    [
+                        "<button>NO</button>",
+                        function (instance, toast) {
+                            instance.hide(
+                                { transitionOut: "fadeOut" },
+                                toast,
+                                "button"
+                            );
+                        }
+                    ]
+                ]
             });
         });
 
@@ -187,23 +249,12 @@ $(function () {
             $("#view_document").load(baseUrl + route);
         });
 
-    $(document).off("click", "#anexos").on("click", "#anexos", function () {
-        $("#show_files").click();
-    });
-    /////// FIN MENU INTERMEDIO /////
-    window.addEventListener(
-        "orientationchange",
-        function () {
-            setTimeout(() => {
-                toggleGoBack();
-            }, 500);
-        },
-        false
-    );
-
-    $(window).resize(function () {
-        toggleGoBack();
-    });
+    $(document)
+        .off("click", "#anexos")
+        .on("click", "#anexos", function () {
+            $("#show_files").click();
+        });
+    /////// FIN MENU INTERMEDIO /////    
 
     function toggleGoBack() {
         if ($("#mailbox").is(":hidden")) {
@@ -255,7 +306,8 @@ $(function () {
             },
             function (response) {
                 if (response.success) {
-                    showFab(response.data);
+                    fabActions = response.data;
+                    showFab();
                 } else {
                     console.error("error al mostrar las acciones");
                 }
@@ -264,11 +316,12 @@ $(function () {
         );
     }
 
-    function showFab(actions) {
-        if (actions.showFab) {
+    function showFab() {
+
+        if (fabActions.showFab) {
             let buttons = [];
 
-            if (actions.reject.see) {
+            if (fabActions.reject.see) {
                 buttons.push({
                     button: {
                         style: "small orange",
@@ -284,7 +337,7 @@ $(function () {
                 });
             }
 
-            if (actions.confirm.see) {
+            if (fabActions.confirm.see) {
                 buttons.push({
                     button: {
                         style: "small yellow",
@@ -300,7 +353,7 @@ $(function () {
                 });
             }
 
-            if (actions.edit.see) {
+            if (fabActions.edit.see) {
                 buttons.push({
                     button: {
                         style: "small yellow",
@@ -311,12 +364,12 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.edit.route, "_self");
+                        window.open(fabActions.edit.route, "_self");
                     }
                 });
             }
 
-            if (actions.managers.see) {
+            if (fabActions.managers.see) {
                 buttons.push({
                     button: {
                         style: "small yellow",
@@ -327,12 +380,12 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        seeManagers(actions.managers.route)
+                        seeManagers(fabActions.managers.route)
                     }
                 });
             }
 
-            if (actions.return.see) {
+            if (fabActions.return.see) {
                 buttons.push({
                     button: {
                         style: "small yellow",
@@ -343,7 +396,7 @@ $(function () {
                         html: ""
                     },
                     onClick: function () {
-                        window.open(actions.return.route, "_self");
+                        window.open(fabActions.return.route, "_self");
                     }
                 });
             }
@@ -396,16 +449,53 @@ $(function () {
         );
     }
 
-    function seeManagers(route) {
+    function seeManagers() {
         top.topModal({
-            url: baseUrl + route,
+            url: baseUrl + fabActions.managers.route,
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {},
             onSuccess: function () {
                 findActions();
+            },
+            beforeShow: function (event) {
+                if (!isOwner()) {
+                    event.preventDefault();
+                    top.notification({
+                        type: 'error',
+                        message: 'No tienes revisar esta acción'
+                    });
+                }
             }
         })
+    }
+
+    function isOwner() {
+        let owner = false;
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            url: `${baseUrl}app/documento/verificar_responsabilidad.php`,
+            data: {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: documentId,
+                userId: localStorage.getItem('key')
+            },
+            success: function (response) {
+                if (response.success) {
+                    owner = response.data;
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            }
+        });
+
+        return owner;
     }
 
     function findMenu() {
@@ -478,5 +568,30 @@ $(function () {
         if (data.documents) {
             $('#documents_counter').text(data.documents);
         }
+    }
+
+    function storage() {
+        $.post(
+            `${baseUrl}app/documento/versionar.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: documentId
+            },
+            function (response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });

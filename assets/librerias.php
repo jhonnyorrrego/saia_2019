@@ -440,12 +440,20 @@ function kuku()
 {
     global $ruta_db_superior;
 
-    $routeJs = $ruta_db_superior . 'visorjs/scripts/docxjs/DocxJS.bundle.min.js';
-    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
-    $routeJs = $ruta_db_superior . 'visorjs/scripts/celljs/CellJS.bundle.min.js';
-    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
-    $routeJs = $ruta_db_superior . 'visorjs/scripts/slidejs/SlideJS.bundle.min.js';
-    $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    $js = '';
+    $routes = [
+        'assets/theme/assets/plugins/kukudocs/celljs/CellJS.bundle.min.js',
+        'assets/theme/assets/plugins/kukudocs/celljs/CellUiLoader.js',
+        'assets/theme/assets/plugins/kukudocs/docxjs/DocxJS.bundle.min.js',
+        'assets/theme/assets/plugins/kukudocs/docxjs/DocxUiLoader.js',
+        'assets/theme/assets/plugins/kukudocs/slidejs/SlideJS.bundle.min.js',
+        'assets/theme/assets/plugins/kukudocs/slidejs/SlideUiLoader.js'
+    ];
+
+    foreach ($routes as $route) {
+        $routeJs = $ruta_db_superior . $route;
+        $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    }
 
     return $js;
 }

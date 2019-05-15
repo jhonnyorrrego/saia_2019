@@ -54,13 +54,11 @@ try {
         ]);
     }
 
-    if ($seeManagers) {
-        $managersRoute = 'views/documento/responsables.php?';
-        $managersRoute .= http_build_query([
-            'documentId' => $documentId,
-            'number' => $Documento->numero
-        ]);
-    }
+    $managersRoute = 'views/documento/responsables.php?';
+    $managersRoute .= http_build_query([
+        'documentId' => $documentId,
+        'number' => $Documento->numero
+    ]);
 
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,

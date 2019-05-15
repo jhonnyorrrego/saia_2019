@@ -54,6 +54,8 @@ class JwtController
             $access =
                 empty($decode->aud) ||
                 $decode->data->id != $userId;
+            $Funcionario = new Funcionario($decode->data->id);
+            new SessionController($Funcionario);
         } else {
             $access =
                 $decode->aud !== self::Aud() ||

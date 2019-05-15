@@ -395,6 +395,21 @@ abstract class Model extends StaticSql
     }
 
     /**
+     * retorna un clone de la instancia sin su llave primaria
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-15
+     */
+    public function clone()
+    {
+        $object = $this;
+        $pkLabel = $object->getPkName();
+        unset($object->$pkLabel);
+        return $object;
+    }
+
+    /**
      * obtiene el nombre de la llave primaria
      * en un ambito estatico
      * @return string
