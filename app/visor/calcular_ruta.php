@@ -21,7 +21,7 @@ $Response = (object)[
 ];
 
 try {
-    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);    
 
     switch ($_REQUEST['type']) {
         case 'TIPO_ANEXO_PDF':

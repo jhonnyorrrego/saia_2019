@@ -23,7 +23,7 @@ class TemporalController
                     continue;
                 }
                 if (!@unlink($dir . '/' . $obj)) {
-                    borrar_archivos_carpeta($dir . '/' . $obj, true);
+                    self::cleanDirectory($dir . '/' . $obj, true);
                 }
             }
             closedir($dh);
@@ -58,15 +58,14 @@ class TemporalController
             'route' => ''
         ];
 
-        $filebinario = StorageUtils::get_file_content($dbString);
-        if ($filebinario) {
-            $json = json_decode($dbString);
-            $fileName = $prefix . basename($json->ruta);
+        $binary = StorageUtils::get_file_content($dbString);
+        if ($binary) {
+            $fileName = $prefix . Anexo::getNameFromJson($dbString);
             $temporalRoute = SessionController::getTemporalDir() . '/' . $fileName;
             $relativeRoute = $ruta_db_superior . $temporalRoute;
 
             if (!is_file($relativeRoute) || $force) {
-                file_put_contents($relativeRoute, $filebinario);
+                file_put_contents($relativeRoute, $binary);
             }
 
             if (is_file($relativeRoute)) {

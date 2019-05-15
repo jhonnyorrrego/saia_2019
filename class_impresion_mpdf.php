@@ -13,10 +13,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "controllers/autoload.php";
 
 try {
-	JwtController::check($_REQUEST['token'], $_REQUEST['key']);
-	$data = JwtController::GetData($_REQUEST['token']);
-	$Funcionario = new Funcionario($data->id);
-	new SessionController($Funcionario);
+	JwtController::check($_REQUEST['token'], $_REQUEST['key']);	
 } catch (\Throwable $th) {
 	die("invalid access");
 }
@@ -395,7 +392,8 @@ class Imprime_Pdf
 			if ($encabezado["numcampos"]) {
 				//$this -> pdf ->setHeader('{PAGENO}');
 				//$this -> pdf ->setHeader('Pagina {PAGENO} de {nbpg}');
-				$this->pdf->SetHTMLHeader(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1), 'O', TRUE);
+				$header = crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
+				$this->pdf->SetHTMLHeader($header, 'O', TRUE);
 			}
 		}
 

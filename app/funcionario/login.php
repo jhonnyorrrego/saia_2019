@@ -25,17 +25,6 @@ try {
         isset($_REQUEST['user'], $_REQUEST['password'], $_REQUEST['token']) &&
         !$session_userId
     ) {
-        $token = base64_decode($_REQUEST['token']);
-
-        $DateTimeNow = new DateTime();
-        $DateTime = new DateTime();
-        $DateTime->setTimestamp($token);
-        $diff =  $DateTime->diff($DateTimeNow);
-
-        if ($diff->s > 2) { //mayor a 2 segundos
-            throw new Exception("token expirado", 1);
-        }
-
         $exist = Funcionario::countRecords(['login' => $_REQUEST['user']]);
         if (!$exist) {
             throw new Exception("El usuario no pertenece al sistema", 1);
