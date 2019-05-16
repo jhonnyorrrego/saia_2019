@@ -35,30 +35,24 @@ try {
     ]);
 
     if ($_REQUEST['reject']) {
-        RutaAprobacion::executeUpdate([
-            'ejecucion' => RutaAprobacion::EJECUCION_RECHAZAR,
-            'fecha_ejecucion' => date('Y-m-d H:i:s')
-        ], [
-            'fk_funcionario' => $_REQUEST['key'],
-            'fk_ruta_documento' => $RutaDocumento->getPK()
-        ]);
+        $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
+
+        if($RutaAprobacion->fk_funcionario == $_REQUEST['key']){
+            $RutaAprobacion->execute(RutaAprobacion::EJECUCION_RECHAZAR);
+        }
 
         if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
             sendDocument($Documento);
         }
     } else {
         if ($RutaDocumento) {
-            RutaAprobacion::executeUpdate([
-                'ejecucion' => RutaAprobacion::EJECUCION_APROBAR,
-                'fecha_ejecucion' => date('Y-m-d H:i:s')
-            ], [
-                'fk_funcionario' => $_REQUEST['key'],
-                'fk_ruta_documento' => $RutaDocumento->getPK()
-            ]);
+            $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
+
+            if($RutaAprobacion->fk_funcionario == $_REQUEST['key']){
+                $RutaAprobacion->execute(RutaAprobacion::EJECUCION_APROBAR);
+            }
         }
 
-        //confirmar en la ruta de aprob
-        //verificar si tiene numero y no hacer lo de abajo
         if ($Documento->numero) {
             if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
                 sendDocument($Documento);

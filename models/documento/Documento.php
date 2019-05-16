@@ -2,6 +2,9 @@
 
 class Documento extends Model
 {
+    const APROBADO = 'Aprobado';
+    const RECHAZADO = 'Rechazado';
+
     protected $iddocumento;
     protected $numero;
     protected $serie;
@@ -198,6 +201,44 @@ class Documento extends Model
         }
 
         return $access > 0;
+    }
+
+    /**
+     * asigna el estado de aprobacion del documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-16
+     */
+    public static function setApprobationState($documentId)
+    {
+        $finished = RutaDocumento::countRecords([
+            'fk_documento' => $documentId,
+            'estado' => 1,
+            'finalizado' => 1
+        ]);
+
+        if ($finished) {
+            $state = self::APROBADO;
+            $routes = RutaAprobacion::findActivesByDocument($documentId);
+
+            foreach ($routes as $RutaAprobacion) {
+                if (
+                    $RutaAprobacion->tipo_accion == RutaAprobacion::TIPO_APROBAR &&
+                    $RutaAprobacion->ejecucion == RutaAprobacion::EJECUCION_RECHAZAR
+                ) {
+                    $state = self::RECHAZADO;
+                    break;
+                }
+            }
+
+            self::executeUpdate([
+                'estado_aprobacion' => $state
+            ], [
+                'iddocumento' => $documentId
+            ]);
+        }
     }
 
     /**
