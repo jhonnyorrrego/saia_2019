@@ -198,6 +198,14 @@ class Documento extends Model
             $access = $Documento->getFormat()->tipo_edicion;
         }
 
+        if (!$access && $Documento->activa_admin == 1) {
+            $VersionDocumento = VersionDocumento::findByAttributes([
+                'documento_iddocumento' => $documentId,
+            ], null, 'idversion_documento desc');
+
+            $access = $VersionDocumento->funcionario_idfuncionario == $userId;
+        }
+
         return $access > 0;
     }
 

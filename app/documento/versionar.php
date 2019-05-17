@@ -119,7 +119,10 @@ try {
         ]);
     }
 
-    ++$Documento->version;
+    $Documento->setAttributes([
+        'version' => $Documento->version + 1,
+        'activa_admin' => 1
+    ]);
     $Documento->save();
 
     RutaDocumento::executeUpdate([
@@ -139,12 +142,14 @@ try {
                 $route[] = [
                     'funcionario' => $Ruta->origen,
                     'tipo_firma' => $Ruta->obligatorio,
-                    'tipo' => 1 // :'( destino en buzon entrada siempre es funcionario_codigo
+                    'tipo' => $Ruta->tipo_origen
                 ];
             }
             insertar_ruta($route, $documentId, 0);
         }
     }
+
+    $Response->message = "Documento versionado";
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

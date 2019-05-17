@@ -450,7 +450,7 @@ $(function() {
                     event.preventDefault();
                     top.notification({
                         type: 'error',
-                        message: 'No tienes revisar esta acción'
+                        message: 'No puedes realizar esta acción'
                     });
                 }
             }

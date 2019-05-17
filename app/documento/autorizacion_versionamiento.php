@@ -41,19 +41,31 @@ try {
     if (!$access) {
         if ((!$Documento->numero) || ($Documento->numero && $Documento->version > 1)) {
             $ActiveRoute = Ruta::getStepFromDocumet($documentId);
-            $routes = Ruta::findActiveRoute($documentId);
 
-            foreach ($routes as $key => $Ruta) {
-                if ($userId == $Ruta->getOrigin()->getPK()) {
-                    $access = true;
-                    break;
+            if ($ActiveRoute) {
+                $routes = Ruta::findActiveRoute($documentId);
+
+                foreach ($routes as $key => $Ruta) {
+                    if ($userId == $Ruta->getOrigin()->getPK()) {
+                        $access = true;
+                        break;
+                    }
+
+                    if ($Ruta->getPK() == $ActiveRoute->getPK()) {
+                        break;
+                    }
                 }
+            } else {
+                $routes = Ruta::findLastFinishedRoute($documentId);
 
-                if ($Ruta->getPK() == $ActiveRoute->getPK()) {
-                    break;
+                foreach ($routes as $key => $Ruta) {
+                    if ($userId == $Ruta->getOrigin()->getPK()) {
+                        $access = true;
+                        break;
+                    }
                 }
             }
-        } else if ($Documento->numero && $Documento->version == 1) {
+        } else if ($Documento->numero) {
             $routes = Ruta::findLastFinishedRoute($documentId);
 
             foreach ($routes as $key => $Ruta) {

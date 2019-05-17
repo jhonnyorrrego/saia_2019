@@ -27,7 +27,7 @@ try {
         throw new Exception("Documento invalido", 1);
     }
 
-    $Documento = new Documento($_REQUEST['documentId']);    
+    $Documento = new Documento($_REQUEST['documentId']);
     $RutaDocumento = RutaDocumento::findByAttributes([
         'fk_documento' => $Documento->getPK(),
         'estado' => 1,
@@ -37,7 +37,7 @@ try {
     if ($_REQUEST['reject']) {
         $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
 
-        if($RutaAprobacion->fk_funcionario == $_REQUEST['key']){
+        if ($RutaAprobacion->fk_funcionario == $_REQUEST['key']) {
             $RutaAprobacion->execute(RutaAprobacion::EJECUCION_RECHAZAR);
         }
 
@@ -48,18 +48,42 @@ try {
         if ($RutaDocumento) {
             $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
 
-            if($RutaAprobacion->fk_funcionario == $_REQUEST['key']){
+            if ($RutaAprobacion->fk_funcionario == $_REQUEST['key']) {
                 $RutaAprobacion->execute(RutaAprobacion::EJECUCION_APROBAR);
             }
         }
 
-        if ($Documento->numero) {
-            if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
-                sendDocument($Documento);
+        $ActiveRoute = Ruta::getStepFromDocumet($Documento->getPK());
+        $routes = BuzonEntrada::findActiveRoute($Documento->getPK());
+
+        if (
+            $Documento->numero &&
+            $RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE
+        ) {
+            sendDocument($Documento);
+        }
+
+        $RutaDocumento = RutaDocumento::countRecords([
+            'fk_documento' => $Documento->getPK(),
+            'estado' => 1,
+            'tipo' => RutaDocumento::TIPO_RADICACION,
+            'finalizado' => 0
+        ]);
+
+        if ($RutaDocumento) {
+            foreach ($routes as $key => $BuzonEntrada) {
+                if ($BuzonEntrada->ruta_idruta == $ActiveRoute->getPK()) {
+                    //en buzon entrada el destino siempre es funcionario codigo :'(
+                    $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $BuzonEntrada->destino);
+
+                    if ($VfuncionarioDc->getPK() == $_REQUEST['key']) {
+                        include_once $ruta_db_superior . 'class_transferencia.php';
+                        aprobar($Documento->getPK());
+                    }
+
+                    break;
+                }
             }
-        } else {
-            include_once $ruta_db_superior . 'class_transferencia.php';
-            aprobar($_REQUEST['documentId']);
         }
     }
 
