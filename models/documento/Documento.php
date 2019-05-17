@@ -34,7 +34,6 @@ class Documento extends Model
     protected $tipo_despacho;
     protected $formato_idformato;
     protected $documento_antiguo;
-    protected $fk_idversion_documento;
     protected $version;
     protected $fecha_limite;
     protected $ventanilla_radicacion;
@@ -87,7 +86,6 @@ class Documento extends Model
             'tipo_despacho',
             'formato_idformato',
             'documento_antiguo',
-            'fk_idversion_documento',
             'version',
             'fecha_limite',
             'ventanilla_radicacion',

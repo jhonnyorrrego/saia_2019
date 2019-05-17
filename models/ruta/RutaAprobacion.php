@@ -150,7 +150,8 @@ SQL;
     }
 
     /**
-     * busca el siguiente paso en la ruta de un documento
+     * busca el registro por interactuar
+     * en la ruta de un documento
      *
      * @param integer $documentId
      * @return void

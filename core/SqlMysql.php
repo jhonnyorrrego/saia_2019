@@ -69,7 +69,7 @@ class SqlMysql extends SQL2
         $accion = strtok(strtolower($sql), ' ');
         $this->filas = 0;
 
-        if (in_array(strtolower($accion), ["insert", "update"])) {
+        if (in_array($accion, ["insert", "update"])) {
             $this->ultimoInsert = 0;
             $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
@@ -79,7 +79,6 @@ class SqlMysql extends SQL2
             $this->res = mysqli_query($this->Conn->conn, $sql);
 
             if ($this->res) {
-                $this->ultimoInsert = 0;
                 if ($accion == "insert") {
                     $this->ultimoInsert = $this->Ultimo_Insert();
                 } else if ($accion == "select") {
