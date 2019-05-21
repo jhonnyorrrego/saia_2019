@@ -20,6 +20,7 @@ final class Version20190507213229 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $table = $schema->getTable('ruta_aprobacion');
+	$table->dropColumn('fk_ruta_documento');
         $table->addColumn('fk_ruta_documento', 'integer', [
             'notnull' => true,
             'length' => 11

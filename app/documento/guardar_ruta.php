@@ -119,7 +119,7 @@ function createApprobationRoute($documentId, $data, $flow)
         'fk_documento' => $documentId,
         'tipo' => RutaDocumento::TIPO_APROBACION,
         'estado' => 1,
-        'tipo_flujo' => RutaDocumento::TIPO_APROBACION
+        'tipo_flujo' => $flow
     ]);
 
     foreach ($data as $row) {

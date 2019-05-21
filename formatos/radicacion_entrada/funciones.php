@@ -573,9 +573,6 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         padding-top: 2px;
         padding-bottom: 2px;            
     }
-    .table.table-condensed {
-        table-layout: auto;
-    }
 
     </style>
         <div class="row">
@@ -699,9 +696,6 @@ function mostrar_copia_electronica($idformato, $iddoc)
         .table.table-condensed thead tr td {
         padding-top: 2px;
         padding-bottom: 2px;            
-    }
-    .table.table-condensed {
-        table-layout: auto;
     }
 
     </style>';

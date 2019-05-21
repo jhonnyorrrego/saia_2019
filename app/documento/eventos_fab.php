@@ -33,9 +33,9 @@ try {
     $routes = BuzonEntrada::findActiveRoute($documentId);
     $editButton = Documento::canEdit($userId, $documentId);
     $seeManagers = canEditRoute($documentId);
-    $returnButton = canReturn($userCode, $routes);
+    $returnButton = !$Documento->numero && canReturn($userCode, $routes);
     $confirmButton = canConfirm($routes, $Documento);
-    $rejectButton = canReject($userId, $Documento);
+    $rejectButton = $Documento->numero && canReject($userId, $Documento);
 
     if ($editButton) {
         $Formato = $Documento->getFormat();
@@ -54,13 +54,11 @@ try {
         ]);
     }
 
-    if ($seeManagers) {
-        $managersRoute = 'views/documento/responsables.php?';
-        $managersRoute .= http_build_query([
-            'documentId' => $documentId,
-            'number' => $Documento->numero
-        ]);
-    }
+    $managersRoute = 'views/documento/responsables.php?';
+    $managersRoute .= http_build_query([
+        'documentId' => $documentId,
+        'number' => $Documento->numero
+    ]);
 
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
@@ -133,7 +131,7 @@ function canConfirm($routes, $Documento)
     $userCode = SessionController::getValue('usuario_actual');
     $response = false;
 
-    if (!$Documento->numero) {
+    if (!$Documento->numero) { //ruta de radicacion
         foreach ($routes as $BuzonEntrada) {
             if ($BuzonEntrada->activo) {
                 //el destino de buzon_entrada siempre es funcionario_codigo
@@ -142,16 +140,28 @@ function canConfirm($routes, $Documento)
                 break;
             }
         }
-    } else {
+    } else { //ruta de aprobacion
         $userId = SessionController::getValue('idfuncionario');
         $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+        $RutaDocumento = RutaDocumento::findByAttributes([
+            'fk_documento' => $Documento->getPK(),
+            'estado' => 1,
+            'tipo' => RutaDocumento::TIPO_APROBACION
+        ]);
 
-        foreach ($routes as $RutaAprobacion) {
-            if (!$RutaAprobacion->ejecucion) {
-                //el destino de buzon_entrada siempre es funcionario_codigo
-                //por error en insertar ruta :'(
-                $response = $RutaAprobacion->fk_funcionario == $userId;
-                break;
+        if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
+            foreach ($routes as $RutaAprobacion) {
+                if (!$RutaAprobacion->ejecucion) {
+                    $response = $RutaAprobacion->fk_funcionario == $userId;
+                    break;
+                }
+            }
+        } else { //paralelo
+            foreach ($routes as $RutaAprobacion) {
+                if ($RutaAprobacion->fk_funcionario == $userId) {
+                    $response = true;
+                    break;
+                }
             }
         }
     }
@@ -181,9 +191,29 @@ function canEditRoute($documentId)
 
 function canReject($userId, $Documento)
 {
-    if (!$Documento->numero) {
-        return false;
-    } else {
-        return true;
+    $response = false;
+    $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+    $RutaDocumento = RutaDocumento::findByAttributes([
+        'fk_documento' => $Documento->getPK(),
+        'estado' => 1,
+        'tipo' => RutaDocumento::TIPO_APROBACION
+    ]);
+
+    if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
+        foreach ($routes as $RutaAprobacion) {
+            if (!$RutaAprobacion->ejecucion) {
+                $response = $RutaAprobacion->fk_funcionario == $userId;
+                break;
+            }
+        }
+    } else { //paralelo
+        foreach ($routes as $RutaAprobacion) {
+            if ($RutaAprobacion->fk_funcionario == $userId) {
+                $response = true;
+                break;
+            }
+        }
     }
+
+    return $response;
 }

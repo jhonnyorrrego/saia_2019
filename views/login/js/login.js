@@ -13,15 +13,13 @@ $(function () {
 
     $('#access').on('click', function (event) {
         event.preventDefault();
-        let ts = Math.round((new Date()).getTime() / 1000);
         $.ajax({
             type: 'POST',
             url: `${baseUrl}app/funcionario/login.php`,
             dataType: 'json',
             data: {
                 user: $("[name='username']").val(),
-                password: $("[name='password']").val(),
-                token: window.btoa(ts)
+                password: $("[name='password']").val()
             },
             success: function (response) {
                 if (response.success) {

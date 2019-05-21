@@ -43,8 +43,17 @@ try {
 			];
 		}
 	} else if ($_REQUEST['type'] == 'approbation') {
-		$routes = RutaAprobacion::findActivesByDocument($_REQUEST['documentId']);
+		$RutaDocumento = RutaDocumento::findByAttributes([
+			'fk_documento' => $_REQUEST['documentId'],
+			'estado' => 1,
+			'tipo' => RutaDocumento::TIPO_APROBACION
+		]);
 
+		if($RutaDocumento){
+			$Response->data['flow_type'] = $RutaDocumento->tipo_flujo;
+		}
+
+		$routes = RutaAprobacion::findActivesByDocument($_REQUEST['documentId']);
 		foreach ($routes as $RutaAprobacion) {
 			$Response->data[] = [
 				'id' => $RutaAprobacion->getPK(),

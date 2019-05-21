@@ -1,4 +1,5 @@
 <?php
+use function GuzzleHttp\json_decode;
 
 /**
  * 
@@ -48,5 +49,20 @@ trait TAnexo
         }
 
         return "<i class='fa {$icon}'></i>";
+    }
+
+    /**
+     * retorna el nombre de un archivo
+     * basado en el json de base de datos
+     *
+     * @param string $json
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-14
+     */
+    public static function getNameFromJson($json)
+    {
+        $object = json_decode($json);
+        return basename($object->ruta);
     }
 }
