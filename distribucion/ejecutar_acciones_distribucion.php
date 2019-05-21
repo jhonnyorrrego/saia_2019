@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-
+include_once  ($ruta_db_superior."controllers/autoload.php");
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
 
@@ -28,8 +28,8 @@ function cambiar_mensajero_distribucion()
         $vector_mensajero_nuevo = explode('-', @$_REQUEST['mensajero']);
         $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "", $conn);
 
-        $retorno = validar_oriden_destino_distribucion($iddistribucion);
-
+        //$retorno = validar_oriden_destino_distribucion($iddistribucion); Valida que todos los items sean internos o externos
+        $retorno['exito']=1;
         if ($retorno['exito'] == 1) {
             for ($i = 0; $i < $distribucion['numcampos']; $i++) {
                 $diligencia = mostrar_diligencia_distribucion($distribucion[$i]['tipo_origen'], $distribucion[$i]['estado_recogida']);
@@ -162,7 +162,25 @@ function confirmar_recepcion_distribucion()
 }
 
 //fin function confirmar_recepcion_distribucion()
+function confirmar_recepcion_item_planilla()
+{
+global $conn;
+    $retorno = array('exito' => 0);
+    if (@$_REQUEST['ft_item_despacho_ingres']) {
+        $vector_planilla = explode(',', $_REQUEST['ft_item_despacho_ingres']);
+        for ($i = 0; $i < count($vector_planilla); $i++) {
+            $ft_item_despacho_ingres = $vector_planilla[$i];
+            $upd = " UPDATE dt_recep_despacho SET recepcion=1,idfuncionario=".SessionController::getValue('idfuncionario')." WHERE ft_item_despacho_ingres=" . $ft_item_despacho_ingres;
 
+            phpmkr_query($upd);
+            /*$iddistribucion=busca_filtro_tabla("iddistribucion","dt_recep_despacho","ft_item_despacho_ingres=". $ft_item_despacho_ingres,"",$conn);
+            $actualiza_por_disitrbuir="UPDATE disitrbucion SET estado_disitrbucion=1 WHERE iddistribucion=".$iddistribucion['iddistribucion'];
+            phpmkr_query($actualiza_por_disitrbuir);*/
+        }
+        $retorno['exito'] = 1;
+    }
+    return ($retorno);
+}
 function finalizar_entrega_personal()
 {
     global $conn;
