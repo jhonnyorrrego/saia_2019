@@ -181,29 +181,30 @@ class Ui {
         let host = window.location.host;
         let url = `ws://${host}:1000/saia_2019/saia/app/websockets/notificaciones.php`;
         //let url = 'wss://echo.websocket.org';
-        let socket = new WebSocket(url);
+        window.socket = new WebSocket(url);
 
-        socket.onopen = function(e) {
+        window.socket.onopen = function(e) {
             //indico los datos del usuario al la coneccion
             var msg = {
+                action: 'userData',
                 userData: {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token')
                 }
             };
             //convert and send data to server
-            socket.send(JSON.stringify(msg));
+            window.socket.send(JSON.stringify(msg));
         };
 
-        socket.onclose = function(e) {
+        window.socket.onclose = function(e) {
             alert('close');
         };
 
-        socket.onmessage = function(e) {
+        window.socket.onmessage = function(e) {
             alert('message' + e.data);
         };
 
-        socket.onerror = function(e) {
+        window.socket.onerror = function(e) {
             alert('error' + e.data);
         };
 
@@ -214,11 +215,11 @@ class Ui {
                 param3: 'param3'
             };
             //convert and send data to server
-            socket.send(JSON.stringify(msg));
+            window.socket.send(JSON.stringify(msg));
         });
 
         $('#profile_image').on('click', function() {
-            socket.close();
+            window.socket.close();
         });
     }
 }
