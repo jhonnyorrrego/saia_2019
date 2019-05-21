@@ -110,7 +110,7 @@ function mostrar_seleccionados_entrega($idformato, $iddoc) {
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie,ventanilla", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$iddestino_radicacion = explode(",", $seleccionado[0]['iddestino_radicacion']);
 	$cont = count($iddestino_radicacion);
 	for ($i = 0; $i < $cont; $i++) {
@@ -119,6 +119,11 @@ function generar_pdf_entrega($idformato, $iddoc) {
         $busca_item_actual=busca_filtro_tabla("idft_item_despacho_ingres","ft_item_despacho_ingres","ft_destino_radicacio=".$iddestino_radicacion[$i]." and ft_despacho_ingresados=".$seleccionado[0]['idft_despacho_ingresados'],"",$conn);
         $insert = "INSERT INTO dt_recep_despacho(iddistribucion,ft_item_despacho_ingres,idfuncionario) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $busca_item_actual[0]['idft_item_despacho_ingres'] . "'," . SessionController::getValue('idfuncionario') . ")";
         phpmkr_query($insert);
+
+        $distribucion = busca_filtro_tabla("documento_iddocumento","distribucion","iddistribucion=".$iddestino_radicacion[$i],"",$conn);
+        $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $distribucion[0]['documento_iddocumento'] . "', '" . $seleccionado[$i]['ventanilla'] . "'," . SessionController::getValue('idfuncionario') . ")";
+        phpmkr_query($insert);
+
 		$update = "UPDATE distribucion SET estado_distribucion=2 WHERE iddistribucion=" . $iddestino_radicacion[$i];
 		phpmkr_query($update);
 
