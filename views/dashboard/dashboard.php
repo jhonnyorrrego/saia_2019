@@ -296,7 +296,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <?= jsTheme() ?>
-    
+
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
@@ -317,14 +317,15 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script>
         $(function() {
             if (localStorage.getItem('key') > 0) {
+                $('[data-toggle="tooltip"]').tooltip();
+
                 Ui.putColor();
                 Ui.inactiveTime();
                 Ui.bindServiceWorker();
-
-                $('[data-toggle="tooltip"]').tooltip();
+                Ui.bindNotifications();
             }
         });
     </script>
 </body>
 
-</html> 
+</html>

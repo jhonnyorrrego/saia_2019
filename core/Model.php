@@ -79,6 +79,19 @@ abstract class Model extends StaticSql
     }
 
     /**
+     * elimina la llave primaria cuando el objeto es clonado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-21
+     */
+    public function __clone()
+    {
+        $pkLabel = $this->getPkName();
+        unset($this->$pkLabel);
+    }
+
+    /**
      * retorna el nombre de la tabla
      *
      * @return string
@@ -403,10 +416,7 @@ abstract class Model extends StaticSql
      */
     public function clone()
     {
-        $object = $this;
-        $pkLabel = $object->getPkName();
-        unset($object->$pkLabel);
-        return $object;
+        return clone $this;
     }
 
     /**
