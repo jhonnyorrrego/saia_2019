@@ -20,6 +20,7 @@ final class Version20190520211431 extends AbstractMigration
     public function up(Schema $schema): void
     {
         date_default_timezone_set("America/Bogota");
+        $this->platform->registerDoctrineTypeMapping('enum', 'string');
         $conn = $this->connection;
         if (!$schema->hasTable("dt_recep_despacho")) {
             $table = $schema->createTable("dt_recep_despacho");
@@ -36,7 +37,7 @@ final class Version20190520211431 extends AbstractMigration
             $table->addColumn("recepcion", "integer", [
                 "length" => 11, "notnull" => false
             ]);
-            $table->addColumn("fecha", "timestamp", [
+            $table->addColumn("fecha", "datetime", [
                 "notnull" => false
             ]);
             $table->addColumn("idfuncionario", "integer", [
@@ -58,7 +59,7 @@ final class Version20190520211431 extends AbstractMigration
             $table->addColumn("idcf_ventanilla", "integer", [
                 "length" => 11, "notnull" => false
             ]);
-            $table->addColumn("fecha", "timestamp", [
+            $table->addColumn("fecha", "datetime", [
                 "notnull" => false
             ]);
             $table->addColumn("idfuncionario", "integer", [
@@ -95,7 +96,7 @@ final class Version20190520211431 extends AbstractMigration
         ];
         $condicion = ['idbusqueda_componente' => '303'];
 
-        $conn->update("busqueda", $busqueda_componente, $condicion);
+        $conn->update("busqueda_componente", $busqueda_componente, $condicion);
 
         $busqueda_componente = [
             'info' => 'N&uacute;mero|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Ventanilla|{*ventanilla*}|left|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|left|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|left|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left',
@@ -137,25 +138,25 @@ final class Version20190520211431 extends AbstractMigration
         $busqueda_condicion = [
             'codigo_where' => 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=0 AND b.ejecutor=c.funcionario_codigo AND c.ventanilla_radicacion=d.idcf_ventanilla AND b.ventanilla_radicacion=e.idcf_ventanilla {*condicion_adicional_distribucion*}'
         ];
-        $condicion = ['idbusqueda_componente' => '238'];
+        $condicion = ['idbusqueda_condicion' => '238'];
         $conn->update("busqueda_condicion", $busqueda_condicion, $condicion);
 
         $busqueda_condicion = [
             'codigo_where' => 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=3 AND b.ejecutor=c.funcionario_codigo AND c.ventanilla_radicacion=d.idcf_ventanilla AND b.ventanilla_radicacion=e.idcf_ventanilla {*condicion_adicional_distribucion*}'
         ];
-        $condicion = ['idbusqueda_componente' => '237'];
+        $condicion = ['idbusqueda_condicion' => '237'];
         $conn->update("busqueda_condicion", $busqueda_condicion, $condicion);
 
         $busqueda_condicion = [
             'codigo_where' => 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=2 AND b.ejecutor=c.funcionario_codigo AND c.ventanilla_radicacion=d.idcf_ventanilla AND b.ventanilla_radicacion=e.idcf_ventanilla {*condicion_adicional_distribucion*}'
         ];
-        $condicion = ['idbusqueda_componente' => '236'];
+        $condicion = ['idbusqueda_condicion' => '236'];
         $conn->update("busqueda_condicion", $busqueda_condicion, $condicion);
 
         $busqueda_condicion = [
             'codigo_where' => 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=1 AND b.ejecutor=c.funcionario_codigo AND c.ventanilla_radicacion=d.idcf_ventanilla AND b.ventanilla_radicacion=e.idcf_ventanilla {*condicion_adicional_distribucion*}'
         ];
-        $condicion = ['idbusqueda_componente' => '235'];
+        $condicion = ['idbusqueda_condicion' => '235'];
         $conn->update("busqueda_condicion", $busqueda_condicion, $condicion);
 
     }
