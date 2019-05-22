@@ -184,7 +184,7 @@ class Ui {
         window.socket = new WebSocket(url);
 
         window.socket.onopen = function(e) {
-            //indico los datos del usuario al la coneccion
+            //indico los datos del usuario al la conexion
             var msg = {
                 action: 'userData',
                 userData: {
@@ -197,29 +197,21 @@ class Ui {
         };
 
         window.socket.onclose = function(e) {
-            alert('close');
+            top.notification({
+                type: 'error',
+                message: 'Sincronización de notificaciones cancelada'
+            });
         };
 
         window.socket.onmessage = function(e) {
-            alert('message' + e.data);
+            console.log(e.data);
         };
 
         window.socket.onerror = function(e) {
-            alert('error' + e.data);
+            top.notification({
+                type: 'error',
+                message: 'Error al sincronizar las notificaciones'
+            });
         };
-
-        $('#client_image').on('click', function() {
-            var msg = {
-                param1: 'param1',
-                param2: 'param2',
-                param3: 'param3'
-            };
-            //convert and send data to server
-            window.socket.send(JSON.stringify(msg));
-        });
-
-        $('#profile_image').on('click', function() {
-            window.socket.close();
-        });
     }
 }

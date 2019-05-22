@@ -13,9 +13,6 @@ $(function() {
         }
     })();
 
-    $(document).ajaxSend(() => top.window.checkSession());
-    $(document).ajaxError((e, xhr) => top.window.checkLogoutResponse(xhr));
-
     $('#btn_logout').on('click', function(event) {
         event.preventDefault();
         Ui.close();

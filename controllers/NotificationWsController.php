@@ -1,5 +1,4 @@
 <?php
-
 class NotificationWsController
 {
     private $host;
@@ -8,15 +7,21 @@ class NotificationWsController
     private $changed;
     private $socket;
     public $clients = [];
-    private $activeUsers = [];
-
 
     function __construct($host = 'localhost', $port = 1000)
     {
         $this->host = $host;
         $this->port = $port;
+        $this->init();
     }
 
+    /**
+     * inicia el proceso
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function init()
     {
         $this->createSocket();
@@ -24,12 +29,20 @@ class NotificationWsController
         while (true) {
             $this->checkNewConnections();
             $this->checkChanges();
-            //$this->sendNotifications();
+            //en caso de que se requieran notificaciones basadas en consultas
+            //$this->sendNotifications(); 
         }
         // close the listening socket
         socket_close($this->socket);
     }
 
+    /**
+     * crea el socket inicial
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function createSocket()
     {
         //Create TCP/IP sream socket
@@ -44,28 +57,32 @@ class NotificationWsController
         socket_listen($this->socket);
 
         //create & add listning socket to the list
-        $this->clients = [
-            'default' => (object)[
-                'socket' => $this->socket
-            ]
+        $this->clients[0] = [
+            $this->socket
         ];
     }
 
+    /**
+     * verifica si hay nuevas conecciones
+     * y las vincula 
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function checkNewConnections()
     {
-        //manage multipal connections
         $this->changed = [];
-        foreach ($this->clients as $data) {
-            $this->changed[] = $data->socket;
+        foreach ($this->clients as $clientId => $sockets) {
+            $this->changed = array_merge($this->changed, $sockets);
         }
+
         //returns the socket resources in $changed array
         socket_select($this->changed, $this->null, $this->null, 0, 10);
-        //check for new socket
+        //check for new socket        
         if (in_array($this->socket, $this->changed)) {
             $socket_new = socket_accept($this->socket); //accpet new socket
-            $this->clients['new-' . count($this->clients)] = (object)[
-                'socket' => $socket_new //add socket to client array
-            ];
+            $this->clients['unknown'][] = $socket_new; //add socket to client array
 
             $header = socket_read($socket_new, 1024); //read data sent by the socket
             $this->perform_handshaking($header, $socket_new, $this->host, $this->port); //perform websocket handshake
@@ -80,6 +97,14 @@ class NotificationWsController
         }
     }
 
+    /**
+     * verifica si hay cambios en el estado de las conexiones
+     * o si hay mensajes desde los clientes
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function checkChanges()
     {
         //loop through all connected sockets
@@ -94,25 +119,39 @@ class NotificationWsController
             $buf = @socket_read($changed_socket, 1024, PHP_NORMAL_READ);
             if ($buf === false) { // check disconnected client
 
-                foreach ($this->clients as $clientName => $data) {
-                    if ($data->socket == $changed_socket) {
-                        // remove client for $clients array
-                        socket_getpeername($changed_socket, $ip);
-                        unset($this->clients[$clientName]);
-                        break;
+                foreach ($this->clients as $clientId => $sockets) {
+                    if (!in_array($changed_socket, $sockets)) {
+                        continue;
+                    }
+
+                    foreach ($sockets as $key => $socket) {
+                        if ($socket == $changed_socket) {
+                            // remove client for $clients array
+                            socket_getpeername($changed_socket, $ip);
+                            unset($this->clients[$clientId][$key]);
+                            break 2;
+                        }
                     }
                 }
             }
         }
     }
 
+    /**
+     * envia notificaciones cada 5 segundos
+     * (simula un tiempo real)
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function sendNotifications()
     {
-        if (!$this->activeUsers) {
+        if (!$this->getActiveClients()) {
             return;
         }
 
-        $userList = implode(',', $this->activeUsers);
+        $userList = implode(',', $this->getActiveClients());
         $sql = <<<SQL
             SELECT destino,count(*) as total 
             FROM notificacion
@@ -124,11 +163,10 @@ SQL;
         $data = StaticSql::search($sql);
 
         foreach ($data as $value) {
-            foreach ($this->clients as $data) {
-                if ($data->userData->key == $value['destino']) {
-                    $message = $this->mask(json_encode($value));
-                    $this->sendMessage($message, $data->socket); //send data
-                }
+            $sockets = $this->clients[$value['destino']];
+            foreach ($sockets as $socket) {
+                $message = $this->mask(json_encode($value));
+                $this->sendMessage($message, $socket); //send data
             }
         }
 
@@ -144,82 +182,152 @@ SQL;
         sleep(5);
     }
 
+    /**
+     * procesa la comunicacion  entrante de un cliente
+     *
+     * @param [type] $originSocket socket que se comunica
+     * @param string $data
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function processCommunication($originSocket, $data)
     {
         $inputData = json_decode($data); //json decode 
 
         switch ($inputData->action) {
             case 'userData':
-                foreach ($this->clients as $clientName => $data) {
-                    if ($data->socket == $originSocket) {
-                        $response = $this->setUserData($clientName, $inputData);
-                        break;
+                $key = array_search($originSocket, $this->clients['unknown']);
+                if ($key !== false) {
+                    $response = $this->setUserData($key, $inputData);
+                    $response_text = $this->mask(json_encode($response));
+                    $this->sendMessage($response_text, $originSocket);
+                }
+                break;
+            case 'notifications':
+                $messages = $this->createNotifications($inputData);
+
+                foreach ($messages as $clientId => $notifications) {
+                    if (array_key_exists($clientId, $this->getActiveClients())) {
+                        $destinationSocket = $this->clients[$clientId];
                     }
+
+                    $message = count($notifications) > 1 ?
+                        'Tienes una nuevas notificaciones' : 'Tienes una nueva notificación';
+
+                    $data = [
+                        'message' => $message,
+                        'type' => 'notification'
+                    ];
+
+                    $response_text = $this->mask(json_encode($data));
+                    $this->sendMessage($response_text, $destinationSocket);
                 }
 
-                $destinationSocket = $originSocket;
                 break;
-            case 'notification':
-                $response = $this->createNotification($inputData);
-                foreach ($this->clients as $data) {
-                    if ($data->userData->key == $inputData->destination) {
-                        $destinationSocket = $data->socket;
-                        break;
-                    }
-                }
-
-                $response = $destinationSocket ? $response : null;
-                break;
-        }
-
-        if (isset($response)) {
-            //prepare data to be sent to client
-            $response_text = $this->mask(json_encode($response));
-            $this->sendMessage($response_text, $destinationSocket); //send data
         }
     }
 
-    public function createNotification($data)
+    /**
+     * crea una notificacion basada en la comunicacion
+     * de un cliente
+     *
+     * @param object $data
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
+    public function createNotifications($params)
     {
-        $pk = Notificacion::newRecord([
-            'origen' => $data->origin,
-            'destino' => $data->destination,
-            'fecha' => $data->date,
-            'descripcion' => $data->description,
-            'leido' => 0,
-            'notificado' => 0,
-            'tipo' => Notificacion::TIPO_DOCUMENTO,
-            'tipo_id' => $data->typeId,
-        ]);
+        $notifications = CriptoController::decrypt_blowfish($params->data);
+        $notifications = json_decode($notifications);
 
-        return [
-            'type' => 'notification',
-            'success' => $pk ? 1 : 0,
-            'message' => 'Tienes una nueva notificación',
-            'data' => $data
-        ];
+        $messages = [];
+        foreach ($notifications as $notification) {
+            $notification->id = Notificacion::newRecord([
+                'origen' => $notification->origin,
+                'destino' => $notification->destination,
+                'fecha' => $notification->date,
+                'descripcion' => $notification->description,
+                'leido' => 0,
+                'notificado' => 0,
+                'tipo' => $notification->type,
+                'tipo_id' => $notification->typeId,
+            ]);
+            $messages[$notification->destination][] = $notification;
+        }
+
+        return $messages;
     }
 
-    public function setUserData($clientName, $inputData)
+    /**
+     * vincula los sockets con la informacion de los usuarios
+     *
+     * @param string $clientName
+     * @param object $inputData
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
+    public function setUserData($key, $inputData)
     {
-        $this->activeUsers[] = $inputData->userData->key;
-        $this->activeUsers = array_unique($this->activeUsers);
-        $this->clients[$clientName]->userData = $inputData->userData;
+        $socket = $this->clients['unknown'][$key];
+        $clientId = $inputData->userData->key;
+        $this->clients[$clientId][] = $socket;
+        unset($this->clients['unknown'][$key]);
 
+        $success = !$this->clients['unknown'][$key] &&
+            in_array($socket, $this->clients[$clientId]);
         return [
-            'success' => $this->clients[$clientName]->userData ? 1 : 0,
+            'success' => $success,
             'type' => 'userData',
             'message' => 'Informacion actualizada'
         ];
     }
 
-    public function sendMessage($msg, $socket)
+    /**
+     * envia un mensaje a un cliente especifico
+     *
+     * @param string $msg
+     * @param void $sockets
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
+    public function sendMessage($msg, $sockets)
     {
-        @socket_write($socket, $msg, strlen($msg));
+        $sockets = !is_array($sockets) ? [$sockets] : $sockets;
+
+        foreach ($sockets as $socket) {
+            @socket_write($socket, $msg, strlen($msg));
+        }
         return true;
     }
 
-    //Unmask incoming framed message
+    /**
+     * retorna el listado de usuarios activos
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
+    public function getActiveClients()
+    {
+        $clients = array_filter($this->clients, function ($key) {
+            return !in_array($key, [0, 'unknown']);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $clients;
+    }
+
+    /**
+     * decodifica el mensaje recibido
+     *
+     * @param string $text
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function unmask($text)
     {
         $length = ord($text[1]) & 127;
@@ -240,7 +348,14 @@ SQL;
         return $text;
     }
 
-    //Encode message for transfer to client.
+    /**
+     * codifica un mensaje para enviar
+     *
+     * @param string $text
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function mask($text)
     {
         $b1 = 0x80 | (0x1 & 0x0f);
@@ -255,7 +370,18 @@ SQL;
         return $header . $text;
     }
 
-    //handshake new client.
+    /**
+     * genera la respuesta para crear la comunicacion
+     * con el cliente
+     *
+     * @param [type] $receved_header
+     * @param [type] $client_conn
+     * @param string $host
+     * @param integer $port
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-22
+     */
     public function perform_handshaking($receved_header, $client_conn, $host, $port)
     {
         $headers = array();
@@ -274,7 +400,7 @@ SQL;
             "Upgrade: websocket\r\n" .
             "Connection: Upgrade\r\n" .
             "WebSocket-Origin: $host\r\n" .
-            "WebSocket-Location: ws://$host:$port/demo/shout.php\r\n" .
+            "WebSocket-Location: ws://$host:$port/app/websockets/notificaciones.php\r\n" .
             "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
         socket_write($client_conn, $upgrade, strlen($upgrade));
     }

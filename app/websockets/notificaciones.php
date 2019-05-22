@@ -14,5 +14,4 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$NotificationWsController = new NotificationWsController();
-$NotificationWsController->init();
+new NotificationWsController();
