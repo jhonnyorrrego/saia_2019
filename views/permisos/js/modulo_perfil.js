@@ -115,4 +115,27 @@ $(function () {
             "json"
         );
     }
+
+    function listProfile() {
+        $.post(
+            `${baseUrl}app/funcionario/consulta_perfiles.php`,
+            {
+                key: localStorage.getItem("key")
+            },
+            function (response) {
+                if (response.success) {
+                    response.data.forEach(element => {
+                        $("#profile").append(
+                            $("<option>", {
+                                value: element.idperfil,
+                                text: element.nombre
+                            })
+                        );
+                    });
+                    $("#profile").select2();
+                }
+            },
+            "json"
+        );
+    }
 });

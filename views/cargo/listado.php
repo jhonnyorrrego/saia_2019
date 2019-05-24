@@ -46,22 +46,16 @@ include_once $ruta_db_superior . "assets/librerias.php";
                     <thead>
                         <tr>
                             <th class="text-center bold text-dark">Código</th>
-                            <th class="text-center bold text-dark">Logo</th>
                             <th class="text-center bold text-dark">Nombre</th>
+                            <th class="text-center bold text-dark">Tipo</th>
                             <th class="text-center bold text-dark">Estado</th>
-                            <th class="text-center bold text-dark">Extensión</th>
-                            <th class="text-center bold text-dark">Ubicación</th>
-                            <th class="text-center bold text-dark">Descripción</th>
                             <th class="text-center bold text-dark">Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td class="text-center" style="padding:8px"></td>
-                            <td class="text-center" style="padding:8px"></td>
                             <td class="text-dark"></td>
-                            <td class="text-center" style="padding:8px"></td>
-                            <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
@@ -73,7 +67,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
     </div>
     <?= fancyTree(true) ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-fancytree/2.30.0/modules/jquery.fancytree.table.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/dependencia/js/listado.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
+    <script src="<?= $ruta_db_superior ?>views/cargo/js/listado.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
 </body>
 
 </html>

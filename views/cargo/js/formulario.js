@@ -2,11 +2,9 @@ $(function () {
     let params = $('#area_script').data('params');
     let baseUrl = params.baseUrl;
     let myDropzone = null;
-
+    
     (function init() {
-        createFileInput();
         $('#type_select').select2();
-
         if (params.id) {
             findData(params.id);
         } else {
@@ -19,10 +17,11 @@ $(function () {
     });
 
     function findData(id) {
-        $.post(`${params.baseUrl}app/dependencia/consulta_datos.php`, {
+        $.post(`${params.baseUrl}app/cargo/consulta_datos.php`, {
             key: localStorage.getItem('key'),
             id: id
         }, function (response) {
+            console.log(response);
             if (response.success) {
                 fillForm(response.data);
             } else {
@@ -41,14 +40,9 @@ $(function () {
                 e.val(data[attribute]).trigger('change');
             } else if (attribute == 'estado') {
                 $(`[name='estado'][value=${data.estado}]`).prop('checked', true);
-            } else if (attribute == 'logo') {
-                if (data.logo) {
-                  $(`[name='logo']`).val(data.logo.route);
-                  setImage(data.logo);
-                }
             }
         }
-
+        console.log(data.cod_padre);
         createTree(data.cod_padre, [data.key]);
     }
 
@@ -58,7 +52,7 @@ $(function () {
             checkbox: true,
             selectMode: 1,
             source: {
-                url: `${baseUrl}arboles/arbol_dependencia.php`,
+                url: `${baseUrl}arboles/arbol_cargo.php`,
                 data: {
                     expandir: 1,
                     unSelectables: unSelectables
@@ -78,75 +72,23 @@ $(function () {
         });
     }
 
-    function createFileInput() {
-        $("#file").addClass("dropzone");
-        myDropzone = new Dropzone("#file", {
-            url: `${baseUrl}app/temporal/cargar_anexos.php`,
-            dictDefaultMessage:
-                "Haga clic para elegir un archivo o Arrastre acá el archivo.",
-            addRemoveLinks: true,
-            dictRemoveFile: 'Eliminar anexo',
-            maxFilesize: 3,
-            maxFiles: 1,
-            dictFileTooBig: "Tamaño máximo {{maxFilesize}} MB",
-            dictMaxFilesExceeded: "Máximo 1 archivo",
-            params: {
-                key: localStorage.getItem("key"),
-                dir: "dependencia"
-            },
-            paramName: "file",
-            init: function () {
-                this.on("success", function (file, response) {
-                    response = JSON.parse(response);
-
-                    if (response.success) {
-                        $('[name="logo"]').val(response.data[0]);
-                    } else {
-                        top.notification({
-                            type: "error",
-                            message: response.message
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    function setImage(mockFile) {
-        myDropzone.removeAllFiles();
-        myDropzone.emit("addedfile", mockFile);
-        myDropzone.emit("thumbnail", mockFile, baseUrl + mockFile.route);
-        myDropzone.emit("complete", mockFile);
-    }
 });
 
 $("#area_form").validate({
     ignore: '',
     rules: {
-        codigo: {
-            required: true
-        },
         nombre: {
             required: true
         },
-        cod_padre: {
-            required: true
-        },
-        tipo: {
+        tipo_cargo: {
             required: true
         },
     },
     messages: {
-        codigo: {
-            required: "Campo requerido"
-        },
         nombre: {
             required: "Campo requerido"
         },
-        cod_padre: {
-            required: "Debe seleccionar una dependencia"
-        },
-        tipo: {
+        tipo_cargo: {
             required: "Debe seleccionar un tipo"
         }
     },
@@ -172,7 +114,7 @@ $("#area_form").validate({
         });
 
         $.post(
-            `${params.baseUrl}app/dependencia/adicionar.php`,
+            `${params.baseUrl}app/cargo/adicionar.php`,
             data,
             function (response) {
                 if (response.success) {

@@ -46,13 +46,15 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
                         'telefono', 'email', 'perfil', 'ventanilla_radicacion', 'estado'
                     ]);
                 }, ARRAY_FILTER_USE_KEY);
-
-                $image = TemporalController::createTemporalFile($Funcionario->firma, uniqid('firma'), true);
-                $data['firma'] = [
-                    'name' => 'firma',
-                    'route' => $image->route,
-                    'size' => filesize($ruta_db_superior . $image->route)
-                ];
+                
+                if($Funcionario->firma){
+                    $image = TemporalController::createTemporalFile($Funcionario->firma, uniqid('firma'), true);
+                    $data['firma'] = [
+                        'name' => 'firma',
+                        'route' => $image->route,
+                        'size' => filesize($ruta_db_superior . $image->route)
+                    ];
+                }
                 $Response->data = $data;
                 break;
             default:

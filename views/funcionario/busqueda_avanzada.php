@@ -43,7 +43,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                     <div class="form-group form-group-default">
                         <label>Identificación:</label>
                         <input name="bqsaia_nit" type="text" class="form-control">
-                        <input type="hidden" name="bksaiacondicion_nit" value="=">
+                        <input type="hidden" name="bksaiacondicion_nit" value="like">
                     </div>
                     <div class="form-group form-group-default form-group-default-select2">
                         <label class="">Perfil</label>
