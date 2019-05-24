@@ -16868,6 +16868,18 @@ Main components
   text-transform: none !important;
 }
 
+.notification {
+  position: relative;
+  cursor: pointer;
+  text-decoration: none;
+}
+.notification > .counter {
+  position: absolute;
+  font-size: 0.5em;
+  top: -5px;
+  left: 13px;
+}
+
 .f-12 {
   font-size: 12px;
 }

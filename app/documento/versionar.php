@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'formatos/librerias/funciones_formatos_generales.php';
 
 $Response = (object)[
     'data' => new stdClass(),
@@ -63,7 +64,7 @@ try {
         'documento_iddocumento' => $documentId,
         'fecha' => date('Y-m-d H:i:s'),
         'funcionario_idfuncionario' => $userId,
-        'version' => $Documento->version + 1,
+        'version' => $Documento->version,
         'pdf' => $fileDbRoute //pendiente almacenar en la carpeta de versionamiento
     ]);
 
@@ -120,10 +121,35 @@ try {
 
     $Documento->setAttributes([
         'version' => $Documento->version + 1,
-        'fk_idversion_documento' => $fkVersionDocumento
+        'activa_admin' => 1
     ]);
     $Documento->save();
 
+    RutaDocumento::executeUpdate([
+        'fk_version_documento' => $fkVersionDocumento
+    ], [
+        'finalizado' => 1,
+        'fk_version_documento' => null,
+        'fk_documento' => $documentId
+    ]);
+
+    //si se versiona por primera vez se duplica la ruta finalizada    
+    if ($Documento->version == 2 && $Documento->numero) {
+        $routes = Ruta::findLastFinishedRoute($documentId);
+        if ($routes) {
+            $route = [];
+            foreach ($routes as $key => $Ruta) {
+                $route[] = [
+                    'funcionario' => $Ruta->origen,
+                    'tipo_firma' => $Ruta->obligatorio,
+                    'tipo' => $Ruta->tipo_origen
+                ];
+            }
+            insertar_ruta($route, $documentId, 0);
+        }
+    }
+
+    $Response->message = "Documento versionado";
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

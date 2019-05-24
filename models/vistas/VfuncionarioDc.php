@@ -124,7 +124,7 @@ class VfuncionarioDc extends Funcionario
         $name = ucwords($name);
         return $name;
     }
-    
+
     /**
      * realiza una busqueda donde el nombre, apellidos o cargo
      * se parezcan a una palabra
@@ -163,7 +163,33 @@ SQL;
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-05-09
      */
-    public static function findByRole($roleId){
+    public static function findByRole($roleId)
+    {
         return self::findByAttributes(['iddependencia_cargo' => $roleId]);
+    }
+
+    /**
+     * obtiene una instancia de funcionario basado
+     * en la entidad
+     *
+     * @param integer $type 5 => iddependencia_cargo, 1=>funcionario_codigo
+     * @param integer $id
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-17
+     */
+    public static function getUserFromEntity($type, $id)
+    {
+        if ($type == 5) {
+            $response = self::findByRole($id);
+        } else if ($type == 1) {
+            $response = Funcionario::findByAttributes([
+                'funcionario_codigo' => $id
+            ]);
+        } else {
+            $response = null;
+        }
+
+        return $response;
     }
 }

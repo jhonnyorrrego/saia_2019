@@ -131,7 +131,7 @@ function canConfirm($routes, $Documento)
     $userCode = SessionController::getValue('usuario_actual');
     $response = false;
 
-    if (!$Documento->numero) { //ruta de radicacion
+    if ((!$Documento->numero) || ($Documento->numero && $Documento->activa_admin == 1)) { //ruta de radicacion
         foreach ($routes as $BuzonEntrada) {
             if ($BuzonEntrada->activo) {
                 //el destino de buzon_entrada siempre es funcionario_codigo

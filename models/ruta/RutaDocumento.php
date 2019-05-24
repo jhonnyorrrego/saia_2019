@@ -13,6 +13,8 @@ class RutaDocumento extends Model
     protected $estado;
     protected $fk_documento;
     protected $tipo_flujo;
+    protected $fk_version_documento;
+    protected $finalizado;
     protected $dbAttributes;
 
     //utilities
@@ -33,7 +35,9 @@ class RutaDocumento extends Model
                 'tipo',
                 'estado',
                 'fk_documento',
-                'tipo_flujo'
+                'tipo_flujo',
+                'fk_version_documento',
+                'finalizado'
             ],
             'date' => []
         ];

@@ -211,8 +211,7 @@ SQL;
                 a.estado = 1
             order by $params->order
 SQL;
-        $records = StaticSql::search($sql, $params->offset, $params->limit);
-        return Anexo::convertToObjectCollection($records);
+        return Anexo::findBySql($sql, $params->offset, $params->limit);
     }
 
     /**

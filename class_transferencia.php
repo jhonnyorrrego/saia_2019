@@ -528,6 +528,14 @@ function aprobar($iddoc = 0, $opcion = 0)
                     phpmkr_query("UPDATE documento SET estado='APROBADO',activa_admin=0, fecha=" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", dias='" . $dias_entrega[0]["dias_entrega"] . "' WHERE iddocumento=" . $iddoc, $conn);
                 }
 
+                RutaDocumento::executeUpdate([
+                    'finalizado' => 1
+                ], [
+                    'estado' => 1,
+                    'fk_documento' => $iddoc,
+                    'tipo' => RutaDocumento::TIPO_RADICACION
+                ]);
+
                 $nombre_tabla = busca_filtro_tabla("nombre_tabla,banderas", "formato", "nombre like '$formato'", "", $conn);
                 $tabla = $nombre_tabla[0]["nombre_tabla"];
                 $campos_formato = listar_campos_tabla($tabla);
@@ -822,13 +830,6 @@ function mostrar_estado_proceso($idformato, $iddoc)
         echo "</table><br/>";
     }
 
-    if ($_REQUEST["tipo"] == 1 && $ocultar_confirmar) {
-        echo "<script>
-		$(document).ready(function(){
-			$('#boton_confirmar').attr('disabled','true');
-		});
-		</script>";
-    }
     if (!$firma_actual)
         return (true);
     else
@@ -1019,7 +1020,7 @@ function radicar_plantilla()
         }
     } else {
         Documento::setPermissions($_POST["iddoc"]);
-        
+
         $formato = busca_filtro_tabla("", "formato", "nombre_tabla LIKE '" . @$_POST["tabla"] . "'", "", $conn);
         $banderas = array();
         if ($formato["numcampos"]) {
@@ -2149,4 +2150,3 @@ if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) != "") {
         $funcion();
     }
 }
- 

@@ -79,6 +79,19 @@ abstract class Model extends StaticSql
     }
 
     /**
+     * elimina la llave primaria cuando el objeto es clonado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-21
+     */
+    public function __clone()
+    {
+        $pkLabel = $this->getPkName();
+        unset($this->$pkLabel);
+    }
+
+    /**
      * retorna el nombre de la tabla
      *
      * @return string
@@ -179,7 +192,7 @@ abstract class Model extends StaticSql
     }
 
     /**
-     * consulta un rgistro en la tabla segun 
+     * consulta un registro en la tabla segun 
      * la llave primaria y asigna masivamente los atributos
      *
      * @return void
@@ -403,10 +416,7 @@ abstract class Model extends StaticSql
      */
     public function clone()
     {
-        $object = $this;
-        $pkLabel = $object->getPkName();
-        unset($object->$pkLabel);
-        return $object;
+        return clone $this;
     }
 
     /**
@@ -583,8 +593,8 @@ abstract class Model extends StaticSql
         $className = get_called_class();
         $Instance = new $className();
 
-        $safeAttributes = $Instance->getSafeAttributes();
         $dateAttributes = $Instance->getDateAttributes();
+        $safeAttributes = $Instance->getSafeAttributes();
         $safeAttributes[] = $Instance->getPkName();
         $select = '';
 
@@ -600,7 +610,7 @@ abstract class Model extends StaticSql
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $select .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
+                $select .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . ' AS ' . $attribute;
             } else {
                 $select .= $attribute;
             }
@@ -627,13 +637,15 @@ abstract class Model extends StaticSql
 
             foreach ($conditions as $attribute => $value) {
                 if (strlen($condition)) {
-                    $condition .= ' and ';
+                    $condition .= ' AND ';
                 }
 
-                if (in_array($attribute, $dateAttributes)) {
+                if (is_null($value)) {
+                    $condition = "{$attribute} IS NULL";
+                } else if (in_array($attribute, $dateAttributes)) {
                     $condition .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . "=" . $value;
                 } else {
-                    $condition .= $attribute . "='" . $value . "'";
+                    $condition .= "{$attribute}='{$value}'";
                 }
             }
         }
@@ -654,7 +666,7 @@ abstract class Model extends StaticSql
     {
         $condition = self::createCondition($conditions);
 
-        $sql = "Select ";
+        $sql = "SELECT ";
         $sql .= self::createSelect($fields) ?? "*";
         $sql .= " FROM " . self::getTableName();
         $sql .= $condition ? " WHERE {$condition} " : ' ';
