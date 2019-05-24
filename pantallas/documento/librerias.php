@@ -250,6 +250,7 @@ function variable_busqueda()
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
+    $number = is_numeric($number) ? $number : 0;
     $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
     $temporality = strtotime($date) ? temporality($date) : '';
@@ -495,4 +496,3 @@ function date_formatted($date)
 {
     return DateController::convertDate($date);
 }
-

@@ -57,10 +57,10 @@ class Ui {
         const color = localStorage.getItem('color');
 
         if (color) {
-            $('#instition_style').remove();
+            $('#institution_style').remove();
             $('head').append(
                 $('<style>', {
-                    id: 'instition_style',
+                    id: 'institution_style',
                     rel: 'stylesheet',
                     type: 'text/css',
                     text: `

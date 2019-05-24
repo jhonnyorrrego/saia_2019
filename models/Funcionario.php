@@ -254,10 +254,9 @@ class Funcionario extends Model
             FROM 
                 funcionario
             WHERE
-                lower(nombres) like '%{$term}%' or
-                apellidos like '%{$term}%'
+                LOWER(CONCAT(nombres,CONCAT(' ', apellidos))) 
+                LIKE '%{$term}%'
 SQL;
-
 
         return  self::findBySql($sql);
     }

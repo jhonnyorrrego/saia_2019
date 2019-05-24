@@ -51,6 +51,44 @@ class Acceso extends Model
         ];
     }
 
+    public function afterCreate()
+    {
+        return $this->checkNewDocumentManager();
+    }
+
+    /**
+     * verfica si fue un cambio de responsable
+     * sobre un documento y asigna la nueva configuracion
+     * de alerta en caso de que el documento no tenga ruta
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-24
+     */
+    public function checkNewDocumentManager()
+    {
+        if (
+            $this->tipo_relacion == self::TIPO_DOCUMENTO &&
+            $this->accion == self::ACCION_ELIMINAR
+        ) {
+            DocumentoAlertaRuta::executeUpdate([
+                'estado' => 0,
+                'fecha_modificacion' => date('Y-m-d H:i:s')
+            ], [
+                'fk_documento' => $this->id_relacion,
+                'estado' => 1
+            ]);
+
+            DocumentoAlertaRuta::newRecord([
+                'fk_documento' => $this->id_relacion,
+                'fk_funcionario' => $this->fk_funcionario
+            ]);
+        }
+
+        return true;
+    }
+
+
     /**
      * obtiene una instancia del funcionario relacionado
      *
@@ -58,8 +96,9 @@ class Acceso extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-05-09
      */
-    public function getUser(){
-        if(!$this->User){
+    public function getUser()
+    {
+        if (!$this->User) {
             $this->User = $this->getRelationFk('Funcionario');
         }
 
@@ -76,7 +115,8 @@ class Acceso extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-05-14
      */
-    public static function isManager($type, $typeId, $userId){
+    public static function isManager($type, $typeId, $userId)
+    {
         return Acceso::countRecords([
             'tipo_relacion' => $type,
             'id_relacion' => $typeId,

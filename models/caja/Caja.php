@@ -21,9 +21,9 @@ class Caja extends Model
     protected $fecha_creacion;
     protected $estado;
     protected $fk_caja_eli;
-    
+
     protected $dbAttributes;
-    
+
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -61,13 +61,10 @@ class Caja extends Model
      * @return boolean
      * @author Name <email@email.com>
      */
-    public function isResponsable() : bool
+    public function isResponsable(): bool
     {
-        $response = false;
-        if ($this->propietario == $_SESSION['idfuncionario'] || $this->responsable == $_SESSION['idfuncionario']) {
-            $response = true;
-        }
-        return $response;
+        $userId = SessionController::getValue('idfuncionario');
+        return in_array($userId, [$this->propietario, $this->responsable]);
     }
     /**
      * Retorna el nombre del propietario
@@ -75,7 +72,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getPropietario() : string
+    public function getPropietario(): string
     {
         $data = $this->getRelationFk('Funcionario', 'propietario');
         return $data ? $data->nombres . ' ' . $data->apellidos : '';
@@ -98,7 +95,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getResponsable() : string
+    public function getResponsable(): string
     {
         $data = $this->getRelationFk('Funcionario', 'responsable');
         return $data ? $data->nombres . ' ' . $data->apellidos : '';
@@ -110,7 +107,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getSeguridad() : string
+    public function getSeguridad(): string
     {
         $data = $this->keyValueField('seguridad');
         return $data[$this->seguridad] ?? '';
@@ -123,7 +120,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getMaterial() : string
+    public function getMaterial(): string
     {
         $data = $this->keyValueField('material');
         return $data[$this->material] ?? '';
@@ -134,7 +131,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEstadoArchivo() : string
+    public function getEstadoArchivo(): string
     {
         $data = $this->keyValueField('estado_archivo');
         return $data[$this->estado_archivo] ?? '';
@@ -146,7 +143,7 @@ class Caja extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countDocuments() : int
+    public function countDocuments(): int
     {
         return ExpedienteDoc::countDocumentsCaja($this->idcaja);
     }
@@ -159,7 +156,7 @@ class Caja extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countAllExpediente() : int
+    public function countAllExpediente(): int
     {
         return Expediente::countAllExpedienteCaja($this->idcaja);
     }
@@ -172,7 +169,7 @@ class Caja extends Model
      * @return integer
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function countExpediente() : int
+    public function countExpediente(): int
     {
         return Expediente::countExpedienteCaja($this->idcaja);
     }
@@ -186,7 +183,7 @@ class Caja extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function getHtmlField(string $campo, string $etiqHtml, $selected = 0) : string
+    public static function getHtmlField(string $campo, string $etiqHtml, $selected = 0): string
     {
         $html = '';
         switch ($etiqHtml) {
@@ -211,7 +208,7 @@ class Caja extends Model
      * @param string $campo : nombre del campo en la db
      * @return array
      */
-    public static function keyValueField(string $campo) : array
+    public static function keyValueField(string $campo): array
     {
         $response['estado'] = [
             0 => 'INACTIVO',

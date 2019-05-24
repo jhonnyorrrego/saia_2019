@@ -143,11 +143,8 @@ class VfuncionarioDc extends Funcionario
         FROM 
             vfuncionario_dc
         WHERE
-            (
-                lower(nombres) like '%{$term}%' OR
-                apellidos like '%{$term}%' OR
-                cargo like '%{$term}%'
-            ) AND
+            LOWER(CONCAT(nombres,CONCAT(' ', CONCAT(apellidos,CONCAT(' ', cargo))))) 
+                LIKE '%{$term}%' AND
             estado = 1 AND
             estado_dc = 1                 
 SQL;

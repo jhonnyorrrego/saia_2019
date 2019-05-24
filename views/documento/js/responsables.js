@@ -1,13 +1,13 @@
-$(function () {
+$(function() {
     let params = $('script[data-route]').data('route');
     $('script[data-route]').removeAttr('data-route');
     let routeType = 0;
 
-    $('.toggle_forms').on('click', function () {
+    $('.toggle_forms').on('click', function() {
         toggleForms();
     });
 
-    $('#route_type').on('select2:select', function () {
+    $('#route_type').on('select2:select', function() {
         routeType = +$(this).val();
         hideRoutes();
         switch (routeType) {
@@ -28,8 +28,10 @@ $(function () {
 
     $(document)
         .off('select2:select', '.select_action')
-        .on('select2:select', '.select_action', function () {
-            let tr = $(this).parents('tr').first();
+        .on('select2:select', '.select_action', function() {
+            let tr = $(this)
+                .parents('tr')
+                .first();
             let data = tr.data('info');
             data.action = $(this).val();
             tr.attr('data-info', JSON.stringify(data));
@@ -37,16 +39,20 @@ $(function () {
 
     $(document)
         .off('click', '.remove_row')
-        .on('click', '.remove_row', function () {
+        .on('click', '.remove_row', function() {
             let table = $(this).parents('table');
-            $(this).parents('tr').first().remove();
+            $(this)
+                .parents('tr')
+                .first()
+                .remove();
             generateNewOrder(table);
         });
 
-    $('#save_item').on('click', function () {
+    $('#save_item').on('click', function() {
         let user = $('#manager').val();
-        let action = $('#firm_type_container').is(':visible') ?
-            $('#firm_type_select').val() : $('#action_type_select').val();
+        let action = $('#firm_type_container').is(':visible')
+            ? $('#firm_type_select').val()
+            : $('#action_type_select').val();
 
         if (!user.length) {
             top.notification({
@@ -60,26 +66,29 @@ $(function () {
                     message: 'Debe indicar una acción'
                 });
             } else {
-                let user = $('#manager').select2('data')[0];
-                if (routeType == 1 || routeType == 3) {
-                    addRadicationItem(user, action[0]);
-                } else {
-                    addApprobationItem(user, action[0]);
-                }
+                $('#manager')
+                    .select2('data')
+                    .forEach(user => {
+                        if (routeType == 1 || routeType == 3) {
+                            addRadicationItem(user, action);
+                        } else {
+                            addApprobationItem(user, action);
+                        }
+                    });
 
                 toggleForms();
             }
         }
     });
 
-    $('#save_routes').on('click', function () {
+    $('#save_routes').on('click', function() {
         let data = [];
-        let rows = $('#radication_route_container').is(':visible') ?
-            $('#radication_route_container tbody tr') :
-            $('#approbation_route_container tbody tr');
+        let rows = $('#radication_route_container').is(':visible')
+            ? $('#radication_route_container tbody tr')
+            : $('#approbation_route_container tbody tr');
 
-        rows.each(function () {
-            data.push($(this).data('info'))
+        rows.each(function() {
+            data.push($(this).data('info'));
         });
 
         $('#save_routes,#spiner').toggle();
@@ -93,7 +102,7 @@ $(function () {
                 data: data,
                 flow: $('[name="flow"]:checked').val()
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -123,10 +132,16 @@ $(function () {
 
     function hideApprobationType() {
         if (+params.number) {
-            $('#route_type').find('[value="1"]').remove();
-            $('#route_type').find('[value="3"]').remove();
+            $('#route_type')
+                .find('[value="1"]')
+                .remove();
+            $('#route_type')
+                .find('[value="3"]')
+                .remove();
         } else {
-            $('#route_type').find('[value="2"]').remove();
+            $('#route_type')
+                .find('[value="2"]')
+                .remove();
         }
     }
 
@@ -143,7 +158,7 @@ $(function () {
                 documentId: params.documentId,
                 type: 'radication'
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     createRadicationTable(response.data);
                     $('#radication_route_container').show();
@@ -187,10 +202,12 @@ $(function () {
                 documentId: params.documentId,
                 type: 'approbation'
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     if (response.data.flow_type) {
-                        $(`[name="flow"][value=${response.data.flow_type}]`).trigger('click');
+                        $(
+                            `[name="flow"][value=${response.data.flow_type}]`
+                        ).trigger('click');
                         delete response.data.flow_type;
                         response.data = Object.values(response.data);
                     }
@@ -209,11 +226,10 @@ $(function () {
     }
 
     function createApprobationTable(data) {
-
         $('#approbation_route_container table > tbody').remove();
         $('#approbation_route_container table').append(
             $('<tbody>').css('cursor', 'move')
-        )
+        );
 
         let tbody = $('#approbation_route_container tbody');
         data.forEach(e => {
@@ -234,12 +250,12 @@ $(function () {
         let data = {
             order: tbody.find('tr').length + 1,
             user: {
-                type: "5",
+                type: '5',
                 typeId: user.id,
                 name: user.text
             },
             action
-        }
+        };
         tbody.append(generateRadicationItem(data));
         $('#radication_route_container select').select2();
     }
@@ -249,42 +265,47 @@ $(function () {
         let data = {
             order: tbody.find('tr').length + 1,
             user: {
-                type: "5",
+                type: '5',
                 typeId: user.id,
                 name: user.text
             },
             action
-        }
+        };
         tbody.append(generateApprobationItem(data));
         $('#approbation_route_container select').select2();
     }
 
     function createSelects() {
-        $("#route_type,#firm_type_select,#action_type_select").select2({
-            placeholder: "Seleccione..",
+        $('#route_type,#firm_type_select,#action_type_select').select2({
+            placeholder: 'Seleccione..'
         });
 
-        let firstValue = $('#route_type').find('option:eq(1)').val();
-        $('#route_type').val(firstValue).trigger('change').trigger('select2:select');
+        let firstValue = $('#route_type')
+            .find('option:eq(1)')
+            .val();
+        $('#route_type')
+            .val(firstValue)
+            .trigger('change')
+            .trigger('select2:select');
     }
 
     function createAutocomplete() {
-        $("#manager").select2({
+        $('#manager').select2({
             minimumInputLength: 3,
-            language: "es",
+            language: 'es',
             ajax: {
                 url: `${params.baseUrl}app/funcionario/autocompletar.php`,
-                dataType: "json",
-                data: function (params) {
+                dataType: 'json',
+                data: function(params) {
                     return {
                         term: params.term,
-                        key: localStorage.getItem("key"),
-                        token: localStorage.getItem("token"),
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
                         roles: 1,
                         identificator: 'iddependencia_cargo'
                     };
                 },
-                processResults: function (response) {
+                processResults: function(response) {
                     return response.success ? { results: response.data } : {};
                 }
             }
@@ -292,93 +313,105 @@ $(function () {
     }
 
     function generateRadicationItem(data) {
-        return $('<tr>').append(
-            $('<td>', {
-                class: 'text-center'
-            }).text(data.order),
-            $('<td>').text(data.user.name),
-            $('<td>').append(
-                $('<select>', {
-                    class: 'full-width select_action'
+        return $('<tr>')
+            .append(
+                $('<td>', {
+                    class: 'text-center'
+                }).text(data.order),
+                $('<td>').text(data.user.name),
+                $('<td>').append(
+                    $('<select>', {
+                        class: 'full-width select_action'
+                    })
+                        .append(
+                            $('<option>', {
+                                value: 3,
+                                text: 'Visto bueno - oculto'
+                            }),
+                            $('<option>', {
+                                value: 2,
+                                text: 'Visto bueno - visible'
+                            }),
+                            $('<option>', {
+                                value: 0,
+                                text: 'Firma oculta'
+                            }),
+                            $('<option>', {
+                                value: 1,
+                                text: 'Firma visible'
+                            }),
+                            $('<option>', {
+                                value: 4,
+                                text: 'Firma manual'
+                            }),
+                            $('<option>', {
+                                value: 5,
+                                text: 'Firma externa'
+                            })
+                        )
+                        .val(data.action)
+                        .trigger('change')
+                ),
+                $('<td>', {
+                    class: 'remove_row text-center'
                 }).append(
-                    $('<option>', {
-                        value: 3,
-                        text: 'Visto bueno - oculto'
-                    }),
-                    $('<option>', {
-                        value: 2,
-                        text: 'Visto bueno - visible'
-                    }),
-                    $('<option>', {
-                        value: 0,
-                        text: 'Firma oculta'
-                    }),
-                    $('<option>', {
-                        value: 1,
-                        text: 'Firma visible'
-                    }),
-                    $('<option>', {
-                        value: 4,
-                        text: 'Firma manual'
-                    }),
-                    $('<option>', {
-                        value: 5,
-                        text: 'Firma externa'
+                    $('<span>', {
+                        class: 'cursor fa fa-trash f-20'
                     })
                 )
-                    .val(data.action)
-                    .trigger('change')
-            ),
-            $('<td>', {
-                class: 'remove_row text-center'
-            }).append(
-                $('<span>', {
-                    class: 'cursor fa fa-trash f-20'
-                })
             )
-        ).attr('data-info', JSON.stringify({
-            type: data.user.type,
-            typeId: data.user.typeId,
-            action: data.action,
-            order: data.order
-        }));
+            .attr(
+                'data-info',
+                JSON.stringify({
+                    type: data.user.type,
+                    typeId: data.user.typeId,
+                    action: data.action,
+                    order: data.order
+                })
+            );
     }
 
     function generateApprobationItem(data) {
         return $('<tr>', {
             class: 'text-center'
-        }).append(
-            $('<td>').text(data.order),
-            $('<td>').text(data.user.name),
-            $('<td>').append(
-                $('<select>', {
-                    class: 'full-width select_action'
+        })
+            .append(
+                $('<td>').text(data.order),
+                $('<td>').text(data.user.name),
+                $('<td>').append(
+                    $('<select>', {
+                        class: 'full-width select_action'
+                    })
+                        .append(
+                            $('<option>', {
+                                value: '1',
+                                text: 'Visto bueno'
+                            }),
+                            $('<option>', {
+                                value: '2',
+                                text: 'Aprobar'
+                            })
+                        )
+                        .val(data.action)
+                        .trigger('change')
+                ),
+                $('<td>', {
+                    class: 'remove_row'
                 }).append(
-                    $('<option>', {
-                        value: '1',
-                        text: 'Visto bueno'
-                    }),
-                    $('<option>', {
-                        value: '2',
-                        text: 'Aprobar'
+                    $('<span>', {
+                        class: 'cursor fa fa-trash f-20'
                     })
                 )
-                    .val(data.action)
-                    .trigger('change')
-            ),
-            $('<td>', {
-                class: 'remove_row'
-            }).append(
-                $('<span>', {
-                    class: 'cursor fa fa-trash f-20'
-                })
             )
-        ).attr('data-info', JSON.stringify({
-            type: data.user.type,
-            typeId: data.user.typeId,
-            action: data.action,
-            order: data.order
-        }));
+            .attr(
+                'data-info',
+                JSON.stringify({
+                    type: data.user.type,
+                    typeId: data.user.typeId,
+                    action: data.action,
+                    order: data.order
+                })
+            );
     }
 
     function toggleForms() {
@@ -399,20 +432,21 @@ $(function () {
     }
 
     function generateNewOrder(table) {
-        table.find('tbody tr').each(function (i) {
+        table.find('tbody tr').each(function(i) {
             let data = $(this).data('info');
             data.order = i + 1;
             $(this).attr('data-info', JSON.stringify(data));
-            $(this).find('td:first').text(data.order);
+            $(this)
+                .find('td:first')
+                .text(data.order);
         });
     }
 
     function addSortPlugin(table) {
         table.find('tbody').sortable({
-            update: function (event, ui) {
+            update: function(event, ui) {
                 generateNewOrder($(this).parent());
             }
         });
     }
-
 });

@@ -34,7 +34,8 @@ try {
     switch ($_REQUEST['type']) {
         case '1': //ruta radicacion
             createRadicationRoute($documentId, $data);
-            $Response->message = 'Ruta de radicación asignada';
+            $Response->message = 'Ruta de radicación asignada.
+                Por favor confirme el documento para que inicie la ruta establecida.';
             break;
         case '2': //ruta aprobacion
             createApprobationRoute($documentId, $data, $_REQUEST['flow']);
@@ -49,7 +50,8 @@ try {
             break;
         case '3': //ruta radicacion / aprobacion
             createBothRoutes($documentId, $data);
-            $Response->message = 'Rutas asignadas';
+            $Response->message = 'Ruta asignada.
+                Por favor confirme el documento para que inicie la ruta establecida.';
             break;
     }
 
@@ -134,7 +136,7 @@ function createApprobationRoute($documentId, $data, $flow)
             ]);
             $fk = $Funcionario->getPK();
         } else {
-            throw new Exception("tipo de ralacion invalido", 1);
+            throw new Exception(" tipo de ralacion inval ido", 1);
         }
 
         RutaAprobacion::newRecord([

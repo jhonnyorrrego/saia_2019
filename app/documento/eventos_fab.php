@@ -54,31 +54,30 @@ try {
         ]);
     }
 
-    $managersRoute = 'views/documento/responsables.php?';
-    $managersRoute .= http_build_query([
-        'documentId' => $documentId,
-        'number' => $Documento->numero
-    ]);
-
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
         'managers' => [
             'see' => $seeManagers,
-            'route' => $managersRoute
+            'route' => 'views/documento/responsables.php',
+            'tooltip' => 'Asignar Responsables'
         ],
         'edit' => [
             'see' =>  $editButton,
-            'route' => $editRoute ?? ''
+            'route' => $editRoute ?? '',
+            'tooltip' => 'Editar Documento'
         ],
         'return' => [
             'see' =>  $returnButton,
-            'route' => $returnRoute ?? ''
+            'route' => $returnRoute ?? '',
+            'tooltip' => 'Devolver Documento'
         ],
         'confirm' => [
-            'see' =>  $confirmButton
+            'see' =>  $confirmButton,
+            'tooltip' => 'Aprobar Documento'
         ],
         'reject' => [
-            'see' => $rejectButton
+            'see' => $rejectButton,
+            'tooltip' => 'Rechazar Documento'
         ]
     ];
     $Response->success = 1;
