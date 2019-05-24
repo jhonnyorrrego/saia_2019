@@ -176,42 +176,4 @@ class Ui {
                 });
         }
     }
-
-    static bindNotifications() {
-        let host = window.location.host;
-        let url = `ws://${host}:1000/saia_2019/saia/app/websockets/notificaciones.php`;
-        //let url = 'wss://echo.websocket.org';
-        window.socket = new WebSocket(url);
-
-        window.socket.onopen = function(e) {
-            //indico los datos del usuario al la conexion
-            var msg = {
-                action: 'userData',
-                userData: {
-                    key: localStorage.getItem('key'),
-                    token: localStorage.getItem('token')
-                }
-            };
-            //convert and send data to server
-            window.socket.send(JSON.stringify(msg));
-        };
-
-        window.socket.onclose = function(e) {
-            top.notification({
-                type: 'error',
-                message: 'Sincronización de notificaciones cancelada'
-            });
-        };
-
-        window.socket.onmessage = function(e) {
-            console.log(e.data);
-        };
-
-        window.socket.onerror = function(e) {
-            top.notification({
-                type: 'error',
-                message: 'Error al sincronizar las notificaciones'
-            });
-        };
-    }
 }

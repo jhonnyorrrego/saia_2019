@@ -96,6 +96,13 @@ $notifications = [
         'description' => 'desc',
         'type' => Notificacion::TIPO_DOCUMENTO,
         'typeId' => 1,
+    ], [
+        'origin' => 1,
+        'destination' => 9,
+        'date' => date('Y-m-d H:i:s'),
+        'description' => 'desc',
+        'type' => Notificacion::TIPO_DOCUMENTO,
+        'typeId' => 1,
     ]
 ];
 $Response->notifications = CriptoController::encrypt_blowfish(json_encode($notifications));

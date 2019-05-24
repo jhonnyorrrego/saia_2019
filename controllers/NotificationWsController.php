@@ -213,11 +213,12 @@ SQL;
                     }
 
                     $message = count($notifications) > 1 ?
-                        'Tienes una nuevas notificaciones' : 'Tienes una nueva notificación';
+                        'Tienes nuevas notificaciones' : 'Tienes una nueva notificación';
 
                     $data = [
                         'message' => $message,
-                        'type' => 'notification'
+                        'type' => 'notification',
+                        'total' => count($notifications)
                     ];
 
                     $response_text = $this->mask(json_encode($data));
@@ -271,18 +272,29 @@ SQL;
      */
     public function setUserData($key, $inputData)
     {
-        $socket = $this->clients['unknown'][$key];
-        $clientId = $inputData->userData->key;
-        $this->clients[$clientId][] = $socket;
-        unset($this->clients['unknown'][$key]);
+        $token = $inputData->userData->token;
+        if (!LogAcceso::checkActiveToken($token)) {
+            $response = [
+                'success' => 0,
+                'type' => 'userData',
+                'message' => 'Acceso denegado'
+            ];
+        } else {
+            $socket = $this->clients['unknown'][$key];
+            $clientId = $inputData->userData->key;
+            $this->clients[$clientId][] = $socket;
+            unset($this->clients['unknown'][$key]);
 
-        $success = !$this->clients['unknown'][$key] &&
-            in_array($socket, $this->clients[$clientId]);
-        return [
-            'success' => $success,
-            'type' => 'userData',
-            'message' => 'Informacion actualizada'
-        ];
+            $success = !$this->clients['unknown'][$key] &&
+                in_array($socket, $this->clients[$clientId]);
+            $response = [
+                'success' => $success,
+                'type' => 'userData',
+                'message' => 'Informacion actualizada'
+            ];
+        }
+
+        return $response;
     }
 
     /**
