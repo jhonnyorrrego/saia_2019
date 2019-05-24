@@ -14,7 +14,7 @@ class StaticSql
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function search(string $sql, $start = 0, $end = 0) : array
+    public static function search(string $sql, $start = 0, $end = 0): array
     {
         if (!self::$instance) {
             self::$instance = Conexion::getConnection();
@@ -30,7 +30,7 @@ class StaticSql
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function query(string $sql) : bool
+    public static function query(string $sql): bool
     {
         return Conexion::getConnection()->Ejecutar_Sql($sql);
     }
@@ -43,7 +43,7 @@ class StaticSql
      * Cuando es una insercion masiva retorna el primer id ingresado
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function insert(string $sql) : int
+    public static function insert(string $sql): int
     {
         $conection = Conexion::getConnection();
         $conection->Ejecutar_Sql($sql);
@@ -59,7 +59,7 @@ class StaticSql
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function setDateFormat(string $date, string $format) : string
+    public static function setDateFormat(string $date, string $format): string
     {
         if (!self::$instance) {
             self::$instance = Conexion::getConnection();
@@ -74,7 +74,7 @@ class StaticSql
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function getDateFormat(string $attribute, string $format) : string
+    public static function getDateFormat(string $attribute, string $format): string
     {
         if (!self::$instance) {
             self::$instance = Conexion::getConnection();
@@ -82,5 +82,4 @@ class StaticSql
 
         return (self::$instance)::fecha_db_obtener($attribute, $format);
     }
-
 }

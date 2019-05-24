@@ -64,7 +64,6 @@ function plantilla($documentId, $transferId = 0)
 
     $priorityClass = $Documento->prioridad ? 'text-danger' : '';
     ?>
-    <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
     <div class="row mx-0 px-1">
         <div class="col-12 p-0 m-0" id="document_information">

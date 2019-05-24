@@ -612,4 +612,3 @@ abstract class SQL2
 		return $response;
 	}
 }
-?>

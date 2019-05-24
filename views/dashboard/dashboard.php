@@ -128,11 +128,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
             </div>
             <div class="d-flex align-items-center">
+                <div class="dropdown pull-left d-xs-block pr-5">
+                    <span id="show_notifications" class="profile-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="px-1 cursor fa fa-globe fa-2x notification f-20">
+                            <span class="badge badge-important counter" id="notification_counter"></span>
+                        </span>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu" id="notification_list">
+                        <a href="#" class="dropdown-item" id="config_profile">
+                            Lorem, ipsum dolor sit amet consectetur.
+                        </a>
+                    </div>
+                </div>
                 <div class="pull-left p-r-10 fs-14 font-heading d-lg-block d-none">
                     <span class="semi-bold" id="user_name"></span>
                 </div>
                 <div class="dropdown pull-right d-xs-block">
-                    <button class="profile-dropdown-toggle cursor" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_info">
+                    <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_info">
                         <span class="thumbnail-wrapper d32 circular inline">
                             <img id="profile_image" class="cuted_photo" width="32" height="32">
                         </span>
@@ -307,8 +319,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/notification.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/modules.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/notification_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
@@ -322,7 +336,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 Ui.putColor();
                 Ui.inactiveTime();
                 Ui.bindServiceWorker();
-                Ui.bindNotifications();
             }
         });
     </script>
