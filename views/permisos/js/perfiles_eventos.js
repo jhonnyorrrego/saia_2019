@@ -14,16 +14,7 @@ $(function(){
                 key: localStorage.getItem('key')
             };
             
-            save(profile);
-
-            //console.log(save(profile));
-            /*if (save(profile)){
-                addprofile(profile);
-                console.log(1);
-            } else {
-                console.log(2);
-            }*/
-            
+            Perfil.save(profile);
             
         }else{
             $('#profile_name_error').text('Ingrese el nombre');
@@ -36,9 +27,9 @@ $(function(){
             profileId: profileId,
             key: localStorage.getItem('key')
         };
-        
-        if (del(data)) {
-            deleteprofile(profileId);
+
+        if (Perfil.del(data)) {
+            deleteprofile(data.profileId);
         }
     });
 
@@ -65,7 +56,7 @@ $(function(){
                 idPerfil: li.data('profileid'),
                 key: localStorage.getItem('key')
             };
-            save(profile);
+            Perfil.save(profile);
         }else{
             li.find('.profile_name_error').text('Ingrese el nombre');
         }
@@ -74,7 +65,6 @@ $(function(){
     function addprofile(profile){
         $('#profile_name').val('');
         let template = `<li class="tag_item list-group-item d-flex justify-content-between align-items-center p-1" data-tagid="${profile.idperfil}">
-            <input type="checkbox" class="checkbox_tag">
             <div class="">
                 <input type="text" readOnly class="item_tag_name form-control text-dark bg-white" value="${profile.nombre}" style="border:0px">
                 <small class="error pl-2" class="tag_name_error"></small>
@@ -99,12 +89,8 @@ $(function(){
         }
     }
 
-    function deleteprofile(profileId){
-        $(`li.profile_item[data-profileid=${profileId}]`).remove();
-
-        if(!$('li.profile_item').length)
-            $('#profile_list').html(noDataFound());
-        
+    function deleteprofile(profileId) {
+        $(`li.profile_item[data-profileid=${profileId}]`).remove();      
     }
 
 });

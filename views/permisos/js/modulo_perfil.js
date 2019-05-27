@@ -61,6 +61,15 @@ $(function () {
         top.topModal({
             url: `${baseUrl}views/permisos/perfiles.php`,
             title: 'Perfiles',
+            buttons: {
+                cancel: {
+                    label: "Cerrar",
+                    class: "btn btn-danger"
+                }
+            },  
+            afterHide: function (event) {
+                findProfileOptions();
+            }
         });
     });
 
@@ -94,29 +103,8 @@ $(function () {
     }
 
     function findProfileOptions() {
-        $.post(
-            `${baseUrl}app/funcionario/consulta_perfiles.php`,
-            {
-                key: localStorage.getItem("key")
-            },
-            function (response) {
-                if (response.success) {
-                    response.data.forEach(element => {
-                        $("#profile").append(
-                            $("<option>", {
-                                value: element.idperfil,
-                                text: element.nombre
-                            })
-                        );
-                    });
-                    $("#profile").select2();
-                }
-            },
-            "json"
-        );
-    }
-
-    function listProfile() {
+        $("#profile").empty(); 
+        $("#profile").append('<option value="">Seleccione...</option>');
         $.post(
             `${baseUrl}app/funcionario/consulta_perfiles.php`,
             {

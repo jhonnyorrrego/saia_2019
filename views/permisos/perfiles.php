@@ -8,11 +8,10 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+
 include_once $ruta_db_superior . "assets/librerias.php";
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 <div class="container-fluid p-0">
     <div class="row mx-0">
         <div class="col-12 p-0">
@@ -35,55 +34,25 @@ include_once $ruta_db_superior . "assets/librerias.php";
             </span>
         </div>
     </div>
-    <div class="row pt-2">
-        <div class="col-12">
-            <button class="btn btn-complete float-right" id="save_relation">Guardar</button>
-        </div>
-    </div>
 </div>
-
 <script>
     $(function(){
-       
-
-        /*$('#save_relation').on('click', e => {
-            let profiles = {};
-
-            $('.checkbox_profile').each(function(i, c){
-                let profileId = $(c).parents('li.profile_item').data('profileid');
-
-                if($(c).is(':checked')){
-                    profiles[profileId] = 1;
-                }else if($(c).is(':indeterminate')){
-                    profiles[profileId] = 2;
-                }else{
-                    profiles[profileId] = 0;
-                }
+        let baseUrl = Session.getBaseUrl();
+        let userId = localStorage.getItem('key');
+      
+        if(typeof Perfil == 'undefined'){
+            $.getScript(`${baseUrl}views/permisos/js/perfiles_adicionar.js`, r => {
+                $.getScript(`${baseUrl}views/permisos/js/perfiles_eventos.js`, r => {
+                    showProfile(userId);
+                }); 
             });
+        }else{
+            showProfile(userId);
+        }
 
-            $.post(`${baseUrl}app/etiquetas/enlace_documento.php`, {
-                key: userId,
-                selections: selections,
-                profiles: profiles
-            }, function(response){
-                if(response.success){
-                    top.notification({
-                        message: 'Documentos etiquetados',
-                        type: 'success'
-                    });
-                    top.closeTopModal();
-                }else{
-                    top.notification({
-                        message: response.message,
-                        type: 'error',
-                        title: 'Error!'
-                    });
-                }
-            }, 'json')
-        });*/
-
-        
+        function showProfile(userId, selections){
+            var profile = new Perfil(userId);
+            profile.listProfile();
+        }
     });
 </script>
-<script src="<?= $ruta_db_superior ?>views/permisos/js/adicionar.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
-<script src="<?= $ruta_db_superior ?>views/permisos/js/eventos.js" data-baseurl="<?= $ruta_db_superior ?>"></script>
