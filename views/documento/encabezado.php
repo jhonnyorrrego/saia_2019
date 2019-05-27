@@ -14,22 +14,21 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
-$userCode = SessionController::getValue('usuario_actual'); //funcionario_codigo
-
 function getTransfer($transferId)
 {
-    global $userCode;
+    $userCode = SessionController::getValue('usuario_actual');
 
     if ($transferId) {
         $findTransfer = StaticSql::search("select * from buzon_salida where idtransferencia = {$transferId}");
-        if ($findTransfer[0]['origen'] == $userCode) {
-            $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
-        } else {
-            $ReferenceUser = new Funcionario($findTransfer[0]['origen']);
-        }
+
+        $code = $findTransfer[0]['origen'] == $userCode ?
+            $findTransfer[0]['origen'] : $findTransfer[0]['destino'];
+        $Funcionario = Funcionario::findByAttributes([
+            'funcionario_codigo' => $code
+        ]);
 
         $Response = (object)$findTransfer[0];
-        $Response->user = $ReferenceUser;
+        $Response->user = $Funcionario;
     } else {
         $Response = new stdclass();
         $Response->user = new Funcionario($userCode);
