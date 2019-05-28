@@ -17,7 +17,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
 $userId = base64_decode(base64_decode($_REQUEST['token']));
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -102,4 +102,4 @@ $userId = base64_decode(base64_decode($_REQUEST['token']));
     <?php endif; ?>
 </body>
 
-</html> 
+</html>

@@ -80,12 +80,12 @@ class RutaAprobacion extends Model
         $finished = true;
 
         foreach ($siblingsRoute as $RutaDocumento) {
-            if(!$RutaDocumento->ejecucion){
+            if (!$RutaDocumento->ejecucion) {
                 $finished = false;
             }
         }
 
-        if($finished){
+        if ($finished) {
             RutaDocumento::executeUpdate([
                 'finalizado' => 1
             ], [
@@ -118,7 +118,8 @@ class RutaAprobacion extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-05-016
      */
-    public function getDocumentRoute(){
+    public function getDocumentRoute()
+    {
         if (!$this->DocumentRoute) {
             $this->DocumentRoute = self::getRelationFk('RutaDocumento');
         }
@@ -127,8 +128,8 @@ class RutaAprobacion extends Model
     }
 
     /**
-     * obtiene las instancias de la ruta 
-     * vigente de aprobacion para un documento
+     * obtiene las instancias de la ruta de aprobacion
+     * vigente para un documento
      * 
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-05-04

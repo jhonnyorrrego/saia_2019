@@ -1,6 +1,6 @@
 <?php
 
-class BuzonEntrada extends Model
+class BuzonSalida extends Model
 {
     protected $idtransferencia;
     protected $archivo_idarchivo;
@@ -14,9 +14,10 @@ class BuzonEntrada extends Model
     protected $notas;
     protected $transferencia_descripcion;
     protected $tipo;
-    protected $activo;
     protected $ruta_idruta;
     protected $ver_notas;
+    protected $recibido;
+    protected $enviado;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -42,9 +43,10 @@ class BuzonEntrada extends Model
                 'notas',
                 'transferencia_descripcion',
                 'tipo',
-                'activo',
                 'ruta_idruta',
-                'ver_notas'
+                'ver_notas',
+                'recibido',
+                'enviado'
             ],
             'date' => [
                 'fecha',
@@ -52,34 +54,5 @@ class BuzonEntrada extends Model
             ],
             'primary' => 'idtransferencia'
         ];
-    }
-
-    /**
-     * busca los registros en buzon entrada de la ruta activa
-     *
-     * @param integer $documentId
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-09
-     */
-    public static function findActiveRoute($documentId)
-    {
-        $type = RutaDocumento::TIPO_RADICACION;
-        $sql = <<<SQL
-            SELECT a.*
-            FROM
-                buzon_entrada a 
-                JOIN ruta b ON 
-                    a.ruta_idruta = b.idruta
-                JOIN ruta_documento c ON
-                    b.fk_ruta_documento = c.idruta_documento
-            WHERE
-                c.fk_documento = {$documentId} AND
-                c.estado = 1 AND
-                c.tipo = {$type}
-            ORDER BY a.idtransferencia ASC
-SQL;
-
-        return self::findBySql($sql);
     }
 }

@@ -46,14 +46,6 @@ try {
         ]);
     }
 
-    if ($returnButton) {
-        $returnRoute = $ruta_db_superior . 'class_transferencia.php?';
-        $returnRoute .= http_build_query([
-            'iddoc' => $documentId,
-            'funcion' => 'formato_devolucion'
-        ]);
-    }
-
     $Response->data = [
         'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
         'managers' => [
@@ -68,7 +60,6 @@ try {
         ],
         'return' => [
             'see' =>  $returnButton,
-            'route' => $returnRoute ?? '',
             'tooltip' => 'Devolver Documento'
         ],
         'confirm' => [

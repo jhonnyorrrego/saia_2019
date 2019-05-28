@@ -106,6 +106,19 @@ class Documento extends Model
     }
 
     /**
+     * retorna la decripcion lista para mostrar al cliente
+     * sin tags html y decodificada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function getDescription()
+    {
+        return strip_tags(html_entity_decode($this->descripcion));
+    }
+
+    /**
      * asigna la fecha limite en base a la ultima tarea activa
      *
      * @param integer $documentId

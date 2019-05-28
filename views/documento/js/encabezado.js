@@ -313,6 +313,7 @@ $(function() {
     }
 
     function showFab() {
+        $('#fab').empty();
         if (fabActions.showFab) {
             let buttons = [];
 
@@ -396,12 +397,11 @@ $(function() {
                         html: ''
                     },
                     onClick: function() {
-                        window.open(fabActions.return.route, '_self');
+                        returnDocument();
                     }
                 });
             }
 
-            $('#fab').empty();
             new Fab({
                 selector: '#fab',
                 button: {
@@ -709,5 +709,19 @@ $(function() {
             },
             'json'
         );
+    }
+
+    function returnDocument() {
+        top.topModal({
+            url: `${baseUrl}views/documento/devolver.php`,
+            params: {
+                documentId: documentId
+            },
+            size: 'modal-xl',
+            title: 'Devolver documento',
+            onSuccess: function() {
+                findActions();
+            }
+        });
     }
 });
