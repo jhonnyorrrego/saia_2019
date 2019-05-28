@@ -131,26 +131,33 @@ function canConfirm($routes, $Documento)
             }
         }
     } else { //ruta de aprobacion
-        $userId = SessionController::getValue('idfuncionario');
-        $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
         $RutaDocumento = RutaDocumento::findByAttributes([
             'fk_documento' => $Documento->getPK(),
             'estado' => 1,
-            'tipo' => RutaDocumento::TIPO_APROBACION
+            'tipo' => RutaDocumento::TIPO_APROBACION,
+            'finalizado' => 0
         ]);
 
-        if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
-            foreach ($routes as $RutaAprobacion) {
-                if (!$RutaAprobacion->ejecucion) {
-                    $response = $RutaAprobacion->fk_funcionario == $userId;
-                    break;
+        if ($RutaDocumento) { //si no esta finalizada
+            $userId = SessionController::getValue('idfuncionario');
+            $routes = RutaAprobacion::findActivesByDocument($Documento->getPK());
+
+            if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
+                foreach ($routes as $RutaAprobacion) {
+                    if (!$RutaAprobacion->ejecucion) {
+                        $response = $RutaAprobacion->fk_funcionario == $userId;
+                        break;
+                    }
                 }
-            }
-        } else { //paralelo
-            foreach ($routes as $RutaAprobacion) {
-                if ($RutaAprobacion->fk_funcionario == $userId) {
-                    $response = true;
-                    break;
+            } else { //paralelo
+                foreach ($routes as $RutaAprobacion) {
+                    if (
+                        $RutaAprobacion->fk_funcionario == $userId &&
+                        !$RutaAprobacion->ejecucion
+                    ) {
+                        $response = true;
+                        break;
+                    }
                 }
             }
         }
@@ -198,7 +205,10 @@ function canReject($userId, $Documento)
         }
     } else { //paralelo
         foreach ($routes as $RutaAprobacion) {
-            if ($RutaAprobacion->fk_funcionario == $userId) {
+            if (
+                $RutaAprobacion->fk_funcionario == $userId &&
+                !$RutaAprobacion->ejecucion
+            ) {
                 $response = true;
                 break;
             }
