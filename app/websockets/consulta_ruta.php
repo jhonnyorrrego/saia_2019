@@ -27,7 +27,7 @@ try {
         case 'notifications':
             $host = $_SERVER['SERVER_NAME'];
             $folderRoute = RUTA_SAIA;
-            $route = "ws://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
+            $route = "wss://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
             break;
 
         default:
