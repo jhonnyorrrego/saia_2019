@@ -64,7 +64,8 @@ class Expediente extends Model
                 'd' => false,
                 'v' => false
             ];
-            $this->setAccessUser($_SESSION['idfuncionario']);
+            $userId = SessionController::getValue('idfuncionario');
+            $this->setAccessUser($userId);
         }
     }
 
@@ -310,10 +311,10 @@ class Expediente extends Model
      */
     public function getPropietario(): string
     {
-        $propietario='GENERADO POR EL SISTEMA';
-        if($this->propietario){
+        $propietario = 'GENERADO POR EL SISTEMA';
+        if ($this->propietario) {
             $data = $this->getRelationFk('Funcionario', 'propietario');
-            $propietario= $data ? $data->nombres . ' ' . $data->apellidos : '';
+            $propietario = $data ? $data->nombres . ' ' . $data->apellidos : '';
         }
         return $propietario;
     }
@@ -458,13 +459,8 @@ class Expediente extends Model
      */
     public function isResponsable(): bool
     {
-        $response = false;
-        if ($this->propietario == $_SESSION['idfuncionario'] || 
-            $this->responsable == $_SESSION['idfuncionario']
-        ){
-            $response = true;
-        }
-        return $response;
+        $userId = SessionController::getValue('idfuncionario');
+        return in_array($userId, [$this->propietario, $this->responsable]);
     }
 
     /**
@@ -474,15 +470,15 @@ class Expediente extends Model
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function hasChild(int $agrupador=null): bool
+    public function hasChild(int $agrupador = null): bool
     {
-        $where='';
-        if(!is_null($agrupador)){
-            $where= " and agrupador={$agrupador}";
+        $where = '';
+        if (!is_null($agrupador)) {
+            $where = " and agrupador={$agrupador}";
         }
         $sql = "SELECT count(idexpediente) as cant FROM expediente 
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1 {$where}";
-        $cant = $this->findBySql($sql,false);
+        $cant = $this->findBySql($sql, false);
         return ($cant[0]['cant']) ? true : false;
     }
 
@@ -497,7 +493,7 @@ class Expediente extends Model
         $sql = "SELECT count(idexpediente) as cant FROM expediente
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 
         AND estado=1 AND estado_cierre=1";
-        $cant = $this->findBySql($sql,false);
+        $cant = $this->findBySql($sql, false);
         return (!$cant[0]['cant']) ? true : false;
     }
 
@@ -628,12 +624,12 @@ class Expediente extends Model
         if ($instance) {
             $data = ExpedienteCierre::findAllByAttributes(
                 ['fk_expediente' => $this->idexpediente],
-                [], 
+                [],
                 'idexpediente_cierre desc'
             );
         } else {
             $data = ExpedienteCierre::findColumn(
-                'idexpediente_cierre', 
+                'idexpediente_cierre',
                 ['fk_expediente' => $this->idexpediente]
             );
         }

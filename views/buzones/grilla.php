@@ -412,10 +412,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
             function exportar_funcion_excel_reporte() {
                 var busqueda_total = $("#busqueda_total_paginas").val();
                 if (parseInt(busqueda_total) != 0) {
-                    <?php
-                    $ruta_temporal = $_SESSION["ruta_temp_funcionario"];
-                    ?>
-                    var ruta_file = "<?= $ruta_temporal; ?>/reporte_<?= $datos_busqueda[0]["nombre"] . '_' . date('Ymd') . '.xls' ?>";
+                    var ruta_file = "<?= SessionController::getTemporalDir() ?>/reporte_<?= $datos_busqueda[0]["nombre"] . '_' . date('Ymd') . '.xls' ?>";
                     var url = "<?= $ruta_db_superior ?>pantallas/busquedas/exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?= $componentId ?>&page=1&exportar_saia=excel&ruta_exportar_saia=" + ruta_file + "&rows=" + $("#busqueda_registros").val() * 4 + "&actual_row=0&variable_busqueda=" + $("#variable_busqueda").val() + "&idbusqueda_filtro_temp=<?php echo (@$_REQUEST['idbusqueda_filtro_temp']); ?>&idbusqueda_filtro=<?php echo (@$_REQUEST['idbusqueda_filtro']); ?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']); ?>";
                     window.open(url, "iframe_exportar_saia");
                     $('#iframe_exportar_saia').parent().removeClass('d-none');

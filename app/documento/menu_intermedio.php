@@ -35,4 +35,3 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
-

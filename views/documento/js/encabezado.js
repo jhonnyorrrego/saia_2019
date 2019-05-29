@@ -1,7 +1,11 @@
 $(function() {
-    let baseUrl = $('[data-baseurl]').data('baseurl');
-    let documentId = $('[data-documentid]').data('documentid');
+    let params = $('[data-headerparams]').data('headerparams');
+    let baseUrl = params.baseUrl;
+    let documentId = params.documentId;
+    let number = params.number;
+    let owner = undefined;
     let fabActions = new Object();
+    $('[data-headerparams]').removeAttr('data-headerparams');
 
     (function init() {
         toggleGoBack();
@@ -9,7 +13,11 @@ $(function() {
         findActions();
         findCounters();
         findMenu();
-        $('[data-toggle="tooltip"]').tooltip();
+        checkRouteNotification();
+
+        setTimeout(() => {
+            $('[data-toggle="tooltip"]').tooltip();
+        }, 2000);
     })();
 
     $('#go_back').on('click', function() {
@@ -305,6 +313,7 @@ $(function() {
     }
 
     function showFab() {
+        $('#fab').empty();
         if (fabActions.showFab) {
             let buttons = [];
 
@@ -312,7 +321,8 @@ $(function() {
                 buttons.push({
                     button: {
                         style: 'small orange',
-                        html: ''
+                        html: '',
+                        tooltip: fabActions.reject.tooltip
                     },
                     icon: {
                         style: 'fa fa-times',
@@ -328,7 +338,8 @@ $(function() {
                 buttons.push({
                     button: {
                         style: 'small yellow',
-                        html: ''
+                        html: '',
+                        tooltip: fabActions.confirm.tooltip
                     },
                     icon: {
                         style: 'fa fa-check',
@@ -344,7 +355,8 @@ $(function() {
                 buttons.push({
                     button: {
                         style: 'small yellow',
-                        html: ''
+                        html: '',
+                        tooltip: fabActions.edit.tooltip
                     },
                     icon: {
                         style: 'fa fa-edit',
@@ -360,7 +372,8 @@ $(function() {
                 buttons.push({
                     button: {
                         style: 'small yellow',
-                        html: ''
+                        html: '',
+                        tooltip: fabActions.managers.tooltip
                     },
                     icon: {
                         style: 'fa fa-users',
@@ -376,19 +389,19 @@ $(function() {
                 buttons.push({
                     button: {
                         style: 'small yellow',
-                        html: ''
+                        html: '',
+                        tooltip: fabActions.return.tooltip
                     },
                     icon: {
                         style: 'fa fa-backward',
                         html: ''
                     },
                     onClick: function() {
-                        window.open(fabActions.return.route, '_self');
+                        returnDocument();
                     }
                 });
             }
 
-            $('#fab').empty();
             new Fab({
                 selector: '#fab',
                 button: {
@@ -439,6 +452,10 @@ $(function() {
     function seeManagers() {
         top.topModal({
             url: baseUrl + fabActions.managers.route,
+            params: {
+                documentId: documentId,
+                number: number
+            },
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {},
@@ -450,7 +467,7 @@ $(function() {
                     event.preventDefault();
                     top.notification({
                         type: 'error',
-                        message: 'No puedes realizar esta acción'
+                        message: 'No es posible realizar esta acción'
                     });
                 }
             }
@@ -458,29 +475,30 @@ $(function() {
     }
 
     function isOwner() {
-        let owner = false;
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            url: `${baseUrl}app/documento/verificar_responsabilidad.php`,
-            data: {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                documentId: documentId,
-                userId: localStorage.getItem('key')
-            },
-            success: function(response) {
-                if (response.success) {
-                    owner = response.data;
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
+        if (typeof owner == 'undefined') {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                url: `${baseUrl}app/documento/verificar_responsabilidad.php`,
+                data: {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId,
+                    userId: localStorage.getItem('key')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        owner = response.data;
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return owner;
     }
@@ -618,6 +636,92 @@ $(function() {
                     }
                 ]
             ]
+        });
+    }
+
+    function checkRouteNotification() {
+        if (!+number && isOwner()) {
+            $.post(
+                `${baseUrl}app/documento/alerta_ruta.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId,
+                    userId: localStorage.getItem('key')
+                },
+                function(response) {
+                    if (response.success) {
+                        if (response.data.show) {
+                            showRouteAlert(response.message);
+                        }
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        }
+    }
+
+    function showRouteAlert(message) {
+        top.confirm({
+            id: 'question',
+            type: 'info',
+            message: message,
+            position: 'topRight',
+            timeout: 5000,
+            buttons: [
+                [
+                    '<button><b>No volver a mostrar esta alerta en este documento</b></button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                        removeRouteAlerts();
+                    },
+                    true
+                ]
+            ]
+        });
+    }
+
+    function removeRouteAlerts() {
+        $.post(
+            `${baseUrl}app/documento/omitir_alertas_ruta.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: localStorage.getItem('key'),
+                documentId: documentId
+            },
+            function(response) {
+                if (!response.success) {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    }
+
+    function returnDocument() {
+        top.topModal({
+            url: `${baseUrl}views/documento/devolver.php`,
+            params: {
+                documentId: documentId
+            },
+            size: 'modal-xl',
+            title: 'Devolver documento',
+            onSuccess: function() {
+                findActions();
+            }
         });
     }
 });

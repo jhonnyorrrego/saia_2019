@@ -14,7 +14,8 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +27,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= theme() ?>
     <?= moment() ?>
 </head>
+
 <body>
     <div class="container m-0 p-0 mw-100 mx-100">
         <div class="row mx-0">
@@ -33,14 +35,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <script data-baseurl="<?= $ruta_db_superior ?>" data-params='<?= json_encode($_REQUEST) ?>'>
-        $(function(){
+        $(function() {
             let baseUrl = $('script[data-baseurl]').data('baseurl');
             let params = $('script[data-params]').data('params');
 
             let acordeonRoute = baseUrl + 'views/documento/acordeon.php';
             $('#content').load(acordeonRoute, params);
 
-            window.addEventListener("orientationchange", function () {
+            window.addEventListener("orientationchange", function() {
                 setTimeout(() => {
                     window.resizeIframe();
                 }, 500);
@@ -49,11 +51,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $(window).resize(function() {
                 window.resizeIframe();
             });
-            
-            window.resizeIframe = function (){
+
+            window.resizeIframe = function() {
                 $('#content').height($(window).height());
             }
         });
     </script>
 </body>
+
 </html>

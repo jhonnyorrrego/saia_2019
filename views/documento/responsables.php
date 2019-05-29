@@ -100,7 +100,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 			<div id="firm_type_container" class="form-group form-group-default form-group-default-select2 required">
 				<label class="">Tipo firma</label>
-				<select class="full-width" multiple id="firm_type_select">
+				<select class="full-width" id="firm_type_select">
 					<option value="3">Visto bueno - oculto</option>
 					<option value="2">Visto bueno - visible</option>
 					<option value="0">Firma oculta</option>
@@ -116,7 +116,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 		<div class="col">
 			<div id="action_type_container" class="form-group form-group-default form-group-default-select2 required">
 				<label class="">Acción</label>
-				<select class="full-width" multiple id="action_type_select">
+				<select class="full-width" id="action_type_select">
 					<option value="1">Visto bueno</option>
 					<option value="2">Aprobar</option>
 				</select>

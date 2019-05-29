@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "librerias_saia.php");
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $params = $_REQUEST;
@@ -20,16 +20,16 @@ $idflujo = $params['idflujo'];
 $bpmn_id = null;
 $idactividad = null;
 $tipoElemento = null;
-if(!empty($_REQUEST["bpmn_id"])) {
+if (!empty($_REQUEST["bpmn_id"])) {
     $bpmn_id = $_REQUEST["bpmn_id"];
     $actividad = Elemento::findByBpmnId($idflujo, $bpmn_id);
     $idactividad = $actividad->getPk();
     $params["idactividad"] = $idactividad;
 
-    if(!empty($params["tipoBpmn"])) {
-        if(preg_match("/Gateway/", $params["tipoBpmn"])) {
+    if (!empty($params["tipoBpmn"])) {
+        if (preg_match("/Gateway/", $params["tipoBpmn"])) {
             $tipoElemento = TipoElemento::TIPO_COND_EXCLUSIVA;
-        } else if(preg_match("/Task/", $params["tipoBpmn"])) {
+        } else if (preg_match("/Task/", $params["tipoBpmn"])) {
             $tipoElemento = TipoElemento::TIPO_TAREA;
         }
     }
@@ -58,84 +58,87 @@ $tabs = [
         "url" => "tab_riesgo.php", "href" => "riesgos", "icon" => "fa fa-exclamation-triangle",
     ]
 ];
-if($tipoElemento != TipoElemento::TIPO_TAREA) {
+if ($tipoElemento != TipoElemento::TIPO_TAREA) {
     $tabs[] = ["url" => "tab_decision.php", "href" => "decision", "icon" => "fa fa-thumbs-up"];
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>SAIA - SGDEA</title>
+<html lang="es">
 
-        <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SAIA - SGDEA</title>
 
-	    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
+    <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
 
-		<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/css/bootstrap-editable.css">
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
 
-        <?= jquery() ?>
-        <?= validate() ?>
-        <?= bootstrap() ?>
-        <?= icons() ?>
-        <?= theme() ?>
-        <?= librerias_UI("1.12") ?>
-		<?= librerias_arboles_ft("2.24")?>
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/css/bootstrap-editable.css">
 
-        <?= bootstrapTable() ?>
-        <?= bootstrapTableEditable() ?>
+    <?= jquery() ?>
+    <?= validate() ?>
+    <?= bootstrap() ?>
+    <?= icons() ?>
+    <?= theme() ?>
+    <?= librerias_UI("1.12") ?>
+    <?= librerias_arboles_ft("2.24") ?>
 
-	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
-        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
-        <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
+    <?= bootstrapTable() ?>
+    <?= bootstrapTableEditable() ?>
 
-		<!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
+    <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
+
+    <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
 
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>  -->
 
-    </head>
-    <body>
+</head>
 
-        <ul class="nav nav-tabs" id="tabsActividad" role="tablist">
-            <?php foreach ($tabs as $tab): ?>
-                <li class="nav-item">
-                    <a class="nav-link tab_actividad" data-toggle="tab" href="#<?= $tab['href'] ?>" data-url="<?= $tab['url'] ?>" role="tab" style="min-width:auto">
-                        <i class="f-12 <?= $tab['icon'] ?>"></i>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-        <div class="tab-content" id="contenidoTabsActividad">
-            <?php foreach ($tabs as $tab): ?>
-                <div class="tab-pane fade" id="<?= $tab['href'] ?>" role="tabpanel" aria-labelledby="<?= $tab['href'] ?>-tab"></div>
-            <?php endforeach; ?>
-        </div>
+<body>
 
-        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
-        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
+    <ul class="nav nav-tabs" id="tabsActividad" role="tablist">
+        <?php foreach ($tabs as $tab) : ?>
+            <li class="nav-item">
+                <a class="nav-link tab_actividad" data-toggle="tab" href="#<?= $tab['href'] ?>" data-url="<?= $tab['url'] ?>" role="tab" style="min-width:auto">
+                    <i class="f-12 <?= $tab['icon'] ?>"></i>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <div class="tab-content" id="contenidoTabsActividad">
+        <?php foreach ($tabs as $tab) : ?>
+            <div class="tab-pane fade" id="<?= $tab['href'] ?>" role="tabpanel" aria-labelledby="<?= $tab['href'] ?>-tab"></div>
+        <?php endforeach; ?>
+    </div>
 
-        <script data-params='<?= json_encode($params) ?>'>
-            var idflujo = "<?= $_REQUEST['idflujo'] ?>";
-            var params = null;
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
 
-            $(function () {
+    <script data-params='<?= json_encode($params) ?>'>
+        var idflujo = "<?= $_REQUEST['idflujo'] ?>";
+        var params = null;
 
-                params = $("script[data-params]").data("params");
-                $('.tab_actividad').on('shown.bs.tab', function (e) {
-                    let tab = $(e.target);
-                    let container = $(tab.attr('href'))
-                    //console.log("params", params);
-                    let url = tab.data('url');
-                    let strParam = jQuery.param(params);
-                    url += "?" + strParam;
-                    container.load(url);
-                });
+        $(function() {
 
-                $('.tab_actividad:first').trigger('click');
-
+            params = $("script[data-params]").data("params");
+            $('.tab_actividad').on('shown.bs.tab', function(e) {
+                let tab = $(e.target);
+                let container = $(tab.attr('href'))
+                //console.log("params", params);
+                let url = tab.data('url');
+                let strParam = jQuery.param(params);
+                url += "?" + strParam;
+                container.load(url);
             });
-        </script>
-    </body>
+
+            $('.tab_actividad:first').trigger('click');
+
+        });
+    </script>
+</body>
+
 </html>

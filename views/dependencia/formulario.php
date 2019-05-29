@@ -23,7 +23,7 @@ $params = json_encode([
 ]);
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <!-- Required meta tags -->

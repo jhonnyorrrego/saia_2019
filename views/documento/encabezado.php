@@ -14,22 +14,21 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
-$userCode = $_SESSION["usuario_actual"]; //funcionario_codigo
-
 function getTransfer($transferId)
 {
-    global $userCode;
+    $userCode = SessionController::getValue('usuario_actual');
 
     if ($transferId) {
         $findTransfer = StaticSql::search("select * from buzon_salida where idtransferencia = {$transferId}");
-        if ($findTransfer[0]['origen'] == $userCode) {
-            $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
-        } else {
-            $ReferenceUser = new Funcionario($findTransfer[0]['origen']);
-        }
+
+        $code = $findTransfer[0]['origen'] == $userCode ?
+            $findTransfer[0]['origen'] : $findTransfer[0]['destino'];
+        $Funcionario = Funcionario::findByAttributes([
+            'funcionario_codigo' => $code
+        ]);
 
         $Response = (object)$findTransfer[0];
-        $Response->user = $ReferenceUser;
+        $Response->user = $Funcionario;
     } else {
         $Response = new stdclass();
         $Response->user = new Funcionario($userCode);
@@ -61,6 +60,12 @@ function plantilla($documentId, $transferId = 0)
         'user' => $Transfer->user->getPK(),
         'name' => $Transfer->user->getName()
     ];
+
+    $params = json_encode([
+        'baseUrl' => $ruta_db_superior,
+        'documentId' => $documentId,
+        'number' => $Documento->numero
+    ]);
 
     $priorityClass = $Documento->prioridad ? 'text-danger' : '';
     ?>
@@ -174,7 +179,7 @@ function plantilla($documentId, $transferId = 0)
         </div>
     </div>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
+    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-headerparams='<?= $params ?>'></script>
 <?php
 
 }

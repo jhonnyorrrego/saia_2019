@@ -25,7 +25,8 @@ function conditions()
         $where .= " AND v.cod_padre={$idexp}";
     }
 
-    $where .= " AND (v.agrupador =1 OR fk_funcionario={$_SESSION['idfuncionario']})";
+    $userId = SessionController::getValue('idfuncionario');
+    $where .= " AND (v.agrupador =1 OR fk_funcionario={$userId})";
 
     return $where;
 }
@@ -48,11 +49,11 @@ function conditions_exp_documents()
 /** AQUI EMPIEZA LAS FUNCIONES DEL INFO EXPEDIENTE */
 function icon_exp($idexpediente)
 {
-    $ExpInfo=new Expediente($idexpediente);
-    $GLOBALS['ExpInfo']=$ExpInfo;
+    $ExpInfo = new Expediente($idexpediente);
+    $GLOBALS['ExpInfo'] = $ExpInfo;
 
     return "<i class='{$ExpInfo->getIcon()}'></i>";
- }
+}
 
 function nombre_exp($idexpediente)
 {
@@ -66,7 +67,7 @@ function nombre_exp($idexpediente)
     $params = http_build_query($data);
 
     $nombre = $ExpInfo->nombre;
-    if ($ExpInfo->nucleo) {        
+    if ($ExpInfo->nucleo) {
         $link = "class ='cursor kenlace_saia' enlace='views/expediente/index.php?{$params}' conector='iframe' titulo='{$ExpInfo->nombre}'";
     } else {
         if ($ExpInfo->getAccessUser('c')) {
@@ -86,7 +87,7 @@ function nombre_exp($idexpediente)
 }
 
 function propietario_exp()
-{ 
+{
     global $ExpInfo;
     return $ExpInfo->getPropietario();
 }
@@ -102,7 +103,7 @@ function accion_exp($idexpediente)
     global $ExpInfo;
     $idcomp = $_REQUEST["idbusqueda_componente"];
 
-    $btn='<button class="btn btn-info mx-1 infoExp" data-id="'. $idexpediente.'" data-componente="'.$idcomp.'" title="Información del expediente"><i class="fa fa-info-circle"></i></button>';
+    $btn = '<button class="btn btn-info mx-1 infoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Información del expediente"><i class="fa fa-info-circle"></i></button>';
     if (!$ExpInfo->nucleo) {
         if ($ExpInfo->isResponsable()) {
             if (!$ExpInfo->agrupador) {
@@ -121,25 +122,27 @@ function icon_exp_caj($id, $idtabla, $tipo)
 {
     if (strtolower($tipo) == 'expediente') {
         $Instance = new Expediente($idtabla);
-    }else{
+    } else {
         $Instance = new Caja($idtabla);
     }
-    $GLOBALS['Instance']= $Instance;
+    $GLOBALS['Instance'] = $Instance;
 
     return "<i class='{$Instance->getIcon()}'></i>";
 }
 
-function nombre_exp_caj($id, $idtabla, $tipo){
+function nombre_exp_caj($id, $idtabla, $tipo)
+{
     global $Instance;
     if (strtolower($tipo) == 'expediente') {
-        $name=$Instance->nombre;
-    }else{
-        $name=$Instance->codigo;
+        $name = $Instance->nombre;
+    } else {
+        $name = $Instance->codigo;
     }
     return $name;
 }
 
-function propietario_exp_caja(){
+function propietario_exp_caja()
+{
     global $Instance;
     return $Instance->getPropietario();
 }
@@ -148,18 +151,18 @@ function fecha_creacion_exp_caj($id, $idtabla, $tipo)
 {
     global $Instance;
     if (strtolower($tipo) == 'expediente') {
-        $fecha=$Instance->fecha;
-    }else{
-        $fecha=$Instance->fecha_creacion;
+        $fecha = $Instance->fecha;
+    } else {
+        $fecha = $Instance->fecha_creacion;
     }
     return $fecha;
 }
 
 function accion_exp_caja($id, $idtabla, $tipo)
 {
-    $tipo=strtolower($tipo);
+    $tipo = strtolower($tipo);
 
-    $html= '<button class="btn btn-info restore" data-id="' . $idtabla . '" data-key="' . $id . '" data-tabla="' . $tipo . '" title="Restaurar"><i class="fa fa-history"></i></button>
+    $html = '<button class="btn btn-info restore" data-id="' . $idtabla . '" data-key="' . $id . '" data-tabla="' . $tipo . '" title="Restaurar"><i class="fa fa-history"></i></button>
     <button class="btn btn-info delDef" data-id="' . $idtabla . '" data-key="' . $id . '" data-tabla="' . $tipo . '" title="Eliminar definitivamente"><i class="fa fa-trash"></i></button>';
 
     return $html;
@@ -171,7 +174,7 @@ function accion_exp_caja($id, $idtabla, $tipo)
 function nombre_exp_dir($idexpediente)
 {
     global $ExpInfo;
-    
+
     $comp = [
         1 => 'expediente_gestion',
         2 => 'expediente_central',
@@ -202,30 +205,30 @@ function nombre_exp_dir($idexpediente)
             <strong>Tomo:</strong> {$ExpInfo->tomo_no} de {$ExpInfo->countTomos()}</i>";
             }
         }
-        $html="<div {$link}>{$nombre}</div>";
+        $html = "<div {$link}>{$nombre}</div>";
     } else {
         $html = "NO se encuentra el componente";
     }
     return $html;
 }
 
-function accion_exp_dir( $idexpediente)
+function accion_exp_dir($idexpediente)
 {
-    $html = '<button class="btn btn-info infoExp" data-id="'.  $idexpediente. '"  title="Información del expediente"><i class="fa fa-info-circle"></i></button>
-    <button class="btn btn-info mx-1 delDirectoExp" data-id="'.  $idexpediente. ' " title="Eliminar acceso directo"><i class="fa fa-trash"></i></button>';
+    $html = '<button class="btn btn-info infoExp" data-id="' .  $idexpediente . '"  title="Información del expediente"><i class="fa fa-info-circle"></i></button>
+    <button class="btn btn-info mx-1 delDirectoExp" data-id="' .  $idexpediente . ' " title="Eliminar acceso directo"><i class="fa fa-trash"></i></button>';
     return $html;
 }
 /** AQUI TERMINA LAS FUNCIONES DEL INFO ACCESO DIRECTOS */
 
 /** AQUI EMPIEZA LAS FUNCIONES DEL INFO EXPEDIENTE DOCUMENTO */
 
-function icon_doc( $iddocExp)
+function icon_doc($iddocExp)
 {
     $ExpedienteDoc = new ExpedienteDoc($iddocExp);
     $Documento = $ExpedienteDoc->getRelationFk('Documento');
 
-    $GLOBALS['ExpedienteDoc']= $ExpedienteDoc;
-    $GLOBALS['Documento']= $Documento;
+    $GLOBALS['ExpedienteDoc'] = $ExpedienteDoc;
+    $GLOBALS['Documento'] = $Documento;
 
     return "<i class='fa fa-file'></i>";
 }
@@ -233,7 +236,7 @@ function icon_doc( $iddocExp)
 function descripcion_doc()
 {
     global $Documento;
-    return $Documento->numero.' - '.$Documento->descripcion;
+    return $Documento->numero . ' - ' . $Documento->descripcion;
 }
 
 function propietario_doc()
@@ -248,7 +251,7 @@ function fecha_creacion_doc()
     return $Documento->fecha;
 }
 
-function accion_doc( $iddocExp)
+function accion_doc($iddocExp)
 {
     global $Documento, $ExpedienteDoc;
 
@@ -259,7 +262,7 @@ function accion_doc( $iddocExp)
     } else {
         $btn .= '<button class="btn mx-1 btn-info delDoc" data-id="' . $iddocExp . '" title="Eliminar"><i class="fa fa-trash"></i></button>';
     }
-    $html="<button class='btn mx-1 btn-info cursor kenlace_saia' title='Información del documento' conector = 'iframe' enlace = 'views/documento/index_acordeon.php?documentId={$Documento->getPK()}' titulo='Rad. {$Documento->numero}'>
+    $html = "<button class='btn mx-1 btn-info cursor kenlace_saia' title='Información del documento' conector = 'iframe' enlace = 'views/documento/index_acordeon.php?documentId={$Documento->getPK()}' titulo='Rad. {$Documento->numero}'>
         <i class='fa fa-info-circle'></i>
     </button>{$btn}";
     return $html;
@@ -267,4 +270,3 @@ function accion_doc( $iddocExp)
 /** TERMINA LAS FUNCIONES DEL INFO EXPEDIENTE DOCUMENTO */
 
 /** TERMINA LAS FUNCIONES DEL INFO */
- 
