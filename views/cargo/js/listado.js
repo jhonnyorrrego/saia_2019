@@ -7,15 +7,15 @@ $(function () {
         icon: false,
         table: {
             indentation: 20,      // indent 20px per node level
-            nodeColumnIdx: 2,     // render the node title into the 2nd column
+            nodeColumnIdx: 1,     // render the node title into the 2nd column
             checkboxColumnIdx: 0  // render the checkboxes into the 1st column
         },
         source: {
-            url: `${baseUrl}arboles/arbol_dependencia.php`,
+            url: `${baseUrl}arboles/arbol_cargo.php`,
             data: {
                 expandir: 1,
                 checkbox: null,
-                fields: ['codigo', 'nombre', 'estado', 'logo', 'extension', 'ubicacion_dependencia', 'descripcion']
+                fields: ['codigo_cargo', 'nombre', 'tipo_cargo', 'estado']
             }
         },
         filter: {
@@ -33,19 +33,11 @@ $(function () {
         renderColumns: function (event, data) {
             var node = data.node,
                 $tdList = $(node.tr).find(">td");
-
-            let image = !node.data.logo ? '' : $('<img>', {
-                src: baseUrl + node.data.logo,
-                width: '100'
-            });
-
-            $tdList.eq(0).text(node.data.codigo);
-            $tdList.eq(1).html(image);
-            $tdList.eq(3).text(node.data.estado ? 'Activo' : 'Inactivo');
-            $tdList.eq(4).text(node.data.extension);
-            $tdList.eq(5).text(node.data.ubicacion_dependencia);
-            $tdList.eq(6).text(node.data.descripcion);
-            $tdList.eq(7).html(`<div class="dropdown">
+            console.log(data)
+            $tdList.eq(0).text(node.data.codigo_cargo);
+            $tdList.eq(2).text(node.data.tipo_cargo == 1 ? 'Administrativo' : 'Funcional');
+            $tdList.eq(3).text(node.data.estado == 1 ? 'Activo' : 'Inactivo');
+            $tdList.eq(4).html(`<div class="dropdown">
                 <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v fa-2x"></i>
                 </button>
@@ -76,10 +68,10 @@ $(function () {
         }
 
         top.topModal({
-            url: `${baseUrl}views/dependencia/formulario.php`,
+            url: `${baseUrl}views/cargo/formulario.php`,
             params: data,
             size: 'modal-lg',
-            title: 'Dependencia',
+            title: 'Cargo',
             buttons: {
                 success: {
                     label: "Guardar",
@@ -91,6 +83,7 @@ $(function () {
                 }
             },
             onSuccess: function () {
+               
                 top.closeTopModal();
                 let tree = $("#treegrid").fancytree("getTree");
                 tree.reload();
