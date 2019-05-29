@@ -166,6 +166,7 @@ class Notification {
     createItems(first, last) {
         let _this = this;
         let notifications = _this.notifications.slice(first, last + 1);
+
         notifications.forEach(element => {
             $(_this.options.listSelector).append(
                 $('<a>', {

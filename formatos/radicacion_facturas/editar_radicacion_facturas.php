@@ -17,14 +17,14 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:ADICIONAR VINCULAR DOCUMENTOS A UN EXPEDIENTE:.</title>
+                                    <title>.:EDITAR RADICACI&Oacute;N DE FACTURAS:.</title>
                                     <meta name="viewport"
                                       content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
+                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../librerias/funciones_formatos_generales.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
@@ -64,79 +64,137 @@
                   <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                       <!-- START card -->
                       <div class="card card-default">
-                            <div class="card-body"><center><h5 class="text-black">VINCULAR DOCUMENTOS A UN EXPEDIENTE</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],312,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4943)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(312,3657);?></div><div class="form-group" id="tr_fecha_documento"><label title="">FECHA*</label><?php fecha_formato(312,3662);?></div><div class="form-group "  id="tr_asunto">
-                                        <label title="">NOMBRE O ASUNTO</label>
-                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="asunto" name="asunto" required value="<?php echo(validar_valor_campo(3661)); ?>">
-                                       </div><div class="form-group" id="tr_serie_idserie">
-                                <label title="Vincular documentos a un expediente">EXPEDIENTE VINCULADO*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(312,3654,'1',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_serie_idserie" width="200px" size="25" onblur="closetree_serie_idserie()"> <input type="hidden" id="idclosetree_serie_idserie">
-                                <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)">
-                                    <img src="../../assets/images/buscar.png"border="0px">
-                                </a>
-                                    <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)">
-                                        <img src="../../assets/images/anterior.png"border="0px">
-                                    </a>
-                                <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><div id="esperando_serie_idserie">
-                                    <img src="../../imagenes/cargando.gif">
-                                </div>
-                                <div id="treeboxbox_serie_idserie" height="90%"></div><script type="text/javascript">
-                                var browserType;
-                                if (document.layers) {browserType = "nn4"}
-                                if (document.all) {browserType = "ie"}
-                                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                                    browserType= "gecko"
-                                }
-                                tree_serie_idserie=new dhtmlXTreeObject("treeboxbox_serie_idserie","100%","100%",0);
-                                tree_serie_idserie.setImagePath("../../imgs/");
-                                tree_serie_idserie.enableTreeImages("false");
-                                tree_serie_idserie.enableTreeLines("false");
-                                tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
-                                    tree_serie_idserie.enableRadioButtons(true);
-                                    tree_serie_idserie.enableSingleRadioMode(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-                                tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php");tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
-                                    function onNodeSelect_serie_idserie(nodeId) {
-                                        valor_destino=document.getElementById("serie_idserie");
-                                        if(tree_serie_idserie.isItemChecked(nodeId)){
-                                            if(valor_destino.value!=="")
-                                            tree_serie_idserie.setCheck(valor_destino.value,false);
+                            <div class="card-body"><center><h5 class="text-black">RADICACIÓN DE FACTURAS</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],424,"ingresar","ANTERIOR"); ?>
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',424,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_pago" value="<?php echo(mostrar_valor_campo('fecha_pago',424,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="observaciones_check" value="<?php echo(mostrar_valor_campo('observaciones_check',424,$_REQUEST['iddoc'])); ?>"><div class="form-group "  id="tr_total_factura">
+                                        <label title="">TOTAL FACTURA</label>
+                                        <input class="form-control"  maxlength="50"   tabindex='1'  type="text"  size="100" id="total_factura" name="total_factura"  value="<?php echo(mostrar_valor_campo('total_factura',424,$_REQUEST['iddoc'])); ?>">
+                                       </div><input type="hidden" name="idft_radicacion_facturas" value="<?php echo(mostrar_valor_campo('idft_radicacion_facturas',424,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',424,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(424,7036,$_REQUEST['iddoc']);?></div><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',424,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',424,$_REQUEST['iddoc'])); ?>"><div class="form-group "  id="tr_fecha_radicado">
+                                        <label title="">FECHA DE RADICACI&Oacute;N</label>
+                                        <input class="form-control" required  class="required"   tabindex='2'  type="text"  size="100" id="fecha_radicado" name="fecha_radicado" required value="<?php echo(mostrar_valor_campo('fecha_radicado',424,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group" id="tr_numero_radicado"><label title="">N&Uacute;MERO DE RADICADO*</label><?php mostrar_radicado_factura(424,7048,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_natural_juridica">
+                                        <label title="">PROVEEDOR*</label>
+                                        <input type="hidden" maxlength="255"  class="required"  name="natural_juridica" id="natural_juridica" value="<?php echo(mostrar_valor_campo('natural_juridica',424,$_REQUEST['iddoc'])); ?>"><?php componente_ejecutor("7047",@$_REQUEST["iddoc"]); ?></div><input type="hidden" name="estado" value="<?php echo(mostrar_valor_campo('estado',424,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_fecha_emision">
+<label for="fecha_emision">FECHA DE EMISI&Oacute;N DE LA FACTURA</label>
 
-                                            valor_destino.value=nodeId.split(/[_.]/)[0];
-                                        }else{
-                                            valor_destino.value="";
-                                        }
-                                    }function fin_cargando_serie_idserie() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_serie_idserie"]');
-                                    }
-                                    document.poppedLayer.style.display = "none";
-                                }
-
-                                function cargando_serie_idserie() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_serie_idserie"]');
-                                    }
-                                    document.poppedLayer.style.display = "";
-                                }</script></div></div><input type="hidden" name="fk_idexpediente" value="<?php echo(validar_valor_campo(3663)); ?>"><div class="form-group" id="tr_anexos">
-                                        <label title="">ADJUNTAR ARCHIVO*</label>
+<div class="input-group date">
+<input  tabindex="3 " type="text" class="form-control"  id="fecha_emision"   name="fecha_emision" />
+<div class="input-group-append">
+<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+</div>
+<script type="text/javascript">
+            $(function () {
+                var configuracion={"defaultDate":"<?php echo(mostrar_valor_campo('fecha_emision',424,$_REQUEST['iddoc'])); ?>","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                $("#fecha_emision").datetimepicker(configuracion);
+                $("#content_container").height($(window).height());
+            });
+        </script>
+</div>
+</div><div class="form-group "  id="tr_num_factura">
+                                        <label title="">N&Uacute;MERO DE FACTURA</label>
+                                        <input class="form-control" required maxlength="255"   tabindex='4'  type="text"  size="100" id="num_factura" name="num_factura" required value="<?php echo(mostrar_valor_campo('num_factura',424,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group" id="tr_descripcion">
+                                        <label title="">DESCRIPCI&Oacute;N SERVICIO O PRODUCTO*</label>
+                                        <div class="celda_transparente">
+                                        <textarea  tabindex='5'  name="descripcion" id="descripcion" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('descripcion',424,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group "  id="tr_num_folios">
+                                        <label title="">N&Uacute;MERO DE FOLIOS</label>
+                                        <input class="form-control" required maxlength="255"   tabindex='6'  type="text"  size="100" id="num_folios" name="num_folios" required value="<?php echo(mostrar_valor_campo('num_folios',424,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group" id="tr_anexos_fisicos">
+                                        <label title="">ANEXOS F&Iacute;SICOS</label>
+                                        <div class="celda_transparente">
+                                        <textarea  tabindex='7'  name="anexos_fisicos" id="anexos_fisicos" cols="53" rows="3" class="form-control"><?php echo(mostrar_valor_campo('anexos_fisicos',424,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_anexos_digitales">
+                                        <label title="">ANEXOS DIGITALES</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>
                                              <a class="config" data-toggle="modal" href="#grid-config"></a>
                                              <a class="reload" href="javascript:;"></a>
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
-                                       <div class="card-body no-scroll no-padding"><div id="dz_campo_3660" class="saia_dz dropzone no-margin" data-nombre-campo="anexos" data-longitud=""  data-cantidad="" data-idformato="312" data-idcampo-formato="3660" data-extensiones="<?php echo $extensiones;?>" data-multiple="unico"><div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div><input type="hidden" class="required" id="anexos" name="anexos" value=""></div></div></div><div class="form-group" id="tr_observaciones">
-                                        <label title="">OBSERVACIONES</label>
-                                        <div class="celda_transparente">
-                                        <textarea  tabindex='4'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(validar_valor_campo(3664)); ?></textarea></div></div><input type="hidden" name="idft_vincular_doc_expedie" value="<?php echo(validar_valor_campo(3655)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3656)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(3658)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3659)); ?>"><?php add_edit_vincu_exp(312,NULL);?><?php cargar_serie_documental(312,NULL);?><input type="hidden" name="campo_descripcion" value="3661"><tr><td colspan='2'><?php submit_formato(312);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("312-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                                       <div class="card-body no-scroll no-padding"><?php echo '<div class="textwrapper">
+                                            <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=424&idcampo=7033" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+                                            objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
+                                            outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
+                                            </div>'; ?></div></div><div class="form-group" id="tr_copia_electronica">
+                                <label title="">COPIA ELECTR&Oacute;NICA A</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(424,7035,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='9'  type="text" id="stext_copia_electronica" width="200px" size="25" onblur="closetree_copia_electronica()"> <input type="hidden" id="idclosetree_copia_electronica">
+                                <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),0,1)">
+                                    <img src="../../assets/images/buscar.png"border="0px">
+                                </a>
+                                    <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),1)">
+                                        <img src="../../assets/images/anterior.png"border="0px">
+                                    </a>
+                                <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value))">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  name="copia_electronica" id="copia_electronica"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(424,7035,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_copia_electronica">
+                                    <img src="../../imagenes/cargando.gif">
+                                </div>
+                                <div id="treeboxbox_copia_electronica" height="90%"></div><script type="text/javascript">
+                                var browserType;
+                                if (document.layers) {browserType = "nn4"}
+                                if (document.all) {browserType = "ie"}
+                                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                                    browserType= "gecko"
+                                }
+                                tree_copia_electronica=new dhtmlXTreeObject("treeboxbox_copia_electronica","100%","100%",0);
+                                tree_copia_electronica.setImagePath("../../imgs/");
+                                tree_copia_electronica.enableTreeImages("false");
+                                tree_copia_electronica.enableTreeLines("false");
+                                tree_copia_electronica.enableIEImageFix(true);tree_copia_electronica.enableCheckBoxes(1);
+                                    tree_copia_electronica.enableThreeStateCheckboxes(1);tree_copia_electronica.setOnLoadingStart(cargando_copia_electronica);
+                                tree_copia_electronica.setOnLoadingEnd(fin_cargando_copia_electronica);tree_copia_electronica.enableSmartXMLParsing(true);tree_copia_electronica.loadXML("../../test.php?rol=1",checkear_arbol);tree_copia_electronica.setOnCheckHandler(onNodeSelect_copia_electronica);
+
+                                    function onNodeSelect_copia_electronica(nodeId){
+                                        valor_destino=document.getElementById("copia_electronica");
+                                        destinos=tree_copia_electronica.getAllChecked();
+                                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+                                        nuevo=nuevo.replace(/\,$/gi,"");
+                                        vector=destinos.split(",");
+                                        for(i=0;i<vector.length;i++){
+                                            if(vector[i].indexOf("_")!=-1){
+                                                vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
+                                            }
+                                            nuevo=vector.join(",");
+                                            if(vector[i].indexOf("#")!=-1){
+                                                hijos=tree_copia_electronica.getAllSubItems(vector[i]);
+                                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+                                                hijos=hijos.replace(/\,$/gi,"");
+                                                vectorh=hijos.split(",");
+
+                                                for(h=0;h<vectorh.length;h++){
+                                                    if(vectorh[h].indexOf("_")!=-1)
+                                                    vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
+                                                    nuevo=eliminarItem(nuevo,vectorh[h]);
+                                                }
+                                            }
+                                        }
+                                        nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
+                                        nuevo=nuevo.replace(/\,$/gi,"");
+                                        valor_destino.value=nuevo;
+                                    }function fin_cargando_copia_electronica() {
+                                    if (browserType == "gecko" ) {
+                                        document.poppedLayer = eval('document.getElementById("esperando_copia_electronica")');
+                                    } else if (browserType == "ie") {
+                                        document.poppedLayer = eval('document.getElementById("esperando_copia_electronica")');
+                                    } else {
+                                        document.poppedLayer = eval('document.layers["esperando_copia_electronica"]');
+                                    }
+                                    document.poppedLayer.style.display = "none";
+                                }
+
+                                function cargando_copia_electronica() {
+                                    if (browserType == "gecko" ) {
+                                        document.poppedLayer = eval('document.getElementById("esperando_copia_electronica")');
+                                    } else if (browserType == "ie") {
+                                        document.poppedLayer = eval('document.getElementById("esperando_copia_electronica")');
+                                    } else {
+                                        document.poppedLayer = eval('document.layers["esperando_copia_electronica"]');
+                                    }
+                                    document.poppedLayer.style.display = "";
+                                }function checkear_arbol(){
+                                        vector2="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(424,7035,1,$_REQUEST['iddoc']);}?>";
+                                        vector2=vector2.split(",");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_copia_electronica.setCheck(vector2[m],true);
+                                        }
+                                    }
+</script></div></div><?php digitalizar_formato(424,NULL,$_REQUEST['iddoc']);?><?php validar_digitalizacion_formato(424,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('7047'); ?>"><input type="hidden" name="formato" value="424"><tr><td colspan='2'><?php submit_formato(424,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("424-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
@@ -271,4 +329,4 @@
                                 
                             });
                         </script>
-                  </html>
+                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

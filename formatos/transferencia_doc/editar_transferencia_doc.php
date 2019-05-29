@@ -17,14 +17,14 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:ADICIONAR TRANSFERENCIA DOCUMENTAL:.</title>
+                                    <title>.:EDITAR TRANSFERENCIA DOCUMENTAL:.</title>
                                     <meta name="viewport"
                                       content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
+                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
@@ -65,7 +65,7 @@
                       <!-- START card -->
                       <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">TRANSFERENCIA DOCUMENTAL</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],343,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="iddependencia_compania" value="<?php echo(validar_valor_campo(6748)); ?>"><input type="hidden" name="tipo_transferencia" value="<?php echo(validar_valor_campo(6753)); ?>"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4794)); ?>"><input type="hidden" name="idft_transferencia_doc" value="<?php echo(validar_valor_campo(3990)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3991)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(3993)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3994)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(343,3992);?></div><div class="form-group" id="tr_expediente_vinculado"><label title="">TRANSFERENCIA VINCULADA*</label><?php guardar_expedientes_add(343,3995);?></div><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3989)); ?>"><div class="form-group" id="tr_oficina_productora">
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="iddependencia_compania" value="<?php echo(mostrar_valor_campo('iddependencia_compania',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="tipo_transferencia" value="<?php echo(mostrar_valor_campo('tipo_transferencia',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_transferencia_doc" value="<?php echo(mostrar_valor_campo('idft_transferencia_doc',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',343,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(343,3992,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_expediente_vinculado"><label title="">TRANSFERENCIA VINCULADA*</label><?php guardar_expedientes_add(343,3995,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_oficina_productora">
                                 <label title="">OFICINA PRODUCTORA*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,3997,'2',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_oficina_productora" width="200px" size="25" onblur="closetree_oficina_productora()"> <input type="hidden" id="idclosetree_oficina_productora">
                                 <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),0,1)">
                                     <img src="../../assets/images/buscar.png"border="0px">
@@ -74,7 +74,7 @@
                                         <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="oficina_productora" id="oficina_productora"   value="" ><label style="display:none" class="error" for="oficina_productora">Campo obligatorio.</label><div id="esperando_oficina_productora">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="oficina_productora" id="oficina_productora"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,3997,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_oficina_productora">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_oficina_productora" height="90%"></div><script type="text/javascript">
@@ -91,7 +91,7 @@
                                 tree_oficina_productora.enableIEImageFix(true);tree_oficina_productora.enableCheckBoxes(1);
                                     tree_oficina_productora.enableRadioButtons(true);
                                     tree_oficina_productora.enableSingleRadioMode(true);tree_oficina_productora.setOnLoadingStart(cargando_oficina_productora);
-                                tree_oficina_productora.setOnLoadingEnd(fin_cargando_oficina_productora);tree_oficina_productora.enableSmartXMLParsing(true);tree_oficina_productora.loadXML("../../test_serie.php?tabla=dependencia&estado=1");tree_oficina_productora.setOnCheckHandler(onNodeSelect_oficina_productora);
+                                tree_oficina_productora.setOnLoadingEnd(fin_cargando_oficina_productora);tree_oficina_productora.enableSmartXMLParsing(true);tree_oficina_productora.loadXML("../../test_serie.php?tabla=dependencia&estado=1",checkear_arbol);tree_oficina_productora.setOnCheckHandler(onNodeSelect_oficina_productora);
                                     function onNodeSelect_oficina_productora(nodeId) {
                                         valor_destino=document.getElementById("oficina_productora");
                                         if(tree_oficina_productora.isItemChecked(nodeId)){
@@ -122,10 +122,17 @@
                                         document.poppedLayer = eval('document.layers["esperando_oficina_productora"]');
                                     }
                                     document.poppedLayer.style.display = "";
-                                }</script></div></div><div class="form-group" id="tr_observaciones">
+                                }function checkear_arbol(){
+                                        vector2="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,3997,1,$_REQUEST['iddoc']);}?>";
+                                        vector2=vector2.split(",");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_oficina_productora.setCheck(vector2[m],true);
+                                        }
+                                    }
+</script></div></div><div class="form-group" id="tr_observaciones">
                                         <label title="">OBSERVACIONES</label>
                                         <div class="celda_transparente">
-                                        <textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(validar_valor_campo(3998)); ?></textarea></div></div><div class="form-group" id="tr_anexos">
+                                        <textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(mostrar_valor_campo('observaciones',343,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_anexos">
                                         <label title="">ANEXOS</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>
@@ -133,7 +140,11 @@
                                              <a class="reload" href="javascript:;"></a>
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
-                                       <div class="card-body no-scroll no-padding"><div id="dz_campo_3999" class="saia_dz dropzone no-margin" data-nombre-campo="anexos" data-longitud=""  data-cantidad="" data-idformato="343" data-idcampo-formato="3999" data-extensiones="<?php echo $extensiones;?>" data-multiple="unico"><div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div></div></div><div class="form-group" id="tr_entregado_por">
+                                       <div class="card-body no-scroll no-padding"><?php echo '<div class="textwrapper">
+                                            <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=343&idcampo=3999" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+                                            objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
+                                            outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
+                                            </div>'; ?></div></div><div class="form-group" id="tr_entregado_por">
                                 <label title="">ENTREGADO POR*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4000,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='4'  type="text" id="stext_entregado_por" width="200px" size="25" onblur="closetree_entregado_por()"> <input type="hidden" id="idclosetree_entregado_por">
                                 <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),0,1)">
                                     <img src="../../assets/images/buscar.png"border="0px">
@@ -142,7 +153,7 @@
                                         <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="entregado_por" id="entregado_por"   value="" ><label style="display:none" class="error" for="entregado_por">Campo obligatorio.</label><div id="esperando_entregado_por">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="entregado_por" id="entregado_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4000,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_entregado_por">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_entregado_por" height="90%"></div><script type="text/javascript">
@@ -159,7 +170,7 @@
                                 tree_entregado_por.enableIEImageFix(true);tree_entregado_por.enableCheckBoxes(1);
                                     tree_entregado_por.enableRadioButtons(true);
                                     tree_entregado_por.enableSingleRadioMode(true);tree_entregado_por.setOnLoadingStart(cargando_entregado_por);
-                                tree_entregado_por.setOnLoadingEnd(fin_cargando_entregado_por);tree_entregado_por.enableSmartXMLParsing(true);tree_entregado_por.loadXML("../../test.php?rol=1&sin_padre=1");tree_entregado_por.setOnCheckHandler(onNodeSelect_entregado_por);
+                                tree_entregado_por.setOnLoadingEnd(fin_cargando_entregado_por);tree_entregado_por.enableSmartXMLParsing(true);tree_entregado_por.loadXML("../../test.php?rol=1&sin_padre=1",checkear_arbol);tree_entregado_por.setOnCheckHandler(onNodeSelect_entregado_por);
                                     function onNodeSelect_entregado_por(nodeId) {
                                         valor_destino=document.getElementById("entregado_por");
                                         if(tree_entregado_por.isItemChecked(nodeId)){
@@ -190,7 +201,14 @@
                                         document.poppedLayer = eval('document.layers["esperando_entregado_por"]');
                                     }
                                     document.poppedLayer.style.display = "";
-                                }</script></div></div><div class="form-group" id="tr_recibido_por">
+                                }function checkear_arbol(){
+                                        vector2="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4000,1,$_REQUEST['iddoc']);}?>";
+                                        vector2=vector2.split(",");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_entregado_por.setCheck(vector2[m],true);
+                                        }
+                                    }
+</script></div></div><div class="form-group" id="tr_recibido_por">
                                 <label title="">RECIBIDO POR*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4001,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='5'  type="text" id="stext_recibido_por" width="200px" size="25" onblur="closetree_recibido_por()"> <input type="hidden" id="idclosetree_recibido_por">
                                 <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),0,1)">
                                     <img src="../../assets/images/buscar.png"border="0px">
@@ -199,7 +217,7 @@
                                         <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="recibido_por" id="recibido_por"   value="" ><label style="display:none" class="error" for="recibido_por">Campo obligatorio.</label><div id="esperando_recibido_por">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="recibido_por" id="recibido_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4001,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_recibido_por">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_recibido_por" height="90%"></div><script type="text/javascript">
@@ -216,7 +234,7 @@
                                 tree_recibido_por.enableIEImageFix(true);tree_recibido_por.enableCheckBoxes(1);
                                     tree_recibido_por.enableRadioButtons(true);
                                     tree_recibido_por.enableSingleRadioMode(true);tree_recibido_por.setOnLoadingStart(cargando_recibido_por);
-                                tree_recibido_por.setOnLoadingEnd(fin_cargando_recibido_por);tree_recibido_por.enableSmartXMLParsing(true);tree_recibido_por.loadXML("../../test.php?rol=1&sin_padre=1");tree_recibido_por.setOnCheckHandler(onNodeSelect_recibido_por);
+                                tree_recibido_por.setOnLoadingEnd(fin_cargando_recibido_por);tree_recibido_por.enableSmartXMLParsing(true);tree_recibido_por.loadXML("../../test.php?rol=1&sin_padre=1",checkear_arbol);tree_recibido_por.setOnCheckHandler(onNodeSelect_recibido_por);
                                     function onNodeSelect_recibido_por(nodeId) {
                                         valor_destino=document.getElementById("recibido_por");
                                         if(tree_recibido_por.isItemChecked(nodeId)){
@@ -247,7 +265,14 @@
                                         document.poppedLayer = eval('document.layers["esperando_recibido_por"]');
                                     }
                                     document.poppedLayer.style.display = "";
-                                }</script></div></div><div class="form-group" id="tr_transferir_a">
+                                }function checkear_arbol(){
+                                        vector2="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4001,1,$_REQUEST['iddoc']);}?>";
+                                        vector2=vector2.split(",");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_recibido_por.setCheck(vector2[m],true);
+                                        }
+                                    }
+</script></div></div><div class="form-group" id="tr_transferir_a">
                                         <label title="">TRANSFERIR A*</label><?php genera_campo_listados_editar(343,4002,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_agrupador">
                                 <label title="">AGRUPADOR</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,6752,'3',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='6'  type="text" id="stext_agrupador" width="200px" size="25" onblur="closetree_agrupador()"> <input type="hidden" id="idclosetree_agrupador">
                                 <a href="javascript:void(0)" onclick="buscar_nodo_agrupador('tree_agrupador')">
@@ -257,7 +282,7 @@
                                         <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  name="agrupador" id="agrupador"   value="" ><label style="display:none" class="error" for="agrupador">Campo obligatorio.</label><div id="esperando_agrupador">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  name="agrupador" id="agrupador"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,6752,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_agrupador">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_agrupador" height="90%"></div><script type="text/javascript">
@@ -314,7 +339,14 @@
                                         document.poppedLayer = eval('document.layers["esperando_agrupador"]');
                                     }
                                     document.poppedLayer.style.display = "";
-                                }</script></div></div><input type="hidden" name="expedientes_padre" value="<?php echo(validar_valor_campo(6751)); ?>"><?php asignar_responsables(343,NULL);?><?php validacion_js_transferencia(343,NULL);?><input type="hidden" name="campo_descripcion" value="3997"><tr><td colspan='2'><?php submit_formato(343);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("343-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                                }function checkear_arbol(){
+                                        vector2="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,6752,1,$_REQUEST['iddoc']);}?>";
+                                        vector2=vector2.split(",");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_agrupador.setCheck(vector2[m],true);
+                                        }
+                                    }
+</script></div></div><input type="hidden" name="expedientes_padre" value="<?php echo(mostrar_valor_campo('expedientes_padre',343,$_REQUEST['iddoc'])); ?>"><?php validacion_js_transferencia(343,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3997'); ?>"><input type="hidden" name="formato" value="343"><tr><td colspan='2'><?php submit_formato(343,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("343-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
@@ -449,4 +481,4 @@
                                 
                             });
                         </script>
-                  </html>
+                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

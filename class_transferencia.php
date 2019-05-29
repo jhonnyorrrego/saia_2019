@@ -355,6 +355,13 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     if ($texto_notas != "") {
                         guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', $conn, 0);
                     }
+
+                    $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $user);
+                    Acceso::addSeePermission(
+                        Acceso::TIPO_DOCUMENTO,
+                        $idarchivo,
+                        $VfuncionarioDc->getPK()
+                    );
                 } else if ($datos["nombre"] == "POR_APROBAR") {
                     $fk_ruta_documento = RutaDocumento::newRecord([
                         'tipo' => RutaDocumento::TIPO_RADICACION,

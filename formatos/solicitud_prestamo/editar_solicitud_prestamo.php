@@ -17,7 +17,7 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:ADICIONAR VINCULAR DOCUMENTOS A UN EXPEDIENTE:.</title>
+                                    <title>.:EDITAR SOLICITUD DE PRESTAMO:.</title>
                                     <meta name="viewport"
                                       content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,7 +28,7 @@
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
-                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
+                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
                   <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
                                   rel="stylesheet" type="text/css" media="screen" />
@@ -64,79 +64,59 @@
                   <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                       <!-- START card -->
                       <div class="card card-default">
-                            <div class="card-body"><center><h5 class="text-black">VINCULAR DOCUMENTOS A UN EXPEDIENTE</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],312,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4943)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(312,3657);?></div><div class="form-group" id="tr_fecha_documento"><label title="">FECHA*</label><?php fecha_formato(312,3662);?></div><div class="form-group "  id="tr_asunto">
-                                        <label title="">NOMBRE O ASUNTO</label>
-                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="asunto" name="asunto" required value="<?php echo(validar_valor_campo(3661)); ?>">
-                                       </div><div class="form-group" id="tr_serie_idserie">
-                                <label title="Vincular documentos a un expediente">EXPEDIENTE VINCULADO*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(312,3654,'1',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_serie_idserie" width="200px" size="25" onblur="closetree_serie_idserie()"> <input type="hidden" id="idclosetree_serie_idserie">
-                                <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)">
-                                    <img src="../../assets/images/buscar.png"border="0px">
-                                </a>
-                                    <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)">
-                                        <img src="../../assets/images/anterior.png"border="0px">
-                                    </a>
-                                <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))">
-                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><div id="esperando_serie_idserie">
-                                    <img src="../../imagenes/cargando.gif">
-                                </div>
-                                <div id="treeboxbox_serie_idserie" height="90%"></div><script type="text/javascript">
-                                var browserType;
-                                if (document.layers) {browserType = "nn4"}
-                                if (document.all) {browserType = "ie"}
-                                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                                    browserType= "gecko"
-                                }
-                                tree_serie_idserie=new dhtmlXTreeObject("treeboxbox_serie_idserie","100%","100%",0);
-                                tree_serie_idserie.setImagePath("../../imgs/");
-                                tree_serie_idserie.enableTreeImages("false");
-                                tree_serie_idserie.enableTreeLines("false");
-                                tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
-                                    tree_serie_idserie.enableRadioButtons(true);
-                                    tree_serie_idserie.enableSingleRadioMode(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-                                tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php");tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
-                                    function onNodeSelect_serie_idserie(nodeId) {
-                                        valor_destino=document.getElementById("serie_idserie");
-                                        if(tree_serie_idserie.isItemChecked(nodeId)){
-                                            if(valor_destino.value!=="")
-                                            tree_serie_idserie.setCheck(valor_destino.value,false);
+                            <div class="card-body"><center><h5 class="text-black">SOLICITUD DE PRESTAMO</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],412,"ingresar","ANTERIOR"); ?>
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="form-group "  id="tr_highslide_1926201103">
+                                        <label title="">HIGHSLIDE</label>
+                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="highslide_1926201103" name="highslide_1926201103" required value="<?php echo(mostrar_valor_campo('highslide_1926201103',412,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(412,5104,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_fecha"><label title="">FECHA DE SOLICITUD</label><?php fecha_formato(412,5111,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_transferencia_presta"><label title="">EXPEDIENTE VINCULADO*</label><?php guardar_expedientes_prestamos(412,5205,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_observaciones">
+                                        <label title="">OBSERVACIONES*</label>
+                                        <div class="celda_transparente">
+                                        <textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('observaciones',412,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group  required" id="tr_documento_archivo">
+                            <label title="">UBICACI&Oacute;N DEL DOCUMENTO*</label><?php genera_campo_listados_editar(412,5114,$_REQUEST['iddoc']);?><label id="-error" class="error" f or="documento_archivo" style="display: none;"></label><br></div><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_solicitud_prestamo" value="<?php echo(mostrar_valor_campo('idft_solicitud_prestamo',412,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_fecha_prestamo_rep">
+<label for="fecha_prestamo_rep">FECHA REQUERIDA PARA PRESTAMO</label>
 
-                                            valor_destino.value=nodeId.split(/[_.]/)[0];
-                                        }else{
-                                            valor_destino.value="";
-                                        }
-                                    }function fin_cargando_serie_idserie() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_serie_idserie"]');
-                                    }
-                                    document.poppedLayer.style.display = "none";
-                                }
+<div class="input-group date">
+<input  tabindex="3 " type="text" class="form-control"  id="fecha_prestamo_rep"   name="fecha_prestamo_rep" />
+<div class="input-group-append">
+<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+</div>
+<script type="text/javascript">
+            $(function () {
+                var configuracion={"defaultDate":"<?php echo(mostrar_valor_campo('fecha_prestamo_rep',412,$_REQUEST['iddoc'])); ?>","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                $("#fecha_prestamo_rep").datetimepicker(configuracion);
+                $("#content_container").height($(window).height());
+            });
+        </script>
+</div>
+</div><div class="form-group" id="tr_fecha_devolucion_rep">
+<label for="fecha_devolucion_rep">FECHA DE DEVOLUCI&Oacute;N ESTIMADA</label>
 
-                                function cargando_serie_idserie() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_serie_idserie"]');
-                                    }
-                                    document.poppedLayer.style.display = "";
-                                }</script></div></div><input type="hidden" name="fk_idexpediente" value="<?php echo(validar_valor_campo(3663)); ?>"><div class="form-group" id="tr_anexos">
-                                        <label title="">ADJUNTAR ARCHIVO*</label>
+<div class="input-group date">
+<input  tabindex="4 " type="text" class="form-control"  id="fecha_devolucion_rep"   name="fecha_devolucion_rep" />
+<div class="input-group-append">
+<span class="input-group-text"><i class="fa fa-calendar"></i></span>
+</div>
+<script type="text/javascript">
+            $(function () {
+                var configuracion={"defaultDate":"<?php echo(mostrar_valor_campo('fecha_devolucion_rep',412,$_REQUEST['iddoc'])); ?>","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                $("#fecha_devolucion_rep").datetimepicker(configuracion);
+                $("#content_container").height($(window).height());
+            });
+        </script>
+</div>
+</div><div class="form-group" id="tr_anexos">
+                                        <label title="">ANEXOS DIGITALES</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>
                                              <a class="config" data-toggle="modal" href="#grid-config"></a>
                                              <a class="reload" href="javascript:;"></a>
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
-                                       <div class="card-body no-scroll no-padding"><div id="dz_campo_3660" class="saia_dz dropzone no-margin" data-nombre-campo="anexos" data-longitud=""  data-cantidad="" data-idformato="312" data-idcampo-formato="3660" data-extensiones="<?php echo $extensiones;?>" data-multiple="unico"><div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div><input type="hidden" class="required" id="anexos" name="anexos" value=""></div></div></div><div class="form-group" id="tr_observaciones">
-                                        <label title="">OBSERVACIONES</label>
-                                        <div class="celda_transparente">
-                                        <textarea  tabindex='4'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(validar_valor_campo(3664)); ?></textarea></div></div><input type="hidden" name="idft_vincular_doc_expedie" value="<?php echo(validar_valor_campo(3655)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3656)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(3658)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3659)); ?>"><?php add_edit_vincu_exp(312,NULL);?><?php cargar_serie_documental(312,NULL);?><input type="hidden" name="campo_descripcion" value="3661"><tr><td colspan='2'><?php submit_formato(312);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("312-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                                       <div class="card-body no-scroll no-padding"><?php echo '<div class="textwrapper">
+                                            <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=412&idcampo=5116" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+                                            objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
+                                            outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
+                                            </div>'; ?></div></div><?php validar_fecha_prestamo(412,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5113'); ?>"><input type="hidden" name="formato" value="412"><tr><td colspan='2'><?php submit_formato(412,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("412-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
@@ -271,4 +251,4 @@
                                 
                             });
                         </script>
-                  </html>
+                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
