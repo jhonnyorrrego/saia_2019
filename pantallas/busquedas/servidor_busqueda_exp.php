@@ -370,7 +370,7 @@ if (!$_REQUEST['onlyCount']) {
 } else {
     $response['exito'] = 1;
 }
-echo json_encode($response);
+echo json_encode($response,JSON_PARTIAL_OUTPUT_ON_ERROR);
 
 function crear_condicion_sql($idbusqueda, $idcomponente)
 {

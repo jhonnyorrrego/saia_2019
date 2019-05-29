@@ -71,10 +71,11 @@ $tabs = [
 </div>
 <script data-params='<?= json_encode($_REQUEST) ?>'>
     $(function() {
+        let taskId = "<?= !empty($_REQUEST['id']) ? $_REQUEST['id'] : 0 ?>";
+
         $('.tasktab').on('shown.bs.tab', function(e) {
             let tab = $(e.target);
-            let container = $(tab.attr('href'))
-
+            let container = $(tab.attr('href'));
             container.load(tab.data('url'));
 
             if($(':button[aria-expanded="true"]').length){
@@ -85,8 +86,7 @@ $tabs = [
         });
 
         $('.tasktab:first').trigger('click');
-
-        if (!"<?= $_REQUEST['id'] ?>".length) {
+        if (!+taskId) {
             $('.tasktab:not(:first)').addClass('disabled');
         }
     });
