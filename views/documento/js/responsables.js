@@ -109,16 +109,14 @@ $(function() {
                         message: response.message
                     });
                     top.successModalEvent();
-
-                    $('#save_routes,#spiner').toggle();
                 } else {
                     top.notification({
                         type: 'error',
                         message: response.message
                     });
-
-                    $('#spiner').hide();
                 }
+
+                $('#save_routes,#spiner').toggle();
             },
             'json'
         );
@@ -138,6 +136,7 @@ $(function() {
             $('#route_type')
                 .find('[value="3"]')
                 .remove();
+            $('#route_type').prop('disabled', true);
         } else {
             $('#route_type')
                 .find('[value="2"]')

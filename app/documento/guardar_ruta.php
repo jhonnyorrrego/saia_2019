@@ -107,6 +107,30 @@ function addPermissions($documentId, $data)
  */
 function createApprobationRoute($documentId, $data, $flow)
 {
+    $routeItems = $userList = [];
+    foreach ($data as $row) {
+        $VfuncionarioDc = VfuncionarioDc::getUserFromEntity($row['type'], $row['typeId']);
+        $fk = $VfuncionarioDc->getPK();
+
+        if (!$fk) {
+            throw new Exception("tipo de ralacion invalido", 1);
+        }
+
+        if (in_array($fk, $userList)) {
+            $username = $VfuncionarioDc->getName();
+            throw new Exception("El usuario {$username} ya se encuentra en la ruta", 1);
+        } else {
+            $userList[] = $fk;
+        }
+
+        $routeItems[] = [
+            'orden' => $row['order'],
+            'fk_funcionario' => $fk,
+            'tipo_accion' => $row['action'],
+            'tipo_flujo' => $flow
+        ];
+    }
+
     RutaDocumento::inactiveByType($documentId, RutaDocumento::TIPO_APROBACION);
 
     if ($data) {
@@ -118,20 +142,9 @@ function createApprobationRoute($documentId, $data, $flow)
             'tipo_flujo' => $flow
         ]);
 
-        foreach ($data as $row) {
-            $VfuncionarioDc = VfuncionarioDc::getUserFromEntity($row['type'], $row['typeId']);
-            $fk = $VfuncionarioDc->getPK();
-
-            if (!$fk) {
-                throw new Exception("tipo de ralacion invalido", 1);
-            }
-
-            RutaAprobacion::newRecord([
-                'orden' => $row['order'],
-                'fk_funcionario' => $fk,
-                'tipo_accion' => $row['action'],
-                'fk_ruta_documento' => $fk_ruta_documento,
-                'tipo_flujo' => $flow
+        foreach ($routeItems as $key => $data) {
+            RutaAprobacion::newRecord($data + [
+                'fk_ruta_documento' => $fk_ruta_documento
             ]);
         }
     }

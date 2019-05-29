@@ -27,32 +27,32 @@
     </div>
 </div>
 <script>
-    $(function(){
+    $(function() {
         let baseUrl = Session.getBaseUrl();
         let userId = localStorage.getItem('key');
         let selections = '<?= $_REQUEST["selections"] ? $_REQUEST["selections"] : $_REQUEST["documentId"]  ?>';
 
-        if(typeof Tags == 'undefined'){
+        if (typeof Tags == 'undefined') {
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tags.js`, r => {
                 $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tag_events.js`, r => {
                     showTags(userId, selections);
-                }); 
+                });
             });
-        }else{
+        } else {
             showTags(userId, selections);
         }
 
         $('#save_relation').on('click', e => {
             let tags = {};
 
-            $('.checkbox_tag').each(function(i, c){
+            $('.checkbox_tag').each(function(i, c) {
                 let tagId = $(c).parents('li.tag_item').data('tagid');
 
-                if($(c).is(':checked')){
+                if ($(c).is(':checked')) {
                     tags[tagId] = 1;
-                }else if($(c).is(':indeterminate')){
+                } else if ($(c).is(':indeterminate')) {
                     tags[tagId] = 2;
-                }else{
+                } else {
                     tags[tagId] = 0;
                 }
             });
@@ -61,14 +61,14 @@
                 key: userId,
                 selections: selections,
                 tags: tags
-            }, function(response){
-                if(response.success){
+            }, function(response) {
+                if (response.success) {
                     top.notification({
-                        message: 'Documentos etiquetados',
+                        message: response.message,
                         type: 'success'
                     });
                     top.closeTopModal();
-                }else{
+                } else {
                     top.notification({
                         message: response.message,
                         type: 'error',
@@ -78,7 +78,7 @@
             }, 'json')
         });
 
-        function showTags(userId, selections){
+        function showTags(userId, selections) {
             var tags = new Tags(userId);
             tags.selections = selections;
             $('#tag_list').html(tags.createList());

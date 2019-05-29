@@ -1264,19 +1264,6 @@ function guardar_documento($iddoc, $tipo = 0)
             $valores[$pos] = $iddoc;
         }
 
-        if (in_array("estado_documento", $campos)) {
-            $idestado = obtener_estado_documento($iddoc);
-            if ($idestado) {
-                if (!in_array("estado_documento", $campos)) {
-                    array_push($campos, "estado_documento");
-                    array_push($valores, $idestado);
-                } else {
-                    $pos_e = array_search('estado_documento', $campos);
-                    $valores[$pos_e] = $idestado;
-                }
-            }
-        }
-
         if (in_array("serie_idserie", $campos)) {
             $pos = array_search('serie_idserie', $campos);
             if ($valores[$pos] == "''") {

@@ -264,12 +264,11 @@ SQL;
     public static function findByDocumentTransfer($documentId)
     {
         $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
-        $records = Conexion::getConnection()->executeSelect($sql);
+        $records = self::search($sql);
 
         $users = [];
         foreach ($records as $key => $value) {
-            $users[] = $value['origen'];
-            $users[] = $value['destino'];
+            array_push($users, $value['origen'], $value['destino']);
         }
 
         $users = array_unique($users);
