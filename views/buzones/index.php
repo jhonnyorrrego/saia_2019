@@ -16,7 +16,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 $params = json_encode($_REQUEST);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -82,4 +82,4 @@ $params = json_encode($_REQUEST);
     </script>
 </body>
 
-</html> 
+</html>

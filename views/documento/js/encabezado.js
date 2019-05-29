@@ -1,7 +1,11 @@
-$(function () {
-    let baseUrl = $("[data-baseurl]").data("baseurl");
-    let documentId = $("[data-documentid]").data("documentid");
+$(function() {
+    let params = $('[data-headerparams]').data('headerparams');
+    let baseUrl = params.baseUrl;
+    let documentId = params.documentId;
+    let number = params.number;
+    let owner = undefined;
     let fabActions = new Object();
+    $('[data-headerparams]').removeAttr('data-headerparams');
 
     (function init() {
         toggleGoBack();
@@ -9,107 +13,111 @@ $(function () {
         findActions();
         findCounters();
         findMenu();
-        $('[data-toggle="tooltip"]').tooltip();
+        checkRouteNotification();
+
+        setTimeout(() => {
+            $('[data-toggle="tooltip"]').tooltip();
+        }, 2000);
     })();
 
-    $("#go_back").on("click", function () {
-        $("#mailbox,#right_workspace").toggleClass("d-none");
+    $('#go_back').on('click', function() {
+        $('#mailbox,#right_workspace').toggleClass('d-none');
     });
 
     $(document)
-        .off("click", "#show_comments,#discutir_documento")
-        .on("click", "#show_comments,#discutir_documento", function () {
+        .off('click', '#show_comments,#discutir_documento')
+        .on('click', '#show_comments,#discutir_documento', function() {
             let options = {
                 url: `${baseUrl}views/documento/comentarios.php`,
                 params: {
                     documentId: documentId
                 },
-                title: "Comentarios",
-                size: "modal-lg",
+                title: 'Comentarios',
+                size: 'modal-lg',
                 buttons: {}
             };
             top.topModal(options);
         });
 
     $(document)
-        .off("click", "#show_documents,#vincular_otro_documento")
-        .on("click", "#show_documents,#vincular_otro_documento", function () {
+        .off('click', '#show_documents,#vincular_otro_documento')
+        .on('click', '#show_documents,#vincular_otro_documento', function() {
             let iframe = $('<iframe>', {
                 src: `${baseUrl}views/documento/vinculados.php?documentId=${documentId}`
             }).css({
                 width: '100%',
                 height: '100%',
-                border: 'none',
+                border: 'none'
             });
 
             top.topJsPanel({
                 headerTitle: 'Documentos vinculados',
                 contentSize: {
                     width: $(window).width() * 0.8,
-                    height: $(window).height() * 0.9,
+                    height: $(window).height() * 0.9
                 },
                 content: iframe.prop('outerHTML')
             });
         });
 
     $(document)
-        .off("click", "#resend,#reenviar")
-        .on("click", "#resend,#reenviar", function () {
+        .off('click', '#resend,#reenviar')
+        .on('click', '#resend,#reenviar', function() {
             transferModal(1);
         });
 
     $(document)
-        .off("click", "#reply,#responder")
-        .on("click", "#reply,#responder", function () {
-            let userInfo = $("#userInfo").data("info");
+        .off('click', '#reply,#responder')
+        .on('click', '#reply,#responder', function() {
+            let userInfo = $('#userInfo').data('info');
             transferModal(2, userInfo);
         });
 
     $(document)
-        .off("click", "#responder_todos")
-        .on("click", "#responder_todos", function () {
+        .off('click', '#responder_todos')
+        .on('click', '#responder_todos', function() {
             transferModal(3);
         });
 
-    $("#show_tree").on("click", function () {
+    $('#show_tree').on('click', function() {
         let options = {
             url: `${baseUrl}views/arbol/proceso_formato.php`,
             params: {
                 documentId: documentId
             },
-            title: "Proceso",
-            size: "modal-sm",
+            title: 'Proceso',
+            size: 'modal-sm',
             buttons: {
                 cancel: {
-                    label: "Cerrar",
-                    class: "btn btn-danger"
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
                 }
             }
         };
         top.topModal(options);
     });
 
-    $("#show_task").on("click", function () {
+    $('#show_task').on('click', function() {
         let options = {
             url: `${baseUrl}views/tareas/lista_documento.php`,
             params: {
                 documentId: documentId
             },
-            title: "Tareas",
+            title: 'Tareas',
             buttons: {
                 cancel: {
-                    label: "Cerrar",
-                    class: "btn btn-danger"
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
                 }
             }
         };
         top.topModal(options);
     });
 
-    $("#priority_flag").on("click", function () {
-        let flag = $("#priority_flag i"),
-            priority = flag.hasClass("text-danger") ? 0 : 1,
-            key = localStorage.getItem("key");
+    $('#priority_flag').on('click', function() {
+        let flag = $('#priority_flag i'),
+            priority = flag.hasClass('text-danger') ? 0 : 1,
+            key = localStorage.getItem('key');
 
         $.post(
             `${baseUrl}app/documento/asignar_prioridad.php`,
@@ -118,39 +126,39 @@ $(function () {
                 selections: documentId,
                 key: key
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,
-                        type: "success"
+                        type: 'success'
                     });
 
                     if (priority) {
-                        flag.addClass("text-danger");
+                        flag.addClass('text-danger');
                         $(
                             `#table .priority_flag[data-key=${documentId}]`
-                        ).removeClass("d-none");
+                        ).removeClass('d-none');
                     } else {
-                        flag.removeClass("text-danger");
+                        flag.removeClass('text-danger');
                         $(
                             `#table .priority_flag[data-key=${documentId}]`
-                        ).addClass("d-none");
+                        ).addClass('d-none');
                     }
                 } else {
                     top.notification({
                         message: response.message,
-                        type: "error",
-                        title: "Error!"
+                        type: 'error',
+                        title: 'Error!'
                     });
                 }
             },
-            "json"
+            'json'
         );
     });
 
     window.addEventListener(
-        "orientationchange",
-        function () {
+        'orientationchange',
+        function() {
             setTimeout(() => {
                 toggleGoBack();
             }, 500);
@@ -158,76 +166,64 @@ $(function () {
         false
     );
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         toggleGoBack();
     });
 
     /////// MENU INTERMEDIO ////////
     $(document)
-        .off("click", "#crear_tarea,#etiquetar,#asignar_responsable")
-        .on("click", "#crear_tarea,#etiquetar,#asignar_responsable", function () {
-            let route = $(this).data("url");
-            top.topModal({
-                url: `${baseUrl + route}`,
-                title: $(this).text(),
-                params: {
-                    documentId: documentId
-                },
-                buttons: {}
-            });
-        });
+        .off('click', '#crear_tarea,#etiquetar,#asignar_responsable')
+        .on(
+            'click',
+            '#crear_tarea,#etiquetar,#asignar_responsable',
+            function() {
+                let route = $(this).data('url');
+                top.topModal({
+                    url: `${baseUrl + route}`,
+                    title: $(this).text(),
+                    params: {
+                        documentId: documentId
+                    },
+                    buttons: {}
+                });
+            }
+        );
 
     $(document)
-        .off("click", "#solicitar_aprobacion")
-        .on("click", "#solicitar_aprobacion", function () {
+        .off('click', '#solicitar_aprobacion')
+        .on('click', '#solicitar_aprobacion', function() {
             seeManagers();
         });
 
     $(document)
-        .off("click", "#crear_nueva_version")
-        .on("click", "#crear_nueva_version", function () {
-            top.confirm({
-                id: "question",
-                type: "warning",
-                title: "Versionar!",
-                message: "Está seguro de versionar este documento?",
-                position: "center",
-                timeout: 0,
-                buttons: [
-                    [
-                        "<button><b>Si</b></button>",
-                        function (instance, toast) {
-                            storage();
-                            top.notification({
-                                type: 'info',
-                                message: 'Esto puede tardar un momento'
-                            });
-                            instance.hide(
-                                { transitionOut: "fadeOut" },
-                                toast,
-                                "button"
-                            );
-                        },
-                        true
-                    ],
-                    [
-                        "<button>NO</button>",
-                        function (instance, toast) {
-                            instance.hide(
-                                { transitionOut: "fadeOut" },
-                                toast,
-                                "button"
-                            );
-                        }
-                    ]
-                ]
-            });
+        .off('click', '#crear_nueva_version')
+        .on('click', '#crear_nueva_version', function() {
+            $.post(
+                `${baseUrl}app/documento/autorizacion_versionamiento.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId,
+                    userId: localStorage.getItem('key')
+                },
+                function(response) {
+                    if (response.success) {
+                        showVersionConfirm();
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
         });
 
     $(document)
-        .off("click", "#privacidad")
-        .on("click", "#privacidad", function () {
-            let route = $(this).data("url");
+        .off('click', '#privacidad')
+        .on('click', '#privacidad', function() {
+            let route = $(this).data('url');
             top.topModal({
                 url: baseUrl + route,
                 title: $(this).text(),
@@ -241,33 +237,33 @@ $(function () {
         });
 
     $(document)
-        .off("click", "#actualizar_pdf")
-        .on("click", "#actualizar_pdf", function () {
-            let route = $("#acordeon_container").attr("data-location");
-            route += "&actualizar_pdf=1";
+        .off('click', '#actualizar_pdf')
+        .on('click', '#actualizar_pdf', function() {
+            let route = $('#acordeon_container').attr('data-location');
+            route += '&actualizar_pdf=1';
 
-            $("#view_document").load(baseUrl + route);
+            $('#view_document').load(baseUrl + route);
         });
 
     $(document)
-        .off("click", "#anexos")
-        .on("click", "#anexos", function () {
-            $("#show_files").click();
+        .off('click', '#anexos')
+        .on('click', '#anexos', function() {
+            $('#show_files').click();
         });
-    /////// FIN MENU INTERMEDIO /////    
+    /////// FIN MENU INTERMEDIO /////
 
     function toggleGoBack() {
-        if ($("#mailbox").is(":hidden")) {
-            $("#go_back").show();
+        if ($('#mailbox').is(':hidden')) {
+            $('#go_back').show();
         } else {
-            $("#go_back").hide();
+            $('#go_back').hide();
         }
     }
 
     function showFlag() {
-        if ($("#document_information .priority").is(":hidden")) {
-            $("#document_information .priority")
-                .removeClass("text-danger")
+        if ($('#document_information .priority').is(':hidden')) {
+            $('#document_information .priority')
+                .removeClass('text-danger')
                 .show();
         }
     }
@@ -280,16 +276,16 @@ $(function () {
                 userInfo: userInfo,
                 type: type
             },
-            title: "Reenviar",
-            size: "modal-lg",
+            title: 'Reenviar',
+            size: 'modal-lg',
             buttons: {
                 success: {
-                    label: "Enviar",
-                    class: "btn btn-complete"
+                    label: 'Enviar',
+                    class: 'btn btn-complete'
                 },
                 cancel: {
-                    label: "Cancelar",
-                    class: "btn btn-danger"
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
                 }
             }
         };
@@ -300,38 +296,39 @@ $(function () {
         $.post(
             `${baseUrl}app/documento/eventos_fab.php`,
             {
-                key: localStorage.getItem("key"),
-                token: localStorage.getItem("token"),
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     fabActions = response.data;
                     showFab();
                 } else {
-                    console.error("error al mostrar las acciones");
+                    console.error('error al mostrar las acciones');
                 }
             },
-            "json"
+            'json'
         );
     }
 
     function showFab() {
-
+        $('#fab').empty();
         if (fabActions.showFab) {
             let buttons = [];
 
             if (fabActions.reject.see) {
                 buttons.push({
                     button: {
-                        style: "small orange",
-                        html: ""
+                        style: 'small orange',
+                        html: '',
+                        tooltip: fabActions.reject.tooltip
                     },
                     icon: {
-                        style: "fa fa-times",
-                        html: ""
+                        style: 'fa fa-times',
+                        html: ''
                     },
-                    onClick: function () {
+                    onClick: function() {
                         confirmDocument(false);
                     }
                 });
@@ -340,14 +337,15 @@ $(function () {
             if (fabActions.confirm.see) {
                 buttons.push({
                     button: {
-                        style: "small yellow",
-                        html: ""
+                        style: 'small yellow',
+                        html: '',
+                        tooltip: fabActions.confirm.tooltip
                     },
                     icon: {
-                        style: "fa fa-check",
-                        html: ""
+                        style: 'fa fa-check',
+                        html: ''
                     },
-                    onClick: function () {
+                    onClick: function() {
                         confirmDocument(true);
                     }
                 });
@@ -356,15 +354,16 @@ $(function () {
             if (fabActions.edit.see) {
                 buttons.push({
                     button: {
-                        style: "small yellow",
-                        html: ""
+                        style: 'small yellow',
+                        html: '',
+                        tooltip: fabActions.edit.tooltip
                     },
                     icon: {
-                        style: "fa fa-edit",
-                        html: ""
+                        style: 'fa fa-edit',
+                        html: ''
                     },
-                    onClick: function () {
-                        window.open(fabActions.edit.route, "_self");
+                    onClick: function() {
+                        window.open(fabActions.edit.route, '_self');
                     }
                 });
             }
@@ -372,15 +371,16 @@ $(function () {
             if (fabActions.managers.see) {
                 buttons.push({
                     button: {
-                        style: "small yellow",
-                        html: ""
+                        style: 'small yellow',
+                        html: '',
+                        tooltip: fabActions.managers.tooltip
                     },
                     icon: {
-                        style: "fa fa-users",
-                        html: ""
+                        style: 'fa fa-users',
+                        html: ''
                     },
-                    onClick: function () {
-                        seeManagers(fabActions.managers.route)
+                    onClick: function() {
+                        seeManagers(fabActions.managers.route);
                     }
                 });
             }
@@ -388,34 +388,34 @@ $(function () {
             if (fabActions.return.see) {
                 buttons.push({
                     button: {
-                        style: "small yellow",
-                        html: ""
+                        style: 'small yellow',
+                        html: '',
+                        tooltip: fabActions.return.tooltip
                     },
                     icon: {
-                        style: "fa fa-backward",
-                        html: ""
+                        style: 'fa fa-backward',
+                        html: ''
                     },
-                    onClick: function () {
-                        window.open(fabActions.return.route, "_self");
+                    onClick: function() {
+                        returnDocument();
                     }
                 });
             }
 
-            $('#fab').empty();
             new Fab({
-                selector: "#fab",
+                selector: '#fab',
                 button: {
-                    style: "blue",
-                    html: ""
+                    style: 'blue',
+                    html: ''
                 },
                 icon: {
-                    style: "fa fa-arrow-left",
-                    html: ""
+                    style: 'fa fa-arrow-left',
+                    html: ''
                 },
                 // "top-left" || "top-right" || "bottom-left" || "bottom-right"
-                position: "bottom-right",
+                position: 'bottom-right',
                 // "horizontal" || "vertical"
-                direction: "horizontal",
+                direction: 'horizontal',
                 buttons: buttons
             });
         }
@@ -425,75 +425,80 @@ $(function () {
         $.post(
             `${baseUrl}app/documento/confirmar.php`,
             {
-                key: localStorage.getItem("key"),
-                token: localStorage.getItem("token"),
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
                 documentId: documentId,
                 reject: !accept ? 1 : 0
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
-                    let route = baseUrl + "views/documento/acordeon.php";
-                    $("#acordeon_container")
+                    let route = baseUrl + 'views/documento/acordeon.php';
+                    $('#acordeon_container')
                         .parent()
                         .load(route, {
                             documentId: documentId
                         });
                 } else {
                     top.notification({
-                        type: "error",
+                        type: 'error',
                         message: response.message
                     });
                 }
             },
-            "json"
+            'json'
         );
     }
 
     function seeManagers() {
         top.topModal({
             url: baseUrl + fabActions.managers.route,
+            params: {
+                documentId: documentId,
+                number: number
+            },
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {},
-            onSuccess: function () {
+            onSuccess: function() {
                 findActions();
             },
-            beforeShow: function (event) {
+            beforeShow: function(event) {
                 if (!isOwner()) {
                     event.preventDefault();
                     top.notification({
                         type: 'error',
-                        message: 'No tienes revisar esta acción'
-                    });
-                }
-            }
-        })
-    }
-
-    function isOwner() {
-        let owner = false;
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            url: `${baseUrl}app/documento/verificar_responsabilidad.php`,
-            data: {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                documentId: documentId,
-                userId: localStorage.getItem('key')
-            },
-            success: function (response) {
-                if (response.success) {
-                    owner = response.data;
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
+                        message: 'No es posible realizar esta acción'
                     });
                 }
             }
         });
+    }
+
+    function isOwner() {
+        if (typeof owner == 'undefined') {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                url: `${baseUrl}app/documento/verificar_responsabilidad.php`,
+                data: {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId,
+                    userId: localStorage.getItem('key')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        owner = response.data;
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                }
+            });
+        }
 
         return owner;
     }
@@ -502,31 +507,31 @@ $(function () {
         $.post(
             `${baseUrl}app/documento/menu_intermedio.php`,
             {
-                key: localStorage.getItem("key"),
+                key: localStorage.getItem('key'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     createMenu(response.data);
                 } else {
-                    console.error("error al crear el menu");
+                    console.error('error al crear el menu');
                 }
             },
-            "json"
+            'json'
         );
     }
 
     function createMenu(data) {
         data.forEach(m => {
-            $("#module_items").append(
-                $("<span>", {
+            $('#module_items').append(
+                $('<span>', {
                     id: m.nombre,
-                    class: "dropdown-item menu_options text-truncate cursor",
-                    style: "line-height:28px;",
-                    "data-url": m.enlace
+                    class: 'dropdown-item menu_options text-truncate cursor',
+                    style: 'line-height:28px;',
+                    'data-url': m.enlace
                 })
                     .append(
-                        $("<i>", {
+                        $('<i>', {
                             class: `${m.imagen} px-1`
                         })
                     )
@@ -539,20 +544,20 @@ $(function () {
         $.post(
             `${baseUrl}app/documento/contadores_encabezado.php`,
             {
-                key: localStorage.getItem("key"),
+                key: localStorage.getItem('key'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     showCounters(response.data);
                 } else {
                     top.notification({
-                        type: "error",
+                        type: 'error',
                         message: response.message
                     });
                 }
             },
-            "json"
+            'json'
         );
     }
 
@@ -578,7 +583,7 @@ $(function () {
                 token: localStorage.getItem('token'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -593,5 +598,130 @@ $(function () {
             },
             'json'
         );
+    }
+
+    function showVersionConfirm() {
+        top.confirm({
+            id: 'question',
+            type: 'warning',
+            title: 'Versionar!',
+            message: 'Está seguro de versionar este documento?',
+            position: 'center',
+            timeout: 0,
+            buttons: [
+                [
+                    '<button><b>Si</b></button>',
+                    function(instance, toast) {
+                        storage();
+                        top.notification({
+                            type: 'info',
+                            message: 'Esto puede tardar un momento'
+                        });
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    }
+                ]
+            ]
+        });
+    }
+
+    function checkRouteNotification() {
+        if (!+number && isOwner()) {
+            $.post(
+                `${baseUrl}app/documento/alerta_ruta.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId,
+                    userId: localStorage.getItem('key')
+                },
+                function(response) {
+                    if (response.success) {
+                        if (response.data.show) {
+                            showRouteAlert(response.message);
+                        }
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        }
+    }
+
+    function showRouteAlert(message) {
+        top.confirm({
+            id: 'question',
+            type: 'info',
+            message: message,
+            position: 'topRight',
+            timeout: 5000,
+            buttons: [
+                [
+                    '<button><b>No volver a mostrar esta alerta en este documento</b></button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                        removeRouteAlerts();
+                    },
+                    true
+                ]
+            ]
+        });
+    }
+
+    function removeRouteAlerts() {
+        $.post(
+            `${baseUrl}app/documento/omitir_alertas_ruta.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: localStorage.getItem('key'),
+                documentId: documentId
+            },
+            function(response) {
+                if (!response.success) {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    }
+
+    function returnDocument() {
+        top.topModal({
+            url: `${baseUrl}views/documento/devolver.php`,
+            params: {
+                documentId: documentId
+            },
+            size: 'modal-xl',
+            title: 'Devolver documento',
+            onSuccess: function() {
+                findActions();
+            }
+        });
     }
 });

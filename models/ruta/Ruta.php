@@ -19,7 +19,11 @@ class Ruta extends Model
     protected $destino;
     protected $condicion_transferencia;
     protected $clase;
+    protected $fk_ruta_documento;
     protected $dbAttributes;
+
+    //relations
+    protected $DocumentRoute;
 
     function __construct($id = null)
     {
@@ -50,9 +54,25 @@ class Ruta extends Model
                 'destino',
                 'condicion_transferencia',
                 'clase',
+                'fk_ruta_documento',
             ],
             'date' => ['fecha']
         ];
+    }
+
+    /**
+     * obtiene una instancia de la ruta relacionada
+     * 
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-17
+     */
+    public function getDocumentRoute()
+    {
+        if (!$this->DocumentRoute) {
+            $this->DocumentRoute = self::getRelationFk('RutaDocumento');
+        }
+
+        return $this->DocumentRoute;
     }
 
     /**
@@ -65,30 +85,10 @@ class Ruta extends Model
      */
     public function getOrigin()
     {
-        switch ($this->tipo_origen) {
-            case 1: // Funcionario
-                $response = Funcionario::findByAttributes([
-                    'funcionario_codigo' => $this->origen
-                ]);
-                break;
-            case 5: //dependencia_cargo
-                $sql = <<<SQL
-                    SELECT b.*
-                    FROM
-                        dependencia_cargo a JOIN
-                        funcionario b ON
-                            b.idfuncionario = a.funcionario_idfuncionario
-                    WHERE
-                        a.iddependencia_cargo = {$this->origen}
-SQL;
-                $response = Funcionario::findBySql($sql)[0];
-                break;
-            default:
-                $response = null;
-                break;
-        }
-
-        return $response;
+        return VfuncionarioDc::getUserFromEntity(
+            $this->tipo_origen,
+            $this->origen
+        );
     }
 
     /**
@@ -101,30 +101,10 @@ SQL;
      */
     public function getDestination()
     {
-        switch ($this->tipo_destino) {
-            case 1: // Funcionario
-                $response = Funcionario::findByAttributes([
-                    'funcionario_codigo' => $this->origen
-                ]);
-                break;
-            case 5: //dependencia_cargo
-                $sql = <<<SQL
-                    SELECT b.*
-                    FROM
-                        dependencia_cargo a JOIN
-                        funcionario b ON
-                            b.idfuncionario = a.funcionario_idfuncionario
-                    WHERE
-                        a.iddependencia_cargo = {$this->destino}
-SQL;
-                $response = Funcionario::findBySql($sql)[0];
-                break;
-            default:
-                $response = null;
-                break;
-        }
-
-        return $response;
+        return VfuncionarioDc::getUserFromEntity(
+            $this->tipo_destino,
+            $this->destino
+        );
     }
 
     /**
@@ -151,5 +131,59 @@ SQL;
 SQL;
 
         return self::findBySql($sql);
+    }
+
+    /**
+     * busca la ultima ruta finalizada
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-17
+     */
+    public static function findLastFinishedRoute($documentId)
+    {
+        $RutaDocumento = RutaDocumento::findByAttributes([
+            'fk_documento' => $documentId,
+            'finalizado' => 1,
+            'tipo' => RutaDocumento::TIPO_RADICACION
+        ], null, 'idruta_documento desc');
+
+        return self::findAllByAttributes([
+            'fk_ruta_documento' => $RutaDocumento->getPK()
+        ]);
+    }
+
+    /**
+     * busca el registro por interactuar
+     * en la ruta de un documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-16
+     */
+    public static function getStepFromDocumet($documentId)
+    {
+        $type = RutaDocumento::TIPO_RADICACION;
+        $sql = <<<SQL
+        SELECT a.*
+        FROM 
+            ruta a 
+            JOIN
+                ruta_documento b ON
+                    b.idruta_documento = a.fk_ruta_documento
+            JOIN
+                buzon_entrada c ON
+                    a.idruta = c.ruta_idruta
+        WHERE
+            b.estado = 1 AND
+            b.fk_documento = {$documentId} AND
+            c.activo = 1 AND
+            b.tipo = {$type}         
+        ORDER BY a.orden ASC
+SQL;
+
+        return self::findBySql($sql, true, 0, 1)[0];
     }
 }

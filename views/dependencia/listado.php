@@ -12,7 +12,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">

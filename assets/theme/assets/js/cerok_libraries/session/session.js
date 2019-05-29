@@ -22,14 +22,14 @@ class Session {
                     key: localStorage.getItem('key')
                 },
                 async: false,
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         session.user = response.data;
                     } else {
                         Session.violation('Debe iniciar sessión');
                     }
                 }
-            })
+            });
         } else {
             if (Session.check(Session.getBaseUrl())) {
                 let data = localStorage.getItem('user');
@@ -38,8 +38,6 @@ class Session {
                 Session.violation('Debe iniciar sesión');
             }
         }
-
-        Session.defineGlobalChecker();
     }
 
     set baseUrl(route) {
@@ -79,7 +77,7 @@ class Session {
                     key: localStorage.getItem('key')
                 },
                 async: false,
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         if (!response.data) {
                             Session.close();
@@ -111,21 +109,6 @@ class Session {
     }
 
     static getBaseUrl() {
-        return $("#baseUrl").data('baseurl');
-    }
-
-    static defineGlobalChecker() {
-        top.window.checkSession = function () {
-            if (!localStorage.getItem('key') || !localStorage.getItem('token')) {
-                window.location = Session.getBaseUrl() + 'views/login/login.php';
-            }
-        }
-
-        top.window.checkLogoutResponse = function (xhr) {
-            if (xhr.status == 200 && xhr.responseText.indexOf('logout') != -1) {
-                let node = $(xhr.responseText);
-                eval(node.html());
-            }
-        }
+        return $('#baseUrl').data('baseurl');
     }
 }

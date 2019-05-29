@@ -1,10 +1,7 @@
 <?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
@@ -19,9 +16,6 @@ include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.p
 include_once $ruta_db_superior . "bpmn/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 
-if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]) {
-    desencriptar_sqli('form_info');
-}
 /*
  * <Clase>
  * <Nombre>buscar_funcionarios</Nombre>
@@ -42,7 +36,7 @@ function buscar_funcionarios($dependencia, $arreglo = null)
     $dependencias = array_unique($dependencias);
     $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1 AND C.tipo_cargo=1", "", $conn);
     $arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
-    return ($arreglo);
+    return $arreglo;
 }
 
 /*
@@ -77,32 +71,7 @@ function dependencias($padre)
     } else
         $listado4 = $padres;
 
-    return ($listado4);
-}
-
-/*
- * <Clase>
- * <Nombre>prepara_sql
- * <Parametros>$arreglo-matriz con los valores a formatear; $separador-caracter
- * con el cual quiero separar los campos
- * <Responsabilidades>Saca los valores de la matriz y los pone en una cadena entre
- * comillas simples y separados por $separador
- * <Notas>
- * <Excepciones>
- * <Salida>una cadena con los valores formateados
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-function preparasql($arreglo, $separador)
-{
-    if (is_array($arreglo)) {
-        $aux_arreglo = array_values($arreglo);
-        $values = "'" . ($aux_arreglo[0]) . "'";
-        for ($i = 1; $i < count($arreglo); $i++)
-            $values .= $separador . " '" . ($aux_arreglo[$i]) . "'";
-        return ($values);
-    }
-    return (false);
+    return $listado4;
 }
 
 /*
@@ -228,7 +197,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     }
     include_once($ruta_db_superior . "workflow/libreria_paso.php");
     iniciar_flujo($doc, $idflujo);
-    return ($doc);
+    return $doc;
 }
 
 /*
@@ -280,7 +249,7 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
         $datorig[0]['iddependencia_cargo'] = $dato;
     if ($temp != "" && $temp["numcampos"] > 0)
         $datorig[0] = array_merge((array)$datorig[0], (array)$temp[0]);
-    return ($datorig);
+    return $datorig;
 }
 
 /*
@@ -434,7 +403,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     if ($anexos == 1) {
         return $idtransferencia;
     } else {
-        return (true);
+        return true;
     }
 }
 
@@ -528,6 +497,14 @@ function aprobar($iddoc = 0, $opcion = 0)
                     phpmkr_query("UPDATE documento SET estado='APROBADO',activa_admin=0, fecha=" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", dias='" . $dias_entrega[0]["dias_entrega"] . "' WHERE iddocumento=" . $iddoc, $conn);
                 }
 
+                RutaDocumento::executeUpdate([
+                    'finalizado' => 1
+                ], [
+                    'estado' => 1,
+                    'fk_documento' => $iddoc,
+                    'tipo' => RutaDocumento::TIPO_RADICACION
+                ]);
+
                 $nombre_tabla = busca_filtro_tabla("nombre_tabla,banderas", "formato", "nombre like '$formato'", "", $conn);
                 $tabla = $nombre_tabla[0]["nombre_tabla"];
                 $campos_formato = listar_campos_tabla($tabla);
@@ -577,7 +554,7 @@ function aprobar($iddoc = 0, $opcion = 0)
     actualizar_datos_documento($tipo_radicado[0]["idformato"], $iddoc);
     if ($opcion == 0) {
         if ($_REQUEST["anterior"] == $iddoc) {
-            return ($iddoc);
+            return $iddoc;
         } else {
             $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "", $conn);
             if ($formato_ant["numcampos"]) {
@@ -589,55 +566,6 @@ function aprobar($iddoc = 0, $opcion = 0)
         }
     }
     return $iddoc;
-}
-
-/*
- * <Clase>
- * <Nombre>crear_pdf</Nombre>
- * <Parametros>$idformato:id del formato;$iddoc:id del documento</Parametros>
- * <Responsabilidades>Genera el pdf del formato<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function crear_pdf($idformato, $iddoc)
-{
-    global $conn;
-    $url = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&actualizar_pdf=1&rand=" . rand(0, 1000);
-    abrir_url($url, "_self");
-}
-
-/*
- * <Clase>
- * <Nombre>mostrar_formato</Nombre>
- * <Parametros>$idformato:id del formato;$iddoc: id del documento</Parametros>
- * <Responsabilidades><Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function mostrar_formato($idformato, $iddoc)
-{
-    global $conn;
-    if (!isset($_REQUEST["no_redirecciona"])) {
-        $datos_formato = busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf", "formato", "idformato=$idformato", "", $conn);
-        if ($datos_formato[0]["mostrar_pdf"] == 1) {
-            $url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&idformato=$idformato&actualizar_pdf=1";
-        } else if ($datos_formato[0]["mostrar_pdf"] == 2) {
-            $url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&pdf_word=1";
-        } else {
-            $url = FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?iddoc=" . $iddoc . "&idformato=$idformato";
-        }
-        if (!@$_REQUEST['aprobacion_externa']) {
-            redirecciona($url);
-        }
-    }
 }
 
 function mostrar_estado_proceso($idformato, $iddoc)
@@ -792,7 +720,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                             for ($h = 0; $h < $cargos["numcampos"]; $h++)
                                 $parte .= formato_cargo($cargos[$h]["nombre"]) . "<br/>";
                         }
-                        echo ($parte . "</td>");
+                        echo $parte . "</td>";
                     }
                     $firmas++;
                 }
@@ -822,17 +750,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
         echo "</table><br/>";
     }
 
-    if ($_REQUEST["tipo"] == 1 && $ocultar_confirmar) {
-        echo "<script>
-		$(document).ready(function(){
-			$('#boton_confirmar').attr('disabled','true');
-		});
-		</script>";
-    }
-    if (!$firma_actual)
-        return (true);
-    else
-        return (false);
+    return !$firma_actual;
 }
 
 
@@ -909,7 +827,7 @@ function radicar_plantilla()
                             volver(1);
                         } else {
                             $retorno["mensaje"] = "El campo " . $campos[$l]["nombre"] . " Debe ser Unico por Favor Vuelva a Insertar la informacion";
-                            return (json_encode($retorno));
+                            return json_encode($retorno);
                         }
                     }
                 }
@@ -963,7 +881,7 @@ function radicar_plantilla()
             volver(1);
         } else {
             $retorno["mensaje"] = "El Documento que intenta Radicar no posee Secuencia";
-            return (json_encode($retorno));
+            return json_encode($retorno);
         }
     }
     $valores["numero"] = 0;
@@ -1015,11 +933,11 @@ function radicar_plantilla()
             redirecciona("responder.php");
         } else {
             $retorno["mensaje"] = "No se ha podido Crear el documento ";
-            return (json_encode($retorno));
+            return json_encode($retorno);
         }
     } else {
         Documento::setPermissions($_POST["iddoc"]);
-        
+
         $formato = busca_filtro_tabla("", "formato", "nombre_tabla LIKE '" . @$_POST["tabla"] . "'", "", $conn);
         $banderas = array();
         if ($formato["numcampos"]) {
@@ -1065,7 +983,7 @@ function radicar_plantilla()
                 return;
             } else {
                 $retorno["mensaje"] = "Error al generar la ruta de aprobacion";
-                return (json_encode($retorno));
+                return json_encode($retorno);
             }
         }
 
@@ -1079,7 +997,7 @@ function radicar_plantilla()
 }
 
 /**
- * redirec document to a new window
+ * redirect document to a new window
  * default: views/documento/index_acordeon.php
  * @param string $url
  * @return void
@@ -1164,7 +1082,7 @@ function ejecutoradd($sKey)
         $repetido = busca_filtro_tabla("iddatos_ejecutor", "ejecutor,datos_ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $campo[0]["iddatos_ejecutor"] . " and direccion='" . (($x_direccion)) . "' and telefono='" . (($x_telefono)) . "' and pais_idpais='$x_nacionalidad'   and email='" . (($x_email)) . "' and celular='" . (($x_celular)) . "'", "", $conn);
 
         if ($repetido["numcampos"] > 0)
-            return ($sKey);
+            return $sKey;
         else { // comprobar si existe la nacionalidad -----
             $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
 
@@ -1174,7 +1092,7 @@ function ejecutoradd($sKey)
             }
             // --------------------------------------------
             phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')", $conn) or error("NO SE INSERTO REMITENTE");
-            return (phpmkr_insert_id());
+            return phpmkr_insert_id();
         }
     } else { // comprobar si existe la nacionalidad -----
         $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
@@ -1188,11 +1106,11 @@ function ejecutoradd($sKey)
 
         if ($idejecutor) {
             phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $idejecutor . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')", $conn) or error("NO SE INSERTO REMITENTE");
-            return (phpmkr_insert_id());
+            return phpmkr_insert_id();
         }
     }
-    // die();
-    return (true);
+
+    return true;
 }
 
 /*
@@ -1346,19 +1264,6 @@ function guardar_documento($iddoc, $tipo = 0)
             $valores[$pos] = $iddoc;
         }
 
-        if (in_array("estado_documento", $campos)) {
-            $idestado = obtener_estado_documento($iddoc);
-            if ($idestado) {
-                if (!in_array("estado_documento", $campos)) {
-                    array_push($campos, "estado_documento");
-                    array_push($valores, $idestado);
-                } else {
-                    $pos_e = array_search('estado_documento', $campos);
-                    $valores[$pos_e] = $idestado;
-                }
-            }
-        }
-
         if (in_array("serie_idserie", $campos)) {
             $pos = array_search('serie_idserie', $campos);
             if ($valores[$pos] == "''") {
@@ -1452,7 +1357,7 @@ function guardar_documento($iddoc, $tipo = 0)
     }
     actualizar_datos_documento($idformato, $iddoc);
 
-    return ($insertado);
+    return $insertado;
 }
 
 function actualizar_datos_documento($idformato, $iddoc)
@@ -1490,663 +1395,12 @@ function actualizar_datos_documento($idformato, $iddoc)
     return;
 }
 
-/*
- * <Clase>
- * <Nombre>llamar_buscar_ruta
- * <Parametros>
- * <Responsabilidades>tomar del post los parametros para poder llamar la funcion buscar_ruta
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-function llamar_buscar_ruta()
-{
-    buscar_ruta($_POST["serie"], $_POST["$ejecutor"], $_POST["$destino"]);
-}
-
-/*
- * <Clase>
- * <Nombre>buscar_funcionario_ruta
- * <Parametros>tipo_ruta-si la ruta es para un documento o para una serie;
- * dato-dependiento del tipo de ruta contiene la serie o el id del documento;
- * usuario-funcionario al cual quiero buscar dentro de la ruta
- * <Responsabilidades>busca un funcionario dentro de una ruta
- * <Notas>
- * <Excepciones>si no lo encuentra devuelve -1
- * <Salida> retorna el orden del funcionario dentro de la ruta
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-function buscar_funcionario_ruta($tipo_ruta, $dato, $usuario)
-{
-    global $conn;
-    // busco la informacion de cargo,funcionario y dependencia del usuario actual
-    $inf_funcionario = busca_cargofuncionario(2, $usuario, '');
-    // miro que tipo de ruta es
-    if ($tipo_ruta == "serie")
-        $filtro = "tipo_documental_idtipo_documental=" . $dato;
-    if ($tipo_ruta == "documento")
-        $filtro = "documento_iddocumento=" . $dato;
-    if ($inf_funcionario["numcampos"] == 0) {
-        return (-1);
-    } else {
-        $encontrado = 0;
-        foreach ($inf_funcionario as $fila) {
-            $idnodo = busca_filtro_tabla("orden", "ruta", "origen=" . $fila["iddependencia_cargo"] . " and tipo_origen=5 and $filtro", "orden", $conn);
-            if ($idnodo["numcampos"] == 0) {
-                $idnodo = busca_filtro_tabla("orden", "ruta", "origen=" . $fila["cargo_idcargo"] . " and tipo_origen=4 and $filtro", "orden", $conn);
-                if ($idnodo["numcampos"] == 0) {
-                    $idnodo = busca_filtro_tabla("orden", "ruta", "origen=" . $fila["dependencia_iddependencia"] . " and tipo_origen=2 and $filtro", "orden", $conn);
-                    if ($idnodo["numcampos"] == 0) {
-                        $idnodo = busca_filtro_tabla("orden", "ruta", "origen=" . $_SESSION["usuario_actual"] . " and tipo_origen=1 and $filtro", "orden", $conn);
-                    } else {
-                        $encontrado = 1;
-                        break;
-                    }
-                } else {
-                    $encontrado = 1;
-                    break;
-                }
-            } else {
-                $encontrado = 1;
-                break;
-            }
-        }
-        if ($encontrado == 0)
-            return (-1);
-        else
-            return ($idnodo[0]["orden"]);
-    }
-}
-
-/*
- * <Clase>
- * <Nombre>buscar_ruta
- * <Parametros>serie-id de la serie(entero); ejecutor-quien hizo el documento(entero);
- * destino-persona a quien va dirigido el documento(entero); iddoc-id del documento(entero)
- * <Responsabilidades>busca la ruta para un documento por serie y si no la encuentra por iddocumento
- * <Notas>crea la ruta en un vector con los codigos de los funcionarios,nombres,estado de transferencia,etc.
- * si no encuentra la ruta ni por serie ni por iddocumento llama a rutaadd.php
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>llama a verificar_rutas
- */
-function buscar_ruta($serie, $ejecutor, $destino, $iddoc)
-{
-    global $conn;
-    $ruta = "";
-    // busco en la ruta el id del nodo con los ceros en origen y destino (para la factura)
-    $idnodo = busca_filtro_tabla("A.orden", "ruta A", "A.origen=0 and A.destino<>0 and A.tipo_documental_idtipo_documental=" . $serie, "A.orden", $conn);
-    if ($idnodo["numcampos"] > 0) { // busco los nodos siguientes en la ruta
-        $campos = "distinct A.idruta,A.origen,A.destino,A.condicion_transferencia,A.tipo_origen,A.tipo_destino,A.orden,A.obligatorio";
-        $where = "A.tipo_documental_idtipo_documental=" . $serie;
-        $where .= " and A.orden>=" . $idnodo[0]["orden"];
-        $ruta = busca_filtro_tabla($campos, "ruta A", $where, "A.orden", $conn);
-        for ($i = 0; $i < count($ruta); $i++) {
-            if ($ruta[$i]["origen"] == 0) {
-                $ruta[$i]["origen"] = $destino;
-                $ruta[$i]["tipo_origen"] = 1;
-            }
-        }
-    } else { // busco el usuario en la ruta por serie
-        $encontrado = buscar_funcionario_ruta("serie", $serie, $destino);
-        if ($encontrado == "-1") { // busco el usuario en la ruta por iddocumento
-            $encontrado = buscar_funcionario_ruta("documento", $iddoc, $destino);
-            if ($encontrado == "-1") {
-                $enlace = '<div align=center>
-                <iframe src="formatos/librerias/rutaadd.php';
-                if (isset($iddoc))
-                    $enlace .= '?doc=' . $iddoc . "&origen=" . $_SESSION["usuario_actual"];
-                $enlace .= '" width="100%" height="100%" frameborder=0 scrolling="si" marginwidth=0>
-                 </iframe>
-                 <input name="serie" value="' . $serie . '" type="hidden">
-                 <input name="ejecutor" value="' . $ejecutor . '" type="hidden">
-                 <input name="destino" value="' . $destino . '" type="hidden">
-                 <input name="funcion" value="llamar_buscar_ruta();" type="hidden">
-                 <input type=button value="Actualizar" onclick="window.location.reload();">
-                 </div> ';
-                echo ($enlace);
-            } else { // busco el resto de la ruta por iddocumento
-                $campos = "distinct idruta,origen,destino,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio";
-                $where = "documento_iddocumenot=" . $iddoc;
-                $where .= " and orden>=" . $encontrado;
-                $ruta = busca_filtro_tabla($campos, "ruta", $where, "orden", $conn);
-            }
-        } else { // busco el resto de la ruta por serie
-            $campos = "distinct idruta,origen,destino,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio";
-            $where = "tipo_documental_idtipo_documental=" . $serie;
-            $where .= " and orden>=" . $encontrado;
-            $ruta = busca_filtro_tabla($campos, "ruta", $where, "orden", $conn);
-        }
-    }
-    $i = 0;
-    // busco la informaci�n de los funcionarios que van en la ruta usando el destino,origen,tipo destino,tipo origen
-    if ($ruta["numcampos"] > 0) {
-        for ($i = 0; $i < $ruta["numcampos"]; $i++) {
-            $nombre_origen = "";
-            switch ($ruta[$i]["tipo_origen"]) {
-                case "1":
-                    $datos_origen = busca_cargofuncionario(2, $ruta[$i]["origen"], "");
-                    if ($datos_origen[0]["estado_f"] == 1)
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-                case "5":
-                    $datos_origen = busca_cargofuncionario(5, $ruta[$i]["origen"], "");
-                    $nombre_origen = $datos_origen[0]["nombre"] . " - ";
-                    if ($datos_origen[0]["estado_f"] == 1 && $datos_origen[0]["estado_d"] == 1 && date("Y-m-d") <= $datos_origen[0]["fecha_final"] && date("Y-m-d") >= $datos_origen[0]["fecha_inicial"])
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-                case "4":
-                    $dependencia = busca_filtro_tabla("d.dependencia_iddependencia as dep", "dependencia_cargo d,funcionario f", "d.funcionario_idfuncionario=f.idfuncionario and f.funcionario_codigo=" . $_SESSION["usuario_factura"], "", $conn);
-                    $datos_origen = busca_cargofuncionario(4, $ruta[$i]["origen"], $dependencia[0]["dep"]);
-                    $nombre_origen = $datos_origen[0]["nombre"] . " - ";
-                    if ($datos_origen[0]["estado_f"] == 1 && $datos_origen[0]["estado_d"] == 1 && date("Y-m-d") <= $datos_origen[0]["fecha_final"] && date("Y-m-d") >= $datos_origen[0]["fecha_inicial"])
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-            }
-
-            $nombre_origen .= $datos_origen[0]["nombres"] . " " . $datos_origen[0]["apellidos"];
-            if ($estado)
-                $nombre_origen .= " (activo)";
-            else
-                $nombre_origen .= " (inactivo)";
-            $nombre_destino = "";
-            switch ($ruta[$i]["tipo_destino"]) {
-                case "1":
-                    $datos_destino = busca_cargofuncionario(2, $ruta[$i]["destino"], "");
-                    if ($datos_destino[0]["estado_f"] == 1)
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-                case "5":
-                    $datos_destino = busca_cargofuncionario(5, $ruta[$i]["destino"], "");
-                    $nombre_destino = $datos_destino[0]["nombre"] . " - ";
-                    if ($datos_destino[0]["estado_f"] == 1 && $datos_destino[0]["estado_d"] == 1 && date("Y-m-d") <= $datos_destino[0]["fecha_final"] && date("Y-m-d") >= $datos_destino[0]["fecha_inicial"])
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-                case "4":
-                    $dependencia = busca_filtro_tabla("d.dependencia_iddependencia as dep", "dependencia_cargo d,funcionario f", "d.funcionario_idfuncionario=f.idfuncionario and f.funcionario_codigo=" . $_SESSION["usuario_factura"], "", $conn);
-                    $datos_destino = busca_cargofuncionario(4, $ruta[$i]["origen"], $dependencia[0]["dep"]);
-                    $nombre_destino = $datos_destino[0]["nombre"] . " - ";
-                    if ($datos_destino[0]["estado_f"] == 1 && $datos_destino[0]["estado_d"] == 1 && date("Y-m-d") <= $datos_destino[0]["fecha_final"] && date("Y-m-d") >= $datos_destino[0]["fecha_inicial"])
-                        $estado = 1;
-                    else
-                        $estado = 0;
-                    break;
-                case "2":
-                    $dependencia = busca_filtro_tabla("A.nombre", "dependencia A", "A.iddependencia=" . $ruta[$i]["destino"], "", $conn);
-                    $nombre_destino = $dependencia[0]["nombre"];
-                    $datos_destino[0]["funcionario_codigo"] = $ruta[$i]["destino"];
-                    $datos_destino[0]["nombres"] = "";
-                    $estado = 1;
-                    break;
-            }
-            if ($datos_destino[0]["nombres"] != "")
-                $nombre_destino .= $datos_destino[0]["nombres"] . " " . $datos_destino[0]["apellidos"];
-            if ($estado)
-                $nombre_destino .= " (activo)";
-            else
-                $nombre_destino .= " (inactivo)";
-            // vector con la ruta
-            $enrutados[$i]["origen"] = $datos_origen[0]["funcionario_codigo"];
-            $enrutados[$i]["tipo_origen"] = $ruta[$i]["tipo_origen"];
-            $enrutados[$i]["destino"] = $datos_destino[0]["funcionario_codigo"];
-            $enrutados[$i]["tipo_destino"] = $ruta[$i]["tipo_destino"];
-            $enrutados[$i]["idruta"] = $ruta[$i]["idruta"];
-            $enrutados[$i]["orden"] = $ruta[$i]["orden"];
-            $enrutados[$i]["nombre_origen"] = $nombre_origen;
-            $enrutados[$i]["nombre_destino"] = $nombre_destino;
-            $enrutados[$i]["accion"] = $ruta[$i]["condicion_transferencia"];
-            $i++;
-        }
-    }
-    verificar_ruta($enrutados, $iddoc);
-}
-
-/*
- * <Clase>
- * <Nombre>verificar_ruta
- * <Parametros>fila-vector con la ruta creada por buscar_ruta;id_documento-id del documento actual
- * <Responsabilidades>verifica que la ruta est� bien formada
- * <Notas>
- * <Excepciones>si hay errores muestra una pantalla con la ruta y los mesajes de error
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>si todo est� bien llama a transferir_archivo_prueba
- */
-function verificar_ruta($fila, $id_documento)
-{ // verifico que est�n bien los nodos
-    $error = 0;
-    $mensaje = "";
-
-    for ($i = 0; $i < count($fila); $i++) {
-        if ($i < count($fila) - 1 && $fila[$i]["origen"] == $fila[$i + 1]["origen"] && $fila[$i]["destino"] == $fila[$i + 1]["destino"]) {
-            $error = 1;
-            $mensaje .= "No debe haber dos nodos consecutivos con el mismo origen y destino (nodo $i)<br/>";
-        }
-        if ($fila[$i]["origen"] == "" || $fila[$i]["destino"] == "") {
-            $error = 1;
-            $mensaje .= "El origen y el destino deben ser diferentes de vacio (nodo $i)<br/>";
-        }
-        if ($i < count($fila) - 1 && $fila[$i]["orden"] != $fila[$i + 1]["orden"] && $fila[$i]["destino"] != $fila[$i + 1]["origen"]) {
-            $error = 1;
-            $mensaje .= "El destino del nodo $i debe ser igual al origen del nodo " . ($i + 1) . "<br/>";
-        }
-        if ($fila[$i]["origen"] == $fila[$i]["destino"]) {
-            $error = 1;
-            $mensaje .= "El origen y el destino deben ser diferentes (nodo $i)<br/>";
-        }
-    }
-    // si hubo alg�n error muestro la ruta en pantalla y espero verificaci�n
-    if ($error == 1) {
-        echo $mensaje;
-        echo "<form name='form1' action='class_transferencia.php' method='post' >";
-        echo "<table border='0' cellspacing='1' cellpadding='4' bgcolor='#CCCCCC'>
-             <tr class='encabezado_list' align='center'>
-             <td><b><span class='phpmaker'>Nodo</b></span></td>
-             <td><b><span class='phpmaker'>Orden</b></span></td>
-             <td><span class='phpmaker'><b>Origen</b></span></td>";
-        echo "<td><span class='phpmaker'><b>" . codifica_encabezado("Acción") . "</b></span></td>
-             <td><span class='phpmaker'><b>Destino</b></span></td><td><span class='phpmaker'><b>Obligatorio</b></span></td></tr>
-             <td></td>";
-        $i = 0;
-        foreach ($fila as $fila2) {
-            echo "<tr  bgcolor='#F5F5F5' id='fila$i'>
-                 <td>$i</td>
-                <td><span class='phpmaker'>
-                <input type=hidden id='idruta$i' name='idruta$i' value='" . $fila2["idruta"] . "'>
-                <input type=text readonly=true style='width:50px;' id='orden$i' name='orden$i' value='" . $fila2["orden"] . "'>
-                </span></td>
-                <td><span class='phpmaker'>
-                <input type=hidden id='tipo_origen$i' name='tipo_origen$i' value='" . $fila2["tipo_origen"] . "'>
-                <input type=hidden name='origen$i' id='origen$i' value='" . $fila2["origen"] . "'>
-                <input type=text style='width:450px;' readonly=true  value='" . $fila2["nombre_origen"] . "'>
-                </span></td>
-                <td><span class='phpmaker'>
-                <input type=text style='width:100px;' readonly=true  id='accion$i' name='accion$i' value='" . $fila2["accion"] . "'>
-                </span></td>
-                <td><span class='phpmaker'>
-                <input type=hidden id='tipo_destino$i' name='tipo_destino$i' value='" . $fila2["tipo_destino"] . "'>
-                <input type=hidden name='destino$i' id='destino$i' value='" . $fila2["destino"] . "'>
-                <input type=text style='width:450px;' readonly=true  value='" . $fila2["nombre_destino"] . "'>
-                </span></td>
-                <td><span class='phpmaker'><input type=text name='obligatorio$i' value='" . $fila2["tipo_origen"] . "' >
-                </span></td>
-                ";
-            if ($fila2["idruta"] != "") {
-                echo "<td id='editar$i'><span class='phpmaker'>
-                          <input type='button' value='Editar' name='editar$i'
-                          onclick='window.location=\"DibujaPantalla.php?codigo=2&tipo=editar&id=" . $fila2["idruta"] . "\"' >
-                          <input type='button' value='Eliminar' name='eliminar$i'
-                          onclick='window.location=\"DibujaPantalla.php?codigo=2&tipo=eliminar&id=" . $fila2["idruta"] . "\"' >
-                          </span></td>
-                          </tr>";
-            } else
-                echo "</tr>";
-            $i++;
-        }
-        echo "</table><input type=button value='Continuar' onclick='location=\"class_transferencia.php?funcion=llamar_buscar_ruta&iddoc=" . $_POST["iddoc"] . "\";'>";
-    } // si todo est� bien hago la transferencia
-    else {
-        $datos = array();
-        $adicionales = array();
-        $destino = array();
-        if (isset($_POST["iddoc"])) {
-            $datos["archivo_idarchivo"] = $_POST["iddoc"];
-        } else {
-            $datos["archivo_idarchivo"] = $id_documento;
-        }
-        $datos["nombre"] = "POR_APROBAR";
-        $datos["tipo"] = "";
-        foreach ($fila as $fila2) {
-            $datos["ruta_idruta"] = $fila2["idruta"];
-            $adicionales["activo"] = 1;
-            $datos["tipo_destino"] = $fila2["tipo_destino"];
-            $destino[0] = $fila2["destino"];
-            $datos["origen"] = $fila2["origen"];
-            transferir_archivo_prueba($datos, $destino, $adicionales);
-        }
-        echo "<script>window.location='/saia/saia1.0/documentoview.php?key=" . $_SESSION["iddoc"] . "';</script>";
-    }
-}
-
-/*
- * <Clase>
- * <Nombre>formato_devolucion
- * <Parametros>iddoc-id del documento actual
- * <Responsabilidades>muestra en pantalla el formato donde se llenan los datos para la devolucion
- * <Notas>
- * <Excepciones>si no hay a quien devolver el documento muestra una alerta y se devuelve a la pagina anterior
- * <Salida>
- * <Pre-condiciones>que el documento haya sido transferido por otra persona al usuario actual
- * <Post-condiciones>
- */
-function formato_devolucion($iddoc = 0)
-{
-    global $conn, $ruta_db_superior;
-    if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
-        if (!@$_REQUEST["iddoc"])
-            $_REQUEST["iddoc"] = @$_REQUEST["key"];
-        include_once("pantallas/documento/menu_principal_documento.php");
-        menu_principal_documento($_REQUEST["iddoc"]);
-    }
-    $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
-    if ($config[0]["valor"]) {
-        $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:" . $config[0]["valor"] . "; color:white ; padding:10px; text-align: left;  } .encabezado_list { background-color:" . $config[0]["valor"] . "; color:white ; vertical-align:middle; text-align: center; } --></style>";
-        echo $style;
-    }
-    if (!$iddoc) {
-        $iddoc = $_REQUEST["iddoc"];
-    } else {
-        $_REQUEST["iddoc"] = $iddoc;
-    }
-
-    $x_recibido = $_SESSION["usuario_actual"];
-    $reemplazo = 0;
-    $transferencias = busca_filtro_tabla("destino", "buzon_entrada", "archivo_idarchivo=" . $iddoc . " AND origen='" . $x_recibido . "' AND destino<>'" . $x_recibido . "' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION')", "fecha DESC", $conn);
-
-    if ($transferencias["numcampos"]) {
-        $retorno = obtener_reemplazo($transferencias[0]['destino'], 1);
-        if ($retorno['exito']) {
-            $reemplazo = $retorno['funcionario_codigo'][0];
-        }
-    } else {
-        alerta('<b>ATENCI&Oacute;N</b><br>No es posible devolver el documento, por favor transfieralo o terminelo.', 'warning', 4000);
-        $mostar_formato_devolver = busca_filtro_tabla('b.nombre,b.idformato', 'documento a, formato b', 'b.nombre=lower(a.plantilla) AND a.iddocumento=' . $iddoc, '', $conn);
-        redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $mostar_formato_devolver[0]['nombre'] . "/mostrar_" . $mostar_formato_devolver[0]['nombre'] . ".php?iddoc=" . $iddoc . "&idformato=" . $mostar_formato_devolver[0]['idformato']);
-        return;
-    }
-    echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;</span><br/><br/></p>
-<form name="transferenciadev" id="transferenciadev" action="' . PROTOCOLO_CONEXION . RUTA_PDF . '/class_transferencia.php" method="post">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
-<tr>
-			  <td class="encabezado">
-			  	<span class="phpmaker" style="color: #FFFFFF;">CAMBIANDO ESTADO AL DOCUMENTO:</span>
-  </td>
-			  <td bgcolor="#F5F5F5">
-				  <span class="phpmaker">';
-    $arch = busca_filtro_tabla("numero,descripcion", "documento", "iddocumento=" . $iddoc, "", $conn);
-    echo ($arch[0]["numero"] . "-" . $arch[0]['descripcion']);
-    echo '<input type="hidden" name="iddoc" value="' . $iddoc . '">
-					</span>
-  </td>
-</tr>
-
-<tr>
-  <td class="encabezado">
-    <span class="phpmaker" style="color: #FFFFFF;">FECHA</span>
-  </td>
-  <td bgcolor="#F5F5F5"><span class="phpmaker">';
-    $x_fecha = date("Y-m-d H:i:s");
-    echo '<input type="hidden" name="x_fecha" id="x_fecha" value="' . $x_fecha . '">' . $x_fecha . '</span>
-  </td>
-</tr>
-
-<tr>
-				<td class="encabezado">
-					<span class="phpmaker" style="color: #FFFFFF;"> DEVUELTO A:</span>
-</td>
-<td bgcolor="#F5F5F5"><span class="phpmaker">';
-    $transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha,ruta_idruta", "buzon_entrada", " archivo_idarchivo='" . $_REQUEST["iddoc"] . "' AND origen='" . $x_recibido . "' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'" . $x_recibido . "'", "fecha DESC", $conn);
-    if ($transferencias["numcampos"]) {
-        $info_adicional = "";
-        if ($reemplazo) {
-            $transferencias[0]["destino"] = $reemplazo;
-            $info_adicional = " - Reemplazo";
-            echo "<input type='hidden' value='" . $retorno['idreemplazo'][0] . "' name='campo_reemplazo' id='campo_reemplazo'>";
-            echo "<input type='hidden' value='" . $transferencias[0]['ruta_idruta'] . "' name='campo_idruta' id='campo_idruta'>";
-        }
-        $funcionario_destino = busca_filtro_tabla("", "funcionario", "funcionario_codigo=" . $transferencias[0]["destino"] . " and estado=1", "", $conn);
-        if ($funcionario_destino['numcampos']) {
-            echo ucwords($funcionario_destino[0]["nombres"] . " " . $funcionario_destino[0]["apellidos"]) . $info_adicional . "<br><br />";
-        } else {
-            alerta("<b>ATENCI&Oacute;N</b><br>El funcionario NO esta Activo, por favor transfieralo o terminelo.", 'warning', 4000);
-            redirecciona($ruta_db_superior . "vacio.php");
-        }
-    } else {
-        alerta("<b>ATENCI&Oacute;N</b><br>No existe funcionarios para devolver el documento", 'warning', 4000);
-        redirecciona($ruta_db_superior . "vacio.php");
-    }
-    echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="' . $funcionario_destino[0]["funcionario_codigo"] . '"></span>
-</td>
-</tr>
-
-<tr>
-<td class="encabezado">
-  <span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span>
-</td>
-<td bgcolor="#F5F5F5">
-  <span class="phpmaker"><input type="hidden" name="x_nombre" value="DEVOLUCION">DEVOLUCI&Oacute;N</span>
-</td>
-</tr>
-
-<tr>
-<td class="encabezado">
-  <span class="phpmaker" style="color: #FFFFFF;">MOTIVOS DEVOLUCION</span>
-</td>
-<td bgcolor="#F5F5F5">
-  <span class="phpmaker">
-					<input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">
-					Mal direccionamiento de Ventanilla Unica
-					<br/>
-					<input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">
-					Cambio de Funciones del Usuario
-					<br/>
-					<input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">
-					Se Necesitan Cambios en el Documento
-					<br/>
-					<input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">
-					Otras
-  </span>
-</td>
-</tr>
-
-<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;"> OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"><textarea cols="55" rows="5" id="x_notas" name="x_notas">' . @$x_notas . '</textarea></span></td>
-</tr>
-</table>
-<input type="hidden" name="funcion" value="devolucion">
-		<input type="hidden" name="ruta_idruta" id="ruta_idruta" value="0">
-		<input type="button" name="Action" value="DEVOLVER" onclick="if(form.x_notas.value==' . "''" . ') alert(' . "'Debe llenar las notas.'" . '); else form.submit(); ">
-</form>';
-}
-
-function devolucion()
-{
-    global $conn, $ruta_db_superior;
-    $theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";
-    $datos["archivo_idarchivo"] = $theValue;
-
-    if (isset($_REQUEST['campo_reemplazo']) && $_REQUEST['campo_reemplazo'] != 0 && isset($_REQUEST['campo_idruta']) && $_REQUEST['campo_idruta'] != 0) {
-        include_once($ruta_db_superior . "pantallas/reemplazos/procesar_reemplazo.php");
-        actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'], $datos["archivo_idarchivo"], $_REQUEST['campo_idruta']);
-    }
-    $idformato = busca_filtro_tabla("idformato", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $datos["archivo_idarchivo"], "", $conn);
-    llama_funcion_accion($datos["archivo_idarchivo"], $idformato[0]["idformato"], "devolver", "ANTERIOR");
-
-    $documento = busca_filtro_tabla("", "documento", "iddocumento=" . $datos["archivo_idarchivo"], "", $conn);
-
-    // NUEVO DESARROLLO DEVOLVER
-
-    $sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO'";
-    phpmkr_query($sql2);
-
-    $sql3 = " UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='POR_APROBAR'";
-    phpmkr_query($sql3);
-
-    $sql4 = " UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=" . $datos["archivo_idarchivo"] . " AND llave_entidad='" . $_SESSION["usuario_actual"] . "' ";
-    phpmkr_query($sql4);
-
-    $strsql = "INSERT INTO asignacion (tarea_idtarea,fecha_inicial,documento_iddocumento,serie_idserie,estado,entidad_identidad,llave_entidad)";
-    $strsql .= "VALUES (2,'" . date('Y-m-d H:i:s') . "'," . $datos["archivo_idarchivo"] . ",0,'PENDIENTE',1,'" . $_REQUEST["x_funcionario_destino"] . "')";
-    $sql5 = $strsql;
-    phpmkr_query($sql5);
-
-    $strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta,ver_notas)";
-    $strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_SESSION["usuario_actual"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,0,1)";
-    $sql6 = $strsql;
-    phpmkr_query($sql6);
-
-    $strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta,ver_notas)";
-    $strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_SESSION["usuario_actual"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,1)";
-    $sql7 = $strsql;
-    phpmkr_query($sql7);
-
-    llama_funcion_accion($datos["archivo_idarchivo"], $idformato[0]["idformato"], "devolver", "POSTERIOR");
-    // FIN NUEVO DESARROLLO DEVOLVER
-
-    if ($_REQUEST["retornar"] == 1) {
-        return true;
-    } else {
-        enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");
-    }
-}
-
-/*
- * <Clase>
- * <Nombre>revisar_fechas
- * <Parametros>estado-estado que quiero revisar para ver si hay documentos que deban pasar a el
- * <Responsabilidades>dependiendo del parametro pasado en la variable estado revisa si hay documentos que cumplan
- * las condiciones necesarias para pasar a dicho estado
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-function revisar_fechas($estado)
-{
-    global $conn;
-    // convierto el estado a mayusculas
-    $estado = strtoupper($estado);
-    if ($estado == "GESTION") {
-        $from = "(select iddocumento,fecha+decode(dias,'',dias_entrega,dias)-sysdate as faltantes from documento A,serie B where A.estado='APROBADO' and A.serie=idserie)";
-    } else if ($estado == "CENTRAL") {
-        $from = "(select iddocumento,ADD_MONTHS(fecha+decode(dias,'',dias_entrega,dias),retencion_gestion*12)-sysdate as faltantes from documento A,serie B where A.estado='GESTION' and A.serie=idserie)";
-    } else if ($estado == "HISTORICO") {
-        $from = "(select iddocumento,ADD_MONTHS(fecha+decode(dias,'',dias_entrega,dias),(retencion_gestion+retencion_central)*12)-sysdate as faltantes from documento A,serie B where A.estado='CENTRAL' and A.serie=idserie)";
-    }
-    $resultado = busca_filtro_tabla("iddocumento", $from, "faltantes<=0", "", $conn);
-    if ($resultado["numcampos"]) {
-        for ($i = 0; $i < $resultado["numcampos"]; $i++) {
-            phpmkr_query("UPDATE documento SET estado='$estado' WHERE iddocumento=" . $resultado[$i]["iddocumento"], $conn);
-        }
-    }
-}
-
-function dependencias_asistentes($padre)
-{
-    global $conn;
-    $listado1 = array();
-    $listado2 = array();
-    $listado3 = array();
-    $ldependencias = busca_filtro_tabla("iddependencia", "dependencia A", "A.cod_padre IN(" . $padre . ")", "", $conn);
-    $listado1 = extrae_campo($ldependencias, "iddependencia", "U");
-    $padres = explode(",", $padre);
-
-    if (count($listado1) > 0)
-        $listado2 = array_diff($listado1, $padres);
-
-    $cont = count($listado1);
-    if ($cont) {
-        $listado3 = dependencias(implode(",", $listado2));
-        $listado4 = array_merge((array)$listado1, (array)$listado3);
-    } else
-        $listado4 = $padres;
-
-    return ($listado4);
-}
-
-/*
- * <Clase>
- * <Nombre>arbol_serie()</Nombre>
- * <Parametros></Parametros>
- * <Responsabilidades>Desplegar el arbol de las series documentales que están asignadas a un funcionario<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excpciones>
- * <Salida>Arbol desplegado</Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function arbol_serie($condicion_adicional = '')
-{
-    echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="assets/images/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-    <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree2"></div>
-	<script type="text/javascript">
-  <!--
-      var browserType;
-      if (document.layers) {browserType = "nn4"}
-      if (document.all) {browserType = "ie"}
-      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-         browserType= "gecko"
-      }
-			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","100%",0);
-			tree2.setImagePath("imgs/");
-			tree2.enableIEImageFix(true);
-			tree2.enableCheckBoxes(1);
-			tree2.enableRadioButtons(true);
-			tree2.setOnLoadingStart(cargando_serie);
-      tree2.setOnLoadingEnd(fin_cargando_serie);
-			tree2.enableThreeStateCheckboxes(true);
-			tree2.enableThreeStateCheckboxes(true);
-			tree2.setXMLAutoLoading("test_serie_funcionario.php' . $condicion_adicional . '");
-			tree2.loadXML("test_serie_funcionario.php' . $condicion_adicional . '");
-			function fin_cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval(\'document.getElementById("esperando_serie")\');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval(\'document.getElementById("esperando_serie")\');
-        else
-           document.poppedLayer =
-              eval(\'document.layers["esperando_serie"]\');
-        document.poppedLayer.style.visibility = "hidden";
-      }
-
-      function cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval(\'document.getElementById("esperando_serie")\');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval(\'document.getElementById("esperando_serie")\');
-        else
-           document.poppedLayer =
-               eval(\'document.layers["esperando_serie"]\');
-        document.poppedLayer.style.visibility = "visible";
-      }
-	-->
-	</script>';
-}
-
-if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) != "") {
-    $funcion = str_replace("'", "", str_replace("\\", "", strtolower($_REQUEST["funcion"])));
-    if (isset($_REQUEST["parametros"]) && trim($_REQUEST["parametros"]) != "") {
+if (!empty($_REQUEST["funcion"])) {
+    $funcion = str_replace(["'", "\\"], "", strtolower($_REQUEST["funcion"]));
+    if (!empty($_REQUEST["parametros"])) {
         $params = preg_split("/;/", $_REQUEST["parametros"]);
         call_user_func_array($funcion, $params);
     } else {
         $funcion();
     }
 }
- 
