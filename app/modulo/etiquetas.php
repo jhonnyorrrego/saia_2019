@@ -5,6 +5,7 @@ $ruta_db_superior = $ruta = '';
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -12,48 +13,52 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
-$Response = (object) array(
+
+$Response = (object)[
     'data' => new stdClass(),
     'message' => '',
-    'success' => 1,
-);
+    'success' => 0
+];
 
-if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
-    global $conn;
-    
-    $data = array();
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    $data = [];
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
     $BusquedaComponente = BusquedaComponente::findByAttributes(
-        ['nombre' => 'etiquetados'
-    ], [
-        BusquedaComponente::getPrimaryLabel()
-    ]);
+        [
+            'nombre' => 'etiquetados'
+        ],
+        [
+            BusquedaComponente::getPrimaryLabel()
+        ]
+    );
     $tags = Etiqueta::findAllByAttributes([
         'estado' => 1,
-        'fk_funcionario' => $_REQUEST['iduser']
+        'fk_funcionario' => $_REQUEST['key']
     ]);
 
-    foreach($tags as $Etiqueta){
+    foreach ($tags as $Etiqueta) {
         $url = 'views/buzones/index.php?';
         $url .= http_build_query([
             'variable_busqueda' => $Etiqueta->getPK(),
             'idbusqueda_componente' => $BusquedaComponente->getPK()
         ]);
 
-        $data[] = array(
+        $data[] = [
             'idmodule' => $Etiqueta->getPK(),
             'isParent' => false,
             'name' => html_entity_decode($Etiqueta->nombre),
             'icon' => 'fa fa-tag',
             'type' => 'tag',
             'url' => $url
-        );
+        ];
     }
 
     $Response->data = $data;
-} else {
-    $Response->message = 'Debe iniciar sesion';
-    $Response->success = 0;
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

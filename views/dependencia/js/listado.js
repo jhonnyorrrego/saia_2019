@@ -15,7 +15,7 @@ $(function () {
             data: {
                 expandir: 1,
                 checkbox: null,
-                fields: ['codigo', 'nombre', 'estado', 'logo']
+                fields: ['codigo', 'nombre', 'estado', 'logo', 'extension', 'ubicacion_dependencia', 'descripcion']
             }
         },
         filter: {
@@ -41,8 +41,11 @@ $(function () {
 
             $tdList.eq(0).text(node.data.codigo);
             $tdList.eq(1).html(image);
-            $tdList.eq(3).text(+node.data.estado ? 'Activo' : 'Inactivo');
-            $tdList.eq(4).html(`<div class="dropdown">
+            $tdList.eq(3).text(node.data.estado ? 'Activo' : 'Inactivo');
+            $tdList.eq(4).text(node.data.extension);
+            $tdList.eq(5).text(node.data.ubicacion_dependencia);
+            $tdList.eq(6).text(node.data.descripcion);
+            $tdList.eq(7).html(`<div class="dropdown">
                 <button class="btn bg-institutional mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v fa-2x"></i>
                 </button>

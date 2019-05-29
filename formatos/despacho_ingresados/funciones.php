@@ -8,6 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+include_once  ($ruta_db_superior."controllers/autoload.php");
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/documento/librerias_tramitados.php");
@@ -22,6 +23,13 @@ function campos_ocultos_entrega($idformato,$iddoc){
 	$mensajero=trim($vector_mensajero[0],',');
 	$tipo_mensajero=$vector_mensajero[1];
 	$hoy=date("Y-m-d");
+	$ventanillas = busca_filtro_tabla("idcf_ventanilla,nombre","cf_ventanilla","estado=1","idcf_ventanilla ASC",$conn);
+
+	$opciones_ventanilla="";
+	for ($i=0;$i<$ventanillas['numcampos'];$i++){
+        $opciones_ventanilla.="<option value=".$ventanillas[$i]['idcf_ventanilla'].">".$ventanillas[$i]['nombre']."</option>";
+    }
+
 	?>
 	<script>
 		$(document).ready(function (){
@@ -37,6 +45,7 @@ function campos_ocultos_entrega($idformato,$iddoc){
 				$("input[name=fecha_entrega]").val('<?php echo $hoy;?>');
 			}
 		});
+		$("#ventanilla").empty().html("<?php echo($opciones_ventanilla); ?>");
 		$("#formulario_formatos").validate({
 				submitHandler: function(form){
 					var seguro=confirm("Esta seguro que desea crear la entrega?");
@@ -101,12 +110,20 @@ function mostrar_seleccionados_entrega($idformato, $iddoc) {
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie,ventanilla", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$iddestino_radicacion = explode(",", $seleccionado[0]['iddestino_radicacion']);
 	$cont = count($iddestino_radicacion);
 	for ($i = 0; $i < $cont; $i++) {
-		$insert = "INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $seleccionado[0]['idft_despacho_ingresados'] . "'," . $seleccionado[0]['serie_idserie'] . ")";
-		phpmkr_query($insert);
+        $insert = "INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $seleccionado[0]['idft_despacho_ingresados'] . "'," . $seleccionado[0]['serie_idserie'] . ")";
+        phpmkr_query($insert);
+        $busca_item_actual=busca_filtro_tabla("idft_item_despacho_ingres","ft_item_despacho_ingres","ft_destino_radicacio=".$iddestino_radicacion[$i]." and ft_despacho_ingresados=".$seleccionado[0]['idft_despacho_ingresados'],"",$conn);
+        $insert = "INSERT INTO dt_recep_despacho(iddistribucion,ft_item_despacho_ingres,idfuncionario) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $busca_item_actual[0]['idft_item_despacho_ingres'] . "'," . SessionController::getValue('idfuncionario') . ")";
+        phpmkr_query($insert);
+
+        $distribucion = busca_filtro_tabla("documento_iddocumento","distribucion","iddistribucion=".$iddestino_radicacion[$i],"",$conn);
+        $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $distribucion[0]['documento_iddocumento'] . "', '" . $seleccionado[$i]['ventanilla'] . "'," . SessionController::getValue('idfuncionario') . ")";
+        phpmkr_query($insert);
+
 		$update = "UPDATE distribucion SET estado_distribucion=2 WHERE iddistribucion=" . $iddestino_radicacion[$i];
 		phpmkr_query($update);
 

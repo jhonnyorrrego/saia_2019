@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "controllers/autoload.php";
 
 try {
-    JwtController::check($_REQUEST['token'], $_REQUEST['key']);    
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
     die("invalid access");
 }
@@ -370,7 +370,7 @@ if (!$_REQUEST['onlyCount']) {
 } else {
     $response['exito'] = 1;
 }
-echo json_encode($response);
+echo json_encode($response,JSON_PARTIAL_OUTPUT_ON_ERROR);
 
 function crear_condicion_sql($idbusqueda, $idcomponente)
 {

@@ -75,9 +75,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">DEPENDENCIA</td><input type="hidden" name="bksaiacondicion_dependencia_asignada" id="bksaiacondicion_dependencia_asignada" value="like"><td bgcolor="#F5F5F5"><div id="esperando_dependencia_asignada"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(405,4995,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_dependencia_asignada" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_dependencia_asignada.findItem((document.getElementById('stext_dependencia_asignada').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_dependencia_asignada" height="90%"></div><input type="hidden" maxlength="255"  name="dependencia_asignada" id="dependencia_asignada"   value="" ><label style="display:none" class="error" for="dependencia_asignada">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

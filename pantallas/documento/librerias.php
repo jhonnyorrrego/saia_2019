@@ -220,7 +220,7 @@ function iddoc_no_distribuidos()
  */
 function code_logged_user()
 {
-    return $_SESSION['usuario_actual'];
+    return SessionController::getValue('usuario_actual');
 }
 
 /**
@@ -250,6 +250,7 @@ function variable_busqueda()
  */
 function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
 {
+    $number = is_numeric($number) ? $number : 0;
     $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
     $temporality = strtotime($date) ? temporality($date) : '';
@@ -300,9 +301,9 @@ function roundedImage($route)
  */
 function unread($iddocumento, $fecha)
 {
-    $idfuncionario = $_SESSION["usuario_actual"];
+    $userCode = SessionController::getValue('usuario_actual');
     $convertString = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
-    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$idfuncionario} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
+    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$userCode} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
     $total = StaticSql::search($sql);
 
     return !$total[0]['total'] ? 'bold' : '';
@@ -495,4 +496,3 @@ function date_formatted($date)
 {
     return DateController::convertDate($date);
 }
-

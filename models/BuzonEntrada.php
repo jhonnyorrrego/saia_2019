@@ -31,7 +31,6 @@ class BuzonEntrada extends Model
     {
         $this->dbAttributes = (object)[
             'safe' => [
-                'idtransferencia',
                 'archivo_idarchivo',
                 'nombre',
                 'destino',
@@ -50,7 +49,8 @@ class BuzonEntrada extends Model
             'date' => [
                 'fecha',
                 'respuesta'
-            ]
+            ],
+            'primary' => 'idtransferencia'
         ];
     }
 

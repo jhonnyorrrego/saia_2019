@@ -61,6 +61,15 @@ $(function () {
         top.topModal({
             url: `${baseUrl}views/permisos/perfiles.php`,
             title: 'Perfiles',
+            buttons: {
+                cancel: {
+                    label: "Cerrar",
+                    class: "btn btn-danger"
+                }
+            },  
+            afterHide: function (event) {
+                findProfileOptions();
+            }
         });
     });
 
@@ -94,6 +103,8 @@ $(function () {
     }
 
     function findProfileOptions() {
+        $("#profile").empty(); 
+        $("#profile").append('<option value="">Seleccione...</option>');
         $.post(
             `${baseUrl}app/funcionario/consulta_perfiles.php`,
             {

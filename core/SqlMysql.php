@@ -69,7 +69,7 @@ class SqlMysql extends SQL2
         $accion = strtok(strtolower($sql), ' ');
         $this->filas = 0;
 
-        if (in_array(strtolower($accion), ["insert", "update"])) {
+        if (in_array($accion, ["insert", "update"])) {
             $this->ultimoInsert = 0;
             $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
@@ -79,7 +79,6 @@ class SqlMysql extends SQL2
             $this->res = mysqli_query($this->Conn->conn, $sql);
 
             if ($this->res) {
-                $this->ultimoInsert = 0;
                 if ($accion == "insert") {
                     $this->ultimoInsert = $this->Ultimo_Insert();
                 } else if ($accion == "select") {
@@ -333,14 +332,14 @@ class SqlMysql extends SQL2
      */
     public function Busca_tabla($tabla, $campo = "")
     {
-        if (!$tabla && @$_REQUEST["tabla"]){
+        if (!$tabla && @$_REQUEST["tabla"]) {
             $tabla = $_REQUEST["tabla"];
-        }else if (!$tabla){
+        } else if (!$tabla) {
             return (false);
         }
-        if($campo){
+        if ($campo) {
             $tabla .= " where Field = '{$campo}'";
-        }   
+        }
         $this->consulta = "show columns from {$tabla}";
         $this->res = mysqli_query($this->Conn->conn, $this->consulta);
         $i = 0;
@@ -376,7 +375,6 @@ class SqlMysql extends SQL2
         $cuantos = $fin - $inicio + 1;
         $inicio = $inicio < 0 ? 0 : $inicio;
         $consulta = "$sql LIMIT $inicio,$cuantos";
-        //$consulta = str_replace("key", "'key'", $consulta);
         return mysqli_query($this->Conn->conn, $consulta);
     }
 
@@ -564,7 +562,7 @@ class SqlMysql extends SQL2
     {
         if ($compara = "" || $compara == 0)
             $compara = ">0";
-        return ("IF($dato$compara,$valor2,$valor1)");
+        return ("IF($dato $compara,$valor2,$valor1)");
     }
 
     function suma_fechas($fecha1, $cantidad, $tipo = "")

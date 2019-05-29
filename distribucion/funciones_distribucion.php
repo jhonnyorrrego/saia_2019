@@ -377,7 +377,14 @@ function ver_documento_distribucion($iddocumento, $tipo_origen)
 
     return ($enlace_documento);
 }
+function ver_documento_planilla($iddocumento, $numero)
+{//Radicado
+    global $conn;
 
+    $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $numero . '</button></center></div>';
+
+    return ($enlace_documento);
+}
 function ver_estado_distribucion($estado_distribucion)
 {//Estado
     $array_estado_distribucion = array(
@@ -514,7 +521,15 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
     //return $tipo_origen." - ".$tipo_destino." - ". $mensajero_origen." - ". $mensajero_destino." - ". $empresa_transportadora." - ". $iddistribucion." - ".$diligencia;
     return ($html);
 }
-
+function filtro_planilla_distribucion(){
+    if($_REQUEST['variable_busqueda']){
+        $variables=explode("|",$_REQUEST['variable_busqueda']);
+        $sql="iddocumento=".$variables[1];
+        return $sql;
+    }else{
+        return '1=1';
+    }
+}
 function mostrar_planilla_diligencia_distribucion($iddistribucion)
 {//Planilla Asociada
     global $conn;
@@ -525,7 +540,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
     if ($planillas['numcampos']) {
         $html = '';
         for ($i = 0; $i < $planillas['numcampos']; $i++) {
-            $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
+            $html .= '<div class="kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=379&variable_busqueda=planilla|' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
         }
     }
     return ($html);
@@ -559,7 +574,9 @@ function opciones_acciones_distribucion($datos)
     if ($nombre_componente == 'reporte_distribucion_general_sinrecogida') {
         $cadena_acciones .= "<option value='boton_confirmar_recepcion_distribucion'>Confirmar Recepcion</option>";
     }
-
+    if ($nombre_componente == 'reporte_planilla_distribucion') {
+        $cadena_acciones .= "<option value='boton_confirmar_recepcion_iten_planilla'>Confirmar Recepcion</option>";
+    }
     if ($nombre_componente != 'reporte_distribucion_general_finalizado') {
         $cadena_acciones .= "<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
     }
@@ -650,6 +667,7 @@ function condicion_adicional_distribucion()
             //la consulta sale vacia si no pertenece a dependencia ventanilla
         }
     }
+
     //FIN CONDICION VENTANILLA
     //FILTRO MENSAJERO
     if (!$administrador_mensajeria && $es_mensajero['numcampos']) {//si no es un administrador filtramos como si fuera un mensajero

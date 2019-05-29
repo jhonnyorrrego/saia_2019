@@ -271,9 +271,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia" id="bksaiacondicion_copia" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(422,6990,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_copia" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_copia" height="90%"></div><input type="hidden" maxlength="255"  name="copia" id="copia"   value="" ><label style="display:none" class="error" for="copia">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

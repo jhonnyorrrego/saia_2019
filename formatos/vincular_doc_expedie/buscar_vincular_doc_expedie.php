@@ -85,9 +85,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="Vincular documentos a un expediente">EXPEDIENTE VINCULADO</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like"><td bgcolor="#F5F5F5"><div id="esperando_serie_idserie"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(312,3654,'1',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_serie_idserie" height="90%"></div><input type="hidden" maxlength="255"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

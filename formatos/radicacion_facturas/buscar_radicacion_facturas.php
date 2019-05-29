@@ -379,9 +379,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia_electronica" id="bksaiacondicion_copia_electronica" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia_electronica"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(424,7035,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_copia_electronica" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_copia_electronica" height="90%"></div><input type="hidden" maxlength="255"  name="copia_electronica" id="copia_electronica"   value="" ><label style="display:none" class="error" for="copia_electronica">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

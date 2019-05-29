@@ -1,4 +1,4 @@
-<html><title>.: CORREO SAIA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/><?php echo(librerias_jquery('1.7')); ?><script type="text/javascript" src="../../js/selectize.js"></script><link rel="stylesheet" type="text/css" href="../../css/selectize.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA CORREO SAIA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_ingresar_datos_factu"><div class="btn-group" data-toggle="buttons-radio" >
+<html><title>.: CORREO SAIA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/><?php echo(librerias_jquery('1.7')); ?><script type="text/javascript" src="../../js/selectize.js"></script><link rel="stylesheet" type="text/css" href="../../css/selectize.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA CORREO SAIA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_ingresar_datos_factu"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_ingresar_datos_factu',this.id)">
 		    Y
 		  </button>
@@ -414,77 +414,7 @@
         				</div>
         			  </div>
         			  <input  type="text" name="transferencia_correo" id="transferencia_correo">
-                </td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_copia_correo',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_copia_correo',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_copia_correo" id="bqsaiaenlace_copia_correo" value="y" />
-		</div>
-                   <td class="encabezado" width="20%" title="">CON COPIA</td><input type="hidden" name="bksaiacondicion_copia_correo" id="bksaiacondicion_copia_correo" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia_correo"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(348,4085,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input type="text" id="stext_copia_correo" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_copia_correo.findItem((document.getElementById('stext_copia_correo').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_copia_correo.findItem((document.getElementById('stext_copia_correo').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_copia_correo.findItem((document.getElementById('stext_copia_correo').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_copia_correo" height="90%"></div><input type="hidden" maxlength="255"  name="copia_correo" id="copia_correo"   value="" ><label style="display:none" class="error" for="copia_correo">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_copia_correo=new dhtmlXTreeObject("treeboxbox_copia_correo","100%","100%",0);
-                			tree_copia_correo.setImagePath("../../imgs/");
-                			tree_copia_correo.enableIEImageFix(true);tree_copia_correo.enableCheckBoxes(1);
-                			tree_copia_correo.enableThreeStateCheckboxes(1);tree_copia_correo.setOnLoadingStart(cargando_copia_correo);
-                      tree_copia_correo.setOnLoadingEnd(fin_cargando_copia_correo);tree_copia_correo.setXMLAutoLoading("../../test_funcionario.php?rol=1");tree_copia_correo.loadXML("../../test_funcionario.php?rol=1");
-                      tree_copia_correo.setOnCheckHandler(onNodeSelect_copia_correo);
-                      function onNodeSelect_copia_correo(nodeId)
-                      {valor_destino=document.getElementById("copia_correo");
-                       destinos=tree_copia_correo.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++) {
-                           if(vector[i].indexOf("#")!=-1) {
-                               hijos=tree_copia_correo.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               for(h=0;h<vectorh.length;h++)
-                                  nuevo=eliminarItem(nuevo,vectorh[h]);
-								}
-						}
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_copia_correo() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_copia_correo")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_copia_correo")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_copia_correo"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_copia_correo() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_copia_correo")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_copia_correo")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_copia_correo"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script></td></tr><tr id="tr_comentario"><div class="btn-group" data-toggle="buttons-radio" >
+                </td></tr><tr id="tr_comentario"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_comentario',this.id)">
 		    Y
 		  </button>

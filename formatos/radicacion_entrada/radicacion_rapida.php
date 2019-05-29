@@ -14,7 +14,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
 	<meta charset="UTF-8">

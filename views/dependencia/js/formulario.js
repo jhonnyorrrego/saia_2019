@@ -42,8 +42,10 @@ $(function () {
             } else if (attribute == 'estado') {
                 $(`[name='estado'][value=${data.estado}]`).prop('checked', true);
             } else if (attribute == 'logo') {
-                $(`[name='logo']`).val(data.logo.route);
-                setImage(data.logo);
+                if (data.logo) {
+                  $(`[name='logo']`).val(data.logo.route);
+                  setImage(data.logo);
+                }
             }
         }
 

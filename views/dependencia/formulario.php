@@ -10,7 +10,12 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
-
+if(empty($_REQUEST['id'])){
+    $_REQUEST['id'] = '';
+}
+if(empty($_REQUEST['parent'])){
+  $_REQUEST['parent'] = '';
+}
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
     'id' => $_REQUEST['id'],
@@ -18,7 +23,7 @@ $params = json_encode([
 ]);
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <!-- Required meta tags -->

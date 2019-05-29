@@ -1,56 +1,71 @@
-$(function(){
-    let token = localStorage.getItem("token");;
-    let key = localStorage.getItem("key");;
-    let grouperSelector = "#appMenu";
-    let listSelector = "#module_list";
+$(function() {
+    let baseUrl = $('script[data-baseurl]').data('baseurl');
+    let token = localStorage.getItem('token');
+    let key = localStorage.getItem('key');
+    let grouperSelector = '#appMenu';
+    let listSelector = '#module_list';
     var xDown = null;
     var yDown = null;
-    
+
     var modules = new Modules(token, key, grouperSelector, listSelector);
 
-    $(document).on('click', '.grouper', function(){    
+    $(document).on('click', '.grouper', function() {
         let idmodule = $(this).attr('id');
         modules.find(idmodule);
 
-        $('[data-pages-toggle="#appMenu"]').trigger("click");
+        $('[data-pages-toggle="#appMenu"]').trigger('click');
     });
 
-    $(document).on('click', '.parent_item', function (e) {
-        if($(e.target).parent().find('.arrow').length){
+    $(document).on('click', '.parent_item', function(e) {
+        if (
+            $(e.target)
+                .parent()
+                .find('.arrow').length
+        ) {
             let moduleId = $(this).attr('id');
             let url = $(this).data('url');
-            
+
             modules.find(moduleId, url);
         }
     });
 
-    $(document).on('click', '.module_link', function(){
-        $("#iframe_workspace").attr('src', $(this).attr('url'));
+    $(document).on('click', '.module_link', function() {
+        $('#iframe_workspace').attr('src', $(this).attr('url'));
 
         let breakpoint = localStorage.getItem('breakpoint');
-        
-        if(['xs','sm'].indexOf(breakpoint) != -1){
+
+        if (['xs', 'sm'].indexOf(breakpoint) != -1) {
             $('#toggle_sidebar').trigger('click');
         }
-        
-        $("#module_list").find('span.bg-institutional').removeClass('bg-institutional');
-        $(this).find('span:last').addClass('bg-institutional');
+
+        $('#module_list')
+            .find('span.bg-institutional')
+            .removeClass('bg-institutional');
+        $(this)
+            .find('span:last')
+            .addClass('bg-institutional');
     });
 
-    document.getElementById('iframe_workspace').addEventListener('load', function () {
-        let script = $('<script>').append(`
-            $(document).ajaxSend(() => top.window.checkSession());
-            $(document).ajaxError((e,xhr) => top.window.checkLogoutResponse(xhr));
-        `);
-        $(this).contents().find('body').prepend(script)
-    });
+    document
+        .getElementById('iframe_workspace')
+        .addEventListener('load', function() {
+            $.getScript(
+                `${baseUrl}assets/theme/assets/js/cerok_libraries/session/global_ajax_validations.js`,
+                r => {
+                    $(this)
+                        .contents()
+                        .find('body')
+                        .prepend($('<script>').text(r));
+                }
+            );
+        });
 
-    $(".page-sidebar").on('touchstart', function (evt) {
+    $('.page-sidebar').on('touchstart', function(evt) {
         xDown = getTouches(evt)[0].clientX;
         yDown = getTouches(evt)[0].clientY;
     });
 
-    $(".page-sidebar").on('touchmove', function (evt) {
+    $('.page-sidebar').on('touchmove', function(evt) {
         if (!xDown || !yDown) {
             return;
         }
@@ -61,7 +76,8 @@ $(function(){
         var xDiff = xDown - xUp;
         var yDiff = yDown - yUp;
 
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+            /*most significant*/
             if (xDiff > 0) {
                 evt.preventDefault();
                 setTimeout(() => {

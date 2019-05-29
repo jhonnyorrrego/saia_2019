@@ -189,9 +189,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">OFICINA PRODUCTORA</td><input type="hidden" name="bksaiacondicion_oficina_productora" id="bksaiacondicion_oficina_productora" value="like"><td bgcolor="#F5F5F5"><div id="esperando_oficina_productora"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,3997,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_oficina_productora" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_oficina_productora" height="90%"></div><input type="hidden" maxlength="255"  name="oficina_productora" id="oficina_productora"   value="" ><label style="display:none" class="error" for="oficina_productora">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
@@ -297,9 +297,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">ENTREGADO POR</td><input type="hidden" name="bksaiacondicion_entregado_por" id="bksaiacondicion_entregado_por" value="like"><td bgcolor="#F5F5F5"><div id="esperando_entregado_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,4000,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_entregado_por" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_entregado_por" height="90%"></div><input type="hidden" maxlength="255"  name="entregado_por" id="entregado_por"   value="" ><label style="display:none" class="error" for="entregado_por">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
@@ -367,9 +367,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">RECIBIDO POR</td><input type="hidden" name="bksaiacondicion_recibido_por" id="bksaiacondicion_recibido_por" value="like"><td bgcolor="#F5F5F5"><div id="esperando_recibido_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,4001,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_recibido_por" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_recibido_por" height="90%"></div><input type="hidden" maxlength="255"  name="recibido_por" id="recibido_por"   value="" ><label style="display:none" class="error" for="recibido_por">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
@@ -446,9 +446,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">AGRUPADOR</td><input type="hidden" name="bksaiacondicion_agrupador" id="bksaiacondicion_agrupador" value="like"><td bgcolor="#F5F5F5"><div id="esperando_agrupador"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,6752,'3',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_agrupador" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_agrupador" height="90%"></div><input type="hidden" maxlength="11"  name="agrupador" id="agrupador"   value="" ><label style="display:none" class="error" for="agrupador">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

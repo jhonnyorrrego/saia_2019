@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 $incluidos = array();
 
@@ -228,10 +228,14 @@ function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
 
         if (is_object($ruta_imagen)) {
             if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
-                $ruta_imagen = json_encode($ruta_imagen);
-                $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
+                $image = TemporalController::createTemporalFile($logo[0]['valor']);
+                if($image->success){
+                    $route = PROTOCOLO_CONEXION . RUTA_PDF . '/' . $image->route;
+                }else{
+                    $route = '';
+                }
 
-                return '<img src="' . $archivo_binario . '" width="80px">';
+                return '<img src="' . $route . '" width="80px">';
             }
         }
     } else {

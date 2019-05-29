@@ -34,22 +34,26 @@ try {
     switch ($_REQUEST['type']) {
         case '1': //ruta radicacion
             createRadicationRoute($documentId, $data);
-            $Response->message = 'Ruta de radicación asignada';
+            $Response->message = 'Ruta de radicación asignada.
+                Por favor confirme el documento para que inicie la ruta establecida.';
             break;
         case '2': //ruta aprobacion
             createApprobationRoute($documentId, $data, $_REQUEST['flow']);
 
-            if ($_REQUEST['flow'] == RutaDocumento::FlUJO_PARALELO) {
-                sendAllDocuments($documentId, $data);
-            } else if ($_REQUEST['flow'] == RutaDocumento::FLUJO_SERIE) {
-                sendToFirstUser($documentId, $data[0]);
+            if ($data) {
+                if ($_REQUEST['flow'] == RutaDocumento::FlUJO_PARALELO) {
+                    sendAllDocuments($documentId, $data);
+                } else if ($_REQUEST['flow'] == RutaDocumento::FLUJO_SERIE) {
+                    sendToFirstUser($documentId, $data[0]);
+                }
             }
 
             $Response->message = 'Ruta de aprobación asignada';
             break;
         case '3': //ruta radicacion / aprobacion
             createBothRoutes($documentId, $data);
-            $Response->message = 'Rutas asignadas';
+            $Response->message = 'Ruta asignada.
+                Por favor confirme el documento para que inicie la ruta establecida.';
             break;
     }
 
@@ -68,17 +72,8 @@ function addPermissions($documentId, $data)
     $date = date('Y-m-d H:i:s');
 
     foreach ($data as $key => $row) {
-        if ($row['type'] == 5) { //iddependencia_cargo
-            $VfuncionarioDc = VfuncionarioDc::findByAttributes([
-                'iddependencia_cargo' => $row['typeId']
-            ]);
-            $fk_funcionario =  $VfuncionarioDc->getPK();
-        } else { //funcionario_codigo
-            $Funcionario = Funcionario::findByAttributes([
-                'funcionario_codigo' => $row['typeId']
-            ]);
-            $fk_funcionario = $Funcionario->getPK();
-        }
+        $VfuncionarioDc = VfuncionarioDc::getUserFromEntity($row['type'], $row['typeId']);
+        $fk_funcionario = $VfuncionarioDc->getPK();
 
         Acceso::executeUpdate([
             'estado' => 0
@@ -112,38 +107,46 @@ function addPermissions($documentId, $data)
  */
 function createApprobationRoute($documentId, $data, $flow)
 {
-    RutaDocumento::inactiveByType($documentId, RutaDocumento::TIPO_APROBACION);
-
-    //nueva relacion de ruta con el documento
-    $fk_ruta_documento = RutaDocumento::newRecord([
-        'fk_documento' => $documentId,
-        'tipo' => RutaDocumento::TIPO_APROBACION,
-        'estado' => 1,
-        'tipo_flujo' => $flow
-    ]);
-
+    $routeItems = $userList = [];
     foreach ($data as $row) {
-        if ($row['type'] == 5) { //iddependencia cargo
-            $VfuncionarioDc = VfuncionarioDc::findByAttributes([
-                'iddependencia_cargo' => $row['typeId']
-            ]);
-            $fk = $VfuncionarioDc->getPK();
-        } else if ($row['type'] == 1) { //funcionario_codigo
-            $Funcionario = Funcionario::findByAttributes([
-                'funcionario_codigo' => $row['typeId']
-            ]);
-            $fk = $Funcionario->getPK();
-        } else {
+        $VfuncionarioDc = VfuncionarioDc::getUserFromEntity($row['type'], $row['typeId']);
+        $fk = $VfuncionarioDc->getPK();
+
+        if (!$fk) {
             throw new Exception("tipo de ralacion invalido", 1);
         }
 
-        RutaAprobacion::newRecord([
+        if (in_array($fk, $userList)) {
+            $username = $VfuncionarioDc->getName();
+            throw new Exception("El usuario {$username} ya se encuentra en la ruta", 1);
+        } else {
+            $userList[] = $fk;
+        }
+
+        $routeItems[] = [
             'orden' => $row['order'],
             'fk_funcionario' => $fk,
             'tipo_accion' => $row['action'],
-            'fk_ruta_documento' => $fk_ruta_documento,
+            'tipo_flujo' => $flow
+        ];
+    }
+
+    RutaDocumento::inactiveByType($documentId, RutaDocumento::TIPO_APROBACION);
+
+    if ($data) {
+        //nueva relacion de ruta con el documento
+        $fk_ruta_documento = RutaDocumento::newRecord([
+            'fk_documento' => $documentId,
+            'tipo' => RutaDocumento::TIPO_APROBACION,
+            'estado' => 1,
             'tipo_flujo' => $flow
         ]);
+
+        foreach ($routeItems as $key => $data) {
+            RutaAprobacion::newRecord($data + [
+                'fk_ruta_documento' => $fk_ruta_documento
+            ]);
+        }
     }
 }
 
@@ -215,16 +218,20 @@ function sendAllDocuments($documentId, $data)
     foreach ($data as $key => $row) {
         if ($row['type'] == 5) { //iddependencia_cargo
             $roles[] = $row['typeId'];
-        } else if ($row['typ e'] == 1) { //funcionario_codigo
+        } else if ($row['type'] == 1) { //funcionario_codigo
             $codes[] = $row['typeId'];
         }
     }
 
-    $destination = implode('@', $codes);
-    transferencia_automatica($Formato->getPK(), $documentId, $destination, 3, 'Transferencia de aprobación');
+    if ($codes) {
+        $destination = implode('@', $codes);
+        transferencia_automatica($Formato->getPK(), $documentId, $destination, 3, 'Transferencia de aprobación');
+    }
 
-    $destination = implode('@', $roles);
-    transferencia_automatica($Formato->getPK(), $documentId, $destination, 1, 'Transferencia de aprobación');
+    if ($roles) {
+        $destination = implode('@', $roles);
+        transferencia_automatica($Formato->getPK(), $documentId, $destination, 1, 'Transferencia de aprobación');
+    }
 }
 
 /**
@@ -243,9 +250,7 @@ function sendToFirstUser($documentId, $data)
     $Formato = $Documento->getFormat();
 
     if ($data['type'] == 5) { //iddependencia_cargo
-        $VfuncionarioDc = VfuncionarioDc::findByAttributes([
-            'iddependencia_cargo' => $data['typeId']
-        ]);
+        $VfuncionarioDc = VfuncionarioDc::findByRole($data['typeId']);
         $code = $VfuncionarioDc->funcionario_codigo;
         $type = 1;
     } else {

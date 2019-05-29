@@ -6,7 +6,7 @@ class Perfil extends Model
     const GENERAL = 6; 
     const ADMIN_INTERNO = 8; 
 
-    protected $id_perfil;
+    protected $idperfil;
     protected $nombre;
     protected $dbAttributes;
 
@@ -30,5 +30,6 @@ class Perfil extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+        
     }
 }

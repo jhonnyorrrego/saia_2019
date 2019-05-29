@@ -40,7 +40,7 @@ class PermisoSerie extends Model
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public function createPermisoSerie() : array
+    public function createPermisoSerie(): array
     {
         $response = [
             'data' => [],
@@ -95,7 +95,7 @@ class PermisoSerie extends Model
      * @return boolean
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function deletePermisoSerie() : bool
+    public function deletePermisoSerie(): bool
     {
         $response = false;
         if ($this->delete()) {
@@ -105,10 +105,10 @@ class PermisoSerie extends Model
         return $response;
     }
 
-    public static function hasAccessUser(int $fk_dependencia, int $fk_serie, string $permiso = 'a') : bool
+    public static function hasAccessUser(int $fk_dependencia, int $fk_serie, string $permiso = 'a'): bool
     {
-        $sql = "SELECT permiso FROM vpermiso_serie WHERE idserie={$fk_serie} AND fk_dependencia={$fk_dependencia} AND permiso like '%{$permiso}%' AND idfuncionario={$_SESSION['idfuncionario']}";
-        return self::findBySql($sql,false) ? true : false;
+        $userId = SessionController::getValue('idfuncionario');
+        $sql = "SELECT permiso FROM vpermiso_serie WHERE idserie={$fk_serie} AND fk_dependencia={$fk_dependencia} AND permiso like '%{$permiso}%' AND idfuncionario={$userId}";
+        return self::findBySql($sql, false) ? true : false;
     }
-
 }
