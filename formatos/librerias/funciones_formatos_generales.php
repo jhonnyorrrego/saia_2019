@@ -156,7 +156,6 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         "'ELIMINA_'",
         "nombre"
     )) . " WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
-    phpmkr_query("delete from ruta where documento_iddocumento=" . $iddoc);
 
     for ($i = 0; $i < count($ruta) - 1; $i++) {
         if (!isset($ruta[$i]["tipo_firma"])) {

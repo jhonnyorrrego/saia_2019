@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -134,4 +134,4 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script data-baseurl="<?= $ruta_db_superior ?>" src="<?= $ruta_db_superior ?>views/configuracion/js/cambio_tema.js"></script>
 </body>
 
-</html> 
+</html>

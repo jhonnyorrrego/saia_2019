@@ -12,12 +12,13 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 
-$Response = (object)array(
+$Response = (object)[
     'data' => new stdClass(),
     'message' => "",
-    'success' => 1,
-);
+    'success' => 1
+];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $DocumentoFuncionario = DocumentoFuncionario::findByAttributes([
@@ -47,6 +48,12 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         }
 
         if ($pk) {
+            transferencia_automatica(
+                null,
+                $DocumentoFuncionario->fk_documento,
+                $DocumentoFuncionario->getUser()->funcionario_codigo,
+                3
+            );
             $Response->message = 'Usuario asignado';
         } else {
             $Response->message = 'Error al guardar';
@@ -59,4 +66,3 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($Response);
-

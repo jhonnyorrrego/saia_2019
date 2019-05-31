@@ -85,8 +85,14 @@ function serie_subserie($idformato, $iddoc, $tipo = 0)
  * @param string $nombre nombre de transferencia
  * @return void
  */
-function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas = "", $nombre = "TRANSFERIDO")
-{
+function transferencia_automatica(
+    $idformato = null,
+    $iddoc,
+    $destinos,
+    $tipo,
+    $notas = "",
+    $nombre = "TRANSFERIDO"
+) {
     global $conn;
 
     $adicionales = array();

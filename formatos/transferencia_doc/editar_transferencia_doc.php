@@ -19,37 +19,37 @@
                                     <meta charset="utf-8" />
                                     <title>.:EDITAR TRANSFERENCIA DOCUMENTAL:.</title>
                                     <meta name="viewport"
-                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                      content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?= pace() ?>
+                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
-                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><?php include_once('../../formatos/librerias/header_formato.php'); ?><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?=  ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
-                	<link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
+                  <link
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                	rel="stylesheet" type="text/css" media="screen" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
+                                  rel="stylesheet" type="text/css" media="screen" />
                                 <link class="main-stylesheet"
-                                	href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-                                	rel="stylesheet" type="text/css" />
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
-                                	rel="stylesheet" type="text/css" media="screen">
+                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
+                                  rel="stylesheet" type="text/css" media="screen">
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                	type="text/javascript"></script>
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
@@ -57,24 +57,24 @@
                                 <link rel="stylesheet"
                                     href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script> 
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script> 
                                 <script
-                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script> 
-                	</head>
-                	<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
-                    	<!-- START card -->
-                    	<div class="card card-default">
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script> 
+                  </head>
+                  <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
+                      <!-- START card -->
+                      <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">TRANSFERENCIA DOCUMENTAL</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],343,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="iddependencia_compania" value="<?php echo(mostrar_valor_campo('iddependencia_compania',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="tipo_transferencia" value="<?php echo(mostrar_valor_campo('tipo_transferencia',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_transferencia_doc" value="<?php echo(mostrar_valor_campo('idft_transferencia_doc',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',343,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',343,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(343,3992,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_expediente_vinculado"><label title="">TRANSFERENCIA VINCULADA*</label><?php guardar_expedientes_add(343,3995,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_oficina_productora">
-                                <label title="">OFICINA PRODUCTORA*</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,3997,'2',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_oficina_productora" width="200px" size="25" onblur="closetree_oficina_productora()"> <input type="hidden" id="idclosetree_oficina_productora">
+                                <label title="">OFICINA PRODUCTORA*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,3997,'2',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_oficina_productora" width="200px" size="25" onblur="closetree_oficina_productora()"> <input type="hidden" id="idclosetree_oficina_productora">
                                 <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),0,1)">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="oficina_productora" id="oficina_productora"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,3997,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_oficina_productora">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="oficina_productora" id="oficina_productora"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,3997,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_oficina_productora">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_oficina_productora" height="90%"></div><script type="text/javascript">
@@ -131,7 +131,8 @@
                                     }
 </script></div></div><div class="form-group" id="tr_observaciones">
                                         <label title="">OBSERVACIONES</label>
-                                        <div class="celda_transparente"><textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(mostrar_valor_campo('observaciones',343,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_anexos">
+                                        <div class="celda_transparente">
+                                        <textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control"><?php echo(mostrar_valor_campo('observaciones',343,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_anexos">
                                         <label title="">ANEXOS</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>
@@ -144,15 +145,15 @@
                                             objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
                                             outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
                                             </div>'; ?></div></div><div class="form-group" id="tr_entregado_por">
-                                <label title="">ENTREGADO POR*</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4000,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='4'  type="text" id="stext_entregado_por" width="200px" size="25" onblur="closetree_entregado_por()"> <input type="hidden" id="idclosetree_entregado_por">
+                                <label title="">ENTREGADO POR*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4000,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='4'  type="text" id="stext_entregado_por" width="200px" size="25" onblur="closetree_entregado_por()"> <input type="hidden" id="idclosetree_entregado_por">
                                 <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),0,1)">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="entregado_por" id="entregado_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4000,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_entregado_por">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="entregado_por" id="entregado_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4000,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_entregado_por">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_entregado_por" height="90%"></div><script type="text/javascript">
@@ -208,15 +209,15 @@
                                         }
                                     }
 </script></div></div><div class="form-group" id="tr_recibido_por">
-                                <label title="">RECIBIDO POR*</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4001,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='5'  type="text" id="stext_recibido_por" width="200px" size="25" onblur="closetree_recibido_por()"> <input type="hidden" id="idclosetree_recibido_por">
+                                <label title="">RECIBIDO POR*</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,4001,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='5'  type="text" id="stext_recibido_por" width="200px" size="25" onblur="closetree_recibido_por()"> <input type="hidden" id="idclosetree_recibido_por">
                                 <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),0,1)">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="recibido_por" id="recibido_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4001,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_recibido_por">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="recibido_por" id="recibido_por"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,4001,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_recibido_por">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_recibido_por" height="90%"></div><script type="text/javascript">
@@ -273,15 +274,15 @@
                                     }
 </script></div></div><div class="form-group" id="tr_transferir_a">
                                         <label title="">TRANSFERIR A*</label><?php genera_campo_listados_editar(343,4002,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_agrupador">
-                                <label title="">AGRUPADOR</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,6752,'3',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='6'  type="text" id="stext_agrupador" width="200px" size="25" onblur="closetree_agrupador()"> <input type="hidden" id="idclosetree_agrupador">
+                                <label title="">AGRUPADOR</label><div class="form-controls"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(343,6752,'3',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='6'  type="text" id="stext_agrupador" width="200px" size="25" onblur="closetree_agrupador()"> <input type="hidden" id="idclosetree_agrupador">
                                 <a href="javascript:void(0)" onclick="buscar_nodo_agrupador('tree_agrupador')">
-                                    <img src="../../botones/general/buscar.png"border="0px">
+                                    <img src="../../assets/images/buscar.png"border="0px">
                                 </a>
                                     <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
+                                        <img src="../../assets/images/anterior.png"border="0px">
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_agrupador.findItem((document.getElementById('stext_agrupador').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  name="agrupador" id="agrupador"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,6752,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_agrupador">
+                                    <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  name="agrupador" id="agrupador"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(343,6752,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_agrupador">
                                     <img src="../../imagenes/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_agrupador" height="90%"></div><script type="text/javascript">
@@ -345,80 +346,99 @@
                                             tree_agrupador.setCheck(vector2[m],true);
                                         }
                                     }
-</script></div></div><input type="hidden" name="expedientes_padre" value="<?php echo(mostrar_valor_campo('expedientes_padre',343,$_REQUEST['iddoc'])); ?>"><?php validacion_js_transferencia(343,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3997'); ?>"><input type="hidden" name="formato" value="343"><tr><td colspan='2'><?php submit_formato(343,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
-            var upload_url = '../../dropzone/cargar_archivos_formato.php';
+</script></div></div><input type="hidden" name="expedientes_padre" value="<?php echo(mostrar_valor_campo('expedientes_padre',343,$_REQUEST['iddoc'])); ?>"><?php validacion_js_transferencia(343,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3997'); ?>"><input type="hidden" name="formato" value="343"><tr><td colspan='2'><?php submit_formato(343,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("343-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+            var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
             var lista_archivos = new Object();
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
+                    var upload_max_size = 5;
+                    var maximo = 5;
+                    var tamanoMaximo = $(this).attr('data-longitud');
+                    var archivosMaximo = $(this).attr('data-cantidad');
+                    var multiple_text = $(this).attr('data-multiple');
+                    if(tamanoMaximo > 1){
+                         multiple_text = 'multiple';
+                    }
+                    
                     var idformato = $(this).attr('data-idformato');
-                	var idcampo = $(this).attr('id');
-                	var paramName = $(this).attr('data-nombre-campo');
-                	var idcampoFormato = $(this).attr('data-idcampo-formato');
-                	var extensiones = $(this).attr('data-extensiones');
-                	var multiple_text = $(this).attr('data-multiple');
-                	var multiple = false;
-                	var form_uuid = $('#form_uuid').val();
-                	var maxFiles = 1;
-                	if(multiple_text == 'multiple') {
-                	multiple = true;
-                	maxFiles = 10;
-                	}
+                  var idcampo = $(this).attr('id');
+                  var paramName = $(this).attr('data-nombre-campo');
+                  var idcampoFormato = $(this).attr('data-idcampo-formato');
+                  var extensiones = $(this).attr('data-extensiones');
+                  
+                  var multiple = false;
+                  var form_uuid = $('#form_uuid').val();
+                    var maxFiles = 1;
+                    var maxFilesize = 5;
+                  if(multiple_text == 'multiple') {
+                      multiple = true;
+                        if(tamanoMaximo > upload_max_size){
+                            maxFilesize = 200;                           
+                        }else{
+                            maxFilesize = tamanoMaximo;
+                        }
+                        if(archivosMaximo > maximo){
+                            maxFiles = 10;
+                        }else{
+                            maxFiles = archivosMaximo;
+                        } 
+                  }
                     var opciones = {
-                        maxFilesize: 2,
-                    	ignoreHiddenFiles : true,
-                    	maxFiles : maxFiles,
-                    	acceptedFiles: extensiones,
-                   	addRemoveLinks: true,
-                   	dictRemoveFile: 'Quitar anexo',
-                   	dictMaxFilesExceeded : 'No puede subir mas archivos',
-                   	dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
-                	uploadMultiple: multiple,
-                    	url: upload_url,
-                    	paramName : paramName,
-                    	params : {
-                        	idformato : idformato,
-                        	idcampo_formato : idcampoFormato,
-                        	nombre_campo : paramName,
-                        	uuid : form_uuid
+                        maxFilesize: maxFilesize,
+                      ignoreHiddenFiles : true,
+                      maxFiles : maxFiles,
+                      acceptedFiles: extensiones,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Quitar anexo',
+                    dictMaxFilesExceeded : 'No puede subir mas archivos',
+                    dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
+                  uploadMultiple: multiple,
+                      url: upload_url,
+                      paramName : paramName,
+                      params : {
+                          idformato : idformato,
+                          idcampo_formato : idcampoFormato,
+                          nombre_campo : paramName,
+                          uuid : form_uuid
                         },
                         removedfile : function(file) {
                             if(lista_archivos && lista_archivos[file.upload.uuid]) {
-                            	$.ajax({
-                            	url: upload_url,
-                            	type: 'POST',
-                            	data: {
-                                	accion:'eliminar_temporal',
-                                    	idformato : idformato,
-                                    	idcampo_formato : idcampoFormato,
-                                	archivo: lista_archivos[file.upload.uuid]}
-                            	});
+                              $.ajax({
+                              url: upload_url,
+                              type: 'POST',
+                              data: {
+                                  accion:'eliminar_temporal',
+                                      idformato : idformato,
+                                      idcampo_formato : idcampoFormato,
+                                  archivo: lista_archivos[file.upload.uuid]}
+                              });
                             }
                             if (file.previewElement != null && file.previewElement.parentNode != null) {
                                 file.previewElement.parentNode.removeChild(file.previewElement);
-                            	delete lista_archivos[file.upload.uuid];
-                            	$('#'+paramName).val(Object.values(lista_archivos).join());
+                              delete lista_archivos[file.upload.uuid];
+                              $('#'+paramName).val(Object.values(lista_archivos).join());
                             }
                             return this._updateMaxFilesReachedClass();
                         },
                         success : function(file, response) {
-                        	for (var key in response) {
-                            	if(Array.isArray(response[key])) {
-                                	for(var i=0; i < response[key].length; i++) {
-                                	archivo=response[key][i];
-                                    	if(archivo.original_name == file.upload.filename) {
-                                    	lista_archivos[file.upload.uuid] = archivo.id;
-                                    	}
-                                	}
-                            	} else {
-                            	if(response[key].original_name == file.upload.filename) {
-                                	lista_archivos[file.upload.uuid] = response[key].id;
-                            	}
-                            	}
-                        	}
-                        	$('#'+paramName).val(Object.values(lista_archivos).join());
+                          for (var key in response) {
+                              if(Array.isArray(response[key])) {
+                                  for(var i=0; i < response[key].length; i++) {
+                                  archivo=response[key][i];
+                                      if(archivo.original_name == file.upload.filename) {
+                                      lista_archivos[file.upload.uuid] = archivo.id;
+                                      }
+                                  }
+                              } else {
+                              if(response[key].original_name == file.upload.filename) {
+                                  lista_archivos[file.upload.uuid] = response[key].id;
+                              }
+                              }
+                          }
+                          $('#'+paramName).val(Object.values(lista_archivos).join());
                             if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
                                 $('#dz_campo_'+idcampoFormato).find('label.error').remove()
                             }
@@ -461,4 +481,4 @@
                                 
                             });
                         </script>
-                	</html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
+                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

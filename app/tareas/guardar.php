@@ -13,11 +13,11 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
+$Response = (object)[
     'data' => new stdClass(),
     'message' => "",
     'success' => 0,
-);
+];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $Tarea = new Tarea($_REQUEST['task'] ?? null);
@@ -81,7 +81,31 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 } else {
     $Response->message = "Debe iniciar sesion";
 }
-
+$notifications = [
+    [
+        'origin' => 1,
+        'destination' => 6,
+        'date' => date('Y-m-d H:i:s'),
+        'description' => 'desc',
+        'type' => Notificacion::TIPO_DOCUMENTO,
+        'typeId' => 1,
+    ], [
+        'origin' => 1,
+        'destination' => 6,
+        'date' => date('Y-m-d H:i:s'),
+        'description' => 'desc',
+        'type' => Notificacion::TIPO_DOCUMENTO,
+        'typeId' => 1,
+    ], [
+        'origin' => 1,
+        'destination' => 9,
+        'date' => date('Y-m-d H:i:s'),
+        'description' => 'desc',
+        'type' => Notificacion::TIPO_DOCUMENTO,
+        'typeId' => 1,
+    ]
+];
+$Response->notifications = CriptoController::encrypt_blowfish(json_encode($notifications));
 echo json_encode($Response);
 
 function sendNotification($Tarea)

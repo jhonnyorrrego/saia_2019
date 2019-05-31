@@ -367,11 +367,11 @@ function select2()
 {
     global $ruta_db_superior;
 
-    $ruta_lib = $ruta_db_superior . 'assets/theme/assets/plugins/select2/';
-    $css = '<link href="' . $ruta_lib . 'css/select2.min.css" rel="stylesheet" type="text/css" />';
+    $baseUrl = $ruta_db_superior . 'assets/theme/assets/plugins/select2/';
+    $css = '<link href="' . $baseUrl . 'css/select2.min.css" rel="stylesheet" type="text/css" />';
 
-    $js = '<script src="' . $ruta_lib . 'js/select2.min.js" type="text/javascript"></script>';
-    $js .= '<script src="' . $ruta_lib . 'js/i18n/es.js" type="text/javascript"></script>';
+    $js = '<script src="' . $baseUrl . 'js/select2.min.js" type="text/javascript"></script>';
+    $js .= '<script src="' . $baseUrl . 'js/i18n/es.js" type="text/javascript"></script>';
     return $css . $js;
 }
 /**

@@ -2,6 +2,9 @@
 
 class Documento extends Model
 {
+    const APROBADO = 'Aprobado';
+    const RECHAZADO = 'Rechazado';
+
     protected $iddocumento;
     protected $numero;
     protected $serie;
@@ -31,7 +34,6 @@ class Documento extends Model
     protected $tipo_despacho;
     protected $formato_idformato;
     protected $documento_antiguo;
-    protected $fk_idversion_documento;
     protected $version;
     protected $fecha_limite;
     protected $ventanilla_radicacion;
@@ -84,7 +86,6 @@ class Documento extends Model
             'tipo_despacho',
             'formato_idformato',
             'documento_antiguo',
-            'fk_idversion_documento',
             'version',
             'fecha_limite',
             'ventanilla_radicacion',
@@ -102,6 +103,19 @@ class Documento extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * retorna la decripcion lista para mostrar al cliente
+     * sin tags html y decodificada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function getDescription()
+    {
+        return strip_tags(html_entity_decode($this->descripcion));
     }
 
     /**
@@ -197,7 +211,53 @@ class Documento extends Model
             $access = $Documento->getFormat()->tipo_edicion;
         }
 
+        if (!$access && $Documento->activa_admin == 1) {
+            $VersionDocumento = VersionDocumento::findByAttributes([
+                'documento_iddocumento' => $documentId,
+            ], null, 'idversion_documento desc');
+
+            $access = $VersionDocumento->funcionario_idfuncionario == $userId;
+        }
+
         return $access > 0;
+    }
+
+    /**
+     * asigna el estado de aprobacion del documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-16
+     */
+    public static function setApprobationState($documentId)
+    {
+        $finished = RutaDocumento::countRecords([
+            'fk_documento' => $documentId,
+            'estado' => 1,
+            'finalizado' => 1
+        ]);
+
+        if ($finished) {
+            $state = self::APROBADO;
+            $routes = RutaAprobacion::findActivesByDocument($documentId);
+
+            foreach ($routes as $RutaAprobacion) {
+                if (
+                    $RutaAprobacion->tipo_accion == RutaAprobacion::TIPO_APROBAR &&
+                    $RutaAprobacion->ejecucion == RutaAprobacion::EJECUCION_RECHAZAR
+                ) {
+                    $state = self::RECHAZADO;
+                    break;
+                }
+            }
+
+            self::executeUpdate([
+                'estado_aprobacion' => $state
+            ], [
+                'iddocumento' => $documentId
+            ]);
+        }
     }
 
     /**

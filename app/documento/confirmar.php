@@ -27,7 +27,7 @@ try {
         throw new Exception("Documento invalido", 1);
     }
 
-    $Documento = new Documento($_REQUEST['documentId']);    
+    $Documento = new Documento($_REQUEST['documentId']);
     $RutaDocumento = RutaDocumento::findByAttributes([
         'fk_documento' => $Documento->getPK(),
         'estado' => 1,
@@ -35,37 +35,55 @@ try {
     ]);
 
     if ($_REQUEST['reject']) {
-        RutaAprobacion::executeUpdate([
-            'ejecucion' => RutaAprobacion::EJECUCION_RECHAZAR,
-            'fecha_ejecucion' => date('Y-m-d H:i:s')
-        ], [
-            'fk_funcionario' => $_REQUEST['key'],
-            'fk_ruta_documento' => $RutaDocumento->getPK()
-        ]);
+        $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
+
+        if ($RutaAprobacion->fk_funcionario == $_REQUEST['key']) {
+            $RutaAprobacion->execute(RutaAprobacion::EJECUCION_RECHAZAR);
+        }
 
         if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
             sendDocument($Documento);
         }
     } else {
         if ($RutaDocumento) {
-            RutaAprobacion::executeUpdate([
-                'ejecucion' => RutaAprobacion::EJECUCION_APROBAR,
-                'fecha_ejecucion' => date('Y-m-d H:i:s')
-            ], [
-                'fk_funcionario' => $_REQUEST['key'],
-                'fk_ruta_documento' => $RutaDocumento->getPK()
-            ]);
+            $RutaAprobacion = RutaAprobacion::getStepFromDocumet($Documento->getPK());
+
+            if ($RutaAprobacion->fk_funcionario == $_REQUEST['key']) {
+                $RutaAprobacion->execute(RutaAprobacion::EJECUCION_APROBAR);
+            }
         }
 
-        //confirmar en la ruta de aprob
-        //verificar si tiene numero y no hacer lo de abajo
-        if ($Documento->numero) {
-            if ($RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE) {
-                sendDocument($Documento);
+        $ActiveRoute = Ruta::getStepFromDocumet($Documento->getPK());
+        $routes = BuzonEntrada::findActiveRoute($Documento->getPK());
+
+        if (
+            $Documento->numero &&
+            $RutaDocumento->tipo_flujo == RutaDocumento::FLUJO_SERIE
+        ) {
+            sendDocument($Documento);
+        }
+
+        $RutaDocumento = RutaDocumento::countRecords([
+            'fk_documento' => $Documento->getPK(),
+            'estado' => 1,
+            'tipo' => RutaDocumento::TIPO_RADICACION,
+            'finalizado' => 0
+        ]);
+
+        if ($RutaDocumento) {
+            foreach ($routes as $key => $BuzonEntrada) {
+                if ($BuzonEntrada->ruta_idruta == $ActiveRoute->getPK()) {
+                    //en buzon entrada el destino siempre es funcionario codigo :'(
+                    $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $BuzonEntrada->destino);
+
+                    if ($VfuncionarioDc->getPK() == $_REQUEST['key']) {
+                        include_once $ruta_db_superior . 'class_transferencia.php';
+                        aprobar($Documento->getPK());
+                    }
+
+                    break;
+                }
             }
-        } else {
-            include_once $ruta_db_superior . 'class_transferencia.php';
-            aprobar($_REQUEST['documentId']);
         }
     }
 

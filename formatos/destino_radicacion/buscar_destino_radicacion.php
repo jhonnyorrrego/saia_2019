@@ -142,9 +142,9 @@
 		</div>
                    <td class="encabezado" width="20%" title="">DESTINO*</td><input type="hidden" name="bksaiacondicion_nombre_destino" id="bksaiacondicion_nombre_destino" value="like"><td bgcolor="#F5F5F5"><div id="esperando_nombre_destino"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(403,4972,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_nombre_destino" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_nombre_destino.findItem((document.getElementById('stext_nombre_destino').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
                           <br /><br /><div id="treeboxbox_nombre_destino" height="90%"></div><input type="hidden" maxlength="255"  name="nombre_destino" id="nombre_destino"   value="" ><label style="display:none" class="error" for="nombre_destino">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
