@@ -42,7 +42,7 @@ class Dependencia extends Model
                 'codigo_arbol',
                 'descripcion'
             ],
-            'date' => 'fecha_ingreso'
+            'date' => ['fecha_ingreso']
         ];
     }
     /**
