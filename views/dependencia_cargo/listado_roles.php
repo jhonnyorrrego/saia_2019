@@ -28,6 +28,13 @@ $params = json_encode([
 
 <body>
     <div class="container-fluid">
+        <div class="row pb-2">
+            <div class="col-12">
+                <button class="btn btn-complete btn-sm float-right" id="add_role" title="Crear rol">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <table id="role_table"></table>
@@ -35,7 +42,7 @@ $params = json_encode([
         </div>
     </div>
     <?= bootstrapTable() ?>
-    <script id="user_script" src="<?= $ruta_db_superior ?>views/funcionario/js/asignar_rol.js" data-params='<?= $params ?>'>
+    <script id="role_script" src="<?= $ruta_db_superior ?>views/dependencia_cargo/js/listado_roles.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

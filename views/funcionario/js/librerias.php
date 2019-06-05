@@ -66,12 +66,12 @@
 
         function addRole(userId){
             top.topModal({
-                url: `${baseUrl}views/funcionario/asignar_rol.php`,
+                url: `${baseUrl}views/dependencia_cargo/listado_roles.php`,
                 params: {
                     userId: userId
                 },
                 size: 'modal-xl',
-                title: 'Usuario',
+                title: 'Listado de roles',
                 buttons: {}
             });
         }
