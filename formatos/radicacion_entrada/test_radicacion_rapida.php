@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "core/autoload.php";
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: application/xhtml+xml");

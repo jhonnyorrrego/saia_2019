@@ -42,7 +42,7 @@ class LogController
      */
     public static function simpleEvent($event, $userId)
     {
-        $userId = $userId ? $userId : $_SESSION['idfuncionario'];
+        $userId = $userId ? $userId : SessionController::getValue('idfuncionario');;
         return Log::newRecord([
             'fk_funcionario' => $userId,
             'fecha' => date('Y-m-d H:i:s'),
@@ -50,7 +50,7 @@ class LogController
         ]);
     }
 
-     /**
+    /**
      * crea los registros de log_historial
      * cuando el evento es una modificacion
      *
@@ -63,7 +63,10 @@ class LogController
     {
         $logId = self::simpleEvent($event, $userId);
         foreach ($object->getAttributes() as $attribute => $value) {
-            if (!is_null($object->$attribute) && $object->$attribute != $object->clone->$attribute) {
+            if (
+                !is_null($object->$attribute)
+                && $object->$attribute != $object->clone->$attribute
+            ) {
                 LogHistorial::newRecord([
                     'fk_log' => $logId,
                     'campo' => $attribute,

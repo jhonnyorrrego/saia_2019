@@ -258,7 +258,7 @@ class Funcionario extends Model
                 LIKE '%{$term}%'
 SQL;
 
-        return  self::findBySql($sql);
+        return self::findBySql($sql);
     }
 
     public static function findByDocumentTransfer($documentId)

@@ -181,6 +181,8 @@ $(function() {
                 top.topModal({
                     url: `${baseUrl + route}`,
                     title: $(this).text(),
+                    centerAlign: false,
+                    size: 'modal-xl',
                     params: {
                         documentId: documentId
                     },

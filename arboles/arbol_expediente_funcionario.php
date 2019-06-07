@@ -8,7 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-require_once $ruta_db_superior . "controllers/autoload.php";
+require_once $ruta_db_superior . "core/autoload.php";
 
 $ExpFunc = new ExpedienteFuncionario();
 $ExpFunc->setOptions($_REQUEST);

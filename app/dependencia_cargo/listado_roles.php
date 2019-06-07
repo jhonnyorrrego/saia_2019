@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "core/autoload.php";
 
 $Response = (object)[
     "total" => 0,
@@ -44,7 +44,21 @@ try {
         ORDER BY {$order}
 SQL;
     $roles = StaticSql::search($sql, $offset, $limit);
-    $Response->total = count($roles);
+
+    $sql = <<<SQL
+        SELECT
+            count(*) as total
+        FROM
+            dependencia_cargo a 
+            JOIN dependencia b 
+                ON a.dependencia_iddependencia = b.iddependencia
+            JOIN cargo c
+                ON a.cargo_idcargo = c.idcargo
+        WHERE
+            a.funcionario_idfuncionario = {$_REQUEST["userId"]}
+SQL;
+    $total = StaticSql::search($sql);
+    $Response->total = $total[0]['total'];
 
     foreach ($roles as $key => $row) {
         $Response->rows[] = [
