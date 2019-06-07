@@ -1,6 +1,6 @@
 <?php
 
-class FuncionarioFuncion extends Model
+class FuncionarioFuncion extends LogModel
 {
     protected $idfuncionario_funcion;
     protected $fk_funcion;

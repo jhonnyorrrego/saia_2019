@@ -1,10 +1,13 @@
 <?php
+use Stringy\Stringy;
+
 trait TLogConnection
 {
     private static function getParentRelationName()
     {
-        $name = strtolower(get_called_class());
-        $name = str_replace('log', '', $name);
+        $Stringy = new Stringy(get_called_class());
+        $name = (string)$Stringy->underscored();
+        $name = str_replace('_log', '', $name);
         return 'fk_' . $name;
     }
 
