@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 if (!$_REQUEST["key"]) {
     return false;
 }
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $idserie = $_REQUEST["key"];
 if (!$idserie) {

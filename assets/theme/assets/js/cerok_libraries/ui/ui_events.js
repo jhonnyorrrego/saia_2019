@@ -281,7 +281,7 @@ $(function() {
             url: `${baseUrl}views/tareas/crear.php`,
             centerAlign: false,
             size: 'modal-lg',
-            title: 'Tarea',
+            title: 'Tarea o Recordatorio',
             buttons: {}
         };
 

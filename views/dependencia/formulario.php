@@ -10,11 +10,11 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
-if(empty($_REQUEST['id'])){
+if (empty($_REQUEST['id'])) {
     $_REQUEST['id'] = '';
 }
-if(empty($_REQUEST['parent'])){
-  $_REQUEST['parent'] = '';
+if (empty($_REQUEST['parent'])) {
+    $_REQUEST['parent'] = '';
 }
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
@@ -64,6 +64,10 @@ $params = json_encode([
                         <label>Logo:</label>
                         <div id="file"></div>
                         <input type="hidden" name="logo">
+                    </div>
+                    <div class="form-group form-group-default">
+                        <label>Sigla:</label>
+                        <input name="sigla" type="text" class="form-control">
                     </div>
                     <div class="form-group form-group-default">
                         <label>Extensión:</label>

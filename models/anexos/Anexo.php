@@ -15,9 +15,10 @@ class Anexo extends Model
     protected $eliminado;
     protected $fk_anexo;
     protected $user;
-    protected $log;
     protected $dbAttributes;
-    
+
+    //relations
+    protected $log;
     //utilities
     public $clone;
 

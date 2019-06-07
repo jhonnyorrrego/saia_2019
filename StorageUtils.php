@@ -1,7 +1,4 @@
 <?php
-require_once ("define.php");
-
-require ('vendor/autoload.php');
 require_once 'filesystem/SaiaLocalAdapter.php';
 require_once 'filesystem/SaiaStorage.php';
 
@@ -9,17 +6,14 @@ use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 use Gaufrette\Filesystem;
 use Aws\S3\S3Client;
 use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
-use Gaufrette\Adapter\GoogleCloudStorage;
 use Gaufrette\Adapter\InMemory;
 use Gaufrette\StreamWrapper;
 
 use Stringy\Stringy;
 use Stringy\StaticStringy as StringUtils;
 
-use Imagine\Image\Palette\RGB;
-use Imagine\Image\Box;
-
-class StorageUtils {
+class StorageUtils
+{
 	const LOCAL = 'local://';
 	const NETWORK = 'net://';
 	const GOOGLE = 'gc://';
@@ -35,50 +29,51 @@ class StorageUtils {
 	 * @param unknown $tipo
 	 * @return string
 	 */
-	public static function get_storage_path($tipo, $cadena = false) {
+	public static function get_storage_path($tipo, $cadena = false)
+	{
 		$path = "";
 		switch ($tipo) {
-			case 'archivos' :
+			case 'archivos':
 				$server_path = RUTA_ARCHIVOS;
 				break;
-			case 'pdf' :
+			case 'pdf':
 				$server_path = RUTA_PDFS;
 				break;
-			case 'imagenes' :
+			case 'imagenes':
 				$server_path = RUTA_IMAGENES;
 				break;
-			case 'versiones' :
+			case 'versiones':
 				$server_path = RUTA_VERSIONES;
 				break;
-			case 'configuracion' :
+			case 'configuracion':
 				$server_path = RUTA_CONFIGURACION;
 				break;
-			case 'backup' :
+			case 'backup':
 				$server_path = RUTA_BACKUPS;
 				break;
-			case 'bpmn' :
+			case 'bpmn':
 				$server_path = RUTA_ARCHIVOS_BPMN;
 				break;
-			case 'manual' :
+			case 'manual':
 				$server_path = RUTA_MANUAL;
 				break;
-			case 'plantilla_word' :
+			case 'plantilla_word':
 				$server_path = RUTA_PLANTILLA_WORD;
 				break;
-			case 'planos' :
+			case 'planos':
 				$server_path = RUTA_PLANOS;
 				break;
-			case 'historial_impresion' :
+			case 'historial_impresion':
 				$server_path = RUTA_HISTORIAL_IMPRESION;
 				break;
-			default :
+			default:
 				//Usar el tipo. Ej. BACKUP
 				$server_path = $tipo;
 		}
 
 		$filesystem = static::ensure_dir_exists($server_path);
 		if ($cadena) {
-			return $filesystem -> getAdapter() -> getDirectory();
+			return $filesystem->getAdapter()->getDirectory();
 		}
 		return $filesystem;
 	}
@@ -89,35 +84,36 @@ class StorageUtils {
 	 *        	cadena json con la sintaxis: {servidor:"local://ruta/al/servidor", ruta:"ruta/al/archivo.ext"}
 	 * @return binary (contenido del archivo)
 	 */
-	public static function get_binary_file($vector_ruta, $img_blanco = true) {
+	public static function get_binary_file($vector_ruta, $img_blanco = true)
+	{
 		$pdf = @$_REQUEST["tipo"] == 5;
 		$tipo_pdf = $_REQUEST['tipo_pdf'] ?? null;
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		$ruta = $resolver_ruta['ruta'];
 		$tipo_almacenamiento = $resolver_ruta['clase'];
 		try {
-			$type = $tipo_almacenamiento -> get_filesystem() -> mimeType($ruta);
+			$type = $tipo_almacenamiento->get_filesystem()->mimeType($ruta);
 		} catch (Exception $le) {
 			$type = false;
 		}
 
-		if ($tipo_almacenamiento -> get_filesystem() -> has($ruta)) {
-			$contenido_binario = $tipo_almacenamiento -> get_filesystem() -> read($ruta);
+		if ($tipo_almacenamiento->get_filesystem()->has($ruta)) {
+			$contenido_binario = $tipo_almacenamiento->get_filesystem()->read($ruta);
 		} else if ($img_blanco) {
 			$imagine = new Imagine\Gd\Imagine();
 			$size = new Imagine\Image\Box(100, 100);
-			$image = $imagine -> create($size);
-			$contenido_binario = $image -> get("png");
+			$image = $imagine->create($size);
+			$contenido_binario = $image->get("png");
 		} else {
 			return false;
 		}
 		if (!$type) {
 			$finfo = new finfo(FILEINFO_MIME_TYPE);
-			$type = $finfo -> buffer($contenido_binario);
+			$type = $finfo->buffer($contenido_binario);
 		}
 		switch ($type) {
-			case 'image/png' :
-			case 'image/jpeg' :
+			case 'image/png':
+			case 'image/jpeg':
 				if ($pdf) {
 					if ($tipo_pdf == 'tcpdf') {
 						$wtf = "@";
@@ -139,20 +135,22 @@ class StorageUtils {
 	 * @param unknown $vector_ruta
 	 * @return unknown
 	 */
-	public static function get_file_content($vector_ruta) {
+	public static function get_file_content($vector_ruta)
+	{
 		$contenido_binario = false;
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		if ($resolver_ruta["error"] === false) {
 			$ruta = $resolver_ruta['ruta'];
 			$clase = $resolver_ruta['clase'];
-            if($clase -> get_filesystem() -> has($ruta)){
-                $contenido_binario = $clase -> get_filesystem() -> read($ruta);   
-            }
+			if ($clase->get_filesystem()->has($ruta)) {
+				$contenido_binario = $clase->get_filesystem()->read($ruta);
+			}
 		}
 		return ($contenido_binario);
 	}
 
-	private static function ensure_dir_exists($destino) {
+	private static function ensure_dir_exists($destino)
+	{
 		$adapter = null;
 		$mi_ruta = Stringy::create(__DIR__);
 		$root = $_SERVER["DOCUMENT_ROOT"];
@@ -162,33 +160,35 @@ class StorageUtils {
 		$root .= $resto;
 
 		$str_path = Stringy::create($destino);
-		$storage_type = $str_path -> first($str_path -> indexOf("://")) -> ensureRight("://");
-		$path = $str_path -> removeLeft($storage_type);
+		$storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
+		$path = $str_path->removeLeft($storage_type);
 
 		switch ($storage_type) {
-			case self::LOCAL :
-			case self::NETWORK :
+			case self::LOCAL:
+			case self::NETWORK:
 				if (StringUtils::startsWith($path, "..")) {
-					$path = Stringy::create($path) -> trimLeft(".." . self::SEPARADOR) -> removeRight(self::SEPARADOR) -> ensureLeft(self::SEPARADOR);
+					$path = Stringy::create($path)->trimLeft(".." . self::SEPARADOR)->removeRight(self::SEPARADOR)->ensureLeft(self::SEPARADOR);
 					$adapter = new Local($root . $path, true, 0777);
 				} else {
 					$adapter = new Local($path, true, 0777);
 				}
 				break;
-			case self::GOOGLE :
+			case self::GOOGLE:
 				$adapter = obtener_google_adapter();
 				break;
-			case self::S3 :
+			case self::S3:
 				$s3client = new S3Client([
-				'credentials' => [
-				'key' => KEY_AWS,
-				'secret' => SECRET_AWS, ],
-				'version' => 'latest',
-				'region' => REGION_AWS, ]);
-				$path = Stringy::create($path) -> removeRight(StorageUtils::SEPARADOR);
+					'credentials' => [
+						'key' => KEY_AWS,
+						'secret' => SECRET_AWS,
+					],
+					'version' => 'latest',
+					'region' => REGION_AWS,
+				]);
+				$path = Stringy::create($path)->removeRight(StorageUtils::SEPARADOR);
 				$adapter = new AwsS3Adapter($s3client, $path);
 				break;
-			default :
+			default:
 				$adapter = new Local($path, true, 0777);
 		}
 		if ($adapter) {
@@ -203,13 +203,14 @@ class StorageUtils {
 	 * @param string $path
 	 * @return array con los datos de la ruta
 	 */
-	public static function resolver_ruta($path) {
+	public static function resolver_ruta($path)
+	{
 		$resp = array("error" => true);
 
 		$ruta = Stringy::create($path);
 
 		$almacenamiento = null;
-		if ($ruta -> isJson()) {
+		if ($ruta->isJson()) {
 			$rutaj = json_decode($path);
 			/*$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
 			 $rutaj->servidor = (string)$ruta_resuelta["servidor"];
@@ -217,9 +218,9 @@ class StorageUtils {
 			 $ruta_compuesta = Stringy::create($ruta_resuelta["ruta"]);
 			 $rutaj->ruta = (string)$ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
 			 }*/
-			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj -> servidor);
-			$resp["servidor"] = $rutaj -> servidor;
-			$resp["ruta"] = (string)$rutaj -> ruta;
+			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
+			$resp["servidor"] = $rutaj->servidor;
+			$resp["ruta"] = (string)$rutaj->ruta;
 			$resp["error"] = false;
 			//print_r($resp);die("<==== Resuelta");
 		} else {
@@ -237,14 +238,14 @@ class StorageUtils {
 			$str_path = Stringy::create($path);
 			$posibles = array();
 			foreach ($constantes as $key => $value) {
-				if ($str_path -> startsWith($value)) {
+				if ($str_path->startsWith($value)) {
 					$posibles[] = $value;
 				} else {
 					$str_const = Stringy::create($value);
-					if ($str_const -> contains("://")) {
-						$storage_type = $str_const -> first($str_const -> indexOf("://")) -> ensureRight("://");
-						$otra_ruta = $str_const -> removeLeft($storage_type);
-						if ($str_path -> startsWith($otra_ruta)) {
+					if ($str_const->contains("://")) {
+						$storage_type = $str_const->first($str_const->indexOf("://"))->ensureRight("://");
+						$otra_ruta = $str_const->removeLeft($storage_type);
+						if ($str_path->startsWith($otra_ruta)) {
 							$posibles[] = $str_const;
 						}
 					}
@@ -258,7 +259,7 @@ class StorageUtils {
 				$mejor_opcion = $posibles[$index];
 				$ruta_resuelta = static::parsear_ruta_servidor($mejor_opcion);
 
-				$ruta_compuesta = (string)$str_path -> removeLeft($mejor_opcion);
+				$ruta_compuesta = (string)$str_path->removeLeft($mejor_opcion);
 				if (!empty($ruta_resuelta["ruta"])) {
 					$ruta_compuesta = Stringy::create($ruta_resuelta["ruta"]);
 				}
@@ -280,12 +281,13 @@ class StorageUtils {
 	 * @param string $ruta_servidor
 	 * @return string[]
 	 */
-	private static function parsear_ruta_servidor($ruta_servidor) {
+	private static function parsear_ruta_servidor($ruta_servidor)
+	{
 		//debug_print_backtrace();
 		$str_ruta = Stringy::create($ruta_servidor);
-		$storage_type = $str_ruta -> first($str_ruta -> indexOf("://")) -> ensureRight("://");
-		$str_ruta = $str_ruta -> removeLeft($storage_type);
-		$rutas = $str_ruta -> removeLeft(static::SEPARADOR) -> split(static::SEPARADOR);
+		$storage_type = $str_ruta->first($str_ruta->indexOf("://"))->ensureRight("://");
+		$str_ruta = $str_ruta->removeLeft($storage_type);
+		$rutas = $str_ruta->removeLeft(static::SEPARADOR)->split(static::SEPARADOR);
 		$rutas = array_filter($rutas);
 		$resto = "";
 		$ruta_srv = "";
@@ -297,21 +299,21 @@ class StorageUtils {
 			if (SO == "Windows") {
 				if (preg_match("/^([a-zA-Z]:)/", $str_ruta, $unidad)) {
 					$str_ruta = Stringy::create(preg_replace("/^[a-zA-Z]:/", '', $str_ruta));
-					if ($str_ruta -> startsWith(StorageUtils::SEPARADOR)) {
+					if ($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
 						$prefijo_servidor = $unidad[0] . StorageUtils::SEPARADOR;
 					}
 				}
 			} else {
-				if ($str_ruta -> startsWith(StorageUtils::SEPARADOR)) {
+				if ($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
 					$prefijo_servidor = StorageUtils::SEPARADOR;
 				}
 			}
 
-			$ruta_srv = Stringy::create($rutas[0]) -> prepend($prefijo_servidor) -> prepend($storage_type);
+			$ruta_srv = Stringy::create($rutas[0])->prepend($prefijo_servidor)->prepend($storage_type);
 			if (count($rutas) > 1) {
 				unset($rutas[0]);
 				$resto = implode(static::SEPARADOR, $rutas);
-				$resto = Stringy::create($resto) -> removeRight(static::SEPARADOR);
+				$resto = Stringy::create($resto)->removeRight(static::SEPARADOR);
 			}
 		}
 		$resp = array(
@@ -329,7 +331,8 @@ class StorageUtils {
 	 * @param unknown $usr_temp
 	 * @return boolean
 	 */
-	public static function obtener_archivo_temporal($prefix, $usr_temp = null) {
+	public static function obtener_archivo_temporal($prefix, $usr_temp = null)
+	{
 		$ruta_db_superior = __DIR__;
 		if (!empty($prefix)) {
 			$nombre_temporal = uniqid($prefix);
@@ -367,7 +370,8 @@ class StorageUtils {
 	 * Devuelve
 	 * @return string
 	 */
-	public static function obtener_tempdir() {
+	public static function obtener_tempdir()
+	{
 		$tempfile = tempnam(sys_get_temp_dir(), '');
 		if (file_exists($tempfile)) {
 			unlink($tempfile);
@@ -379,7 +383,8 @@ class StorageUtils {
 		return null;
 	}
 
-	public static function get_app_root() {
+	public static function get_app_root()
+	{
 		if (defined("RUTA_ABS_SAIA")) {
 			return RUTA_ABS_SAIA;
 		}
@@ -390,8 +395,8 @@ class StorageUtils {
 		$app_root = $docRoot;
 
 		$rutas = new ArrayObject(explode(self::SEPARADOR, ltrim($dir, self::SEPARADOR)));
-		for ($it = $rutas -> getIterator(); $it -> valid(); $it -> next()) {
-			$app_root .= self::SEPARADOR . $it -> current();
+		for ($it = $rutas->getIterator(); $it->valid(); $it->next()) {
+			$app_root .= self::SEPARADOR . $it->current();
 			if (is_file($app_root . self::SEPARADOR . "db.php")) {
 				break;
 			}
@@ -403,13 +408,13 @@ class StorageUtils {
 		return $app_root;
 	}
 
-	public static function get_memory_filesystem($root, $scheme = null) {
-		$memory_filesystem = new Filesystem(new InMemory( array()));
+	public static function get_memory_filesystem($root, $scheme = null)
+	{
+		$memory_filesystem = new Filesystem(new InMemory(array()));
 
 		$filesystemMap = StreamWrapper::getFilesystemMap();
-		$filesystemMap -> set($root, $memory_filesystem);
+		$filesystemMap->set($root, $memory_filesystem);
 		StreamWrapper::register($scheme);
 		return $memory_filesystem;
 	}
 }
-?>

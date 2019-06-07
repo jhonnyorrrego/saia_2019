@@ -10,7 +10,8 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
 /**
  * las funciones indicadas posteriormente son
@@ -93,10 +94,6 @@ function user_condition()
  */
 function get_image($imgRoute, $userId, $name, $lastName)
 {
-    global $ruta_db_superior;
-
-    include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
-
     $Funcionario = new Funcionario();
     $Funcionario->setAttributes([
         'nombres' => $name,
@@ -127,11 +124,27 @@ function options_button($userId)
                 <a href="#" class="dropdown-item new_action" data-type="edit" data-id="{$userId}">
                     <i class="fa fa-edit"></i> Editar
                 </a>
+                <a href="#" class="dropdown-item new_action" data-type="add_role" data-id="{$userId}">
+                    <i class="fa fa-users"></i> Roles
+                </a>
+                <a href="#" class="dropdown-item new_action" data-type="add_function" data-id="{$userId}">
+                    <i class="fa fa-cogs"></i> Funciones
+                </a>
             </div>
         </div>
 HTML;
 }
 
-function close_session_button($login){
-    return "<button class='btn btn-danger close_session' data-login='{$login}'>Cerrar</button>";    
+/**
+ * boton para cerrar la sesion desde el reporte
+ * de usuarios concurrentes
+ *
+ * @param string $login
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
+function close_session_button($login)
+{
+    return "<button class='btn btn-danger close_session' data-login='{$login}'>Cerrar</button>";
 }

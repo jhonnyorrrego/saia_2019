@@ -12,7 +12,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object)[
     'data' => new stdClass(),
@@ -27,7 +27,7 @@ try {
         case 'notifications':
             $host = $_SERVER['SERVER_NAME'];
             $folderRoute = RUTA_SAIA;
-            $route = "wss://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
+            $route = "ws://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
             break;
 
         default:

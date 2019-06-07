@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_cliente.php";
 include_once $ruta_db_superior . "class_transferencia.php";
 
@@ -1585,29 +1585,27 @@ function submit_formato($formato, $iddoc = null)
     <script>
         $(document).ready(function() {
             $("#continuar").click(function() {
-                var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
-                var size = elementos.length;
-                if (size) {
-                    $.each(elementos, function(i, val) {
-                        var contenido_textarea = tinyMCE.get($(val).attr('id')).getContent();
-                        $("#" + $(val).attr('id')).val(contenido_textarea);
-                    });
-                }
-                /*if($('#formulario_formatos').validate({ignore:""})){
-                 $("#continuar").hide();
-                 $("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
-                 }
-                 }*/
+                $('[class^="tiny_"]:not(.tiny_sin_tiny)').each(() => {
+                    let identification = $(this).attr('id');
+                    var content = tinyMCE.get(identification).getContent();
+                    $(this).val(content);
+                });
+
                 $("#formulario_formatos").validate({
                     ignore: [],
                     submitHandler: function(form) {
-                        // disable your button here
                         $("#continuar").hide();
-                        $("#continuar").after('<button class="btn btn-success" disabled="true" value="Enviando..." id="boton_enviando">Enviando...</button>');
+                        $("#continuar").after(
+                            $('<button>', {
+                                class: 'btn btn-success',
+                                disabled: true,
+                                id: 'boton_enviando',
+                                text: 'Enviando...'
+                            })
+                        );
                         form.submit();
                     },
                     invalidHandler: function() {
-                        // re-enable the button here as validation has failed
                         $("#continuar").show();
                         $("#boton_enviando").remove();
                     }

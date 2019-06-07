@@ -48,6 +48,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                             <th class="text-center bold text-dark">Código</th>
                             <th class="text-center bold text-dark">Logo</th>
                             <th class="text-center bold text-dark">Nombre</th>
+                            <th class="text-center bold text-dark">Sigla</th>
                             <th class="text-center bold text-dark">Estado</th>
                             <th class="text-center bold text-dark">Extensión</th>
                             <th class="text-center bold text-dark">Ubicación</th>
@@ -60,6 +61,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-dark"></td>
+                            <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>
                             <td class="text-center" style="padding:8px"></td>

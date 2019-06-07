@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $response = [
     'total' => 0,
@@ -21,7 +21,7 @@ $response = [
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $order = Anexos::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
     $offset = ($_REQUEST['pageNumber'] - 1)  * $_REQUEST['pageSize'];
-    $limit = $offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+    $limit = $offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 :'(
 
     if (!$_REQUEST['fileId']) {
         $anexos = Anexos::findAllByAttributes([

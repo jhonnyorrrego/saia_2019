@@ -4,10 +4,17 @@
 
         $(document).on('click', '.new_action', function() {
             let type = $(this).data('type');
+            let userId = $(this).data('id');
 
             switch (type) {
                 case 'edit':
-                    edit($(this).data('id'));
+                    edit(userId);
+                    break;
+                case 'add_role':
+                    addRole(userId);
+                    break;
+                case 'add_function':
+                    addFunction(userId);
                     break;
             }
         });
@@ -49,7 +56,7 @@
                 },
                 buttons: {
                     success: {
-                        label: "Guardar cambios",
+                        label: "Guardar",
                         class: "btn btn-complete"
                     },
                     cancel: {
@@ -57,7 +64,31 @@
                         class: "btn btn-danger"
                     }
                 },
-            })
+            });
+        }
+
+        function addRole(userId) {
+            top.topModal({
+                url: `${baseUrl}views/dependencia_cargo/listado.php`,
+                params: {
+                    userId: userId
+                },
+                size: 'modal-xl',
+                title: 'Listado de roles',
+                buttons: {}
+            });
+        }
+
+        function addFunction(userId) {
+            top.topModal({
+                url: `${baseUrl}views/funciones/listado_funcionario.php`,
+                params: {
+                    userId: userId
+                },
+                size: 'modal-xl',
+                title: 'Listado de funciones',
+                buttons: {}
+            });
         }
     });
 </script>

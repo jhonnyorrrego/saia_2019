@@ -21,9 +21,9 @@ class Comments {
     }
 
     init() {
-        document.querySelector(this.options.selector).innerHTML = "";
+        document.querySelector(this.options.selector).innerHTML = '';
 
-        if (this.options.order == "asc") {
+        if (this.options.order == 'asc') {
             this.createList();
             this.createForm();
         } else {
@@ -35,15 +35,17 @@ class Comments {
     createEvents() {
         let instance = this;
 
-        let input = document.querySelector("#comment_content");
-        let button = document.querySelector("#save_comment");
+        let input = document.querySelector('#comment_content');
+        let button = document.querySelector('#save_comment');
+        let errorNode = document.getElementById('comment_error');
 
-        input.addEventListener("keyup", function() {
-            button.disabled = input.value.length ? false : true;
-        });
-
-        button.addEventListener("click", function() {
-            instance.save(input.value);
+        button.addEventListener('click', function() {
+            if (!input.value.length) {
+                errorNode.classList.remove('d-none');
+            } else {
+                errorNode.classList.add('d-none');
+                instance.save(input.value);
+            }
         });
     }
 
@@ -55,10 +57,11 @@ class Comments {
                         <textarea class="form-control" id="comment_content" rows="3" placeholder="${
                             this.options.placeholder
                         }"></textarea>
+                        <span class="text-danger d-none" id="comment_error">Escriba un comentario</span>
                     </div>
                 </div>
                 <div class="col-auto px-0 ">
-                    <button class="btn btn-sm btn-complete" id="save_comment" disabled>
+                    <button class="btn btn-sm btn-complete" id="save_comment">
                         <i class="fa fa-paper-plane"></i>
                     </button>
                 </div>
@@ -80,12 +83,12 @@ class Comments {
             list = this.createTemplate();
         }
 
-        if (document.querySelector("#comment_list")) {
-            var div = document.querySelector("#comment_list");
+        if (document.querySelector('#comment_list')) {
+            var div = document.querySelector('#comment_list');
             div.innerHTML = list;
         } else {
-            var div = document.createElement("div");
-            div.setAttribute("id", "comment_list");
+            var div = document.createElement('div');
+            div.setAttribute('id', 'comment_list');
             div.innerHTML = list;
             document.querySelector(this.options.selector).appendChild(div);
         }
@@ -105,9 +108,9 @@ class Comments {
             data.push(this.createItem());
         });
 
-        return this.options.order == "desc"
-            ? data.reverse().join("")
-            : data.join("");
+        return this.options.order == 'desc'
+            ? data.reverse().join('')
+            : data.join('');
     }
 
     save(comment) {
@@ -121,7 +124,7 @@ class Comments {
             this.createList();
             Comments.resetForm();
         } else {
-            console.error("fail to save");
+            console.error('fail to save');
         }
     }
 
@@ -187,21 +190,21 @@ class Comments {
 
     static getTemporality() {
         let date = new Date();
-        let response = date.getDate() + "-";
-        response += date.getMonth() + "-";
-        response += date.getFullYear() + " ";
+        let response = date.getDate() + '-';
+        response += date.getMonth() + '-';
+        response += date.getFullYear() + ' ';
         response +=
-            date.getHours() > 12 ? date.getHours() - 12 : date.getHours() + ":";
-        response += date.getMinutes() + "-";
-        response += date.getHours() - 12 > 0 ? "pm" : "am";
+            date.getHours() > 12 ? date.getHours() - 12 : date.getHours() + ':';
+        response += date.getMinutes() + '-';
+        response += date.getHours() - 12 > 0 ? 'pm' : 'am';
 
         return response;
     }
 
     static resetForm() {
-        document.querySelector("#comment_content").value = "";
+        document.querySelector('#comment_content').value = '';
         document
-            .querySelector("#comment_content")
-            .dispatchEvent(new Event("keyup"));
+            .querySelector('#comment_content')
+            .dispatchEvent(new Event('keyup'));
     }
 }
