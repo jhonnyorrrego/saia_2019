@@ -127,6 +127,9 @@ function options_button($userId)
                 <a href="#" class="dropdown-item new_action" data-type="edit" data-id="{$userId}">
                     <i class="fa fa-edit"></i> Editar
                 </a>
+                <a href="#" class="dropdown-item new_action" data-type="add_role" data-id="{$userId}">
+                    <i class="fa fa-users"></i> Asignar roles
+                </a>
             </div>
         </div>
 HTML;
