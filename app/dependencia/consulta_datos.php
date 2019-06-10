@@ -39,7 +39,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
         $Response->success = 1;
     } else {
-        $Dependencia->message = "No se encuentra la dependencia";
+        $Response->message = "No se encuentra la dependencia";
     }
 } else {
     $Response->message = "Debe iniciar sesion";

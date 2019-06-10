@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object) [
+$Response = (object)[
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -33,16 +33,16 @@ try {
         'dependencia_iddependencia' => $_REQUEST['dependency'],
         'cargo_idcargo' => $_REQUEST['position'],
         'estado' => $_REQUEST['state'],
-        'fecha_inicial' => $_REQUEST['initial_date'],
-        'fecha_final' => $_REQUEST['final_date'],
+        'fecha_inicial' => (new DateTime($_REQUEST['initial_date']))->format('Y-m-d H:i:s'),
+        'fecha_final' => (new DateTime($_REQUEST['final_date']))->format('Y-m-d H:i:s'),
         'tipo' => 1
     ]);
 
-    if(!$_REQUEST['roleId']){//adicionar
+    if (!$_REQUEST['roleId']) { //adicionar
         $DependenciaCargo->fecha_ingreso = date('Y-m-d H:i:s');
     }
 
-    if(!$DependenciaCargo->save()){
+    if (!$DependenciaCargo->save()) {
         throw new Exception("Error al guardar", 1);
     }
 

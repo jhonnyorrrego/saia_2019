@@ -1,6 +1,6 @@
 $(function() {
-    let params = $('#user_function_script').data('params');
-    $('#user_function_script').removeAttr('data-params');
+    let params = $('#position_function_script').data('params');
+    $('#position_function_script').removeAttr('data-params');
 
     $(document)
         .off('click', '#add_function')
@@ -20,14 +20,14 @@ $(function() {
 
     function createFunctionTable() {
         $('#function_table').bootstrapTable({
-            url: `${params.baseUrl}app/funciones/listado_funcionario.php`,
+            url: `${params.baseUrl}app/funciones/listado_cargo.php`,
             sidePagination: 'server',
             queryParamsType: 'other',
             pagination: true,
             pageSize: 10,
             queryParams: function(queryParams) {
                 return $.extend({}, queryParams, {
-                    userId: params.userId,
+                    position: params.position,
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token')
                 });
@@ -79,9 +79,9 @@ $(function() {
 
     function showForm() {
         top.topModal({
-            url: `${params.baseUrl}views/funciones/vincular_funcionario.php`,
+            url: `${params.baseUrl}views/funciones/vincular_cargo.php`,
             params: {
-                userId: params.userId
+                position: params.position
             },
             size: 'modal-xl',
             title: 'Vincular función',
@@ -93,7 +93,7 @@ $(function() {
 
     function changeState(relation, state) {
         $.post(
-            `${params.baseUrl}app/funciones/desvincular_funcionario.php`,
+            `${params.baseUrl}app/funciones/desvincular_cargo.php`,
             {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token'),

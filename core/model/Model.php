@@ -311,7 +311,7 @@ abstract class Model extends StaticSql
 
         $dateAttributes = $Instance->getDateAttributes();
         foreach ($fields as $attribute => $value) {
-            if (strlen($set)) {
+            if ($set) {
                 $set .= ',';
             }
 
@@ -627,7 +627,7 @@ abstract class Model extends StaticSql
             $dateAttributes = $Instance->getDateAttributes();
 
             foreach ($conditions as $attribute => $value) {
-                if (strlen($condition)) {
+                if ($condition) {
                     $condition .= ' AND ';
                 }
 

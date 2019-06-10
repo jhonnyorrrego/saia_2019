@@ -27,7 +27,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $Response->data['key'] = $Cargo->getPK();
         $Response->success = 1;
     } else {
-        $Cargo->message = "No se encuentro el Cargo";
+        $Response->message = "No se encuentro el Cargo";
     }
 } else {
     $Response->message = "Debe iniciar sesion";

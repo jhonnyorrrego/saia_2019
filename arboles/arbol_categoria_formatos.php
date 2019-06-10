@@ -28,7 +28,6 @@ if ($_REQUEST["seleccionados"]) {
 
 if ($seleccionados) {
     $id_x = buscar_papa($seleccionados);
-
 }
 
 function buscar_papa($idcategoriaFormato)
@@ -79,7 +78,6 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
     }*/
     if (empty($id)) {
         $papas = busca_filtro_tabla("*", "categoria_formato", "(cod_padre=0 OR cod_padre is null)" . $where, "", $conn);
-
     } else if ($cod_padre != '') {
         $papas = busca_filtro_tabla("*", "categoria_formato", "cod_padre='" . $cod_padre . "'" . $where, "", $conn);
     } else {
@@ -88,8 +86,7 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
 
 
     if (isset($_REQUEST['seleccionados'])) {
-        $seleccionados = explode(",",$_REQUEST['seleccionados']);
-        
+        $seleccionados = explode(",", $_REQUEST['seleccionados']);
     }
 
     $resp = array();
@@ -120,14 +117,13 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
                 $item["data"] = array(
                     'estado' => $estado
                 );
-                for ($j=0; $j <count($seleccionados) ; $j++) { 
-                    if($papas[$i]["idcategoria_formato"] == $seleccionados[$j]){
+                for ($j = 0; $j < count($seleccionados); $j++) {
+                    if ($papas[$i]["idcategoria_formato"] == $seleccionados[$j]) {
                         $item["selected"] = true;
                     }
                 }
-                
             }
-          
+
             if ($hijos[0]["total"]) {
                 $children = llena_formato($papas[$i]["idcategoria_formato"], $nivel++, '', $seleccionados, $seleccionable);
                 if ($children) {
@@ -142,4 +138,3 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
 
     return $resp;
 }
-?>

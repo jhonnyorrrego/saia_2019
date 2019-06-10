@@ -62,11 +62,14 @@ class LogController
     public static function updateEvent($object, $event, $userId)
     {
         $logId = self::simpleEvent($event, $userId);
-        foreach ($object->getAttributes() as $attribute => $value) {
-            if (
-                !is_null($object->$attribute)
-                && $object->$attribute != $object->clone->$attribute
-            ) {
+        $diff = array_diff_assoc(
+            $object->getAttributes(),
+            $object->clone->getAttributes()
+        );
+
+        foreach ($diff as $attribute => $value) {
+            //un modelo nunca tiene attributos null => 'NULL'
+            if (!is_null($object->$attribute)) {
                 LogHistorial::newRecord([
                     'fk_log' => $logId,
                     'campo' => $attribute,
