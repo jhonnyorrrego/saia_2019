@@ -103,11 +103,11 @@ foreach($campos AS $key=>$valor){
               ?>
                   <div id="datos_ejecutor">
                     <div class="row">
-                      <div class="pl-sm-3 pl-md-0">
-                        <span id="borrar_todos" class="label label-success"  style="cursor:pointer">Quitar todos</span>
+                      <div class="pl-sm-3 pl-md-3">
+                        <span id="borrar_todos" class="label label-success"  style="cursor:pointer">Limpiar campos</span>
                       </div>
                       <div class="pl-sm-3 pl-md-1">
-                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Seleccionar datos</span>
+                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Guardar datos</span>
                       </div>
                     </div>
                     <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
@@ -231,7 +231,7 @@ foreach($campos AS $key=>$valor){
                   }
                   $("#destinos_seleccionados").val(vector[0]);
                   llenar_llamado();
-                  notificacion_saia('<b>ATENCI&Oacute;N</b><br>Remitente actualizado satisfactoriamente','success','',4000);
+                  notificacion_saia('<b>ATENCI&Oacute;N</b><br>Contacto actualizado satisfactoriamente','success','',4000);
                   limpiarRemitente();
                   $("#buscar_nombre").focus();
 				  $("#"+window.frames.name+"",window.parent.document).height($(document).height());
@@ -517,8 +517,8 @@ function campoCiudad($ciudad = null, $campo) {
 					</select>
 				</div>
 			</div>
-			<div class="col-md-4 pl-sm-3 pl-md-0">
-				<span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Agregar Ciudad</span>
+			<br class="col-md-4 pl-sm-3 pl-md-3">
+				<span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Agregar Ciudad</span></br>
 			</div>
 		</div>
 	</div>';
