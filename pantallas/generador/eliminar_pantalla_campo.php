@@ -8,9 +8,9 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/generador/librerias.php");
+include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 echo estilo_bootstrap();
 if(@$_REQUEST["idpantalla_campos"]){
   $pantalla_campos=get_pantalla_campos($_REQUEST["idpantalla_campos"],0);

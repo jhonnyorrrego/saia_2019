@@ -36,8 +36,8 @@ if(@$id != ""){
 else{
   $where_id="";
   echo("<tree id=\"0\">\n");
-}    
-include_once($ruta_db_superior."db.php");
+}
+include_once $ruta_db_superior . 'core/autoload.php';
 if(@$_REQUEST["tipo_pantalla"]){
   switch($_REQUEST["tipo_pantalla"]){
     case 1:
