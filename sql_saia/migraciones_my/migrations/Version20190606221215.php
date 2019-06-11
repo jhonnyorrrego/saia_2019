@@ -98,11 +98,16 @@ final class Version20190606221215 extends AbstractMigration
             'formato_idformato' => 3
         ]);
         $this->connection->update('campos_formato', [
-            'etiqueta' => 'ASUNTO','orden' => '14'
+            'etiqueta' => 'ASUNTO','orden' => '14',
+            'tipo_dato' => 'varchar','longitud' => '255',
+            'valor' => '','etiqueta_html' => 'text',
+            'estilo' => '{"size":"50"}'
+
         ], [
             'nombre' => 'descripcion',
             'formato_idformato' => 3
         ]);
+);
         $this->connection->update('campos_formato', [
             'etiqueta' => 'ANEXOS FISICOS','orden' => '15'
         ], [
