@@ -79,12 +79,13 @@ class DependenciaCargo extends LogModel
      */
     private function checkStateChange()
     {
-        $diff = array_diff($this->getAttributes(), $this->clone->getAttributes());
+        $diff = array_diff_assoc($this->getAttributes(), $this->clone->getAttributes());
+
+        $lastActiveRole = $this->activeRolesByPosition() == 0 && $diff['estado'] == 0;
+        $firstActiveRole = $this->activeRolesByPosition() == 1 && $diff['estado'] == 1;
 
         if (
-            array_key_exists('estado', $diff) &&
-            $diff['estado'] &&
-            $this->checkLastActiveRole()
+            array_key_exists('estado', $diff) && ($lastActiveRole || $firstActiveRole)
         ) {
             return CargoFuncion::newRole(
                 $this->cargo_idcargo,
@@ -104,15 +105,13 @@ class DependenciaCargo extends LogModel
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-06-10
      */
-    public function checkLastActiveRole()
+    public function activeRolesByPosition()
     {
-        $total = VfuncionarioDc::countRecords([
+        return VfuncionarioDc::countRecords([
             'estado' => 1,
             'estado_dc' => 1,
             'idcargo' => $this->cargo_idcargo,
             'idfuncionario' => $this->funcionario_idfuncionario
         ]);
-
-        return $total == 0;
     }
 }

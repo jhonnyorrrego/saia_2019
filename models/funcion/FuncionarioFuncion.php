@@ -151,19 +151,19 @@ class FuncionarioFuncion extends LogModel
         $state
     ) {
         foreach ($userList as $userId) {
+            $oldState = !$state ? 1 : 0;
             $FuncionarioFuncion = FuncionarioFuncion::findByAttributes([
                 'fk_funcionario' => $userId,
                 'fk_cargo' => $positionId,
-                'fk_funcion' => $functionId,
-                'estado' => !$state ? 1 : 0
+                'fk_funcion' => $functionId
             ]);
 
-            if ($FuncionarioFuncion) {
+            if ($FuncionarioFuncion && $FuncionarioFuncion->estado == $oldState) {
                 $FuncionarioFuncion->estado = $state;
                 if (!$FuncionarioFuncion->save()) {
                     throw new Exception("Error al modificar el estado", 1);
                 }
-            } else if ($state == 1) { //si no esta asignada la funcion por rol
+            } else if (!$FuncionarioFuncion && $state == 1) { //si no esta asignada la funcion por rol
                 self::createRoleRelations([$userId], $functionId, $positionId);
             }
         }

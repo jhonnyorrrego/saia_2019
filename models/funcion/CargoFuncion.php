@@ -133,6 +133,7 @@ class CargoFuncion extends LogModel
         $list = VfuncionarioDc::findColumn('idfuncionario', [
             'idcargo' => $this->fk_cargo
         ]);
+        $list = array_unique($list);
 
         return FuncionarioFuncion::toggleRoleRelations(
             $list,
@@ -152,8 +153,11 @@ class CargoFuncion extends LogModel
     public function createUserRelations()
     {
         $list = VfuncionarioDc::findColumn('idfuncionario', [
-            'idcargo' => $this->fk_cargo
+            'idcargo' => $this->fk_cargo,
+            'estado' => 1,
+            'estado_dc' => 1
         ]);
+        $list = array_unique($list);
 
         return FuncionarioFuncion::createRoleRelations($list, $this->fk_funcion, $this->fk_cargo);
     }
