@@ -107,7 +107,7 @@ final class Version20190606221215 extends AbstractMigration
             'nombre' => 'descripcion',
             'formato_idformato' => 3
         ]);
-);
+
         $this->connection->update('campos_formato', [
             'etiqueta' => 'ANEXOS FISICOS','orden' => '15'
         ], [
