@@ -15,7 +15,7 @@ if (!$idexpediente) {
     return;
 }
 
-require_once $ruta_db_superior . "controllers/autoload.php";
+require_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . 'assets/librerias.php';
 echo validate();
 echo select2();

@@ -1,6 +1,7 @@
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
@@ -8,8 +9,8 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once $ruta_db_superior . "db.php";
-include_once $ruta_db_superior . "controllers/autoload.php";
+
+include_once $ruta_db_superior . "core/autoload.php";
 
 header('Content-Type: application/json');
 
@@ -44,11 +45,11 @@ class ArbolCargo
 
         $this->configurar();
 
-		$id = 0;
-		if ($this->parametros["id"]) {
-			$id = $this->parametros["id"];
-			$objetoJson["key"] = $this->parametros["id"];
-		}
+        $id = 0;
+        if ($this->parametros["id"]) {
+            $id = $this->parametros["id"];
+            $objetoJson["key"] = $this->parametros["id"];
+        }
 
         $hijos_cargo = $this->llena_cargo($id);
         if (!empty($hijos_cargo)) {
@@ -56,7 +57,7 @@ class ArbolCargo
         }
         $objetoJson['children'] = $hijos;
 
-		return $objetoJson;
+        return $objetoJson;
     }
 
     private function configurar()
@@ -89,62 +90,58 @@ class ArbolCargo
         if (isset($this->parametros["unSelectables"])) {
             $this->unSelectables = $this->parametros["unSelectables"];
         }
-	}
-	
-	private function llena_cargo($id) {
-		
-		$objetoJson = [];
-		if ($id == 0) {
-			$papas = busca_filtro_tabla("", "cargo", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
-		} else {
-			$papas = busca_filtro_tabla("", "cargo", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $conn);
-		}
-		if ($papas["numcampos"]) {
-			for ($i = 0; $i < $papas["numcampos"]; $i++) {
-				$item = [];
-				$text = $papas[$i]["nombre"];
-				if ($papas[$i]["estado"] == 0) {
-					$item["unselectableStatus"] = true;
-					$item["folder"] = 1;
-				}
-				
-				$item["extraClasses"] = "estilo-dependencia";
-				$item["title"] = $text;
-				$item["key"] = $papas[$i]["idcargo"];
-				$item["checkbox"]=$checkbox;
-				
-				if ($this->expandir == 1) {
-					$item["expanded"] = true;
-				}
-				
-				if ($this->cantSel) {
-					if (in_array($papas[$i]["idcargo"], $this->seleccionados) !== false) {
-						$item["selected"] = true;
-					}
-				}
-	
-				foreach ($_REQUEST['fields'] as $field){
-					$item['data'][$field] = $papas[$i][$field];
-				}
-	
-				if ($this->unSelectables && in_array($papas[$i]["idcargo"], $this->unSelectables)) {
-					$item["unselectableStatus"] = true;
-				}
-	
-				$hijos = busca_filtro_tabla("count(*) as cant", "cargo", "cod_padre=" . $papas[$i]["idcargo"] . $condicion_ad, "", $conn);
-				if ($hijos[0]["cant"]) {
-					$item["children"] = $this->llena_cargo($papas[$i]["idcargo"]);
-				} else {
-					$item["folder"] = 0;
-				}
-				$objetoJson[] = $item;
-			}
-		}
-		return $objetoJson;
-	}
+    }
 
+    private function llena_cargo($id)
+    {
+
+        $objetoJson = [];
+        if ($id == 0) {
+            $papas = busca_filtro_tabla("", "cargo", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
+        } else {
+            $papas = busca_filtro_tabla("", "cargo", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $conn);
+        }
+        if ($papas["numcampos"]) {
+            for ($i = 0; $i < $papas["numcampos"]; $i++) {
+                $item = [];
+                $text = $papas[$i]["nombre"];
+                if ($papas[$i]["estado"] == 0) {
+                    $item["unselectableStatus"] = true;
+                    $item["folder"] = 1;
+                }
+
+                $item["extraClasses"] = "estilo-dependencia";
+                $item["title"] = $text;
+                $item["key"] = $papas[$i]["idcargo"];
+                $item["checkbox"] = $checkbox;
+
+                if ($this->expandir == 1) {
+                    $item["expanded"] = true;
+                }
+
+                if ($this->cantSel) {
+                    if (in_array($papas[$i]["idcargo"], $this->seleccionados) !== false) {
+                        $item["selected"] = true;
+                    }
+                }
+
+                foreach ($_REQUEST['fields'] as $field) {
+                    $item['data'][$field] = $papas[$i][$field];
+                }
+
+                if ($this->unSelectables && in_array($papas[$i]["idcargo"], $this->unSelectables)) {
+                    $item["unselectableStatus"] = true;
+                }
+
+                $hijos = busca_filtro_tabla("count(*) as cant", "cargo", "cod_padre=" . $papas[$i]["idcargo"] . $condicion_ad, "", $conn);
+                if ($hijos[0]["cant"]) {
+                    $item["children"] = $this->llena_cargo($papas[$i]["idcargo"]);
+                } else {
+                    $item["folder"] = 0;
+                }
+                $objetoJson[] = $item;
+            }
+        }
+        return $objetoJson;
+    }
 }
-//-----------------------
-
-
-?>

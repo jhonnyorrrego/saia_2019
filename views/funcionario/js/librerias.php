@@ -13,6 +13,9 @@
                 case 'add_role':
                     addRole(userId);
                     break;
+                case 'add_function':
+                    addFunction(userId);
+                    break;
             }
         });
 
@@ -64,14 +67,26 @@
             });
         }
 
-        function addRole(userId){
+        function addRole(userId) {
             top.topModal({
-                url: `${baseUrl}views/funcionario/asignar_rol.php`,
+                url: `${baseUrl}views/dependencia_cargo/listado.php`,
                 params: {
                     userId: userId
                 },
                 size: 'modal-xl',
-                title: 'Usuario',
+                title: 'Listado de roles',
+                buttons: {}
+            });
+        }
+
+        function addFunction(userId) {
+            top.topModal({
+                url: `${baseUrl}views/funciones/listado_funcionario.php`,
+                params: {
+                    userId: userId
+                },
+                size: 'modal-xl',
+                title: 'Listado de funciones',
                 buttons: {}
             });
         }

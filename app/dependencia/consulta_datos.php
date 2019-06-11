@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object)array(
     'data' => new stdClass(),
@@ -39,7 +39,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
         $Response->success = 1;
     } else {
-        $Dependencia->message = "No se encuentra la dependencia";
+        $Response->message = "No se encuentra la dependencia";
     }
 } else {
     $Response->message = "Debe iniciar sesion";

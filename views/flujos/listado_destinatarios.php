@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 error_reporting(E_ALL | E_STRICT);
 
-require $ruta_db_superior . 'controllers/autoload.php';
+require $ruta_db_superior . 'core/autoload.php';
 
 $datos = [];
 if (!empty($_REQUEST["idnotificacion"])) {

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
