@@ -34,6 +34,8 @@ try {
     foreach ($functions as $key => $FuncionarioFuncion) {
         $Response->rows[] = [
             "id" => $FuncionarioFuncion->getPK(),
+            "role" => $FuncionarioFuncion->fk_cargo ?
+                $FuncionarioFuncion->getPosition()->nombre : '',
             "name" => $FuncionarioFuncion->getFunction()->nombre,
             "state" => $FuncionarioFuncion->estado
         ];

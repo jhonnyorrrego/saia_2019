@@ -14,6 +14,12 @@ $(function() {
             changeState($(this).data('id'), $(this).val());
         });
 
+    $(document)
+        .off('click', '.see_history')
+        .on('click', '.see_history', function() {
+            showHistory($(this).data('id'));
+        });
+
     (function init() {
         createFunctionTable();
     })();
@@ -36,11 +42,16 @@ $(function() {
             theadClasses: 'thead-light',
             columns: [
                 { field: 'name', title: 'Nombre' },
+                { field: 'role', title: 'Asignado por rol' },
                 {
                     field: 'options',
                     title: 'Estado',
                     align: 'center',
                     formatter: function(value, row, index, field) {
+                        if (row.role) {
+                            return row.state == 1 ? 'Activo' : 'Inactivo';
+                        }
+
                         return `<div class="radio radio-success mt-0 mb-2">
                             <input id="active${index}" type="radio" name="name${index}" value="1" 
                                 data-id="${row.id}" ${
@@ -65,8 +76,9 @@ $(function() {
                                 <i class="fa fa-ellipsis-v"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                                <a href="#" class="dropdown-item new_action" data-type="add_role"
-                                    data-id="${row.id}">
+                                <a href="#" class="dropdown-item see_history" data-id="${
+                                    row.id
+                                }">
                                     <i class="fa fa-history"></i> Ver historial
                                 </a>
                             </div>
@@ -116,5 +128,17 @@ $(function() {
             },
             'json'
         );
+    }
+
+    function showHistory(item) {
+        top.topModal({
+            url: `${params.baseUrl}views/log/historial.php`,
+            params: {
+                model: 'FuncionarioFuncion',
+                item: item
+            },
+            size: 'modal-xl',
+            title: 'Historial'
+        });
     }
 });

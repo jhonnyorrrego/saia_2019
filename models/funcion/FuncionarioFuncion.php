@@ -10,8 +10,20 @@ class FuncionarioFuncion extends LogModel
     protected $fecha;
     protected $dbAttributes;
 
+    protected $fieldLabels = [
+        'estado' => 'Estado'
+    ];
+    protected $fieldValueLabels = [
+        'estado' => [
+            0 => 'Inactivo',
+            1 => 'Activo'
+        ]
+    ];
+
     //relations
     private $Funcion;
+    private $Cargo;
+
 
     function __construct($id = null)
     {
@@ -61,6 +73,22 @@ class FuncionarioFuncion extends LogModel
         }
 
         return $this->Funcion;
+    }
+
+    /**
+     * retorna la instancia de la funcion relacionada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-06
+     */
+    public function getPosition()
+    {
+        if (!$this->Cargo) {
+            $this->Cargo = new Cargo($this->fk_cargo);
+        }
+
+        return $this->Cargo;
     }
 
     /**

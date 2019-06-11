@@ -29,4 +29,22 @@ class LogHistorial extends Model
             'date' => []
         ];
     }
+
+    public static function findHistoryByLog($logId, $Instance)
+    {
+        $records = self::findAllByAttributes([
+            'fk_log' => $logId
+        ]);
+
+        $data = [];
+        foreach ($records as $LogHistorial) {
+            $data[] = [
+                'field' => $Instance->getFieldLabel($LogHistorial->campo),
+                'old' => $Instance->getValueLabel($LogHistorial->campo, $LogHistorial->anterior),
+                'new' => $Instance->getValueLabel($LogHistorial->campo, $LogHistorial->nuevo),
+            ];
+        }
+
+        return $data;
+    }
 }

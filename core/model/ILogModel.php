@@ -34,5 +34,5 @@ interface ILogModel
      * metodo para definir el modelo con el que
      * se relacionara el modelo actual y log ej. AnexoLog
      */
-    public function setModelToLogRelation();
+    public function getModelToLogRelation();
 }

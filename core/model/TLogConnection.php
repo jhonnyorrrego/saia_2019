@@ -3,7 +3,7 @@ use Stringy\Stringy;
 
 trait TLogConnection
 {
-    private static function getParentRelationName()
+    public static function getParentRelationName()
     {
         $Stringy = new Stringy(get_called_class());
         $name = (string)$Stringy->underscored();

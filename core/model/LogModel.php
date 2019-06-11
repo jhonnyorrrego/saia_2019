@@ -5,7 +5,7 @@ abstract class LogModel extends Model implements ILogModel
 
     function __construct($id = null)
     {
-        $this->setModelToLogRelation();
+        $this->getModelToLogRelation();
         parent::__construct($id);
     }
 }

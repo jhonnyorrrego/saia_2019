@@ -6522,9 +6522,9 @@ body>.pgn-wrapper {
   .modal .modal-content {
     box-shadow: none;
   }
-  .modal .modal-dialog {
+  /*.modal .modal-dialog {
     width: 600px;
-  }
+  }*/
   .modal .modal-sm {
     width: 300px;
   }
