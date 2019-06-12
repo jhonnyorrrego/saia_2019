@@ -9,8 +9,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
@@ -1175,6 +1174,8 @@ $(document).ready(function() {
 
     $(document).on("click", ".crear_encabezado", function(e) {
         var enlace = 'crear_encabezado_pie.php?crear_encabezado=1';
+        hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		hs.outlineType = 'rounded-white';
         hs.htmlExpand(this, {
             objectType: 'iframe',
             width: 800,
@@ -1275,30 +1276,7 @@ $(document).ready(function() {
     $(".tab-pane").height(alto - 50);
     $(".tab-content").height(alto - 40);
     $(".tab-content").css("padding-top", 0);
-    /*tinymce.init({
-     	selector:'.editor_tiny',
-     	language:'es',
-     	height:(alto-($(".mce-toolbar-grp").height()+$(".mce-menubar").height()+150)),
-     	statusbar : false,
-     	browser_spellcheck : true ,
-     	plugins : 'advlist autolink lists charmap print preview pagebreak table code contextmenu responsivefilemanager image link',
-     	toolbar:'bold italic underline strikethrough alignleft aligncenter alignright alignjustify | cut copy paste bullist numlist outdent indent blockquote undo redo | removeformat subscript superscript code jbimages responsivefilemanager image link ',
-     	external_filemanager_path:"<?php echo (PROTOCOLO_CONEXION . RUTA_PDF); ?>/tinymce/filemanager/",
-      /*filemanager_title:"Administrador Imagenes" ,
-      external_plugins: {
-      		"filemanager" : "<?php echo (PROTOCOLO_CONEXION . RUTA_PDF); ?>/tinymce/filemanager/plugin.min.js"
-      /*},
-      content_css : "<?php echo ($ruta_db_superior); ?>css/bootstrap/saia/css/bootstrap.css",
-      /*extended_valid_elements :"div[*]",
-      setup: function (ed) {
-          ed.on('keyup', function (e) {
-              cambios_editor(ed);
-          });
-          ed.on('change', function(e) {
-              cambios_editor(ed);
-          });
-      }
-    });*/
+    
     $.ajax({
         type: 'POST',
         url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",

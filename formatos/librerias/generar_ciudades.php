@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 
 if(isset($_POST["ciudad"])){
   $pais=busca_filtro_tabla("idpais,nombre","pais","lower(nombre) LIKE '%".strtolower((html_entity_decode(($_POST["pais"]))))."%'","",$conn);

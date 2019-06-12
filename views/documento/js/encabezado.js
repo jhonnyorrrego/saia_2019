@@ -248,6 +248,15 @@ $(function() {
         });
 
     $(document)
+        .off('click', '#imprimir')
+        .on('click', '#imprimir', function() {
+            let route = $('#acordeon_container').attr('data-location');
+            route += '&mostrar_pdf=1';
+
+            $('#view_document').load(baseUrl + route);
+        });
+
+    $(document)
         .off('click', '#anexos')
         .on('click', '#anexos', function() {
             $('#show_files').click();
