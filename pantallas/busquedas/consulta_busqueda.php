@@ -8,7 +8,7 @@ while($max_salida>0){
     $ruta.="../";
     $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."controllers/autoload.php");
 usuario_actual("login");
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
