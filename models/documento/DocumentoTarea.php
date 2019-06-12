@@ -71,7 +71,7 @@ SQL;
     }
 
     /**
-     * consulta la inicial de la tarea y el estado
+     * consulta la fecha inicial y el estado
      * de la ultima tarea de un documento
      *
      * @param integer $documentId
