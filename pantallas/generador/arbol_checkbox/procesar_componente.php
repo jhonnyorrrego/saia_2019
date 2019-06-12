@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 function caracteristicas_arbol_checkbox($idcampo='',$seleccionado='',$accion='',$campo=''){
 	
 }

@@ -8,7 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once ($ruta_db_superior . "pantallas/lib/buscar_patron_archivo.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
@@ -66,14 +66,11 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 	$campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $pantalla_idpantalla . " and etiqueta_html<>'campo_heredado' ".$condicion_adicional."", "A.orden", $conn);
 	
     if ($campos["numcampos"]) {
-    $texto.= '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">
-     <div class="accordion-group">
-     	
-    		<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_1">Elementos del formato</a></div>';
+    $texto.= '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;"><div class="accordion-group">
+     <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_1">Elementos del formato</a></div>';
 		        for ($i = 0; $i < $campos["numcampos"]; $i++) {
 		        	 $etiqueta = htmlentities(html_entity_decode(utf8_encode($campos[$i]["etiqueta"])));			
-					$texto .= '
-					<div id="categoria_' . $campos[$i]["nombre"] . '" class="accordion-body">
+					$texto .= '<div id="categoria_' . $campos[$i]["nombre"] . '" class="accordion-body">
 						<div class="accordion" style="margin-bottom: 5px;">
 							<div  style="cursor:pointer;" id="camposPropios" name="{*'.$campos[$i]["nombre"] .'*}" idcamposFormato="' . $campos[$i]["idcampos_formato"] . '_campo">
 						<span class="fa-fw fa '.$imagen.'"></span>&nbsp;' . $etiqueta . '</div>
@@ -81,8 +78,7 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 		            </div>';
 		
 		        }
-		$texto.='
-		</div>
+		$texto.='</div>
      </div>';
     }
 	 $retorno["codigo_html"] = $texto;
