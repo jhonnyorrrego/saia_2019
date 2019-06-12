@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once($ruta_db_superior."pantalla/lib/class_campos_db.php");
 class tabla_db extends SQL{
   var $conn;

@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 $funcion=str_replace(")","",$_REQUEST["funcion"]);
 $funcion_actual=explode("(",$funcion);
 $funcion_bd=busca_filtro_tabla("", "pantalla_libreria A, pantalla_funcion B, pantalla_funcion_exe C,pantalla_func_param D","A.idpantalla_libreria=B.fk_idpantalla_libreria AND B.idpantalla_funcion=C.fk_idpantalla_funcion AND C.idpantalla_funcion_exe=D.fk_idpantalla_funcion_exe AND A.ruta='".trim($_REQUEST["ruta"])."' AND B.nombre='".$funcion_actual[0]."'", "idpantalla_funcion_exe desc", $conn);

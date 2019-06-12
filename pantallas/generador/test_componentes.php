@@ -16,7 +16,7 @@ else {
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 echo("<tree id=\"0\">\n");
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 llena_categorias(); 
 echo("</tree>\n");
 $activo = "";

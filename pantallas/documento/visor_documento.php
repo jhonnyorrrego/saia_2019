@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $iddoc = $_REQUEST["iddoc"];
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);

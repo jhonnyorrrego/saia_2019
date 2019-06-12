@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 $response = (object) [
     'data' => [],
     'message' => "",

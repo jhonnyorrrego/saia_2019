@@ -8,7 +8,7 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once($ruta_db_superior."pantallas/generador/librerias_pantalla.php");
 $pantallas=busca_filtro_tabla("","pantalla","","",$conn);
 for($i=0;$i<$pantallas["numcampos"];$i++){

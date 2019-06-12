@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "core/autoload.php";
 
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
     logear_funcionario_webservice($_REQUEST["LOGIN"]);
@@ -401,7 +401,7 @@ class GenerarFormato
 
             $content = <<<CODE
 <?php
-include_once "../../controllers/autoload.php";
+include_once "../../core/autoload.php";
 
 try {
     JwtController::check(\$_REQUEST["token"], \$_REQUEST["key"]);    

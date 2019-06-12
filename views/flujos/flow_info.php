@@ -15,7 +15,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 $consulta = array(
     "campoid" => "idexpediente",

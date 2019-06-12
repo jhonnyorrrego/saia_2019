@@ -135,7 +135,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         </span>
                     </span>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu" id="notification_list">
-                        <a href="#" class="dropdown-item" id="config_profile">
+                        <a href="#" class="dropdown-item">
                             Lorem, ipsum dolor sit amet consectetur.
                         </a>
                     </div>
