@@ -9,11 +9,10 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."core/autoload.php");
 include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior . "pantallas/qr/librerias.php");
 include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
-include_once $ruta_db_superior . 'controllers/autoload.php';
 /* ADICIONAR */
 
 function mostrar_radicado_entrada($idformato, $iddoc)
