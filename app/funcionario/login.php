@@ -82,6 +82,8 @@ echo json_encode($Response);
 
 function access($userId)
 {
+    global $ruta_db_superior;
+
     if (!LogAcceso::canAccess()) {
         throw new Exception("Limite de usuarios concurrentes alcanzado", 1);
     }
@@ -91,7 +93,8 @@ function access($userId)
     $Funcionario->save();
 
     $SessionController = new SessionController($Funcionario);
-    TemporalController::cleanDirectory($Funcionario->getTemporalRoute());
+    $temporalRoute = $ruta_db_superior . $Funcionario->getTemporalRoute();
+    TemporalController::cleanDirectory($temporalRoute);
 
     $token = FuncionarioController::generateToken($Funcionario);
     $SessionController->setValue('token', $token);

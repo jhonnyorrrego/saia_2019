@@ -235,7 +235,7 @@ class Funcionario extends Model
      */
     public function updateImage($image, $attribute)
     {
-        $fileName = "{$attribute}-{$this->nit}.{$image['extension']}";
+        $fileName = "{$attribute}-{$this->getPK()}.{$image['extension']}";
         $this->$attribute = TemporalController::createFileDbRoute(
             "fotos/{$fileName}",
             "imagenes",

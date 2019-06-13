@@ -92,17 +92,23 @@ function user_condition()
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  * @date 2019-04-01
  */
-function get_image($imgRoute, $userId, $name, $lastName)
+function get_image($route, $avatar, $userId, $name, $lastName)
 {
     $Funcionario = new Funcionario();
+    $Funcionario->setPK($userId);
     $Funcionario->setAttributes([
         'nombres' => $name,
         'apellidos' => $lastName,
     ]);
-    $Funcionario->setPK($userId);
 
-    if (is_object(json_decode($imgRoute))) {
-        $Funcionario->foto_recorte = $imgRoute;
+    if (is_object(json_decode($avatar))) {
+        $Funcionario->foto_recorte = $avatar;
+    } else {
+        if (is_object(json_decode($route))) {
+            $Funcionario->foto_original = $route;
+        } else {
+            $Funcionario->foto_original = null;
+        }
     }
 
     return roundedImage($Funcionario->getImage('foto_recorte'));

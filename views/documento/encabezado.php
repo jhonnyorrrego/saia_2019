@@ -21,7 +21,7 @@ function getTransfer($transferId)
     if ($transferId) {
         $findTransfer = StaticSql::search("select * from buzon_salida where idtransferencia = {$transferId}");
 
-        $code = $findTransfer[0]['origen'] == $userCode ?
+        $code = $findTransfer[0]['origen'] != $userCode ?
             $findTransfer[0]['origen'] : $findTransfer[0]['destino'];
         $Funcionario = Funcionario::findByAttributes([
             'funcionario_codigo' => $code
@@ -96,12 +96,6 @@ function plantilla($documentId, $transferId = 0)
                             </a>
                             <a href="#" class="dropdown-item new_add" data-type="process">
                                 <i class="fa fa-link"></i> Gestionar con otros formatos
-                            </a>
-                            <a href="#" class="dropdown-item new_add" data-type="approval">
-                                <i class="fa fa-thumbs-o-up"></i> Solicitar aprobación
-                            </a>
-                            <a href="#" class="dropdown-item new_add" data-type="task">
-                                <i class="fa fa-calendar-o"></i> Asignar tareas o recordatorios
                             </a>
                         </div>
                     </div>

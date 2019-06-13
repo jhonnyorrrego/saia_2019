@@ -63,20 +63,20 @@ $(function() {
     $(document)
         .off('click', '#resend,#reenviar')
         .on('click', '#resend,#reenviar', function() {
-            transferModal(1);
+            transferModal('Reenviar', 1);
         });
 
     $(document)
         .off('click', '#reply,#responder')
         .on('click', '#reply,#responder', function() {
             let userInfo = $('#userInfo').data('info');
-            transferModal(2, userInfo);
+            transferModal('Responder', 2, userInfo);
         });
 
     $(document)
         .off('click', '#responder_todos')
         .on('click', '#responder_todos', function() {
-            transferModal(3);
+            transferModal('Responder a todos', 3);
         });
 
     $('#show_tree').on('click', function() {
@@ -172,24 +172,35 @@ $(function() {
 
     /////// MENU INTERMEDIO ////////
     $(document)
-        .off('click', '#crear_tarea,#etiquetar,#asignar_responsable')
-        .on(
-            'click',
-            '#crear_tarea,#etiquetar,#asignar_responsable',
-            function() {
-                let route = $(this).data('url');
-                top.topModal({
-                    url: `${baseUrl + route}`,
-                    title: $(this).text(),
-                    centerAlign: false,
-                    size: 'modal-xl',
-                    params: {
-                        documentId: documentId
-                    },
-                    buttons: {}
-                });
-            }
-        );
+        .off('click', '#crear_tarea')
+        .on('click', '#crear_tarea', function() {
+            let route = $(this).data('url');
+            top.topModal({
+                url: `${baseUrl + route}`,
+                title: $(this).text(),
+                centerAlign: false,
+                size: 'modal-lg',
+                params: {
+                    documentId: documentId
+                },
+                buttons: {}
+            });
+        });
+
+    $(document)
+        .off('click', '#etiquetar,#asignar_responsable')
+        .on('click', '#etiquetar,#asignar_responsable', function() {
+            let route = $(this).data('url');
+            top.topModal({
+                url: `${baseUrl + route}`,
+                title: $(this).text(),
+                centerAlign: false,
+                params: {
+                    documentId: documentId
+                },
+                buttons: {}
+            });
+        });
 
     $(document)
         .off('click', '#solicitar_aprobacion')
@@ -279,7 +290,7 @@ $(function() {
         }
     }
 
-    function transferModal(type, userInfo) {
+    function transferModal(title, type, userInfo) {
         let options = {
             url: `${baseUrl}views/documento/reenviar.php`,
             params: {
@@ -287,7 +298,7 @@ $(function() {
                 userInfo: userInfo,
                 type: type
             },
-            title: 'Reenviar',
+            title: title,
             size: 'modal-lg',
             buttons: {
                 success: {
