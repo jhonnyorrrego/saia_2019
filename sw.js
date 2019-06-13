@@ -16,7 +16,8 @@ var filesToCache = [
     'assets/theme/assets/js/cerok_libraries/notifications/topNotification.js',
     'assets/theme/assets/js/cerok_libraries/ui/ui.js',
     'assets/theme/assets/plugins/iziToast/js/iziToast.min.js',
-    'assets/theme/assets/js/cerok_libraries/session/global_ajax_validations.js'
+    'assets/theme/assets/js/cerok_libraries/session/global_ajax_validations.js',
+    'assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js'
 ];
 
 self.addEventListener('install', function(e) {

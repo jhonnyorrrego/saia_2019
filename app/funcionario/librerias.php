@@ -98,9 +98,12 @@ function get_image($imgRoute, $userId, $name, $lastName)
     $Funcionario->setAttributes([
         'nombres' => $name,
         'apellidos' => $lastName,
-        'foto_recorte' => $imgRoute
     ]);
     $Funcionario->setPK($userId);
+
+    if (is_object(json_decode($imgRoute))) {
+        $Funcionario->foto_recorte = $imgRoute;
+    }
 
     return roundedImage($Funcionario->getImage('foto_recorte'));
 }
