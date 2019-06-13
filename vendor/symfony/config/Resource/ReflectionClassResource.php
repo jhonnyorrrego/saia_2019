@@ -13,20 +13,23 @@ namespace Symfony\Component\Config\Resource;
 
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface as LegacyServiceSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
+ *
+ * @final since Symfony 4.3
  */
-class ReflectionClassResource implements SelfCheckingResourceInterface, \Serializable
+class ReflectionClassResource implements SelfCheckingResourceInterface
 {
-    private $files = array();
+    private $files = [];
     private $className;
     private $classReflector;
-    private $excludedVendors = array();
+    private $excludedVendors = [];
     private $hash;
 
-    public function __construct(\ReflectionClass $classReflector, array $excludedVendors = array())
+    public function __construct(\ReflectionClass $classReflector, array $excludedVendors = [])
     {
         $this->className = $classReflector->name;
         $this->classReflector = $classReflector;
@@ -58,19 +61,17 @@ class ReflectionClassResource implements SelfCheckingResourceInterface, \Seriali
         return 'reflection.'.$this->className;
     }
 
-    public function serialize()
+    /**
+     * @internal
+     */
+    public function __sleep(): array
     {
         if (null === $this->hash) {
             $this->hash = $this->computeHash();
             $this->loadFiles($this->classReflector);
         }
 
-        return serialize(array($this->files, $this->className, $this->hash));
-    }
-
-    public function unserialize($serialized)
-    {
-        list($this->files, $this->className, $this->hash) = unserialize($serialized);
+        return ['files', 'className', 'hash'];
     }
 
     private function loadFiles(\ReflectionClass $class)
@@ -142,7 +143,7 @@ class ReflectionClassResource implements SelfCheckingResourceInterface, \Seriali
         foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_PROTECTED) as $m) {
             yield preg_replace('/^  @@.*/m', '', $m);
 
-            $defaults = array();
+            $defaults = [];
             foreach ($m->getParameters() as $p) {
                 $defaults[$p->name] = $p->isDefaultValueAvailable() ? $p->getDefaultValue() : null;
             }
@@ -158,9 +159,16 @@ class ReflectionClassResource implements SelfCheckingResourceInterface, \Seriali
             yield print_r($class->name::getSubscribedEvents(), true);
         }
 
+        if (interface_exists(MessageSubscriberInterface::class, false) && $class->isSubclassOf(MessageSubscriberInterface::class)) {
+            yield MessageSubscriberInterface::class;
+            foreach ($class->name::getHandledMessages() as $key => $value) {
+                yield $key.print_r($value, true);
+            }
+        }
+
         if (interface_exists(LegacyServiceSubscriberInterface::class, false) && $class->isSubclassOf(LegacyServiceSubscriberInterface::class)) {
             yield LegacyServiceSubscriberInterface::class;
-            yield print_r(array($class->name, 'getSubscribedServices')(), true);
+            yield print_r([$class->name, 'getSubscribedServices'](), true);
         } elseif (interface_exists(ServiceSubscriberInterface::class, false) && $class->isSubclassOf(ServiceSubscriberInterface::class)) {
             yield ServiceSubscriberInterface::class;
             yield print_r($class->name::getSubscribedServices(), true);

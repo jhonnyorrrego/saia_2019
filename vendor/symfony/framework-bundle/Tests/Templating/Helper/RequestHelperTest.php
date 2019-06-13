@@ -16,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Templating\Helper\RequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @group legacy
+ */
 class RequestHelperTest extends TestCase
 {
     protected $requestStack;
@@ -24,7 +27,7 @@ class RequestHelperTest extends TestCase
     {
         $this->requestStack = new RequestStack();
         $request = new Request();
-        $request->initialize(array('foobar' => 'bar'));
+        $request->initialize(['foobar' => 'bar']);
         $this->requestStack->push($request);
     }
 

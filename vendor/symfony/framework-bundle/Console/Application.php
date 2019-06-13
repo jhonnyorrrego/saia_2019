@@ -32,7 +32,7 @@ class Application extends BaseApplication
 {
     private $kernel;
     private $commandsRegistered = false;
-    private $registrationErrors = array();
+    private $registrationErrors = [];
 
     public function __construct(KernelInterface $kernel)
     {
@@ -62,15 +62,13 @@ class Application extends BaseApplication
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $this->kernel->boot();
-
-        $this->setDispatcher($this->kernel->getContainer()->get('event_dispatcher'));
-
         $this->registerCommands();
 
         if ($this->registrationErrors) {
             $this->renderRegistrationErrors($input, $output);
         }
+
+        $this->setDispatcher($this->kernel->getContainer()->get('event_dispatcher'));
 
         return parent::doRun($input, $output);
     }
@@ -83,7 +81,7 @@ class Application extends BaseApplication
         if (!$command instanceof ListCommand) {
             if ($this->registrationErrors) {
                 $this->renderRegistrationErrors($input, $output);
-                $this->registrationErrors = array();
+                $this->registrationErrors = [];
             }
 
             return parent::doRunCommand($command, $input, $output);
@@ -93,7 +91,7 @@ class Application extends BaseApplication
 
         if ($this->registrationErrors) {
             $this->renderRegistrationErrors($input, $output);
-            $this->registrationErrors = array();
+            $this->registrationErrors = [];
         }
 
         return $returnCode;
@@ -179,7 +177,7 @@ class Application extends BaseApplication
         }
 
         if ($container->hasParameter('console.command.ids')) {
-            $lazyCommandIds = $container->hasParameter('console.lazy_command.ids') ? $container->getParameter('console.lazy_command.ids') : array();
+            $lazyCommandIds = $container->hasParameter('console.lazy_command.ids') ? $container->getParameter('console.lazy_command.ids') : [];
             foreach ($container->getParameter('console.command.ids') as $id) {
                 if (!isset($lazyCommandIds[$id])) {
                     try {

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.2.1 (2019-06-03)
+* Silence call to `\Imagick::setImageOpacity()` in order to prevent deprecation error with Imagick 3.4.4 and ImageMagick 6 (#715, @samdark, @mlocati)
+
 ### 1.2.0 (2018-12-07)
 * `ExifMetadataReader` now returns all the available metadata, not only EXIF and IFD0 (#701, @mlocati)
 

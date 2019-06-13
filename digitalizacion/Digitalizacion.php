@@ -37,7 +37,7 @@ class Digitalizacion {
 		global $conn;
 
 		// Sort out the parameters and grab their data
-
+		$dir_ip='192.168.1.173';
 		$resp = array(
 				"status" => 0,
 				"message" => "Error de ejecucion"
