@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once($ruta_db_superior."pantallas/ruta_temporal/funciones.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 function procesar_ruta_fija_documento($idcampo='',$seleccionado='',$accion='',$campo=''){

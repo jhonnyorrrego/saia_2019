@@ -1,5 +1,5 @@
 <?php
- /*
+/*
 <Clase>
 <Nombre>PERMISO</Nombre>
 <Parametros></Parametros>
@@ -15,14 +15,14 @@ class PermisoController
 {
     public static $instance;
 
-    var $login;
-    var $conn;
-    var $acceso_propio;
-    var $acceso_grupo;
-    var $acceso_total;
-    var $idfuncionario;
-    var $funcionario_codigo;
-    var $perfil;
+    public $login;
+    public $conn;
+    public $acceso_propio;
+    public $acceso_grupo;
+    public $acceso_total;
+    public $idfuncionario;
+    public $funcionario_codigo;
+    public $perfil;
 
     /*
 <Clase>PERMISO
@@ -38,10 +38,10 @@ class PermisoController
     function __construct()
     {
         global $conn;
-        
-        $this->login = $_SESSION["LOGIN" . LLAVE_SAIA];
+
+        $this->login = SessionController::getLogin();
         $this->conn = $conn;
-        
+
         if ($this->acceso_root()) {
             $this->idfuncionario = 0;
             $this->funcionario_codigo = 0;
@@ -63,23 +63,16 @@ class PermisoController
         return (false);
     }
 
-    /*
-<Clase>PERMISO
-<Nombre>acceso_root
-<Parametros>
-<Responsabilidades>buscar el login del administrador
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+    /**
+     * verifica si un usuario tiene acceso root
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-06
      */
     function acceso_root()
     {
-        $configuracion = busca_filtro_tabla("A.valor,A.fecha", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $this->conn);
-        if ($configuracion["numcampos"] && $this->login == $configuracion[0]["valor"])
-            return (true);
-        else return (false);
+        return SessionController::isRoot();
     }
 
     /*
@@ -230,7 +223,7 @@ class PermisoController
      * */
     public static function moduleAccess(string $nombreModulo)
     {
-        if(!self::$instance){
+        if (!self::$instance) {
             self::$instance = new self;
         }
 

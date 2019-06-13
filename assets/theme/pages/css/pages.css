@@ -6522,9 +6522,9 @@ body>.pgn-wrapper {
   .modal .modal-content {
     box-shadow: none;
   }
-  .modal .modal-dialog {
+  /*.modal .modal-dialog {
     width: 600px;
-  }
+  }*/
   .modal .modal-sm {
     width: 300px;
   }
@@ -8246,7 +8246,7 @@ body.rtl .checkbox label::after {
   padding-left: 12px;
   padding-right: 12px;
   padding-bottom: 4px;
-  overflow: hidden;
+  /*overflow: hidden;  for eonasdan widget*/
   width: 100%;
   -webkit-transition: background-color 0.2s ease;
   transition: background-color 0.2s ease;

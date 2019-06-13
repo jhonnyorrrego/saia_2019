@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "core/autoload.php";
 
 $objetoJson = [
 	"key" => 0
@@ -156,4 +156,3 @@ function llena_funcionario($iddep)
 	}
 	return $objetoJson;
 }
-?>

@@ -2,6 +2,7 @@
 class TemporalController
 {
     public static $saiaDir = 'temporal/saia';
+
     /**
      * limpia una carpeta
      *
@@ -14,21 +15,23 @@ class TemporalController
     public static function cleanDirectory($dir, $remove = false)
     {
         if (is_dir($dir)) {
-
             if (!$dh = @opendir($dir)) {
                 return;
             }
+
             while (false !== ($obj = readdir($dh))) {
                 if ($obj == '.' || $obj == '..') {
                     continue;
                 }
+
                 if (!@unlink($dir . '/' . $obj)) {
                     self::cleanDirectory($dir . '/' . $obj, true);
                 }
             }
+
             closedir($dh);
 
-            if ($remove) { //elimina la carpeta
+            if ($remove) {
                 @rmdir($dir);
             }
         } else {
