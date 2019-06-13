@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
+include_once($ruta_db_superior."core/autoload.php");
 include_once $ruta_db_superior . "class_transferencia.php";
 include_once $ruta_db_superior . FORMATOS_SAIA . "/librerias/funciones_formatos_generales.php";
 include_once $ruta_db_superior . "pantallas/qr/librerias.php";

@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."core/autoload.php");
 
 
 $destinos_radicacion=busca_filtro_tabla("idft_destino_radicacion","ft_destino_radicacion","estado_item<>3","",$conn);
