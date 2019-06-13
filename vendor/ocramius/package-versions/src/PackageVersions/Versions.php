@@ -102,7 +102,7 @@ final class Versions
   'zendframework/zend-code' => '3.3.1@c21db169075c6ec4b342149f446e7b7b724f95eb',
   'zendframework/zend-escaper' => '2.6.0@31d8aafae982f9568287cb4dce987e6aff8fd074',
   'zendframework/zend-eventmanager' => '3.2.1@a5e2583a211f73604691586b8406ff7296a946dd',
-  '__root__' => 'dev-correspondencia_20180502_acarvajal@80120d583283d22caefd9647a29fd940fbe9f452',
+  '__root__' => 'dev-correspondencia_20180502_acarvajal@e2098d2755968e9b1ac24376f7a9687d3cd7832e',
 );
 
     private function __construct()
