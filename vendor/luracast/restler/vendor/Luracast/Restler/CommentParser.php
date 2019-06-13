@@ -195,7 +195,7 @@ class CommentParser
             list(, $param, $value) = preg_split('/\@|\s/', $line, 3)
             + array('', '', '');
             list($value, $embedded) = $this->parseEmbeddedData($value);
-            $value = array_filter(preg_split('/\s+/msu', $value));
+            $value = array_filter(preg_split('/\s+/msu', $value),'strlen');
             $this->parseParam($param, $value, $embedded);
         }
         return $this->_data;
@@ -273,13 +273,9 @@ class CommentParser
                 $value
             );
             $data[$param] = $arr;
-        } else {
-            if (!is_string($value) && isset($value[self::$embeddedDataName])
-                && isset($data[$param][self::$embeddedDataName])
-            ) {
-                $value[self::$embeddedDataName]
-                    += $data[$param][self::$embeddedDataName];
-            }
+        } elseif (!is_string($value) && isset($value[self::$embeddedDataName]) &&
+                  isset($data[$param][self::$embeddedDataName])) {
+            $value[self::$embeddedDataName] += $data[$param][self::$embeddedDataName];
             $data[$param] = $value + $data[$param];
         }
     }
