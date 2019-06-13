@@ -4,9 +4,9 @@ $(function() {
 
     (function init() {
         defineButtonLabel();
+        createDatePicker();
 
         if (!params.id) {
-            createDatePicker();
             checkName();
             defaultUser(localStorage.getItem('key'));
         } else {

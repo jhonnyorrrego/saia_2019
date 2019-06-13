@@ -8,7 +8,7 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 if(@$_REQUEST["idformato"]){
 	$pantalla=busca_filtro_tabla("A.*,A.nombre AS pantalla, A.librerias AS librerias_pantalla, A.etiqueta AS etiqueta_pantalla,B.*, A.nombre_tabla AS tabla_campo, B.nombre AS campo, B.etiqueta AS etiqueta_campo, B.orden AS orden_campo, C.*, C.nombre AS componente_nombre, C.librerias AS librerias_componente","formato A, campos_formato B, pantalla_componente C","A.idformato=B.formato_idformato AND B.etiqueta_html=C.nombre AND A.idformato=".$_REQUEST["idformato"],"B.orden asc",$conn);
 	

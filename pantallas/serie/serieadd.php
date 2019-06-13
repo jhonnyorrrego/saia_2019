@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-require_once $ruta_db_superior . "controllers/autoload.php";
+require_once $ruta_db_superior . "core/autoload.php";
 require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $sAction = $_POST["a_add"];

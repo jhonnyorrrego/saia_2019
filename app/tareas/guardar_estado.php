@@ -11,9 +11,9 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => [],
     'message' => "",
     'success' => 0,
@@ -31,10 +31,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         'estado' => 1
     ]);
 
-    if($pk){        
-        $Response->message = "Prioridad asignada";
+    if ($pk) {
+        $Response->message = "El estado ha sido modificado";
         $Response->success = 1;
-    }else{
+    } else {
         $Response->message = "Error al guardar";
     }
 } else {

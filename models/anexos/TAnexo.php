@@ -1,9 +1,4 @@
 <?php
-use function GuzzleHttp\json_decode;
-
-/**
- * 
- */
 trait TAnexo
 {
     /**

@@ -1,73 +1,73 @@
-$(function () {
-    let baseUrl = $("script[data-baseurl]").data("baseurl");
+$(function() {
+    let baseUrl = $('script[data-baseurl]').data('baseurl');
 
-    $("#calendar").fullCalendar({
+    $('#calendar').fullCalendar({
         longPressDelay: 300,
         selectLongPressDelay: 500,
         eventDurationEditable: false,
         editable: true,
-        defaultView: "agendaWeek",
-        eventTextColor: "white",
+        defaultView: 'agendaWeek',
+        eventTextColor: 'white',
         height: $(window).height() - 20,
         selectable: true,
         customButtons: {
             refresh: {
-                icon: "clockwise-arrow",
-                click: function () {
-                    $("#calendar").fullCalendar("refetchEvents");
+                icon: 'clockwise-arrow',
+                click: function() {
+                    $('#calendar').fullCalendar('refetchEvents');
                 }
             },
             select: {
-                icon: "clockwise-arrow",
-                click: function () {
+                icon: 'clockwise-arrow',
+                click: function() {
                     console.log(1);
                 }
             }
         },
         header: {
-            left: "title",
-            right: "select prev,next,refresh month,agendaWeek,agendaDay,today"
+            left: 'title',
+            right: 'select prev,next,refresh month,agendaWeek,agendaDay,today'
         },
-        select: function (start, end) {
+        select: function(start, end) {
             let params = {
-                initialTime: start.format("YYYY-MM-DD HH:mm:ss"),
-                finalTime: end.format("YYYY-MM-DD HH:mm:ss")
+                initialTime: start.format('YYYY-MM-DD HH:mm:ss'),
+                finalTime: end.format('YYYY-MM-DD HH:mm:ss')
             };
             modalTask(params);
         },
-        eventDrop: function (event) {
+        eventDrop: function(event) {
             updateTask(event);
         },
-        eventResize: function (event) {
+        eventResize: function(event) {
             updateTask(event);
         },
-        eventClick: function (event) {
+        eventClick: function(event) {
             modalTask({ id: event.id });
         },
-        events: function (start, end, timezone, callback) {
+        events: function(start, end, timezone, callback) {
             $.ajax({
                 url: `${baseUrl}app/tareas/funcionario.php`,
-                dataType: "json",
+                dataType: 'json',
                 data: {
                     serachtype: getSearchType(),
-                    initialDate: start.format("YYYY-MM-DD HH:mm:ss"),
-                    finalDate: end.format("YYYY-MM-DD HH:mm:ss"),
-                    key: localStorage.getItem("key")
+                    initialDate: start.format('YYYY-MM-DD HH:mm:ss'),
+                    finalDate: end.format('YYYY-MM-DD HH:mm:ss'),
+                    key: localStorage.getItem('key')
                 },
-                success: function (response) {
+                success: function(response) {
                     callback(response.data);
                 }
             });
         }
     });
 
-    $(document).on("change", "#changeCalendarParams", function (event) {
-        $("#calendar").fullCalendar("refetchEvents");
+    $(document).on('change', '#changeCalendarParams', function(event) {
+        $('#calendar').fullCalendar('refetchEvents');
     });
 
     function getSearchType() {
-        if ($("#changeCalendarParams").length) {
-            var type = $("#changeCalendarParams").val();
+        if ($('#changeCalendarParams').length) {
+            var type = $('#changeCalendarParams').val();
         } else {
             var type = 1;
         }
@@ -79,12 +79,12 @@ $(function () {
         let options = {
             url: `${baseUrl}views/tareas/crear.php`,
             params: params,
-            title: "Tarea",
+            title: 'Tarea o Recordatorio',
             centerAlign: false,
-            size: "modal-lg",
+            size: 'modal-lg',
             buttons: {},
-            onSuccess: function () {
-                $(".fc-refresh-button").trigger("click");
+            onSuccess: function() {
+                $('.fc-refresh-button').trigger('click');
             }
         };
 
@@ -92,92 +92,95 @@ $(function () {
     }
 
     function updateTask(event) {
-        let initialTime = event.start.format("YYYY-MM-DD HH:mm:ss");
-        let finalTime = event.end.format("YYYY-MM-DD HH:mm:ss");
+        let initialTime = event.start.format('YYYY-MM-DD HH:mm:ss');
+        let finalTime = event.end.format('YYYY-MM-DD HH:mm:ss');
 
         $.post(
             `${baseUrl}app/tareas/guardar.php`,
             {
                 initialDate: initialTime,
                 finalDate: finalTime,
-                key: localStorage.getItem("key"),
+                key: localStorage.getItem('key'),
                 task: event.id
             },
-            function (response) {
+            function(response) {
                 if (!response.success) {
                     top.notification({
-                        type: "error",
+                        type: 'error',
                         message: response.message
                     });
                 }
             },
-            "json"
+            'json'
         );
     }
 
     (function defaultOptions() {
-        $("<select>", {
-            id: "changeCalendarParams",
-            class: "form-control py-0"
+        $('<select>', {
+            id: 'changeCalendarParams',
+            class: 'form-control py-0'
         })
             .css({
-                minHeight: "2.1em",
-                maxHeight: "2.1em",
-                fontSize: "13px",
-                width: "auto"
+                minHeight: '2.1em',
+                maxHeight: '2.1em',
+                fontSize: '13px',
+                width: 'auto'
             })
             .append(
-                $("<option>", {
+                $('<option>', {
                     value: 1,
-                    text: "Soy Responsable"
+                    text: 'Soy Responsable'
                 }),
-                $("<option>", {
+                $('<option>', {
                     value: 2,
-                    text: "Soy Seguidor"
+                    text: 'Soy Seguidor'
                 }),
-                $("<option>", {
+                $('<option>', {
                     value: 3,
-                    text: "Soy Planeador"
+                    text: 'Soy Planeador'
                 })
             )
-            .insertAfter(".fc-select-button");
-        $(".fc-select-button").remove();
-        $(".fc-toolbar")
-            .find("button")
-            .addClass("btn bg-white");
+            .insertAfter('.fc-select-button');
+        $('.fc-select-button').remove();
+        $('.fc-toolbar')
+            .find('button')
+            .addClass('btn bg-white');
 
         setTimeout(() => {
-            let heightHeader = $(".fc-header-toolbar").height();
-            $(".fc-header-toolbar .fc-right")
+            let heightHeader = $('.fc-header-toolbar').height();
+            $('.fc-header-toolbar .fc-right')
                 .height(heightHeader)
-                .addClass("d-flex align-items-center");
+                .addClass('d-flex align-items-center');
         }, 300);
     })();
 
     (function createPicker() {
-        $("#picker").datetimepicker({
-            locale: "es",
-            format: "YYYY-MM-DD",
+        $('#picker').datetimepicker({
+            locale: 'es',
+            format: 'YYYY-MM-DD',
             defaultDate: new Date()
         });
 
-        $("#picker").on("dp.change", function (e) {
-            $("#calendar").fullCalendar("changeView", "agendaDay");
-            $("#calendar").fullCalendar("gotoDate", $(this).val());
+        $('#picker').on('dp.change', function(e) {
+            $('#calendar').fullCalendar('changeView', 'agendaDay');
+            $('#calendar').fullCalendar('gotoDate', $(this).val());
         });
 
-        $(".fc-left")
-            .on("click", function () {
-                $("#picker")
-                    .data("DateTimePicker")
+        $('.fc-left')
+            .on('click', function() {
+                $('#picker')
+                    .data('DateTimePicker')
                     .show();
             })
-            .addClass("cursor");
+            .addClass('cursor');
 
-        $("*:not(.fc-left)").on("click", function (e) {
-            if ($('.fc-left').length && !$(e.target).parents(".fc-left").length) {
-                $("#picker")
-                    .data("DateTimePicker")
+        $('*:not(.fc-left)').on('click', function(e) {
+            if (
+                $('.fc-left').length &&
+                !$(e.target).parents('.fc-left').length
+            ) {
+                $('#picker')
+                    .data('DateTimePicker')
                     .hide();
             }
         });

@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "controllers/autoload.php";
+include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_formato.php";
@@ -3348,7 +3348,7 @@ function permisosFormato($idformato, $idperfil, $nombreFormato)
     phpmkr_query($eliminarPermisos);
     if ($consultaModulo['numcampos']) {
         for ($i = 0; $i < count($idperfil); $i++) {
-            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil[$i]},'lame','lame','lame')";
+            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil[$i]})";
             phpmkr_query($guardarPermiso);
             $retorno['exito'] = 1;
             $retorno['mensaje'] = 'permisos asignados correctamente';

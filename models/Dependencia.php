@@ -16,6 +16,7 @@ class Dependencia extends Model
     protected $orden;
     protected $codigo_arbol;
     protected $descripcion;
+    protected $sigla;
     protected $dbAttributes;
     protected $DependenciaPadre;
 
@@ -40,9 +41,10 @@ class Dependencia extends Model
                 'logo',
                 'orden',
                 'codigo_arbol',
-                'descripcion'
+                'descripcion',
+                'sigla'
             ],
-            'date' => 'fecha_ingreso'
+            'date' => ['fecha_ingreso']
         ];
     }
     /**

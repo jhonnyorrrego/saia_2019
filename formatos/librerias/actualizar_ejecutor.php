@@ -1,5 +1,15 @@
 <?php
-include_once ("../../db.php");
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+  if (is_file($ruta . "db.php")) {
+    $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}
+
+include_once $ruta_db_superior . 'core/autoload.php';
 foreach ($_REQUEST AS $key => $valor) {
 	if ($valor == 'undefined') {
 		unset($_REQUEST[$key]);

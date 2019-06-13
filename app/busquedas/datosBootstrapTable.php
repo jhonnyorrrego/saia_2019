@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     $userId = SessionController::getValue('idfuncionario');
@@ -22,7 +22,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
         'rows' => $_REQUEST['pageSize'],
         'actual_row' => $actualRow,
         'key' => $Funcionario->getPK(),
-        'token' => FuncionarioController::generateToken($Funcionario, 5, true),
+        'token' => FuncionarioController::generateToken($Funcionario, 5000000, true),
         'ws' => 1
     ];
 
