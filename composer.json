@@ -1,6 +1,6 @@
 {
 	"require": {
-		"luracast/restler": "*",
+		"luracast/restler": "^3.0",
 		"firebase/php-jwt": "*",
 		"phpoffice/phpword": "*",
 		"greenlion/php-sql-parser": "*",

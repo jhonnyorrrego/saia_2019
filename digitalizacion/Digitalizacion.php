@@ -9,17 +9,11 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."core/autoload.php");
 
-if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
-    if(function_exists("logear_funcionario_webservice")) {
-    	logear_funcionario_webservice("radicador_web");
-    } else {
-        $GLOBALS['usuactual'] = "radicador_web";
-        $_SESSION["LOGIN" . LLAVE_SAIA] = "radicador_web";
-        $_SESSION["conexion_remota"] = 1;
-    }
-}
+$Funcionario = new Funcionario(funcionario::RADICADOR_WEB);
+$SessionController = new SessionController($Funcionario);
+
 
 class Digitalizacion {
 
@@ -37,7 +31,7 @@ class Digitalizacion {
 		global $conn;
 
 		// Sort out the parameters and grab their data
-
+		$dir_ip='192.168.1.173';
 		$resp = array(
 				"status" => 0,
 				"message" => "Error de ejecucion"

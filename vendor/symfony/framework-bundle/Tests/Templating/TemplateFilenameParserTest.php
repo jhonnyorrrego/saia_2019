@@ -15,6 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateFilenameParser;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
+/**
+ * @group legacy
+ */
 class TemplateFilenameParserTest extends TestCase
 {
     protected $parser;
@@ -45,12 +48,12 @@ class TemplateFilenameParserTest extends TestCase
 
     public function getFilenameToTemplateProvider()
     {
-        return array(
-            array('/path/to/section/name.format.engine', new TemplateReference('', '/path/to/section', 'name', 'format', 'engine')),
-            array('\\path\\to\\section\\name.format.engine', new TemplateReference('', '/path/to/section', 'name', 'format', 'engine')),
-            array('name.format.engine', new TemplateReference('', '', 'name', 'format', 'engine')),
-            array('name.format', false),
-            array('name', false),
-        );
+        return [
+            ['/path/to/section/name.format.engine', new TemplateReference('', '/path/to/section', 'name', 'format', 'engine')],
+            ['\\path\\to\\section\\name.format.engine', new TemplateReference('', '/path/to/section', 'name', 'format', 'engine')],
+            ['name.format.engine', new TemplateReference('', '', 'name', 'format', 'engine')],
+            ['name.format', false],
+            ['name', false],
+        ];
     }
 }

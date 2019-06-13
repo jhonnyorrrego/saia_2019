@@ -17,6 +17,9 @@ use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 
+/**
+ * @group legacy
+ */
 class AssetsHelperTest extends TestCase
 {
     private $helper;
@@ -26,7 +29,7 @@ class AssetsHelperTest extends TestCase
         $fooPackage = new Package(new StaticVersionStrategy('42', '%s?v=%s'));
         $barPackage = new Package(new StaticVersionStrategy('22', '%s?%s'));
 
-        $packages = new Packages($fooPackage, array('bar' => $barPackage));
+        $packages = new Packages($fooPackage, ['bar' => $barPackage]);
 
         $this->helper = new AssetsHelper($packages);
     }

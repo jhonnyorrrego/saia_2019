@@ -115,7 +115,7 @@ class TreeBuilderTest extends TestCase
         $builder = new TreeBuilder('test');
 
         $builder->getRootNode()
-            ->example(array('key' => 'value'))
+            ->example(['key' => 'value'])
             ->children()
                 ->node('child', 'variable')->info('child info')->defaultValue('default')->example('example')
             ->end()
@@ -196,5 +196,15 @@ class TreeBuilderTest extends TestCase
     public function testInitializingTreeBuildersWithoutRootNode()
     {
         new TreeBuilder();
+    }
+
+    /**
+     * @group legacy
+     * @expectedDeprecation The "Symfony\Component\Config\Definition\Builder\TreeBuilder::root()" method called for the "foo" configuration is deprecated since Symfony 4.3, pass the root name to the constructor instead.
+     */
+    public function testRoot()
+    {
+        $builder = new TreeBuilder('foo');
+        $builder->root('foo');
     }
 }

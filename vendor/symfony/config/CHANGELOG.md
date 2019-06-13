@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+4.3.0
+-----
+
+ * deprecated using environment variables with `cannotBeEmpty()` if the value is validated with `validate()`
+ * made `Resource\*` classes final and not implement `Serializable` anymore
+ * deprecated the `root()` method in `TreeBuilder`, pass the root node information to the constructor instead
+
 4.2.0
 -----
 
@@ -52,7 +59,7 @@ The edge case of defining just one value for nodes of type Enum is now allowed:
 $rootNode
     ->children()
         ->enumNode('variable')
-            ->values(array('value'))
+            ->values(['value'])
         ->end()
     ->end()
 ;
