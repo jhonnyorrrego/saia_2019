@@ -160,6 +160,7 @@ $(function() {
         $.post(
             `${baseUrl}app/busquedas/consulta_componente.php`,
             {
+                token: localStorage.getItem('token'),
                 key: localStorage.getItem('key'),
                 name: 'busqueda_general_tareas'
             },

@@ -116,7 +116,8 @@ class Funcionario extends Model
         return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'cutedPhoto' => $this->getImage('foto_recorte')
+            'cutedPhoto' => $this->getImage('foto_recorte'),
+            'login' => $this->login
         ];
     }
 
@@ -235,7 +236,7 @@ class Funcionario extends Model
      */
     public function updateImage($image, $attribute)
     {
-        $fileName = "{$attribute}-{$this->nit}.{$image['extension']}";
+        $fileName = "{$attribute}-{$this->getPK()}.{$image['extension']}";
         $this->$attribute = TemporalController::createFileDbRoute(
             "fotos/{$fileName}",
             "imagenes",

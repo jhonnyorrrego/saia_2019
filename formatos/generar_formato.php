@@ -10,11 +10,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-
-if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
-    logear_funcionario_webservice($_REQUEST["LOGIN"]);
-}
-
 include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php";
 include_once $ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php";
 include_once $ruta_db_superior . "pantallas/documento/class_documento_elastic.php";
@@ -409,10 +404,12 @@ try {
     die("invalid access");
 }
 
-if(!\$_REQUEST['actualizar_pdf'] && (
-    (\$_REQUEST["tipo"] && \$_REQUEST["tipo"] == 5) ||
-    0 == {$formato[0]['mostrar_pdf']}
-)): ?>
+if(
+    !\$_REQUEST['mostrar_pdf'] && !\$_REQUEST['actualizar_pdf'] && (
+        (\$_REQUEST["tipo"] && \$_REQUEST["tipo"] == 5) ||
+        0 == {$formato[0]['mostrar_pdf']}
+    )
+): ?>
     <!DOCTYPE html>
     <html>
         <head>
@@ -440,8 +437,7 @@ if(!\$_REQUEST['actualizar_pdf'] && (
         "type" => "TIPO_DOCUMENTO",
         "typeId" => \$documentId,
         "exportar" => \$record[0]["exportar"],
-        "ruta" => base64_encode(\$record[0]["pdf"]),
-        "usuario" => encrypt_blowfish(\$_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO)
+        "ruta" => base64_encode(\$record[0]["pdf"])
     ];
 
     if((\$record[0]["mostrar_pdf"] == 1 && !\$record[0]["pdf"]) || \$_REQUEST["actualizar_pdf"]){

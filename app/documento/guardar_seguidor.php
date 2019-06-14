@@ -28,7 +28,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
     if ($_REQUEST['remove'] && $DocumentoFuncionario) {
         if ($DocumentoFuncionario->toggleRelation(0)) {
-            $Response->message = 'Usuario Eliminado';
+            $Response->message = "Usuario Eliminado";
             $Response->data = $DocumentoFuncionario->getPK();
         } else {
             $Response->message = "Error al guardar";
@@ -38,13 +38,16 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         if ($DocumentoFuncionario) {
             $pk = $DocumentoFuncionario->toggleRelation(1);
         } else {
-            $pk = DocumentoFuncionario::newRecord([
+            $DocumentoFuncionario = new DocumentoFuncionario();
+            $DocumentoFuncionario->setAttributes([
                 'fk_documento' => $_REQUEST['documentId'],
                 'fk_funcionario' => $_REQUEST['user'],
                 'estado' => 1,
                 'fecha' => date('Y-m-d H:i:s'),
-                'tipo' => 2
+                'tipo' => DocumentoFuncionario::SEGUIDOR
             ]);
+
+            $pk = $DocumentoFuncionario->save();
         }
 
         if ($pk) {
@@ -54,9 +57,9 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 $DocumentoFuncionario->getUser()->funcionario_codigo,
                 3
             );
-            $Response->message = 'Usuario asignado';
+            $Response->message = "Usuario asignado";
         } else {
-            $Response->message = 'Error al guardar';
+            $Response->message = "Error al guardar";
             $Response->success = 0;
         }
     }

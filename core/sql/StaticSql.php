@@ -65,6 +65,7 @@ class StaticSql
         }
         return (StaticSql::$instance)::fecha_db_almacenar($date, $format);
     }
+
     /**
      * Obtiene una fecha de la db en el formato especificado
      * es equivalente a fecha_db_obtener
@@ -80,5 +81,22 @@ class StaticSql
         }
 
         return (StaticSql::$instance)::fecha_db_obtener($attribute, $format);
+    }
+
+    /**
+     * concatena un conjunto de datos
+     *
+     * @param array $data
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-12
+     */
+    public static function concat(array $data): string
+    {
+        if (!StaticSql::$instance) {
+            StaticSql::$instance = Conexion::getConnection();
+        }
+
+        return (StaticSql::$instance)::concatenar_cadena($data);
     }
 }
