@@ -272,6 +272,12 @@ $(function() {
         .on('click', '#anexos', function() {
             $('#show_files').click();
         });
+
+    $(document)
+        .off('click', '#anular_documento')
+        .on('click', '#anular_documento', function() {
+            cancelNotification();
+        });
     /////// FIN MENU INTERMEDIO /////
 
     function toggleGoBack() {
@@ -745,5 +751,92 @@ $(function() {
                 findActions();
             }
         });
+    }
+
+    function cancelNotification() {
+        if (!isOwner()) {
+            top.notification({
+                type: 'error',
+                message: 'No puedes realizar esta acción'
+            });
+
+            return;
+        }
+
+        top.confirm({
+            timeout: 20000,
+            overlay: true,
+            displayMode: 'once',
+            id: 'inputs',
+            zindex: 9999,
+            title: 'Anular documento',
+            message:
+                'Debe indicar una observación. Recuerde, esta acción no se podrá revertir',
+            position: 'center',
+            drag: false,
+            type: 'warning',
+            inputs: [
+                [
+                    '<input type="text" id="cancel_observation">',
+                    'keyup',
+                    () => {
+                        return true;
+                    },
+                    true
+                ]
+            ],
+            buttons: [
+                [
+                    '<button>Cancelar</button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    }
+                ],
+                [
+                    '<button><b>Anular</b></button>',
+                    function(instance, toast) {
+                        var input = $(toast).find('#cancel_observation');
+                        let observation = input.val();
+                        cancelDocument(observation);
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    },
+                    true
+                ]
+            ]
+        });
+    }
+
+    function cancelDocument(observation) {
+        $.post(
+            `${baseUrl}app/documento/anular.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: documentId,
+                observation: observation
+            },
+            function(response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });
