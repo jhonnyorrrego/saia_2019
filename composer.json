@@ -1,37 +1,37 @@
 {
-    "require": {
-        "luracast/restler": "*",
-        "firebase/php-jwt": "*",
-        "phpoffice/phpword": "*",
-        "greenlion/php-sql-parser": "*",
-        "siriusphp/upload": "*",
-        "symfony/process": "*",
-        "doctrine/orm": "*",
-        "danielstjules/stringy": "*",
-        "knplabs/gaufrette": "*",
-        "imagine/imagine": "*",
-        "doctrine/doctrine-migrations-bundle": "*",
-        "smalot/pdfparser": "*",
-        "tecnickcom/tcpdf": "*",
-        "aws/aws-sdk-php": "*",
-        "lasserafn/php-initial-avatar-generator": "^3.0",
-        "symfony/yaml": "^4.1",
-        "mpdf/mpdf": "^7.1",
-        "setasign/fpdf": "^1.8",
-        "setasign/fpdi": "v1.6",
-        "setasign/fpdi-tcpdf": "v1.6",
-        "phpoffice/phpspreadsheet": "^1.6",
-        "phpoffice/phpexcel": "^1.8"
-    },
-    "extra": {
-        "class": "Corley\\Composer\\MyHook"
-    },
-    "autoload": {
-        "psr-4": {
-            "Corley\\Composer\\" : "instalador/"
-        }
-    },
-    "scripts": {
-        "post-install-cmd": "Corley\\Composer\\MyHook::localConf"
-    }
+	"require": {
+		"luracast/restler": "^3.0",
+		"firebase/php-jwt": "*",
+		"phpoffice/phpword": "*",
+		"greenlion/php-sql-parser": "*",
+		"siriusphp/upload": "*",
+		"symfony/process": "*",
+		"doctrine/orm": "*",
+		"danielstjules/stringy": "*",
+		"knplabs/gaufrette": "*",
+		"imagine/imagine": "*",
+		"doctrine/doctrine-migrations-bundle": "*",
+		"smalot/pdfparser": "*",
+		"tecnickcom/tcpdf": "*",
+		"aws/aws-sdk-php": "*",
+		"lasserafn/php-initial-avatar-generator": "^3.0",
+		"symfony/yaml": "^4.1",
+		"mpdf/mpdf": "^7.1",
+		"setasign/fpdf": "^1.8",
+		"setasign/fpdi": "v1.6",
+		"setasign/fpdi-tcpdf": "v1.6",
+		"phpoffice/phpspreadsheet": "^1.6",
+		"phpoffice/phpexcel": "^1.8"
+	},
+	"extra": {
+		"class": "Corley\\Composer\\MyHook"
+	},
+	"autoload": {
+		"psr-4": {
+			"Corley\\Composer\\" : "instalador/"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "Corley\\Composer\\MyHook::localConf"
+	}
 }

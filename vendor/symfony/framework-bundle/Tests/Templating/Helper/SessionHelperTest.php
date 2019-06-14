@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
+/**
+ * @group legacy
+ */
 class SessionHelperTest extends TestCase
 {
     protected $requestStack;
@@ -47,13 +50,13 @@ class SessionHelperTest extends TestCase
 
         $this->assertTrue($helper->hasFlash('notice'));
 
-        $this->assertEquals(array('bar'), $helper->getFlash('notice'));
+        $this->assertEquals(['bar'], $helper->getFlash('notice'));
     }
 
     public function testGetFlashes()
     {
         $helper = new SessionHelper($this->requestStack);
-        $this->assertEquals(array('notice' => array('bar')), $helper->getFlashes());
+        $this->assertEquals(['notice' => ['bar']], $helper->getFlashes());
     }
 
     public function testGet()

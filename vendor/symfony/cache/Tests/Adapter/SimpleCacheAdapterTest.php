@@ -11,21 +11,21 @@
 
 namespace Symfony\Component\Cache\Tests\Adapter;
 
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\SimpleCacheAdapter;
-use Symfony\Component\Cache\Simple\Psr6Cache;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
  * @group time-sensitive
+ * @group legacy
  */
 class SimpleCacheAdapterTest extends AdapterTestCase
 {
-    protected $skippedTests = array(
+    protected $skippedTests = [
         'testPrune' => 'SimpleCache just proxies',
-    );
+    ];
 
     public function createCachePool($defaultLifetime = 0)
     {
-        return new SimpleCacheAdapter(new Psr6Cache(new FilesystemAdapter()), '', $defaultLifetime);
+        return new SimpleCacheAdapter(new FilesystemCache(), '', $defaultLifetime);
     }
 }

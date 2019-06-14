@@ -1,7 +1,7 @@
 <?php
 namespace Luracast\Restler\Format;
 
-use Luracast\Restler\Data\Object;
+use Luracast\Restler\Data\Obj;
 use Luracast\Restler\RestException;
 
 /**
@@ -66,24 +66,21 @@ class JsonFormat extends Format
             if (self::$bigIntAsString) $options |= JSON_BIGINT_AS_STRING;
             if (self::$unEscapedUnicode) $options |= JSON_UNESCAPED_UNICODE;
             return json_encode(
-                Object::toArray($data, true), $options
+                Obj::toArray($data, true), $options
             );
         }
 
-        $result = json_encode(Object::toArray($data, true));
+        $result = json_encode(Obj::toArray($data, true));
         if ($humanReadable) $result = $this->formatJson($result);
         if (self::$unEscapedUnicode) {
             $result = preg_replace_callback('/\\\u(\w\w\w\w)/',
                 function($matches)
                 {
-                    if (function_exists('mb_convert_encoding'))
-                	{
-                		return mb_convert_encoding(pack('H*', $matches[1]), 'UTF-8', 'UTF-16BE');	
-                	}
-                	else
-                	{
-                		return iconv('UTF-16BE','UTF-8',pack('H*', $matches[1]));
-                	}
+                    if (function_exists('mb_convert_encoding')) {
+                        return mb_convert_encoding(pack('H*', $matches[1]), 'UTF-8', 'UTF-16BE');
+                    } else {
+                        return iconv('UTF-16BE', 'UTF-8', pack('H*', $matches[1]));
+                    }
                 }
                 , $result);
         }
@@ -106,11 +103,11 @@ class JsonFormat extends Format
                 );
             }
         }
-        $decoded = json_decode($data, $options);
+        $decoded = json_decode($data, true, 512, $options);
         if (function_exists('json_last_error')) {
             switch (json_last_error()) {
                 case JSON_ERROR_NONE :
-                    return Object::toArray($decoded);
+                    return $decoded; //Obj::toArray($decoded);
                     break;
                 case JSON_ERROR_DEPTH :
                     $message = 'maximum stack depth exceeded';
@@ -137,7 +134,7 @@ class JsonFormat extends Format
             throw new RestException (400, 'Error parsing JSON');
         }
 
-        return Object::toArray($decoded);
+        return $decoded; //Obj::toArray($decoded);
     }
 
     /**

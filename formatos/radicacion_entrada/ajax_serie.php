@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."core/autoload.php");
 $retorno[]=array();
 if($_REQUEST['iddependencia']){
     $retorno[]= $_REQUEST['iddependencia'];

@@ -12,7 +12,5 @@ return array(
     'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
-    'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
     'Analog' => array($vendorDir . '/analog/analog/lib'),
 );
