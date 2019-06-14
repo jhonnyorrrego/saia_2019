@@ -33,6 +33,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/animate.min.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 
 <body class="fixed-header">
@@ -129,7 +130,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="d-flex align-items-center">
                 <div class="dropdown pull-left d-xs-block pr-5">
                     <span id="show_notifications" class="profile-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="px-1 cursor fa fa-globe fa-2x notification f-20">
+                        <span class="px-1 cursor fa fa-bell faa-shake fa-2x notification f-20">
                             <span class="badge badge-important counter" id="notification_counter"></span>
                         </span>
                     </span>

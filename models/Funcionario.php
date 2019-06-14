@@ -116,7 +116,8 @@ class Funcionario extends Model
         return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'cutedPhoto' => $this->getImage('foto_recorte')
+            'cutedPhoto' => $this->getImage('foto_recorte'),
+            'login' => $this->login
         ];
     }
 
