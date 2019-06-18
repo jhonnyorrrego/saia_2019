@@ -1,8 +1,12 @@
 <?php
 
-class Ejecutor extends Model {
+class Ejecutor extends Model
+{
+    const TIPO_PERSONA_NATURAL = 1;
+    const TIPO_PERSONA_JURIDICA = 2;
+    const ESTADO_ACTIVO = 1;
+    const ESTADO_INACTIVO = 0;
 
-    protected $tabla = 'ejecutor';
     protected $idejecutor;
     protected $identificacion;
     protected $nombre;
@@ -11,39 +15,59 @@ class Ejecutor extends Model {
     protected $tipo_ejecutor;
     protected $datosEjecutor;
 
-    const TIPO_PERSONA_NATURAL = 1;
-    const TIPO_PERSONA_JURIDICA = 2;
-    const ESTADO_ACTIVO = 1;
-    const ESTADO_INACTIVO = 0;
+    //relations 
+    protected $DatosEjecutor;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         parent::__construct($id);
     }
 
-    protected function defineAttributes() {
-        $this->dbAttributes = (object) [
-                    "safe" => [
-                        "identificacion",
-                        "nombre",
-                        "fecha_ingreso",
-                        "estado",
-                        "tipo_ejecutor"
-                    ],
-                    "table" => "ejecutor",
-                    "primary" => "idejecutor"
+    protected function defineAttributes()
+    {
+        $this->dbAttributes = (object)[
+            "safe" => [
+                "identificacion",
+                "nombre",
+                "fecha_ingreso",
+                "estado",
+                "tipo_ejecutor"
+            ],
+            "date" => ['fecha_ingreso'],
         ];
     }
 
-    public function setDatosEjecutor($datosEjecutor) {
+    /**
+     * retorna los ultimos datos_ejecutor 
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-17
+     */
+    public function getUserData()
+    {
+        if (!$this->DatosEjecutor) {
+            $this->DatosEjecutor = DatosEjecutor::findByAttributes([
+                'ejecutor_idejecutor' => $this->getPK()
+            ], [], DatosEjecutor::getPrimaryLabel() . ' DESC');
+        }
+
+        return $this->DatosEjecutor;
+    }
+
+    public function setDatosEjecutor($datosEjecutor)
+    {
         $this->datosEjecutor = $datosEjecutor;
     }
 
-    public function getDatosEjecutor() {
+    public function getDatosEjecutor()
+    {
         return $this->datosEjecutor;
     }
 
-    public static function findByIdentificacion($identificacion) {
-        if(!empty($identificacion)) {
+    public static function findByIdentificacion($identificacion)
+    {
+        if (!empty($identificacion)) {
             $sql = <<<SQL
                 select t.*
                 from ejecutor t
@@ -54,11 +78,10 @@ class Ejecutor extends Model {
                     AND t.identificacion = '{$identificacion}'
 SQL;
             $records = StaticSql::search($sql);
-
-            $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+            $total = count($records);
 
             $data = [];
-            for($row = 0; $row < $total; $row++) {
+            for ($row = 0; $row < $total; $row++) {
                 $tercero = new self();
                 $datosTercero = new DatosEjecutor();
                 $tercero->idejecutor = $records[$row]['idejecutor'];
@@ -74,11 +97,12 @@ SQL;
         return null;
     }
 
-    public static function findByIdentificacionTipo($identificacion, $tipo) {
-        if(!in_array($tipo, [self::TIPO_PERSONA_NATURAL, self::TIPO_PERSONA_JURIDICA])) {
+    public static function findByIdentificacionTipo($identificacion, $tipo)
+    {
+        if (!in_array($tipo, [self::TIPO_PERSONA_NATURAL, self::TIPO_PERSONA_JURIDICA])) {
             return null;
         }
-        if(!empty($identificacion) && !empty($tipo)) {
+        if (!empty($identificacion) && !empty($tipo)) {
             $sql = <<<SQL
                 select t.*
                 from ejecutor t
@@ -91,10 +115,10 @@ SQL;
 SQL;
             $records = StaticSql::search($sql);
 
-            $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+            $total = count($records);
 
             $data = [];
-            for($row = 0; $row < $total; $row++) {
+            for ($row = 0; $row < $total; $row++) {
                 $tercero = new self();
                 $datosTercero = new DatosEjecutor();
                 $tercero->idejecutor = $records[$row]['idejecutor'];
@@ -110,9 +134,10 @@ SQL;
         return null;
     }
 
-    public function consultarDatos() {
+    public function consultarDatos()
+    {
         $posibles = DatosEjecutor::findByEjecutor($this->getPK());
-        if(count($posibles)) {
+        if ($posibles) {
             $this->setDatosEjecutor($posibles[0]);
         }
     }
