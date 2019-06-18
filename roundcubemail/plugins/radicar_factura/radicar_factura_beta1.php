@@ -51,8 +51,7 @@ class radicar_factura_beta1 extends rcube_plugin {
             $max_salida--;
         }
         global $conn;
-        require_once ($ruta_db_superior . "vendor/autoload.php");
-        include_once ($ruta_db_superior . "db.php");
+        require_once ($ruta_db_superior . "core/autoload.php");
         $this->add_texts('localization');
 
         $rcmail = rcmail::get_instance();
