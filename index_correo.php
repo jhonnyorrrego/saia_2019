@@ -8,8 +8,8 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "librerias_saia.php";
 usuario_actual("login");
 echo(estilo_bootstrap());
 
@@ -19,6 +19,8 @@ if (is_dir("roundcubemail")) {
 	}
 
 	$funcionario = busca_filtro_tabla("idfuncionario, email, email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+	$funcionario[0]["email"] = 'cristian.agudelo@cerok.com';
+	$funcionario[0]["email_contrasena"] = 'pikec123';
 	if (!$funcionario["numcampos"]) {
 	?>
 	<div class="alert alert-error">
