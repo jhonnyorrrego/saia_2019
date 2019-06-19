@@ -32,9 +32,9 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
                 $Funcionario = new Funcionario($_REQUEST['key']);
                 $data = $Funcionario->getBasicInformation();
                 $data['originalPhoto'] = $Funcionario->getImage('foto_original');
-                $data['email'] = $Funcionario->getEmail();
-                $data['direction'] = $Funcionario->getDirection();
-                $data['phoneNumber'] = $Funcionario->getPhoneNumber();
+                $data['email'] = $Funcionario->email;
+                $data['direction'] = $Funcionario->direccion;
+                $data['phoneNumber'] = $Funcionario->telefono;
 
                 $Response->data = $data;
                 break;
@@ -46,8 +46,8 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
                         'telefono', 'email', 'perfil', 'ventanilla_radicacion', 'estado'
                     ]);
                 }, ARRAY_FILTER_USE_KEY);
-                
-                if($Funcionario->firma){
+
+                if ($Funcionario->firma) {
                     $image = TemporalController::createTemporalFile($Funcionario->firma, uniqid('firma'), true);
                     $data['firma'] = [
                         'name' => 'firma',
