@@ -70,17 +70,14 @@ $params = json_encode([
                         <label>Correo:</label>
                         <input name="email" type="text" class="form-control">
                     </div>
-                    <div class="form-group form-group-default">
-                        <label>Ciudad:</label>
-                        <input name="ciudad" type="text" class="form-control">
-                    </div>
+                    <div id="location_component"></div>
                 </form>
             </div>
         </div>
     </div>
+    <?= select2() ?>
     <?= validate() ?>
-    <script id="user_script" src="<?= $ruta_db_superior ?>views/remitente/js/adicionar.js" data-params='<?= $params ?>'>
-    </script>
+    <script id="user_script" src="<?= $ruta_db_superior ?>views/remitente/js/adicionar.js" data-params='<?= $params ?>'></script>
 </body>
 
 </html>

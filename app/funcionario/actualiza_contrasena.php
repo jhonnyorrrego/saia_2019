@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 1,
@@ -21,20 +21,20 @@ $Response = (object) array(
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $Funcionario = new Funcionario($_SESSION['idfuncionario']);
-    $password = $Funcionario->getPassword();
+    $password = $Funcionario->clave;
 
-    if($password == CriptoController::encrypt_md5($_REQUEST['actual'])){
+    if ($password == CriptoController::encrypt_md5($_REQUEST['actual'])) {
         $Funcionario->setAttributes(array(
             'clave' => CriptoController::encrypt_md5($_REQUEST['new'])
         ));
-        
+
         if ($Funcionario->update()) {
             $Response->message = "Datos Actualizados";
         } else {
             $Response->message = "Error al guardar";
             $Response->success = 0;
         }
-    }else{
+    } else {
         $Response->message = "Contraseña incorrecta";
         $Response->success = 0;
     }

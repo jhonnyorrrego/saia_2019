@@ -7,6 +7,8 @@ $(function() {
     (function init() {
         if (params.userId) {
             find(params.userId);
+        } else {
+            showMultipleSelect();
         }
     })();
 
@@ -54,6 +56,32 @@ $(function() {
                     break;
             }
         }
+
+        showMultipleSelect(data.ciudad);
+    }
+
+    function showMultipleSelect(city) {
+        if (typeof MultipleSelect === 'undefined') {
+            $.getScript(
+                `${baseUrl}assets/theme/assets/js/cerok_libraries/multipleSelect/multipleSelect.js`,
+                r => {
+                    createComponent(city);
+                }
+            );
+        } else {
+            createComponent(city);
+        }
+    }
+
+    function createComponent(city) {
+        let options = {
+            selector: '#location_component',
+            baseUrl: baseUrl,
+            identificator: 'ciudad',
+            defaultValues: true,
+            defaultCity: city || null
+        };
+        new MultipleSelect(options);
     }
 });
 
