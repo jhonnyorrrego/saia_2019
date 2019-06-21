@@ -23,7 +23,7 @@ class Anexos extends Model
     protected $versionamiento;
     protected $user;
     protected $log;
-    protected $dbAttributes;
+    
     public $clone;
 
     function __construct($id = null)

@@ -1,5 +1,5 @@
 <?php
-class SqlOracle extends SQL2
+class SqlOracle extends Sql
 {
 
     public function __construct($conn, $motorBd)

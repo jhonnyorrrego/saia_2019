@@ -8,7 +8,7 @@ class DocumentoAlertaRuta extends Model
     protected $activo;
     protected $estado;
     protected $fecha_modificacion;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

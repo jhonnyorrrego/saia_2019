@@ -10,7 +10,7 @@ class ExpedienteDoc extends Model
     protected $fecha_indice;
     protected $fecha;
 
-    protected $dbAttributes;
+    
 
     public function __construct($id = null)
     {

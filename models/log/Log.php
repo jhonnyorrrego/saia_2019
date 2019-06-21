@@ -7,7 +7,7 @@ class Log extends Model
     protected $fk_funcionario;
     protected $fecha;
     protected $user;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

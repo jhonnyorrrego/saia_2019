@@ -5,7 +5,7 @@ class TareaLog extends Model
     protected $idtarea_log;
     protected $fk_log;
     protected $fk_tarea;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

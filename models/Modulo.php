@@ -11,7 +11,7 @@ class Modulo extends Model
     protected $enlace;
     protected $cod_padre;
     protected $orden;
-    protected $dbAttributes;
+
 
     function __construct($id = null)
     {

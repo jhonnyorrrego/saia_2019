@@ -8,7 +8,7 @@ class VersionPagina extends Model
     protected $ruta_miniatura;
     protected $fk_idversion_documento;
     protected $pagina_idpagina;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

@@ -11,7 +11,7 @@ class VisorComentario extends Model
     protected $annotation;
     protected $content;
     protected $user;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

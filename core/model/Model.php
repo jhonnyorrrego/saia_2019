@@ -82,40 +82,11 @@ abstract class Model extends StaticSql
      * elimina la llave primaria cuando el objeto es clonado
      *
      * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-21
      */
     public function __clone()
     {
         $pkLabel = $this->getPkName();
         $this->setPK(null);
-    }
-
-    /**
-     * retorna el nombre de la tabla
-     *
-     * @return string
-     */
-    public function getTable()
-    {
-        if (empty($this->dbAttributes->table)) {
-            $Stringy = new Stringy(get_called_class());
-            $this->dbAttributes->table = (string)$Stringy->underscored();
-        }
-        return $this->dbAttributes->table;
-    }
-
-    /**
-     * retorna el nombre de la llave primaria
-     *
-     * @return string
-     */
-    public function getPkName()
-    {
-        if (empty($this->dbAttributes->primary)) {
-            $this->dbAttributes->primary = 'id' . $this->getTable();
-        }
-        return $this->dbAttributes->primary;
     }
 
     /**
@@ -138,7 +109,7 @@ abstract class Model extends StaticSql
      */
     public function getDateAttributes()
     {
-        return $this->dbAttributes->date;
+        return $this->dbAttributes->date ? $this->dbAttributes->date : [];
     }
 
     /**
@@ -188,6 +159,113 @@ abstract class Model extends StaticSql
     }
 
     /**
+     * obtiene un atributo tipo fecha 
+     * en el formato necesario
+     *
+     * @param string $attribute nombre del atributo a convertir
+     * @param string $format formato requerido
+     * @return string
+     */
+    public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
+    {
+        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
+    }
+
+    /**
+     * retorna el nombre de la tabla
+     *
+     * @return string
+     */
+    public function getTable()
+    {
+        if (empty($this->dbAttributes->table)) {
+            $Stringy = new Stringy(get_called_class());
+            $this->dbAttributes->table = (string)$Stringy->underscored();
+        }
+        return $this->dbAttributes->table;
+    }
+
+    /**
+     * retorna el nombre de la llave primaria
+     *
+     * @return string
+     */
+    public function getPkName()
+    {
+        if (empty($this->dbAttributes->primary)) {
+            $this->dbAttributes->primary = 'id' . $this->getTable();
+        }
+        return $this->dbAttributes->primary;
+    }
+
+    /**
+     * obtiene el nombre de la llave primaria
+     * en un ambito estatico
+     * @return string
+     */
+    public static function getPrimaryLabel()
+    {
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getPkName();
+    }
+
+    /**
+     * obtiene el nombre de la tabla
+     * en un ambito estatico
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getTable();
+    }
+
+    /**
+     * obtiene el valor de la llave primaria
+     * 
+     * @return integer
+     */
+    public function getPK()
+    {
+        $pk = $this->getPkName();
+        return $this->$pk;
+    }
+
+    /**
+     * setea el valor de la llave primaria
+     *
+     * @param int $value nuevo valor
+     * @return void
+     */
+    public function setPK($value)
+    {
+        $pk = $this->getPkName();
+        $this->$pk = $value;
+    }
+
+    /**
+     * retorna la instancia de la relacion dada
+     * usado para relaciones 1=1
+     *
+     * @param string $instance Nombre de la instancia requerida
+     * @param string $fieldName atributo igual a la llave primaria de $instance
+     * @return array|null
+     * @author Andre.Agudelo <andres.agudelo@cerok.com>
+     * @modificado jhon sebastian valencia <jhon.valencia@cerok.com> 2019-03-14
+     */
+    public function getRelationFk(string $instance = null, $fieldName = null)
+    {
+        if ($instance) {
+            $fieldName = $fieldName ?? 'fk_' . $instance::getTableName();
+            $response = new $instance($this->$fieldName);
+        }
+        return $response ?? null;
+    }
+
+    /**
      * consulta un registro en la tabla segun 
      * la llave primaria y asigna masivamente los atributos
      *
@@ -201,6 +279,128 @@ abstract class Model extends StaticSql
         if (!$this->setAttributes($data)) {
             throw new Exception("invalid Pk", 1);
         }
+    }
+
+    /**
+     * obtiene un objeto filtrado por las condiciones
+     * obtiene null en caso de no encontrar una coincidencia
+     *
+     * @param array $conditions condiciones a cumplir attributo -> valor
+     * @param array $fields filas a consultar
+     * @param string $order string de ordenamiento id desc
+     * @return void
+     */
+    public static function findByAttributes(
+        array $conditions,
+        $fields = [],
+        $order = ''
+    ) {
+        $data = self::findAllByAttributes($conditions, $fields, $order, 0, 1);
+        return $data ? $data[0] : null;
+    }
+
+    /**
+     * obtiene una matriz de objetos filtrados por las condiciones
+     * obtiene una matriz vacia en caso de no encontrar coincidencias
+     *
+     * @param array $conditions condiciones a cumplir atributo -> valor
+     * @param array $fields lista de campos a consultar
+     * @param string $order string de ordenamiento id desc
+     * @param integer $offset limite inferior de la busqueda
+     * @param integer $limit limite superior de la busqueda
+     * @return array
+     */
+    public static function findAllByAttributes(
+        array $conditions,
+        $fields = [],
+        $order = '',
+        $offset = 0,
+        $limit = 0
+    ) {
+        $sql = self::generateSelectSql($conditions, $fields, $order);
+        $records = self::search($sql, $offset, $limit);
+        return self::convertToObjectCollection($records);
+    }
+
+    /**
+     * obtiene una matriz con los datos de una columna
+     * filtrando los registros por las condiciones indicadas
+     * 
+     * obtiene una matriz vacia en caso de no encontrar coincidencias
+     *
+     * @param string $field nombre de la columna a consultar
+     * @param array $conditions condiciones a cumplir atributo -> valor
+     * @param string $order string de ordenamiento id desc
+     * @return array
+     */
+    public static function findColumn(
+        string $field,
+        $conditions = [],
+        $order = ''
+    ) {
+        $sql = self::generateSelectSql($conditions, [$field], $order);
+        $records = self::search($sql);
+
+        $data = [];
+        foreach ($records as $value) {
+            $data[] = $value[0];
+        }
+        return $data;
+    }
+
+    /**
+     * ejecuta una busqueda normalmente con un sql avanzado
+     *
+     * @param string $sql sentencia a ejecutar
+     * @param boolean $getInstance retornar instancias del modelo
+     * @param integer $offset limite inferior de la consulta
+     * @param integer $limit limite superior de la consulta
+     * @return void
+     */
+    public static function findBySql(
+        string $sql,
+        $getInstance = true,
+        $offset = null,
+        $limit = null
+    ) {
+        $data = self::search($sql, $offset, $limit);
+        if ($getInstance) {
+            $className = get_called_class();
+            $data = $className::convertToObjectCollection($data);
+        }
+        return $data;
+    }
+
+    /**
+     * consulta la cantidad de registros
+     * que cumplen con una condicion
+     *
+     * @param array $conditions condicion a cumplir atributo -> valor
+     * @return int numero de coincidencias
+     */
+    public static function countRecords(array $conditions = [])
+    {
+        $condition = self::createCondition($conditions);
+        $condition = $condition ? " where "  . $condition : '';
+        $sql = "select count(*) as total from " . self::getTableName() . $condition;
+        $record = self::search($sql);
+
+        return $record[0]['total'];
+    }
+
+    /**
+     * crea un nuevo registro en la tabla 
+     * desde un ambito estatico
+     *
+     * @param array $attributes atributo -> valor
+     * @return int valor de la nueva llave primaria
+     */
+    public static function newRecord(array $attributes)
+    {
+        $className = get_called_class();
+        $Instance = new $className();
+        $Instance->setAttributes($attributes);
+        return $Instance->create();
     }
 
     /**
@@ -367,213 +567,6 @@ abstract class Model extends StaticSql
     }
 
     /**
-     * obtiene el valor de la llave primaria
-     * 
-     * @return integer
-     */
-    public function getPK()
-    {
-        $pk = $this->getPkName();
-        return $this->$pk;
-    }
-
-    /**
-     * setea el valor de la llave primaria
-     *
-     * @param int $value nuevo valor
-     * @return void
-     */
-    public function setPK($value)
-    {
-        $pk = $this->getPkName();
-        $this->$pk = $value;
-    }
-
-    /**
-     * obtiene un atributo tipo fecha 
-     * en el formato necesario
-     *
-     * @param string $attribute nombre del atributo a convertir
-     * @param string $format formato requerido
-     * @return string
-     */
-    public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
-    {
-        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
-    }
-
-    /**
-     * retorna un clone de la instancia sin su llave primaria
-     *
-     * @return object
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-15
-     */
-    public function clone()
-    {
-        $pk = $this->getPK();
-        $response = clone $this;
-        $this->setPK($pk);
-        return $response;
-    }
-
-    /**
-     * obtiene el nombre de la llave primaria
-     * en un ambito estatico
-     * @return string
-     */
-    public static function getPrimaryLabel()
-    {
-        $caller = get_called_class();
-        $instance = new $caller();
-        return $instance->getPkName();
-    }
-
-    /**
-     * obtiene el nombre de la tabla
-     * en un ambito estatico
-     * 
-     * @return string
-     */
-    public static function getTableName()
-    {
-        $caller = get_called_class();
-        $instance = new $caller();
-        return $instance->getTable();
-    }
-
-    /**
-     * obtiene un objeto filtrado por las condiciones
-     * obtiene null en caso de no encontrar una coincidencia
-     *
-     * @param array $conditions condiciones a cumplir attributo -> valor
-     * @param array $fields filas a consultar
-     * @param string $order string de ordenamiento id desc
-     * @return void
-     */
-    public static function findByAttributes(
-        array $conditions,
-        $fields = [],
-        $order = ''
-    ) {
-        $data = self::findAllByAttributes($conditions, $fields, $order, 0, 1);
-        return $data ? $data[0] : null;
-    }
-
-    /**
-     * obtiene una matriz de objetos filtrados por las condiciones
-     * obtiene una matriz vacia en caso de no encontrar coincidencias
-     *
-     * @param array $conditions condiciones a cumplir atributo -> valor
-     * @param array $fields lista de campos a consultar
-     * @param string $order string de ordenamiento id desc
-     * @param integer $offset limite inferior de la busqueda
-     * @param integer $limit limite superior de la busqueda
-     * @return array
-     */
-    public static function findAllByAttributes(
-        array $conditions,
-        $fields = [],
-        $order = '',
-        $offset = 0,
-        $limit = 0
-    ) {
-        $sql = self::generateSelectSql($conditions, $fields, $order);
-        $records = self::search($sql, $offset, $limit);
-        return self::convertToObjectCollection($records);
-    }
-
-    /**
-     * obtiene una matriz con los datos de una columna
-     * filtrando los registros por las condiciones indicadas
-     * 
-     * obtiene una matriz vacia en caso de no encontrar coincidencias
-     *
-     * @param string $field nombre de la columna a consultar
-     * @param array $conditions condiciones a cumplir atributo -> valor
-     * @param string $order string de ordenamiento id desc
-     * @return array
-     */
-    public static function findColumn(
-        string $field,
-        $conditions = [],
-        $order = ''
-    ) {
-        $sql = self::generateSelectSql($conditions, [$field], $order);
-        $records = self::search($sql);
-
-        $data = [];
-        foreach ($records as $value) {
-            $data[] = $value[0];
-        }
-        return $data;
-    }
-
-    /**
-     * consulta la cantidad de registros
-     * que cumplen con una condicion
-     *
-     * @param array $conditions condicion a cumplir atributo -> valor
-     * @return int numero de coincidencias
-     */
-    public static function countRecords(array $conditions = [])
-    {
-        $condition = self::createCondition($conditions);
-        $condition = $condition ? " where "  . $condition : '';
-        $sql = "select count(*) as total from " . self::getTableName() . $condition;
-        $record = self::search($sql);
-
-        return $record[0]['total'];
-    }
-
-    /**
-     * convierte un array de arrays a un array de objetos
-     * 
-     * en caso de que el modelo defina el metodo massiveAssigned
-     * este sera ejecutado 
-     *
-     * @param array $records array a convertir
-     * @return array
-     */
-    public static function convertToObjectCollection(array $records)
-    {
-        $class = get_called_class();
-        $massiveAssigned = method_exists($class, 'massiveAssigned');
-        $data = [];
-
-        foreach ($records as $row) {
-            $Instance = new $class();
-            $Instance->setAttributes($row);
-
-            if (array_key_exists($Instance->getPkName(), $row)) {
-                $Instance->setPK($row[$Instance->getPkName()]);
-            }
-
-            if ($massiveAssigned) {
-                $Instance->massiveAssigned();
-            }
-            $data[] = $Instance;
-        }
-
-        return $data;
-    }
-
-    /**
-     * crea un nuevo registro en la tabla 
-     * desde un ambito estatico
-     *
-     * @param array $attributes atributo -> valor
-     * @return int valor de la nueva llave primaria
-     */
-    public static function newRecord(array $attributes)
-    {
-        $className = get_called_class();
-        $Instance = new $className();
-        $Instance->setAttributes($attributes);
-        return $Instance->create();
-    }
-
-    /**
      * create select portion for sql query
      * check date attributes
      *
@@ -673,44 +666,80 @@ abstract class Model extends StaticSql
     }
 
     /**
-     * retorna la instancia de la relacion dada
-     * usado para relaciones 1=1
+     * convierte un array de arrays a un array de objetos
+     * 
+     * en caso de que el modelo defina el metodo massiveAssigned
+     * este sera ejecutado 
      *
-     * @param string $instance Nombre de la instancia requerida
-     * @param string $fieldName atributo igual a la llave primaria de $instance
-     * @return array|null
-     * @author Andre.Agudelo <andres.agudelo@cerok.com>
-     * @modificado jhon sebastian valencia <jhon.valencia@cerok.com> 2019-03-14
+     * @param array $records array a convertir
+     * @return array
      */
-    public function getRelationFk(string $instance = null, $fieldName = null)
+    public static function convertToObjectCollection(array $records)
     {
-        if ($instance) {
-            $fieldName = $fieldName ?? 'fk_' . $instance::getTableName();
-            $response = new $instance($this->$fieldName);
+        $class = get_called_class();
+        $massiveAssigned = method_exists($class, 'massiveAssigned');
+        $data = [];
+
+        foreach ($records as $row) {
+            $Instance = new $class();
+            $Instance->setAttributes($row);
+
+            if (array_key_exists($Instance->getPkName(), $row)) {
+                $Instance->setPK($row[$Instance->getPkName()]);
+            }
+
+            if ($massiveAssigned) {
+                $Instance->massiveAssigned();
+            }
+            $data[] = $Instance;
         }
-        return $response ?? null;
+
+        return $data;
     }
 
     /**
-     * ejecuta una busqueda normalmente con un sql avanzado
+     * retorna un clone de la instancia sin su llave primaria
      *
-     * @param string $sql sentencia a ejecutar
-     * @param boolean $getInstance retornar instancias del modelo
-     * @param integer $offset limite inferior de la consulta
-     * @param integer $limit limite superior de la consulta
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-15
+     */
+    public function clone()
+    {
+        $pk = $this->getPK();
+        $response = clone $this;
+        $this->setPK($pk);
+        return $response;
+    }
+
+    /**
+     * obtiene la etiqueta de un campo
+     * en caso de no existir retorna el nombre del campo
+     *
+     * @param string $field
      * @return void
      */
-    public static function findBySql(
-        string $sql,
-        $getInstance = true,
-        $offset = null,
-        $limit = null
-    ) {
-        $data = self::search($sql, $offset, $limit);
-        if ($getInstance) {
-            $className = get_called_class();
-            $data = $className::convertToObjectCollection($data);
+    public function getFieldLabel($field)
+    {
+        if (!array_key_exists($field, $this->dbAttributes->labels)) {
+            return $field;
         }
-        return $data;
+
+        return  $this->dbAttributes->labels[$field]['label'];
+    }
+
+    /**
+     * obtiene la etiqueta de un valor de campo
+     *
+     * @param string $field
+     * @return void
+     */
+    public function getValueLabel($field, $value)
+    {
+        if (!array_key_exists($value, $this->dbAttributes->labels[$field]['values'])) {
+            return $value;
+        }
+
+        return $this->dbAttributes->labels[$field]['values'][$value];
     }
 }

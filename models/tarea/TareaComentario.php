@@ -7,7 +7,7 @@ class TareaComentario extends Model
     protected $fk_tarea;
     protected $comentario;
     protected $fecha;
-    protected $dbAttributes;
+    
     public $user;
 
     function __construct($id = null) {

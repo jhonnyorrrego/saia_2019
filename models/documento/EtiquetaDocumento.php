@@ -5,7 +5,7 @@ class EtiquetaDocumento extends Model
     protected $iddocumento_etiqueta;
     protected $fk_etiqueta;
     protected $fk_documento;
-    protected $dbAttributes;
+    
 
     function __construct($id = null) {
         return parent::__construct($id);

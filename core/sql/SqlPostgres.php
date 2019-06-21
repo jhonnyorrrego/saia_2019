@@ -1,5 +1,5 @@
 <?php
-class SqlPostgres extends SQL2
+class SqlPostgres extends Sql
 {
 
 	public function __construct($conn, $motorBd)

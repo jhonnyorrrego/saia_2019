@@ -6,7 +6,7 @@ class Departamento extends Model
     protected $nombre;
     protected $estado;
     protected $pais_idpais;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

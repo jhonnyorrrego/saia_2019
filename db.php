@@ -20,7 +20,7 @@ function defineGlobalVars()
     }
 
     $GLOBALS['sql'] = '';
-    $GLOBALS['conn'] = phpmkr_db_connect();
+    $GLOBALS['conn'] = StaticSql::getInstance();
 }
 
 /*
@@ -262,47 +262,6 @@ function formato_cargo($nombre_cargo)
     return $cargo;
 }
 
-
-/*
-<Clase>
-<Nombre>phpmkr_db_connect
-<Parametros>$HOST: Equipo en el que se encuentra la base de datos
-            $USER: nombre del usuario con el cual se realizará la conexión
-            $PASS: contraseña del usuario
-            $DB: Nombre de la base de datos, o del esquema
-            $MOTOR: Motor con el que se realiza la conexion, Oracle o MySql
-<Responsabilidades> Establecer una conexión entre la base de datos y la aplicacion
-<Notas> Hace uso de las clases SQL y conexion, retornando el objeto SQL inicializado,
-        con el cual se pueden ejecutar los queries en la base de datos.
-<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los parámetros
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_db_connect()
-{
-    global $conn;
-
-    if (!$conn) {
-        $conn = Conexion::getConnection();
-
-        if ($conn && $conn->Conn) {
-            $response = $conn;
-        } elseif (!$conn) {
-            error("Error al Tratar de Crear el SQL." . $conn->consulta);
-            $response = false;
-        } else {
-            error("Error al conectarse con la Base de datos." . $conn->consulta);
-            $response = false;
-        }
-    } else {
-        $response = $conn;
-    }
-
-    return $response;
-}
-
-
 /*
 <Clase>
 <Nombre>phpmkr_db_close
@@ -501,28 +460,20 @@ function phpmkr_error()
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn)
+function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn = null)
 {
-    global $sql, $conn;
+    global $sql;
 
-    $sql = "Select ";
+    $sql = "SELECT ";
     $sql .= $campos ? $campos : "*";
     $sql .= " FROM {$tabla}";
     $sql .= $filtro ? " WHERE {$filtro} " : ' ';
     $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
         $orden : "ORDER BY {$orden} ") : '';
-
     $sql = htmlspecialchars_decode($sql);
-    $rs = $conn->Ejecutar_Sql($sql);
-    $temp = phpmkr_fetch_array($rs);
 
-    $return = [];
-    for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
-        $return[] = $temp;
-    }
-    phpmkr_free_result($rs);
-
-    $return['numcampos'] = $i;
+    $return = StaticSql::search($sql);
+    $return['numcampos'] = count($return);
     $return['tabla'] = $tabla;
     $return['sql'] = $sql;
     return $return;
@@ -574,53 +525,6 @@ function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $re
     phpmkr_free_result($rs);
 
     return ($retorno);
-}
-/*
-<Clase>
-<Nombre>ejecuta_sql
-<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecuta la sentencia
-<Responsabilidades>Ejecuta una sentencia insert y retorna la llave de lo que acaba de insertar
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function ejecuta_sql($sql)
-{
-    global $conn;
-
-
-    phpmkr_query($sql, $conn);
-    $id = phpmkr_insert_id();
-    if ($id > 0) {
-        return ($id);
-    } else
-        return false;
-    phpmkr_free_result();
-}
-/*
-<Clase>
-<Nombre>ejecuta_filtro
-<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar�la sentencia
-<Responsabilidades>Ejecuta una sentencia insert y retorna la llave de lo que acaba de insertar
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function ejecuta_filtro($sql1, $con)
-{
-    global $sql;
-    $sql = $sql1;
-    $rs = @phpmkr_query($sql, $con);
-    $resultado["numcampos"] = @phpmkr_num_rows($rs);
-    if ($resultado["numcampos"]) {
-        $resultado = @phpmkr_fetch_array($rs);
-        $resultado["numcampos"] = @phpmkr_num_rows($rs);
-    }
-    return ($resultado);
 }
 
 /**

@@ -11,7 +11,7 @@ class DependenciaCargo extends LogModel
     protected $fecha_final;
     protected $fecha_ingreso;
     protected $tipo;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

@@ -40,7 +40,7 @@ class VfuncionarioDc extends Funcionario
     protected $fecha_final;
     protected $creacion_dc;
     protected $tipo_dc;
-    protected $dbAttributes;
+    
 
     /**
      * @param int $id value for idfuncionario attribute

@@ -18,7 +18,7 @@ class BuzonSalida extends Model
     protected $ver_notas;
     protected $recibido;
     protected $enviado;
-    protected $dbAttributes;
+
 
     function __construct($id = null)
     {

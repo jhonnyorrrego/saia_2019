@@ -10,7 +10,7 @@ class Cargo extends Model
     protected $estado;
     protected $tipo_cargo;
     protected $pertenece_nucleo;
-    protected $dbAttributes;
+
     protected $cargoPadre;
 
     function __construct($id = null)
@@ -32,7 +32,7 @@ class Cargo extends Model
             ]
         ];
     }
-    
+
     /**
      * retorna la etiqueta del estado de la cargo
      *

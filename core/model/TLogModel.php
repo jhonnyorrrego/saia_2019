@@ -1,8 +1,6 @@
 <?php
 trait TLogModel
 {
-    protected $fieldLabels = [];
-    protected $fieldValueLabels = [];
     public $logModelRelation;
     public $clone;
 
@@ -56,43 +54,5 @@ trait TLogModel
     public function afterDelete()
     {
         return LogController::create(LogAccion::BORRAR, $this->logModelRelation, $this);
-    }
-
-    /**
-     * obtiene la etiqueta de un campo
-     * en caso de no existir retorna el nombre del campo
-     *
-     * @param string $field
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-06-11
-     */
-    public function getFieldLabel($field)
-    {
-        if (!array_key_exists($field, $this->fieldLabels)) {
-            return $field;
-        }
-
-        return $this->fieldLabels[$field];
-    }
-
-    /**
-     * obtiene la etiqueta de un valor de campo
-     *
-     * @param string $field
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-06-11
-     */
-    public function getValueLabel($field, $value)
-    {
-        if (
-            !array_key_exists($field, $this->fieldValueLabels) &&
-            !array_key_exists($value, $this->fieldValueLabels[$field])
-        ) {
-            return $value;
-        }
-
-        return $this->fieldValueLabels[$field][$value];
     }
 }

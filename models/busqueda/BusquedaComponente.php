@@ -29,7 +29,7 @@ class BusquedaComponente extends Model
     protected $enlace_adicionar;
     protected $encabezado_grillas;
     protected $llave;
-    protected $dbAttributes;
+    
 
     function __construct($id = null) {
         return parent::__construct($id);

@@ -8,7 +8,7 @@ class Digitalizacion extends Model
     protected $accion;
     protected $funcionario;
     protected $justificacion;
-    protected $dbAttributes;
+
 
     function __construct($id = null)
     {

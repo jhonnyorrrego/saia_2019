@@ -11,7 +11,7 @@ class LogAcceso extends Model
     protected $funcionario_idfuncionario;
     protected $idsesion_php;
     protected $token;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

@@ -7,7 +7,7 @@ class ComentarioDocumento extends Model
     protected $fk_documento;
     protected $comentario;
     protected $fecha;
-    protected $dbAttributes;
+    
     public $user;
 
     function __construct($id = null) {

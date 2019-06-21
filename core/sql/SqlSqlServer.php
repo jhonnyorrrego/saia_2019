@@ -1,5 +1,5 @@
 <?php
-class SqlSqlServer extends SQL2
+class SqlSqlServer extends Sql
 {
 
     public function __construct($conn, $motorBd)

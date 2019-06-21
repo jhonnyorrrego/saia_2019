@@ -17,7 +17,7 @@ class Dependencia extends Model
     protected $codigo_arbol;
     protected $descripcion;
     protected $sigla;
-    protected $dbAttributes;
+    
     protected $DependenciaPadre;
 
     function __construct($id = null)
