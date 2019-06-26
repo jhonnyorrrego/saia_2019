@@ -170,6 +170,10 @@ class Funcionario extends Model
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
             $tempRoute = $ruta_db_superior . $this->getTemporalRoute();
 
+            if (!is_dir($tempRoute)) {
+                mkdir($tempRoute, PERMISOS_CARPETAS, TRUE);
+            }
+
             $name = strtok($this->nombres, " ") . ' ' . strtok($this->apellidos, " ");
             $avatar = $avatar
                 ->name($name)
