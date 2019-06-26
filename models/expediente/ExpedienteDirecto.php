@@ -8,7 +8,7 @@ class ExpedienteDirecto extends Model
     protected $fk_funcionario;
     protected $fecha_creacion;
 
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

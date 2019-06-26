@@ -42,8 +42,6 @@ class Expediente extends Model
     protected $fk_dependencia;
     protected $fk_entidad_serie;
 
-    protected $dbAttributes;
-
     protected $expedientePadre;
     public $permiso;
 

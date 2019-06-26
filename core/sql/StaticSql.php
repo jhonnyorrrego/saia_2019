@@ -2,7 +2,33 @@
 
 class StaticSql
 {
+    /**
+     * instancia de sql segun el motor
+     *
+     * @var object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     private static $instance;
+
+    /**
+     * obtiene la instancia de sql, en caso de no
+     * existir la genera
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-19
+     */
+    public static function getInstance($newInstance = false)
+    {
+        if (!StaticSql::$instance || $newInstance) {
+            StaticSql::$instance = Sql::getInstance();
+        }
+        return StaticSql::$instance;
+    }
+
+
+
     /**
      * Realiza una consulta a la DB
      * retorna un array con los datos
@@ -11,15 +37,12 @@ class StaticSql
      * @param int $start : utilizar si necesita limit
      * @param int $end : utilizar si necesita limit
      * @return array
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
 
     public static function search(string $sql, $start = 0, $end = 0): array
     {
-        if (!StaticSql::$instance) {
-            StaticSql::$instance = Conexion::getConnection();
-        }
-        return (StaticSql::$instance)->executeSelect($sql, $start, $end);
+        return StaticSql::getInstance()->executeSelect($sql, $start, $end);
     }
 
     /**
@@ -28,12 +51,13 @@ class StaticSql
      *
      * @param string $sql : SQL update/delete
      * @return boolean
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
     public static function query(string $sql): bool
     {
-        return Conexion::getConnection()->Ejecutar_Sql($sql);
+        return StaticSql::getInstance(true)->Ejecutar_Sql($sql);
     }
+
     /**
      * Realiza insert en la DB y retorna el id insertado
      * NO aplica para insert masivos
@@ -41,13 +65,13 @@ class StaticSql
      * @param string $sql : Sql insert
      * @return integer 
      * Cuando es una insercion masiva retorna el primer id ingresado
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
     public static function insert(string $sql): int
     {
-        $conection = Conexion::getConnection();
-        $conection->Ejecutar_Sql($sql);
-        return $conection->Ultimo_Insert();
+        $SqlInstance = StaticSql::getInstance(true);
+        $SqlInstance->Ejecutar_Sql($sql);
+        return $SqlInstance->Ultimo_Insert();
     }
 
     /**
@@ -56,14 +80,12 @@ class StaticSql
      * @param string $date
      * @param string $format
      * @return string
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
     public static function setDateFormat(string $date, string $format): string
     {
-        if (!StaticSql::$instance) {
-            StaticSql::$instance = Conexion::getConnection();
-        }
-        return (StaticSql::$instance)::fecha_db_almacenar($date, $format);
+        $instance = StaticSql::getInstance();
+        return $instance::fecha_db_almacenar($date, $format);
     }
 
     /**
@@ -72,15 +94,12 @@ class StaticSql
      * @param string $attribute
      * @param string $format
      * @return string
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
     public static function getDateFormat(string $attribute, string $format): string
     {
-        if (!StaticSql::$instance) {
-            StaticSql::$instance = Conexion::getConnection();
-        }
-
-        return (StaticSql::$instance)::fecha_db_obtener($attribute, $format);
+        $instance = StaticSql::getInstance();
+        return $instance::fecha_db_obtener($attribute, $format);
     }
 
     /**
@@ -93,10 +112,7 @@ class StaticSql
      */
     public static function concat(array $data): string
     {
-        if (!StaticSql::$instance) {
-            StaticSql::$instance = Conexion::getConnection();
-        }
-
-        return (StaticSql::$instance)::concatenar_cadena($data);
+        $instance = StaticSql::getInstance();
+        return $instance::concatenar_cadena($data);
     }
 }

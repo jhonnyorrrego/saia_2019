@@ -8,17 +8,6 @@ class FuncionarioFuncion extends LogModel
     protected $fk_cargo;
     protected $estado;
     protected $fecha;
-    protected $dbAttributes;
-
-    protected $fieldLabels = [
-        'estado' => 'Estado'
-    ];
-    protected $fieldValueLabels = [
-        'estado' => [
-            0 => 'Inactivo',
-            1 => 'Activo'
-        ]
-    ];
 
     //relations
     private $Funcion;
@@ -43,7 +32,16 @@ class FuncionarioFuncion extends LogModel
                 'estado',
                 'fecha'
             ],
-            'date' => ['fecha']
+            'date' => ['fecha'],
+            'labels' => [
+                'estado' => [
+                    'label' => 'Estado',
+                    'values' => [
+                        0 => 'Inactivo',
+                        1 => 'Activo'
+                    ]
+                ]
+            ]
         ];
     }
 

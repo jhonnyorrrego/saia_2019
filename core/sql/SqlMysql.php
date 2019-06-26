@@ -1,5 +1,5 @@
 <?php
-class SqlMysql extends SQL2
+class SqlMysql extends Sql
 {
 
     public function __construct($conn, $motorBd)
@@ -373,6 +373,7 @@ class SqlMysql extends SQL2
         $cuantos = $fin - $inicio + 1;
         $inicio = $inicio < 0 ? 0 : $inicio;
         $consulta = "$sql LIMIT $inicio,$cuantos";
+
         return mysqli_query($this->Conn->conn, $consulta);
     }
 

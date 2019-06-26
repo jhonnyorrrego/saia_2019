@@ -23,21 +23,28 @@ $Response = (object)[
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['name']) {
-        throw new Exception('Debe indicar el nombre del componente', 1);
+    if (!$_REQUEST['name'] && !$_REQUEST['graphName']) {
+        throw new Exception('Debe indicar un criterio de busqueda', 1);
     }
 
-    $BusquedaComponente = BusquedaComponente::findByAttributes([
-        'nombre' => $_REQUEST['name']
-    ], [
-        BusquedaComponente::getPrimaryLabel()
-    ]);
+    if ($_REQUEST['name']) {
+        $BusquedaComponente = BusquedaComponente::findByAttributes([
+            'nombre' => $_REQUEST['name']
+        ]);
+    } else {
+        $BusquedaComponente = Grafico::findByAttributes([
+            'nombre' => $_REQUEST['graphName']
+        ])->getComponent();
+    }
 
     if (!$BusquedaComponente) {
         throw new Exception("No se encontro la busqueda {$_REQUEST['name']}", 1);
     }
 
-    $Response->data = $BusquedaComponente->getPK();
+    $Response->data = array_merge(
+        ['idbusqueda_componente' => $BusquedaComponente->getPK()],
+        $BusquedaComponente->getAttributes()
+    );
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

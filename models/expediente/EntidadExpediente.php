@@ -9,7 +9,7 @@ class EntidadExpediente extends Model
     protected $fecha;
     protected $fk_expediente;
     
-    protected $dbAttributes;
+    
 
     protected $accessPermits;
 

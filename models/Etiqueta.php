@@ -7,7 +7,7 @@ class Etiqueta extends Model
     protected $fk_funcionario;
     protected $estado;
     protected $nucleo;
-    protected $dbAttributes;
+
 
     function __construct($id = null)
     {
@@ -56,5 +56,4 @@ class Etiqueta extends Model
 
         return $pk;
     }
-
 }

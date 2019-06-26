@@ -6,7 +6,7 @@ class Funcion extends LogModel
     protected $nombre;
     protected $estado;
     protected $fecha;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

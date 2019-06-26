@@ -15,7 +15,7 @@ class RutaAprobacion extends Model
     protected $tipo_accion;
     protected $ejecucion;
     protected $fecha_ejecucion;
-    protected $dbAttributes;
+    
 
     //relations
     protected $User;

@@ -9,7 +9,7 @@ class ExpedienteCierre extends Model
     protected $fecha_accion;
     protected $observacion;
 
-    protected $dbAttributes;
+    
 
     public function __construct($id = null)
     {

@@ -8,7 +8,7 @@ class PermisoSerie extends Model
     protected $permiso;
     protected $fk_entidad_serie;
 
-    protected $dbAttributes;
+    
 
     public function __construct($id = null)
     {

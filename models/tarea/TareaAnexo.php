@@ -4,7 +4,7 @@ class TareaAnexo extends Model
 {
     protected $fk_tarea;
     protected $fk_anexo;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

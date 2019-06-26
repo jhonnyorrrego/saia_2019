@@ -20,7 +20,6 @@ try {
 
 // pagina actual inicia en 1
 $page = (int)$_REQUEST['page'] ? $_REQUEST["page"] : 1;
-
 // registros por listado de datos
 $limit = (int)$_REQUEST['rows'] ? $_REQUEST["rows"] : 30;
 $aux_limit = $_REQUEST['rows'];
@@ -33,149 +32,122 @@ $sord = @$_REQUEST['sord'];
 $actual_row = (int)$_REQUEST['actual_row'];
 $start = $actual_row;
 
-$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden", $conn);
-if ($datos_busqueda["numcampos"]) {
-    if ($datos_busqueda[0]["ruta_libreria"]) {
-        $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
-        array_walk($librerias, "incluir_librerias_busqueda");
-    }
-}
+$sql = <<<SQL
+    SELECT * 
+    FROM 
+        busqueda A JOIN
+        busqueda_componente B
+            ON A.idbusqueda=B.busqueda_idbusqueda
+    WHERE
+        B.idbusqueda_componente={$_REQUEST["idbusqueda_componente"]}
+SQL;
+$record = StaticSql::search($sql, 0, 1);
 
-if ($datos_busqueda["numcampos"]) {
-    $select = array();
-    $ordenar = array();
-    $agrupar = array();
-    $sumar = array();
-    $tablas = array();
-    $condicion = "";
-    if ($datos_busqueda[0]["tablas"] != '') {
-        $tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas"]));
-    }
-    if ($datos_busqueda[0]["tablas_adicionales"] != '') {
-        $tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
-    }
-
-    $distinct = false;
-    if ($datos_busqueda[0]["llave"]) {
-        if (preg_match("/^distinct/i", $datos_busqueda[0]["llave"])) {
-            $datos_busqueda[0]["llave"] = preg_replace("/^distinct/i", "", $datos_busqueda[0]["llave"]);
-            if (!$distinct) {
-                $distinct = true;
-            }
-        }
-        $select[] = $datos_busqueda[0]["llave"];
-    }
-
-    if ($datos_busqueda[0]["campos"]) {
-        if (preg_match("/^distinct/i", $datos_busqueda[0]["campos"])) {
-            $datos_busqueda[0]["campos"] = preg_replace("/^distinct/i", "", $datos_busqueda[0]["campos"]);
-            if (!$distinct) {
-                $distinct = true;
-            }
-        }
-        $select[] = $datos_busqueda[0]["campos"];
-    }
-
-    if ($datos_busqueda[0]["campos_adicionales"]) {
-        if (preg_match("/^distinct/i", $datos_busqueda[0]["campos_adicionales"])) {
-            $datos_busqueda[0]["campos_adicionales"] = preg_replace("/^distinct/i", "", $datos_busqueda[0]["campos_adicionales"]);
-            if (!$distinct) {
-                $distinct = true;
-            }
-        }
-        $select[] = $datos_busqueda[0]["campos_adicionales"];
-    }
-
-    if ($distinct) {
-        $campos_string = "distinct " . implode(",", $select);
-    } else {
-        $campos_string = implode(",", $select);
-    }
-
-    $campos = explode(",", $campos_string);
-    if (!$datos_busqueda[0]["llave"]) {
-        $datos_busqueda[0]["llave"] = $campos[0];
-    }
-
-    $pos = strpos($datos_busqueda[0]["llave"], ".");
-    if ($pos !== false) {
-        $llave = substr($datos_busqueda[0]["llave"], ($pos + 1), strlen($datos_busqueda[0]["llave"]));
-    } else {
-        $llave = $datos_busqueda[0]["llave"];
-    }
-
-    $condicion = crear_condicion_sql($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"]);
-    $funciones_condicion = parsear_datos_plantilla_visual($condicion);
-
-    $valor_variables = array();
-    if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
-        $variables_final = array();
-        $variables1 = explode(",", $_REQUEST["variable_busqueda"]);
-        foreach ($variables1 as $key => $valor) {
-            $variable2 = explode("=", $valor);
-            $variables_final[$variable2[0]] = $variable2[1];
-        }
-    }
-
-    foreach ($funciones_condicion as $key => $valor) {
-        unset($valor_variables);
-        $valor_variables = array();
-        $funcion = explode("@", $valor);
-        $variables = explode(",", $funcion[1]);
-        $cant_variables = count($variables);
-        for ($h = 0; $h < $cant_variables; $h++) {
-            if (@$variables_final[$variables[$h]])
-                array_push($valor_variables, $variables_final[$variables[$h]]);
-            else
-                array_push($valor_variables, $variables[$h]);
-        }
-        $resultado = call_user_func_array($funcion[0], $valor_variables);
-        $condicion = str_replace("{*" . $valor . "*}", $resultado, $condicion);
-    }
-
-    if (!$sidx) {
-        if ($datos_busqueda[0]["ordenado_por"]) {
-            $sidx = $datos_busqueda[0]["ordenado_por"];
-        }
-        if ($datos_busqueda[0]["direccion"]) {
-            $sord = $datos_busqueda[0]["direccion"];
-        }
-        if (!$sord) {
-            $sord = " DESC ";
-        }
-    }
+if ($record) {
+    $busqueda = $record[0];
 } else {
-    die();
+    throw new Exception("Componente invalido", 1);
 }
 
-if (@$_REQUEST["idbusqueda_filtro_temp"]) {
+if ($busqueda["ruta_libreria"]) {
+    $librerias = array_unique(explode(",", $busqueda["ruta_libreria"]));
+    array_walk($librerias, "incluir_librerias_busqueda");
+}
+
+$select = $ordenar = $agrupar = $sumar = [];
+$condicion = "";
+
+if ($busqueda["tablas"]) {
+    $tablas = explode(",", $busqueda["tablas"]);
+} else {
+    $tablas = [];
+}
+
+if ($busqueda["tablas_adicionales"]) {
+    $tablas = array_merge($tablas, explode(",", $busqueda["tablas_adicionales"]));
+}
+
+array_push($select, $busqueda["llave"], $busqueda["campos"], $busqueda["campos_adicionales"]);
+$select = array_filter($select);
+$campos_string = implode(",", $select);
+
+if (strpos($campos_string, 'distinct') !== false) {
+    $campos_string = str_replace('distinct', '', $campos_string);
+    $campos_string = 'distinct ' . $campos_string;
+}
+
+$campos = explode(",", $campos_string);
+
+if (!$busqueda["llave"]) {
+    $busqueda["llave"] = $campos[0];
+}
+
+$pos = strpos($busqueda["llave"], ".");
+if ($pos !== false) {
+    $llave = substr($busqueda["llave"], ($pos + 1), strlen($busqueda["llave"]));
+} else {
+    $llave = $busqueda["llave"];
+}
+
+$condicion = crear_condicion_sql($busqueda["idbusqueda"], $busqueda["idbusqueda_componente"]);
+$funciones_condicion = parsear_datos_plantilla_visual($condicion);
+
+$valor_variables = array();
+if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
+    $variables_final = array();
+    $variables1 = explode(",", $_REQUEST["variable_busqueda"]);
+    foreach ($variables1 as $key => $valor) {
+        $variable2 = explode("=", $valor);
+        $variables_final[$variable2[0]] = $variable2[1];
+    }
+}
+
+foreach ($funciones_condicion as $key => $valor) {
+    unset($valor_variables);
+    $valor_variables = array();
+    $funcion = explode("@", $valor);
+    $variables = explode(",", $funcion[1]);
+    $cant_variables = count($variables);
+    for ($h = 0; $h < $cant_variables; $h++) {
+        if (@$variables_final[$variables[$h]])
+            array_push($valor_variables, $variables_final[$variables[$h]]);
+        else
+            array_push($valor_variables, $variables[$h]);
+    }
+    $resultado = call_user_func_array($funcion[0], $valor_variables);
+    $condicion = str_replace("{*" . $valor . "*}", $resultado, $condicion);
+}
+
+if (!$sidx && $busqueda["ordenado_por"]) {
+    $sidx = $busqueda["ordenado_por"];
+    $sord = $busqueda["direccion"] ? $busqueda["direccion"] : ' DESC ';
+}
+
+if (!empty($_REQUEST["idbusqueda_filtro_temp"])) {
     $filtro_temp = busca_filtro_tabla("", "busqueda_filtro_temp", "idbusqueda_filtro_temp IN(" . $_REQUEST["idbusqueda_filtro_temp"] . ")", "", $conn);
     if ($filtro_temp["numcampos"]) {
-        $cadena1 = '';
+        $cadena = '';
         for ($i = 0; $i < $filtro_temp["numcampos"]; $i++) {
-            $cadena1 = parsear_cadena($filtro_temp[$i]["detalle"]);
-            $cadena .= $cadena1;
-            if (@$filtro_temp[$i + 1]["detalle"]) {
+            $cadena .= parsear_cadena($filtro_temp[$i]["detalle"]);
+            if (isset($filtro_temp[$i + 1]["detalle"])) {
                 $cadena .= ' AND ';
             }
         }
         $condicion .= " AND (" . stripslashes($cadena) . ")";
     }
 }
-$condicion = str_replace(" AND  and  ", " and ", $condicion);
+$condicion = str_replace(" AND  and  ", " and ", $condicion); //:'(
 
 foreach ($campos as $valor) {
     $as = strpos(strtolower($valor), " as ");
     if ($as !== false) {
         $agrupacion[] = substr($valor, 0, ($as));
-        continue;
+    } else {
+        $agrupacion[] = $valor;
     }
-    $agrupacion[] = $valor;
 }
 
 $lcampos = $campos;
-
-
 $campos_consulta = implode(",", $lcampos);
 $tablas_consulta = implode(",", $tablas);
 
@@ -198,7 +170,7 @@ foreach ($funciones_tablas as $key => $valor) {
 
 $ordenar_consulta = "";
 $ordenar_consulta2 = "";
-$agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
+$agrupar_consulta = $busqueda["agrupado_por"];
 
 if ($agrupar_consulta != "") {
     $ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
@@ -210,12 +182,8 @@ if ($sidx && $sord) {
     $ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;
 }
 
-$ordenar_consulta = $ordenar_consulta;
-//Sin order by
-$ordenar_consulta2 = $ordenar_consulta2;
-// Con order by
-
 $condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
+
 if (@$_REQUEST["idbusqueda_temporal"]) {
     $datos = busca_filtro_tabla("tabla_adicional,where_adicional", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
     if ($datos["numcampos"]) {
@@ -300,7 +268,7 @@ if (!$_REQUEST['onlyCount']) {
                 $response['mensaje'] = "Registros encontrados";
 
                 $cant_campos = count($lcampos);
-                $info_base = str_replace('"', "'", $datos_busqueda[0]["info"]);
+                $info_base = str_replace('"', "'", $busqueda["info"]);
                 for ($j = 0; $j < $cant_campos; $j++) {
                     $as = strpos(strtolower($lcampos[$j]), " as ");
                     if ($as !== false) {
@@ -346,13 +314,13 @@ if (!$_REQUEST['onlyCount']) {
                         if (function_exists($funcion[0])) {
                             $valor_funcion = call_user_func_array($funcion[0], $valor_variables);
                             $info = str_replace("{*" . $valor . "*}", $valor_funcion, $info);
-                            if ($datos_busqueda[0]["tipo_busqueda"] == 2) {
+                            if ($busqueda["tipo_busqueda"] == 2) {
                                 $response["rows"][$i][$funcion[0]] = $valor_funcion;
                             }
                         }
                     }
 
-                    if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
+                    if ($busqueda["tipo_busqueda"] == 1) {
                         $response['rows'][$i]['info'] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'></div>";
                         $response['rows'][$i]['info'] = str_replace("\n", "", str_replace("\r", "", $info));
                     }
@@ -370,6 +338,7 @@ if (!$_REQUEST['onlyCount']) {
 } else {
     $response['exito'] = 1;
 }
+
 echo json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
 function crear_condicion_sql($idbusqueda, $idcomponente)
@@ -428,5 +397,5 @@ function parsear_datos_plantilla_visual($cadena, $campos = array())
 function incluir_librerias_busqueda($elemento, $indice)
 {
     global $ruta_db_superior;
-    include_once($ruta_db_superior . $elemento);
+    include_once $ruta_db_superior . $elemento;
 }

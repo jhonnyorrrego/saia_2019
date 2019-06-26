@@ -38,7 +38,7 @@ class Documento extends Model
     protected $fecha_limite;
     protected $ventanilla_radicacion;
     protected $prioridad;
-    protected $dbAttributes;
+    
 
     //relations
     protected $User;

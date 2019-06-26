@@ -13,7 +13,8 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-function acceso_modulo($idmodulo = 0){
+function acceso_modulo($idmodulo = 0)
+{
     global $conn;
     if ($idmodulo) {
         $modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "", $conn);
@@ -27,14 +28,14 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
 ?>
 <div class="panel-body">
     <div class="block-nav">
-    <?php
+        <?php
         $texto = '';
 
-        for ($i = 0; $i < $components["numcampos"]; $i++){
+        for ($i = 0; $i < $components["numcampos"]; $i++) {
             if (!acceso_modulo($components[$i]["modulo_idmodulo"]))
                 continue;
 
-            switch ($components[$i]["tipo"]){
+            switch ($components[$i]["tipo"]) {
                 case 1:
                     //sumary, es un componente tipo div html tiene un label y un info
                     $texto .= '<div class="summary" id="' . $components[$i]["nombre"] . '">';
@@ -63,7 +64,7 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
                             break;
                         default:
                             $conector = '';
-                        break;
+                            break;
                     }
 
                     if ($components[$i]["url"]) {
@@ -87,9 +88,9 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
                     }
 
                     if ($conector) {
-                        $texto .= '<div title="' . $components[$i]["etiqueta"] . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . '", "kTitle":"' . $components[$i]["etiqueta"] . '","kWidth":"' . $components[$i]["ancho"] . 'px"}\' class="items navigable">';
+                        $texto .= '<div title="' . $components[$i]["etiqueta"] . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . '", "kTitle":"' . $components[$i]["etiqueta"] . '"}\' class="items navigable">';
                         $texto .= '<div class="head"></div>';
-                        $texto .= '<div class="label">' . $components[$i]["etiqueta"].'</div>';
+                        $texto .= '<div class="label">' . $components[$i]["etiqueta"] . '</div>';
                         $texto .= '<div class="info"></div>';
                         $texto .= '<div class="tail"></div>';
                         $texto .= '</div>';
@@ -135,6 +136,6 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
             }
         }
         echo $texto;
-    ?>
+        ?>
     </div>
 </div>

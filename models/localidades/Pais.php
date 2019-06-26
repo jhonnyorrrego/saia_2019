@@ -7,7 +7,7 @@ class Pais extends Model
     protected $estado;
     protected $sortname;
     protected $phonecode;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

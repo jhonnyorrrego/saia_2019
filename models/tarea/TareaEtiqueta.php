@@ -7,7 +7,7 @@ class TareaEtiqueta extends Model
     protected $fk_funcionario;
     protected $fk_etiqueta;
     protected $estado;
-    protected $dbAttributes;
+    
 
     function __construct($id = null) {
         return parent::__construct($id);

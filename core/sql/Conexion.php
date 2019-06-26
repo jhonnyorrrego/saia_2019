@@ -9,51 +9,38 @@ class Conexion
 	public $Pass;
 	public $Nombredb;
 	public $Puerto;
-	/*
-	 <Clase>Conexion
-	 <Nombre>Conexion
-	 <Parametros>$motor-con el que se desea trabajar; $host-ip del host; $user-usuario con el que me conecto a la base de datos;
-	 $pass-clave para $user; $db-nombre de la base de datos; $puerto-puerto por el que me deseo conectar
-	 <Responsabilidades>Poblar los atributos de la clase y llamar a la función que realiza la conexion a la base de datos
-	 <Notas>
-	 <Excepciones>cualquier problema con alguno de los parametros causa un error
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
-	function __construct($datos = null)
+
+	function __construct()
 	{
-		if ($datos !== null) {
-			$this->Motor = $datos["motor"];
-			$this->Host = $datos["host"];
-			$this->Usuario = $datos["user"];
-			$this->Pass = $datos["pass"];
-			$this->Nombredb = $datos["basedatos"];
-			$this->Db = $datos["db"];
-			$this->Puerto = $datos["port"];
-		} else {
-			$this->Motor = MOTOR;
-			$this->Host = HOST;
-			$this->Usuario = USER;
-			$this->Pass = PASS;
-			$this->Nombredb = BASEDATOS;
-			$this->Puerto = PORT;
-		}
-		$this->Conectar();
+		$this->setAttributes();
+		$this->connect();
 	}
 
-	/*
-	 <Clase>Conexion
-	 <Nombre>Conectar()
-	 <Parametros>
-	 <Responsabilidades>llama a la función que crea la conexion a la base de datos
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
+	/**
+	 * setea las credenciales de la base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-06-20
 	 */
-	function Conectar()
+	public function setAttributes()
+	{
+		$this->Motor = MOTOR;
+		$this->Host = HOST;
+		$this->Usuario = USER;
+		$this->Pass = PASS;
+		$this->Nombredb = BASEDATOS;
+		$this->Db = DB;
+		$this->Puerto = PORT;
+	}
+
+	/**
+	 * llama el metodo conectar segun el motor de bd
+	 *
+	 * @return void
+	 * @date 2019
+	 */
+	function connect()
 	{
 		switch ($this->Motor) {
 			case "MySql":
@@ -69,23 +56,17 @@ class Conexion
 				$this->Conectar_MSSql();
 				break;
 		}
-
 	}
 
-	/*
-	 <Clase>Conexion
-	 <Nombre>Conectar_Mysql()
-	 <Parametros>
-	 <Responsabilidades>Crea la conexion a una base de datos mysql
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
 	function Conectar_Mysql()
 	{
-		$this->conn = mysqli_connect($this->Host, $this->Usuario, $this->Pass, $this->Db, $this->Puerto) or alerta("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this->Db . ": " . mysqli_connect_error());
+		$this->conn = mysqli_connect(
+			$this->Host,
+			$this->Usuario,
+			$this->Pass,
+			$this->Db,
+			$this->Puerto
+		) or alerta("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this->Db . ": " . mysqli_connect_error());
 	}
 
 	function Conectar_SqlServer()
@@ -106,10 +87,8 @@ class Conexion
 
 	function Conectar_MSSql()
 	{
-
 		$this->conn = mssql_connect($this->Host, $this->Usuario, $this->Pass) or print_r(mssql_get_last_message());
 		mssql_query("USE " . $this->Db, $this->conn);
-
 	}
 
 	function Conectar_Oracle()
@@ -117,16 +96,11 @@ class Conexion
 		$this->conn = @oci_connect($this->Usuario, $this->Pass, "(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = " . $this->Host . ")(PORT =" . $this->Puerto . "))(CONNECT_DATA = (SID = " . $this->Nombredb . ")))");
 	}
 
-	/*
-	 <Clase>Conexion
-	 <Nombre>Desconecta()
-	 <Parametros>
-	 <Responsabilidades>cierra la conexion con la base de datos
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>que exista una conexion a la base de datos
-	 <Post-condiciones>
+	/**
+	 * cierra la conexion con la base de datos
+	 *
+	 * @return void
+	 * @date 2019
 	 */
 	function Desconecta()
 	{
@@ -148,93 +122,5 @@ class Conexion
 					mssql_close($this->conn);
 				break;
 		}
-
-	}
-
-	/*
-	 <Clase>Conexion
-	 <Nombre>Reconexion
-	 <Parametros>nueva_db-nombre de la nueva base de datos
-	 <Responsabilidades>cambia la base de datos activa
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
-	function Reconexion($nueva_db)
-	{/*
-		 if($nueva_db=="radica_camara")
-		 $this->Nombredb="saia8";
-		 if ($nueva_db=="formulario")
-		 $this->Nombredb="framework";
-		 */
-		$this->Nombredb = DB;
-		mysqli_select_db($this->conn, $this->Nombredb) or die("error al conectarse a la bd: " . $nueva_db);
-	}
-
-	/*
-	 <Clase>Conexion
-	 <Nombre>Get_Motor
-	 <Parametros>
-	 <Responsabilidades>Devuelve el nombre del motor de base de datos que se está usando
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
-	function Get_Motor()
-	{
-		return $this->Motor;
-	}
-
-	/*
-	 <Clase>Conexion
-	 <Nombre>Set_Motor
-	 <Parametros>value-nombre del nuevo motor de base de datos
-	 <Responsabilidades>Cambiar el valor del atributo motor de base de datos
-	 <Notas>
-	 <Excepciones>
-	 <Salida>
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
-	function Set_Motor($value)
-	{
-		$this->Motor = value;
-	}
-
-	/*
-	 <Clase>Conexion
-	 <Nombre>Obtener_Conexion
-	 <Parametros>
-	 <Responsabilidades>retorna el puntero a la conexion actual
-	 <Notas>
-	 <Excepciones>
-	 <Salida>puntero al objeto conexion actual
-	 <Pre-condiciones>
-	 <Post-condiciones>
-	 */
-
-	function Obtener_Conexion()
-	{
-		return $this->conn;
-	}
-
-	public static function getConnection()
-	{
-		$Conexion = new Conexion([
-			'basedatos' => BASEDATOS,
-			'db' => DB,
-			'motor' => MOTOR,
-			'host' => HOST,
-			'user' => USER,
-			'pass' => PASS,
-			'port' => PORT
-		]);
-
-		return SQL2::get_instance($Conexion, MOTOR);
 	}
 }
-?>
