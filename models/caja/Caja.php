@@ -22,7 +22,7 @@ class Caja extends Model
     protected $estado;
     protected $fk_caja_eli;
 
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

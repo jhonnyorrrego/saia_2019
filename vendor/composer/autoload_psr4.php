@@ -74,7 +74,6 @@ return array(
     'Doctrine\\Bundle\\DoctrineCacheBundle\\' => array($vendorDir . '/doctrine/doctrine-cache-bundle'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'Corley\\Composer\\' => array($baseDir . '/instalador'),
     'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );

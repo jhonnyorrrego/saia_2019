@@ -7,7 +7,7 @@ class CargoFuncion extends LogModel
     protected $fk_cargo;
     protected $estado;
     protected $fecha;
-    protected $dbAttributes;
+    
 
     //relations
     private $Funcion;

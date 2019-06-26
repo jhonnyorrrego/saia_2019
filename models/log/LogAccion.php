@@ -5,7 +5,7 @@ class LogAccion extends Model
     protected $idlog_accion;
     protected $nombre;
     protected $descripcion;
-    protected $dbAttributes;
+    
 
     const CREAR = 1;
     const EDITAR = 2;

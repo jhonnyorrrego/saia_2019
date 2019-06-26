@@ -13,7 +13,7 @@ class VisorNota extends Model
     protected $class;
     protected $uuid;
     protected $page;
-    protected $dbAttributes;
+    
 
     const TIPO_DOCUMENTO = 1;
     const TIPO_PAGINA = 2;

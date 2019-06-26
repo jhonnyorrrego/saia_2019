@@ -20,7 +20,7 @@ class Ruta extends Model
     protected $condicion_transferencia;
     protected $clase;
     protected $fk_ruta_documento;
-    protected $dbAttributes;
+    
 
     //relations
     protected $DocumentRoute;

@@ -13,7 +13,7 @@ class Notificacion extends Model
     protected $notificado;
     protected $tipo;
     protected $tipo_id;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

@@ -7,7 +7,7 @@ class DocumentoVinculado extends Model
     protected $destino;
     protected $fecha;
     protected $fk_funcionario;
-    protected $dbAttributes;
+    
 
     //relations
     protected $Origin;

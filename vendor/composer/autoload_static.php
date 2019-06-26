@@ -185,7 +185,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         ),
         'C' => 
         array (
-            'Corley\\Composer\\' => 16,
             'Complex\\' => 8,
         ),
         'A' => 
@@ -469,10 +468,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
-        ),
-        'Corley\\Composer\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/instalador',
         ),
         'Complex\\' => 
         array (

@@ -7,7 +7,7 @@ class LogHistorial extends Model
     protected $campo;
     protected $anterior;
     protected $nuevo;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

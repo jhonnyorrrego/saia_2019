@@ -8,7 +8,7 @@ class TareaPrioridad extends Model
     protected $prioridad;
     protected $estado;
     protected $fecha;
-    protected $dbAttributes;
+    
 
     function __construct($id = null) {
         return parent::__construct($id);

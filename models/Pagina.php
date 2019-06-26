@@ -7,7 +7,7 @@ class Pagina extends Model
     protected $ruta;
     protected $fecha_pagina;
     protected $consecutivo;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

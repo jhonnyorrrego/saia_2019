@@ -33,6 +33,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/animate.min.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 
 <body class="fixed-header">
@@ -117,11 +118,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 </div>
                             </span>
                         </div>
-                        <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:250px">
+                        <select class="form-control" id="document_finder" style="width:250px"></select>
                         <div class="input-group-append ">
                             <span class="input-group-text transparent">
-                                <i class="fa fa-times pr-3" id="clean_finder"></i>
-                                <i class="fa fa-search"></i>
+                                <i class="fa fa-times" id="clean_finder"></i>
                             </span>
                         </div>
                     </div>
@@ -130,7 +130,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="d-flex align-items-center">
                 <div class="dropdown pull-left d-xs-block pr-5">
                     <span id="show_notifications" class="profile-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="px-1 cursor fa fa-globe fa-2x notification f-20">
+                        <span class="px-1 cursor fa fa-bell faa-shake fa-2x notification f-20">
                             <span class="badge badge-important counter" id="notification_counter"></span>
                         </span>
                     </span>
@@ -308,13 +308,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <?= jsTheme() ?>
-
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
+    <?= select2() ?>
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
-
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js" type="text/javascript"></script>
-
     <?= breakpoint() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>

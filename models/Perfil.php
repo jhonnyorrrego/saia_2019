@@ -8,7 +8,7 @@ class Perfil extends Model
 
     protected $idperfil;
     protected $nombre;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

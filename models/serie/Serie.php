@@ -20,7 +20,7 @@ class Serie extends Model
     protected $categoria;
     protected $cod_arbol;
     
-    protected $dbAttributes;
+    
 
     protected $seriePadre;
 

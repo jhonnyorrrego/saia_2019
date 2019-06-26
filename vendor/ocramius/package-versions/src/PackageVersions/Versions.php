@@ -15,7 +15,7 @@ final class Versions
     public const ROOT_PACKAGE_NAME = '__root__';
     public const VERSIONS          = array (
   'analog/analog' => '1.0.12-stable@4ac87ac59555db6eaba734b2b022fcc296e8729d',
-  'aws/aws-sdk-php' => '3.100.2@c08969c6bf828910fc868d882bcd55ea5d9f97f7',
+  'aws/aws-sdk-php' => '3.100.3@daa94a5ac8931e151ccf0dcdce632d9b6a83a1fe',
   'danielstjules/stringy' => '3.1.0@df24ab62d2d8213bbbe88cc36fc35a4503b4bd7e',
   'doctrine/annotations' => 'v1.6.1@53120e0eb10355388d6ccbe462f1fea34ddadb24',
   'doctrine/cache' => 'v1.8.0@d768d58baee9a4862ca783840eca1b9add7a7f57',
@@ -102,7 +102,7 @@ final class Versions
   'zendframework/zend-code' => '3.3.1@c21db169075c6ec4b342149f446e7b7b724f95eb',
   'zendframework/zend-escaper' => '2.6.0@31d8aafae982f9568287cb4dce987e6aff8fd074',
   'zendframework/zend-eventmanager' => '3.2.1@a5e2583a211f73604691586b8406ff7296a946dd',
-  '__root__' => 'dev-correspondencia_20180502_acarvajal@e2098d2755968e9b1ac24376f7a9687d3cd7832e',
+  '__root__' => 'dev-semana22_20190529_svalencia@508fc08357121b27f2840ec87393e480f7988e96',
 );
 
     private function __construct()

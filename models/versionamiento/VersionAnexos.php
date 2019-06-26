@@ -7,7 +7,7 @@ class VersionAnexos extends Model
     protected $ruta;
     protected $fk_idversion_documento;
     protected $anexos_idanexos;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

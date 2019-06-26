@@ -63,20 +63,20 @@ $(function() {
     $(document)
         .off('click', '#resend,#reenviar')
         .on('click', '#resend,#reenviar', function() {
-            transferModal(1);
+            transferModal('Reenviar', 1);
         });
 
     $(document)
         .off('click', '#reply,#responder')
         .on('click', '#reply,#responder', function() {
             let userInfo = $('#userInfo').data('info');
-            transferModal(2, userInfo);
+            transferModal('Responder', 2, userInfo);
         });
 
     $(document)
         .off('click', '#responder_todos')
         .on('click', '#responder_todos', function() {
-            transferModal(3);
+            transferModal('Responder a todos', 3);
         });
 
     $('#show_tree').on('click', function() {
@@ -172,24 +172,35 @@ $(function() {
 
     /////// MENU INTERMEDIO ////////
     $(document)
-        .off('click', '#crear_tarea,#etiquetar,#asignar_responsable')
-        .on(
-            'click',
-            '#crear_tarea,#etiquetar,#asignar_responsable',
-            function() {
-                let route = $(this).data('url');
-                top.topModal({
-                    url: `${baseUrl + route}`,
-                    title: $(this).text(),
-                    centerAlign: false,
-                    size: 'modal-xl',
-                    params: {
-                        documentId: documentId
-                    },
-                    buttons: {}
-                });
-            }
-        );
+        .off('click', '#crear_tarea')
+        .on('click', '#crear_tarea', function() {
+            let route = $(this).data('url');
+            top.topModal({
+                url: `${baseUrl + route}`,
+                title: $(this).text(),
+                centerAlign: false,
+                size: 'modal-lg',
+                params: {
+                    documentId: documentId
+                },
+                buttons: {}
+            });
+        });
+
+    $(document)
+        .off('click', '#etiquetar,#asignar_responsable')
+        .on('click', '#etiquetar,#asignar_responsable', function() {
+            let route = $(this).data('url');
+            top.topModal({
+                url: `${baseUrl + route}`,
+                title: $(this).text(),
+                centerAlign: false,
+                params: {
+                    documentId: documentId
+                },
+                buttons: {}
+            });
+        });
 
     $(document)
         .off('click', '#solicitar_aprobacion')
@@ -248,9 +259,24 @@ $(function() {
         });
 
     $(document)
+        .off('click', '#imprimir')
+        .on('click', '#imprimir', function() {
+            let route = $('#acordeon_container').attr('data-location');
+            route += '&mostrar_pdf=1';
+
+            $('#view_document').load(baseUrl + route);
+        });
+
+    $(document)
         .off('click', '#anexos')
         .on('click', '#anexos', function() {
             $('#show_files').click();
+        });
+
+    $(document)
+        .off('click', '#anular_documento')
+        .on('click', '#anular_documento', function() {
+            cancelNotification();
         });
     /////// FIN MENU INTERMEDIO /////
 
@@ -270,7 +296,7 @@ $(function() {
         }
     }
 
-    function transferModal(type, userInfo) {
+    function transferModal(title, type, userInfo) {
         let options = {
             url: `${baseUrl}views/documento/reenviar.php`,
             params: {
@@ -278,7 +304,7 @@ $(function() {
                 userInfo: userInfo,
                 type: type
             },
-            title: 'Reenviar',
+            title: title,
             size: 'modal-lg',
             buttons: {
                 success: {
@@ -725,5 +751,92 @@ $(function() {
                 findActions();
             }
         });
+    }
+
+    function cancelNotification() {
+        if (!isOwner()) {
+            top.notification({
+                type: 'error',
+                message: 'No puedes realizar esta acción'
+            });
+
+            return;
+        }
+
+        top.confirm({
+            timeout: 20000,
+            overlay: true,
+            displayMode: 'once',
+            id: 'inputs',
+            zindex: 9999,
+            title: 'Anular documento',
+            message:
+                'Debe indicar una observación. Recuerde, esta acción no se podrá revertir',
+            position: 'center',
+            drag: false,
+            type: 'warning',
+            inputs: [
+                [
+                    '<input type="text" id="cancel_observation">',
+                    'keyup',
+                    () => {
+                        return true;
+                    },
+                    true
+                ]
+            ],
+            buttons: [
+                [
+                    '<button>Cancelar</button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    }
+                ],
+                [
+                    '<button><b>Anular</b></button>',
+                    function(instance, toast) {
+                        var input = $(toast).find('#cancel_observation');
+                        let observation = input.val();
+                        cancelDocument(observation);
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                    },
+                    true
+                ]
+            ]
+        });
+    }
+
+    function cancelDocument(observation) {
+        $.post(
+            `${baseUrl}app/documento/anular.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                documentId: documentId,
+                observation: observation
+            },
+            function(response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });

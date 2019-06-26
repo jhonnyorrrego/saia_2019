@@ -33,26 +33,11 @@ try {
     }
 
     $s = htmlentities(strtolower(trim($_REQUEST['query'])));
-
-    if (strlen($s) && strpos($s, '-') !== false && strtotime($s)) {
-        $_REQUEST['date'] = $s;
-    } else if ((int)$s) {
-        $_REQUEST['number'] = $s;
-    } else {
-        $_REQUEST['string'] = $s;
-    }
-
-    if ($_REQUEST['date']) {
-        $condition .= " and date(b.fecha) = " . StaticSql::setDateFormat($_REQUEST['date'], 'Y-m-d');
-    }
-
-    if ($_REQUEST['number']) {
-        $condition .= " and a.numero like '%" . $_REQUEST['number'] . "%'";
-    }
-
-    if ($_REQUEST['string']) {
-        $condition .= " and lower(a.descripcion) like '%" . $_REQUEST['string'] . "%'";
-    }
+    $concat = StaticSql::concat([
+        'numero',
+        'LOWER(a.descripcion)',
+        StaticSql::getDateFormat('b.fecha', 'Y-m-d')
+    ]);
 
     $sql = <<<SQL
         SELECT
@@ -66,9 +51,8 @@ try {
             ON
                 b.archivo_idarchivo = a.iddocumento
         WHERE            
-            {$condition}
+            {$concat} LIKE '%{$s}%'
         group by iddocumento,numero,descripcion
-
 SQL;
     $documents = Documento::findBySql($sql, true, 0, 10);
 
@@ -78,7 +62,7 @@ SQL;
         foreach ($documents as $Documento) {
             $label = $Documento->numero . ' - ';
             $label .= $Documento->fecha . ' - ';
-            $label .= substr(html_entity_decode(strip_tags($Documento->descripcion)), 0, 30);
+            $label .= html_entity_decode(strip_tags($Documento->descripcion));
 
             $data[] = [
                 'id' => $Documento->getPK(),

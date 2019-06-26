@@ -8,7 +8,7 @@ class DocumentoTarea extends Model
     protected $fk_funcionario;
     protected $fecha;
     protected $estado;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

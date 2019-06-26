@@ -178,7 +178,6 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <?= bootstrapTable() ?>
     <?= icons() ?>
     <?= select2() ?>
-    <?= librerias_acciones_kaiten() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $.fn.serializeObject = function() {
             var o = {};

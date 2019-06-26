@@ -17,7 +17,7 @@ class BuzonEntrada extends Model
     protected $activo;
     protected $ruta_idruta;
     protected $ver_notas;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

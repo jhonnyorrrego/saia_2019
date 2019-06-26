@@ -12,7 +12,7 @@ class PermisoExpediente extends Model
     protected $permiso;
     protected $fk_expediente;
     
-    protected $dbAttributes;
+    
 
     public function __construct($id = null)
     {

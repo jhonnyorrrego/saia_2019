@@ -1,27 +1,19 @@
 <?php
 $max_salida = 10;
-// Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior = $ruta = "";
+$ruta_db_superior = $ruta = '';
+
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
+	if (is_file($ruta . 'db.php')) {
 		$ruta_db_superior = $ruta;
-		// Preserva la ruta superior encontrada
+		break;
 	}
-	$ruta .= "../";
+
+	$ruta .= '../';
 	$max_salida--;
 }
 
-error_reporting(E_ALL | E_STRICT);
-
-require $ruta_db_superior . 'vendor/autoload.php';
-
+include_once $ruta_db_superior . 'core/autoload.php';
 use Sirius\Upload\Handler as UploadHandler;
-
-include_once ($ruta_db_superior . "db.php");
-
-// var_dump($_REQUEST);
-// var_dump($_FILES);
-// die();
 
 if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	$archivo = $_REQUEST["archivo"];
@@ -123,4 +115,3 @@ function eliminar_temporal($archivo) {
 		die("No se encontro archivo con identificador: $archivo");
 	}
 }
-?>

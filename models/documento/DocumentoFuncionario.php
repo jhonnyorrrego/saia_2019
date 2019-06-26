@@ -12,7 +12,7 @@ class DocumentoFuncionario extends Model
     protected $fecha;
     protected $estado;
     protected $user;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

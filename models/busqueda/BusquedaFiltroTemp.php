@@ -8,7 +8,7 @@ class BusquedaFiltroTemp extends Model
     protected $fecha;
     protected $detalle;
 
-    protected $dbAttributes;
+    
 
     public function __construct($id = null)
     {

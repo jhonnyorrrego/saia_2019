@@ -160,12 +160,13 @@ $(function() {
         $.post(
             `${baseUrl}app/busquedas/consulta_componente.php`,
             {
+                token: localStorage.getItem('token'),
                 key: localStorage.getItem('key'),
                 name: 'busqueda_general_tareas'
             },
             function(response) {
                 if (response.success) {
-                    $('#component').val(response.data);
+                    $('#component').val(response.data.idbusqueda_componente);
                 } else {
                     top.notification({
                         type: 'error',

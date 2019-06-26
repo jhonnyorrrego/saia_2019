@@ -8,20 +8,22 @@ class Respuesta extends Model
     protected $origen;
     protected $idbuzon;
     protected $plantilla;
-    protected $dbAttributes;
-    
+
+
     //relations
     protected $Origin;
     protected $Destination;
 
-    function __construct($id = null){
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'fecha',
@@ -34,7 +36,7 @@ class Respuesta extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -47,8 +49,9 @@ class Respuesta extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-30
      */
-    public function getOrigin(){
-        if(!$this->Origin){
+    public function getOrigin()
+    {
+        if (!$this->Origin) {
             $this->Origin = $this->getRelationFk('Documento', 'origen');
         }
 
@@ -62,8 +65,9 @@ class Respuesta extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-30
      */
-    public function getDestination(){
-        if(!$this->Destination){
+    public function getDestination()
+    {
+        if (!$this->Destination) {
             $this->Destination = $this->getRelationFk('Documento', 'destino');
         }
 

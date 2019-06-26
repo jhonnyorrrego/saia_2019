@@ -35,7 +35,7 @@ class Funcionario extends Model
     protected $ventanilla_radicacion;
     protected $pertenece_nucleo;
     protected $token;
-    protected $dbAttributes;
+
 
     /**
      * @param int $id value for idfuncionario attribute
@@ -51,49 +51,52 @@ class Funcionario extends Model
      */
     protected function defineAttributes()
     {
-        // set the safe attributes to update and consult
-        $safeDbAttributes = [
-            'funcionario_codigo',
-            'login',
-            'nombres',
-            'apellidos',
-            'firma',
-            'firma_temporal',
-            'firma_original',
-            'estado',
-            'fecha_ingreso',
-            'clave',
-            'nit',
-            'perfil',
-            'debe_firmar',
-            'tipo',
-            'ultimo_pwd',
-            'mensajeria',
-            'email',
-            'sistema',
-            'email_contrasena',
-            'direccion',
-            'telefono',
-            'fecha_fin_inactivo',
-            'intento_login',
-            'foto_original',
-            'foto_recorte',
-            'foto_cordenadas',
-            'ventanilla_radicacion',
-            'pertenece_nucleo',
-            'token'
-        ];
-
-        // set the date attributes on the schema
-        $dateAttributes = [
-            'fecha_ingreso',
-            'ultimo_pwd',
-            'fecha_fin_inactivo'
-        ];
-
         $this->dbAttributes = (object)[
-            'safe' => $safeDbAttributes,
-            'date' => $dateAttributes
+            'safe' => [
+                'funcionario_codigo',
+                'login',
+                'nombres',
+                'apellidos',
+                'firma',
+                'firma_temporal',
+                'firma_original',
+                'estado',
+                'fecha_ingreso',
+                'clave',
+                'nit',
+                'perfil',
+                'debe_firmar',
+                'tipo',
+                'ultimo_pwd',
+                'mensajeria',
+                'email',
+                'sistema',
+                'email_contrasena',
+                'direccion',
+                'telefono',
+                'fecha_fin_inactivo',
+                'intento_login',
+                'foto_original',
+                'foto_recorte',
+                'foto_cordenadas',
+                'ventanilla_radicacion',
+                'pertenece_nucleo',
+                'token'
+            ],
+            'date' => [
+                'fecha_ingreso',
+                'ultimo_pwd',
+                'fecha_fin_inactivo'
+            ],
+            'labels' => [
+                'estado' => [
+                    'label' => 'Estado',
+                    'values' => [
+                        0 => 'Inactivo',
+                        1 => 'Activo'
+                    ]
+                ]
+            ]
         ];
     }
 
@@ -116,13 +119,18 @@ class Funcionario extends Model
         return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'cutedPhoto' => $this->getImage('foto_recorte')
+            'cutedPhoto' => $this->getImage('foto_recorte'),
+            'login' => $this->login
         ];
     }
 
     /**
-     * @return  string the complete name formatted
-     * @author jhon.valencia@cerok.com
+     * obtiene el nombre del funcionario
+     * con un formato predefinido
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
     public function getName()
     {
@@ -133,57 +141,15 @@ class Funcionario extends Model
     }
 
     /**
-     * @return string for represent state attribute
-     * @author jhon.valencia@cerok.com
+     * etiqueta del statdo actual
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
     public function getState()
     {
         return $this->estado = 1 ? 'Activo' : 'Inactivo';
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getDirection()
-    {
-        return $this->direccion;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getPhoneNumber()
-    {
-        return $this->telefono;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getPassword()
-    {
-        return $this->clave;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getLogin()
-    {
-        return $this->login;
     }
 
     /**
@@ -203,6 +169,10 @@ class Funcionario extends Model
         } else if ($image != 'firma') {
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
             $tempRoute = $ruta_db_superior . $this->getTemporalRoute();
+
+            if (!is_dir($tempRoute)) {
+                mkdir($tempRoute, PERMISOS_CARPETAS, TRUE);
+            }
 
             $name = strtok($this->nombres, " ") . ' ' . strtok($this->apellidos, " ");
             $avatar = $avatar
@@ -235,7 +205,7 @@ class Funcionario extends Model
      */
     public function updateImage($image, $attribute)
     {
-        $fileName = "{$attribute}-{$this->nit}.{$image['extension']}";
+        $fileName = "{$attribute}-{$this->getPK()}.{$image['extension']}";
         $this->$attribute = TemporalController::createFileDbRoute(
             "fotos/{$fileName}",
             "imagenes",
@@ -246,6 +216,16 @@ class Funcionario extends Model
         return $this->$attribute;
     }
 
+    /**
+     * buscador para autocompletar por
+     * nombre y apellido
+     *
+     * @param string $term palabra a buscar
+     * @param string $field columna a retornar como llave
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
         $sql = <<<SQL
@@ -261,6 +241,15 @@ SQL;
         return self::findBySql($sql);
     }
 
+    /**
+     * busca los funcionario que estan presentes
+     * en las transacciones de un documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function findByDocumentTransfer($documentId)
     {
         $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
@@ -304,6 +293,14 @@ SQL;
         ]);
     }
 
+    /**
+     * genere la condicion para excluir los funcionarios
+     * de nucleo en un sql
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function excludeCondition()
     {
         $users = [
@@ -315,6 +312,13 @@ SQL;
         return " idfuncionario not in(" . implode(',', $users) . ") ";
     }
 
+    /**
+     * verifica si no se ha excedido el limite de usuarios
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function checkAdition()
     {
         $exclude = self::excludeCondition();

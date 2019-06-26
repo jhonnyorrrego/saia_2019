@@ -5,7 +5,7 @@ class AnexosLog extends Model
     protected $idanexos_log;
     protected $fk_log;
     protected $fk_anexos;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {
