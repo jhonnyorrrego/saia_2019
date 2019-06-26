@@ -63,7 +63,7 @@ class PermisoController
             return true;
         }
 
-        if (!empty($tabla) && $accion && $this->login) {
+        if (!empty($tabla) && !is_null($accion) && $this->login) {
             $sql = <<<SQL
                 SELECT count(*) as total
                 FROM funcionario,permiso,modulo
@@ -140,7 +140,7 @@ SQL;
         $query = StaticSql::search($sql);
 
         return $query[0]['total'] ?
-            $this->permiso_usuario($nombre, '0') : $this->acceso_modulo($nombre);
+            !$this->permiso_usuario($nombre, '0') : $this->acceso_modulo($nombre);
     }
 
     /**
