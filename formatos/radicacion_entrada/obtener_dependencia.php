@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."core/autoload.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 
 $datos=busca_filtro_tabla('iddependencia','vfuncionario_dc','iddependencia_cargo='.$_REQUEST['iddependencia_cargo'],'',conn);

@@ -1,6 +1,7 @@
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,11 +9,11 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "sql.php");
-usuario_actual("login");
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("idbusqueda_componente");
+
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
+
+$validar_enteros = array("idbusqueda_componente");
 desencriptar_sqli('form_info');
 $filtro = '';
 $idbusqueda_temp = '';
@@ -76,13 +77,13 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			}
 			if (MOTOR == "Oracle") {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn -> Ejecutar_Sql($sql2);
-				$idbusqueda_temp = $conn -> Ultimo_Insert();
+				$conn->Ejecutar_Sql($sql2);
+				$idbusqueda_temp = $conn->Ultimo_Insert();
 				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn -> Ejecutar_Sql($sql2);
-				$idbusqueda_temp = $conn -> Ultimo_Insert();
+				$conn->Ejecutar_Sql($sql2);
+				$idbusqueda_temp = $conn->Ultimo_Insert();
 			}
 
 			$idbusqueda_fil = filtros_adicionales();
@@ -138,9 +139,10 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 	$retorno["exito"] = 0;
 	$retoro["mensaje"] = "Existe un problema con la identificaci&oacuete;n de su componente de b&uacute;squeda";
 }
-echo(json_encode($retorno));
+echo (json_encode($retorno));
 
-function parsear_cadena_temporal($key, $valor, $contador_campos) {
+function parsear_cadena_temporal($key, $valor, $contador_campos)
+{
 	$key = str_replace("bqsaia_", "", $key);
 	$valor = str_replace("@", "%", $valor);
 	// Cuando quieren buscar una cadena con @ no estaba buscando, esto soluciona el problema
@@ -151,10 +153,10 @@ function parsear_cadena_temporal($key, $valor, $contador_campos) {
 	$conector = '';
 	if ($enlace) {
 		switch ($enlace) {
-			case 'y' :
+			case 'y':
 				$conector = '|+|';
 				break;
-			case 'o' :
+			case 'o':
 				$conector = '|-|';
 				break;
 		}
@@ -167,7 +169,8 @@ function parsear_cadena_temporal($key, $valor, $contador_campos) {
 	return $cadena . $conector;
 }
 
-function limpiar_cadena($cadena) {
+function limpiar_cadena($cadena)
+{
 	$cadena_aux = substr($cadena, -3);
 	$tamano = strlen($cadena);
 	if ($cadena_aux == '|+|' || $cadena_aux == '|-|') {
@@ -176,7 +179,8 @@ function limpiar_cadena($cadena) {
 	return $cadena;
 }
 
-function valor_dato($campo, $valor) {
+function valor_dato($campo, $valor)
+{
 	$valor = "'" . $valor . "'";
 	$bqtipodato = array();
 	$bqtipodato_plantilla = array();
@@ -225,7 +229,8 @@ function valor_dato($campo, $valor) {
 	}
 }
 
-function filtros_adicionales() {
+function filtros_adicionales()
+{
 	global $conn;
 	if (@$_REQUEST["filtro_adicional"]) {
 		$datos = $_REQUEST["filtro_adicional"];
@@ -244,13 +249,14 @@ function filtros_adicionales() {
 			$where = stripslashes($valores[1]);
 		}
 		$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
-		$conn -> Ejecutar_Sql($sql1);
-		$idbusqueda = $conn -> Ultimo_Insert();
+		$conn->Ejecutar_Sql($sql1);
+		$idbusqueda = $conn->Ultimo_Insert();
 		return $idbusqueda;
 	}
 }
 
-function campos_especiales() {
+function campos_especiales()
+{
 	global $conn, $ruta_db_superior;
 	if (@$_REQUEST["campos_especiales"]) {
 		$campos = explode(",", $_REQUEST["campos_especiales"]);
@@ -340,7 +346,8 @@ function campos_especiales() {
 	}
 }
 
-function realizar_consulta() {
+function realizar_consulta()
+{
 	global $conn, $ruta_db_superior;
 	$tablas = array();
 	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden", $conn);
@@ -412,7 +419,8 @@ function realizar_consulta() {
 	);
 }
 
-function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
+function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
+{
 	global $conn;
 	$condicion_filtro = '';
 	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
@@ -449,7 +457,8 @@ function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
 	return ('(' . $condicion . ')');
 }
 
-function parsear_datos_plantilla_visual($cadena, $campos = array()) {
+function parsear_datos_plantilla_visual($cadena, $campos = array())
+{
 	$result = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cadena, $resultado);
 	if ($result !== FALSE) {
 		$patrones = str_replace(array(
@@ -466,12 +475,14 @@ function parsear_datos_plantilla_visual($cadena, $campos = array()) {
 	return ($listado_funciones);
 }
 
-function incluir_librerias_busqueda($elemento, $indice) {
+function incluir_librerias_busqueda($elemento, $indice)
+{
 	global $ruta_db_superior;
-	include_once ($ruta_db_superior . $elemento);
+	include_once($ruta_db_superior . $elemento);
 }
 
-function parsear_subconsulta($key, $valor, $contador_campos) {
+function parsear_subconsulta($key, $valor, $contador_campos)
+{
 	$key = str_replace("subsaia_", "", $key);
 	$key_aux = $key;
 	$valor = parsear_cadena_tildes($valor);
@@ -481,10 +492,10 @@ function parsear_subconsulta($key, $valor, $contador_campos) {
 	$conector = '';
 	if ($enlace) {
 		switch ($enlace) {
-			case 'y' :
+			case 'y':
 				$conector = '|+|';
 				break;
-			case 'o' :
+			case 'o':
 				$conector = '|-|';
 				break;
 		}
@@ -497,7 +508,8 @@ function parsear_subconsulta($key, $valor, $contador_campos) {
 	return $cadena . $conector;
 }
 
-function parsear_consulta($key, $valor, $req_condicion_llave) {
+function parsear_consulta($key, $valor, $req_condicion_llave)
+{
 	$valor = parsear_cadena_tildes($valor);
 	$fin = strpos($key, "__");
 	if ($fin) {
@@ -505,7 +517,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 	}
 	$condicion_min = strtolower($req_condicion_llave);
 	switch ($condicion_min) {
-		case '=' :
+		case '=':
 			$condicion = '|' . $req_condicion_llave . '|';
 			$valor_ = $valor;
 			$escaped_val = ($valor);
@@ -522,7 +534,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			}
 			break;
 
-		case 'like' :
+		case 'like':
 			$condicion = "|" . $req_condicion_llave . "|";
 			if (MOTOR == "MySql") {
 				$str_quote1 = "'%";
@@ -575,7 +587,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			}
 			break;
 
-		case 'like_comas' :
+		case 'like_comas':
 			$condicion = "|" . str_replace("like_comas", "like", $req_condicion_llave) . "|";
 			if (MOTOR == "MySql") {
 				$str_quote1 = "'%,";
@@ -679,7 +691,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 
 			break;
 
-		case 'like_total' :
+		case 'like_total':
 			$condicion = "|" . str_replace("like_total", "like", $req_condicion_llave) . "|";
 			if (MOTOR == "MySql") {
 				$str_quote1 = "'%";
@@ -734,8 +746,8 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			}
 			break;
 
-		case 'in' :
-		case 'in_enteros' :
+		case 'in':
+		case 'in_enteros':
 			//$condicion = "|" . $req_condicion_llave . "|";
 			$condicion = "|" . str_replace("in_enteros", "in", $req_condicion_llave) . "|";
 			if ($condicion_min === 'in_enteros') {
@@ -777,7 +789,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$cadena = ($funcion_campo . $condicion . $valor);
 			}
 			break;
-		case 'date' :
+		case 'date':
 			$condicion = "|" . $req_condicion_llave . "|";
 			if (MOTOR == "MySql") {
 				if (substr($valor, -1) == ",") {
@@ -829,7 +841,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			}
 			break;
 
-		default :
+		default:
 			$condicion = "|" . $req_condicion_llave . "|";
 			$tipodate = False;
 			$str_quote1 = "'%";
@@ -857,7 +869,8 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 	return $cadena;
 }
 
-function ajustar_lista_valores($valor) {
+function ajustar_lista_valores($valor)
+{
 	if (substr($valor, -1) == ",") {
 		$valor = substr($valor, 0, -1);
 	}
@@ -867,7 +880,8 @@ function ajustar_lista_valores($valor) {
 	return $valor;
 }
 
-function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2) {
+function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2)
+{
 	$valor = "";
 	if (!valor_dato($key, $valor_)) {
 		$valor = $str_quote1 . $escaped_val . $str_quote2;
@@ -877,7 +891,8 @@ function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quot
 	return $valor;
 }
 
-function procesar_filtro_like_general($key, $valor, $condicion) {
+function procesar_filtro_like_general($key, $valor, $condicion)
+{
 	if (strpos($valor, ",") === false) {
 		if (!valor_dato($key, $valor)) {
 			$valor = "''%" . strtolower($valor) . "%''";
@@ -907,57 +922,59 @@ function procesar_filtro_like_general($key, $valor, $condicion) {
 	return $cadena;
 }
 
-function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1) {
+function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1)
+{
 	$sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
-	$stmt = OCIParse($conn -> Conn -> conn, $sql) or print_r(OCIError($stmt));
+	$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
 	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
 
 	if (!count($row)) {
-		oci_rollback($conn -> Conn -> conn);
+		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
 		$clob_blob = 'clob';
 		if ($tipo == 'archivo') {
 			$clob_blob = 'blob';
 		}
 		$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
-		$conn -> Ejecutar_Sql($up_clob);
-		$stmt = OCIParse($conn -> Conn -> conn, $sql) or print_r(OCIError($stmt));
+		$conn->Ejecutar_Sql($up_clob);
+		$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
 
 		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 		OCIFetchInto($stmt, $row, OCI_ASSOC);
 	}
 	if (FALSE === $row) {
-		OCIRollback($conn -> Conn -> conn);
+		OCIRollback($conn->Conn->conn);
 		alerta("No se pudo modificar el campo.");
 		$resultado = FALSE;
 	} else {
-		if ($row[strtoupper($campo)] -> size() > 0) {
-			$contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)] -> read($row[strtoupper($campo)] -> size()));
+		if ($row[strtoupper($campo)]->size() > 0) {
+			$contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
 		} else {
 			$contenido_actual = "";
 		}
 		if ($contenido_actual != $contenido) {
-			if ($row[strtoupper($campo)] -> size() > 0 && !$row[strtoupper($campo)] -> truncate()) {
-				oci_rollback($conn -> Conn -> conn);
+			if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
+				oci_rollback($conn->Conn->conn);
 				alerta("No se pudo modificar el campo.");
 				$resultado = FALSE;
 			} else {
-				if (!$row[strtoupper($campo)] -> save(trim($contenido))) {
-					oci_rollback($conn -> Conn -> conn);
+				if (!$row[strtoupper($campo)]->save(trim($contenido))) {
+					oci_rollback($conn->Conn->conn);
 					$resultado = FALSE;
 				} else {
-					oci_commit($conn -> Conn -> conn);
+					oci_commit($conn->Conn->conn);
 				}
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 			}
 		}
 		oci_free_statement($stmt);
-		$row[strtoupper($campo)] -> free();
+		$row[strtoupper($campo)]->free();
 	}
 }
 
-function parsear_cadena_tildes($cadena) {
+function parsear_cadena_tildes($cadena)
+{
 	$texto = ($cadena);
 	$buscar = array(
 		'á',
@@ -990,4 +1007,3 @@ function parsear_cadena_tildes($cadena) {
 	$texto = str_replace($buscar, $reemplazar, $texto);
 	return $texto;
 }
-?>

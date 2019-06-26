@@ -227,8 +227,7 @@ class radicar_factura extends rcube_plugin {
 
         $conn_tmp = $conn;
 
-        require_once ($ruta_db_superior . "vendor/autoload.php");
-        include_once ($ruta_db_superior . "db.php");
+        require_once ($ruta_db_superior . "core/autoload.php");
         $this->ruta_saia = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/";
         if(empty($conn_tmp)) {
             $conn_tmp = $conn;

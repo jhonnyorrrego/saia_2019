@@ -88,7 +88,7 @@ abstract class Model extends StaticSql
     public function __clone()
     {
         $pkLabel = $this->getPkName();
-        unset($this->$pkLabel);
+        $this->setPK(null);
     }
 
     /**
@@ -259,8 +259,8 @@ abstract class Model extends StaticSql
         }
 
         $sql = "INSERT INTO {$table} ({$fields}) values ({$values})";
-        $this->setPK(self::insert($sql));
 
+        $this->setPK(self::insert($sql));
         return $this->getPK() ?? 0;
     }
 
@@ -411,7 +411,10 @@ abstract class Model extends StaticSql
      */
     public function clone()
     {
-        return clone $this;
+        $pk = $this->getPK();
+        $response = clone $this;
+        $this->setPK($pk);
+        return $response;
     }
 
     /**

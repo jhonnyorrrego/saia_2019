@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."core/autoload.php");
 
 function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
 {

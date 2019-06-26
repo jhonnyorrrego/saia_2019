@@ -24,6 +24,9 @@ $(function() {
     })();
 
     $('#show_notifications').on('click', function() {
+        $(this)
+            .find('.notification')
+            .removeClass('animated');
         notification.showList();
     });
 

@@ -10,7 +10,7 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."core/autoload.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 

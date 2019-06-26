@@ -116,13 +116,18 @@ class Funcionario extends Model
         return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'cutedPhoto' => $this->getImage('foto_recorte')
+            'cutedPhoto' => $this->getImage('foto_recorte'),
+            'login' => $this->login
         ];
     }
 
     /**
-     * @return  string the complete name formatted
-     * @author jhon.valencia@cerok.com
+     * obtiene el nombre del funcionario
+     * con un formato predefinido
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
     public function getName()
     {
@@ -133,57 +138,15 @@ class Funcionario extends Model
     }
 
     /**
-     * @return string for represent state attribute
-     * @author jhon.valencia@cerok.com
+     * etiqueta del statdo actual
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
     public function getState()
     {
         return $this->estado = 1 ? 'Activo' : 'Inactivo';
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getDirection()
-    {
-        return $this->direccion;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getPhoneNumber()
-    {
-        return $this->telefono;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getPassword()
-    {
-        return $this->clave;
-    }
-
-    /**
-     * @return string attribute
-     * @author jhon.valencia@cerok.com
-     */
-    public function getLogin()
-    {
-        return $this->login;
     }
 
     /**
@@ -235,7 +198,7 @@ class Funcionario extends Model
      */
     public function updateImage($image, $attribute)
     {
-        $fileName = "{$attribute}-{$this->nit}.{$image['extension']}";
+        $fileName = "{$attribute}-{$this->getPK()}.{$image['extension']}";
         $this->$attribute = TemporalController::createFileDbRoute(
             "fotos/{$fileName}",
             "imagenes",
@@ -246,6 +209,16 @@ class Funcionario extends Model
         return $this->$attribute;
     }
 
+    /**
+     * buscador para autocompletar por
+     * nombre y apellido
+     *
+     * @param string $term palabra a buscar
+     * @param string $field columna a retornar como llave
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
         $sql = <<<SQL
@@ -261,6 +234,15 @@ SQL;
         return self::findBySql($sql);
     }
 
+    /**
+     * busca los funcionario que estan presentes
+     * en las transacciones de un documento
+     *
+     * @param integer $documentId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function findByDocumentTransfer($documentId)
     {
         $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
@@ -304,6 +286,14 @@ SQL;
         ]);
     }
 
+    /**
+     * genere la condicion para excluir los funcionarios
+     * de nucleo en un sql
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function excludeCondition()
     {
         $users = [
@@ -315,6 +305,13 @@ SQL;
         return " idfuncionario not in(" . implode(',', $users) . ") ";
     }
 
+    /**
+     * verifica si no se ha excedido el limite de usuarios
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public static function checkAdition()
     {
         $exclude = self::excludeCondition();

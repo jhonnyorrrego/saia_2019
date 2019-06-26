@@ -106,6 +106,7 @@ class Notification {
                 type: 'info',
                 message: message.message
             });
+            $('#show_notifications .notification').addClass('animated');
         }
     }
 

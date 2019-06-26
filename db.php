@@ -23,27 +23,6 @@ function defineGlobalVars()
     $GLOBALS['conn'] = phpmkr_db_connect();
 }
 
-/**
- * define variables globales para
- * desarrollos desde servicios web
- *
- * @param string $login
- * @return true
- */
-function logear_funcionario_webservice($login)
-{
-    global $conn;
-
-    $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$login}'", '', $conn);
-    $_SESSION["LOGIN" . LLAVE_SAIA] = $login;
-    $_SESSION["conexion_remota"] = 1;
-    $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
-    $_SESSION["idfuncionario"] = $findUser[0]['idfuncionario'];
-    $_SESSION["ruta_temp_funcionario"] = 'temporal/temporal_' . strtolower($login);
-
-    return true;
-}
-
 /*
 <Clase>
 <Nombre>registrar_accion_digitalizacion
@@ -593,9 +572,7 @@ function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $re
         array_push($retorno, $temp);
     $retorno["numcampos"] = $i;
     phpmkr_free_result($rs);
-    if (DEBUGEAR_FLUJOS && strpos($tabla, 'funcionario') === false) {
-        error(print_r($retorno, true));
-    }
+
     return ($retorno);
 }
 /*
@@ -2151,7 +2128,6 @@ function parsear_cadena($cadena1)
 
 function parsear_comilla_sencilla_cadena($cadena)
 {
-    global $conn;
     $cadena_original = $cadena;
     $cadena_sinespacios = trim($cadena);
     //	$cadena_minuscula=strtolower($cadena_sinespacios);

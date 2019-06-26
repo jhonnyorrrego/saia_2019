@@ -9,7 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."core/autoload.php");
 
 $idft_funcionario=json_decode(@$_REQUEST['idft_funcionario'],1);
 $sql1='';

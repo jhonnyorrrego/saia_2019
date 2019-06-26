@@ -73,7 +73,7 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function generateUrl(string $route, array $parameters = array(), int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    protected function generateUrl(string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
@@ -85,7 +85,7 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function forward(string $controller, array $path = array(), array $query = array()): Response
+    protected function forward(string $controller, array $path = [], array $query = []): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $path['_controller'] = $controller;
@@ -109,7 +109,7 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function redirectToRoute(string $route, array $parameters = array(), int $status = 302): RedirectResponse
+    protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
     {
         return $this->redirect($this->generateUrl($route, $parameters), $status);
     }
@@ -119,12 +119,12 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function json($data, int $status = 200, array $headers = array(), array $context = array()): JsonResponse
+    protected function json($data, int $status = 200, array $headers = [], array $context = []): JsonResponse
     {
         if ($this->container->has('serializer')) {
-            $json = $this->container->get('serializer')->serialize($data, 'json', array_merge(array(
+            $json = $this->container->get('serializer')->serialize($data, 'json', array_merge([
                 'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,
-            ), $context));
+            ], $context));
 
             return new JsonResponse($json, $status, $headers, true);
         }
@@ -203,9 +203,11 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function renderView(string $view, array $parameters = array()): string
+    protected function renderView(string $view, array $parameters = []): string
     {
         if ($this->container->has('templating')) {
+            @trigger_error('Using the "templating" service is deprecated since version 4.3 and will be removed in 5.0; use Twig instead.', E_USER_DEPRECATED);
+
             return $this->container->get('templating')->render($view, $parameters);
         }
 
@@ -221,9 +223,11 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function render(string $view, array $parameters = array(), Response $response = null): Response
+    protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
         if ($this->container->has('templating')) {
+            @trigger_error('Using the "templating" service is deprecated since version 4.3 and will be removed in 5.0; use Twig instead.', E_USER_DEPRECATED);
+
             $content = $this->container->get('templating')->render($view, $parameters);
         } elseif ($this->container->has('twig')) {
             $content = $this->container->get('twig')->render($view, $parameters);
@@ -245,9 +249,11 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function stream(string $view, array $parameters = array(), StreamedResponse $response = null): StreamedResponse
+    protected function stream(string $view, array $parameters = [], StreamedResponse $response = null): StreamedResponse
     {
         if ($this->container->has('templating')) {
+            @trigger_error('Using the "templating" service is deprecated since version 4.3 and will be removed in 5.0; use Twig instead.', E_USER_DEPRECATED);
+
             $templating = $this->container->get('templating');
 
             $callback = function () use ($templating, $view, $parameters) {
@@ -311,7 +317,7 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function createForm(string $type, $data = null, array $options = array()): FormInterface
+    protected function createForm(string $type, $data = null, array $options = []): FormInterface
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
     }
@@ -321,7 +327,7 @@ trait ControllerTrait
      *
      * @final
      */
-    protected function createFormBuilder($data = null, array $options = array()): FormBuilderInterface
+    protected function createFormBuilder($data = null, array $options = []): FormBuilderInterface
     {
         return $this->container->get('form.factory')->createBuilder(FormType::class, $data, $options);
     }
@@ -397,12 +403,12 @@ trait ControllerTrait
      */
     protected function dispatchMessage($message): Envelope
     {
-        if (!$this->container->has('message_bus')) {
+        if (!$this->container->has('messenger.default_bus')) {
             $message = class_exists(Envelope::class) ? 'You need to define the "messenger.default_bus" configuration option.' : 'Try running "composer require symfony/messenger".';
             throw new \LogicException('The message bus is not enabled in your application. '.$message);
         }
 
-        return $this->container->get('message_bus')->dispatch($message);
+        return $this->container->get('messenger.default_bus')->dispatch($message);
     }
 
     /**
@@ -419,7 +425,7 @@ trait ControllerTrait
         }
 
         if (null === $linkProvider = $request->attributes->get('_links')) {
-            $request->attributes->set('_links', new GenericLinkProvider(array($link)));
+            $request->attributes->set('_links', new GenericLinkProvider([$link]));
 
             return;
         }
