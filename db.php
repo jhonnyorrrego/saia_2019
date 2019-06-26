@@ -2014,50 +2014,28 @@ function decodifica_encabezado($texto)
     }
 }
 
-function parsear_cadena($cadena1)
+function parsear_cadena($string)
 {
-    global $conn;
-    $cadena1 = str_replace("|+|", " AND ", $cadena1);
-    $cadena1 = str_replace("|=|", " = ", $cadena1);
-    $cadena1 = str_replace("|like|", " like ", $cadena1);
-    $cadena1 = str_replace("|-|", " OR ", $cadena1);
-    $cadena1 = str_replace("|<|", " < ", $cadena1);
-    $cadena1 = str_replace("|>|", " > ", $cadena1);
-    $cadena1 = str_replace("|>=|", " >= ", $cadena1);
-    $cadena1 = str_replace("|<=|", " <= ", $cadena1);
-    $cadena1 = str_replace("|in|", " in ", $cadena1);
-    $cadena1 = str_replace("||", " LIKE ", $cadena1);
-    return $cadena1;
+    $string = str_replace("|+|", " AND ", $string);
+    $string = str_replace("|=|", " = ", $string);
+    $string = str_replace("|like|", " like ", $string);
+    $string = str_replace("|-|", " OR ", $string);
+    $string = str_replace("|<|", " < ", $string);
+    $string = str_replace("|>|", " > ", $string);
+    $string = str_replace("|>=|", " >= ", $string);
+    $string = str_replace("|<=|", " <= ", $string);
+    $string = str_replace("|in|", " in ", $string);
+    $string = str_replace("||", " LIKE ", $string);
+    return $string;
 }
 
 function parsear_comilla_sencilla_cadena($cadena)
 {
-    $cadena_original = $cadena;
-    $cadena_sinespacios = trim($cadena);
-    //	$cadena_minuscula=strtolower($cadena_sinespacios);
-    $parseada = 0;
-    if (preg_match('/^select/i', $cadena_sinespacios)) {
-        //$findme   = "'";
-        //$pos = strpos($cadena, $findme);
-        if (preg_match("/'/", $cadena)) {  //fue encontrada
-            /*$motor=$conn->motor;
-			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");*/
-            $cadena = str_replace("'", "''", $cadena);
-            $parseada = 1;
-        }
-    } else {
-        //$findme   = "'";
-        //$pos = strpos($cadena, $findme);
-        if (preg_match("/'/", $cadena)) {  //fue encontrada
-            $cadena = str_replace("'", "''", $cadena);
-            $parseada = 1;
-        }
+    if (preg_match("/'/", $cadena)) {
+        $cadena = str_replace("'", "''", $cadena);
     }
-    if ($parseada) {
-        return ($cadena);
-    } else {
-        return ($cadena_original);
-    }
+
+    return $cadena;
 }
 
 function return_megabytes($val)

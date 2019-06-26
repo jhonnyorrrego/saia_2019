@@ -14,7 +14,7 @@ class PieGraphController extends GraficoController
     {
         $stats = $this->getValues();
 
-        $data = (object)[
+        $this->configuration = (object)[
             "tooltip" => [
                 "trigger" => 'item',
                 "formatter" => "{a} <br/>{b} : {c} ({d}%)"
@@ -23,7 +23,6 @@ class PieGraphController extends GraficoController
                 "type" => 'scroll',
                 "orient" => 'vertical',
                 "right" => 10,
-                "top" => 20,
                 "bottom" => 20,
                 "data" => $stats->labels,
             ],
@@ -46,13 +45,13 @@ class PieGraphController extends GraficoController
         ];
 
         if ($this->Grafico->titulo) {
-            $data->title = [
+            $this->configuration->title = [
                 'text' => $this->Grafico->titulo,
                 'x' => 'left'
             ];
         }
 
-        return $data;
+        return $this->addGenericData();
     }
 
     /**

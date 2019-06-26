@@ -20,7 +20,7 @@ class BarsGraphController extends GraficoController
         $labels = array_keys($stats);
         $values = array_values($stats);
 
-        $data = (object)[
+        $this->configuration = (object)[
             "xAxis" => [
                 "data" => $labels
             ],
@@ -35,9 +35,9 @@ class BarsGraphController extends GraficoController
         ];
 
         if ($this->Grafico->titulo) {
-            $data->title->text = $this->Grafico->titulo;
+            $this->configuration->title->text = $this->Grafico->titulo;
         }
 
-        return $data;
+        return $this->addGenericData();
     }
 }

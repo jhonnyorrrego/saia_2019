@@ -27,6 +27,9 @@ class Grafico extends Model
     protected $busqueda;
     protected $titulo;
 
+    //relations
+    protected $BusquedaComponente;
+
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -54,6 +57,22 @@ class Grafico extends Model
                 'titulo',
             ]
         ];
+    }
+
+    /**
+     * obtiene la instancia de busqueda componente relacionada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-25
+     */
+    public function getComponent()
+    {
+        if (!$this->BusquedaComponente) {
+            $this->BusquedaComponente = self::getRelationFk('BusquedaComponente');
+        }
+
+        return $this->BusquedaComponente;
     }
 
     /**

@@ -253,8 +253,7 @@ abstract class Model extends StaticSql
      * @param string $instance Nombre de la instancia requerida
      * @param string $fieldName atributo igual a la llave primaria de $instance
      * @return array|null
-     * @author Andre.Agudelo <andres.agudelo@cerok.com>
-     * @modificado jhon sebastian valencia <jhon.valencia@cerok.com> 2019-03-14
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
     public function getRelationFk(string $instance = null, $fieldName = null)
     {

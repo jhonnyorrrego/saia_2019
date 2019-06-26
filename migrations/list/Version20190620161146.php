@@ -44,7 +44,7 @@ final class Version20190620161146 extends AbstractMigration
         ]);
         $table->setPrimaryKey(['idgrafico']);
         $table->addColumn('fk_busqueda_componente', 'integer', [
-            'notnull' => true,
+            'notnull' => false,
             'length' => 11
         ]);
         $table->addColumn('fk_pantalla_grafico', 'integer', [

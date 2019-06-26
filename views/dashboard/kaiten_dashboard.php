@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . 'librerias_saia.php';
 
 ?>
 <!DOCTYPE html>
@@ -56,6 +56,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                 let panel = kaiten.kaiten("getPanel", panelId);
                 kaiten.kaiten('reload', panel);
             }
+
             window.crear_pantalla_busqueda = function(datos, elimina) {
                 var panel = kaiten.kaiten("getPanel", 1);
 
