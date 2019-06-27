@@ -6,7 +6,7 @@ class Municipio extends Model
     protected $nombre;
     protected $departamento_iddepartamento;
     protected $estado;
-    protected $dbAttributes;
+    
 
     //relations
     protected $Departamento;

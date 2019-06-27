@@ -1,21 +1,24 @@
 <?php
 
-class NotaFuncionario extends Model{
+class NotaFuncionario extends Model
+{
     protected $idnota_funcionario;
     protected $contenido;
     protected $fk_funcionario;
     protected $fecha;
     protected $estado;
-    protected $dbAttributes;
 
-    function __construct($id = null) {
+
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'contenido',
@@ -27,7 +30,7 @@ class NotaFuncionario extends Model{
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];

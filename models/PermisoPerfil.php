@@ -5,7 +5,7 @@ class PermisoPerfil extends Model
     protected $idpermiso_perfil;
     protected $modulo_idmodulo;
     protected $perfil_idperfil;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

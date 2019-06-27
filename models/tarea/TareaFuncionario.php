@@ -11,7 +11,7 @@ class TareaFuncionario extends Model
     protected $fk_tarea;
     protected $tipo;
     protected $estado;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

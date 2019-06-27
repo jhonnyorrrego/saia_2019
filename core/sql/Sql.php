@@ -1,5 +1,5 @@
 <?php
-abstract class SQL2
+abstract class Sql
 {
 	public $Conn;
 	public $res = null;
@@ -13,24 +13,7 @@ abstract class SQL2
 	protected $ultimoInsert = null;
 	protected $filas = 0;
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>SQL.
-	 * <Parametros>conn Recibe el objeto que tiene la conexion; motorBd Es el motor de base de datos que se está utilizando.
-	 * <Responsabilidades>Constructor de la clase SQL.
-	 * <Notas> Asocia las variables de la clase conexion que llegan como parametros con los de la clase SQL.
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>debe existir una conexion a la base de datos
-	 * <Post-condiciones>
-	 */
 	public function __construct($conn, $motorBd)
-	{
-		$this->Conn = $conn;
-		$this->motor = $motorBd;
-	}
-
-	public function __init($conn, $motorBd)
 	{
 		$this->Conn = $conn;
 		$this->motor = $motorBd;
@@ -42,9 +25,11 @@ abstract class SQL2
 	 * @param $motorBd
 	 * @return void
 	 */
-	public static function get_instance($conn, $motorBd)
+	public static function getInstance()
 	{
-		$instance = null;
+		$conn = new Conexion();
+		$motorBd = $conn->Motor;
+
 		switch ($motorBd) {
 			case "MySql":
 				$instance = new SqlMysql($conn, $motorBd);
@@ -60,6 +45,9 @@ abstract class SQL2
 				break;
 			case "Postgres":
 				$instance = new SqlPostgres($conn, $motorBd);
+				break;
+			default:
+				$instance = null;
 				break;
 		}
 
@@ -179,22 +167,6 @@ abstract class SQL2
 	 * <Post-condiciones>
 	 */
 	public abstract function Eliminar($tabla, $where);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Rows_Count
-	 * <Parametros>
-	 * <Responsabilidades>Retornar el número de filas afectadas en la última consulta
-	 * <Notas>se utiliza después de la función Insertar
-	 * <Excepciones>
-	 * <Salida>número de filas devueltas en la última consulta
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Rows_Count()
-	{
-		mysqli_affected_rows($this->res);
-	}
 
 	/*
 	 * <Clase>SQL
@@ -595,12 +567,7 @@ abstract class SQL2
 	public function executeSelect($sql, $start = 0, $end = 0)
 	{
 		$response = [];
-
-		if ($end) {
-			$result = $this->Ejecutar_Limit($sql, $start, $end);
-		} else {
-			$result = $this->Ejecutar_Sql($sql);
-		}
+		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
 
 		while (($row = $this->sacar_fila($result)) !== false) {
 			$response[] = $row;

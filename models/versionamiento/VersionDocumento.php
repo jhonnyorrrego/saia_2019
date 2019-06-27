@@ -8,7 +8,7 @@ class VersionDocumento extends Model
     protected $funcionario_idfuncionario;
     protected $version;
     protected $pdf;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

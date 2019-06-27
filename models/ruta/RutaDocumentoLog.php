@@ -5,7 +5,7 @@ class RutaDocumentoLog extends Model
     protected $idruta_documento_log;
     protected $fk_log;
     protected $fk_ruta_documento;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

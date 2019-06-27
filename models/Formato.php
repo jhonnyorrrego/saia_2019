@@ -1,6 +1,7 @@
 <?php
 
-class Formato extends Model {
+class Formato extends Model
+{
     protected $idformato;
     protected $nombre;
     protected $etiqueta;
@@ -52,20 +53,22 @@ class Formato extends Model {
     protected $documentacion;
     protected $mostrar_tipodoc_pdf;
     protected $publicar;
-    protected $dbAttributes;
+
 
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
      */
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'nombre',
@@ -123,10 +126,9 @@ class Formato extends Model {
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
     }
-
 }

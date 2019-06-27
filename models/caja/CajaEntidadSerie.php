@@ -7,7 +7,7 @@ class CajaEntidadserie extends Model
     protected $fk_entidad_serie;
     protected $fecha_creacion;
 
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

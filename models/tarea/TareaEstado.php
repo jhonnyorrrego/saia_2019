@@ -15,17 +15,19 @@ class TareaEstado extends Model
     protected $valor;
     protected $estado;
     protected $user;
-    protected $dbAttributes;
 
-    function __construct($id = null) {
+
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
-        $this->dbAttributes = (object) [
+    protected function defineAttributes()
+    {
+        $this->dbAttributes = (object)[
             'safe' => [
                 'fk_funcionario',
                 'fk_tarea',
@@ -34,11 +36,22 @@ class TareaEstado extends Model
                 'estado',
                 'valor',
             ],
-            'date' => ['fecha']
+            'date' => ['fecha'],
+            'labels' => [
+                'estado' => [
+                    'label' => 'valor',
+                    'values' => [
+                        '1' => 'Realizada',
+                        '2' => 'Pendiente',
+                        '3' => 'En proceso',
+                        '4' => 'Cancelada'
+                    ]
+                ]
+            ]
         ];
     }
 
-     /**
+    /**
      * funcionalidad ejecutada despues de crear un nuevo registro
      *
      * @return boolean
@@ -65,9 +78,10 @@ class TareaEstado extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-03-21
      */
-    public function getUser(){
-        if(!$this->user){
-            $this->user = self::getRelationFk('funcionario');
+    public function getUser()
+    {
+        if (!$this->user) {
+            $this->user = self::getRelationFk('Funcionario');
         }
 
         return $this->user;
@@ -81,7 +95,8 @@ class TareaEstado extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019
      */
-    public static function takeOffByTask($taskId){
+    public static function takeOffByTask($taskId)
+    {
         return self::executeUpdate(['estado' => 0], ['fk_tarea' => $taskId]);
     }
 
@@ -93,8 +108,9 @@ class TareaEstado extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-03-21
      */
-    public static function getState($state){
-        switch ($state) {            
+    public static function getState($state)
+    {
+        switch ($state) {
             case self::REALIZADA:
                 $response = 'Realizada';
                 break;

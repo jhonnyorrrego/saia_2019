@@ -7,7 +7,7 @@ class Tarea extends Model
     protected $fecha_inicial;
     protected $fecha_final;
     protected $descripcion;
-    protected $dbAttributes;
+    
     public $clone;
 
     function __construct($id = null)

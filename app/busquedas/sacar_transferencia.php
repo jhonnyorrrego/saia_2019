@@ -21,16 +21,16 @@ $Response = (object)[
 
 if ($_SESSION['idfuncionario'] && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $sql = "select idtransferencia from buzon_salida where idtransferencia = {$_REQUEST['transfer']} and destino = {$_REQUEST['key']}";
-    $records = Conexion::getConnection()->executeSelect($sql);
+    $records = StaticSql::search($sql);
 
     $documentList = implode(',', $_REQUEST['selections']);
-    if (count($records)) {//recibidos
+    if (count($records)) { //recibidos
         $sql = "update buzon_salida set recibido = 0 where archivo_idarchivo in ({$documentList}) and destino={$_REQUEST['key']}";
-    } else {//enviados
+    } else { //enviados
         $sql = "update buzon_salida set enviado = 0 where archivo_idarchivo in ({$documentList}) and origen={$_REQUEST['key']}";
     }
-    
-    $update = Conexion::getConnection()->Ejecutar_Sql($sql);
+
+    $update = StaticSql::query($sql);
 
     if ($update) {
         $trashId = Etiqueta::getUserTrashId($_REQUEST['key']);

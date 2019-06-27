@@ -10,7 +10,7 @@ class ExpedienteEli extends Model
     protected $fecha_accion;
     protected $accion;
     
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

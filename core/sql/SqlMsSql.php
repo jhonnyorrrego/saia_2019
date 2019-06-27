@@ -1,5 +1,5 @@
 <?php
-class SqlMsSql extends SQL2
+class SqlMsSql extends Sql
 {
 
 	public function __construct($conn, $motorBd)

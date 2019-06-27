@@ -15,7 +15,7 @@ class RutaDocumento extends Model
     protected $tipo_flujo;
     protected $fk_version_documento;
     protected $finalizado;
-    protected $dbAttributes;
+    
 
     //utilities
     public $clone;

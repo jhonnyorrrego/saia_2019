@@ -8,7 +8,7 @@ class Configuracion extends Model
     protected $tipo;
     protected $fecha;
     protected $encrypt;
-    protected $dbAttributes;
+    
 
     function __construct($id = null)
     {

@@ -166,7 +166,7 @@ $(function() {
             },
             function(response) {
                 if (response.success) {
-                    $('#component').val(response.data);
+                    $('#component').val(response.data.idbusqueda_componente);
                 } else {
                     top.notification({
                         type: 'error',

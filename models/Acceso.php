@@ -18,7 +18,7 @@ class Acceso extends Model
     protected $accion;
     protected $fecha;
     protected $estado;
-    protected $dbAttributes;
+    
 
     //relation
     protected $User;

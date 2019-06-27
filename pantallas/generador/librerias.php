@@ -26,11 +26,11 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
         $sql_campos = array();
         $sql_valores = array();
         $default_campo = json_decode($dato[0]["opciones"], true);
-        $consultaCampos = busca_filtro_tabla("orden","campos_formato","formato_idformato={$idpantalla} and orden <> 0","orden DESC ",$conn);
-        if($consultaCampos['numcampos']){
-            $default_campo['orden'] = $consultaCampos[0]['orden']+1;
+        $consultaCampos = busca_filtro_tabla("orden", "campos_formato", "formato_idformato={$idpantalla} and orden <> 0", "orden DESC ", $conn);
+        if ($consultaCampos['numcampos']) {
+            $default_campo['orden'] = $consultaCampos[0]['orden'] + 1;
         }
-       
+
 
         if (isset($default_campo["valor"]) && is_array($default_campo["valor"])) {
             $default_campo["valor"] = json_encode($default_campo["valor"]);
@@ -53,8 +53,8 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
             array_push($sql_valores, $idpantalla);
         }
         if (count($sql_campos) && count($sql_valores)) {
-            
-          
+
+
             $sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
             $retorno["sql"] = $sql2;
             phpmkr_query($sql2) or die($sql2);
@@ -88,19 +88,19 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
     $acciones = array("a", "e", "b");
     if ($pantalla_campos["numcampos"]) {
         $datos = $_REQUEST;
-      
+
         $consultarNombre = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}", "", $conn);
         if (!$consultarNombre['numcampos']) {
             $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
             $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 
             $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
-            
+
             $sql_update = array();
             $valorArbol = '';
             foreach ($datos as $key => $value) {
                 if (preg_match("/^fs_/", $key)) {
-                   
+
                     switch ($key) {
                         case 'fs_acciones':
                             if ($value == 'true') {
@@ -112,26 +112,22 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                             $retorno["etiqueta"] = $value;
                             break;
                         case "fs_arbol":
- 
-                        if($datos['fs_opciones']['url']=='cargo' && $datos['fs_opciones']['checkbox']=='radio'){
-                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;2;1;1;1;1;5';
-                        }else if($datos['fs_opciones']['url']=='cargo' && $datos['fs_opciones']['checkbox']=='checkbox'){
-                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;1;1;1;1;1;5';
-                        }else if($datos['fs_opciones']['url']=='funcionario' && $datos['fs_opciones']['checkbox']=='radio'){
-                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;2;0;1;1;0;0';
-                        }else if($datos['fs_opciones']['url']=='funcionario' && $datos['fs_opciones']['checkbox']=='checkbox') {
-                            $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;1;0;1;1;0;0';
-                        }else if($datos['fs_opciones']['url']=='dependencia' && $datos['fs_opciones']['checkbox']=='radio'){
-                            $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;2;0;1;1;0;2';
-                        }else if($datos['fs_opciones']['url']== 'dependencia' && $datos['fs_opciones']['checkbox']=='checkbox') {
-                            $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2';
-                        }else if($datos['fs_opciones']['url']== 'serie' && $datos['fs_opciones']['checkbox']=='radio') {
 
-                        } else if ($datos['fs_opciones']['url'] == 'serie' && $datos['fs_opciones']['checkbox'] == 'checkbox') { 
+                            if ($datos['fs_opciones']['url'] == 'cargo' && $datos['fs_opciones']['checkbox'] == 'radio') {
+                                $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;2;1;1;1;1;5';
+                            } else if ($datos['fs_opciones']['url'] == 'cargo' && $datos['fs_opciones']['checkbox'] == 'checkbox') {
+                                $valorArbol = '../../pantallas/lib/arbol_funcionarios.php?rol=1;1;1;1;1;1;5';
+                            } else if ($datos['fs_opciones']['url'] == 'funcionario' && $datos['fs_opciones']['checkbox'] == 'radio') {
+                                $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;2;0;1;1;0;0';
+                            } else if ($datos['fs_opciones']['url'] == 'funcionario' && $datos['fs_opciones']['checkbox'] == 'checkbox') {
+                                $valorArbol = '../../pantallas/lib/arbol_funcionarios.php;1;0;1;1;0;0';
+                            } else if ($datos['fs_opciones']['url'] == 'dependencia' && $datos['fs_opciones']['checkbox'] == 'radio') {
+                                $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;2;0;1;1;0;2';
+                            } else if ($datos['fs_opciones']['url'] == 'dependencia' && $datos['fs_opciones']['checkbox'] == 'checkbox') {
+                                $valorArbol = '../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2';
+                            } else if ($datos['fs_opciones']['url'] == 'serie' && $datos['fs_opciones']['checkbox'] == 'radio') { } else if ($datos['fs_opciones']['url'] == 'serie' && $datos['fs_opciones']['checkbox'] == 'checkbox') { }
 
-                        } 
-                           
-                        break;
+                            break;
                         case "fs_placeholder":
                             $retorno["placeholder"] = $value;
                             break;
@@ -140,34 +136,34 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                             break;
                         case "fs_opciones":
                             $consultarValores = busca_filtro_tabla("opciones", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and idcampos_formato = {$idpantalla_campos}", "", $conn);
-                            if($consultarValores[0]['opciones']){
-                                $opcionesGuardadas = json_decode($consultarValores[0]['opciones'],true);
+                            if ($consultarValores[0]['opciones']) {
+                                $opcionesGuardadas = json_decode($consultarValores[0]['opciones'], true);
                                 $elementosGuardados = [];
-                                foreach($opcionesGuardadas as $fila) {
-                                    $elementosGuardados[]=$fila['llave'];
+                                foreach ($opcionesGuardadas as $fila) {
+                                    $elementosGuardados[] = $fila['llave'];
                                 }
                                 $cantidadElementos = count($elementosGuardados);
                                 $nuevasPosiciones = $elementosGuardados;
 
-                                foreach($value as $valor) {
-                                    if(in_array ( $valor["llave"], $elementosGuardados)) {
+                                foreach ($value as $valor) {
+                                    if (in_array($valor["llave"], $elementosGuardados)) {
                                         continue;
                                     }
                                     $cantidadElementos = asginarValor($cantidadElementos, $nuevasPosiciones);
                                     $nuevasPosiciones[] = $cantidadElementos;
                                     $valor["llave"] = $cantidadElementos;
                                 }
-                            }else{
+                            } else {
                                 $cantidadElementos = count($value);
-                                $nuevasPosiciones = $value;                               
-                                $i=0;
-                                foreach($value as &$valor) {
-                                    $valor["llave"] = $i+1;
-                                     $i++;   
+                                $nuevasPosiciones = $value;
+                                $i = 0;
+                                foreach ($value as &$valor) {
+                                    $valor["llave"] = $i + 1;
+                                    $i++;
                                 }
                             }
                             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-                        break;
+                            break;
                         case "fs_estilo":
                             if (is_array($value)) {
                                 if ($value['con_decimales'] === 'false') {
@@ -187,14 +183,14 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                             }
                             break;
                     }
-                
+
                     array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
                 }
             }
-          
+
             if (count($sql_update)) {
-                $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" .$idpantalla_campos;
-                if($valorArbol){
+                $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
+                if ($valorArbol) {
                     $sqlArboles = "UPDATE campos_formato SET valor = {$valorArbol} WHERE idcampos_formato={$idpantalla_campos}";
                     phpmkr_query($sqlArboles) or die($sqlArboles);
                 }
@@ -215,8 +211,9 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
     }
 }
 
-function asginarValor($x, $a) {
-    for(; in_array($x, $a); $x++);
+function asginarValor($x, $a)
+{
+    for (; in_array($x, $a); $x++);
     return $x;
 }
 function kma_valor_campo($datos, $tiqueta_html)
@@ -479,17 +476,17 @@ function delete_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
             }
         }
         $consultarTabla = busca_filtro_tabla("f.nombre_tabla,cf.nombre,cf.tipo_dato,cf.longitud", "formato f, campos_formato cf", "f.idformato=cf.formato_idformato and f.idformato={$_REQUEST['idformato']} and cf.idcampos_formato={$idpantalla_campos}", "", $conn);
-        
+
         if ($consultarTabla['numcampos']) {
-            if($consultarTabla[0]['tipo_dato']=='text'){
-                   $longitud = 4000;
-            }else if($consultarTabla[0 ]['tipo_dato'] == 'datetime'){
-                 $longitud = 0;
-            }else{
+            if ($consultarTabla[0]['tipo_dato'] == 'text') {
+                $longitud = 4000;
+            } else if ($consultarTabla[0]['tipo_dato'] == 'datetime') {
+                $longitud = 0;
+            } else {
                 $longitud = $consultarTabla[0]['longitud'];
             }
 
-            $consultaCampo = Conexion::getConnection()->Busca_tabla("{$consultarTabla[0]['nombre_tabla']}", "{$consultarTabla[0]['nombre']}");
+            $consultaCampo = SQL2::getInstance()->Busca_tabla("{$consultarTabla[0]['nombre_tabla']}", "{$consultarTabla[0]['nombre']}");
             if ($consultaCampo['numcampos']) {
                 $quitarObligatoriedad = "ALTER TABLE {$consultarTabla[0]['nombre_tabla']} modify {$consultarTabla[0]['nombre']} {$consultarTabla[0]['tipo_dato']}({$longitud}) null";
                 phpmkr_query($quitarObligatoriedad);
@@ -559,7 +556,7 @@ function eliminar_archivo_incluido($idpantalla_include, $tipo_retorno)
         $retorno["idformato"] = $idpantalla_include;
         $retorno["mensaje"] = "Librer&iacute;a  desasociada de forma exitosa de la pantalla";
         /**
-		 * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados
+         * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados
 		//ELIMINO FUNCIONES y PARAMETROS (SI TIENE)
 		$funciones_asociadas=busca_filtro_tabla("","pantalla_funcion_exe a, pantalla_funcion b","b.fk_idpantalla_libreria=".$idpantalla_libreria." AND a.fk_idpantalla_funcion=b.idpantalla_funcion AND a.pantalla_idpantalla=".$pantalla_idpantalla,"",$conn);
 		if($funciones_asociadas['numcampos']){
@@ -780,7 +777,7 @@ function validarCamposObligatorios($idformato)
         $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idformato)) . "')";
         $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
         $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " " . $camposNucleo . "", "A.orden", $conn);
-        
+
         if ($campos['numcampos']) {
             $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
             $camposFormato = StaticSql::search($consultaFormato);
@@ -788,21 +785,21 @@ function validarCamposObligatorios($idformato)
                 $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
                 $retorno['exito'] = 0;
             } else {
-                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo','arbol')";                
+                $consultaFormato = "SELECT valor,etiqueta,opciones FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html in ('arbol_fancytree','radio','checkbox','select','archivo','arbol')";
                 $camposFormato = StaticSql::search($consultaFormato);
                 if ($camposFormato) {
                     $campos = '';
                     for ($i = 0; $i < count($camposFormato); $i++) {
                         $opciones = json_decode($camposFormato[$i]['opciones'], true);
-                        if (!$opciones) {                    
-                            $campos.= $camposFormato[$i]['etiqueta'].",";
+                        if (!$opciones) {
+                            $campos .= $camposFormato[$i]['etiqueta'] . ",";
                             $retorno['exito'] = 0;
-                            $retorno['mensaje'] = "Es necesario configurar los campos antes de seguir: ".substr(trim($campos), 0, -1)." ";
+                            $retorno['mensaje'] = "Es necesario configurar los campos antes de seguir: " . substr(trim($campos), 0, -1) . " ";
                         }
                     }
                 }
             }
-        }else{
+        } else {
             $retorno['mensaje'] = 'Recuerde que se deben crear campos del formato';
             $retorno['exito'] = 0;
         }
@@ -826,4 +823,3 @@ if (@$_REQUEST["ejecutar_campos_formato"]) {
 if ($_REQUEST['ejecutarLibreria']) {
     validarCamposObligatorios($_REQUEST['idformato']);
 }
- 

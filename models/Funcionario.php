@@ -35,7 +35,7 @@ class Funcionario extends Model
     protected $ventanilla_radicacion;
     protected $pertenece_nucleo;
     protected $token;
-    protected $dbAttributes;
+
 
     /**
      * @param int $id value for idfuncionario attribute
@@ -51,49 +51,52 @@ class Funcionario extends Model
      */
     protected function defineAttributes()
     {
-        // set the safe attributes to update and consult
-        $safeDbAttributes = [
-            'funcionario_codigo',
-            'login',
-            'nombres',
-            'apellidos',
-            'firma',
-            'firma_temporal',
-            'firma_original',
-            'estado',
-            'fecha_ingreso',
-            'clave',
-            'nit',
-            'perfil',
-            'debe_firmar',
-            'tipo',
-            'ultimo_pwd',
-            'mensajeria',
-            'email',
-            'sistema',
-            'email_contrasena',
-            'direccion',
-            'telefono',
-            'fecha_fin_inactivo',
-            'intento_login',
-            'foto_original',
-            'foto_recorte',
-            'foto_cordenadas',
-            'ventanilla_radicacion',
-            'pertenece_nucleo',
-            'token'
-        ];
-
-        // set the date attributes on the schema
-        $dateAttributes = [
-            'fecha_ingreso',
-            'ultimo_pwd',
-            'fecha_fin_inactivo'
-        ];
-
         $this->dbAttributes = (object)[
-            'safe' => $safeDbAttributes,
-            'date' => $dateAttributes
+            'safe' => [
+                'funcionario_codigo',
+                'login',
+                'nombres',
+                'apellidos',
+                'firma',
+                'firma_temporal',
+                'firma_original',
+                'estado',
+                'fecha_ingreso',
+                'clave',
+                'nit',
+                'perfil',
+                'debe_firmar',
+                'tipo',
+                'ultimo_pwd',
+                'mensajeria',
+                'email',
+                'sistema',
+                'email_contrasena',
+                'direccion',
+                'telefono',
+                'fecha_fin_inactivo',
+                'intento_login',
+                'foto_original',
+                'foto_recorte',
+                'foto_cordenadas',
+                'ventanilla_radicacion',
+                'pertenece_nucleo',
+                'token'
+            ],
+            'date' => [
+                'fecha_ingreso',
+                'ultimo_pwd',
+                'fecha_fin_inactivo'
+            ],
+            'labels' => [
+                'estado' => [
+                    'label' => 'Estado',
+                    'values' => [
+                        0 => 'Inactivo',
+                        1 => 'Activo'
+                    ]
+                ]
+            ]
         ];
     }
 
