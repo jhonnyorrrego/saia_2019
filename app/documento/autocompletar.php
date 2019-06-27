@@ -34,8 +34,10 @@ try {
 
     $s = htmlentities(strtolower(trim($_REQUEST['query'])));
     $concat = StaticSql::concat([
-        'numero',
-        'LOWER(a.descripcion)',
+        "numero",
+        "' '",
+        "LOWER(a.descripcion)",
+        "' '",
         StaticSql::getDateFormat('b.fecha', 'Y-m-d')
     ]);
 

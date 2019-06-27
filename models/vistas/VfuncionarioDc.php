@@ -40,7 +40,7 @@ class VfuncionarioDc extends Funcionario
     protected $fecha_final;
     protected $creacion_dc;
     protected $tipo_dc;
-    
+
 
     /**
      * @param int $id value for idfuncionario attribute
@@ -137,14 +137,20 @@ class VfuncionarioDc extends Funcionario
      */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
+        $concat = StaticSql::concat([
+            "nombres",
+            "' '",
+            "apellidos",
+            "' '",
+            "cargo",
+        ]);
         $sql = <<<SQL
         SELECT 
             {$field},idfuncionario,nombres,apellidos,cargo
         FROM 
             vfuncionario_dc
         WHERE
-            LOWER(CONCAT(nombres,CONCAT(' ', CONCAT(apellidos,CONCAT(' ', cargo))))) 
-                LIKE '%{$term}%' AND
+            LOWER({$concat}) LIKE '%{$term}%' AND
             estado = 1 AND
             estado_dc = 1                 
 SQL;

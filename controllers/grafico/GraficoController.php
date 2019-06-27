@@ -31,6 +31,24 @@ abstract class GraficoController
     protected $showToolbox = true;
 
     /**
+     * filtro para aplicar a la consulta sql
+     *
+     * @var integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    protected $filterId;
+
+    /**
+     * cadena de condicion adicional
+     *
+     * @var string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    protected $filterCondition;
+
+    /**
      * setea la propiedad Grafico
      *
      * @param Grafico $grafico
@@ -52,6 +70,19 @@ abstract class GraficoController
     public abstract function generate();
 
     /**
+     * setea el id filtro
+     *
+     * @param integer $filterId idbusqueda_filtro_temp
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public function setFilter($filterId = 0)
+    {
+        $this->filterId = $filterId;
+    }
+
+    /**
      * ejecuta el sql para obtener los datos del grafico
      *
      * @return array
@@ -60,7 +91,8 @@ abstract class GraficoController
      */
     public function getValues()
     {
-        $query = StaticSql::search($this->Grafico->query);
+        $sql = $this->getSql();
+        $query = StaticSql::search($sql);
 
         $stats = [];
         $field = $this->Grafico->columna;
@@ -73,6 +105,58 @@ abstract class GraficoController
         }
 
         return $stats;
+    }
+
+    /**
+     * genera el sql para ser ejecutado
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public function getSql()
+    {
+        global $ruta_db_superior;
+
+        if ($this->Grafico->librerias) {
+            include_once $ruta_db_superior . $this->Grafico->librerias;
+        }
+
+        $this->generateFilterCondition();
+        $sql = UtilitiesController::sqlGetFunctionValue($this->Grafico->query);
+
+        $groupPosition = strpos(strtolower($sql), 'group by');
+        $wherePosition = strpos(strtolower($sql), 'where ');
+        if ($wherePosition === false) {
+            $prefix =  ' where ';
+        } else {
+            $prefix = ' and ';
+            $sql = substr_replace($sql, ") ", $groupPosition - 1, 1);
+            $sql = substr_replace($sql, "where (", $wherePosition, 6);
+        }
+
+        $groupPosition = strpos(strtolower($sql), 'group by');
+        $sql = substr_replace($sql, " {$prefix} ({$this->filterCondition}) ", $groupPosition - 1, 1);
+
+        return $sql;
+    }
+
+    /**
+     * genera la condicion adicional para aplicar
+     * filtros al grafico
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public function generateFilterCondition()
+    {
+        if (!$this->filterId) {
+            $this->filterCondition = '1=1';
+        } else {
+            $BusquedaFiltroTemp = new BusquedaFiltroTemp($this->filterId);
+            $this->filterCondition = UtilitiesController::convertTemporalFilter($BusquedaFiltroTemp->detalle);
+        }
     }
 
     /**
@@ -120,8 +204,6 @@ abstract class GraficoController
         $this->configuration->toolbox = [
             'feature' => $buttons
         ];
-
-
 
         return $this->configuration;
     }

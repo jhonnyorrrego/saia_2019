@@ -2,9 +2,9 @@
 class SqlSqlServer extends Sql
 {
 
-    public function __construct($conn, $motorBd)
+    public function __construct(Conexion $Conexion)
     {
-        parent::__construct($conn, $motorBd);
+        return parent::__construct($Conexion);
     }
 
     /*

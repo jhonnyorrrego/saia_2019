@@ -67,12 +67,17 @@ $(function() {
     }
 
     function paintGraph(data) {
-        let container = $('<div>', {
-            id: `graph_${data.id}`,
-            class: 'col-12 col-md-4'
-        });
-        $('#graph_list').append(container);
-        container.height(container.width());
+        let container = null;
+        if (!$(`#graph_${data.id}`).length) {
+            container = $('<div>', {
+                id: `graph_${data.id}`,
+                class: 'col-12 col-md-4'
+            });
+            $('#graph_list').append(container);
+            container.height(container.width());
+        } else {
+            container = $(`#graph_${data.id}`);
+        }
 
         if (data.json.toolbox && data.json.toolbox.feature) {
             for (let object in data.json.toolbox.feature) {
@@ -84,7 +89,7 @@ $(function() {
             }
         }
 
-        var graph = echarts.init(container[0]);
+        var graph = echarts.init(container[0], 'walden');
         graph.setOption(data.json);
     }
 
@@ -98,7 +103,7 @@ $(function() {
 
     function findComponent(ga, callback) {
         let graphName = ga.getOption().series[0].name;
-        let graph = Object.values(graphs).find(g => g.nombre == graphName);
+        let graph = Object.values(graphs).find(g => g.name == graphName);
 
         $.post(
             `${params.baseUrl}app/busquedas/consulta_componente.php`,
@@ -121,13 +126,15 @@ $(function() {
         );
     }
 
-    function openPanel(data) {
+    function openPanel(component, graph) {
+        var routeParams = $.param({
+            idbusqueda_componente: component.idbusqueda_componente,
+            idbusqueda_filtro_temp: graph.filterId
+        });
         var params = {
             kConnector: 'iframe',
-            url: `${data.url}?idbusqueda_componente=${
-                data.idbusqueda_componente
-            }`,
-            kTitle: data.etiqueta
+            url: `${component.url}?${routeParams}`,
+            kTitle: component.etiqueta
         };
 
         parent.crear_pantalla_busqueda(params);
@@ -135,7 +142,7 @@ $(function() {
 
     function openModal(component, graph) {
         top.topModal({
-            url: params.baseUrl + graph.busqueda,
+            url: params.baseUrl + graph.searchRoute,
             params: {
                 idbusqueda_componente: component.idbusqueda_componente
             },
@@ -152,8 +159,36 @@ $(function() {
                 }
             },
             onSuccess: function(data) {
-                console.log(data);
+                if (data.exito) {
+                    let parts = data.filtro.split('=');
+                    graph.filterId = parts[1];
+                    graphs[graph.id] = graph;
+                    filterGraph(graph);
+                }
             }
         });
+    }
+
+    function filterGraph(graph) {
+        $.post(
+            `${params.baseUrl}app/graficos/generar_json.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                graph: graph.id,
+                filterId: graph.filterId
+            },
+            function(response) {
+                if (response.success) {
+                    paintGraph(response.data);
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });

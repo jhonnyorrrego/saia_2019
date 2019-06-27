@@ -65,9 +65,7 @@ function get_name($userId, $name, $lastName)
 function get_state($state)
 {
     $Funcionario = new Funcionario();
-    $Funcionario->estado = $state;
-
-    return $Funcionario->getState();
+    return $Funcionario->getValueLabel('estado', (int)$state);
 }
 
 /**

@@ -460,10 +460,8 @@ function phpmkr_error()
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn = null)
+function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = null)
 {
-    global $sql;
-
     $sql = "SELECT ";
     $sql .= $campos ? $campos : "*";
     $sql .= " FROM {$tabla}";
@@ -478,53 +476,35 @@ function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn = null)
     $return['sql'] = $sql;
     return $return;
 }
-/*
-<Clase>
-<Nombre>busca_filtro_tabla
-<Parametros>$campos: columnas que se van a seleccionar
-            $tabla: Tabla(s) desde la(s) que se va a seleccionar los datos
-            $filtro: where de la consulta
-            $orden: columna por la que se ordenaran los datos
-            $inici: No registro donde inicia la consulta
-            $registros:cantidad de registros que deben consultarse
-<Responsabilidades>Invocar la busqueda a la base de datos y retornar el resultado de la misma en un arreglo
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * ejecuta una busqueda sobre la base de datos
+ * con un limite
+ *
+ * @param string $campos
+ * @param string $tabla
+ * @param string $filtro
+ * @param string $orden
+ * @param string $inicio registro inicial
+ * @param string $registros cantidad de registros a consultar
+ * @param string $conn
+ * @return void
  */
 function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn)
 {
-    global $sql, $conn;
+    $sql = "SELECT ";
+    $sql .= $campos ? $campos : "*";
+    $sql .= " FROM {$tabla}";
+    $sql .= $filtro ? " WHERE {$filtro} " : ' ';
+    $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
+        $orden : "ORDER BY {$orden} ") : '';
+    $sql = htmlspecialchars_decode($sql);
 
-    $retorno = array();
-    $temp = array();
-    $retorno["tabla"] = $tabla;
-    $sql = "Select ";
-    if ($campos)
-        $sql .= $campos;
-    else $sql .= "*";
-    if ($tabla)
-        $sql .= " FROM " . $tabla;
-
-    if ($filtro)
-        $sql .= " WHERE " . str_replace('"', "'", $filtro);
-    if ($orden) {
-        $sql .= $orden;
-    }
-    $sql = htmlspecialchars_decode((($sql)));
-    $rs = $conn->Ejecutar_Limit($sql, $inicio, ($inicio + $registros), $conn);
-    $temp = phpmkr_fetch_array($rs);
-
-    $retorno["sql"] = $sql;
-
-    for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++)
-        array_push($retorno, $temp);
-    $retorno["numcampos"] = $i;
-    phpmkr_free_result($rs);
-
-    return ($retorno);
+    $return = StaticSql::search($sql, $inicio, $inicio + $registros);
+    $return['numcampos'] = count($return);
+    $return['tabla'] = $tabla;
+    $return['sql'] = $sql;
+    return $return;
 }
 
 /**
@@ -1747,8 +1727,7 @@ de tipo select
  */
 function fecha_db_obtener($campo, $formato = null)
 {
-    global $conn;
-    return $conn->fecha_db_obtener($campo, $formato);
+    return StaticSql::getDateFormat($campo, $formato);
 } // Fin Funcion fecha_db_obtener
 
 /*
@@ -1766,8 +1745,7 @@ de tipo select
 
 function fecha_db_almacenar($fecha, $formato = null)
 {
-    global $conn;
-    return $conn->fecha_db_almacenar($fecha, $formato);;
+    return StaticSql::setDateFormat($fecha, $formato);
 }
 
 /*<Clase>
@@ -1834,13 +1812,11 @@ function compara_fechas($fecha_control, $fecha_inicial)
  */
 function usuario_actual($campo)
 {
-    global $conn;
-
     if (!SessionController::getLogin()) {
         SessionController::logout("Su sesión ha expirado, por favor ingrese de nuevo.");
     } else {
         $login = SessionController::getLogin();
-        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario A", "A.login='" . $login . "'", "", $conn);
+        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario", "login='" . $login . "'");
         if ($dato["numcampos"]) {
             if ($dato[0]["estado"] == 1) {
                 return $dato[0][$campo];
@@ -1912,7 +1888,7 @@ function crear_destino($destino)
             return ("");
         }
     }
-    return ($destino);
+    return $destino;
 }
 
 /*<Clase>
@@ -2012,21 +1988,6 @@ function decodifica_encabezado($texto)
     } else {
         return ($texto);
     }
-}
-
-function parsear_cadena($string)
-{
-    $string = str_replace("|+|", " AND ", $string);
-    $string = str_replace("|=|", " = ", $string);
-    $string = str_replace("|like|", " like ", $string);
-    $string = str_replace("|-|", " OR ", $string);
-    $string = str_replace("|<|", " < ", $string);
-    $string = str_replace("|>|", " > ", $string);
-    $string = str_replace("|>=|", " >= ", $string);
-    $string = str_replace("|<=|", " <= ", $string);
-    $string = str_replace("|in|", " in ", $string);
-    $string = str_replace("||", " LIKE ", $string);
-    return $string;
 }
 
 function parsear_comilla_sencilla_cadena($cadena)

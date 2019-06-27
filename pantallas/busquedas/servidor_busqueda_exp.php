@@ -92,8 +92,7 @@ if ($pos !== false) {
 $condicion = crear_condicion_sql($busqueda["idbusqueda"], $busqueda["idbusqueda_componente"]);
 $funciones_condicion = parsear_datos_plantilla_visual($condicion);
 
-$valor_variables = array();
-if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
+if ($funciones_condicion && !empty($_REQUEST["variable_busqueda"])) {
     $variables_final = array();
     $variables1 = explode(",", $_REQUEST["variable_busqueda"]);
     foreach ($variables1 as $key => $valor) {
@@ -103,13 +102,12 @@ if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
 }
 
 foreach ($funciones_condicion as $key => $valor) {
-    unset($valor_variables);
     $valor_variables = array();
     $funcion = explode("@", $valor);
     $variables = explode(",", $funcion[1]);
     $cant_variables = count($variables);
     for ($h = 0; $h < $cant_variables; $h++) {
-        if (@$variables_final[$variables[$h]])
+        if (isset($variables_final[$variables[$h]]))
             array_push($valor_variables, $variables_final[$variables[$h]]);
         else
             array_push($valor_variables, $variables[$h]);
@@ -128,7 +126,7 @@ if (!empty($_REQUEST["idbusqueda_filtro_temp"])) {
     if ($filtro_temp["numcampos"]) {
         $cadena = '';
         for ($i = 0; $i < $filtro_temp["numcampos"]; $i++) {
-            $cadena .= parsear_cadena($filtro_temp[$i]["detalle"]);
+            $cadena .= UtilitiesController::convertTemporalFilter($filtro_temp[$i]["detalle"]);
             if (isset($filtro_temp[$i + 1]["detalle"])) {
                 $cadena .= ' AND ';
             }
@@ -179,7 +177,7 @@ if ($agrupar_consulta != "") {
 }
 
 if ($sidx && $sord) {
-    $ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;
+    $ordenar_consulta2 .= "{$sidx} {$sord}";
 }
 
 $condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
@@ -343,37 +341,20 @@ echo json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
 function crear_condicion_sql($idbusqueda, $idcomponente)
 {
-    global $conn;
-    $condicion_filtro = '';
-    $datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
-    if (!$datos_condicion["numcampos"]) {
-        $datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
-        $condicion = $datos_condicion[0]["codigo_where"];
-    } else {
-        for ($i = 0; $i < $datos_condicion["numcampos"]; $i++) {
-            if (@$datos_condicion[$i]["comparacion"] == '') {
-                $datos_condicion[$i]["comparacion"] = "AND";
-            }
-            if (@$datos_condicion[$i]["idbusqueda_condicion"]) {
-                if ($i > 0) {
-                    $condicion .= " " . $datos_condicion[$i]["comparacion"] . " ";
-                }
-                $condicion .= $datos_condicion[$i]["codigo_where"];
-            }
-        }
-    }
-    if ($condicion == "") {
-        if (@$_REQUEST["condicion_adicional"]) {
+    $datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "");
+    $condicion = $datos_condicion[0]["codigo_where"];
+
+    if (!$condicion) {
+        if (!empty($_REQUEST["condicion_adicional"])) {
             $condicion = $_REQUEST["condicion_adicional"];
         } else {
             $condicion = ' 1=1 ';
         }
-        return ('(' . $condicion . ')');
-    }
-    if (@$_REQUEST["condicion_adicional"]) {
+    } else if (!empty($_REQUEST["condicion_adicional"])) {
         $condicion .= $_REQUEST["condicion_adicional"];
     }
-    return ('(' . $condicion . ')');
+
+    return '(' . $condicion . ')';
 }
 
 function parsear_datos_plantilla_visual($cadena, $campos = array())

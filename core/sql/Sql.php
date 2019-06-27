@@ -4,7 +4,6 @@ abstract class Sql
 	public $Conn;
 	public $res = null;
 	protected $consulta;
-	protected $motor;
 	protected $error = null;
 	protected $nombres_campos = [];
 	protected $tipos_campos = [];
@@ -13,38 +12,37 @@ abstract class Sql
 	protected $ultimoInsert = null;
 	protected $filas = 0;
 
-	public function __construct($conn, $motorBd)
+	public function __construct(Conexion $Conexion)
 	{
-		$this->Conn = $conn;
-		$this->motor = $motorBd;
+		$this->Conn = $Conexion;
 	}
 
 	/**
-	 * Devuelve una instancia a partir de los datos de conexion y el tipo de motor
-	 * @param $conn
-	 * @param $motorBd
+	 * obtiene un objete para manipular la base de datos
+	 *
 	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-06-26
 	 */
 	public static function getInstance()
 	{
-		$conn = new Conexion();
-		$motorBd = $conn->Motor;
+		$Conexion = new Conexion();
 
-		switch ($motorBd) {
+		switch ($Conexion->Motor) {
 			case "MySql":
-				$instance = new SqlMysql($conn, $motorBd);
+				$instance = new SqlMysql($Conexion);
 				break;
 			case "Oracle":
-				$instance = new SqlOracle($conn, $motorBd);
+				$instance = new SqlOracle($Conexion);
 				break;
 			case "SqlServer":
-				$instance = new SqlSqlServer($conn, $motorBd);
+				$instance = new SqlSqlServer($Conexion);
 				break;
 			case "MSSql":
-				$instance = new SqlMsSql($conn, $motorBd);
+				$instance = new SqlMsSql($Conexion);
 				break;
 			case "Postgres":
-				$instance = new SqlPostgres($conn, $motorBd);
+				$instance = new SqlPostgres($Conexion);
 				break;
 			default:
 				$instance = null;
