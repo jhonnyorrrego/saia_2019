@@ -9,11 +9,11 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-require_once $ruta_db_superior . 'vendor/phpoffice/phpexcel/Classes/PHPExcel.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
 class Excelphp {
 
-	public static function leer_archivo_excel($archivo, $key = array()) {
+	public static function readFileExcel($archivo, $key = array(), $nomb_campos = array()) {
 		$ok1 = false;
 		if (in_array(1, $key)) {// Retorna las columnas con Numeros "1"
 			$ok1 = true;
@@ -26,12 +26,16 @@ class Excelphp {
 		if (in_array(3, $key)) {// Retorna las columnas con el encabezado "nombre"
 			$ok3 = true;
 		}
-		if (!$ok1 && !$ok2 && !$ok3) {
+		$ok4 = false;
+		if (in_array(4, $key)) {// Retorna las columnas con el nombre que le lleguen en $nomb_campos
+			$ok4 = true;
+		}
+		if (!$ok1 && !$ok2 && !$ok3 && !$ok4) {
 			$ok1 = true;
 		}
 
-		$inputFileType = PHPExcel_IOFactory::identify($archivo);
-		$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+		$inputFileType = IOFactory::identify($archivo);
+		$objReader = IOFactory::createReader($inputFileType);
 		$objReader -> setReadDataOnly(true);
 		$objPHPExcel = $objReader -> load($archivo);
 		$objWorksheet = $objPHPExcel -> getActiveSheet();
@@ -62,6 +66,9 @@ class Excelphp {
 				}
 				if ($ok3) {
 					$retorno[$i][$encabezado[$j]] = $cell -> getValue();
+				}
+				if ($ok4) {
+					$retorno[$i][$nomb_campos[$j]] = $cell -> getValue();
 				}
 				$j++;
 				$col++;
