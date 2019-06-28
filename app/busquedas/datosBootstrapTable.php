@@ -22,8 +22,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
         'rows' => $_REQUEST['pageSize'],
         'actual_row' => $actualRow,
         'key' => $Funcionario->getPK(),
-        'token' => FuncionarioController::generateToken($Funcionario, 5, true),
-        'ws' => 1
+        'token' => FuncionarioController::generateToken($Funcionario, 5, true)
     ];
 
     unset($_REQUEST['pageNumber'], $_REQUEST['pageSize']);

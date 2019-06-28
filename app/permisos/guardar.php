@@ -28,7 +28,7 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
     $Perfil->setAttributes([
         'nombre' => $_REQUEST['nombre']
     ]);
-  
+    
     if(!$Perfil->save()){
         $Response->success = 0;
         $Response->message = "Error al guardar";

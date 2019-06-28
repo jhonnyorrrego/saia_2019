@@ -15,7 +15,7 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 }
 echo ("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 echo ("<tree id=\"0\">\n");
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once ($ruta_db_superior . "pantallas/lib/buscar_patron_archivo.php");
 if($_REQUEST['funciones_nucleo']){
 	llena_funciones($_REQUEST["pantalla_idpantalla"]);

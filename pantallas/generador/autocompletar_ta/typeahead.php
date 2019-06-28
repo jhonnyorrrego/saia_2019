@@ -1,7 +1,7 @@
 <?php 
 $ruta_db_superior='';
 $ruta_actual='../saia/';
-include_once($ruta_actual."db.php");
+include_once $ruta_actual . 'core/autoload.php';
 include_once($ruta_actual."librerias_saia.php");
 echo(estilo_bootstrap());
 ?>

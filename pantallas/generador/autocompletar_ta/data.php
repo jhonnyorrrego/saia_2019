@@ -1,6 +1,6 @@
 <?php
 $ruta_actual='../saia/';
-include_once($ruta_actual."db.php");
+include_once $ruta_actual . 'core/autoload.php';
 $registros=@$_REQUEST["registros"];
 if(!$registros){
 	$registros=40;
