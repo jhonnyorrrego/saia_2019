@@ -9,21 +9,22 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	logear_funcionario_webservice("radicador_web");
 }
-include_once ($ruta_db_superior . "class_transferencia.php");
+include_once($ruta_db_superior . "class_transferencia.php");
 
-function color_logo_empresa() {
+function color_logo_empresa()
+{
 	global $conn, $ruta_db_superior;
 	$retorno = array("exito" => 1);
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 	if ($logo["numcampos"]) {
 		$ruta_archivo = json_decode($logo[0]["valor"]);
 		if (is_object($ruta_archivo)) {
-			$logo = StorageUtils::get_binary_file($logo[0]["valor"],false);
+			$logo = StorageUtils::get_binary_file($logo[0]["valor"], false);
 			if ($logo !== false) {
 				$retorno["logo"] = $logo;
 			}
@@ -52,11 +53,11 @@ function color_logo_empresa() {
 	}
 
 	ob_clean();
-	session_destroy();
 	return (json_encode($retorno));
 }
 
-function aprobar_devolver_documento($datos) {
+function aprobar_devolver_documento($datos)
+{
 	global $conn, $ruta_db_superior, $usuactual;
 	$datos = json_decode($datos, true);
 	$retorno = array();
@@ -113,9 +114,5 @@ function aprobar_devolver_documento($datos) {
 		$retorno['msn'] = "Por Favor ingrese nuevamente desde el link enviado al correo.";
 	}
 	ob_clean();
-	session_destroy();
 	return (json_encode($retorno));
 }
-
-session_destroy();
-?>

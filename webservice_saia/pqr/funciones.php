@@ -33,7 +33,6 @@ function radicar_documento_remoto($datos) {
 		}
 	}
 	if ($error == 1) {
-		session_destroy();
 		return (json_encode($retorno));
 	}
 	$_POST = $_REQUEST;
@@ -112,7 +111,6 @@ function radicar_documento_remoto($datos) {
 	}
 
 	ob_clean();
-	session_destroy();
 	return (json_encode($retorno));
 }
 
@@ -185,9 +183,5 @@ function consultar_pqr($datos) {
 	}
 
 	ob_clean();
-	session_destroy();
 	return (json_encode($retorno));
 }
-
-session_destroy();
-?>

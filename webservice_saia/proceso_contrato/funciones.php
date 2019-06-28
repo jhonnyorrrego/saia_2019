@@ -8,14 +8,15 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	logear_funcionario_webservice("radicador_web");
 }
-include_once ($ruta_db_superior . 'formatos/librerias/funciones_generales.php');
-include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
+include_once($ruta_db_superior . 'formatos/librerias/funciones_generales.php');
+include_once($ruta_db_superior . 'pantallas/qr/librerias.php');
 
-function consultar_datos_contrato($datos) {
+function consultar_datos_contrato($datos)
+{
 	global $conn, $ruta_db_superior;
 	$retorno = array();
 	$retorno['exito'] = 1;
@@ -32,7 +33,7 @@ function consultar_datos_contrato($datos) {
 				$info[$j]["estado_contrato"] = mostrar_valor_campo('estado_contrato', $form[0]["idformato"], $contrato[$j]["iddocumento"], 1);
 				$info[$j]["fecha_inicio"] = mostrar_valor_campo('fecha_acta', $form[0]["idformato"], $contrato[$j]["iddocumento"], 1);
 				$info[$j]["fecha_fin"] = mostrar_valor_campo('fecha_final_contrato', $form[0]["idformato"], $contrato[$j]["iddocumento"], 1);
-				$info[$j]["qr"] = mostrar_codigo_qr($form[0]["idformato"], $contrato[$j]["iddocumento"], 1,100,100);
+				$info[$j]["qr"] = mostrar_codigo_qr($form[0]["idformato"], $contrato[$j]["iddocumento"], 1, 100, 100);
 				$datos_hijos = array();
 				$hijos = busca_filtro_tabla("dc.*,s.nombre as nombre_serie", "ft_docs_contrato dc,documento d, serie s", "d.iddocumento=dc.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO') and s.idserie=dc.tipo_documento and dc.ft_identifica_contrato=" . $contrato[$j]["idft_identifica_contrato"], "estado_docs desc, fecha_vencimiento desc", $conn);
 				if ($hijos["numcampos"]) {
@@ -95,9 +96,5 @@ function consultar_datos_contrato($datos) {
 	}
 
 	ob_clean();
-	session_destroy();
 	return (json_encode($retorno));
 }
-
-session_destroy();
-?>

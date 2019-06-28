@@ -31,7 +31,7 @@ try {
 
     $Grafico = new Grafico($_REQUEST['graph']);
     $Response->data->json = $Grafico->configuracion ?
-        $Grafico->configuracion : $Grafico->generateConfiguration();
+        $Grafico->configuracion : $Grafico->generateConfiguration($_REQUEST['filterId']);
 
     $Response->data->id = $_REQUEST['graph'];
     $Response->success = 1;

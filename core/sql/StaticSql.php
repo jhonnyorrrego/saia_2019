@@ -30,12 +30,11 @@ class StaticSql
 
 
     /**
-     * Realiza una consulta a la DB
-     * retorna un array con los datos
+     * ejecuta una consulta
      *
-     * @param string $sql :  SQL select
-     * @param int $start : utilizar si necesita limit
-     * @param int $end : utilizar si necesita limit
+     * @param string $sql
+     * @param int $start limite inferior
+     * @param int $end : limite superior
      * @return array
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */

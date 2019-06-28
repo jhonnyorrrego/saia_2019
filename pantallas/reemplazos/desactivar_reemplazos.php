@@ -30,5 +30,3 @@ if ($activar_reemplazos["numcampos"]) {
 		procesar_reemplazo($activar_reemplazos[$i]["idreemplazo_saia"]);
 	}
 }
-@session_destroy();
-?>

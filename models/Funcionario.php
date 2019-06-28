@@ -141,18 +141,6 @@ class Funcionario extends Model
     }
 
     /**
-     * etiqueta del statdo actual
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019
-     */
-    public function getState()
-    {
-        return $this->estado = 1 ? 'Activo' : 'Inactivo';
-    }
-
-    /**
      * obtiene una foto del funcionario
      *
      * @param string $image attribute for find ej . foto_recorte foto_original
@@ -228,14 +216,18 @@ class Funcionario extends Model
      */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
+        $concat = StaticSql::concat([
+            "nombres",
+            "' '",
+            "apellidos"
+        ]);
         $sql = <<<SQL
             SELECT 
                 {$field},idfuncionario,nombres,apellidos
             FROM 
                 funcionario
             WHERE
-                LOWER(CONCAT(nombres,CONCAT(' ', apellidos))) 
-                LIKE '%{$term}%'
+                LOWER({$concat}) LIKE '%{$term}%'
 SQL;
 
         return self::findBySql($sql);

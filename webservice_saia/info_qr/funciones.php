@@ -9,14 +9,15 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	logear_funcionario_webservice("radicador_web");
 }
-include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
-include_once ($ruta_db_superior . 'formatos/librerias/funciones_generales.php');
+include_once($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
+include_once($ruta_db_superior . 'formatos/librerias/funciones_generales.php');
 
-function generar_html_info_qr($datos) {
+function generar_html_info_qr($datos)
+{
 	global $conn, $ruta_db_superior;
 	$datos = json_decode($datos, true);
 	$retorno = array();
@@ -25,7 +26,6 @@ function generar_html_info_qr($datos) {
 	$datos_decrypt = request_encriptado('key_cripto');
 	$iddoc = intval($datos_decrypt['id']);
 	if (!$iddoc) {
-		session_destroy();
 		return (json_encode($retorno));
 	} else {
 		$documento = busca_filtro_tabla("", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
@@ -33,10 +33,10 @@ function generar_html_info_qr($datos) {
 			$retorno["iddoc"] = $iddoc;
 			$retorno["info_tabla"]["N&uacute;mero_de_radicado"] = $documento[0]["numero"];
 			if (is_object($documento[0]["fecha"])) {
-				$documento[0]["fecha"] = $documento[0]["fecha"] -> format("Y-m-d H:i:s");
+				$documento[0]["fecha"] = $documento[0]["fecha"]->format("Y-m-d H:i:s");
 			}
 			if (is_object($documento[0]["fecha_creacion"])) {
-				$documento[0]["fecha_creacion"] = $documento[0]["fecha_creacion"] -> format("Y-m-d H:i:s");
+				$documento[0]["fecha_creacion"] = $documento[0]["fecha_creacion"]->format("Y-m-d H:i:s");
 			}
 			$retorno["info_tabla"]["Fecha_de_creaci&oacute;n"] = $documento[0]["fecha_creacion"];
 			$creador = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $documento[0]["ejecutor"], "", $conn);
@@ -78,13 +78,13 @@ function generar_html_info_qr($datos) {
 			$retorno["exito"] = 1;
 		}
 	}
-	session_destroy();
 	return (json_encode($retorno));
 }
 
-function items_novedad_despacho($datos) {
+function items_novedad_despacho($datos)
+{
 	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+	include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
 	$retorno = array();
 	$retorno['exito'] = 0;
 	$datos = json_decode($datos, true);
@@ -118,9 +118,5 @@ function items_novedad_despacho($datos) {
 			}
 		}
 	}
-	session_destroy();
 	return (json_encode($retorno));
 }
-
-session_destroy();
-?>

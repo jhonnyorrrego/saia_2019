@@ -25,6 +25,7 @@ class Grafico extends Model
     protected $titulo_x;
     protected $titulo_y;
     protected $busqueda;
+    protected $librerias;
     protected $titulo;
 
     //relations
@@ -54,7 +55,8 @@ class Grafico extends Model
                 'titulo_x',
                 'titulo_y',
                 'busqueda',
-                'titulo',
+                'librerias',
+                'titulo'
             ]
         ];
     }
@@ -76,14 +78,29 @@ class Grafico extends Model
     }
 
     /**
+     * obtiene la primera semaforizacion del grafico
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public function getPrincipalCharacterization()
+    {
+        return CaracterizacionGrafico::findByAttributes([
+            'fk_grafico' => $this->getPK()
+        ], null, 'orden');
+    }
+
+    /**
      * delega la creacion del array de configuracion
      * basado en el tipo de grafico
      *
      * @return array
+     * @param $filterId idbusqueda_filtro_temp
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-06-20
      */
-    public function generateConfiguration()
+    public function generateConfiguration($filterId = null)
     {
         $className = self::GRAPHS[$this->tipo];
 
@@ -92,6 +109,7 @@ class Grafico extends Model
         }
 
         $Instance = new $className($this);
+        $Instance->setFilter($filterId);
         return $Instance->generate();
     }
 }

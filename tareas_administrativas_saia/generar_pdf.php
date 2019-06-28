@@ -25,10 +25,7 @@ if ($documentos['numcampos']) {
 		curl_close($ch);
 		/*TERMINA GENERACION*/
 	}
-	@session_destroy();
-	unset($_SESSIONS);
 	redirecciona("http://" . RUTA_PDF_LOCAL . "/tareas_administrativas_saia/generar_pdf.php");
 } else {
 	die("Termino");
 }
-?>

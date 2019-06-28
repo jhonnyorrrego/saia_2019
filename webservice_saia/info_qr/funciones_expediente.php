@@ -33,7 +33,6 @@ function cargar_datos_qr_exp_caja($datos) {
 		}
 	}
 	if (!$id) {
-		session_destroy();
 		$retorno["msn"] = "Error al recuperar el identificador";
 		return (json_encode($retorno));
 	} else {
@@ -149,9 +148,5 @@ function cargar_datos_qr_exp_caja($datos) {
 		}
 		$retorno["exito"] = 1;
 	}
-	session_destroy();
 	return (json_encode($retorno));
 }
-
-session_destroy();
-?>

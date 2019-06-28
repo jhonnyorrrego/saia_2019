@@ -89,6 +89,9 @@ final class Version20190620161146 extends AbstractMigration
             'length' => 200,
             'notnull' => true
         ]);
+        $table->addColumn('librerias', 'text', [
+            'notnull' => false
+        ]);
         $table->addColumn('titulo', 'string', [
             'length' => 200,
             'notnull' => false
