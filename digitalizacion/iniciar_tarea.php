@@ -9,7 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once($ruta_db_superior."core/autoload.php");
+include_once $ruta_db_superior . "core/autoload.php";
 
 $dir_ip = @$_REQUEST["ipaddr"];
 $iddoc = @$_REQUEST["doc"];
@@ -42,4 +42,5 @@ if ($dir_ip && $iddoc && $idfunc) {
 } else {
 	$resp["mensaje"] = "Datos insuficientes para registrar la tarea";
 }
+
 echo json_encode($resp);

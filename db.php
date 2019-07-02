@@ -635,389 +635,327 @@ function extrae_campo($arreglo, $campo, $banderas = "U,M")
     }
     return ($retorno);
 }
-
 /*
 <Clase>
 <Nombre>sincronizar_carpetas
 <Parametros>$conn: conexion activa con la base de datos
 <Responsabilidades>Esta funcion genera una sincronizacion de la carpeta temporal, tomando las imagenes e indexandolas
-                   de forma automatica si no logra encontrar el tipo documental lo envia a  una carpeta sin indexacion
+                   de forma automatica si no logra encontrar el tipo documental lo envia a  una carpeta sin indexacion 
 <Notas>
 <Excepciones>
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
- */
-function sincronizar_carpetas($tipo, $conn)
-{
-    $idimagenes = array();
-    $max_salida = 6;
-    $ruta_db_superior = $ruta_arch_tmp = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta_arch_tmp . "db.php")) {
-            $ruta_db_superior = $ruta_arch_tmp;
-        }
-        $ruta_arch_tmp .= "../";
-        $max_salida--;
-    }
-    include_once($ruta_db_superior . "binario_func.php");
-    $rutas = array();
-    $usr_tmp_dir = "";
-    $dir2 = "";
-    $copiar = 0;
-    $peso = 2000000;
-    $tabla = "pagina";
-    $estado = "";
-    $configuracion = busca_filtro_tabla("*", "configuracion A", "A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'", "A.idconfiguracion DESC", $conn);
-    for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
-        switch ($configuracion[$i]["nombre"]) {
-            case "ruta_temporal":
-                $usr_tmp_dir = SessionController::getTemporalDir();
-                break;
-            case "ruta_documentos":
-                $dir2 = $configuracion[$i]["valor"];
-                break;
-            case "copia":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $copia = $configuracion[$i]["valor"];
-                } else {
-                    $copia = 0;
-                }
-                break;
-            case "genera_pdf":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $pdf = $configuracion[$i]["valor"];
-                } else {
-                    $pdf = 0;
-                }
-                break;
-            case "ancho_imagen":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $imgancho = $configuracion[$i]["valor"];
-                } else {
-                    $imgancho = 600;
-                }
-                break;
-            case "alto_imagen":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $imgalto = $configuracion[$i]["valor"];
-                } else {
-                    $imgalto = 700;
-                }
-                break;
-            case "ancho_miniatura":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $miniatura_ancho = $configuracion[$i]["valor"];
-                } else {
-                    $miniatura_ancho = 90;
-                }
-                break;
-            case "alto_miniatura":
-                if (is_numeric($configuracion[$i]["valor"])) {
-                    $miniatura_alto = $configuracion[$i]["valor"];
-                } else {
-                    $miniatura_alto = 120;
-                }
-                break;
-        }
-    }
-    //Define si se almacena en la BD o en archivos
+*/
+function sincronizar_carpetas($tipo,$conn){
+	$idimagenes = array();
+	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+  $ruta_db_superior=$ruta="";
+  while($max_salida>0)
+  {
+  if(is_file($ruta."db.php"))
+  {
+  $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+  }
+	include_once($ruta_db_superior."binario_func.php");
+	$rutas=array();
+	$dir = "";
+	$dir2="";
+	$copiar=0;
+	$peso=2000000;
+	$tabla="pagina";
+	$estado="";
+	$configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'","A.idconfiguracion DESC",$conn);
+  for($i=0;$i<$configuracion["numcampos"];$i++){
+	  switch($configuracion[$i]["nombre"]){
+		  case "ruta_temporal": 
+		  	$dir=$configuracion[$i]["valor"]."_".$_SESSION["LOGIN".LLAVE_SAIA];
+		  break;
+		  case "ruta_documentos": 
+		  	$dir2=$configuracion[$i]["valor"];
+		  break;
+		  case "copia": 
+			  if(is_numeric($configuracion[$i]["valor"]))
+			  	$copia=$configuracion[$i]["valor"];
+			  else $copia=0;
+		  break;
+		  case "genera_pdf": 
+			  if(is_numeric($configuracion[$i]["valor"])){ 
+			  	$pdf=$configuracion[$i]["valor"];
+			  }
+		  	else $pdf=0;
+		  break;
+		  case "ancho_imagen":
+			  if(is_numeric($configuracion[$i]["valor"])){
+			  	$imgancho=$configuracion[$i]["valor"];
+			  }
+		  	else $imgancho=600;
+		  break; 
+		  case "alto_imagen":
+			  if(is_numeric($configuracion[$i]["valor"])){
+			  	$imgalto=$configuracion[$i]["valor"];
+			  }
+		  	else $imgalto=700;
+		  break;
+		  case "ancho_miniatura":
+			  if(is_numeric($configuracion[$i]["valor"])){
+			  	$miniatura_ancho=$configuracion[$i]["valor"];
+			  }
+		  	else $miniatura_ancho=90;
+		  break;
+		  case "alto_miniatura":
+			  if(is_numeric($configuracion[$i]["valor"])){
+			  	$miniatura_alto=$configuracion[$i]["valor"];
+			  }
+			  else $miniatura_alto=120;
+		  break;
+	  }
+	}
+    /// Define si se almacena en la BD o en archivos
 
-    $config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "", $conn);
-    if ($config["numcampos"]) {
-        $tipo_almacenamiento = $config[0]['valor'];
-    } else { // Si no encuentra el registro en configuracion almacena en archivo
-        $tipo_almacenamiento = "archivo";
-    }
-
-    if ($tipo_almacenamiento == "archivo") { // Se alcenan paginas y miniaturas en la BD
-        $tipo_almacenamiento == "archivos";
-        if (is_dir($usr_tmp_dir)) { // ruta_temporal
-            $directorio = opendir("$usr_tmp_dir");
-        } else {
-            $directorio = null;
-        }
-        if ($directorio) { //ruta_temporal
-            $cont = 1;
-            $ruta_arch_tmp = "";
-            $cad = "";
-            $cad_temp = "";
-            $numero_pagina = "";
-            //Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
-            while ($archivo = readdir($directorio)) {
-                if ($archivo != "." && $archivo != ".." && !is_dir($archivo)) {
-                    $archivos[] = $archivo;
-                }
-            }
-            natsort($archivos);
-            $alm_paginas = new SaiaStorage("archivos");
-            foreach ($archivos as $archivo) {
-                $estado = "";
-                $dir_dst = "";
-                $ruta_arch_tmp = $usr_tmp_dir . "/" . $archivo;
-                $path = pathinfo($ruta_arch_tmp);
-                if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
-
-                    $ic = strrpos($path["basename"], "#");
-                    $fc = strrpos($path["basename"], ")");
-                    $cad = substr($path["basename"], $ic + 1, $fc - $ic - 1);
-                    $punto = strrpos($path["basename"], ".");
-                    $cadpunto = substr($path["basename"], 0, $punto);
-                    $pag = strrpos($cadpunto, "g");
-                    $cont = substr($cadpunto, $pag + 1);
-                    if ($cad == "") {
-                        $cad = "0";
+	$config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
+  if($config["numcampos"]){
+  	$tipo_almacenamiento=$config[0]['valor'];
+  }
+  else 
+    $tipo_almacenamiento="archivo"; // Si no encuentra el registro en configuracion almacena en archivo
+      
+	if($tipo_almacenamiento=="archivo"){// Se alcenan paginas y miniaturas en la BD
+  	if(is_dir($dir))  //ruta_temporal
+	 		$directorio=opendir("$dir");
+   	else
+    	$directorio=null;
+	 
+		if($directorio){//ruta_temporal 
+			$cont=1;
+			$ruta="";
+			$cad="";
+			$cad_temp="";
+			$numero_pagina = "";
+			///Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+			//$archivo = readdir($directorio);
+		 	while ($archivo = readdir($directorio)){ 
+	   		if ($archivo !="." && $archivo !=".." && !is_dir($archivo))
+	      	$archivos[]=$archivo;   
+	  	}
+			natsort ($archivos); // Con ksort($entradas) mostras los menos recientes
+			foreach ($archivos as $archivo){
+				$estado="";
+				$dir3="";
+				$ruta=$dir."/".$archivo;
+				$path=pathinfo($ruta);
+				if($archivo && $archivo!="." && $archivo!=".." && is_file("$archivo")!="dir" && (strtolower($path['extension'])=='jpg' || strtolower($path['extension'])=='jpeg') && @filesize($archivo)<=$peso){
+	
+					$ic=strrpos($path["basename"],"#");
+					$fc=strrpos($path["basename"],")");
+					$cad=substr($path["basename"],$ic+1,$fc-$ic-1);
+					$punto=strrpos($path["basename"],".");
+					$cadpunto=substr($path["basename"],0,$punto);
+					$pag=strrpos($cadpunto,"g");
+					$cont=substr($cadpunto,$pag+1);
+					if($cad==""){
+						$cad="0";
                     }
-                    $fieldList["id_documento"] = $cad;
-
-                    $datos_doc = busca_filtro_tabla("estado," . fecha_db_obtener('fecha', 'Y-m') . " as fecha,iddocumento", "documento", "iddocumento=" . $fieldList["id_documento"], "", $conn);
-                    $estado = $datos_doc[0]["estado"];
-                    $fecha = $datos_doc[0]["fecha"];
-
-                    $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
-                    $numero_pagina = $paginas["numcampos"];
-                    // Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
-                    //$ruta_imagenes = ruta_almacenamiento("imagenes");
-                    $alm_imagenes = new SaiaStorage("imagenes");
-                    $cad2 = $fieldList["id_documento"];
-                    $dir_dst = $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
-                    $ruta_dir = $estado . "/" . $fecha . "/" . $cad2;
-                    //crear_destino($dir_dst);
-
-                    if ($numero_pagina != "") {
-                        $numero_pagina = intval($numero_pagina) + 1;
-                    } else {
-                        $numero_pagina = 1;
-                    }
-                    $ruta_img_dst = $dir_dst . "doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg";
-
-                    //NUEVO. Para redimensionar en memoria
-                    $imagine = new Imagine();
-                    $imagen = $imagine->open($ruta_arch_tmp);
-                    $width = $imagen->getSize()->getWidth();
-                    $height = $imagen->getSize()->getHeight();
-                    if ($imgancho && ($width < $height)) {
-                        $imgancho = ($imgalto / $height) * $width;
-                    } else {
-                        $imgalto = ($imgancho / $width) * $height;
-                    }
-                    $size = new Box($imgancho, $imgalto);
-                    //$image = $imagine->create($size);
-                    $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
-                    $redim = $imagen->resize($size);
-                    //FIN NUEVO. Para redimensionar en memoria
-                    //print_r($redim);die();
-                    if ($redim) {
-                        @unlink($ruta_arch_tmp);
-                        $ruta2 = $ruta_img_dst;
-                        $dirminiatura = $ruta_dir . "/miniaturas";
-                        $ruta_img_min = $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg";
-                        /*if (! is_dir($dirminiatura . "/")) {
-							if (!mkdir($dirminiatura . "/", 0777)) {
-								alerta("Problemas al crear la carpeta " . $dirminiatura . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
+                    
+					$fieldList["id_documento"]=$cad;
+					
+                $datos_doc=busca_filtro_tabla("estado,".fecha_db_obtener('fecha','Y-m')." as fecha,iddocumento","documento","iddocumento=".$fieldList["id_documento"],"",$conn);
+	  			$estado = $datos_doc[0]["estado"];
+	  			$fecha = $datos_doc[0]["fecha"];
+	
+	  			$paginas=busca_filtro_tabla("A.pagina,A.ruta","".$tabla." A","A.id_documento=".$fieldList["id_documento"],"A.pagina",$conn);
+	  			$numero_pagina = $paginas["numcampos"];
+	  			
+					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+					$ruta_imagenes=ruta_almacenamiento("imagenes");
+	    		$cad2=$fieldList["id_documento"];
+					$dir3=$ruta_imagenes.$estado."/".$fecha."/".$cad2."/".$dir2."/";	
+	    		$ruta_dir =$ruta_imagenes.$estado."/".$fecha."/".$cad2;
+					crear_destino($dir3);
+	
+					if($numero_pagina<>"")
+		 				$numero_pagina=intval($numero_pagina)+1;
+					else
+	   				$numero_pagina=1;
+					
+					if(cambia_tam($ruta,$dir3."doc".$fieldList["id_documento"]."pag".$numero_pagina.".jpg",$imgancho,$imgalto,1)){
+						@unlink($ruta);
+						$ruta2=$dir3."doc".$fieldList["id_documento"]."pag".$numero_pagina.".jpg";
+						//$dirminiatura="../miniaturas/documentos/"; 
+						$dirminiatura=$ruta_dir."/miniaturas";
+	  				if(!is_dir($dirminiatura."/")){
+							if(!mkdir($dirminiatura."/",0777)){
+								alerta("Problemas al crear la carpeta ".$dirminiatura."/"." de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
 							}
 						}
-						chmod($dirminiatura . "/", PERMISOS_CARPETAS);*/
-                        $alm_paginas->almacenar_contenido($ruta_img_dst, $imagen->get('jpeg'));
-                        $alm_paginas->almacenar_contenido($ruta_img_min, $minitura->get('jpeg'));
-                        $ruta_pagina = array("servidor" => $alm_paginas->get_ruta_servidor(), "ruta" => $ruta_img_dst);
-                        $fieldList["ruta"] = json_encode($ruta_pagina);
-                        $ruta_miniatura = array("servidor" => $alm_paginas->get_ruta_servidor(), "ruta" => $ruta_img_min);
-                        $fieldList["imagen"] = json_encode($ruta_miniatura);
-
-                        array_push($rutas, $fieldList["id_documento"]);
-                        $fieldList["pagina"] = $numero_pagina;
-
-                        $campo_adicional = "";
-                        $valor_adicional = "";
-                        if ($tipo == "pagina") {
-                            $campo_adicional = ",fecha_pagina";
-                            $valor_adicional = "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-                        }
-                        $strsql = "INSERT INTO $tipo(id_documento,imagen,pagina,ruta " . $campo_adicional . ") VALUES (" . $fieldList["id_documento"] . ",'" . $fieldList["imagen"] . "'," . $fieldList["pagina"] . ", '" . $fieldList["ruta"] . "' " . $valor_adicional . ")";
-                        phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA BUSQUEDA de INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
-                        $idpag = phpmkr_insert_id();
-                        array_push($idimagenes, $idpag);
-                        registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
-                    } else {
-                        error("Existen Problemas al Cargar el Archivo: $ruta_arch_tmp");
-                    }
-                } else if (is_file($archivo) && filesize($archivo) > $peso) {
-                    alerta($archivo . " Excede el tamanio permitido! Por Favor comuniquese con el Administrador del Sistema");
-                }
-                $archivo = readdir($directorio);
-            }
-            closedir($directorio);
-        } //Fin If directorio
-
-        //aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
-        if (is_dir($usr_tmp_dir)) { // ruta_temporal
-            $directorio = opendir("$usr_tmp_dir");
-        } else {
-            $directorio = null;
-        }
-        if ($directorio) { //ruta_temporal
-            $cont = 1;
-            $ruta_arch_tmp = "";
-            $cad = "";
-            $cad_temp = "";
-            $numero_pagina = "";
-            //Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
-            while ($archivo = readdir($directorio)) {
-                if ($archivo != "." && $archivo != ".." && !is_dir($archivo)) {
-                    if (preg_match("/^.*(?<!\.jpg|jpeg)$/i") === 1) {
-                        $archivos[] = $archivo;
-                    }
-                }
-            }
-            natsort($archivos);
-
-            $archivos = array_values($archivos);
-            $archivos_anexos = array_unique($archivos);
-
-            $ruta_temporal = SessionController::getTemporalDir();
-            foreach ($archivos_anexos as $archivo) {
-                $ruta_archivo = $ruta_db_superior . $ruta_temporal . '/' . $archivo;
-                if (file_exists($ruta_archivo)) {
-                    $ic = strrpos($archivo, "#");
-                    $fc = strrpos($archivo, ")");
-                    $cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-                    if (intval($cad) == intval(@$_REQUEST['x_id_documento'])) {
-                        vincular_anexo_documento(@$_REQUEST['x_id_documento'], $ruta_temporal . '/' . $archivo);
-                        unlink($ruta_archivo);
-                    }
-                } //fin if file_exist
-            } //recorriendo directorio
-        } //fin if directorio
-    } elseif ($tipo_almacenamiento == "db") { // Se almacena en la base de datos
-        if (is_dir($usr_tmp_dir)) { // ruta_temporal
-            $directorio = opendir("$usr_tmp_dir");
-        } else {
-            $directorio = null;
-        }
-        if ($directorio) { // ruta_temporal
-            $cont = 1;
-            $ruta_arch_tmp = "";
-            $cad = "";
-            $cad_temp = "";
-            // Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
-            $archivo = readdir($directorio);
-
-            while ($archivo) {
-                $dir_dst = "";
-                $ruta_arch_tmp = $usr_tmp_dir . "/" . $archivo;
-                $path = pathinfo($ruta_arch_tmp);
-                if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
-                    //cad define el nombre de la organizacion de las carpetas y el criterio de almacenamiento, sin embargo debe ser cambiando luego de definir el codigo del documento
-                    $ic = strrpos($path["basename"], "#");
-                    $fc = strrpos($path["basename"], ")");
-                    $cad = substr($path["basename"], $ic + 1, $fc - $ic - 1);
-                    $punto = strrpos($path["basename"], ".");
-                    $cadpunto = substr($path["basename"], 0, $punto);
-                    $pag = strrpos($cadpunto, "g");
-                    $cont = substr($cadpunto, $pag + 1);
-                    if ($cad == "") {
-                        $cad = "0";
-                    }
-                    $fieldList["id_documento"] = $cad;
-                    $num = busca_filtro_tabla("A.pagina", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"] . " AND pagina=" . $cont, "", $conn);
-                    if ($num["numcampos"] && $cad_temp == "") {
-                        $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
-                        $paginas_temporales = array();
-                        for ($h = 0; $h < $paginas["numcampos"]; $h++) {
-                            $punto2 = strrpos($paginas[$h]["ruta"], ".");
-                            $cadpunto2 = substr($paginas[$h]["ruta"], 0, $punto2);
-                            $pag2 = strrpos($cadpunto2, "g");
-                            $cont2 = substr($cadpunto2, $pag2 + 1);
-                            array_push($paginas_temporales, $cont2);
-                            array_push($paginas_temporales, $paginas[$h]["pagina"]);
-                        }
-                        sort($paginas_temporales);
-                        $cont3 = count($paginas_temporales);
-                        $cad_temp = $paginas_temporales[$cont3 - 1];
-                    }
-                    //Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
-                    $cad2 = $fieldList["id_documento"];
-                    $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
-
-                    /*if (! is_dir($dir_dst)) {
-					 if (mkdir($dir_dst, 0777)) {
-					 $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
-					 } else {
-					 $dir_dst = "../documentos/error/" . $cad2;
-					}
-					 }*/
-                    //Me lleva hasta la Ultima pagina del documento.
-                    if ($cad_temp != "") {
-                        $cont = intval($cad_temp) + intval($cont);
-                    }
-                    //NUEVO. Para redimensionar en memoria
-                    $imagine = new Imagine();
-                    $imagen = $imagine->open($ruta_arch_tmp);
-                    $width = $imagen->getSize()->getWidth();
-                    $height = $imagen->getSize()->getHeight();
-                    if ($imgancho && ($width < $height)) {
-                        $imgancho = ($imgalto / $height) * $width;
-                    } else {
-                        $imgalto = ($imgancho / $width) * $height;
-                    }
-                    $size = new Box($imgancho, $imgalto);
-                    //$image = $imagine->create($size);
-                    $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
-                    $redim = $imagen->resize($size);
-                    //FIN NUEVO. Para redimensionar en memoria
-                    //print_r($redim);die();
-                    if ($redim) {
-                        @unlink($ruta_arch_tmp);
-                        $ruta2 = $dir_dst . "doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg";
-                        $dirminiatura = "../miniaturas/documentos/";
-                        $ruta_img_min = $dirminiatura . $fieldList["id_documento"] . "/doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg";
-                        /*if (! is_dir($dirminiatura . $fieldList["id_documento"] . "/")) {
-							if (!mkdir($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS)) {
-								alerta("Problemas al crear la carpeta " . $dirminiatura . $fieldList["id_documento"] . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
-							}
+						chmod($dirminiatura."/",PERMISOS_CARPETAS); 
+						$fieldList["imagen"]=cambia_tam($ruta2,$dirminiatura."/doc".$fieldList["id_documento"]."pag".$numero_pagina.".jpg",$miniatura_ancho,$miniatura_alto,0);
+						
+						array_push($rutas,$fieldList["id_documento"]);
+						$fieldList["ruta"]=$ruta2;
+						$fieldList["pagina"] = $numero_pagina;
+						
+						$campo_adicional="";
+						$valor_adicional="";
+						if($tipo=="pagina"){
+							$campo_adicional=",fecha_pagina";
+							$valor_adicional=",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
 						}
-						 chmod($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS);*/
-                        $fieldList["imagen"] = $ruta_img_min;
-                        array_push($rutas, $fieldList["id_documento"]);
-                        $fieldList["ruta"] = $ruta2;
-                        $fieldList["pagina"] = $cont;
-
-                        $descripcion = "MINIATURA_" . $fieldList["id_documento"];
-                        $idbinario_min = almacena_cont_binario_db($minitura->get('jpeg'), $descripcion, $fieldList["imagen"]);
-                        $descripcion = "PAGINA_" . $fieldList["id_documento"];
-                        $idbinario_pag = almacena_cont_binario_db($imagen->get('jpeg'), $descripcion, $fieldList["ruta"]);
-                        if ($idbinario_min && $idbinario_pag) {
-                            $strsql = "INSERT INTO $tipo(id_documento,idbinario_min,pagina,idbinario_pag,imagen,ruta) VALUES (" . $fieldList["id_documento"] . ",'" . $idbinario_min . "'," . $fieldList["pagina"] . ", '" . $idbinario_pag . "','" . $fieldList["imagen"] . "','" . $fieldList["ruta"] . "')";
-                            phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
-                            $idpag = phpmkr_insert_id();
-                            array_push($idimagenes, $idpag);
-                            registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
-                        } else {
-                            alerta("Error al almacenar el archivo Por favor verifique que el archivo sea accesible y este correctamente almacenado");
-                        }
-                    } else {
-                        error("Existen Problemas al Cargar el Archivo: $ruta_arch_tmp");
-                    }
-                } else if (filesize($archivo) > $peso) {
-                    alerta($archivo . " Excede el tamanio permitido! Por Favor comuniquese con el Administrador del Sistema");
-                }
-                $archivo = readdir($directorio);
-            }
-            closedir($directorio);
-        }
-    }
-
-    $config = busca_filtro_tabla("", "configuracion", "nombre='activar_estampado'", "", $conn);
-    if ($fieldList["id_documento"] != '' && $config[0]["valor"] == 'TRUE') {
-        if (is_file("digital_signed/estampado_tiempo.php")) {
-            include_once("digital_signed/estampado_tiempo.php");
-            $retorno = estampar_imagen($idimagenes, $fieldList);
-        }
-    }
-
-    return (true);
+						$strsql="INSERT INTO $tipo(id_documento,imagen,pagina,ruta ".$campo_adicional.") VALUES (".$fieldList["id_documento"].",'".$fieldList["imagen"]."',".$fieldList["pagina"].", '".$fieldList["ruta"]."' ".$valor_adicional.")";
+			//die($strsql);
+						phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA B?QUEDA de INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
+						$idpag=phpmkr_insert_id();
+						array_push($idimagenes,$idpag);		
+		  			registrar_accion_digitalizacion($fieldList["id_documento"],'ADICION PAGINA',"Identificador: $idpag, Nombre: ".basename($fieldList["imagen"]));	
+			
+					} 
+					else error("Existen Problemas al Cargar el Archivo: $ruta");
+				}
+				else if(is_file($archivo) && filesize($archivo)>$peso)
+					alerta($archivo." Excede el tamanio permitido! Por Favor comuniquese con el Administrador del Sistema");
+				$archivo = readdir($directorio); 
+			} 
+			closedir($directorio);
+		} //Fin If directorio 
+	} // Fin if tipo almacenamiento
+	elseif($tipo_almacenamiento=="db") // Se almacena en la base de datos 
+	{
+	 if(is_dir($dir))
+	  	  $directorio=opendir("$dir");
+		 else
+		  $directorio=null;
+	
+		  if($directorio)
+			{
+			 $cont=1;
+			 $ruta="";
+			 $cad="";
+			 $cad_temp="";
+		 /// Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+			$archivo = readdir($directorio);
+	
+		   while ($archivo)
+			{
+	   	  $dir3="";
+			  $ruta=$dir."/".$archivo;
+			  $path=pathinfo($ruta);
+			if($archivo && $archivo!="." && $archivo!=".." && is_file("$archivo")!="dir" && (strtolower($path['extension'])=='jpg' || strtolower($path['extension'])=='jpeg') && @filesize($archivo)<=$peso)
+			{
+			/*cad define el nombre de la organizacion de las carpetas y el criterio de almacenamiento, sin embargo debe ser cambiando luego de
+			definir el codigo del documento*/
+			 $ic=strrpos($path["basename"],"#");
+			 $fc=strrpos($path["basename"],")");
+			 $cad=substr($path["basename"],$ic+1,$fc-$ic-1);
+			 $punto=strrpos($path["basename"],".");
+			$cadpunto=substr($path["basename"],0,$punto);
+			$pag=strrpos($cadpunto,"g");
+			$cont=substr($cadpunto,$pag+1);
+			if($cad==""){
+			$cad="0";
+		   }
+			$fieldList["id_documento"] = $cad;
+			$num = busca_filtro_tabla("A.pagina","".$tabla." A","A.id_documento=".$fieldList["id_documento"]." AND pagina=".$cont,"",$conn);
+			if($num["numcampos"] && $cad_temp==""){
+			  $paginas=busca_filtro_tabla("A.pagina,A.ruta","".$tabla." A","A.id_documento=".$fieldList["id_documento"],"A.pagina",$conn);
+			  $paginas_temporales=array();
+			    for($h=0;$h<$paginas["numcampos"];$h++){
+			    $punto2=strrpos($paginas[$h]["ruta"],".");
+			    $cadpunto2=substr($paginas[$h]["ruta"],0,$punto2);
+			    $pag2=strrpos($cadpunto2,"g");
+			    $cont2=substr($cadpunto2,$pag2+1);
+			    array_push($paginas_temporales,$cont2);
+			    array_push($paginas_temporales,$paginas[$h]["pagina"]);
+			    //print_r($paginas_temporales);echo "<br><br><br>";
+	
+			    }
+			  sort($paginas_temporales);
+			  $cont3=count($paginas_temporales);
+			  $cad_temp=$paginas_temporales[$cont3-1];
+			}
+			//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+	
+		 	$cad2=$fieldList["id_documento"];
+			$dir3="../".$dir2."/".$cad2."/";
+	
+			if(!is_dir($dir3)){
+			if(mkdir($dir3,0777))
+			$dir3="../".$dir2."/".$cad2."/";
+			else $dir3="../documentos/error/".$cad2;
+			}
+		 	//chmod($ruta,0775);
+	
+			/*Me lleva hasta la Ultima pagina del documento.*/
+	
+		 	if($cad_temp<>""){
+	
+		 	$cont=intval($cad_temp)+intval($cont);
+			}
+			if(cambia_tam($ruta,$dir3."doc".$fieldList["id_documento"]."pag".$cont.".jpg",$imgancho,$imgalto,1))
+			{
+		 	@unlink($ruta);
+			$ruta2=$dir3."doc".$fieldList["id_documento"]."pag".$cont.".jpg";
+			$dirminiatura="../miniaturas/documentos/";
+			if(!is_dir($dirminiatura.$fieldList["id_documento"]."/")){
+			if(!mkdir($dirminiatura.$fieldList["id_documento"]."/",PERMISOS_CARPETAS))
+			{
+		 	alerta("Problemas al crear la carpeta ".$dirminiatura.$fieldList["id_documento"]."/"." de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
+			}
+			}
+	
+				chmod($dirminiatura.$fieldList["id_documento"]."/",PERMISOS_CARPETAS);
+				$fieldList["imagen"]=cambia_tam($ruta2,$dirminiatura.$fieldList["id_documento"]."/doc".$fieldList["id_documento"]."pag".$cont.".jpg",$miniatura_ancho,$miniatura_alto,0);
+		 		array_push($rutas,$fieldList["id_documento"]);
+				$fieldList["ruta"]=$ruta2;
+				$fieldList["pagina"] = $cont;
+	
+			/************************* Almacenamiento en Bd ******************************************/
+			// Nota por el momento se mantienen los archivos como medida de seguridad
+			// Perlo luego se debe realizar un unlink a la miniatura y a la pagina  para
+			// Eliminar
+		 	// Se crea esta funcionalidad  manteniendo la funcionalidad ay creada de almacenamiento en archivos
+			//almacena_binario_db($archivo,$descripcion)
+	
+	 		 $descripcion="MINIATURA_".$fieldList["id_documento"];
+			 $idbinario_min= almacena_binario_db($fieldList["imagen"],$descripcion);
+			 $descripcion="PAGINA_".$fieldList["id_documento"];
+			 $idbinario_pag= almacena_binario_db($fieldList["ruta"],$descripcion);
+			 if($idbinario_min && $idbinario_pag)
+			  {
+			    $strsql = "INSERT INTO $tipo(id_documento,idbinario_min,pagina,idbinario_pag,imagen,ruta) VALUES (".$fieldList["id_documento"].",'".$idbinario_min."',".$fieldList["pagina"].", '".$idbinario_pag."','".$fieldList["imagen"]."','".$fieldList["ruta"]."')";
+			   // die($strsql);
+			  	 phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA B?QUEDA de INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
+	         $idpag=phpmkr_insert_id();
+			 array_push($idimagenes,$idpag);
+		       registrar_accion_digitalizacion($fieldList["id_documento"],'ADICION PAGINA',"Identificador: $idpag, Nombre: ".basename($fieldList["imagen"]));	
+	
+			  }
+		    else
+		      alerta ("Error al almacenar el archivo Por favor verifique que el archivo sea accesible y este correctamente almacenado");
+			  /*****************************************************************************************/
+		 	}
+			else error("Existen Problemas al Cargar el Archivo: $ruta");
+			}
+			else if(filesize($archivo)>$peso)
+			alerta($archivo." Excede el tamanio permitido! Por Favor comuniquese con el Administrador del Sistema");
+			$archivo = readdir($directorio);
+			}
+			closedir($directorio);
+			} //Fin If directorio
+	}// Fin else
+	//else error("No Existe Directorio -Sincroniza Carpeta");
+	$config = busca_filtro_tabla("","configuracion","nombre='activar_estampado'","",$conn);
+	if($fieldList["id_documento"] != '' && $config[0]["valor"] == 'TRUE'){
+		if(is_file("digital_signed/estampado_tiempo.php")){
+			include_once("digital_signed/estampado_tiempo.php");
+			$retorno = estampar_imagen($idimagenes,$fieldList);
+		}
+	}
+    return(TRUE);
 }
+
 
 function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
 {
