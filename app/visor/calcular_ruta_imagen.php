@@ -5,6 +5,7 @@ $ruta_db_superior = $ruta = '';
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -13,13 +14,19 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) [
     'data' => [],
-    'message' => "",
-    'success' => 1
-);
+    'message' => '',
+    'success' => 0
+];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if (!$_REQUEST['type']) {
+        throw new Exception('Debe indicar un tipo', 1);
+    }
+
     switch ($_REQUEST['type']) {
         case 'TIPO_PAGINA':
             $pages = Pagina::findAllByAttributes([
@@ -54,9 +61,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     if (!$Response->data) {
         $Response->message = 'No existen paginas';
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
-    $Response->success = 0;
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
