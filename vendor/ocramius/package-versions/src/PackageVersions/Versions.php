@@ -102,7 +102,7 @@ final class Versions
   'zendframework/zend-code' => '3.3.1@c21db169075c6ec4b342149f446e7b7b724f95eb',
   'zendframework/zend-escaper' => '2.6.0@31d8aafae982f9568287cb4dce987e6aff8fd074',
   'zendframework/zend-eventmanager' => '3.2.1@a5e2583a211f73604691586b8406ff7296a946dd',
-  '__root__' => 'dev-semana22_20190529_svalencia@508fc08357121b27f2840ec87393e480f7988e96',
+  '__root__' => 'dev-master@7176965df8183e939d64c0e2711a25f24a5e1265',
 );
 
     private function __construct()
