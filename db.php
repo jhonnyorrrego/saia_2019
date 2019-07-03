@@ -4,7 +4,6 @@ date_default_timezone_set('America/Bogota');
 require_once 'StorageUtils.php';
 require_once 'filesystem/SaiaStorage.php';
 
-use Gaufrette\Filesystem;
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
@@ -21,7 +20,7 @@ function defineGlobalVars()
     }
 
     $GLOBALS['sql'] = '';
-    $GLOBALS['conn'] = StaticSql::getInstance();
+    $GLOBALS['conn'] = Sql::getInstance();
 }
 
 /*
@@ -276,7 +275,7 @@ function formato_cargo($nombre_cargo)
  */
 function phpmkr_db_close($conn)
 {
-    $conn->Conn->Desconecta();
+    $conn->disconnect();
 }
 
 /*
@@ -1496,7 +1495,7 @@ function codigo_rol($id, $tipo)
 <Parametros>$tipo: filtro de la busqueda
             $dato:
             $dependencia:
-            $conn: Conexion activa con la base de datos
+            $conn: instancia sql
 <Responsabilidades>Funcion  que retorna el origen completo de un funcionario incluyendo los codigos de dependencia y cargo
 <Notas>
 <Excepciones>

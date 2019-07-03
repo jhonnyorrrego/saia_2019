@@ -486,7 +486,7 @@ function delete_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                 $longitud = $consultarTabla[0]['longitud'];
             }
 
-            $consultaCampo = SQL2::getInstance()->Busca_tabla("{$consultarTabla[0]['nombre_tabla']}", "{$consultarTabla[0]['nombre']}");
+            $consultaCampo = Sql::getInstance()->Busca_tabla("{$consultarTabla[0]['nombre_tabla']}", "{$consultarTabla[0]['nombre']}");
             if ($consultaCampo['numcampos']) {
                 $quitarObligatoriedad = "ALTER TABLE {$consultarTabla[0]['nombre_tabla']} modify {$consultarTabla[0]['nombre']} {$consultarTabla[0]['tipo_dato']}({$longitud}) null";
                 phpmkr_query($quitarObligatoriedad);

@@ -3,33 +3,6 @@
 class StaticSql
 {
     /**
-     * instancia de sql segun el motor
-     *
-     * @var object
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019
-     */
-    private static $instance;
-
-    /**
-     * obtiene la instancia de sql, en caso de no
-     * existir la genera
-     *
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-06-19
-     */
-    public static function getInstance($newInstance = false)
-    {
-        if (!StaticSql::$instance || $newInstance) {
-            StaticSql::$instance = Sql::getInstance();
-        }
-        return StaticSql::$instance;
-    }
-
-
-
-    /**
      * ejecuta una consulta
      *
      * @param string $sql
@@ -41,7 +14,7 @@ class StaticSql
 
     public static function search(string $sql, $start = 0, $end = 0): array
     {
-        return StaticSql::getInstance()->executeSelect($sql, $start, $end);
+        return Sql::getInstance()->executeSelect($sql, $start, $end);
     }
 
     /**
@@ -54,7 +27,7 @@ class StaticSql
      */
     public static function query(string $sql): bool
     {
-        return StaticSql::getInstance(true)->Ejecutar_Sql($sql);
+        return Sql::getInstance(true)->Ejecutar_Sql($sql);
     }
 
     /**
@@ -68,7 +41,7 @@ class StaticSql
      */
     public static function insert(string $sql): int
     {
-        $SqlInstance = StaticSql::getInstance(true);
+        $SqlInstance = Sql::getInstance(true);
         $SqlInstance->Ejecutar_Sql($sql);
         return $SqlInstance->Ultimo_Insert();
     }
@@ -83,7 +56,7 @@ class StaticSql
      */
     public static function setDateFormat(string $date, string $format): string
     {
-        $instance = StaticSql::getInstance();
+        $instance = Sql::getInstance();
         return $instance::fecha_db_almacenar($date, $format);
     }
 
@@ -97,7 +70,7 @@ class StaticSql
      */
     public static function getDateFormat(string $attribute, string $format): string
     {
-        $instance = StaticSql::getInstance();
+        $instance = Sql::getInstance();
         return $instance::fecha_db_obtener($attribute, $format);
     }
 
@@ -111,7 +84,7 @@ class StaticSql
      */
     public static function concat(array $data): string
     {
-        $instance = StaticSql::getInstance();
+        $instance = Sql::getInstance();
         return $instance::concatenar_cadena($data);
     }
 }

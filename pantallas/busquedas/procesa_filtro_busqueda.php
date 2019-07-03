@@ -925,12 +925,12 @@ function procesar_filtro_like_general($key, $valor, $condicion)
 function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1)
 {
 	$sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
-	$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
+	$stmt = OCIParse($conn->connection, $sql) or print_r(OCIError($stmt));
 	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
 
 	if (!count($row)) {
-		oci_rollback($conn->Conn->conn);
+		oci_rollback($conn->connection);
 		oci_free_statement($stmt);
 		$clob_blob = 'clob';
 		if ($tipo == 'archivo') {
@@ -938,13 +938,13 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 		}
 		$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
 		$conn->Ejecutar_Sql($up_clob);
-		$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
+		$stmt = OCIParse($conn->connection, $sql) or print_r(OCIError($stmt));
 
 		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 		OCIFetchInto($stmt, $row, OCI_ASSOC);
 	}
 	if (FALSE === $row) {
-		OCIRollback($conn->Conn->conn);
+		OCIRollback($conn->connection);
 		alerta("No se pudo modificar el campo.");
 		$resultado = FALSE;
 	} else {
@@ -955,15 +955,15 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 		}
 		if ($contenido_actual != $contenido) {
 			if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
-				oci_rollback($conn->Conn->conn);
+				oci_rollback($conn->connection);
 				alerta("No se pudo modificar el campo.");
 				$resultado = FALSE;
 			} else {
 				if (!$row[strtoupper($campo)]->save(trim($contenido))) {
-					oci_rollback($conn->Conn->conn);
+					oci_rollback($conn->connection);
 					$resultado = FALSE;
 				} else {
-					oci_commit($conn->Conn->conn);
+					oci_commit($conn->connection);
 				}
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 			}

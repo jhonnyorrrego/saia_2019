@@ -1,10 +1,30 @@
 <?php
 class SqlSqlServer extends Sql
 {
-
-    public function __construct(Conexion $Conexion)
+    public function __construct()
     {
-        return parent::__construct($Conexion);
+        return parent::__construct();
+    }
+
+    function connect()
+    {
+        if ($this->puerto)
+            $conecta = $this->host . "\\" . $this->nombreDb . "," . $this->puerto;
+        else if ($this->host)
+            $conecta = $this->host . "\\" . $this->nombreDb;
+        else
+            $conecta = $this->nombreDb;
+        $this->connection = sqlsrv_connect($conecta, array(
+            "UID" => $this->usuario,
+            "PWD" => $this->password,
+            "Database" => $this->db
+        )) or print_r(sqlsrv_errors());
+        sqlsrv_query($this->connection, "USE " . $this->db);
+    }
+
+    function disconnect()
+    {
+        return sqlsrv_close($this->connection);
     }
 
     /*
@@ -30,8 +50,8 @@ class SqlSqlServer extends Sql
         if ($order_by != "" && $order_by != null)
             $this->consulta .= " ORDER BY " . $order_by;
         // ejecucion de la consulta, a $this->res se le asigna el resource
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $this->consulta);
         // se le asignan a $resultado los valores obtenidos
         if ($this->Numero_Filas() > 0) {
             for ($i = 0; $i < $this->Numero_Filas(); $i++)
@@ -62,8 +82,8 @@ class SqlSqlServer extends Sql
 
         $this->filas = 0;
         if ($sql && $sql != "") {
-            sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-            $this->res = sqlsrv_query($this->Conn->conn, $sql, array(), array(
+            sqlsrv_query($this->connection, "USE " . $this->db);
+            $this->res = sqlsrv_query($this->connection, $sql, array(), array(
                 "Scrollable" => SQLSRV_CURSOR_KEYSET
             ));
             if ($this->res) {
@@ -134,8 +154,8 @@ class SqlSqlServer extends Sql
             $insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
         else
             $insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $insert);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $insert);
         $this->Guardar_log($insert);
     }
 
@@ -160,8 +180,8 @@ class SqlSqlServer extends Sql
         else
             $update = "UPDATE " . $tabla . " SET " . $actualizaciones;
         $this->Guardar_log($update);
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $update);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $update);
     }
 
     /*
@@ -179,8 +199,8 @@ class SqlSqlServer extends Sql
     {
         $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
         $this->consulta = $sql;
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $this->consulta);
         $this->Guardar_log($sql);
         while ($fila = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC)) {
             foreach ($fila as $valor)
@@ -208,8 +228,8 @@ class SqlSqlServer extends Sql
             $delete = "DELETE FROM " . $tabla;
         // ejecucion de la consulta
         $this->Guardar_log($delete);
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $delete);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $delete);
         //
     }
 
@@ -277,8 +297,8 @@ class SqlSqlServer extends Sql
      */
     function Lista_Tabla($db)
     {
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, "select name AS nombre from sysobjects where type='U'");
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, "select name AS nombre from sysobjects where type='U'");
         while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
             $resultado[] = $row[0];
         asort($resultado);
@@ -296,8 +316,8 @@ class SqlSqlServer extends Sql
         } else {
             $this->consulta = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME like '" . $tabla . "'";
         }
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db) or die($this->consulta);
-        $this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
+        sqlsrv_query($this->connection, "USE " . $this->db) or die($this->consulta);
+        $this->res = sqlsrv_query($this->connection, $this->consulta);
         while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
             $resultado[] = $row[0];
 
@@ -354,11 +374,11 @@ class SqlSqlServer extends Sql
             $order = "order by (select 1)";
         }
 
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
+        sqlsrv_query($this->connection, "USE " . $this->db);
         $complemento = substr($sql_count, strpos($sql_count, ' '));
         /*
          * $sql_cantidad="SELECT COUNT(*) as cant FROM (".$sql_count.") cantidad_reg";
-         * $res_cant=sqlsrv_query($conn->Conn->conn,$sql_cantidad) or die("consulta fallida. ---- $sql_cantidad ");
+         * $res_cant=sqlsrv_query($conn->connection,$sql_cantidad) or die("consulta fallida. ---- $sql_cantidad ");
          * $total=sqlsrv_fetch_array($res_cant,SQLSRV_FETCH_NUMERIC);
          * $cant=intval($total[0]);
          */
@@ -371,7 +391,7 @@ class SqlSqlServer extends Sql
 	SELECT *,ROW_NUMBER() OVER(" . $order . ") as numfila__oculto FROM (" . $select . ") datos
 	) SELECT * FROM informacion_tabla WHERE numfila__oculto BETWEEN " . ($inicio + 1) . " AND " . ($fin);
 
-        $res = sqlsrv_query($this->Conn->conn, $consulta) or die("consulta fallida. ---- $consulta ");
+        $res = sqlsrv_query($this->connection, $consulta) or die("consulta fallida. ---- $consulta ");
         return ($res);
     }
 
@@ -389,8 +409,8 @@ class SqlSqlServer extends Sql
     function Total_Registros_Tabla($tabla)
     {
         $this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $this->consulta);
         $total = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC);
         return ($total[0]);
     }
@@ -428,8 +448,8 @@ class SqlSqlServer extends Sql
      */
     function Ultimo_Insert()
     {
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, "SELECT @@identity") or print_r(sqlsrv_errors());
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, "SELECT @@identity") or print_r(sqlsrv_errors());
         $total = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC) or print_r(sqlsrv_errors());
         return ($total[0]);
     }
@@ -451,8 +471,8 @@ class SqlSqlServer extends Sql
         if (isset($_SESSION)) {
             $fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
             if ($sqleve != "") {
-                sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-                $result = sqlsrv_query($this->Conn->conn, $sqleve);
+                sqlsrv_query($this->connection, "USE " . $this->db);
+                $result = sqlsrv_query($this->connection, $sqleve);
                 if (!$result)
                     die(" Error en la consulta: " . sqlsrv_errors());
                 $registro = $this->Ultimo_Insert();
@@ -588,8 +608,8 @@ class SqlSqlServer extends Sql
 
         $strsql = "EXEC sp_asignar_radicado @iddoc=$iddocumento, @tipo=$idcontador, @funcionario=$funcionario";
 
-        sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-        $this->res = sqlsrv_query($this->Conn->conn, $strsql, null, $options);
+        sqlsrv_query($this->connection, "USE " . $this->db);
+        $this->res = sqlsrv_query($this->connection, $strsql, null, $options);
         if (!$this->res) {
             if (($errors = sqlsrv_errors()) != null) {
                 $mensajes = array();
@@ -640,10 +660,10 @@ class SqlSqlServer extends Sql
                 }
             }
             if (MOTOR == "SqlServer") {
-                sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-                sqlsrv_query($this->Conn->conn, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
+                sqlsrv_query($this->connection, "USE " . $this->db);
+                sqlsrv_query($this->connection, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
             } else {
-                mssql_query($sql, $this->Conn->conn) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
+                mssql_query($sql, $this->connection) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
             }
         }
 

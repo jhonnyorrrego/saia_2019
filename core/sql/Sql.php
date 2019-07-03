@@ -1,7 +1,14 @@
 <?php
 abstract class Sql
 {
-	public $Conn;
+	public $connection = null;
+	public $motor;
+	public $host;
+	public $usuario;
+	public $password;
+	public $nombreDb;
+	public $db;
+	public $puerto;
 	public $res = null;
 	protected $consulta;
 	protected $error = null;
@@ -12,44 +19,98 @@ abstract class Sql
 	protected $ultimoInsert = null;
 	protected $filas = 0;
 
-	public function __construct(Conexion $Conexion)
+	/**
+	 * instancia de sql segun el motor
+	 *
+	 * @var object
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	private static $instance;
+
+	/**
+	 * inicio del proceso
+	 * seteo credenciales y conecto la db
+	 *
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	function __construct()
 	{
-		$this->Conn = $Conexion;
+		$this->setAttributes();
+		$this->connect();
 	}
 
 	/**
-	 * obtiene un objete para manipular la base de datos
+	 * setea las credenciales de la base de datos
 	 *
 	 * @return void
 	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-	 * @date 2019-06-26
+	 * @date 2019-06-20
 	 */
-	public static function getInstance()
+	public function setAttributes()
 	{
-		$Conexion = new Conexion();
+		$this->motor = MOTOR;
+		$this->host = HOST;
+		$this->usuario = USER;
+		$this->password = PASS;
+		$this->nombreDb = BASEDATOS;
+		$this->db = DB;
+		$this->puerto = PORT;
+	}
 
-		switch ($Conexion->Motor) {
-			case "MySql":
-				$instance = new SqlMysql($Conexion);
-				break;
-			case "Oracle":
-				$instance = new SqlOracle($Conexion);
-				break;
-			case "SqlServer":
-				$instance = new SqlSqlServer($Conexion);
-				break;
-			case "MSSql":
-				$instance = new SqlMsSql($Conexion);
-				break;
-			case "Postgres":
-				$instance = new SqlPostgres($Conexion);
-				break;
-			default:
-				$instance = null;
-				break;
+	/**
+	 * gestiona la conexion a la base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	public abstract function connect();
+
+	/**
+	 * finaliza la conexion de base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	public abstract function disconnect();
+
+	/**
+	 * obtiene la instancia de sql, en caso de no
+	 * existir la genera
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-06-19
+	 */
+	public static function getInstance($newInstance = false)
+	{
+		if (!Sql::$instance || $newInstance) {
+			switch (MOTOR) {
+				case "MySql":
+					Sql::$instance = new SqlMysql();
+					break;
+				case "Oracle":
+					Sql::$instance = new SqlOracle();
+					break;
+				case "SqlServer":
+					Sql::$instance = new SqlSqlServer();
+					break;
+				case "MSSql":
+					Sql::$instance = new SqlMsSql();
+					break;
+				case "Postgres":
+					Sql::$instance = new SqlPostgres();
+					break;
+				default:
+					Sql::$instance = null;
+					break;
+			}
 		}
 
-		return $instance;
+		return Sql::$instance;
 	}
 
 	/*
