@@ -206,9 +206,9 @@ table tbody td {
 				$ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				$params["dftp"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
-			case "ruta_temporal" :
-				$temporal_usuario = $_SESSION["ruta_temp_funcionario"];
+			case "temporal_digitalizacion" :				
 				$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$temporal_usuario = $params["url"];
 				break;
 			case "puerto_ftp" :
 				$puerto_ftp = 21;
@@ -273,7 +273,7 @@ table tbody td {
 				$x_id_documento = 0;
 			}
 			if (!is_dir($temporal_usuario)) {
-				if (!mkdir($temporal_usuario, PERMISOS_CARPETAS)) {
+				if (!mkdir($temporal_usuario, PERMISOS_CARPETAS, true)) {
 					alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
 				}
 				volver("1");

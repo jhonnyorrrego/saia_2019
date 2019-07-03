@@ -671,7 +671,7 @@ function sincronizar_carpetas($tipo,$conn){
 	$configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'","A.idconfiguracion DESC",$conn);
   for($i=0;$i<$configuracion["numcampos"];$i++){
 	  switch($configuracion[$i]["nombre"]){
-		  case "ruta_temporal": 
+		  case "temporal_digitalizacion": 
 		  	$dir=$configuracion[$i]["valor"]."_".$_SESSION["LOGIN".LLAVE_SAIA];
 		  break;
 		  case "ruta_documentos": 
@@ -2000,4 +2000,63 @@ function return_megabytes($val)
     }
 
     return $val;
+}
+
+/*Manipulacion de Imagenes*/
+/*
+<Clase>
+<Nombre>cambia_tam
+<Parametros>$nombreorig: nombre de la imagen
+            $nombredest: nombre de la nueva imagen
+            $nwidth: ancho del a nueva imagen
+            $nheight: alto de la nueva imagen
+            $tipo:
+<Responsabilidades>cambiar el tamaño de la imagen, generando una nueva de las dimensiones deseadas
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $binario = false)
+{
+        $ext = 'jpg';
+        // Se obtienen las nuevas dimensiones
+        list($width, $height) = getimagesize($nombreorig);
+        if ($nwidth && ($width < $height)) {
+                $nwidth = ($nheight / $height) * $width;
+        } else {
+                $nheight = ($nwidth / $width) * $height;
+        }
+        $image_p = imagecreatetruecolor($nwidth, $nheight);
+        imagecolorallocate($image_p, 255, 255, 255);
+        if ($ext == 'gif') {
+                $image = imagecreatefromgif($nombreorig); ///nombre del archivo origen
+                imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
+                imagegif($image_p, $nombredest); ///nombre del destino
+                imagedestroy($image_p);
+                imagedestroy($image);
+
+                if ($binario) {
+                        $im = file_get_contents($nombreorig);
+                        return ($im);
+                } else {
+                        return ($nombredest);
+                }
+        } else {
+                $image = imagecreatefromjpeg($nombreorig);
+                imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
+                imagejpeg($image_p, $nombredest, 80); ///nombre del destino
+                imagedestroy($image_p);
+                imagedestroy($image);
+                if ($binario) {
+                        $im = file_get_contents($nombreorig);
+                        return ($im);
+                } else {
+                        return ($nombredest);
+                }
+        }
+        imagedestroy($image_p);
+        imagedestroy($image);
+        return (null);
 }

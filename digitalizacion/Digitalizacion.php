@@ -72,7 +72,7 @@ class Digitalizacion {
 						case "ruta_ftp" :
 							$params["dftp"] = $configuracion[$i]["valor"];
 							break;
-						case "ruta_temporal" :
+						case "temporal_digitalizacion" :
 							$params["url"] = $configuracion[$i]["valor"];
 							break;
 						case "puerto_ftp" :
@@ -168,7 +168,7 @@ class Digitalizacion {
 					"message" => "Login incorrecto"
 			);
 		}
-		file_put_contents('log.txt', var_export($resp,true));
+
 		return $resp;
 	}
 
@@ -286,7 +286,7 @@ class Digitalizacion {
 		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
 		if ($datos_dig["numcampos"]) {
 			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
-			$configuracion = busca_filtro_tabla("A.*", "configuracion A", "nombre = 'ruta_temporal'", "", $conn);
+			$configuracion = busca_filtro_tabla("A.*", "configuracion A", "nombre = 'temporal_digitalizacion'", "", $conn);
 
 			if ($user_info["numcampos"]) {
 				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
