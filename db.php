@@ -718,8 +718,9 @@ function sincronizar_carpetas($tipo, $conn)
                 $dir3 = "";
                 $ruta = $dir . "/" . $archivo;
                 $path = pathinfo($ruta);
+                
                 if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
-
+                    
                     $ic = strrpos($path["basename"], "#");
                     $fc = strrpos($path["basename"], ")");
                     $cad = substr($path["basename"], $ic + 1, $fc - $ic - 1);
@@ -743,8 +744,9 @@ function sincronizar_carpetas($tipo, $conn)
                     //Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
                     $ruta_imagenes = ruta_almacenamiento("imagenes");
                     $cad2 = $fieldList["id_documento"];
-                    $dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
-                    $ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
+                    $dir3 = "{$ruta_imagenes}/{$estado}/{$fecha}/{$cad2}/{$dir2}/";                    
+                    $ruta_dir = "{$ruta_imagenes}/{$estado}/{$fecha}/{$cad2}";
+                    
                     crear_destino($dir3);
 
                     if ($numero_pagina <> "")
