@@ -61,7 +61,7 @@ class TemporalController
             'route' => ''
         ];
 
-        $binary = StorageUtils::get_file_content($dbString);
+        $binary = StorageUtils::get_file_content($dbString);;
         if ($binary) {
             $fileName = $prefix . Anexo::getNameFromJson($dbString);
             $directory = SessionController::getTemporalDir();

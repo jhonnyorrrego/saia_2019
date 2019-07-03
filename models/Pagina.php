@@ -49,7 +49,7 @@ class Pagina extends Model
      * */
     public function getTemporalRoute()
     {
-        $prefix = 'pagina' . $this->getPK();
+        $prefix = 'pagina' . $this->getPK();;
         $image = TemporalController::createTemporalFile($this->ruta, $prefix, true);
         return $image->success ? $image->route : false;
     }
