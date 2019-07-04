@@ -42,9 +42,9 @@ include_once $ruta_db_superior . "librerias_saia.php";
 							<h5 class="bold">Generar Sello</h5>
 							<p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
 							<div class="form-group form-group-default required">
-								<label>Seleccione Tipo de Radicación:</label>
+								<label>Seleccione tipo de registro:</label>
 								<div id="esperando_serie">
-									<img src="<?= $ruta_db_superior ?>imagenes/cargando.gif">
+									<img src="<?= $ruta_db_superior ?>assets/images/cargando.gif">
 								</div>
 								<div id="treeboxbox_tree_equipos" class="arbol_saia"></div>
 								<input type="hidden" id="generar_consecutivo" name="generar_consecutivo" class="required">
@@ -54,7 +54,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 								<input type="text" id="descripcion_general" class="required form-control" name="descripcion_general">
 							</div>
 							<div class="form-group">
-								<label class="pl-1 mb-0 mt-1">Colilla</label>
+								<label class="pl-1 mb-0 mt-1">Orientación del Sello</label>
 								<div class="radio radio-success my-0">
 									<input type="radio" name="colilla_vertical" checked value="1" id="vertical_radio">
 									<label for="vertical_radio">Vertical</label>
@@ -63,7 +63,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 								</div>
 							</div>
 							<div class="form-group pt-3">
-								<input class="btn btn-complete mx-1" type="submit" value="Radicar" id="enviar" name="enviar" />
+								<input class="btn btn-complete mx-1" type="submit" value="Registrar" id="enviar" name="enviar" />
 								<input type="hidden" name="target" value="_self">
 							</div>
 						</form>
@@ -85,7 +85,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 				browserType = "gecko"
 			}
 			tree_equipos = new dhtmlXTreeObject("treeboxbox_tree_equipos", "100%", "100%", 0);
-			tree_equipos.setImagePath("<?php echo $ruta_db_superior; ?>imgs/");
+			tree_equipos.setImagePath("<?php echo $ruta_db_superior; ?>assets/images/");
 			tree_equipos.enableTreeImages("false");
 			tree_equipos.enableIEImageFix(true);
 			tree_equipos.setOnCheckHandler(onNodeSelect);

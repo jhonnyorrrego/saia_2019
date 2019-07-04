@@ -342,7 +342,7 @@ include_once $ruta_db_superior . "core/autoload.php";
     function procesamiento_buscar(externo) {
         var data = $('#kformulario_saia').serializeObject();
         $('#tabla_resultados').bootstrapTable('refreshOptions', {
-            url: 'servidor_busqueda.php',
+            url: 'servidor_busqueda_exp.php',
             queryParams: function(params) {
                 var pagina = 1;
                 var filas = params.limit;
@@ -359,7 +359,9 @@ include_once $ruta_db_superior . "core/autoload.php";
                     "order": params.order,
                     "cantidad_total": $("#busqueda_total_paginas").val(),
                     "sidx": params.sort,
-                    "sord": params.order
+                    "sord": params.order,
+                    "key": localStorage.getItem("key"),
+                    "token": localStorage.getItem("token")
                 };
                 $.extend(data, q);
                 return data;

@@ -9,11 +9,10 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
-
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "formatos/librerias_funciones_generales.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "distribucion/funciones_distribucion.php";
 
 /* ADICIONAR - EDITAR */
 
@@ -121,14 +120,14 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
                 );
                 $seleccionar[$item[$j]['estado_dependencia']] = 'selected';
                 $tabla .= '<td>
-					<select class="cambio_estado_dependencia" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]">
+					<select class="cambio_estado_dependencia form-control" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]">
 						<option value="1" ' . $seleccionar[1] . '>Activo</option>
 						<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
 					</select>
 					</td>
 				</tr>';
             }
-            $tabla .= '</table><input class="btn btn-complete" type="submit" value="Guardar Cambios"/></form>';
+            $tabla .= '</table></form>';
         }
     }
     echo $tabla;
@@ -196,7 +195,6 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 		    <td style="text-align:center;">Fecha</td>
 		    <td style="text-align:center;">Mensajero</td>
 		    <td style="text-align:center;">Estado</td>
-		    <td style="text-align:center;">Asignar Ruta</td>
 			</tr>';
 
             for ($j = 0; $j < $item['numcampos']; $j++) {
@@ -206,14 +204,7 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
                     "apellidos"
                 );
                 $cadena_concat = concatenar_cadena_sql($array_concat);
-                $mensajero = busca_filtro_tabla($cadena_concat . ' AS nombre', 'vfuncionario_dc', 'iddependencia_cargo=' . $item[$j]['mensajero_ruta'], '', $conn);
-
-                $boton_asginar_ruta = '<button class="asignar_distribuciones" idft_ruta_distribucion="' . $dato[0]['idft_ruta_distribucion'] . '" mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '" >
-					<i class="icon-ok"></i>
-				</button>';
-                if ($item[$j]['estado_mensajero'] == 2) {
-                    $boton_asginar_ruta = '';
-                }
+                $mensajero = busca_filtro_tabla($cadena_concat . ' AS nombre', 'vfuncionario_dc', 'iddependencia_cargo=' . $item[$j]['mensajero_ruta'], '', $conn);              
                 $seleccionar = array(
                     1 => "",
                     2 => ""
@@ -223,12 +214,11 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 					<td>' . $item[$j]['fecha_mensajero'] . '</td>
 					<td>' . $mensajero[0]['nombre'] . '</td>
 					<td>
-						<select class="cambio_estado" name="estado[]" data-idft="' . $item[$j]['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '">
+						<select class="form-control cambio_estado" name="estado[]" data-idft="' . $item[$j]['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '">
 							<option value="1" ' . $seleccionar[1] . '>Activo</option>
 							<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
 						</select>
-					</td>
-					<td style="text-align:center;">' . $boton_asginar_ruta . '</td>
+					</td>					
 				</tr>';
             }
             $tabla .= '</table><br/>';

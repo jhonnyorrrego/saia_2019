@@ -1,6 +1,7 @@
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,6 +9,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
 include_once $ruta_db_superior . "core/autoload.php";
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
@@ -15,8 +17,9 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 } else {
 	header("Content-type: text/xml");
 }
-echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
-echo("<tree id=\"0\">\n");
+
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">";
+echo "<tree id=\"0\">\n";
 
 $ok = new PermisoController();
 
