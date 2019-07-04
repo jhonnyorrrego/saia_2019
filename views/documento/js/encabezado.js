@@ -79,6 +79,32 @@ $(function() {
             transferModal('Responder a todos', 3);
         });
 
+    ///////////// fab buttons
+    $(document)
+        .off('click', '#confirmButton,#rejectButton')
+        .on('click', '#confirmButton,#rejectButton', function() {
+            confirmDocument($(this).data('info').action);
+        });
+
+    $(document)
+        .off('click', '#editButton')
+        .on('click', '#editButton', function() {
+            window.open($(this).data('info').route, '_self');
+        });
+
+    $(document)
+        .off('click', '#managersButton')
+        .on('click', '#managersButton', function() {
+            seeManagers();
+        });
+
+    $(document)
+        .off('click', '#returnButton')
+        .on('click', '#returnButton', function() {
+            returnDocument();
+        });
+    //////////// fin fab buttons
+
     $('#show_tree').on('click', function() {
         let options = {
             url: `${baseUrl}views/arbol/proceso_formato.php`,
@@ -342,94 +368,8 @@ $(function() {
 
     function showFab() {
         $('#fab').empty();
-        if (fabActions.showFab) {
-            let buttons = [];
 
-            if (fabActions.reject.see) {
-                buttons.push({
-                    button: {
-                        style: 'small orange',
-                        html: '',
-                        tooltip: fabActions.reject.tooltip
-                    },
-                    icon: {
-                        style: 'fa fa-times',
-                        html: ''
-                    },
-                    onClick: function() {
-                        confirmDocument(false);
-                    }
-                });
-            }
-
-            if (fabActions.confirm.see) {
-                buttons.push({
-                    button: {
-                        style: 'small yellow',
-                        html: '',
-                        tooltip: fabActions.confirm.tooltip
-                    },
-                    icon: {
-                        style: 'fa fa-check',
-                        html: ''
-                    },
-                    onClick: function() {
-                        confirmDocument(true);
-                    }
-                });
-            }
-
-            if (fabActions.edit.see) {
-                buttons.push({
-                    button: {
-                        style: 'small yellow',
-                        html: '',
-                        tooltip: fabActions.edit.tooltip
-                    },
-                    icon: {
-                        style: 'fa fa-edit',
-                        html: ''
-                    },
-                    onClick: function() {
-                        window.open(fabActions.edit.route, '_self');
-                    }
-                });
-            }
-
-            if (fabActions.managers.see) {
-                buttons.push({
-                    button: {
-                        style: 'small yellow',
-                        html: '',
-                        tooltip: fabActions.managers.tooltip
-                    },
-                    icon: {
-                        style: 'fa fa-users',
-                        html: ''
-                    },
-                    onClick: function() {
-                        seeManagers(fabActions.managers.route);
-                    }
-                });
-            }
-
-            if (fabActions.return.see) {
-                buttons.push({
-                    button: {
-                        style: 'small yellow',
-                        html: '',
-                        tooltip: fabActions.return.tooltip
-                    },
-                    icon: {
-                        style: 'fa fa-backward',
-                        html: ''
-                    },
-                    onClick: function() {
-                        returnDocument();
-                    }
-                });
-            }
-
+        if (Object.values(fabActions).find(b => b.button.visible == 1)) {
             new Fab({
                 selector: '#fab',
                 button: {
@@ -444,7 +384,7 @@ $(function() {
                 position: 'bottom-right',
                 // "horizontal" || "vertical"
                 direction: 'horizontal',
-                buttons: buttons
+                buttons: fabActions
             });
         }
     }
@@ -479,7 +419,7 @@ $(function() {
 
     function seeManagers() {
         top.topModal({
-            url: baseUrl + fabActions.managers.route,
+            url: baseUrl + fabActions.managers.button.data.route,
             params: {
                 documentId: documentId,
                 number: number
