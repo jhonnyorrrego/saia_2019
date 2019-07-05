@@ -30,9 +30,12 @@ echo estilo_bootstrap();
         "align",
         "preview"
     );
+    
     $datos = array();
-    $datos["fecha_inicio"] = fecha_db_almacenar($_REQUEST["fecha_inicio"], "Y-m-d");
-    $datos["fecha_fin"] = fecha_db_almacenar($_REQUEST["fecha_fin"], "Y-m-d");
+    if(!empty($_REQUEST["fecha_inicio"]) && !empty($_REQUEST["fecha_fin"])){
+        $datos["fecha_inicio"] = fecha_db_almacenar($_REQUEST["fecha_inicio"], "Y-m-d");
+        $datos["fecha_fin"] = fecha_db_almacenar($_REQUEST["fecha_fin"], "Y-m-d");
+    }
 
     $accion = $_REQUEST["accion"];
     foreach ($campos as $fila) {
@@ -257,6 +260,7 @@ function guardar_editar($accion, $datos)
 
     $id = $_REQUEST["id"];
     $sql1 = "update contenidos_carrusel set " . implode(",", $fields) . " where idcontenidos_carrusel=" . $id;
+
     phpmkr_query($sql1, $conn);
     guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto", $conn);
 

@@ -13,7 +13,10 @@ include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
-echo librerias_UI("1.12");
+include_once $ruta_db_superior . "assets/librerias.php";
+echo librerias_notificaciones(); 
+///echo select2(); 
+//echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 
 if ($_REQUEST['idformato']) {
@@ -66,6 +69,10 @@ if ($_REQUEST['idformato']) {
   $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 
 }
+
+$tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)", $conn);
+          
+
 /**
  * Esta funcion puede servir para
  */
@@ -118,6 +125,7 @@ span.fancytree-expander {
 
 </head>
 <body>
+
 <h4 class="title" style="margin-top: 20px;">Información general</h4><hr style="margin-top:10px;">
 <form name="datos_formato" id="datos_formato">
  <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
@@ -219,33 +227,43 @@ if ($formato["numcampos"]) {
       <div class="control-group">
         <label class="control-label" for="serie_idserie"><strong>Tipo documental asociado</strong></label>
         <div class="controls">
-        	<div id="esperando_arbol_serie_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-        	<?php
-        $url = $ruta_db_superior . "test_serie.php?tabla=serie&filtrar_arbol=documental&arbol_series=1";
-        if ($formato["numcampos"] && !empty($formato[0]["serie_idserie"])) {
-          $url .= "&seleccionado=" . $formato[0]["serie_idserie"];
-          $datos_serie = busca_filtro_tabla("codigo, nombre", "serie", "idserie=" . $formato[0]["serie_idserie"], "", $conn);
-              //echo($datos_serie[0]["nombre"]);
-
-        }
-        ?>
-          <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
-          <input id="arbol_serie_formato" type="hidden" name="serie_idserie" value="<?= $formato[0]["serie_idserie"] ?>">
+          <div class="form-group form-group-default-select2">
+            <select style="width: 100%;" name="serie_idserie" id="serie_idserie" >
           <?php
-          crear_arbol("arbol_serie_formato", $url);
+          $tipo = '';
+          for ($i = 0; $i < $tipoDocumental["numcampos"]; $i++) {
+            echo '<option value="' . $tipoDocumental[$i]["idserie"] . '>' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
+          }       
           ?>
+            </select> 
+          </div>
+            <!--div id="esperando_arbol_serie_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div-->
+            <!--?php
+          $url = $ruta_db_superior . "test_serie.php?tabla=serie&filtrar_arbol=documental&arbol_series=1";
+          if ($formato["numcampos"] && !empty($formato[0]["serie_idserie"])) {
+            $url .= "&seleccionado=" . $formato[0]["serie_idserie"];
+            $datos_serie = busca_filtro_tabla("codigo, nombre", "serie", "idserie=" . $formato[0]["serie_idserie"], "", $conn);
+                //echo($datos_serie[0]["nombre"]);
+
+          }
+          ?-->
+            <!--div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
+            <input id="arbol_serie_formato" type="hidden" name="serie_idserie" value="--><!--?= $formato[0]["serie_idserie"] ?>"-->
+            <!--?php
+            crear_arbol("arbol_serie_formato", $url);
+            ?-->
         </div>
       </div>
     </div>
 
-    <div class="span4">
+    <!--div class="span4">
       <div class="control-group">
         <label class="control-label" for="codigo_serie"><strong>C&oacute;digo</strong></label>
         <div class="controls">
           <input type="text" id="codigo_serie" value="<?= $datos_serie["numcampos"] ? $datos_serie[0]["codigo"] : '' ?>" disabled="disabled">
         </div>
       </div>
-    </div>
+    </div-->
     <div class="span4">
       <div class="control-group">
         <label class="control-label" for="mostrar_tipodoc_pdf">&nbsp;</label>
@@ -468,6 +486,7 @@ echo librerias_notificaciones();
    }); */
 
 $("document").ready(function(){
+  //$("#serie_idserie").select2();
   $("input[name='when_is_escrow_set_to_close']").hide();
   if($("#codigo_serie").val()==''){
      $("#mostrar_tipodoc_pdf").hide();

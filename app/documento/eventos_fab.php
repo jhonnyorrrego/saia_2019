@@ -130,10 +130,10 @@ try {
     if (is_file($functionsFile)) {
         include_once $functionsFile;
 
-        $functionName = $Formato->nombre . "fabButtons";
+        $functionName = $Formato->nombre . "_fab_buttons";
         if (function_exists($functionName)) {
             $otherButtons = $functionName();
-
+            //print_r($otherButtons);
             if (is_array($otherButtons)) {
                 $buttons += $otherButtons;
             }

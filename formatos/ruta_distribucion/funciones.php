@@ -228,6 +228,9 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
     ?>
     <script>
         $(document).ready(function () {
+            $("#rejectButton2").click(function(){
+                alert(21);
+            });
             $(".asignar_distribuciones").click(function () {
                 var idft_ruta_distribucion = $(this).attr("idft_ruta_distribucion");
                 var mensajero_ruta = $(this).attr("mensajero_ruta");
@@ -307,5 +310,40 @@ function vincular_dependencia_ruta_distribucion($idformato, $iddoc) {//POSTERIOR
             actualizar_dependencia_ruta_distribucion($datos[$i]['idft_ruta_distribucion'], $datos[$i]['dependencia_asignada'], 1);
         }
     }
+}
+
+function ruta_distribucion_fab_buttons(){
+
+    return  array('adddependence' => [
+        'button' => [
+            'id' => 'adddependence',
+            'class' => 'small red',
+            'html' => '',
+            'tooltip' => 'Adicionar Dependencias de la Ruta',
+            'visible' => 1,
+            'data' => [
+                'action' => 0
+            ]
+        ],
+        'icon' => [
+            'class' => 'fa fa-times',
+            'html' => ''
+        ]
+    ],'addmessage' => [
+        'button' => [
+            'id' => 'addmessage',
+            'class' => 'small red',
+            'html' => '',
+            'tooltip' => 'Adicionar Mensajeros de la Ruta',
+            'visible' => 1,
+            'data' => [
+                'action' => 0
+            ]
+        ],
+        'icon' => [
+            'class' => 'fa fa-times',
+            'html' => ''
+        ]
+    ]);
 }
 ?>

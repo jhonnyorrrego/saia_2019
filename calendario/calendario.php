@@ -14,7 +14,7 @@ $max_salida--;
 }
 
 
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 // Inicialiaci�n de las variables del calendario del planeador
 require_once($ruta_db_superior."calendario/activecalendar/source/activecalendar.php");
 require_once($ruta_db_superior."calendario/activecalendar/source/activecalendarweek.php");

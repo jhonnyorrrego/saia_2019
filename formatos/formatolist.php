@@ -1,4 +1,15 @@
 <?php
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'phpmkrfn.php';
 // Initialize common variables
 $x_idformato = Null;
 $x_nombre = Null;
@@ -16,10 +27,7 @@ $x_orientacion = Null;
 $x_papel = Null;
 $x_exportar = Null; 
 $x_cod_padre = Null;
-?>
-<?php include ("db.php") ?>
-<?php include ("phpmkrfn.php") ?>
-<?php
+
 $nStartRec = 0;
 $nStopRec = 0;
 $nTotalRecs = 0;

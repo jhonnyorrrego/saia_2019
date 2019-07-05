@@ -1,8 +1,17 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
-<?php
+<?php 
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+session_start(); 
+ob_start(); 
 
-
+include_once $ruta_db_superior . 'core/autoload.php';
 // Initialize common variables
 $x_idvista_formato = Null;
 $x_nombre = Null;
@@ -20,7 +29,6 @@ $x_formato_padre = Null;
 $x_banderas = Null;
 $x_font_size = Null;
 ?>
-<?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
 <?php include ("librerias/header_formato.php") ?>
 <script language=javascript>

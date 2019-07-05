@@ -458,7 +458,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
             vincular_campo_anexo($idformato);
         }
         insertar_anexo_formato($idformato, $documentacion, $anexos);
-        //crear_modulo_formato($idformato);
+        crear_modulo_formato($idformato);
     }
     if ($fieldList["cod_padre"] && $idformato) {
 
@@ -877,7 +877,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         }
         // $retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
         // insertar_anexo_formato($idformato,$documentacion,$anexos);
-        //crear_modulo_formato($idformato);
+        crear_modulo_formato($idformato);
     }
 
 
@@ -3322,7 +3322,7 @@ function validar_nombres($texto)
     return $nuevo_texto;
 }
 
-function consultarPermisosPerfil()
+function consultarPermisosPerfil($nombreFormato)
 {
     global $conn;
     $permisos = '';
@@ -3330,8 +3330,13 @@ function consultarPermisosPerfil()
     if ($consultaPermisos['numcampos']) {
         $permisos = '<div>';
         for ($i = 0; $i < $consultaPermisos['numcampos']; $i++) {
+            $permisosPerfil = busca_filtro_tabla("b.perfil_idperfil","modulo a, permiso_perfil b","a.idmodulo=b.modulo_idmodulo and b.perfil_idperfil = " . $consultaPermisos[$i]["idperfil"] ." and a.nombre='crear_{$nombreFormato}' and a.enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php'","",$conn);
+            $checked = '';
+            if($permisosPerfil["numcampos"]){
+                $checked = "checked='checked'";
+            }
             $permisos .= "<label class='checkbox inline'>
-            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}'> {$consultaPermisos[$i]["nombre"]}
+            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
             </label>";
         }
         $permisos .= '</div>';
@@ -3343,7 +3348,7 @@ function permisosFormato($idformato, $idperfil, $nombreFormato)
 {
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
-    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php' ", "", $conn);
     $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
     phpmkr_query($eliminarPermisos);
     if ($consultaModulo['numcampos']) {
@@ -3361,7 +3366,7 @@ function eliminarPermisoFormato($idformato, $nombreFormato)
 {
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
-    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php' ", "", $conn);
     $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
     $deletePermisos = phpmkr_query($eliminarPermisos);
     if ($deletePermisos) {

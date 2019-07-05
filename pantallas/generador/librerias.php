@@ -191,7 +191,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
             if (count($sql_update)) {
                 $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
                 if ($valorArbol) {
-                    $sqlArboles = "UPDATE campos_formato SET valor = {$valorArbol} WHERE idcampos_formato={$idpantalla_campos}";
+                    $sqlArboles = "UPDATE campos_formato SET valor = '{$valorArbol}' WHERE idcampos_formato={$idpantalla_campos}";
                     phpmkr_query($sqlArboles) or die($sqlArboles);
                 }
                 //$retorno["sql"] = $sql2; // Solo para depurar3
