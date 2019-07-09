@@ -5,6 +5,7 @@ $ruta_db_superior = $ruta = '';
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
@@ -13,20 +14,42 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$data = [
-    [
-        'id' => uniqid(),
-        'imgRoute' => 'temporal/temporal_amendoza/1215859079r.',
-        'userName' => 'jhon valencia',
-        'title' => 'titulo de prueba',
-        'icon' => 'fa fa-lock',
-        'content' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        'url' => 'views/tareas/crear.php',
-        'date' => '2019-01-01 01:06:22',
-    ]
+$Response = (object) [
+    'data' => new stdClass(),
+    'message' => '',
+    'success' => 0
 ];
 
-echo '<pre>';
-var_dump($data);
-echo '</pre>';
-exit;
+try {
+    //JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if (!$_REQUEST['documentId']) {
+        throw new Exception('Documento invalido', 1);
+    }
+
+    $records = DocumentoRastro::findAllByAttributes([
+        'fk_documento' => $_REQUEST['documentId']
+    ], null, 'fecha desc');
+
+    $data = [];
+    foreach ($records as $DocumentoRastro) {
+        $Funcionario = $DocumentoRastro->getUser();
+        $data[] =  [
+            'id' => $DocumentoRastro->getPK(),
+            'imgRoute' => $Funcionario->getImage('foto_recorte'),
+            'userName' => $Funcionario->getName(),
+            'title' => $DocumentoRastro->titulo,
+            'content' => $DocumentoRastro->descripcion,
+            'date' => DateController::convertDate($DocumentoRastro->fecha),
+            'icon' => $DocumentoRastro->getIcon(),
+            'url' => $DocumentoRastro->getModalRoute()
+        ];
+    }
+
+    $Response->data = $data;
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
+}
+
+echo json_encode($Response);

@@ -30,6 +30,9 @@ class DocumentoRastro extends Model
     protected $descripcion;
     protected $titulo;
 
+    //relations
+    protected $Funcionario;
+
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -71,5 +74,46 @@ class DocumentoRastro extends Model
         }
 
         return true;
+    }
+
+    /**
+     * obtiene la instancia del funcionario relacionada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function getUser()
+    {
+        if (!$this->Funcionario) {
+            $this->Funcionario = $this->getRelationFk('Funcionario');
+        }
+
+        return $this->Funcionario;
+    }
+
+    /**
+     * obtiene el icon para la linea de tiempo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function getIcon()
+    {
+        return ' fa fa-lock';
+    }
+
+    /**
+     * obtiene la ruta para la ventana modal
+     * que se abre en la linea de tiempo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function getModalRoute()
+    {
+        return '';
     }
 }

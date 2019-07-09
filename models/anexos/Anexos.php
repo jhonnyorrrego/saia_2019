@@ -24,8 +24,6 @@ class Anexos extends LogModel
     protected $user;
     protected $log;
 
-    public $clone;
-
     function __construct($id = null)
     {
         return parent::__construct($id);

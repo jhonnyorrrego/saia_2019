@@ -27,7 +27,7 @@ function getTransfer($transferId)
             'funcionario_codigo' => $code
         ]);
 
-        $Response = (object)$findTransfer[0];
+        $Response = (object) $findTransfer[0];
         $Response->user = $Funcionario;
     } else {
         $Response = new stdclass();
@@ -149,6 +149,7 @@ function plantilla($documentId, $transferId = 0)
                     <span class="px-1 cursor fa fa-chain notification f-20" id="show_documents" data-toggle="tooltip" data-placement="bottom" title="Documentos vinculados">
                         <span class="badge badge-important counter" id="documents_counter"></span>
                     </span>
+                    <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
                 </div>
                 <div class="col-auto d-none d-md-block">
                     <?= expiration($Documento->fecha_limite, $documentId) ?>

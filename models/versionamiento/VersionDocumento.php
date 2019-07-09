@@ -56,7 +56,7 @@ class VersionDocumento extends Model
         return DocumentoRastro::newRecord([
             'fk_documento' => $this->documento_iddocumento,
             'accion' => DocumentoRastro::ACCION_VERSIONAMIENTO,
-            'titulo' => 'Docuemeno versionado'
+            'titulo' => 'Docuemento versionado'
         ]);
     }
 }
