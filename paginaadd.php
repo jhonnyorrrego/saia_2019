@@ -96,7 +96,7 @@ switch ($sAction) {
 				DocumentoRastro::newRecord([
 					'fk_documento' => $key,
 					'accion' => DocumentoRastro::ACCION_DIGITALIZACION,
-					'titulo' => $state == 'Páginas digitalzadas'
+					'titulo' => 'Páginas digitalzadas'
 				]);
 
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
