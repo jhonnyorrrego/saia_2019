@@ -1,6 +1,6 @@
 <?php
 
-class RutaDocumento extends Model
+class RutaDocumento extends LogModel
 {
     const TIPO_RADICACION = 1;
     const TIPO_APROBACION = 2;
@@ -15,10 +15,6 @@ class RutaDocumento extends Model
     protected $tipo_flujo;
     protected $fk_version_documento;
     protected $finalizado;
-    
-
-    //utilities
-    public $clone;
 
     function __construct($id = null)
     {
@@ -30,7 +26,7 @@ class RutaDocumento extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'tipo',
                 'estado',
@@ -43,37 +39,46 @@ class RutaDocumento extends Model
         ];
     }
 
-    /**
-     * funcionalidad a ejecutar posterior a crear un registro
+    /* funcionalidad a ejecutar posterior a crear un registro
      *
      * @return boolean
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-07
+     * @date 2019-03-19
      */
-    protected function afterCreate()
+    public function afterCreate()
     {
-        return LogController::create(LogAccion::CREAR, 'RutaDocumentoLog', $this);
+        return
+            parent::afterCreate() &&
+            $this->addTraceability();
     }
 
     /**
-     * evento de base de datos
-     * se ejecuta antes de modificar un registro
+     * crea los registros para el rastro
+     * del documento
+     *
      * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-08
      */
-    protected function beforeUpdate()
+    public function addTraceability()
     {
-        $this->clone = new self($this->getPK());
-        return $this->clone->getPK();
-    }
+        if ($this->tipo == self::TIPO_RADICACION) {
+            $action = DocumentoRastro::ACCION_ASIGNACION_RUTA_RADICACION;
+            $title = 'Asignación ruta de radicación';
+        } else if ($this->tipo == self::TIPO_APROBACION) {
+            $action = DocumentoRastro::ACCION_ASIGNACION_RUTA_APROBACION;
+            $title = 'Asignación ruta de aprobación';
+        }
 
-    /**
-     * evento de base de datos
-     * se ejecuta despues de modificar un registro
-     * @return void
-     */
-    protected function afterUpdate()
-    {
-        return LogController::create(LogAccion::EDITAR, 'RutaDocumentoLog', $this);
+        if (!$action) {
+            throw new Exception("tipo invalido", 1);
+        }
+
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->fk_documento,
+            'accion' => $action,
+            'titulo' => $title
+        ]);
     }
 
     /**

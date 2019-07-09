@@ -1,6 +1,6 @@
 <?php
 
-class Anexos extends Model
+class Anexos extends LogModel
 {
     use TAnexo;
 
@@ -23,7 +23,7 @@ class Anexos extends Model
     protected $versionamiento;
     protected $user;
     protected $log;
-    
+
     public $clone;
 
     function __construct($id = null)
@@ -36,7 +36,7 @@ class Anexos extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'documento_iddocumento',
                 'ruta',
@@ -66,36 +66,22 @@ class Anexos extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-03-18
      */
-    protected function afterCreate()
+    public function afterCreate()
     {
-        if (AccesoController::setFullAccess(Acceso::TIPO_ANEXOS, $this->getPK())) {
-            return LogController::create(LogAccion::CREAR, 'AnexosLog', $this);
-        } else {
-            return false;
-        }
+        return
+            parent::afterCreate() &&
+            AccesoController::setFullAccess(Acceso::TIPO_ANEXOS, $this->getPK()) &&
+            $this->addTraceability();
     }
 
     /**
-     * evento de base de datos
-     * se ejecuta antes de modificar un registro
+     * obtiene el funcionario del ultimo 
+     * moviento en log
+     *
      * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
-    protected function beforeUpdate()
-    {
-        $this->clone = new self($this->getPK());
-        return $this->clone->getPK();
-    }
-
-    /**
-     * evento de base de datos
-     * se ejecuta despues de modificar un registro
-     * @return void
-     */
-    protected function afterUpdate()
-    {
-        return LogController::create(LogAccion::EDITAR, 'AnexosLog', $this);
-    }
-
     public function getLastUser()
     {
         if (!$this->user) {
@@ -172,7 +158,6 @@ SQL;
         return false;
     }
 
-
     /**
      * consulta las versiones anteriores de un anexo
      *
@@ -194,5 +179,21 @@ SQL;
 
         return $response;
     }
-}
 
+    /**
+     * crea el registro de rastro sobre la 
+     * vinculacion de uin anexo
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function addTraceability()
+    {
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->documento_iddocumento,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_ANEXO,
+            'titulo' => 'Se le ha vinculado un anexo'
+        ]);
+    }
+}

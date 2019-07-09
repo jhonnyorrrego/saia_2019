@@ -67,7 +67,7 @@ function dependencias($padre)
     $cont = count($listado1);
     if ($cont) {
         $listado3 = dependencias(implode(",", $listado2));
-        $listado4 = array_merge((array)$listado1, (array)$listado3);
+        $listado4 = array_merge((array) $listado1, (array) $listado3);
     } else
         $listado4 = $padres;
 
@@ -98,10 +98,10 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     if (!array_key_exists("numero", $arreglo) && $tipo_contador) {
         $arreglo["numero"] = 0;
     }
-    if (!@$arreglo["plantilla"]) {
-        $arreglo["plantilla"] = "''";
+    if (empty($arreglo["plantilla"])) {
+        $arreglo["plantilla"] = "";
     } else {
-        $idformato = busca_filtro_tabla("idformato", "formato", "lower(nombre)=" . strtolower($arreglo["plantilla"]) . "", "", $conn);
+        $idformato = busca_filtro_tabla("idformato", "formato", "lower(nombre)='" . strtolower($arreglo["plantilla"]) . "'", "", $conn);
         if ($idformato['numcampos']) {
             $arreglo["formato_idformato"] = $idformato[0]['idformato'];
         }
@@ -109,26 +109,23 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     if (!isset($arreglo["tipo_radicado"]))
         $arreglo["tipo_radicado"] = $contador[0]["idcontador"];
     if ($tipo_contador == "radicacion_salida" && !isset($arreglo["plantilla"]))
-        $arreglo["estado"] = "'APROBADO'";
-    elseif (@$arreglo["plantilla"] != "")
-        $arreglo["estado"] = "'ACTIVO'";
+        $arreglo["estado"] = "APROBADO";
+    elseif (!empty($arreglo["plantilla"]))
+        $arreglo["estado"] = "ACTIVO";
     elseif (!isset($arreglo["estado"]))
-        $arreglo["estado"] = "'ACTIVO'";
-    $arreglo["fecha_creacion"] = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
+        $arreglo["estado"] = "ACTIVO";
 
     // VENTANILLA RADICACION
-    $ventanilla_radicacion = usuario_actual('ventanilla_radicacion');
-    if (!$ventanilla_radicacion) {
-        $ventanilla_radicacion = 0;
-    }
+    $ventanilla_radicacion = usuario_actual('ventanilla_radicacion') ?? 0;
     $arreglo["ventanilla_radicacion"] = $ventanilla_radicacion;
 
-    $valores = implode(",", array_values($arreglo));
+    $doc = Documento::newRecord($arreglo);
+    /*$valores = implode(",", array_values($arreglo));
     $campos = implode(",", array_keys($arreglo));
 
     $sql = "INSERT INTO documento(" . $campos . ")" . " VALUES (" . $valores . ")";
     phpmkr_query($sql, $conn) or die($sql . "    <br> -" . phpmkr_error());
-    $doc = phpmkr_insert_id();
+    $doc = phpmkr_insert_id();*/
 
     if (empty($doc)) {
         die("No hay ID Documento");
@@ -248,7 +245,7 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
     } else
         $datorig[0]['iddependencia_cargo'] = $dato;
     if ($temp != "" && $temp["numcampos"] > 0)
-        $datorig[0] = array_merge((array)$datorig[0], (array)$temp[0]);
+        $datorig[0] = array_merge((array) $datorig[0], (array) $temp[0]);
     return $datorig;
 }
 
@@ -406,6 +403,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         }
     }
 
+    DocumentoRastro::newRecord([
+        'fk_documento' => $idarchivo,
+        'accion' => DocumentoRastro::ACCION_TRANSFERENCIA,
+        'titulo' => 'Documento transferido.'
+    ]);
     llama_funcion_accion($idarchivo, $idformato, "transferir", "POSTERIOR");
     if ($anexos == 1) {
         return $idtransferencia;
@@ -428,7 +430,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
  */
 function aprobar($iddoc = 0, $opcion = 0)
 {
-    global $ruta_db_superior, $conn;
+    global $conn;
     $aprobar_posterior = 0;
     if (isset($_REQUEST["iddoc"]) && $_REQUEST["iddoc"]) {
         $iddoc = $_REQUEST["iddoc"];
@@ -473,6 +475,12 @@ function aprobar($iddoc = 0, $opcion = 0)
 
                 phpmkr_query("UPDATE buzon_entrada SET activo=0 WHERE idtransferencia=" . $registro_actual[$i]["idtransferencia"], $conn);
                 $valores = $iddoc . ",'$estado',$origen," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$destino,'DOCUMENTO',1,1,";
+
+                DocumentoRastro::newRecord([
+                    'fk_documento' => $iddoc,
+                    'accion' => DocumentoRastro::ACCION_CONFIRMACION,
+                    'titulo' => 'Confirmación del documento'
+                ]);
             }
             if ($registro_actual[0]["ruta_idruta"] != "") {
                 $valores .= $registro_actual[0]["ruta_idruta"];
@@ -510,6 +518,11 @@ function aprobar($iddoc = 0, $opcion = 0)
                     'estado' => 1,
                     'fk_documento' => $iddoc,
                     'tipo' => RutaDocumento::TIPO_RADICACION
+                ]);
+                DocumentoRastro::newRecord([
+                    'fk_documento' => $iddoc,
+                    'accion' => DocumentoRastro::ACCION_RADICACION,
+                    'titulo' => 'Radicación del documento'
                 ]);
 
                 $nombre_tabla = busca_filtro_tabla("nombre_tabla,banderas", "formato", "nombre like '$formato'", "", $conn);
@@ -812,15 +825,18 @@ function cargo_rol($iddoc)
  */
 function radicar_plantilla()
 {
-    global $conn, $sql, $ruta_db_superior;
+    global $conn, $ruta_db_superior;
+
     $valores = array();
     $plantilla = "";
     $idformato = 0;
-    if (!@$_POST["ejecutor"]) {
-        $_POST["ejecutor"] = $_SESSION["usuario_actual"];
+
+    if (empty($_POST["ejecutor"])) {
+        $_POST["ejecutor"] = SessionController::getValue('usuario_actual');
     }
-    if (@$_POST["formato"]) {
-        $plantilla = "'" . strtoupper($_POST["formato"]) . "'";
+
+    if (!empty($_POST["formato"])) {
+        $plantilla = strtoupper($_POST["formato"]);
         $formato = busca_filtro_tabla("idformato,nombre_tabla", "formato A", "A.nombre LIKE '" . strtolower($_POST["formato"]) . "'", "", $conn);
         if ($formato["numcampos"]) {
             $idformato = $formato[0]["idformato"];
@@ -842,32 +858,27 @@ function radicar_plantilla()
         }
     }
 
-    $buscar = phpmkr_query("SELECT A.* FROM documento A WHERE 1=0", $conn);
-    $lista_campos = array();
-    for ($i = 0; $i < phpmkr_num_fields($buscar); $i++) {
-        array_push($lista_campos, strtolower(phpmkr_field_name($buscar, $i)));
-    }
-
-    $valores = array("fecha" => fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s'));
+    $Documento = new Documento();
     foreach ($_POST as $key => $valor) {
-        if (in_array($key, $lista_campos) && $key != "estado" && $key != "descripcion" && $key != "fecha") {
-            if ($valor[0] != "'") {
-                $valor = "'" . $valor . "'";
-            }
+        if (
+            in_array($key, $Documento->getSafeAttributes()) &&
+            !in_array($key, ["estado", "descripcion", "fecha"])
+        ) {
             $valores[$key] = $valor;
         }
     }
-    $valores["descripcion"] = "'" . str_replace("'", "", $_POST["descripcion"]) . "'";
+    $valores["descripcion"] = str_replace("'", "", $_POST["descripcion"]);
     if (isset($_POST["serie_idserie"]) && $_POST["serie_idserie"]) {
         $valores["serie"] = $_POST["serie_idserie"];
     } else {
         $valores["serie"] = 0;
     }
     $valores["plantilla"] = $plantilla;
-    if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "") {
+    if (!empty($_REQUEST["dependencia"])) {
         $valores["responsable"] = $_REQUEST["dependencia"];
     }
-    if (@$_POST["tipo_radicado"]) {
+
+    if (!empty($_POST["tipo_radicado"])) {
         $tipo_radicado = busca_filtro_tabla("idcontador", "contador", "nombre='" . $_POST["tipo_radicado"] . "'", "", $conn);
         if ($tipo_radicado["numcampos"]) {
             $valores["tipo_radicado"] = $tipo_radicado[0]["idcontador"];
@@ -907,7 +918,7 @@ function radicar_plantilla()
 
     llama_funcion_accion(null, $idformato, "radicar", "ANTERIOR");
     $_POST["iddoc"] = radicar_documento_prueba(trim($_POST["tipo_radicado"]), $valores, null);
-    if ($plantilla == "") {
+    if (empty($plantilla)) {
         include_once("anexosdigitales/funciones_archivo.php");
         $permisos = null;
         cargar_archivo($_POST["iddoc"], $permisos);
@@ -918,7 +929,14 @@ function radicar_plantilla()
     if (array_key_exists("anterior", $_REQUEST)) {
         llama_funcion_accion($_REQUEST["anterior"], $idformato, "responder", "ANTERIOR");
         $idbuzon = busca_filtro_tabla("max(A.idtransferencia) as idbuzon", "buzon_entrada A", "A.archivo_idarchivo=" . $_REQUEST["anterior"], "", $conn);
-        phpmkr_query("INSERT INTO respuesta(fecha,destino,origen,idbuzon,plantilla) VALUES (" . fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s') . "," . $_POST["iddoc"] . "," . $_REQUEST["anterior"] . "," . $idbuzon[0]["idbuzon"] . "," . $plantilla . ")", $conn);
+
+        Respuesta::newRecord([
+            'fecha' => date('Y-m-d H:i:s'),
+            'destino' => $_POST["iddoc"],
+            'origen' => $_REQUEST["anterior"],
+            'idbuzon' =>  $idbuzon[0]["idbuzon"],
+            'plantilla' =>  $plantilla,
+        ]);
 
         $datos["archivo_idarchivo"] = $_REQUEST["anterior"];
         $datos["nombre"] = "TRAMITE";
@@ -943,8 +961,6 @@ function radicar_plantilla()
             return json_encode($retorno);
         }
     } else {
-        Documento::setPermissions($_POST["iddoc"]);
-
         $formato = busca_filtro_tabla("", "formato", "nombre_tabla LIKE '" . @$_POST["tabla"] . "'", "", $conn);
         $banderas = array();
         if ($formato["numcampos"]) {
@@ -986,7 +1002,7 @@ function radicar_plantilla()
         } else if (isset($_POST["firmado"]) && $_POST["firmado"] == "varias") {
             $usuario_origen = busca_filtro_tabla("dependencia", $_POST["tabla"], "id" . $_POST["tabla"] . "=" . $idplantilla, "", $conn);
             if (!isset($_REQUEST["no_redirecciona"])) {
-                redirecciona(FORMATOS_SAIA . "librerias/rutaadd.php?x_plantilla=$plantilla&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
+                redirecciona(FORMATOS_SAIA . "librerias/rutaadd.php?x_plantilla='$plantilla'&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
                 return;
             } else {
                 $retorno["mensaje"] = "Error al generar la ruta de aprobacion";
@@ -1344,7 +1360,16 @@ function guardar_documento($iddoc, $tipo = 0)
         }
         llama_funcion_accion($iddoc, $idformato, "editar", "ANTERIOR");
         $sql = "UPDATE " . $tabla . " SET " . implode(",", $update) . " WHERE documento_iddocumento=" . $iddoc;
-        phpmkr_query($sql) or die("Error al actualizar el documento");
+
+        if (!phpmkr_query($sql)) {
+            throw new Exception("Error al actualizar el documento", 1);
+        }
+
+        DocumentoRastro::newRecord([
+            'fk_documento' => $iddoc,
+            'accion' => DocumentoRastro::ACCION_EDICION,
+            'titulo' => 'Edición del documento'
+        ]);
 
         if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "") {
             $valid_ruta = busca_filtro_tabla("idruta,origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "idruta asc", $conn);

@@ -3,12 +3,12 @@ $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-    if (is_file($ruta . 'db.php')) {
-        $ruta_db_superior = $ruta;
-    }
+	if (is_file($ruta . 'db.php')) {
+		$ruta_db_superior = $ruta;
+	}
 
-    $ruta .= '../';
-    $max_salida--;
+	$ruta .= '../';
+	$max_salida--;
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
@@ -53,7 +53,7 @@ if (@$_REQUEST["enlace"]) {
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
 		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
-		$x_enlace = "ordenar.php?key=" . $key."&accion=mostrar&mostrar_formato=1";
+		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	}
 }
 if ($_REQUEST["defecto"]) {
@@ -62,8 +62,6 @@ if ($_REQUEST["defecto"]) {
 if ($_REQUEST["mostrar_formato"]) {
 	$x_enlace .= "&mostrar_formato=" . $_REQUEST["mostrar_formato"];
 }
-
-include_once "phpmkrfn.php";
 
 $sAction = @$_POST["a_add"];
 $tabla = "pagina";
@@ -91,10 +89,16 @@ if (($sAction == "") || (($sAction == NULL))) {
 }
 
 switch ($sAction) {
-	case "A" :
+	case "A":
 		// Add
 		if (sincronizar_carpetas($tabla, $conn)) {
 			if ($key && $idformato[0][0]) {
+				DocumentoRastro::newRecord([
+					'fk_documento' => $key,
+					'accion' => DocumentoRastro::ACCION_DIGITALIZACION,
+					'titulo' => $state == 'Páginas digitalzadas'
+				]);
+
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
 			}
 		}
@@ -121,70 +125,73 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 ?>
 
 <style type="text/css">
-<!--
-INPUT, TEXTAREA, SELECT, body {
-	font-family: Tahoma;
-	font-size: 10px;
-}
+	INPUT,
+	TEXTAREA,
+	SELECT,
+	body {
+		font-family: Tahoma;
+		font-size: 10px;
+	}
 
-.phpmaker {
-	font-family: Verdana;
-	font-size: 9px;
-}
+	.phpmaker {
+		font-family: Verdana;
+		font-size: 9px;
+	}
 
-.encabezado {
-	background-color: <?php echo($config[0]["valor"]); ?>;
-	color: white;
-	padding: 10px;
-	text-align: left;
-}
+	.encabezado {
+		background-color: <?php echo ($config[0]["valor"]);
+							?>;
+		color: white;
+		padding: 10px;
+		text-align: left;
+	}
 
-.encabezado_list {
-	background-color: <?php echo($config[0]["valor"]); ?>;
-	color: white;
-	vertical-align: middle;
-	text-align: center;
-	font-weight: bold;
-}
+	.encabezado_list {
+		background-color: <?php echo ($config[0]["valor"]);
+							?>;
+		color: white;
+		vertical-align: middle;
+		text-align: center;
+		font-weight: bold;
+	}
 
-table thead td {
-	font-weight: bold;
-	cursor: pointer;
-	background-color: <?php echo($config[0]["valor"]); ?>;
-	text-align: center;
-	font-family: Verdana;
-	font-size: 9px;
-	text-transform: Uppercase;
-	vertical-align: middle;
-}
+	table thead td {
+		font-weight: bold;
+		cursor: pointer;
+		background-color: <?php echo ($config[0]["valor"]);
+							?>;
+		text-align: center;
+		font-family: Verdana;
+		font-size: 9px;
+		text-transform: Uppercase;
+		vertical-align: middle;
+	}
 
-table tbody td {
-	font-family: Verdana;
-	font-size: 9px;
-}
--->
+	table tbody td {
+		font-family: Verdana;
+		font-size: 9px;
+	}
 </style>
 <script type="text/javascript">
-		<!--
 	function EW_checkMyForm(EW_this) {
-	if (EW_this.x_id_documento && !EW_hasValue(EW_this.x_id_documento, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "POR FAVOR INGRESE EL CAMPO REQUERIDO - DOCUMENTO ASOCIADO"))
-	return false;
+		if (EW_this.x_id_documento && !EW_hasValue(EW_this.x_id_documento, "TEXT")) {
+			if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "POR FAVOR INGRESE EL CAMPO REQUERIDO - DOCUMENTO ASOCIADO"))
+				return false;
+		}
+		if (EW_this.x_id_documento && !EW_checkinteger(EW_this.x_id_documento.value)) {
+			if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "ENTERO INCORRECTO - DOCUMENTO ASOCIADO"))
+				return false;
+		}
+		if (EW_this.x_imagen && !EW_hasValue(EW_this.x_imagen, "FILE")) {
+			if (!EW_onError(EW_this, EW_this.x_imagen, "FILE", "POR FAVOR INGRESE EL CAMPO REQUERIDO - IMAGEN"))
+				return false;
+		}
 	}
-	if (EW_this.x_id_documento && !EW_checkinteger(EW_this.x_id_documento.value)) {
-	if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "ENTERO INCORRECTO - DOCUMENTO ASOCIADO"))
-	return false;
-	}
-	if (EW_this.x_imagen && !EW_hasValue(EW_this.x_imagen, "FILE" )) {
-	if (!EW_onError(EW_this, EW_this.x_imagen, "FILE", "POR FAVOR INGRESE EL CAMPO REQUERIDO - IMAGEN"))
-	return false;
-	}
-	}
-	--></script>
+</script>
 <br />
 <br />
 <span class="internos" style="display: none; font-family: verdana; font-size: 10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
-<form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo("?key=".$key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
+<form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo ("?key=" . $key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
 	$dir = "";
@@ -196,57 +203,57 @@ table tbody td {
 	$params = array();
 	$configuracion["numcampos"] = 0;
 	$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
-	for($i = 0; $i < $configuracion["numcampos"]; $i++) {
+	for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
 		switch ($configuracion[$i]["nombre"]) {
-			case "ruta_servidor" :
+			case "ruta_servidor":
 				$dir = $configuracion[$i]["valor"];
-				$params["host"]= $configuracion[$i]["valor"];
+				$params["host"] = $configuracion[$i]["valor"];
 				break;
-			case "ruta_ftp" :
+			case "ruta_ftp":
 				$ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
-				$params["dftp"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$params["dftp"] = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
-			case "temporal_digitalizacion" :				
-				$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+			case "temporal_digitalizacion":
+				$params["url"] = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				$temporal_usuario = $params["url"];
 				break;
-			case "puerto_ftp" :
+			case "puerto_ftp":
 				$puerto_ftp = 21;
-				if(!empty($configuracion[$i]["valor"])) {
+				if (!empty($configuracion[$i]["valor"])) {
 					$puerto_ftp = $configuracion[$i]["valor"];
 				}
-				$params["port"]= $puerto_ftp;
+				$params["port"] = $puerto_ftp;
 				break;
-			case "clave_ftp" :
-				if($configuracion[$i]['encrypt']) {
-					include_once ('pantallas/lib/librerias_cripto.php');
+			case "clave_ftp":
+				if ($configuracion[$i]['encrypt']) {
+					include_once('pantallas/lib/librerias_cripto.php');
 					$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
 				}
 				$clave = $configuracion[$i]["valor"];
-				$params["clave"]= $configuracion[$i]["valor"];
+				$params["clave"] = $configuracion[$i]["valor"];
 				break;
-			case "usuario_ftp" :
+			case "usuario_ftp":
 				$usuario = $configuracion[$i]["valor"];
-				$params["usuario"]= $configuracion[$i]["valor"];
+				$params["usuario"] = $configuracion[$i]["valor"];
 				break;
-			case "tamanio_maximo_upload" :
+			case "tamanio_maximo_upload":
 				$peso = $configuracion[$i]["valor"];
 				break;
-			case "ancho_imagen" :
+			case "ancho_imagen":
 				$ancho = $configuracion[$i]["valor"];
-				$params["ancho"]= $configuracion[$i]["valor"];
+				$params["ancho"] = $configuracion[$i]["valor"];
 				break;
-			case "alto_imagen" :
+			case "alto_imagen":
 				$alto = $configuracion[$i]["valor"];
-				$params["alto"]= $configuracion[$i]["valor"];
+				$params["alto"] = $configuracion[$i]["valor"];
 				break;
-			case 'tipo_ftp' :
+			case 'tipo_ftp':
 				$ftp_type = $configuracion[$i]["valor"];
 				$params["ftp_type"] = $configuracion[$i]["valor"];
 				break;
-			case "img_max_upload_size" :
+			case "img_max_upload_size":
 				$img_max_size = 16777216;
-				if($configuracion[$i]["valor"]) {
+				if ($configuracion[$i]["valor"]) {
 					$img_max_size = $configuracion[$i]["valor"];
 				}
 				$params["max_upload_size"] = $img_max_size;
@@ -254,33 +261,32 @@ table tbody td {
 		}
 	}
 	$params["ver_log"] = false;
-	if(!$params["ftp_type"] || $params["ftp_type"]==''){
+	if (!$params["ftp_type"] || $params["ftp_type"] == '') {
 		$params["ftp_type"] = "ftp";
 	}
-
 	?>
 
-	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
-	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
+	<input type="hidden" name="EW_Max_File_Size" value="<?php echo ($peso); ?>">
+	<input type="hidden" name="x_enlace" value="<?php echo ($x_enlace); ?>">
 	<table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
 			<td width="205" class="encabezado"> <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
-			if ($key) {
-				$x_id_documento = $key;
-			} else {
-				$x_id_documento = 0;
-			}
-			if (!is_dir($temporal_usuario)) {
-				if (!mkdir($temporal_usuario, PERMISOS_CARPETAS, true)) {
-					alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
-				}
-				volver("1");
-			}
-			chmod($temporal_usuario, PERMISOS_CARPETAS);
-			?>
-				<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
+					<?php
+					if ($key) {
+						$x_id_documento = $key;
+					} else {
+						$x_id_documento = 0;
+					}
+					if (!is_dir($temporal_usuario)) {
+						if (!mkdir($temporal_usuario, PERMISOS_CARPETAS, true)) {
+							alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
+						}
+						volver("1");
+					}
+					chmod($temporal_usuario, PERMISOS_CARPETAS);
+					?>
+					<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
 					<?php
 					$tabla = "documento";
 					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
@@ -296,151 +302,169 @@ table tbody td {
 					}
 					?> </span></td>
 			<td width="207" rowspan="2" bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="submit" name="Action" value="CONTINUAR" />
-			</span><div align="center"></div></td>
+					<input type="submit" name="Action" value="CONTINUAR" />
+				</span>
+				<div align="center"></div>
+			</td>
 		</tr>
 		<tr>
 			<td width="205" class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
-			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
-				<input type="radio" name="x_escaneo" value="1">NO
-				<input type="radio" name="x_escaneo" value="0" checked>
-			</span></td>
+			<td width="335" bgcolor="#F5F5F5">
+				<span class="phpmaker"> SI
+					<input type="radio" name="x_escaneo" value="1">NO
+					<input type="radio" name="x_escaneo" value="0" checked>
+				</span>
+			</td>
 		</tr>
 
 	</table>
 	<div class="container" id="info_scanner"></div>
-
-
 </form>
-            <div id="output"></div>
+<div id="output"></div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
+	var iddoc = "<?php echo $key; ?>";
+	var idfunc = "<?php echo $funcionario; ?>";
 
-    var iddoc = "<?php echo $key;?>";
-    var idfunc = "<?php echo $funcionario;?>";
+	//get the IP addresses associated with an account
+	function getIPs(callback) {
+		var ip_dups = {};
+		//compatibility for firefox and chrome
+		var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 
-    //get the IP addresses associated with an account
-    function getIPs(callback){
-        var ip_dups = {};
-        //compatibility for firefox and chrome
-        var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+		if (RTCPeerConnection)(function() {
+			var rtc = new RTCPeerConnection({
+				iceServers: []
+			});
+			if (1 || window.mozRTCPeerConnection) { // FF [and now Chrome!] needs a channel/stream to proceed
+				rtc.createDataChannel('', {
+					reliable: false
+				});
+			};
 
-		if (RTCPeerConnection) (function () {
-		    var rtc = new RTCPeerConnection({iceServers:[]});		    
-		    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
-		        rtc.createDataChannel('', {reliable:false});
-		    };
-		    
-		    rtc.onicecandidate = function (evt) {
-		        // convert the candidate to SDP so we can run it through our general parser
-		        // see https://twitter.com/lancestout/status/525796175425720320 for details
-		        if (evt.candidate) grepSDP("a="+evt.candidate.candidate);
-		    };
-		    rtc.createOffer(function (offerDesc) {
-		        grepSDP(offerDesc.sdp);
-		        rtc.setLocalDescription(offerDesc);
-		    }, function (e) { console.warn("offer failed", e); });
-		    
-		    
-		    var addrs = Object.create(null);
-		    addrs["0.0.0.0"] = false;
-		    function updateDisplay(newAddr) {
-		        if (newAddr in addrs) return;
-		        else addrs[newAddr] = true;
-		        
-		        var displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
-		        callback(displayAddrs.join("") || "");
-		        //document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
-		    }
-		    
-		    function grepSDP(sdp) {
-		        var hosts = [];
-		        sdp.split('\r\n').forEach(function (line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
-		        	console.log('texto : ' , line);
-		            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
-		                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
-		                    addr = parts[4],
-		                    type = parts[7];
-		                if (type === 'host'){
-		                	if(addr.indexOf(":") < 0 && addr != '0.0.0.0'){
-		                		updateDisplay(addr);
-		                	}
-		                }
-		            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
-		                var parts = line.split(' '),
-		                    addr = parts[2];
-		                if(addr.indexOf(":") < 0 && addr != '0.0.0.0'){
-		                	updateDisplay(addr);
-		                }
-		            }
-		        });
-		    }
+			rtc.onicecandidate = function(evt) {
+				// convert the candidate to SDP so we can run it through our general parser
+				// see https://twitter.com/lancestout/status/525796175425720320 for details
+				if (evt.candidate) grepSDP("a=" + evt.candidate.candidate);
+			};
+			rtc.createOffer(function(offerDesc) {
+				grepSDP(offerDesc.sdp);
+				rtc.setLocalDescription(offerDesc);
+			}, function(e) {
+				console.warn("offer failed", e);
+			});
+
+
+			var addrs = Object.create(null);
+			addrs["0.0.0.0"] = false;
+
+			function updateDisplay(newAddr) {
+				if (newAddr in addrs) return;
+				else addrs[newAddr] = true;
+
+				var displayAddrs = Object.keys(addrs).filter(function(k) {
+					return addrs[k];
+				});
+				callback(displayAddrs.join("") || "");
+				//document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
+			}
+
+			function grepSDP(sdp) {
+				var hosts = [];
+				sdp.split('\r\n').forEach(function(line) { // c.f. http://tools.ietf.org/html/rfc4566#page-39
+					console.log('texto : ', line);
+					if (~line.indexOf("a=candidate")) { // http://tools.ietf.org/html/rfc4566#section-5.13
+						var parts = line.split(' '), // http://tools.ietf.org/html/rfc5245#section-15.1
+							addr = parts[4],
+							type = parts[7];
+						if (type === 'host') {
+							if (addr.indexOf(":") < 0 && addr != '0.0.0.0') {
+								updateDisplay(addr);
+							}
+						}
+					} else if (~line.indexOf("c=")) { // http://tools.ietf.org/html/rfc4566#section-5.7
+						var parts = line.split(' '),
+							addr = parts[2];
+						if (addr.indexOf(":") < 0 && addr != '0.0.0.0') {
+							updateDisplay(addr);
+						}
+					}
+				});
+			}
 		})();
-    }
+	}
 
-    //insert IP addresses into the page
-    getIPs(function(ip){
-        var data = {doc : iddoc, ipaddr : ip, func : idfunc};
+	//insert IP addresses into the page
+	getIPs(function(ip) {
+		var data = {
+			doc: iddoc,
+			ipaddr: ip,
+			func: idfunc
+		};
 
-        if(ip.length) {
-	        $.ajax({
-	        	url: "digitalizacion/iniciar_tarea.php",
-	        	method : "POST",
-	        	dataType: "json",
-	        	data: data,
-	        	async: false,
-	        	success: function(datos) {
-	            	if(datos.estado == '1') {
-	            		top.notification({
+		if (ip.length) {
+			$.ajax({
+				url: "digitalizacion/iniciar_tarea.php",
+				method: "POST",
+				dataType: "json",
+				data: data,
+				async: false,
+				success: function(datos) {
+					if (datos.estado == '1') {
+						top.notification({
 							message: 'Por favor inicie la App de digitalización',
 							type: "info"
 						});
-	            	} else {
+					} else {
 						top.notification({
 							message: datos.mensaje,
 							type: "error"
 						});
-	            	}
-	            }
-	        });
-        } else {
+					}
+				}
+			});
+		} else {
 			top.notification({
 				message: "No es posible obtener su dirección IP. Contacte con soporte técnico",
 				type: "error"
 			});
-        }
-    });
-    
-    </script>
+		}
+	});
+</script>
 
 <?php
 
-function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank")
+{
 	if (!@$_SESSION['radicacion_masiva']) {
 		if ($target) {
 			?>
-	<script language="javascript">
-		var iddoc = "<?php echo $iddocumento;?>";
-		//alert(iddoc);
-		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
-		if(parent.frames['arbol_formato']) {
-			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
-		}
-    	window.open("<?php print($location);?>","<?php print($target);?>");
-    </script>
-<?php
+			<script language="javascript">
+				var iddoc = "<?php echo $iddocumento; ?>";
+				//alert(iddoc);
+				//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+				if (parent.frames['arbol_formato']) {
+					parent.frames['arbol_formato'].postMessage({
+						iddocumento: iddoc
+					}, "*");
+				}
+				window.open("<?php print($location); ?>", "<?php print($target); ?>");
+			</script>
+		<?php
 		} else {
 			?>
-	<script language="javascript">
-		var iddoc = "<?php echo $iddocumento;?>";
-		//alert(iddoc);
-		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
-		if(parent.frames['arbol_formato']) {
-			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
-		}
-    	window.open("<?php print($location);?>","centro");
-    </script>
-<?php
+			<script language="javascript">
+				var iddoc = "<?php echo $iddocumento; ?>";
+				//alert(iddoc);
+				//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+				if (parent.frames['arbol_formato']) {
+					parent.frames['arbol_formato'].postMessage({
+						iddocumento: iddoc
+					}, "*");
+				}
+				window.open("<?php print($location); ?>", "centro");
+			</script>
+		<?php
 		}
 	}
 }

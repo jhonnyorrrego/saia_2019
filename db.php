@@ -616,7 +616,6 @@ function extrae_campo($arreglo, $campo, $banderas = "U,M")
     return ($retorno);
 }
 
-
 function sincronizar_carpetas($tipo, $conn)
 {
     $idimagenes = array();
@@ -629,11 +628,10 @@ function sincronizar_carpetas($tipo, $conn)
         $ruta_arch_tmp .= "../";
         $max_salida--;
     }
-    include_once($ruta_db_superior . "binario_func.php");
+    include_once $ruta_db_superior . "binario_func.php";
     $rutas = array();
     $usr_tmp_dir = "";
     $dir2 = "";
-    $copiar = 0;
     $peso = 2000000;
     $tabla = "pagina";
     $estado = "";
@@ -986,7 +984,7 @@ function sincronizar_carpetas($tipo, $conn)
         }
     }
 
-    return (TRUE);
+    return true;
 }
 
 function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')

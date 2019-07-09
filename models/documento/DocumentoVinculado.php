@@ -7,7 +7,6 @@ class DocumentoVinculado extends Model
     protected $destino;
     protected $fecha;
     protected $fk_funcionario;
-    
 
     //relations
     protected $Origin;
@@ -23,7 +22,7 @@ class DocumentoVinculado extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'origen',
                 'destino',
@@ -35,23 +34,15 @@ class DocumentoVinculado extends Model
     }
 
     /**
-     * obtiene las relaciones de los documentos vinculados 
+     * funcionalidad a ejecutar posterior a crear un registro
      *
-     * @param integer $documentId documento relacionado
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-04-30
+     * @date 2019-07-09
      */
-    public static function findRelations($documentId)
+    protected function afterCreate()
     {
-        $sql = <<<SQL
-            select *
-            from documento_vinculado
-            where
-                origen = {$documentId} or
-                destino = {$documentId}
-SQL;
-        return self::findBySql($sql);
+        return $this->addTraceability();
     }
 
     /**
@@ -84,5 +75,45 @@ SQL;
         }
 
         return $this->Destination;
+    }
+
+    /**
+     * crea el registro de rastro sobre la vinculacion
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function addTraceability()
+    {
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->origen,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_DOCUMENTO,
+            'titulo' => 'Se le ha vinculado un documento'
+        ]) && DocumentoRastro::newRecord([
+            'fk_documento' => $this->destino,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_DOCUMENTO,
+            'titulo' => 'Se ha vinculado a un documento'
+        ]);
+    }
+
+    /**
+     * obtiene las relaciones de los documentos vinculados 
+     *
+     * @param integer $documentId documento relacionado
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public static function findRelations($documentId)
+    {
+        $sql = <<<SQL
+            select *
+            from documento_vinculado
+            where
+                origen = {$documentId} or
+                destino = {$documentId}
+SQL;
+        return self::findBySql($sql);
     }
 }

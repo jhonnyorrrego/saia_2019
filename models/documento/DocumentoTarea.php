@@ -8,7 +8,6 @@ class DocumentoTarea extends Model
     protected $fk_funcionario;
     protected $fecha;
     protected $estado;
-    
 
     function __construct($id = null)
     {
@@ -20,7 +19,7 @@ class DocumentoTarea extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_tarea',
                 'fk_documento',
@@ -41,7 +40,25 @@ class DocumentoTarea extends Model
      */
     protected function afterCreate()
     {
-        return Documento::setLimitDate($this->fk_documento);
+        return
+            Documento::setLimitDate($this->fk_documento) &&
+            $this->addTraceability();
+    }
+
+    /**
+     * crea el registro de rastro sobre la vinculacion de una tarea
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function addTraceability()
+    {
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->fk_documento,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_TAREA,
+            'titulo' => 'Se le ha vinculado una tarea'
+        ]);
     }
 
     /**
