@@ -9,8 +9,6 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once ($ruta_db_superior . 'pantallas/documento/class_documento_elastic.php');
-// Ejemplo de uso de la clase
-ini_set("display_errors", true);
 if ($_REQUEST["id"]) {
     $d2j = new DocumentoElastic($_REQUEST["id"]);
     switch ($_REQUEST["accion"]) {
@@ -67,4 +65,3 @@ if ($_REQUEST["id"]) {
 } else {
     die("Por favor ingrese el id");
 }
-?>
