@@ -113,44 +113,12 @@ abstract class Sql
 		return Sql::$instance;
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Buscar.
-	 * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-	 * where-el filtro de la búsqueda; order_by-parametro para el orden.
-	 * <Responsabilidades>Enmascarar una búsqueda de tipo select para cualquier motor,
-	 * dependiendo del motor llama a la funcion que corresponda.
-	 * <Notas>
-	 * <Excepciones> las generadas por errores en la consulta, o permisos sobre las bd
-	 * <Salida>devuelve una matriz con el resultado de la consulta
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Buscar($campos, $tablas, $where, $order_by);
-
 	/**
 	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
 	 * @param array $arreglo_cadena
 	 * @return string sentencia concatenar adecuada para el motor configurado
 	 */
 	public abstract function concatenar_cadena($arreglo_cadena);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>el objeto de conexion
-	 * <Pre-condiciones>
-	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
-	 */
-	function Ejecutar_Sql_Noresult($sql)
-	{
-		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		return $this->Ejecutar_Sql($sql, "2");
-	}
 
 	public abstract function liberar_resultado($rs);
 
@@ -169,64 +137,6 @@ abstract class Sql
 
 	public abstract function sacar_fila($rs);
 
-	public abstract function sacar_fila_vector($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Insertar.
-	 * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
-	 * valores-los valores a insertar
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la inserción
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Insertar($campos, $tabla, $valores);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Modificar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
-	 * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
-	 * where-filtro de los registros que serán modificados
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la modificacion
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Modificar($tabla, $actualizaciones, $where);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_tipo.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>según el motor llamar a la función que ejecutará la cadena sql
-	 * <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// ejecuta un sql que debe devuelve un solo registro
-	public abstract function Ejecutar_Sql_Tipo($sql);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Eliminar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la eliminacion
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Eliminar($tabla, $where);
-
 	/*
 	 * <Clase>SQL
 	 * <Nombre>Numero_Filas
@@ -240,21 +150,8 @@ abstract class Sql
 	 */
 	function Numero_Filas($rs = null)
 	{
-		return ($this->filas);
+		return $this->filas;
 	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Tipo_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>tipo del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	public abstract function Tipo_Campo($rs, $pos);
 
 	/*
 	 * <Clase>SQL
