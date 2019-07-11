@@ -34,7 +34,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <div class="card-header py-2" role="tab">
                                 <h4 class="card-title">
                                     <a class="p-0 text-capitalize" data-toggle="collapse" data-parent="#firstTab" href="#firstTabContainer" aria-expanded="true" aria-controls="firstTabContainer">
-                                        Documento
+                                        Búsqueda rápida
                                     </a>
                                 </h4>
                             </div>
@@ -90,7 +90,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <div class="card-header py-2" role="tab">
                                 <h4 class="card-title">
                                     <a class="p-0 text-capitalize collapsed" data-toggle="collapse" data-parent="#secondTab" href="#secondTabContainer" aria-expanded="false" aria-controls="secondTabContainer">
-                                        Anexos
+                                        Búsqueda por contenido del documento
                                     </a>
                                 </h4>
                             </div>
