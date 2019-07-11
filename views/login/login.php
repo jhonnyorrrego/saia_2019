@@ -24,6 +24,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta name="theme-color" content="#48b0f7">
     <meta name="description" content="sistema de gestión documental">
     <link rel="manifest" href="<?= $ruta_db_superior ?>manifest.json">
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= icons() ?>
 </head>
 
 <body class="bg-white">
@@ -162,10 +166,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             window.location = '<?= $ruta_db_superior ?>views/dashboard/dashboard.php';
         }
     </script>
-    <?= jquery() ?>
-    <?= bootstrap() ?>
-    <?= theme() ?>
-    <?= icons() ?>
     <?= breakpoint() ?>
     <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js" data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl"></script>
     <script defer src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>

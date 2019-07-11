@@ -233,8 +233,6 @@ abstract class Sql
 	 */
 	public abstract function Numero_Campos($rs);
 
-	// Fin Funcion General Ultimo Insert
-
 	/*
 	 * <Clase>SQL
 	 * <Nombre>Ultimo_Insert
