@@ -35,6 +35,10 @@ final class Version20190628212601 extends AbstractMigration
     }
     public function up(Schema $schema): void
     {
+	if ($schema->hasTable('tarea_dig')) {
+            $schema->dropTable('tarea_dig');
+        }
+
         $table = $schema->createTable('tarea_dig');
         $table->addColumn('idtarea_dig', 'integer', [
             'autoincrement' => true,
