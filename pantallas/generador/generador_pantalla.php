@@ -70,7 +70,7 @@ echo librerias_acciones_kaiten();
 echo librerias_html5();
 include_once $ruta_db_superior . "assets/librerias.php";
 
-$campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
+$campos = busca_filtro_tabla("", "pantalla_componente B", "nombre not in ('textarea_tiny')", "", $conn);
 $librerias_js = array();
 $librerias_jsh = array();
 for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -89,7 +89,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                 case "js@h":
                     $header = array_filter(explode("@", $libreria));
                     if (!empty($header) && !in_array($header[0], $librerias_jsh)) {
-                        array_push($librerias_jsh, $header[0]);
+                        array_push($librerias_jsh, $header[0]); 
                         echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
                     }
                     break;
@@ -149,6 +149,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 </head>
 
 <body>
+
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span9">
@@ -157,6 +158,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                         <li style="width:100px;" id="pantalla_principal">
                             <a href="#datos_formulario-tab" data-toggle="tab"
                                 style="text-align:center;">Informaci&oacute;n</a>
+                                <div class="progress-circle-indeterminate"></div>
                         </li>
                         <li style="width:100px;" id="generar_formulario_pantalla">
                             <a href="#formulario-tab" data-toggle="tab" style="text-align:center;">Campos</a>
@@ -218,7 +220,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                         
                         <h5 class="title">Permisos del formato a:</h5><br>
                         <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>">
-                            <?= consultarPermisosPerfil(); ?>
+                            <?= consultarPermisosPerfil($consulta_formato[0]['nombre']); ?>
                              <div class="control-group">
                                 <div class="controls">
                                     <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
@@ -546,29 +548,16 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                         </div>
                         <div class="tab-pane" id="archivos-tab">
                             <input type="hidden" name="ruta_archivo_actual" id="ruta_archivo_actual" value="">
-                            <!--div class="form-actions" id="acciones_archivo-tab">
-
-								    <button type="button" name="guardar_archivo_actual" class="btn btn-primary btn-mini" id="guardar_archivo_actual" value="">Guardar</button-->
-                            <!--button type="button" name="nuevo_archivo" class="btn btn-mini" id="nuevo_archivo" value="">Nuevo</button>
-                    <button type="button" name="seleccionar_archivo" class="btn btn-mini" id="seleccionar_archivo" value="">Seleccionar</button>
-								    <div class="pull-right" id="cargando_guardar_archivo"></div>
-									</div-->
                             <div id="esperando_archivo">
-                                <img src="<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif">
+                                <img src="<?php echo ($ruta_db_superior); ?>assets/images/cargando.gif">
                             </div>
                             <div id="treeboxbox_tree3" class="arbol_saia"></div>
                         </div>
                         <div class="tab-pane" id="librerias-tab">
                         </div>
-                        <!--div class="tab-pane" id="includes-tab"  style="overflow:auto;">
-								</div-->
                         <div class="tab-pane" id="funciones-tab">
                             <input type="hidden" name="idpantalla_funcion_exe" id="idpantalla_funcion_exe">
                             <input type="hidden" name="nombre_funcion_insertar" id="nombre_funcion_insertar">
-                            <!--<div id="esperando_acciones">
-    								<img src="<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif">
-    							</div>-->
-                            <!--<div id="actualizar_cuerpo_formato" class="btn btn-mini btn-success">Actualizar</div>-->
                             <div id="funciones_desplegables" style="height:90%;"></div>
                         </div>
 
@@ -708,17 +697,15 @@ $(document).ready(function() {
             $("#list_one").hide();
         }
         
-        $("#pantalla_principal").removeClass("active");
-        $("#datos_formulario-tab").removeClass("active");
-        $("#generar_formulario_pantalla").addClass("active");
+        $("#pantalla_principal").addClass("active");
         $("#diseno_formulario_pantalla").addClass("disabled");
         $("#vista_formulario_pantalla").addClass("disabled");
         $("#vista_formulario_permisos").addClass("disabled");
-        
-        $("#formulario-tab").addClass("active");
-        if(publicar==1){
+
+        if($("#pantalla_principal").attr("class")=="active"){
+            $("#enviar_datos_formato").show();
+            $("#cambiar_nav_basico").hide();
             $("#cambiar_nav").hide();
-            $("#cambiar_nav_basico").show();
         }
         
         $('#componentes_acciones').show();
@@ -1314,7 +1301,7 @@ $(document).ready(function() {
             });
         }
     });
-    hs.graphicsDir = '<?php echo ($ruta_db_superior); ?>images/highslide/';
+    hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 
     var count_click = 0;
     function count_click_add() {
@@ -1890,7 +1877,7 @@ $(document).ready(function() {
 
     $("#tipo_pantalla_busqueda").change(function() {
         $("#frame_tipo_listado").html(
-            "<img src='<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif'>");
+            "<img src='<?php echo ($ruta_db_superior); ?>assets/images/cargando.gif'>");
         if ($(this).val() != 0) {
             $("#frame_tipo_listado").load(
                 "<?php echo ($ruta_db_superior); ?>pantallas/generador/esquemas_busqueda_saia/" + $(

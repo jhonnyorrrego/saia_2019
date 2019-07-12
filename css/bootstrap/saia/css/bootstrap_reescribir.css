@@ -146,7 +146,7 @@ legend {
 	cursor: hand;
 }
 .cargando {
-	background-image: url('../imagenes/cargando.gif');
+	background-image: url('../assets/images/cargando.gif');
 }
 .input-append .add-on {
 	height: inherit;

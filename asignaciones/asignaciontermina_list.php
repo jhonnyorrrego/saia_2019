@@ -28,7 +28,7 @@ if($datos["numcampos"])
 <input type="hidden" name="subtitulo" value="<?php echo $datos[0]["subtitulo"]; ?>">
 <input type="hidden" name="totales" value="<?php echo $datos[0]["totales"]; ?>">
 <input type="hidden" name="sql" value="<?php echo $datos[0]["codigo"]; ?>">
-<input type="image" src="<?php echo "/".RUTA_SCRIPT."/imagenes/cargando.gif"; ?>">
+<input type="image" src="<?php echo "/".RUTA_SCRIPT."/assets/images/cargando.gif"; ?>">
 </form>  
 <script>
 form1.submit();

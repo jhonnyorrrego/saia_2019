@@ -104,7 +104,7 @@ if (isset($_REQUEST["genera"])) {
             }
             include_once $ruta_db_superior . "/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
-
+            
             if ($_REQUEST['permisosPerfil']) {
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             } else {
@@ -1496,12 +1496,12 @@ CODE;
                                 $tam = $estilo["size"];
                                 $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
                             }
-
+                            
                             if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
                             $texto .= '<div class="form-group ' .  $ancho . '"  id="tr_' . $campos[$h]["nombre"] . '">
-                                        <label title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;", "acute;", $this->codifica($campos[$h]["etiqueta"])) . '</label>
+                                        <label title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;", "acute;", $this->codifica($campos[$h]["etiqueta"])) . $obliga . '</label>
                                         <input class="form-control" ' . $obligatorio . " $adicionales $tabindex" . ' type="text"  size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                                        </div>';
                             if ($campos[$h]["mascara"] != "") {
@@ -1639,11 +1639,13 @@ CODE;
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }
+            if($formato[0]["item"] <> 1){
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
                         <?= moment() ?>';
+            }
             $includes .= "<?= validate() ?>";
 
             if ($arboles_fancy) {
