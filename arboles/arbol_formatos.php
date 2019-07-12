@@ -84,7 +84,7 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
         $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "idformato=" . $id, "etiqueta ASC", $conn);
         // $papas = busca_filtro_tabla("idformato, etiqueta", "formato", $valida_item . " idformato=" . $id . $adicionales, "etiqueta ASC", $conn);
     } else {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND cod_padre=" . $id . $adicionales. $formatoExcluido, "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "cod_padre=" . $id . $adicionales. $formatoExcluido, "etiqueta ASC", $conn);
     }
     $resp = array();
     if ($papas["numcampos"]) {

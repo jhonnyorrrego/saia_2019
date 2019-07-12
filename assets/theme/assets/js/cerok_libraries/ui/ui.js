@@ -132,6 +132,7 @@ class Ui {
     }
 
     static inactiveTime() {
+        return true;
         var t;
         document.onclick = resetTimer;
 

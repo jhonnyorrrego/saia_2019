@@ -1639,11 +1639,13 @@ CODE;
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }
+            if($formato[0]["item"] <> 1){
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
                         <?= moment() ?>';
+            }
             $includes .= "<?= validate() ?>";
 
             if ($arboles_fancy) {

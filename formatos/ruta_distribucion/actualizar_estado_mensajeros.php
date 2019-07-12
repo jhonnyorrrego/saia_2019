@@ -9,7 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "core/autoload.php";
 include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
 include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 
@@ -24,4 +24,4 @@ $iddependencia_cargo_mensajero = @$_REQUEST['iddependencia_cargo_mensajero'];
 
 actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddependencia_cargo_mensajero, $estado);
 
-echo('<script>window.history.back(); window.location.reload();</script>');
+//echo('<script>window.history.back(); window.location.reload();</script>');
