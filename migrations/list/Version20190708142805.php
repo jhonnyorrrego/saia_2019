@@ -10,12 +10,13 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190628212601 extends AbstractMigration
+final class Version20190708142805 extends AbstractMigration
 {
     public function getDescription(): string
     {
         return '';
     }
+
     public function preUp(Schema $schema): void
     {
         date_default_timezone_set("America/Bogota");
@@ -35,42 +36,40 @@ final class Version20190628212601 extends AbstractMigration
     }
     public function up(Schema $schema): void
     {
-	if ($schema->hasTable('tarea_dig')) {
-            $schema->dropTable('tarea_dig');
-        }
-
-        $table = $schema->createTable('tarea_dig');
-        $table->addColumn('idtarea_dig', 'integer', [
+        $table = $schema->createTable('documento_rastro');
+        $table->addColumn('iddocumento_rastro', 'integer', [
             'autoincrement' => true,
             'length' => 11
         ]);
-        $table->setPrimaryKey(['idtarea_dig']);
-        $table->addColumn('idfuncionario', 'integer', [
+        $table->setPrimaryKey(['iddocumento_rastro']);
+        $table->addColumn('fk_documento', 'integer', [
             'notnull' => true,
             'length' => 11
         ]);
-        $table->addColumn('iddocumento', 'integer', [
+        $table->addColumn('fk_funcionario', 'integer', [
             'notnull' => true,
             'length' => 11
         ]);
-        $table->addColumn('estado', 'integer', [
+        $table->addColumn('accion', 'integer', [
             'notnull' => true,
             'length' => 11,
-            'default' => 1
         ]);
         $table->addColumn('fecha', 'datetime', [
             'notnull' => true
         ]);
-        $table->addColumn('direccion_ip', 'string', [
-            'notnull' => false,
-            'length' => 20
+        $table->addColumn('descripcion', 'text', [
+            'notnull' => false
+        ]);
+        $table->addColumn('titulo', 'string', [
+            'notnull' => true,
+            'length' => 100
         ]);
     }
 
     public function down(Schema $schema): void
     {
-        if ($schema->hasTable('tarea_dig')) {
-            $schema->dropTable('tarea_dig');
+        if ($schema->hasTable('documento_rastro')) {
+            $schema->dropTable('documento_rastro');
         }
     }
 }

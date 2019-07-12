@@ -15,11 +15,10 @@ class RutaAprobacion extends Model
     protected $tipo_accion;
     protected $ejecucion;
     protected $fecha_ejecucion;
-    
 
     //relations
-    protected $User;
-    protected $DocumentRoute;
+    protected $Funcionario;
+    protected $RutaDocumento;
 
     function __construct($id = null)
     {
@@ -31,7 +30,7 @@ class RutaAprobacion extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'orden',
                 'fk_ruta_documento',
@@ -42,6 +41,36 @@ class RutaAprobacion extends Model
             ],
             'date' => ['fecha_ejecucion']
         ];
+    }
+
+    /**
+     * obtiene una instancia del funcionario relacionado
+     * 
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-04
+     */
+    public function getUser()
+    {
+        if (!$this->Funcionario) {
+            $this->Funcionario = self::getRelationFk('Funcionario');
+        }
+
+        return $this->Funcionario;
+    }
+
+    /**
+     * obtiene una instancia de la ruta relacionada
+     * 
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-016
+     */
+    public function getDocumentRoute()
+    {
+        if (!$this->RutaDocumento) {
+            $this->RutaDocumento = self::getRelationFk('RutaDocumento');
+        }
+
+        return $this->RutaDocumento;
     }
 
     /**
@@ -59,8 +88,47 @@ class RutaAprobacion extends Model
             'fecha_ejecucion' => date('Y-m-d H:i:s')
         ]);
         $this->save();
-
+        $this->addTraceability();
         $this->stepExecuted();
+    }
+
+    /**
+     * crea los registros para el rastro
+     * del documento
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-08
+     */
+    public function addTraceability()
+    {
+        if ($this->ejecucion == self::EJECUCION_APROBAR) {
+            if ($this->tipo_accion == self::TIPO_APROBAR) {
+                $action = DocumentoRastro::ACCION_APROBACION_RUTA_APROBACION;
+                $title = 'Aprobación en la ruta de aprobación';
+            } else if ($this->tipo_accion == self::TIPO_VISTO_BUENO) {
+                $action = DocumentoRastro::ACCION_APROBACION_VISTO_RUTA_APROBACION;
+                $title = 'Aprobación visto bueno en la ruta de aprobación';
+            }
+        } else if ($this->ejecucion == self::EJECUCION_RECHAZAR) {
+            if ($this->tipo_accion == self::TIPO_APROBAR) {
+                $action = DocumentoRastro::ACCION_RECHAZO_RUTA_APROBACION;
+                $title = 'Rechazo en la ruta de aprobación';
+            } else if ($this->tipo_accion == self::TIPO_VISTO_BUENO) {
+                $action = DocumentoRastro::ACCION_RECHAZO_VISTO_RUTA_APROBACION;
+                $title = 'Rechazo visto bueno en la ruta de aprobación';
+            }
+        }
+
+        if (!$action) {
+            throw new Exception("tipo invalido", 1);
+        }
+
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->getDocumentRoute()->fk_documento,
+            'accion' => $action,
+            'titulo' => $title
+        ]);
     }
 
     /**
@@ -95,36 +163,6 @@ class RutaAprobacion extends Model
             $documentId = $this->getDocumentRoute()->fk_documento;
             Documento::setApprobationState($documentId);
         }
-    }
-
-    /**
-     * obtiene una instancia del funcionario relacionado
-     * 
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-04
-     */
-    public function getUser()
-    {
-        if (!$this->User) {
-            $this->User = self::getRelationFk('Funcionario');
-        }
-
-        return $this->User;
-    }
-
-    /**
-     * obtiene una instancia de la ruta relacionada
-     * 
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-016
-     */
-    public function getDocumentRoute()
-    {
-        if (!$this->DocumentRoute) {
-            $this->DocumentRoute = self::getRelationFk('RutaDocumento');
-        }
-
-        return $this->DocumentRoute;
     }
 
     /**

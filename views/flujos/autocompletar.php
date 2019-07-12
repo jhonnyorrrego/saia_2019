@@ -9,15 +9,12 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-
-ini_set("display_errors", 1);
-// sort($paths);
+include_once($ruta_db_superior . "db.php");
 
 header('Content-Type: application/json');
 
 $consulta64 = @$_REQUEST["consulta"];
-if(empty($consulta64)) {
+if (empty($consulta64)) {
     die("No especificó los parámetros de consulta");
 }
 
@@ -29,8 +26,9 @@ $resp = consultar($consulta, $valor);
 
 echo json_encode($resp);
 
-function consultar($consulta, $valor) {
-global $conn;
+function consultar($consulta, $valor)
+{
+    global $conn;
     /*
      $consulta = array(
      "campoid" => $parametros->campoid,
@@ -43,10 +41,10 @@ global $conn;
     $arr_consulta = json_decode($consulta, true);
 
     $campos_nombre = $arr_consulta["campotexto"];
-    if(is_array($arr_consulta["campotexto"])) {
+    if (is_array($arr_consulta["campotexto"])) {
         $campos = array();
         $total_campos = count($arr_consulta["campotexto"]);
-        for($i=0; $i < $total_campos; $i++) {
+        for ($i = 0; $i < $total_campos; $i++) {
             $campos[] = $arr_consulta["campotexto"][$i];
             $campos[] = "' '";
         }
@@ -55,11 +53,11 @@ global $conn;
 
     $campo_id = $arr_consulta["campoid"];
     $tablas = $arr_consulta["tablas"];
-    if(is_array($arr_consulta["campotexto"])) {
+    if (is_array($arr_consulta["campotexto"])) {
         $tablas = implode(", ", $arr_consulta["tablas"]);
     }
     $condicion = $arr_consulta["condicion"];
-    $orden= $arr_consulta["orden"];
+    $orden = $arr_consulta["orden"];
 
     $where_final = $condicion . " AND lower($campos_nombre) like '%$valor%'";
     // Tipo de LLenado =1 es para los funcionarios

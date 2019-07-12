@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class AccesoController
 {
@@ -14,7 +14,7 @@ class AccesoController
      */
     public static function setFullAccess($type, $typeId, $userId = 0)
     {
-        $userId = $userId ? $userId : $_SESSION['idfuncionario'];
+        $userId = $userId ? $userId : SessionController::getValue('idfuncionario');;
 
         $data = [
             'tipo_relacion' => $type,

@@ -304,6 +304,39 @@ $(function() {
         .on('click', '#anular_documento', function() {
             cancelNotification();
         });
+
+    $(document)
+        .off('click', '#imprimir_radicado')
+        .on('click', '#imprimir_radicado', function() {
+            $.post(
+                `${baseUrl}app/documento/ruta_colilla.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    documentId: documentId
+                },
+                function(response) {
+                    if (response.success) {
+                        let iframe = $('<iframe>', {
+                            src: response.data.route
+                        });
+                        $('body').append(iframe);
+
+                        iframe.on('load', function() {
+                            setTimeout(() => {
+                                iframe.remove();
+                            }, 5000);
+                        });
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        });
     /////// FIN MENU INTERMEDIO /////
 
     function toggleGoBack() {

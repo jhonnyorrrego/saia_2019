@@ -12823,10 +12823,10 @@ Main components
 
 .timeline-point i {
   color: #fff;
-  font-size: 14px;
+  font-size: 20px;
   left: 50%;
   margin-left: -7px;
-  margin-top: -7px;
+  margin-top: -9px;
   position: absolute;
   top: 50%;
 }

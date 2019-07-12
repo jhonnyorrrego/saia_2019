@@ -1,4 +1,5 @@
 <?php
+
 use Stringy\Stringy;
 
 /**
@@ -85,7 +86,6 @@ abstract class Model extends StaticSql
      */
     public function __clone()
     {
-        $pkLabel = $this->getPkName();
         $this->setPK(null);
     }
 
@@ -180,7 +180,7 @@ abstract class Model extends StaticSql
     {
         if (empty($this->dbAttributes->table)) {
             $Stringy = new Stringy(get_called_class());
-            $this->dbAttributes->table = (string)$Stringy->underscored();
+            $this->dbAttributes->table = (string) $Stringy->underscored();
         }
         return $this->dbAttributes->table;
     }

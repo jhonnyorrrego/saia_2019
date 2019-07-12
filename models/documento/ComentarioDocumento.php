@@ -7,17 +7,20 @@ class ComentarioDocumento extends Model
     protected $fk_documento;
     protected $comentario;
     protected $fecha;
-    
-    public $user;
 
-    function __construct($id = null) {
+    //relations
+    public $Funcionario;
+
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'fk_funcionario',
@@ -34,20 +37,48 @@ class ComentarioDocumento extends Model
         ];
     }
 
-    public function getUser(){
-        if(!$this->user){
-            $this->user = new Funcionario($this->fk_funcionario);
+    /**
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    protected function afterCreate()
+    {
+        return $this->addTraceability();
+    }
+
+    /**
+     * obtiene la instancia del funcionario relacionado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function getUser()
+    {
+        if (!$this->Funcionario) {
+            $this->Funcionario = new Funcionario($this->fk_funcionario);
         }
-        
-        return $this->user;
+
+        return $this->Funcionario;
     }
 
-    public function getDate($format = 'Y-m-d'){
-        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->fecha);
-        return $DateTime->format($format);
-    }
-
-    public function getComment(){
-        return $this->comentario;
+    /**
+     * crea el registro de rastro sobre la 
+     * creacion de un comentario
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function addTraceability()
+    {
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->fk_documento,
+            'accion' => DocumentoRastro::ACCION_CREACION_COMENTARIO,
+            'titulo' => 'Se le ha creado un comentario'
+        ]);
     }
 }

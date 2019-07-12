@@ -14,13 +14,13 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'success' => 1,
     'message' => '',
-    'data' => (object)array()
+    'data' => (object) array()
 );
 
-if($_SESSION['idfuncionario'] == $_REQUEST['key']){
+if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $comments = ComentarioDocumento::findAllByAttributes([
         'fk_documento' => $_REQUEST['relation']
     ]);
@@ -33,13 +33,13 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
                 'name' => $ComentarioDocumento->getUser()->getName(),
                 'image' => $ComentarioDocumento->getUser()->getImage('foto_recorte')
             ],
-            'comment' => $ComentarioDocumento->getComment(),
-            'temporality' => $ComentarioDocumento->getDate('d-m-Y h:i a')
+            'comment' => $ComentarioDocumento->comentario,
+            'temporality' => DateController::convertDate($ComentarioDocumento->fecha)
         ];
     }
 
     $Response->data = $data;
-}else{
+} else {
     $Response->success = 0;
     $Response->message = 'Debe iniciar Session';
 }

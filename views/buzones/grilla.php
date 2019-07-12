@@ -289,6 +289,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                         $('#busqueda_total_paginas').val(null);
 
                         procesamiento_buscar();
+                        top.closeTopModal();
                     }
                 });
             });

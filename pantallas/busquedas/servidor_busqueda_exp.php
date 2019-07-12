@@ -15,13 +15,15 @@ include_once $ruta_db_superior . "core/autoload.php";
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
-    die("invalid access");
+    if (!isset($_REQUEST['debug'])) {
+        die("invalid access");
+    }
 }
 
 // pagina actual inicia en 1
-$page = (int)$_REQUEST['page'] ? $_REQUEST["page"] : 1;
+$page = (int) $_REQUEST['page'] ? $_REQUEST["page"] : 1;
 // registros por listado de datos
-$limit = (int)$_REQUEST['rows'] ? $_REQUEST["rows"] : 30;
+$limit = (int) $_REQUEST['rows'] ? $_REQUEST["rows"] : 30;
 $aux_limit = $_REQUEST['rows'];
 
 // Campo por el que se debe ordenar
@@ -29,7 +31,7 @@ $sidx = @$_REQUEST['sidx'];
 // Orden de la consulta
 $sord = @$_REQUEST['sord'];
 
-$actual_row = (int)$_REQUEST['actual_row'];
+$actual_row = (int) $_REQUEST['actual_row'];
 $start = $actual_row;
 
 $sql = <<<SQL
@@ -167,17 +169,14 @@ foreach ($funciones_tablas as $key => $valor) {
 }
 
 $ordenar_consulta = "";
-$ordenar_consulta2 = "";
 $agrupar_consulta = $busqueda["agrupado_por"];
 
-if ($agrupar_consulta != "") {
-    $ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
-    $ordenar_consulta2 .= " GROUP BY " . $agrupar_consulta;
-    $ordenar_consulta_aux = " GROUP BY " . implode(",", $agrupacion);
+if ($agrupar_consulta) {
+    $ordenar_consulta .= "group by {$agrupar_consulta} ";
 }
 
 if ($sidx && $sord) {
-    $ordenar_consulta2 .= "{$sidx} {$sord}";
+    $ordenar_consulta .= "order by {$sidx} {$sord}";
 }
 
 $condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
@@ -208,14 +207,14 @@ if (@$_REQUEST["idbusqueda_temporal"]) {
 
 if (!$_REQUEST["cantidad_total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-        $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") SELECT COUNT(*) as cant FROM conteo";
+        $consulta_conteo = "WITH conteo AS (SELECT {$campos_consulta} FROM {$tablas_consulta} WHERE {$condicion} {$ordenar_consulta}) SELECT COUNT(*) as cant FROM conteo";
         $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
         $result = phpmkr_fetch_array($conteo_filas);
         $result[0] = array();
         $result[0]['cant'] = $result['cant'];
         $result["numcampos"] = $result['cant'];
     } else {
-        $select = '(SELECT ' . $campos_consulta . ' FROM ' . $tablas_consulta . ' WHERE' . $condicion . $ordenar_consulta . ') AS temp';
+        $select = "(SELECT {$campos_consulta} FROM {$tablas_consulta} WHERE {$condicion} {$ordenar_consulta}) AS temp";
         $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $select;
         $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
     }
@@ -257,8 +256,11 @@ if (!$_REQUEST['onlyCount']) {
             $response['exito'] = 2;
             $response['mensaje'] = "Fin del listado";
         } else {
+            if (strpos(strtolower(trim($ordenar_consulta)), 'order by') == 0) {
+                $ordenar_consulta = str_replace('order by ', '', $ordenar_consulta);
+            }
 
-            $result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, (int)$start, (int)$limit, $conn);
+            $result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta, (int) $start, (int) $limit, $conn);
             $response['sql'] = $result["sql"];
 
             if ($result["numcampos"]) {

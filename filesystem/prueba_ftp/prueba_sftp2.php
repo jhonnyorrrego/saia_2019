@@ -1,5 +1,4 @@
 <?php
-ini_set("display_errors", true);
 $connection = ssh2_connect('laboratorio.netsaia.com', 22);
 ssh2_auth_password($connection, 'digitalizacion_saia', 'cerok_saia421_5');
 
@@ -22,4 +21,3 @@ while (false !== ($file = readdir($handle))) {
 }
 closedir($handle);
 print_r($tempArray);
-?>

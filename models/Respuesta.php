@@ -9,7 +9,6 @@ class Respuesta extends Model
     protected $idbuzon;
     protected $plantilla;
 
-
     //relations
     protected $Origin;
     protected $Destination;
@@ -36,10 +35,22 @@ class Respuesta extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    protected function afterCreate()
+    {
+        return $this->addTraceability();
     }
 
     /**
@@ -72,5 +83,25 @@ class Respuesta extends Model
         }
 
         return $this->Destination;
+    }
+
+    /**
+     * crea el registro de rastro sobre la vinculacion
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-09
+     */
+    public function addTraceability()
+    {
+        return DocumentoRastro::newRecord([
+            'fk_documento' => $this->origen,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_DOCUMENTO,
+            'titulo' => 'Se le ha vinculado un documento'
+        ]) && DocumentoRastro::newRecord([
+            'fk_documento' => $this->destino,
+            'accion' => DocumentoRastro::ACCION_VINCULACION_DOCUMENTO,
+            'titulo' => 'Se ha vinculado a un documento'
+        ]);
     }
 }

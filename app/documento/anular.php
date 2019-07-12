@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -37,6 +37,8 @@ try {
     if (!$Documento->save()) {
         throw new Exception("Error Processing Request", 1);
     } else {
+        $Documento->addTraceability(DocumentoRastro::ACCION_ANULACION);
+
         $pk = Digitalizacion::newRecord([
             'documento_iddocumento' => $Documento->getPK(),
             'fecha' => date('Y-m-d H:i:s'),

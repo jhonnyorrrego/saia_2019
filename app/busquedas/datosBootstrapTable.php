@@ -32,7 +32,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
 
     if ($_REQUEST['debug']) {
         echo '<pre>';
-        var_dump($url);
+        var_dump($url . "&debug=1");
         echo '</pre>';
         exit;
     }
@@ -51,7 +51,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
         'rows' => array()
     );
     foreach ($output->rows as $key => $value) {
-        $data['rows'][$key]['id'] = (int)$value->llave;
+        $data['rows'][$key]['id'] = (int) $value->llave;
         $data['rows'][$key]['info'] = $value->info;
     }
 } else {

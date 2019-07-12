@@ -129,44 +129,6 @@ class SqlOracle extends Sql
         }
     }
 
-    function sacar_fila_vector($rs = Null)
-    {
-        if ($rs == Null)
-            $rs = $this->res;
-        if (@OCIFetchInto($rs, $arreglo, OCI_NUM)) {
-            return ($arreglo);
-        } else
-            return (FALSE);
-    }
-
-    function Insertar($campos, $tabla, $valores)
-    { }
-
-    function Modificar($tabla, $actualizaciones, $where)
-    { }
-
-    function Ejecutar_Sql_Tipo($sql)
-    { }
-
-    function Eliminar($tabla, $where)
-    { }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Tipo_Campo
-     * <Parametros>pos-posición del campo en el array resultado
-     * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-     * <Notas>se utiliza después de la función ejecutar_sql
-     * <Excepciones>
-     * <Salida>tipo del campos especificado
-     * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-     * <Post-condiciones>
-     */
-    function Tipo_Campo($rs, $pos)
-    {
-        return (oci_field_type($rs, $pos + 1));
-    }
-
     /*
      * <Clase>SQL
      * <Nombre>Nombre_Campo

@@ -94,12 +94,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
                 },
                 "json"
             );
-            $(document).keypress(function(event) {
-                var keycode = event.keyCode || event.which;
-                if (keycode == '13') {
-                    $("#ksubmit_saia").trigger('click');
-                }
-            });
 
             $('#btn_success').on('click', function() {
                 $.post(`${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
@@ -107,7 +101,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
                     function(data) {
                         if (data.exito) {
                             top.successModalEvent(data);
-                            top.closeTopModal();
                         } else {
                             top.notification({
                                 message: data.mensaje,
@@ -122,4 +115,4 @@ include_once $ruta_db_superior . "assets/librerias.php";
     <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 </body>
 
-</html> 
+</html>

@@ -18,28 +18,6 @@ class SqlMsSql extends Sql
 		return mssql_close($this->connection);
 	}
 
-	function Buscar($campos, $tablas, $where, $order_by)
-	{
-		if ($campos == "" || $campos == null)
-			$campos = "*";
-		$this->consulta = "SELECT " . $campos . " FROM " . $tablas;
-		if ($where != "" && $where != null)
-			$this->consulta .= " WHERE " . $where;
-		if ($order_by != "" && $order_by != null)
-			$this->consulta .= " ORDER BY " . $order_by;
-		// ejecucion de la consulta, a $this->res se le asigna el resource
-		mssql_query("USE " . $this->db, $this->connection);
-		$this->res = mssql_query($this->consulta, $this->connection);
-		// se le asignan a $resultado los valores obtenidos
-		if ($this->Numero_Filas() > 0) {
-			for ($i = 0; $i < $this->Numero_Filas(); $i++)
-				$resultado[] = mssql_fetch_array($this->res, MSSQL_ASSOC);
-			return $resultado;
-		} // se retorna la matriz
-		else
-			return (false);
-	}
-
 	function liberar_resultado($rs)
 	{
 		if (!$rs) {
@@ -102,66 +80,6 @@ class SqlMsSql extends Sql
 		}
 	}
 
-	function sacar_fila_vector($rs = Null)
-	{
-		if ($rs == Null)
-			$rs = $this->res;
-		if ($arreglo = @mssql_fetch_array($rs, MSSQL_NUM)) {
-			return ($arreglo);
-		} else
-			return (FALSE);
-	}
-
-	function Insertar($campos, $tabla, $valores)
-	{
-		if ($campos == "" || $campos == null)
-			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
-		else
-			$insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-		mssql_query("USE " . $this->db, $this->connection);
-		$this->res = mssql_query($insert, $this->connection);
-		$this->Guardar_log($insert);
-	}
-
-	function Modificar($tabla, $actualizaciones, $where)
-	{
-		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
-		if ($where != null && $where != "")
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
-		else
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones;
-		$this->Guardar_log($update);
-		mssql_query("USE " . $this->db, $this->connection);
-		$this->res = mssql_query($update, $this->connection);
-	}
-
-	function Ejecutar_Sql_Tipo($sql)
-	{
-		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		$this->consulta = $sql;
-		mssql_query("USE " . $this->db, $this->connection);
-		$this->res = mssql_query($this->consulta, $this->connection);
-		$this->Guardar_log($sql);
-		while ($fila = mssql_fetch_array($this->res, MSSQL_NUM)) {
-			foreach ($fila as $valor)
-				$resultado[] = $valor;
-		}
-		return $resultado;
-	}
-
-	function Eliminar($tabla, $where)
-	{
-		if ($where != null && $where != "")
-			$delete = "DELETE FROM " . $tabla . " WHERE " . $where;
-		else
-			$delete = "DELETE FROM " . $tabla;
-		// ejecucion de la consulta
-		$this->Guardar_log($delete);
-		mssql_query("USE " . $this->db, $this->connection);
-		$this->res = mssql_query($delete, $this->connection);
-		//
-	}
-
 	function Resultado()
 	{
 		$resultado["sql"] = $this->consulta;
@@ -177,23 +95,6 @@ class SqlMsSql extends Sql
 			}
 		}
 		return $resultado;
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Tipo_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>tipo del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Tipo_Campo($rs, $pos)
-	{
-		$dato = mssql_field_type($rs, $pos);
-		return ($dato);
 	}
 
 	/*
