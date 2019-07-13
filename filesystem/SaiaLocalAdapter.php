@@ -1,18 +1,22 @@
 <?php
+
 namespace Gaufrette\Adapter;
 
-class SaiaLocalAdapter extends Local {
+class SaiaLocalAdapter extends Local
+{
 
-	public function getDirectory() {
+	public function getDirectory()
+	{
 		return $this->directory;
 	}
 
-	public function ensureDirectoryExists($directory, $create = false) {
+	public function ensureDirectoryExists($directory, $create = false)
+	{
 		parent::ensureDirectoryExists($directory, $create);
 	}
 
-	public function createDirectory($directory) {
+	public function createDirectory($directory)
+	{
 		parent::createDirectory($directory);
 	}
-
 }
