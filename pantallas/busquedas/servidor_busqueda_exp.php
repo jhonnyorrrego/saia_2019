@@ -334,6 +334,7 @@ if (!$_REQUEST['onlyCount']) {
     } else {
         $response['exito'] = 3;
         $response['mensaje'] = "No existen registros";
+        $response['sql'] = $result['sql'];
     }
 } else {
     $response['exito'] = 1;

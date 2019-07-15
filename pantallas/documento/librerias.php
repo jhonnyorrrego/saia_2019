@@ -352,7 +352,7 @@ function has_files($documentId, $showCounter = false)
  */
 function priority($documentId, $priority)
 {
-    $class = !(int)$priority ? 'd-none' : '';
+    $class = !(int) $priority ? 'd-none' : '';
     return "<span class='my-0 text-center cursor f-20 px-1 priority_flag {$class}' data-key='{$documentId}'>
         <i class='fa fa-flag text-danger'></i>
     </span>";
@@ -468,7 +468,7 @@ function temporality($date)
  */
 function mostrar_numero_enlace($number, $documentId)
 {
-    if ((int)$number) {
+    if ((int) $number) {
         $titulo = "No. " . $number;
     } else {
         $number = "Ver";
@@ -495,4 +495,11 @@ function mostrar_numero_enlace($number, $documentId)
 function date_formatted($date)
 {
     return DateController::convertDate($date);
+}
+
+function filtrar_funcionario($funcionario)
+{
+    $funcionario = SessionController::getValue('usuario_actual');
+    $texto = " AND (z.origen='" . $funcionario . "' OR z.destino='" . $funcionario . "' ) AND (lower(z.nombre)<>'leido' AND lower(z.nombre) NOT LIKE 'elimina_%')";
+    return $texto;
 }

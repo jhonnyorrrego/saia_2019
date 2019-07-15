@@ -331,7 +331,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 $('[data-toggle="tooltip"]').tooltip();
 
                 Ui.putColor();
-                Ui.inactiveTime();
                 Ui.bindServiceWorker();
             }
         });

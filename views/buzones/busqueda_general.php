@@ -22,6 +22,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SAIA - SGDEA</title>
     <?= dateTimePicker() ?>
+    <?= fancyTree() ?>
 </head>
 
 <body>
@@ -98,22 +99,70 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <div class="row px-5 py-2">
                                     <div class="col-12">
                                         <div class="form-group form-group-default required">
-                                            <label>Identificacion:</label>
-                                            <input name="nit" type="text" class="form-control">
+                                            <div id="format_tree"></div>
+                                            <input name="bqsaia_c@idformato" type="hidden" id="formatId">
+                                            <input type="hidden" name="bksaiacondicion_c@idformato" value="in">
+                                            <input type="hidden" name="bqsaiaenlace_c@idformato" value="y" />
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-default mb-0" id="thirdTab">
+                            <div class="card-header py-2" role="tab">
+                                <h4 class="card-title">
+                                    <a class="p-0 text-capitalize collapsed" data-toggle="collapse" data-parent="#thirdTab" href="#thirdTabContainer" aria-expanded="false" aria-controls="thirdTabContainer">
+                                        Búsqueda por tipo de gestión del documento
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="thirdTabContainer" class="collapse" role="tabcard">
+                                <div class="row px-5 py-2">
+                                    <div class="col-12">
+                                        <div class="form-group form-group-default">
+                                            <div class="user_tree">Transferidos a:</div>
+                                            <input name="bqsaia_z@destino" type="hidden" class="treeValue">
+                                            <input type="hidden" name="bksaiacondicion_z@destino" value="in">
+                                            <input type="hidden" name="bqsaiaenlace_z@destino" value="y" />
 
-                                        <div class="form-group form-group-default required">
-                                            <label>Identificacion:</label>
-                                            <input name="nit" type="text" class="form-control">
+                                            <input type="hidden" name="bksaiacondicion_z@nombre__1" value="">
+                                            <input type="hidden" name="bqsaia_z@nombre__1" value="">
+                                            <input type="hidden" name="bqsaiaenlace_z@nombre__1" value="y">
+                                        </div>
+                                        <div class="form-group form-group-default">
+                                            <div class="user_tree">Transferidos por:</div>
+                                            <input name="bqsaia_z@origen__1" type="hidden" class="treeValue">
+                                            <input type="hidden" name="bksaiacondicion_z@origen__1" value="in">
+                                            <input type="hidden" name="bqsaiaenlace_z@origen__1" value="y" />
+
+                                            <input type="hidden" name="bksaiacondicion_z@nombre__2" value="">
+                                            <input type="hidden" name="bqsaia_z@nombre__2" value="">
+                                            <input type="hidden" name="bqsaiaenlace_z@nombre__2" value="y">
+                                        </div>
+                                        <div class="form-group form-group-default">
+                                            <div class="user_tree">Elaborado por:</div>
+                                            <input name="bqsaia_a@ejecutor" type="hidden" class="treeValue">
+                                            <input type="hidden" name="bksaiacondicion_a@ejecutor" value="in">
+                                            <input type="hidden" name="bqsaiaenlace_a@ejecutor" value="y" />
+                                        </div>
+                                        <div class="form-group form-group-default">
+                                            <div class="user_tree">Aprobado por:</div>
+                                            <input name="bqsaia_w@destino" type="hidden" class="treeValue">
+                                            <input type="hidden" name="bksaiacondicion_w@destino" id="bksaiacondicion_w@destino" value="in">
+                                            <input type="hidden" name="bqsaiaenlace_w@destino" value="y">
+
+                                            <input type="hidden" name="bksaiacondicion_w@nombre" id="bksaiacondicion_w-nombre" value="">
+                                            <input type="hidden" id="bqsaia_w-nombre" name="bqsaia_w@nombre" value="">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" name="idbusqueda_componente" id="component">
+                    <input type="hidden" name="idbusqueda_componente" id="component" value="<?= $_REQUEST['idbusqueda_componente'] ?>">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
                     <input type="hidden" name="bqtipodato" value="date|a@fecha_x,a@fecha_y">
+                    <input type="hidden" id="filtro_adicional" name="filtro_adicional" value="buzon_salida z@ AND iddocumento=z.archivo_idarchivo">
                 </form>
             </div>
         </div>
