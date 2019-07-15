@@ -27,7 +27,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form id="find_tasks_form">
+                <form id="find_document_form">
                     <input type="hidden" name="idbusqueda_componente" id="component">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
                     <input type="hidden" name="bqtipodato" value="date|b@fecha_x,b@fecha_y">
@@ -43,11 +43,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     </div>
                     <div class="row">
                         <div class="col-12">
+                            <div class="form-group form-group-default">
+                                <label>Descripción:</label>
+                                <input type="hidden" name="bksaiacondicion_b@descripcion" value="like">
+                                <input type="hidden" name="bqsaiaenlace_b@descripcion" id="bqsaiaenlace_b@descripcion" value="y" />
+                                <input class="form-control" name="bqsaia_b@descripcion" type="text" id="document_description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
                             <div class="form-group">
                                 <select class="full-width" id="filtro_usuario">
                                     <option value="1">Cualquier usuario</option>
-                                    <option value="2">Soy el creador</option>
-                                    <option value="3">Creador especifico</option>
+                                    <option value="2">Creados por:</option>
+                                    <option value="3">Transferidos a:</option>
+                                    <option value="4">Trasferidos por:</option>
+                                    <option value="5">Aprobados por:</option>
                                 </select>
                             </div>
                         </div>
@@ -60,16 +72,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <input type="hidden" name="bqsaia_b@ejecutor" id="user_list">
                                 <input type="hidden" name="bksaiacondicion_b@ejecutor" value="in">
                                 <input type="hidden" name="bqsaiaenlace_b@ejecutor" id="bqsaiaenlace_b@ejecutor" value="y" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group form-group-default">
-                                <label>Descripción:</label>
-                                <input type="hidden" name="bksaiacondicion_b@descripcion" value="like">
-                                <input type="hidden" name="bqsaiaenlace_b@descripcion" id="bqsaiaenlace_b@descripcion" value="y" />
-                                <input class="form-control" name="bqsaia_b@descripcion" type="text" id="task_name">
                             </div>
                         </div>
                     </div>

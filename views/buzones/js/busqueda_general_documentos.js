@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
 
     (function init() {
@@ -8,11 +8,11 @@ $(function() {
         findComponent();
     })();
 
-    $('#clear').on('click', function() {
+    $('#clear').on('click', function () {
         $('#filtro_usuario,#filtro_fecha')
             .val(1)
             .trigger('change');
-        $('#task_name').val('');
+        $('#document_description').val('');
         $('#select_responsable')
             .val(null)
             .trigger('change');
@@ -24,7 +24,7 @@ $(function() {
             .clear();
     });
 
-    $('#find_tasks_form').on('submit', function(e) {
+    $('#find_document_form').on('submit', function (e) {
         e.preventDefault();
 
         top.notification({
@@ -34,8 +34,8 @@ $(function() {
 
         $.post(
             `${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
-            $('#find_tasks_form').serialize(),
-            function(response) {
+            $('#find_document_form').serialize(),
+            function (response) {
                 if (response.exito) {
                     let route = baseUrl + response.url;
                     $('#iframe_workspace').attr('src', route);
@@ -52,7 +52,7 @@ $(function() {
         $('#dinamic_modal').modal('hide');
     });
 
-    $('#filtro_usuario').on('select2:select', function(e) {
+    $('#filtro_usuario').on('select2:select', function (e) {
         $('#select_responsable')
             .val(null)
             .trigger('change');
@@ -60,18 +60,20 @@ $(function() {
         switch (e.params.data.id) {
             case '1':
                 $('#user_container').hide();
+                $('#user_container')
+                    .val(null)
+                    .trigger('change');
                 break;
             case '2':
-                defaultUser();
-                $('#user_container').hide();
-                break;
             case '3':
+            case '4':
+            case '5':
                 $('#user_container').show();
                 break;
         }
     });
 
-    $('#filtro_fecha').on('select2:select', function(e) {
+    $('#filtro_fecha').on('select2:select', function (e) {
         $('#fecha_inicial')
             .data('DateTimePicker')
             .clear();
@@ -123,7 +125,7 @@ $(function() {
         }
     });
 
-    $('#select_responsable').on('select2:select change', function(e) {
+    $('#select_responsable').on('select2:select change', function (e) {
         let values = $('#select_responsable').val();
         $('#user_list').val(values.join(','));
     });
@@ -138,7 +140,7 @@ $(function() {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token')
             },
-            success: function(response) {
+            success: function (response) {
                 response.data.forEach(u => {
                     var option = new Option(u.text, u.id, true, true);
                     $('#select_responsable')
@@ -164,7 +166,7 @@ $(function() {
                 key: localStorage.getItem('key'),
                 name: 'busqueda_general_documentos'
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     $('#component').val(response.data.idbusqueda_componente);
                 } else {
@@ -185,14 +187,14 @@ $(function() {
             ajax: {
                 url: `${baseUrl}app/funcionario/autocompletar.php`,
                 dataType: 'json',
-                data: function(params) {
+                data: function (params) {
                     return {
                         term: params.term,
                         key: localStorage.getItem('key'),
                         token: localStorage.getItem('token')
                     };
                 },
-                processResults: function(response) {
+                processResults: function (response) {
                     return response.success ? { results: response.data } : {};
                 }
             }
