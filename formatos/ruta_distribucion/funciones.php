@@ -68,15 +68,6 @@ function add_edit_ruta_dist($idformato, $iddoc) {
     <?php
 }
 
-function enlace_item_dependencias_ruta($idformato, $iddoc) {
-    global $conn, $ruta_db_superior;
-    $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ",
-            "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc,
-            "",
-            $conn);
-   
-}
-
 
 function crearItemDependencia($item){
     global $conn;
@@ -119,7 +110,10 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
                 2 => "Inactivo"
             );
             $tabla .= '<form id="item_prerequisitos" action="'.$ruta_db_superior.'formatos/ruta_distribucion/guardar_datos_dependencias.php">
-			<table id="dependenciaDistribucion" class="table table-bordered">
+            <table id="dependenciaDistribucion" class="table table-bordered">
+            <tr>
+            <td style="text-align:center; font-weight:bold;" colspan="4">Dependencias de la ruta</td>
+            </tr>
 			<tr style="font-weight:bold">
 			    <td><center> Fecha</center></td>
 			    <td><center>Dependencia</center></td>
@@ -176,21 +170,6 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
     }
 }
 
-function enlace_item_funcionarios_ruta($idformato, $iddoc) {
-    global $conn, $ruta_db_superior;
-
-    if ($_REQUEST['tipo'] != 5) {
-        $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
-        $params = json_encode([
-            'baseUrl' => $ruta_db_superior,
-            'pantalla' => 'padre',
-            'idpadre' => $iddoc,
-            'idformato' => $idformato,
-            'padre' => $dato[0]['idft_ruta_distribucion']
-        ]);
-?><script id='funcionariosDistribucion' src='<?= $ruta_db_superior ?>formatos/ruta_distribucion/funciones.js' data-params='<?= $params ?>'></script><?php
-    }
-}
 
 function crearItemFuncionario($item){
     global $conn;
@@ -235,6 +214,9 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
             );
 
             $tabla .= '<table class="table table-bordered" id="funcionarioRuta">
+            <tr>
+            <td style="text-align:center; font-weight:bold;" colspan="3">Mensajeros de la Ruta</td>
+            </tr>
 			<tr>
 		    <td style="text-align:center;">Fecha</td>
 		    <td style="text-align:center;">Mensajero</td>
@@ -299,6 +281,18 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
         });
     </script>
     <?php
+
+if ($_REQUEST['tipo'] != 5) {
+    $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
+    $params = json_encode([
+        'baseUrl' => $ruta_db_superior,
+        'pantalla' => 'padre',
+        'idpadre' => $iddoc,
+        'idformato' => $idformato,
+        'padre' => $dato[0]['idft_ruta_distribucion']
+    ]);
+?><script id='funcionariosDistribucion' src='<?= $ruta_db_superior ?>formatos/ruta_distribucion/funciones.js' data-params='<?= $params ?>'></script><?php
+}
 }
 
 function crear_items_ruta_distribucion($idformato, $iddoc) {

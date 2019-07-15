@@ -232,10 +232,9 @@ if ($formato["numcampos"]) {
         <?php
           $tipo = '';
           for ($i = 0; $i < $tipoDocumental["numcampos"]; $i++) {
-            echo '<option value="' . $tipoDocumental[$i]["idserie"] . '>' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
+            echo '<option value="' . $tipoDocumental[$i]["idserie"] . '">' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
           }       
           ?>
-        <option value="1">datos</option>
         </select>
 
         
