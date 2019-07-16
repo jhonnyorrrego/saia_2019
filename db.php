@@ -42,62 +42,25 @@ function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
     $sql = "insert into digitalizacion(funcionario,documento_iddocumento,accion,justificacion,fecha) values('$usu','$iddoc','$accion','$justificacion',$fecha)";
     phpmkr_query($sql, $conn);
 }
-/*
-<Clase>
-<Nombre>mayusculas
-<Parametros>$texto-cadena que deseo pasar a mayusculas
-<Responsabilidades>convierte una cadena de texto a mayusculas
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * convierte una cadena a mayusculas
+ *
+ * @param string $string
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
-function mayusculas($texto)
+function mayusculas($string)
 {
-    $texto_nuevo = strtoupper($texto);
-    $texto_nuevo = str_replace("ACUTE;", "acute;", $texto_nuevo);
-    $texto_nuevo = str_replace("TILDE;", "tilde;", $texto_nuevo);
-    $texto_nuevo = str_replace("&IQUEST;", "&iquest;", $texto_nuevo);
-    $texto_nuevo = str_replace("UML;", "uml;", $texto_nuevo);
-    return ($texto_nuevo);
+    $string = strtoupper($string);
+    return str_replace(
+        ["ACUTE;", "TILDE;", "&IQUEST;", "UML;"],
+        ["acute;", "tilde;", "&iquest;", "uml;"],
+        $string
+    );
 }
 
-/*<Clase>
-<Nombre>compara_ruta_archivos</Nombre>
-<Parametros>$buscado:nombre del archivo</Parametros>
-<Responsabilidades>me devuelve la ruta relativa del archivo<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function compara_ruta_archivos($buscado)
-{
-    $info = pathinfo($_SERVER["PHP_SELF"]);
-    $uno = explode("/", $info["dirname"]);
-    $dos = explode("/", $buscado);
-    $igual = array();
-    if (count($uno) > count($dos))
-        $j = count($dos);
-    else
-        $j = count($uno);
-    $espacios = 0;
-    for ($i = 1; $i < $j; $i++) {
-        if ($uno[$i] == $dos[$i]) {
-            $igual[] = $uno[$i];
-        }
-    }
-    $igual = implode("/", $igual);
-    $nueva_actual = str_replace("/" . $igual, "", $info["dirname"]);
-    $nueva_buscada = str_replace("/" . $igual . "/", "", $buscado);
-    $distanciauno = count(explode("/", $nueva_actual));
-    for ($i = 1; $i < $distanciauno; $i++)
-        $ruta = "../" . $ruta;
-    $ruta = str_replace("//", "/", $ruta . $nueva_buscada);
-    return ($ruta);
-}
 /*<Clase>
 <Nombre>leido</Nombre>
 <Parametros>$codigo:codigo del funcionario;$llave:id del documento</Parametros>
@@ -180,24 +143,11 @@ function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log 
 </Clase>*/
 function evento_archivo($cadena)
 {
-    global $conn;
-    $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-    $ruta_db_superior = $ruta = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta . "db.php")) {
-            $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-        }
-        $ruta .= "../";
-        $max_salida--;
-    }
-
     $storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
-
     $nombre = DB . "_log_" . date("Y_m_d") . ".txt";
-
     $filesystem = $storage->get_filesystem();
-
     $contenido = "";
+
     if ($filesystem->has($nombre)) {
         $mode = "ab";
         $contenido = $cadena . "*|*";
@@ -208,7 +158,6 @@ function evento_archivo($cadena)
 
     $stream = $filesystem->createStream($nombre);
     $stream->open(new StreamMode($mode));
-
     $stream->write($contenido);
     $stream->close();
 }
@@ -311,7 +260,7 @@ function phpmkr_query($strsql)
 function phpmkr_num_fields($rs)
 {
     global $conn;
-    return ($conn->Numero_Campos($rs));
+    return $conn->Numero_Campos($rs);
 }
 
 /*
@@ -328,7 +277,7 @@ function phpmkr_num_fields($rs)
 function phpmkr_field_name($rs, $pos)
 {
     global $conn;
-    return ($conn->Nombre_Campo($rs, $pos));
+    return $conn->Nombre_Campo($rs, $pos);
 }
 /*
 <Clase>
@@ -565,7 +514,7 @@ function busca_tabla($tabla, $idtabla)
         array_push($retorno, $temp);
     $retorno["numcampos"] = $i;
     phpmkr_free_result($rs);
-    return ($retorno);
+    return $retorno;
 }
 
 /*
@@ -613,7 +562,7 @@ function extrae_campo($arreglo, $campo, $banderas = "U,M")
                 break;
         }
     }
-    return ($retorno);
+    return $retorno;
 }
 
 function sincronizar_carpetas($tipo, $conn)
@@ -1046,7 +995,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $sql1 = $strsql;
     phpmkr_query($sql1);
 
-    return ($idanexo);
+    return $idanexo;
 }
 
 /*
@@ -1065,7 +1014,7 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
 {
     if (DEBUGEAR) {
         if ($imprime_cadena) {
-            echo ($cad . "<BR>");
+            echo $cad . "<BR>";
         }
         if ($file == "") {
             $file = str_replace(CARPETA_SAIA . "/saia/", "", $_SERVER["PHP_SELF"]);
@@ -1343,7 +1292,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
         }
 
         if (!$mail->Send()) {
-            return ($mail->ErrorInfo);
+            return $mail->ErrorInfo;
         } else {
             if ($iddoc) {
                 $radicador_salida = busca_filtro_tabla("valor", "configuracion", "nombre LIKE 'radicador_salida'", "", $conn);
@@ -1371,7 +1320,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
                 $datos["nombre"] = "DISTRIBUCION";
                 transferir_archivo_prueba($datos, $ejecutores, $otros);
             }
-            return (true);
+            return true;
         }
     } else {
         return false;
@@ -1414,10 +1363,10 @@ function muestra_contador($cad)
     $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "", $conn);
     if ($cuenta["numcampos"]) {
         $consecutivo = $cuenta[0]["consecutivo"];
-        return ($consecutivo);
+        return $consecutivo;
     } else {
         error("NO EXISTE UN CONSECUTIVO LLAMADO " . $cad);
-        return (0);
+        return 0;
     }
 }
 
@@ -1484,7 +1433,7 @@ function codigo_rol($id, $tipo)
         $cod = busca_filtro_tabla("funcionario_codigo as cod", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$id", "", $conn);
     else
         return $id;
-    return ($cod[0]["cod"]);
+    return $cod[0]["cod"];
 }
 
 /*
@@ -1536,7 +1485,7 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
         $datorig[0] = array_merge((array) $datorig[0], (array) $temp[0]);
     }
 
-    return ($datorig);
+    return $datorig;
 }
 
 /**
@@ -1639,39 +1588,11 @@ function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo
     }
 
     if ($retorno) {
-        return ($cadena);
+        return $cadena;
     } else {
-        echo ($cadena);
-        return (true);
+        echo $cadena;
+        return true;
     }
-}
-/*
-<Clase>
-<Nombre>convertir_fecha
-<Parametros>$y: ano; $m: mes; d: dia; $sep: caracter que separa; $formato: formato en que se quiere la fecha
-<Responsabilidades> armar la cadena de la fecha con el formato deseado
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function convertir_fecha($y, $m, $d, $sep, $formato)
-{
-    //echo($y.",".$m.",".$d);
-    $cad = "";
-    switch ($formato) {
-        case "yyyy" . $sep . "mm" . $sep . "dd":
-            alerta("HH");
-            $cad = $y . $sep . $m . $sep . $d;
-            break;
-        case "dd" . $sep . "mm" . $sep . "yyyy":
-            alerta("HH");
-            $cad = $d . $sep . $m . $sep . $y;
-            break;
-    }
-    //echo($cad);
-    return ($cad);
 }
 
 /*
@@ -1689,7 +1610,7 @@ de tipo select
 function fecha_db_obtener($campo, $formato = null)
 {
     return StaticSql::getDateFormat($campo, $formato);
-} // Fin Funcion fecha_db_obtener
+}
 
 /*
 <Clase>
@@ -1723,22 +1644,6 @@ function suma_fechas($fecha1, $cantidad, $tipo = "")
 {
     global $conn;
     return $conn->suma_fechas($fecha1, $cantidad, $tipo);
-}
-
-/*<Clase>
-<Nombre>resta_fechas</Nombre>
-<Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
-<Responsabilidades>Crea la cadena Sql para calcular el numero de dias de diferencia entre dos fechas<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function resta_fechas($fecha1, $fecha2)
-{
-    global $conn;
-    return $conn->resta_fechas($fecha1, $fecha2);
 }
 
 /*<Clase>
@@ -1810,7 +1715,7 @@ function crear_archivo($nombre, $texto = null, $modo = 'wb')
         if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
             chmod($ruta, PERMISOS_CARPETAS);
         } else {
-            return (false);
+            return false;
         }
     }
     if (is_file($nombre)) {
@@ -1826,7 +1731,7 @@ function crear_archivo($nombre, $texto = null, $modo = 'wb')
         }
     }
     fclose($f);
-    return ($resp);
+    return $resp;
 }
 
 /*
@@ -1846,7 +1751,7 @@ function crear_destino($destino)
     if (!is_dir($destino)) {
         if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
             alerta("no es posible crear la carpeta " . $destino);
-            return ("");
+            return '';
         }
     }
     return $destino;
@@ -1882,7 +1787,7 @@ function ejecuta_filtro_tabla($sql2, $conn2 = null)
     $retorno["numcampos"] = $i;
     $retorno["sql"] = $sql2;
     phpmkr_free_result($rs);
-    return ($retorno);
+    return $retorno;
 }
 
 function ruta_almacenamiento($tipo, $raiz = 1)
@@ -1903,7 +1808,7 @@ function ruta_almacenamiento($tipo, $raiz = 1)
         $ruta_raiz = '';
     }
     $path = StorageUtils::get_storage_path($tipo, true);
-    return ($ruta_raiz . $path);
+    return $ruta_raiz . $path;
 }
 
 /* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
@@ -1929,24 +1834,24 @@ function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
         $retorno['funcionario_codigo'] = extrae_campo($reemplazo, 0);
         $retorno['idreemplazo'] = extrae_campo($reemplazo, 1);
     }
-    return ($retorno);
+    return $retorno;
 }
 
 /*EN ALGUNOS CLIENTES SE TIENE PROBLEMA CON LA CODIFICACION, ESTO LO SOLUCIONA DE FORMA GENERICA*/
 function codifica_encabezado($texto)
 {
     if (CODIFICA_ENCABEZADO) {
-        return (utf8_encode($texto));
+        return utf8_encode($texto);
     } else {
-        return ($texto);
+        return $texto;
     }
 }
 function decodifica_encabezado($texto)
 {
     if (CODIFICA_ENCABEZADO) {
-        return (utf8_decode($texto));
+        return utf8_decode($texto);
     } else {
-        return ($texto);
+        return $texto;
     }
 }
 
@@ -2022,9 +1927,9 @@ function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $bi
 
         if ($binario) {
             $im = file_get_contents($nombreorig);
-            return ($im);
+            return $im;
         } else {
-            return ($nombredest);
+            return $nombredest;
         }
     } else {
         $image = imagecreatefromjpeg($nombreorig);
@@ -2034,12 +1939,12 @@ function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $bi
         imagedestroy($image);
         if ($binario) {
             $im = file_get_contents($nombreorig);
-            return ($im);
+            return $im;
         } else {
-            return ($nombredest);
+            return $nombredest;
         }
     }
     imagedestroy($image_p);
     imagedestroy($image);
-    return (null);
+    return null;
 }
