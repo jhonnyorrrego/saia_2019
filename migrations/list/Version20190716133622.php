@@ -43,6 +43,13 @@ final class Version20190716133622 extends AbstractMigration
         ], [
             'etiqueta_condicion' => 'busqueda_general_documentos'
         ]);
+
+        $this->connection->delete('modulo', [
+            'nombre' => 'busqueda_admin'
+        ]);
+        $this->connection->delete('modulo', [
+            'nombre' => 'busqueda_general'
+        ]);
     }
 
     public function down(Schema $schema): void

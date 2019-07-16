@@ -1,9 +1,9 @@
-$(function () {
-    let params = $("#user_script").data('params');
+$(function() {
+    let params = $('#user_script').data('params');
     let baseUrl = params.baseUrl;
     let myDropzone = null;
 
-    $("#user_script").removeAttr('data-params');
+    $('#user_script').removeAttr('data-params');
 
     (function init() {
         createFileInput();
@@ -15,36 +15,36 @@ $(function () {
         }
     })();
 
-    $('#btn_success').on('click', function () {
-        $("#user_form").trigger('submit');
+    $('#btn_success').on('click', function() {
+        $('#user_form').trigger('submit');
     });
 
     function createFileInput() {
-        $("#file").addClass("dropzone");
-        myDropzone = new Dropzone("#file", {
+        $('#file').addClass('dropzone');
+        myDropzone = new Dropzone('#file', {
             url: `${baseUrl}app/temporal/cargar_anexos.php`,
             dictDefaultMessage:
-                "Haga clic para elegir un archivo o Arrastre acá el archivo.",
+                'Haga clic para elegir un archivo o Arrastre acá el archivo.',
             addRemoveLinks: true,
             dictRemoveFile: 'Eliminar anexo',
             maxFilesize: 3,
             maxFiles: 1,
-            dictFileTooBig: "Tamaño máximo {{maxFilesize}} MB",
-            dictMaxFilesExceeded: "Máximo 1 archivo",
+            dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+            dictMaxFilesExceeded: 'Máximo 1 archivo',
             params: {
-                key: localStorage.getItem("key"),
-                dir: "firma_funcionario"
+                key: localStorage.getItem('key'),
+                dir: 'firma_funcionario'
             },
-            paramName: "file",
-            init: function () {
-                this.on("success", function (file, response) {
+            paramName: 'file',
+            init: function() {
+                this.on('success', function(file, response) {
                     response = JSON.parse(response);
 
                     if (response.success) {
                         $('[name="firma"]').val(response.data[0]);
                     } else {
                         top.notification({
-                            type: "error",
+                            type: 'error',
                             message: response.message
                         });
                     }
@@ -57,22 +57,23 @@ $(function () {
         $.post(
             `${baseUrl}app/funcionario/consulta_perfiles.php`,
             {
-                key: localStorage.getItem("key")
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     response.data.forEach(element => {
-                        $("#profile").append(
-                            $("<option>", {
+                        $('#profile').append(
+                            $('<option>', {
                                 value: element.idperfil,
                                 text: element.nombre
                             })
                         );
                     });
-                    $("#profile").select2();
+                    $('#profile').select2();
                 }
             },
-            "json"
+            'json'
         );
     }
 
@@ -80,58 +81,68 @@ $(function () {
         $.post(
             `${baseUrl}app/funcionario/consulta_ventanillas.php`,
             {
-                key: localStorage.getItem("key")
+                key: localStorage.getItem('key')
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     response.data.forEach(element => {
-                        $("#window_radication").append(
-                            $("<option>", {
+                        $('#window_radication').append(
+                            $('<option>', {
                                 value: element.idcf_ventanilla,
                                 text: element.nombre
                             })
                         );
                     });
-                    $("#window_radication").select2();
+                    $('#window_radication').select2();
                 }
             },
-            "json"
+            'json'
         );
     }
 
-    $("#password").keyup(function () {
-        checkStrength("#password_validation", $(this).val());
+    $('#password').keyup(function() {
+        checkStrength('#password_validation', $(this).val());
     });
 
     function find(userId) {
-        $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`, {
-            key: localStorage.getItem('key'),
-            token: localStorage.getItem('token'),
-            type: 'edit',
-            userId: userId
-        }, function (response) {
-            if (response.success) {
-                fillForm(response.data);
-            } else {
-                top.notification({
-                    type: 'error',
-                    message: response.message
-                });
-            }
-        }, 'json');
+        $.post(
+            `${baseUrl}app/funcionario/consulta_funcionario.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                type: 'edit',
+                userId: userId
+            },
+            function(response) {
+                if (response.success) {
+                    fillForm(response.data);
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 
     function fillForm(data) {
         for (let name in data) {
             switch (name) {
                 case 'perfil':
-                    $(`[name="perfil[]"]`).val(data[name].split(',')).change();
+                    $(`[name="perfil[]"]`)
+                        .val(data[name].split(','))
+                        .change();
                     break;
                 case 'firma':
                     setImage(data[name]);
                     break;
                 case 'estado':
-                    $(`[name="estado"][value="${data[name]}"]`).attr('checked', true);
+                    $(`[name="estado"][value="${data[name]}"]`).attr(
+                        'checked',
+                        true
+                    );
                     break;
                 default:
                     let e = $(`[name="${name}"]`);
@@ -146,17 +157,17 @@ $(function () {
 
     function setImage(mockFile) {
         myDropzone.removeAllFiles();
-        myDropzone.emit("addedfile", mockFile);
-        myDropzone.emit("thumbnail", mockFile, baseUrl + mockFile.route);
-        myDropzone.emit("complete", mockFile);
+        myDropzone.emit('addedfile', mockFile);
+        myDropzone.emit('thumbnail', mockFile, baseUrl + mockFile.route);
+        myDropzone.emit('complete', mockFile);
     }
 
     function checkStrength(selector, password) {
         var strength = 0;
 
         if (password.length < 9) {
-            $(selector)[0].className = "label label-danger";
-            $(selector).html("Demasiado Corta");
+            $(selector)[0].className = 'label label-danger';
+            $(selector).html('Demasiado Corta');
             return true;
         }
 
@@ -178,22 +189,22 @@ $(function () {
         // Calculated strength value, we can return messages
 
         if (strength < 2) {
-            $(selector)[0].className = "label label-warning";
-            $(selector).html("Débil");
+            $(selector)[0].className = 'label label-warning';
+            $(selector).html('Débil');
             return true;
         } else if (strength == 2) {
-            $(selector)[0].className = "label label-info";
-            $(selector).html("Buena");
+            $(selector)[0].className = 'label label-info';
+            $(selector).html('Buena');
             return true;
         } else {
-            $(selector)[0].className = "label label-success";
-            $(selector).html("Optima");
+            $(selector)[0].className = 'label label-success';
+            $(selector).html('Optima');
             return true;
         }
     }
 });
 
-$("#user_form").validate({
+$('#user_form').validate({
     rules: {
         nit: {
             required: true
@@ -220,75 +231,78 @@ $("#user_form").validate({
     },
     messages: {
         nit: {
-            required: "Campo requerido"
+            required: 'Campo requerido'
         },
         nombres: {
-            required: "Campo requerido"
+            required: 'Campo requerido'
         },
         apellidos: {
-            required: "Campo requerido"
+            required: 'Campo requerido'
         },
         clave: {
-            required: "Campo requerido",
-            minlength: "Ingrese minimo 8 caracteres"
+            required: 'Campo requerido',
+            minlength: 'Ingrese minimo 8 caracteres'
         },
         perfil: {
-            required: "Campo requerido"
+            required: 'Campo requerido'
         },
         ventanilla_radicacion: {
-            required: "Campo requerido"
+            required: 'Campo requerido'
         },
         login: {
-            required: "Debe indicar un nombre de usuario"
+            required: 'Debe indicar un nombre de usuario'
         }
     },
-    errorPlacement: function (error, element) {
+    errorPlacement: function(error, element) {
         let node = element[0];
 
         if (
-            node.tagName == "SELECT" &&
-            node.className.indexOf("select2") !== false
+            node.tagName == 'SELECT' &&
+            node.className.indexOf('select2') !== false
         ) {
-            error.addClass("pl-3");
+            error.addClass('pl-3');
             element.next().append(error);
         } else {
             error.insertAfter(element);
         }
     },
-    submitHandler: function (form) {
-        let params = $("#user_script").data('params');
-        let data = $("#user_form").serialize();
-        data = data + '&' + $.param({
-            key: localStorage.getItem("key"),
-            token: localStorage.getItem("token"),
-            userId: params.userId
-        });
+    submitHandler: function(form) {
+        let params = $('#user_script').data('params');
+        let data = $('#user_form').serialize();
+        data =
+            data +
+            '&' +
+            $.param({
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: params.userId
+            });
 
         if (params.userId) {
             var route = `${params.baseUrl}app/funcionario/editar.php`;
         } else {
-            var route = `${params.baseUrl}app/funcionario/adicionar.php`
+            var route = `${params.baseUrl}app/funcionario/adicionar.php`;
         }
 
         $.post(
             route,
             data,
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,
-                        type: "success"
+                        type: 'success'
                     });
                     top.successModalEvent();
                 } else {
                     top.notification({
                         message: response.message,
-                        type: "error",
-                        title: "Error!"
+                        type: 'error',
+                        title: 'Error!'
                     });
                 }
             },
-            "json"
+            'json'
         );
     }
 });

@@ -54,6 +54,7 @@ $(function() {
 
     $('#filtro_usuario').on('select2:select', function(e) {
         $('#select_responsable')
+            .empty()
             .val(null)
             .trigger('change');
 

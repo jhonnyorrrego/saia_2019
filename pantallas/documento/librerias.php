@@ -497,9 +497,20 @@ function date_formatted($date)
     return DateController::convertDate($date);
 }
 
-function filtrar_funcionario($funcionario)
+/**
+ * indica si filtra por mis transferencias
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-07-16
+ */
+function transfers()
 {
-    $funcionario = SessionController::getValue('usuario_actual');
-    $texto = " AND (z.origen='" . $funcionario . "' OR z.destino='" . $funcionario . "' ) AND (lower(z.nombre)<>'leido' AND lower(z.nombre) NOT LIKE 'elimina_%')";
+    if (!$_REQUEST['variable_busqueda']) {
+        $funcionario = SessionController::getValue('usuario_actual');
+        $texto = "(a.origen={$funcionario} OR a.destino={$funcionario})";
+    } else {
+        $texto = '1=1';
+    }
     return $texto;
 }

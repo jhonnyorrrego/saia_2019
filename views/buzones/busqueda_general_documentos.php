@@ -29,6 +29,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="col-12">
                 <form id="find_document_form">
                     <input type="hidden" name="idbusqueda_componente" id="component">
+                    <input type="hidden" id="filtro_adicional" name="filtro_adicional">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
                     <input type="hidden" name="bqtipodato" value="date|b@fecha_x,b@fecha_y">
                     <div class="row">
@@ -68,10 +69,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <div class="col-12">
                             <div class="form-group form-group-default form-group-default-select2">
                                 <label>Usuario:</label>
-                                <select class="full-width" id="select_responsable" multiple="multiple"></select>
-                                <input type="hidden" name="bqsaia_b@ejecutor" id="user_list">
-                                <input type="hidden" name="bksaiacondicion_b@ejecutor" value="in">
-                                <input type="hidden" name="bqsaiaenlace_b@ejecutor" id="bqsaiaenlace_b@ejecutor" value="y" />
+                                <select class="full-width" id="selectOwner" multiple="multiple"></select>
+                                <div id="hidden_fields"></div>
                             </div>
                         </div>
                     </div>
@@ -116,7 +115,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group form-group-default form-group-default-select2">
+                                <label>Formato:</label>
+                                <select class="full-width" id="selectTemplate" multiple="multiple"></select>
+                                <input name="bqsaia_b@plantilla" type="hidden" id="template">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row py-2 d-none" id="adminSearch">
+                        <div class="col-auto float-right">
+                            <label for="">
+                                <input type="checkbox" name="variable_busqueda" value="1" class="form-controls">
+                                Buscar como administrador
+                            </label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn btn-danger" id="clear">Limpiar</button>

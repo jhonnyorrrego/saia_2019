@@ -77,7 +77,8 @@ include_once $ruta_db_superior . "assets/librerias.php";
             let baseUrl = '<?= $ruta_db_superior ?>';
             $.post(
                 `${baseUrl}app/funcionario/consulta_perfiles.php`, {
-                    key: localStorage.getItem("key")
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token')
                 },
                 function(response) {
                     if (response.success) {
