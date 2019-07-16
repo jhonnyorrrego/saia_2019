@@ -131,26 +131,6 @@ class Ui {
         window.location = Session.getBaseUrl() + 'logout.php';
     }
 
-    static inactiveTime() {
-        return true;
-        var t;
-        document.onclick = resetTimer;
-
-        function logout() {
-            top.notification({
-                type: 'error',
-                message: 'Debe iniciar sesión'
-            });
-
-            window.setTimeout(x => Ui.close(), 1000);
-        }
-
-        function resetTimer() {
-            clearTimeout(t);
-            t = setTimeout(logout, 3600000);
-        }
-    }
-
     static setWorkspacePosition() {
         let breakpoint = localStorage.getItem('breakpoint');
 

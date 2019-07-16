@@ -8,22 +8,33 @@ class Perfil {
         $.post(
             `${baseUrl}app/funcionario/consulta_perfiles.php`,
             {
-                key: localStorage.getItem("key")
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         if (element.idperfil == 1) {
-                            $("#profile_list").append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${element.idperfil}">
+                            $('#profile_list')
+                                .append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${
+                                element.idperfil
+                            }">
                                 <div class="">
-                                    <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${element.nombre}" style="border:0px">
+                                    <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${
+                                        element.nombre
+                                    }" style="border:0px">
                                     <small class="error pl-2" class="profile_name_error"></small>
                                 </div>
                             </li>`);
                         } else {
-                            $("#profile_list").append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${element.idperfil}">
+                            $('#profile_list')
+                                .append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${
+                                element.idperfil
+                            }">
                                 <div class="">
-                                    <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${element.nombre}" style="border:0px">
+                                    <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${
+                                        element.nombre
+                                    }" style="border:0px">
                                     <small class="error pl-2" class="profile_name_error"></small>
                                 </div>
                                 <span>
@@ -38,29 +49,36 @@ class Perfil {
                                     </span>
                                 </span>
                             </li>`);
-                        }   
+                        }
                     });
                 }
             },
-            "json"
+            'json'
         );
     }
 
+    static save(profile) {
+        let baseUrl = Session.getBaseUrl();
+        let retorno = 0;
 
-    static save(profile){
-    let baseUrl = Session.getBaseUrl();
-    let retorno = 0;
-
-    $.ajax({
-        type:'POST', async: false, url: `${baseUrl}app/permisos/guardar.php`, dataType: "json",
-        data: profile,
-        success: function (response) {
-            if (response.success) {
-                retorno = response;
-                if (!parseInt(profile.idPerfil)) {
-                    $("#profile_list").append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${response.data}">
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: `${baseUrl}app/permisos/guardar.php`,
+            dataType: 'json',
+            data: profile,
+            success: function(response) {
+                if (response.success) {
+                    retorno = response;
+                    if (!parseInt(profile.idPerfil)) {
+                        $('#profile_list')
+                            .append(`<li class="profile_item list-group-item d-flex justify-content-between align-items-center p-1" data-profileid="${
+                            response.data
+                        }">
                             <div class="">
-                                <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${profile.nombre}" style="border:0px">
+                                <input type="text" readOnly class="item_profile_name form-control text-dark bg-white" value="${
+                                    profile.nombre
+                                }" style="border:0px">
                                 <small class="error pl-2" class="profile_name_error"></small>
                             </div>
                             <span>
@@ -75,42 +93,45 @@ class Perfil {
                                 </span>
                             </span>
                         </li>`);
+                    }
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
-            }else{
-                top.notification({
-                    message: response.message,
-                    type: 'error',
-                    title: 'Error!'
-                });
             }
-        }
-    });
-    return retorno;
-}
+        });
+        return retorno;
+    }
 
-    static del(profile){
-    let baseUrl = Session.getBaseUrl();
-    let retorno = 0;
+    static del(profile) {
+        let baseUrl = Session.getBaseUrl();
+        let retorno = 0;
 
-    $.ajax({
-        type:'POST', async: false, url: `${baseUrl}app/permisos/borrar_perfil.php`, dataType: "json",
-        data: profile,
-        success: function (response) {
-            retorno = response.success;
-            if(!response.success){
-                top.notification({
-                    message: response.message,
-                    type: 'error'
-                });
-            } else {
-                top.notification({
-                    message: response.message,
-                    type: 'success',
-                    title: 'Perfil eliminado!'
-                });
+        $.ajax({
+            type: 'POST',
+            async: false,
+            url: `${baseUrl}app/permisos/borrar_perfil.php`,
+            dataType: 'json',
+            data: profile,
+            success: function(response) {
+                retorno = response.success;
+                if (!response.success) {
+                    top.notification({
+                        message: response.message,
+                        type: 'error'
+                    });
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'success',
+                        title: 'Perfil eliminado!'
+                    });
+                }
             }
-        }
-    });
-    return retorno;
-}
+        });
+        return retorno;
+    }
 }

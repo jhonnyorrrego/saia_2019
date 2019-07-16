@@ -54,7 +54,6 @@ class Formato extends Model
     protected $mostrar_tipodoc_pdf;
     protected $publicar;
 
-
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
@@ -126,9 +125,43 @@ class Formato extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * encuentra la instancia del primer formato
+     * en el proceso
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-16
+     */
+    public function findFirstParent()
+    {
+        return $this->cod_padre ? (new self($this->cod_padre))->findFirstParent() : $this;
+    }
+
+    /**
+     * realiza la busqueda de formatos 
+     * por un termino indicado
+     *
+     * @param string $term
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-16
+     */
+    public static function findAllByTerm($term)
+    {
+        $sql = <<<SQL
+            SELECT *
+            FROM formato
+            WHERE
+                etiqueta like '%{$term}%' AND
+                item <> 1
+SQL;
+        return self::findBySql($sql);
     }
 }
