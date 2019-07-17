@@ -1,10 +1,11 @@
 var topModalDefaults = {
-    content: "", //string with especific content to show
-    url: "", // url to open
-    params: {}, //params for url ej: baseUrl
-    size: "", //'modal-lg', 'modal-sm' , 'modal-xl'
-    title: "", //title for modal
-    centerAlign: true, //true for center align, false for top align
+    content: "", //html a mostrar en caso de no suministrar una url
+    url: "", // ruta archivo a cargar
+    params: {}, //parametros a enviar a url
+    size: "", //tamaño de la ventana 'modal-lg', 'modal-sm' , 'modal-xl'
+    title: "", //titulo
+    centerAlign: true, //centrar verticalmente 
+    keep: false, //mantener el contenido en caso de volver a llamarse la misma configuracion
     buttons: {
         success: {
             label: "Enviar",
@@ -33,6 +34,14 @@ var topJsPanelDefaults = {
 };
 
 function topModal(options) {
+    if (
+        window.modalOptions &&
+        window.modalOptions.keep &&
+        window.modalOptions.url == options.url
+    ) {
+        return openModal(options);
+    }
+
     var modal = $("#dinamic_modal", window.top.document);
     var modalDialog = modal.find(".modal-dialog");
     var modalBody = modal.find("#modal_body");
@@ -129,9 +138,7 @@ function setEvents(options, modal) {
 
 function openModal(options) {
     if (!$("#dinamic_modal", window.top.document).is(":visible")) {
-        $("[data-target='#dinamic_modal']", window.top.document).trigger(
-            "click"
-        );
+        $("[data-target='#dinamic_modal']", window.top.document).trigger("click");
         window.modalOptions = options;
     } else {
         options.oldSource = window.modalOptions;
@@ -142,7 +149,7 @@ function openModal(options) {
 function closeTopModal() {
     if (window.modalOptions && window.modalOptions.oldSource) {
         top.topModal(window.modalOptions.oldSource);
-        window.modalOptions = {};
+        window.modalOptions = window.modalOptions.oldSource;
     } else {
         $("#dinamic_modal", window.top.document).modal("hide");
     }

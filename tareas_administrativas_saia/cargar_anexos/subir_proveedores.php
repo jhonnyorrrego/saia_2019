@@ -416,8 +416,7 @@ function radicar_plantilla2()
    }
 }
 function aprobar2($iddoc=0,$url="")
-  {//$con=new Conexion("radica_camara");
-   //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
+  {
    global $conn;
    $transferir=1;
     if(isset($_REQUEST["iddoc"])&&$_REQUEST["iddoc"])
@@ -633,4 +632,3 @@ function aprobar2($iddoc=0,$url="")
     //enrutar_documento();       
     return;
 }
-?>

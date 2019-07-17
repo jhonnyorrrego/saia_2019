@@ -1,8 +1,8 @@
 <?php
+date_default_timezone_set('America/Bogota');
+
 require_once 'StorageUtils.php';
 require_once 'filesystem/SaiaStorage.php';
-
-date_default_timezone_set('America/Bogota');
 
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
@@ -20,7 +20,7 @@ function defineGlobalVars()
     }
 
     $GLOBALS['sql'] = '';
-    $GLOBALS['conn'] = StaticSql::getInstance();
+    $GLOBALS['conn'] = Sql::getInstance();
 }
 
 /*
@@ -42,62 +42,25 @@ function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
     $sql = "insert into digitalizacion(funcionario,documento_iddocumento,accion,justificacion,fecha) values('$usu','$iddoc','$accion','$justificacion',$fecha)";
     phpmkr_query($sql, $conn);
 }
-/*
-<Clase>
-<Nombre>mayusculas
-<Parametros>$texto-cadena que deseo pasar a mayusculas
-<Responsabilidades>convierte una cadena de texto a mayusculas
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * convierte una cadena a mayusculas
+ *
+ * @param string $string
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
-function mayusculas($texto)
+function mayusculas($string)
 {
-    $texto_nuevo = strtoupper($texto);
-    $texto_nuevo = str_replace("ACUTE;", "acute;", $texto_nuevo);
-    $texto_nuevo = str_replace("TILDE;", "tilde;", $texto_nuevo);
-    $texto_nuevo = str_replace("&IQUEST;", "&iquest;", $texto_nuevo);
-    $texto_nuevo = str_replace("UML;", "uml;", $texto_nuevo);
-    return ($texto_nuevo);
+    $string = strtoupper($string);
+    return str_replace(
+        ["ACUTE;", "TILDE;", "&IQUEST;", "UML;"],
+        ["acute;", "tilde;", "&iquest;", "uml;"],
+        $string
+    );
 }
 
-/*<Clase>
-<Nombre>compara_ruta_archivos</Nombre>
-<Parametros>$buscado:nombre del archivo</Parametros>
-<Responsabilidades>me devuelve la ruta relativa del archivo<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function compara_ruta_archivos($buscado)
-{
-    $info = pathinfo($_SERVER["PHP_SELF"]);
-    $uno = explode("/", $info["dirname"]);
-    $dos = explode("/", $buscado);
-    $igual = array();
-    if (count($uno) > count($dos))
-        $j = count($dos);
-    else
-        $j = count($uno);
-    $espacios = 0;
-    for ($i = 1; $i < $j; $i++) {
-        if ($uno[$i] == $dos[$i]) {
-            $igual[] = $uno[$i];
-        }
-    }
-    $igual = implode("/", $igual);
-    $nueva_actual = str_replace("/" . $igual, "", $info["dirname"]);
-    $nueva_buscada = str_replace("/" . $igual . "/", "", $buscado);
-    $distanciauno = count(explode("/", $nueva_actual));
-    for ($i = 1; $i < $distanciauno; $i++)
-        $ruta = "../" . $ruta;
-    $ruta = str_replace("//", "/", $ruta . $nueva_buscada);
-    return ($ruta);
-}
 /*<Clase>
 <Nombre>leido</Nombre>
 <Parametros>$codigo:codigo del funcionario;$llave:id del documento</Parametros>
@@ -180,24 +143,11 @@ function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log 
 </Clase>*/
 function evento_archivo($cadena)
 {
-    global $conn;
-    $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-    $ruta_db_superior = $ruta = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta . "db.php")) {
-            $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-        }
-        $ruta .= "../";
-        $max_salida--;
-    }
-
     $storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
-
     $nombre = DB . "_log_" . date("Y_m_d") . ".txt";
-
     $filesystem = $storage->get_filesystem();
-
     $contenido = "";
+
     if ($filesystem->has($nombre)) {
         $mode = "ab";
         $contenido = $cadena . "*|*";
@@ -208,7 +158,6 @@ function evento_archivo($cadena)
 
     $stream = $filesystem->createStream($nombre);
     $stream->open(new StreamMode($mode));
-
     $stream->write($contenido);
     $stream->close();
 }
@@ -275,7 +224,7 @@ function formato_cargo($nombre_cargo)
  */
 function phpmkr_db_close($conn)
 {
-    $conn->Conn->Desconecta();
+    $conn->disconnect();
 }
 
 /*
@@ -311,7 +260,7 @@ function phpmkr_query($strsql)
 function phpmkr_num_fields($rs)
 {
     global $conn;
-    return ($conn->Numero_Campos($rs));
+    return $conn->Numero_Campos($rs);
 }
 
 /*
@@ -328,7 +277,7 @@ function phpmkr_num_fields($rs)
 function phpmkr_field_name($rs, $pos)
 {
     global $conn;
-    return ($conn->Nombre_Campo($rs, $pos));
+    return $conn->Nombre_Campo($rs, $pos);
 }
 /*
 <Clase>
@@ -460,10 +409,8 @@ function phpmkr_error()
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn = null)
+function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = null)
 {
-    global $sql;
-
     $sql = "SELECT ";
     $sql .= $campos ? $campos : "*";
     $sql .= " FROM {$tabla}";
@@ -478,53 +425,35 @@ function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn = null)
     $return['sql'] = $sql;
     return $return;
 }
-/*
-<Clase>
-<Nombre>busca_filtro_tabla
-<Parametros>$campos: columnas que se van a seleccionar
-            $tabla: Tabla(s) desde la(s) que se va a seleccionar los datos
-            $filtro: where de la consulta
-            $orden: columna por la que se ordenaran los datos
-            $inici: No registro donde inicia la consulta
-            $registros:cantidad de registros que deben consultarse
-<Responsabilidades>Invocar la busqueda a la base de datos y retornar el resultado de la misma en un arreglo
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * ejecuta una busqueda sobre la base de datos
+ * con un limite
+ *
+ * @param string $campos
+ * @param string $tabla
+ * @param string $filtro
+ * @param string $orden
+ * @param string $inicio registro inicial
+ * @param string $registros cantidad de registros a consultar
+ * @param string $conn
+ * @return void
  */
 function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn)
 {
-    global $sql, $conn;
+    $sql = "SELECT ";
+    $sql .= $campos ? $campos : "*";
+    $sql .= " FROM {$tabla}";
+    $sql .= $filtro ? " WHERE {$filtro} " : ' ';
+    $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
+        $orden : "ORDER BY {$orden} ") : '';
+    $sql = htmlspecialchars_decode($sql);
 
-    $retorno = array();
-    $temp = array();
-    $retorno["tabla"] = $tabla;
-    $sql = "Select ";
-    if ($campos)
-        $sql .= $campos;
-    else $sql .= "*";
-    if ($tabla)
-        $sql .= " FROM " . $tabla;
-
-    if ($filtro)
-        $sql .= " WHERE " . str_replace('"', "'", $filtro);
-    if ($orden) {
-        $sql .= $orden;
-    }
-    $sql = htmlspecialchars_decode((($sql)));
-    $rs = $conn->Ejecutar_Limit($sql, $inicio, ($inicio + $registros), $conn);
-    $temp = phpmkr_fetch_array($rs);
-
-    $retorno["sql"] = $sql;
-
-    for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++)
-        array_push($retorno, $temp);
-    $retorno["numcampos"] = $i;
-    phpmkr_free_result($rs);
-
-    return ($retorno);
+    $return = StaticSql::search($sql, $inicio, $inicio + $registros);
+    $return['numcampos'] = count($return);
+    $return['tabla'] = $tabla;
+    $return['sql'] = $sql;
+    return $return;
 }
 
 /**
@@ -585,7 +514,7 @@ function busca_tabla($tabla, $idtabla)
         array_push($retorno, $temp);
     $retorno["numcampos"] = $i;
     phpmkr_free_result($rs);
-    return ($retorno);
+    return $retorno;
 }
 
 /*
@@ -633,21 +562,9 @@ function extrae_campo($arreglo, $campo, $banderas = "U,M")
                 break;
         }
     }
-    return ($retorno);
+    return $retorno;
 }
 
-/*
-<Clase>
-<Nombre>sincronizar_carpetas
-<Parametros>$conn: conexion activa con la base de datos
-<Responsabilidades>Esta funcion genera una sincronizacion de la carpeta temporal, tomando las imagenes e indexandolas
-                   de forma automatica si no logra encontrar el tipo documental lo envia a  una carpeta sin indexacion
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
 function sincronizar_carpetas($tipo, $conn)
 {
     $idimagenes = array();
@@ -660,19 +577,18 @@ function sincronizar_carpetas($tipo, $conn)
         $ruta_arch_tmp .= "../";
         $max_salida--;
     }
-    include_once($ruta_db_superior . "binario_func.php");
+    include_once $ruta_db_superior . "binario_func.php";
     $rutas = array();
     $usr_tmp_dir = "";
     $dir2 = "";
-    $copiar = 0;
     $peso = 2000000;
     $tabla = "pagina";
     $estado = "";
     $configuracion = busca_filtro_tabla("*", "configuracion A", "A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'", "A.idconfiguracion DESC", $conn);
     for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
         switch ($configuracion[$i]["nombre"]) {
-            case "ruta_temporal":
-                $usr_tmp_dir = SessionController::getTemporalDir();
+            case "temporal_digitalizacion":
+                $usr_tmp_dir = $configuracion[$i]["valor"] . '_' . SessionController::getLogin();
                 break;
             case "ruta_documentos":
                 $dir2 = $configuracion[$i]["valor"];
@@ -801,7 +717,7 @@ function sincronizar_carpetas($tipo, $conn)
                     } else {
                         $imgalto = ($imgancho / $width) * $height;
                     }
-                    $size = new Box($imgancho, $imgalto);
+                    $size  = new Box($imgancho, $imgalto);
                     //$image = $imagine->create($size);
                     $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
                     $redim = $imagen->resize($size);
@@ -813,11 +729,11 @@ function sincronizar_carpetas($tipo, $conn)
                         $dirminiatura = $ruta_dir . "/miniaturas";
                         $ruta_img_min = $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg";
                         /*if (! is_dir($dirminiatura . "/")) {
-							if (!mkdir($dirminiatura . "/", 0777)) {
-								alerta("Problemas al crear la carpeta " . $dirminiatura . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
-							}
-						}
-						chmod($dirminiatura . "/", PERMISOS_CARPETAS);*/
+    if (!mkdir($dirminiatura . "/", 0777)) {
+    alerta("Problemas al crear la carpeta " . $dirminiatura . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
+    }
+    }
+    chmod($dirminiatura . "/", PERMISOS_CARPETAS);*/
                         $alm_paginas->almacenar_contenido($ruta_img_dst, $imagen->get('jpeg'));
                         $alm_paginas->almacenar_contenido($ruta_img_min, $minitura->get('jpeg'));
                         $ruta_pagina = array("servidor" => $alm_paginas->get_ruta_servidor(), "ruta" => $ruta_img_dst);
@@ -875,7 +791,7 @@ function sincronizar_carpetas($tipo, $conn)
             $archivos = array_values($archivos);
             $archivos_anexos = array_unique($archivos);
 
-            $ruta_temporal = SessionController::getTemporalDir();
+            $ruta_temporal = $_SESSION["ruta_temp_funcionario"];
             foreach ($archivos_anexos as $archivo) {
                 $ruta_archivo = $ruta_db_superior . $ruta_temporal . '/' . $archivo;
                 if (file_exists($ruta_archivo)) {
@@ -889,6 +805,7 @@ function sincronizar_carpetas($tipo, $conn)
                 } //fin if file_exist
             } //recorriendo directorio
         } //fin if directorio
+
     } elseif ($tipo_almacenamiento == "db") { // Se almacena en la base de datos
         if (is_dir($usr_tmp_dir)) { // ruta_temporal
             $directorio = opendir("$usr_tmp_dir");
@@ -941,12 +858,12 @@ function sincronizar_carpetas($tipo, $conn)
                     $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
 
                     /*if (! is_dir($dir_dst)) {
-					 if (mkdir($dir_dst, 0777)) {
-					 $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
-					 } else {
-					 $dir_dst = "../documentos/error/" . $cad2;
-					}
-					 }*/
+    if (mkdir($dir_dst, 0777)) {
+    $dir_dst = "../" . $dir2 . "/" . $cad2 . "/";
+    } else {
+    $dir_dst = "../documentos/error/" . $cad2;
+    }
+    }*/
                     //Me lleva hasta la Ultima pagina del documento.
                     if ($cad_temp != "") {
                         $cont = intval($cad_temp) + intval($cont);
@@ -961,7 +878,7 @@ function sincronizar_carpetas($tipo, $conn)
                     } else {
                         $imgalto = ($imgancho / $width) * $height;
                     }
-                    $size = new Box($imgancho, $imgalto);
+                    $size  = new Box($imgancho, $imgalto);
                     //$image = $imagine->create($size);
                     $minitura = $imagen->thumbnail(new Box($miniatura_ancho, $miniatura_alto));
                     $redim = $imagen->resize($size);
@@ -973,11 +890,11 @@ function sincronizar_carpetas($tipo, $conn)
                         $dirminiatura = "../miniaturas/documentos/";
                         $ruta_img_min = $dirminiatura . $fieldList["id_documento"] . "/doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg";
                         /*if (! is_dir($dirminiatura . $fieldList["id_documento"] . "/")) {
-							if (!mkdir($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS)) {
-								alerta("Problemas al crear la carpeta " . $dirminiatura . $fieldList["id_documento"] . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
-							}
-						}
-						 chmod($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS);*/
+    if (!mkdir($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS)) {
+    alerta("Problemas al crear la carpeta " . $dirminiatura . $fieldList["id_documento"] . "/" . " de de Imagenes-Miniaturas Por favor Comuniquese con su Administrador");
+    }
+    }
+    chmod($dirminiatura . $fieldList["id_documento"] . "/", PERMISOS_CARPETAS);*/
                         $fieldList["imagen"] = $ruta_img_min;
                         array_push($rutas, $fieldList["id_documento"]);
                         $fieldList["ruta"] = $ruta2;
@@ -1016,7 +933,7 @@ function sincronizar_carpetas($tipo, $conn)
         }
     }
 
-    return (true);
+    return true;
 }
 
 function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
@@ -1078,7 +995,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $sql1 = $strsql;
     phpmkr_query($sql1);
 
-    return ($idanexo);
+    return $idanexo;
 }
 
 /*
@@ -1097,7 +1014,7 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
 {
     if (DEBUGEAR) {
         if ($imprime_cadena) {
-            echo ($cad . "<BR>");
+            echo $cad . "<BR>";
         }
         if ($file == "") {
             $file = str_replace(CARPETA_SAIA . "/saia/", "", $_SERVER["PHP_SELF"]);
@@ -1375,7 +1292,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
         }
 
         if (!$mail->Send()) {
-            return ($mail->ErrorInfo);
+            return $mail->ErrorInfo;
         } else {
             if ($iddoc) {
                 $radicador_salida = busca_filtro_tabla("valor", "configuracion", "nombre LIKE 'radicador_salida'", "", $conn);
@@ -1403,7 +1320,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
                 $datos["nombre"] = "DISTRIBUCION";
                 transferir_archivo_prueba($datos, $ejecutores, $otros);
             }
-            return (true);
+            return true;
         }
     } else {
         return false;
@@ -1446,10 +1363,10 @@ function muestra_contador($cad)
     $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "", $conn);
     if ($cuenta["numcampos"]) {
         $consecutivo = $cuenta[0]["consecutivo"];
-        return ($consecutivo);
+        return $consecutivo;
     } else {
         error("NO EXISTE UN CONSECUTIVO LLAMADO " . $cad);
-        return (0);
+        return 0;
     }
 }
 
@@ -1516,7 +1433,7 @@ function codigo_rol($id, $tipo)
         $cod = busca_filtro_tabla("funcionario_codigo as cod", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$id", "", $conn);
     else
         return $id;
-    return ($cod[0]["cod"]);
+    return $cod[0]["cod"];
 }
 
 /*
@@ -1525,7 +1442,7 @@ function codigo_rol($id, $tipo)
 <Parametros>$tipo: filtro de la busqueda
             $dato:
             $dependencia:
-            $conn: Conexion activa con la base de datos
+            $conn: instancia sql
 <Responsabilidades>Funcion  que retorna el origen completo de un funcionario incluyendo los codigos de dependencia y cargo
 <Notas>
 <Excepciones>
@@ -1557,7 +1474,7 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
     } else if ($tipo == "cargo" || $tipo == 4) {
         $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=" . $dependencia, "A.estado", $conn);
         if ($datorig["numcampos"])
-            $datorig = busca_cargo_funcionario(5, $datorig[0]["iddependencia_cargo"], "");
+            $datorig = busca_cargo_funcionario(5, $datorig[0]["iddependencia_cargo"], "", $conn);
         else alerta(codifica_encabezado("No existe nadie en ésta dependencia con el cargo especificado"));
     } else if ($tipo == 'iddependencia_cargo' || $tipo == 5) {
         $datorig = busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "dependencia_cargo d,funcionario f,cargo", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "f.estado", $conn);
@@ -1565,37 +1482,10 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
         $datorig[0]['iddependencia_cargo'] = $dato;
     }
     if ($temp["numcampos"]) {
-        $datorig[0] = array_merge((array)$datorig[0], (array)$temp[0]);
+        $datorig[0] = array_merge((array) $datorig[0], (array) $temp[0]);
     }
 
-    return ($datorig);
-}
-
-/*
-<Clase>
-<Nombre>agregar_destino_ruta
-<Parametros>$arreglo: arreglo en el que se van a introducir los datos
-            $tipo,$nit_usuario,$dependencia,$condicion,$orden: datos que se le introduciran al arreglo
-<Responsabilidades>adiciona un nuevo componente de la ruta recibe el arreglo donde almacena el listado de rutas
-                   el tipo de destino, el codigo de destino, la dependencia a la que pertenece y la condicion de transferencia
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function agregar_destino_ruta($arreglo, $tipo, $nit_usuario, $dependencia, $condicion, $orden)
-{
-    global $conn;
-    $temp2["tipo"] = $tipo;
-    $temp2["codigo"] = $nit_usuario;
-    if ($dependencia <> "" && $dependencia <> null)
-        $temp2["dependencia"] = $dependencia;
-    else $temp2["dependencia"] = 1;
-    $temp2["condicion"] = $condicion;
-    $temp2["obligatorio"] = $orden;
-    array_push($arreglo, $temp2);
-    return ($arreglo);
+    return $datorig;
 }
 
 /**
@@ -1698,39 +1588,11 @@ function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo
     }
 
     if ($retorno) {
-        return ($cadena);
+        return $cadena;
     } else {
-        echo ($cadena);
-        return (true);
+        echo $cadena;
+        return true;
     }
-}
-/*
-<Clase>
-<Nombre>convertir_fecha
-<Parametros>$y: ano; $m: mes; d: dia; $sep: caracter que separa; $formato: formato en que se quiere la fecha
-<Responsabilidades> armar la cadena de la fecha con el formato deseado
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function convertir_fecha($y, $m, $d, $sep, $formato)
-{
-    //echo($y.",".$m.",".$d);
-    $cad = "";
-    switch ($formato) {
-        case "yyyy" . $sep . "mm" . $sep . "dd":
-            alerta("HH");
-            $cad = $y . $sep . $m . $sep . $d;
-            break;
-        case "dd" . $sep . "mm" . $sep . "yyyy":
-            alerta("HH");
-            $cad = $d . $sep . $m . $sep . $y;
-            break;
-    }
-    //echo($cad);
-    return ($cad);
 }
 
 /*
@@ -1747,9 +1609,8 @@ de tipo select
  */
 function fecha_db_obtener($campo, $formato = null)
 {
-    global $conn;
-    return $conn->fecha_db_obtener($campo, $formato);
-} // Fin Funcion fecha_db_obtener
+    return StaticSql::getDateFormat($campo, $formato);
+}
 
 /*
 <Clase>
@@ -1766,8 +1627,7 @@ de tipo select
 
 function fecha_db_almacenar($fecha, $formato = null)
 {
-    global $conn;
-    return $conn->fecha_db_almacenar($fecha, $formato);;
+    return StaticSql::setDateFormat($fecha, $formato);
 }
 
 /*<Clase>
@@ -1784,22 +1644,6 @@ function suma_fechas($fecha1, $cantidad, $tipo = "")
 {
     global $conn;
     return $conn->suma_fechas($fecha1, $cantidad, $tipo);
-}
-
-/*<Clase>
-<Nombre>resta_fechas</Nombre>
-<Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
-<Responsabilidades>Crea la cadena Sql para calcular el numero de dias de diferencia entre dos fechas<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function resta_fechas($fecha1, $fecha2)
-{
-    global $conn;
-    return $conn->resta_fechas($fecha1, $fecha2);
 }
 
 /*<Clase>
@@ -1834,13 +1678,11 @@ function compara_fechas($fecha_control, $fecha_inicial)
  */
 function usuario_actual($campo)
 {
-    global $conn;
-
     if (!SessionController::getLogin()) {
         SessionController::logout("Su sesión ha expirado, por favor ingrese de nuevo.");
     } else {
         $login = SessionController::getLogin();
-        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario A", "A.login='" . $login . "'", "", $conn);
+        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario", "login='" . $login . "'");
         if ($dato["numcampos"]) {
             if ($dato[0]["estado"] == 1) {
                 return $dato[0][$campo];
@@ -1873,7 +1715,7 @@ function crear_archivo($nombre, $texto = null, $modo = 'wb')
         if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
             chmod($ruta, PERMISOS_CARPETAS);
         } else {
-            return (false);
+            return false;
         }
     }
     if (is_file($nombre)) {
@@ -1889,7 +1731,7 @@ function crear_archivo($nombre, $texto = null, $modo = 'wb')
         }
     }
     fclose($f);
-    return ($resp);
+    return $resp;
 }
 
 /*
@@ -1909,10 +1751,10 @@ function crear_destino($destino)
     if (!is_dir($destino)) {
         if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
             alerta("no es posible crear la carpeta " . $destino);
-            return ("");
+            return '';
         }
     }
-    return ($destino);
+    return $destino;
 }
 
 /*<Clase>
@@ -1945,12 +1787,11 @@ function ejecuta_filtro_tabla($sql2, $conn2 = null)
     $retorno["numcampos"] = $i;
     $retorno["sql"] = $sql2;
     phpmkr_free_result($rs);
-    return ($retorno);
+    return $retorno;
 }
 
 function ruta_almacenamiento($tipo, $raiz = 1)
 {
-    require_once("StorageUtils.php");
     $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
     $ruta_db_superior = $ruta = "";
     while ($max_salida > 0) {
@@ -1967,7 +1808,7 @@ function ruta_almacenamiento($tipo, $raiz = 1)
         $ruta_raiz = '';
     }
     $path = StorageUtils::get_storage_path($tipo, true);
-    return ($ruta_raiz . $path);
+    return $ruta_raiz . $path;
 }
 
 /* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
@@ -1993,40 +1834,25 @@ function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
         $retorno['funcionario_codigo'] = extrae_campo($reemplazo, 0);
         $retorno['idreemplazo'] = extrae_campo($reemplazo, 1);
     }
-    return ($retorno);
+    return $retorno;
 }
 
 /*EN ALGUNOS CLIENTES SE TIENE PROBLEMA CON LA CODIFICACION, ESTO LO SOLUCIONA DE FORMA GENERICA*/
 function codifica_encabezado($texto)
 {
     if (CODIFICA_ENCABEZADO) {
-        return (utf8_encode($texto));
+        return utf8_encode($texto);
     } else {
-        return ($texto);
+        return $texto;
     }
 }
 function decodifica_encabezado($texto)
 {
     if (CODIFICA_ENCABEZADO) {
-        return (utf8_decode($texto));
+        return utf8_decode($texto);
     } else {
-        return ($texto);
+        return $texto;
     }
-}
-
-function parsear_cadena($string)
-{
-    $string = str_replace("|+|", " AND ", $string);
-    $string = str_replace("|=|", " = ", $string);
-    $string = str_replace("|like|", " like ", $string);
-    $string = str_replace("|-|", " OR ", $string);
-    $string = str_replace("|<|", " < ", $string);
-    $string = str_replace("|>|", " > ", $string);
-    $string = str_replace("|>=|", " >= ", $string);
-    $string = str_replace("|<=|", " <= ", $string);
-    $string = str_replace("|in|", " in ", $string);
-    $string = str_replace("||", " LIKE ", $string);
-    return $string;
 }
 
 function parsear_comilla_sencilla_cadena($cadena)
@@ -2062,4 +1888,63 @@ function return_megabytes($val)
     }
 
     return $val;
+}
+
+/*Manipulacion de Imagenes*/
+/*
+<Clase>
+<Nombre>cambia_tam
+<Parametros>$nombreorig: nombre de la imagen
+            $nombredest: nombre de la nueva imagen
+            $nwidth: ancho del a nueva imagen
+            $nheight: alto de la nueva imagen
+            $tipo:
+<Responsabilidades>cambiar el tamaño de la imagen, generando una nueva de las dimensiones deseadas
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $binario = false)
+{
+    $ext = 'jpg';
+    // Se obtienen las nuevas dimensiones
+    list($width, $height) = getimagesize($nombreorig);
+    if ($nwidth && ($width < $height)) {
+        $nwidth = ($nheight / $height) * $width;
+    } else {
+        $nheight = ($nwidth / $width) * $height;
+    }
+    $image_p = imagecreatetruecolor($nwidth, $nheight);
+    imagecolorallocate($image_p, 255, 255, 255);
+    if ($ext == 'gif') {
+        $image = imagecreatefromgif($nombreorig); ///nombre del archivo origen
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
+        imagegif($image_p, $nombredest); ///nombre del destino
+        imagedestroy($image_p);
+        imagedestroy($image);
+
+        if ($binario) {
+            $im = file_get_contents($nombreorig);
+            return $im;
+        } else {
+            return $nombredest;
+        }
+    } else {
+        $image = imagecreatefromjpeg($nombreorig);
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
+        imagejpeg($image_p, $nombredest, 80); ///nombre del destino
+        imagedestroy($image_p);
+        imagedestroy($image);
+        if ($binario) {
+            $im = file_get_contents($nombreorig);
+            return $im;
+        } else {
+            return $nombredest;
+        }
+    }
+    imagedestroy($image_p);
+    imagedestroy($image);
+    return null;
 }

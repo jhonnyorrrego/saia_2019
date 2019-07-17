@@ -37,7 +37,13 @@ try {
     }
 
     foreach ($graphs as $Grafico) {
-        $Response->data[$Grafico->getPK()] = $Grafico->getAttributes();
+        $Response->data[$Grafico->getPK()] = [
+            'id' => $Grafico->getPK(),
+            'name' => $Grafico->nombre,
+            'componentId' => $Grafico->fk_busqueda_componente,
+            'searchRoute' => $Grafico->busqueda,
+            'light' => $Grafico->getPrincipalCharacterization()
+        ];
     }
 
     $Response->success = 1;

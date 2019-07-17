@@ -34,6 +34,7 @@ $params = json_encode($_REQUEST + ['baseUrl' => $ruta_db_superior]);
         <div class="row mx-0" id="graph_list"></div>
     </div>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/echarts/echarts.min.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/echarts/walden.js"></script>
     <script id="graph_script" src="<?= $ruta_db_superior ?>views/graficos/js/dashboard.js" data-params='<?= $params ?>'></script>
 </body>
 

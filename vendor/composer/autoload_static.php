@@ -497,10 +497,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             array (
                 0 => __DIR__ . '/..' . '/greenlion/php-sql-parser/src',
             ),
-            'PHPExcel' => 
-            array (
-                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
-            ),
         ),
         'L' => 
         array (
@@ -514,13 +510,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Gaufrette' => 
             array (
                 0 => __DIR__ . '/..' . '/knplabs/gaufrette/src',
-            ),
-        ),
-        'A' => 
-        array (
-            'Analog' => 
-            array (
-                0 => __DIR__ . '/..' . '/analog/analog/lib',
             ),
         ),
     );

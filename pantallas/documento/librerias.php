@@ -352,7 +352,7 @@ function has_files($documentId, $showCounter = false)
  */
 function priority($documentId, $priority)
 {
-    $class = !(int)$priority ? 'd-none' : '';
+    $class = !(int) $priority ? 'd-none' : '';
     return "<span class='my-0 text-center cursor f-20 px-1 priority_flag {$class}' data-key='{$documentId}'>
         <i class='fa fa-flag text-danger'></i>
     </span>";
@@ -468,7 +468,7 @@ function temporality($date)
  */
 function mostrar_numero_enlace($number, $documentId)
 {
-    if ((int)$number) {
+    if ((int) $number) {
         $titulo = "No. " . $number;
     } else {
         $number = "Ver";
@@ -495,4 +495,22 @@ function mostrar_numero_enlace($number, $documentId)
 function date_formatted($date)
 {
     return DateController::convertDate($date);
+}
+
+/**
+ * indica si filtra por mis transferencias
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-07-16
+ */
+function transfers()
+{
+    if (!$_REQUEST['variable_busqueda']) {
+        $funcionario = SessionController::getValue('usuario_actual');
+        $texto = "(a.origen={$funcionario} OR a.destino={$funcionario})";
+    } else {
+        $texto = '1=1';
+    }
+    return $texto;
 }

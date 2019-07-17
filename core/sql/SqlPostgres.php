@@ -2,43 +2,14 @@
 class SqlPostgres extends Sql
 {
 
-	public function __construct($conn, $motorBd)
+	public function __construct()
 	{
-		parent::__construct($conn, $motorBd);
+		return parent::__construct();
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Buscar.
-	 * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-	 * where-el filtro de la búsqueda; order_by-parametro para el orden.
-	 * <Responsabilidades>ejecutar consulta de selección para postgres
-	 * <Notas>
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>una matriz con los resultados de la consulta
-	 * la matriz es del tipo: resultado[0]['campo']='valor'
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Buscar($campos, $tablas, $where, $order_by)
+	function connect()
 	{
-		if ($campos == "" || $campos == null)
-			$campos = "*";
-		$this->consulta = "SELECT " . $campos . " FROM " . $tablas;
-		if ($where != "" && $where != null)
-			$this->consulta .= " WHERE " . $where;
-		if ($order_by != "" && $order_by != null)
-			$this->consulta .= " ORDER BY " . $order_by;
-		// ejecucion de la consulta, a $this->res se le asigna el resource
-		$this->res = pg_query($this->Conn->conn, $this->consulta);
-		// se le asignan a $resultado los valores obtenidos
-		if ($this->Numero_Filas() > 0) {
-			for ($i = 0; $i < $this->Numero_Filas(); $i++)
-				$resultado[] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
-			return $resultado;
-		} else { // se retorna la matriz
-			return (false);
-		}
+		throw new Exception("Error Processing Request", 1);
 	}
 
 	function liberar_resultado($rs)
@@ -74,10 +45,10 @@ class SqlPostgres extends Sql
 		}
 
 		$this->filas = 0;
-		if ($sql && $sql != "" && $this->Conn->conn) {
+		if ($sql && $sql != "" && $this->connection) {
 			// Quitar "from dual".
 			$sql = preg_replace("/from\s+dual\s*$/i", "", $sql);
-			$this->res = pg_query($this->Conn->conn, $sql); // or die("ERROR SQL " . pg_last_error($this->Conn->conn) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
+			$this->res = pg_query($this->connection, $sql); // or die("ERROR SQL " . pg_last_error($this->connection) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
 
 			if ($this->res) {
 				if (strpos(strtolower($sql), "insert") !== false)
@@ -110,112 +81,6 @@ class SqlPostgres extends Sql
 		} else {
 			return (FALSE);
 		}
-	}
-
-	function sacar_fila_vector($rs = Null)
-	{
-		if ($rs == Null)
-			$rs = $this->res;
-		if ($arreglo = @pg_fetch_row($rs)) {
-			return ($arreglo);
-		} else
-			return (FALSE);
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Insertar.
-	 * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
-	 * valores-los valores a insertar
-	 * <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos postgres
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del INSERT generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Insertar($campos, $tabla, $valores)
-	{
-		if ($campos == "" || $campos == null)
-			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
-		else
-			$insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-		$this->res = pg_query($this->Conn->conn, $insert);
-		$this->Guardar_log($insert);
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Modificar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
-	 * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
-	 * where-filtro de los registros que serán modificados
-	 * <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos postgres
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del UPDATE generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// función update para postgres
-	function Modificar($tabla, $actualizaciones, $where)
-	{
-		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
-		if ($where != null && $where != "")
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
-		else
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones;
-		// ejecucion de la consulta
-		$this->Guardar_log($update);
-		$this->res = pg_query($this->Conn->conn, $update);
-		//
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_tipo.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>Ejecuta una consulta sql
-	 * <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
-	 * <Salida>un vector con los resultados de la consulta
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Ejecutar_Sql_Tipo($sql)
-	{
-		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		$this->consulta = $sql;
-		$this->res = pg_query($this->Conn->conn, $this->consulta);
-		$this->Guardar_log($sql);
-		while ($fila = pg_fetch_row($this->res)) {
-			foreach ($fila as $valor)
-				$resultado[] = $valor;
-		}
-		return $resultado;
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Eliminar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-	 * <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos postgres
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del DELETE generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Eliminar($tabla, $where)
-	{
-		if ($where != null && $where != "")
-			$delete = "DELETE FROM " . $tabla . " WHERE " . $where;
-		else
-			$delete = "DELETE FROM " . $tabla;
-		// ejecucion de la consulta
-		$this->Guardar_log($delete);
-		$this->res = pg_query($this->Conn->conn, $delete);
-		//
 	}
 
 	/*
@@ -253,22 +118,6 @@ class SqlPostgres extends Sql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>Tipo_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>tipo del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Tipo_Campo($rs, $pos)
-	{
-		return pg_field_type($rs, $pos);
-	}
-
-	/*
-	 * <Clase>SQL
 	 * <Nombre>Nombre_Campo
 	 * <Parametros>pos-posición del campo en el array resultado
 	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
@@ -296,7 +145,7 @@ class SqlPostgres extends Sql
 	 */
 	function Lista_Tabla($db)
 	{
-		$this->res = pg_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . pg_last_error($this->Conn->conn));
+		$this->res = pg_query($this->connection, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . pg_last_error($this->connection));
 		while ($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		return ($resultado);
@@ -315,7 +164,7 @@ class SqlPostgres extends Sql
 	 */
 	function Lista_Bd()
 	{
-		$this->res = pg_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . pg_last_error($this->Conn->conn));
+		$this->res = pg_query($this->connection, "SHOW DATABASES") or die("Error " . pg_last_error($this->connection));
 		while ($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		asort($resultado);
@@ -345,7 +194,7 @@ class SqlPostgres extends Sql
 		}
 
 		$this->consulta = "select * from information_schema.columns where table_schema = 'public' AND table_name  = '$tabla'" . $where_campo;
-		$this->res = pg_query($this->Conn->conn, $this->consulta);
+		$this->res = pg_query($this->connection, $this->consulta);
 		$resultado = array();
 		$i = 0;
 		$resultado = array();
@@ -384,7 +233,7 @@ class SqlPostgres extends Sql
 		$consulta = "$sql LIMIT $cuantos OFFSET $inicio";
 		$consulta = str_replace("key", "'key'", $consulta);
 		// echo $consulta;
-		$res = pg_query($this->Conn->conn, $consulta); // or die("consulta fallida ".pg_last_error($conn->Conn->conn));
+		$res = pg_query($this->connection, $consulta); // or die("consulta fallida ".pg_last_error($conn->connection));
 		return ($res);
 	}
 
@@ -402,7 +251,7 @@ class SqlPostgres extends Sql
 	function Total_Registros_Tabla($tabla)
 	{
 		$this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-		$this->res = pg_query($this->Conn->conn, $this->consulta);
+		$this->res = pg_query($this->connection, $this->consulta);
 		$total = pg_fetch_row($this->res);
 		return ($total[0]);
 	}
@@ -442,8 +291,8 @@ class SqlPostgres extends Sql
 		if ($this->ultimoInsert) {
 			return $this->ultimoInsert;
 		}
-		$insert_query = pg_query($this->Conn->conn, "SELECT lastval()");
-		$insert_row = pg_fetch_row($this->Conn->conn, $insert_query);
+		$insert_query = pg_query($this->connection, "SELECT lastval()");
+		$insert_row = pg_fetch_row($this->connection, $insert_query);
 		$insert_id = $insert_row[0];
 		return $insert_id;
 	}
@@ -465,9 +314,9 @@ class SqlPostgres extends Sql
 		if (isset($_SESSION)) {
 			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
-				$result = pg_query($this->Conn->conn, $sqleve);
+				$result = pg_query($this->connection, $sqleve);
 				if (!$result)
-					die(" Error en la consulta: " . pg_last_error($this->Conn->conn));
+					die(" Error en la consulta: " . pg_last_error($this->connection));
 				$registro = $this->Ultimo_Insert();
 			}
 		}
@@ -651,7 +500,7 @@ class SqlPostgres extends Sql
 		$resultado = TRUE;
 		if ($tipo == "archivo") {
 			$sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
-			pg_query($this->Conn->conn, $sql);
+			pg_query($this->connection, $sql);
 			// TODO verificar resultado de la insecion $resultado=FALSE;
 		} elseif ($tipo == "texto") {
 			$contenido = codifica_encabezado($contenido);
@@ -670,7 +519,7 @@ class SqlPostgres extends Sql
 					evento_archivo($archivo);
 				}
 			}
-			pg_query($this->Conn->conn, $sql) or die(pg_last_error($this->Conn->conn));
+			pg_query($this->connection, $sql) or die(pg_last_error($this->connection));
 		}
 		return ($resultado);
 	}

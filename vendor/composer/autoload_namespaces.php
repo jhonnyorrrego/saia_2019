@@ -9,8 +9,6 @@ return array(
     'Smalot\\PdfParser\\' => array($vendorDir . '/smalot/pdfparser/src'),
     'ProxyManager\\' => array($vendorDir . '/ocramius/proxy-manager/src'),
     'PHPSQLParser\\' => array($vendorDir . '/greenlion/php-sql-parser/src'),
-    'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
-    'Analog' => array($vendorDir . '/analog/analog/lib'),
 );

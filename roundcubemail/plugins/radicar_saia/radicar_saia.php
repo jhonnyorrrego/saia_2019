@@ -3,13 +3,15 @@
 /**
  * Radicacion SAIA
  */
-class radicar_saia extends rcube_plugin {
+class radicar_saia extends rcube_plugin
+{
 
     public $task = 'mail';
 
     private $charset = 'ASCII';
 
-    function init() {
+    function init()
+    {
         $rcmail = rcmail::get_instance();
 
         $this->register_action('plugin.radicar_saia', array(
@@ -39,7 +41,8 @@ class radicar_saia extends rcube_plugin {
         }
     }
 
-    function request_action() {
+    function request_action()
+    {
         $max_salida = 10;
         $ruta_db_superior = $ruta = "";
         while ($max_salida > 0) {
@@ -50,7 +53,7 @@ class radicar_saia extends rcube_plugin {
             $max_salida--;
         }
         global $conn;
-        include_once ($ruta_db_superior . "core/autoload.php");
+        include_once($ruta_db_superior . "core/autoload.php");
         $this->add_texts('localization');
 
         $rcmail = rcmail::get_instance();
@@ -146,7 +149,8 @@ class radicar_saia extends rcube_plugin {
         $rcmail->output->send();
     }
 
-    private function _convert_filename($str) {
+    private function _convert_filename($str)
+    {
         $str = rcube_charset::convert($str, RCUBE_CHARSET, $this->charset);
         return strtr($str, array(
             ':' => '',

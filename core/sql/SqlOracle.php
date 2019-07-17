@@ -2,9 +2,19 @@
 class SqlOracle extends Sql
 {
 
-    public function __construct($conn, $motorBd)
+    public function __construct()
     {
-        parent::__construct($conn, $motorBd);
+        return parent::__construct();
+    }
+
+    function connect()
+    {
+        $this->connection = @oci_connect($this->usuario, $this->password, "(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = " . $this->host . ")(PORT =" . $this->puerto . "))(CONNECT_DATA = (SID = " . $this->nombreDb . ")))");
+    }
+
+    function disconnect()
+    {
+        return oci_close($this->connection);
     }
 
     /*
@@ -66,9 +76,9 @@ class SqlOracle extends Sql
         }
 
         $this->consulta = $sql;
-        $rs = oci_parse($this->Conn->conn, $sql);
+        $rs = oci_parse($this->connection, $sql);
         if ($rs) {
-            $rs_fecha = oci_parse($this->Conn->conn, "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY/MM/DD HH24:MI:SS'");
+            $rs_fecha = oci_parse($this->connection, "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY/MM/DD HH24:MI:SS'");
             oci_execute($rs_fecha);
             if (oci_execute($rs, OCI_COMMIT_ON_SUCCESS)) {
                 $this->res = $rs;
@@ -80,19 +90,19 @@ class SqlOracle extends Sql
                     $this->ultimoInsert = 0;
                 }
             } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
-                $e = oci_error($this->Conn->conn);
+                $e = oci_error($this->connection);
                 debug_print_backtrace();
                 trigger_error($e['message'] . " $sql", E_USER_ERROR);
                 return false;
             }
         } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
-            $e = oci_error($this->Conn->conn);
+            $e = oci_error($this->connection);
 
             trigger_error($e['message'] . " $sql", E_USER_ERROR);
             return false;
         }
         if (strpos(strtolower($sql), 'select') !== false) {
-            $rs2 = @oci_parse($this->Conn->conn, "select count(*) as contarfilas from(" . $sql . ")");
+            $rs2 = @oci_parse($this->connection, "select count(*) as contarfilas from(" . $sql . ")");
 
             if (!oci_execute($rs2, OCI_COMMIT_ON_SUCCESS)) {
                 // print_r($sql);
@@ -117,44 +127,6 @@ class SqlOracle extends Sql
             // print_r(oci_error($this->res));
             return (FALSE);
         }
-    }
-
-    function sacar_fila_vector($rs = Null)
-    {
-        if ($rs == Null)
-            $rs = $this->res;
-        if (@OCIFetchInto($rs, $arreglo, OCI_NUM)) {
-            return ($arreglo);
-        } else
-            return (FALSE);
-    }
-
-    function Insertar($campos, $tabla, $valores)
-    { }
-
-    function Modificar($tabla, $actualizaciones, $where)
-    { }
-
-    function Ejecutar_Sql_Tipo($sql)
-    { }
-
-    function Eliminar($tabla, $where)
-    { }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Tipo_Campo
-     * <Parametros>pos-posición del campo en el array resultado
-     * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-     * <Notas>se utiliza después de la función ejecutar_sql
-     * <Excepciones>
-     * <Salida>tipo del campos especificado
-     * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-     * <Post-condiciones>
-     */
-    function Tipo_Campo($rs, $pos)
-    {
-        return (oci_field_type($rs, $pos + 1));
     }
 
     /*
@@ -227,7 +199,7 @@ class SqlOracle extends Sql
 		FROM ($sql) a
 		WHERE ROWNUM <= $fin)
 		WHERE FILA >= $inicio";
-        $stmt = OCIParse($this->Conn->conn, $sql);
+        $stmt = OCIParse($this->connection, $sql);
         // echo $sql;
         if (!OCIExecute($stmt, OCI_COMMIT_ON_SUCCESS))
             $this->error = OCIError();
@@ -307,13 +279,13 @@ class SqlOracle extends Sql
                 }
                 $sql_id = "SELECT " . $aux . "_SEQ.currval FROM DUAL";
 
-                $rs_temp = oci_parse($this->Conn->conn, $sql_id);
+                $rs_temp = oci_parse($this->connection, $sql_id);
                 if (oci_execute($rs_temp)) {
                     $arreglo = oci_fetch_array($rs_temp, OCI_NUM);
                     $identificador = $arreglo[0];
                 } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
 
-                    $e = oci_error($this->Conn->conn);
+                    $e = oci_error($this->connection);
                     trigger_error($e['message'] . " $sql_id", E_USER_ERROR);
                     die("NO HAY SECUENCIA");
                     return false;
@@ -343,7 +315,7 @@ class SqlOracle extends Sql
         if (isset($_SESSION)) {
             $fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
             if ($sqleve != "") {
-                $rs = @OCIParse($this->Conn->conn, $sqleve);
+                $rs = @OCIParse($this->connection, $sqleve);
                 if ($rs) {
                     if (@OCIExecute($rs, OCI_COMMIT_ON_SUCCESS)) {
                         $this->res = $rs;
@@ -536,24 +508,24 @@ class SqlOracle extends Sql
     {
         $resultado = TRUE;
         $sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
-        $stmt = oci_parse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
+        $stmt = oci_parse($this->connection, $sql) or print_r(OCIError($stmt));
         // Execute the statement using OCI_DEFAULT (begin a transaction)
         oci_execute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
         // Fetch the SELECTed row
         OCIFetchInto($stmt, $row, OCI_ASSOC);
 
         if (!count($row)) { // soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
-            oci_rollback($this->Conn->conn);
+            oci_rollback($this->connection);
             oci_free_statement($stmt);
             $clob_blob = 'clob';
             if ($tipo == 'archivo') {
                 $clob_blob = 'blob';
             }
             $up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
-            $stmt_ue = oci_parse($this->Conn->conn, $up_clob) or print_r(oci_error($stmt));
+            $stmt_ue = oci_parse($this->connection, $up_clob) or print_r(oci_error($stmt));
             // Execute the statement using OCI_DEFAULT (begin a transaction)
             oci_execute($stmt_ue, OCI_DEFAULT) or print_r(oci_error($stmt_ue));
-            $stmt = oci_parse($this->Conn->conn, $sql) or print_r(oci_error($stmt));
+            $stmt = oci_parse($this->connection, $sql) or print_r(oci_error($stmt));
             // Execute the statement using OCI_DEFAULT (begin a transaction)
             oci_execute($stmt, OCI_DEFAULT) or print_r(oci_error($stmt));
             // Fetch the SELECTed row
@@ -561,7 +533,7 @@ class SqlOracle extends Sql
         }
 
         if (FALSE === $row) {
-            OCIRollback($this->Conn->conn);
+            OCIRollback($this->connection);
             alerta("No se pudo modificar el campo.");
             die($sql);
             $resultado = FALSE;
@@ -575,15 +547,15 @@ class SqlOracle extends Sql
 
                 if ($contenido_actual != $contenido) {
                     if ($row[strtoupper($campo)] && $row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
-                        oci_rollback($this->Conn->conn);
+                        oci_rollback($this->connection);
                         alerta("No se pudo modificar el campo.");
                         $resultado = FALSE;
                     } else {
                         if ($row[strtoupper($campo)] && !$row[strtoupper($campo)]->save(trim($contenido))) {
-                            oci_rollback($this->Conn->conn);
+                            oci_rollback($this->connection);
                             $resultado = FALSE;
                         } else
-                            oci_commit($this->Conn->conn);
+                            oci_commit($this->connection);
                         // *********** guardo el log en la base de datos **********************
                         preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
                         $llave = trim($resultados[1]);
@@ -630,16 +602,16 @@ class SqlOracle extends Sql
             } elseif ($tipo == "archivo") { // para campos blob como la firma
                 // echo ($campo.$tabla.$condicion.$contenido);
                 if (!$row[strtoupper($campo)]->truncate()) {
-                    oci_rollback($this->Conn->conn);
+                    oci_rollback($this->connection);
                     alerta("No se pudo modificar el campo.");
                     $resultado = FALSE;
                 }
                 if (!$row[strtoupper($campo)]->save($contenido)) {
-                    oci_rollback($this->Conn->conn);
+                    oci_rollback($this->connection);
                     alerta("No se pudo modificar el campo.");
                     $resultado = FALSE;
                 } else
-                    oci_commit($this->Conn->conn);
+                    oci_commit($this->connection);
             }
             oci_free_statement($stmt);
             if ($row[strtoupper($campo)]) {

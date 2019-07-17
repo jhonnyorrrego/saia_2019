@@ -105,6 +105,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $componentId ?>">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
                     <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?= $_REQUEST["idbusqueda_filtro_temp"] ?>">
+                    <input type="hidden" name="idbusqueda_temporal" id="idbusqueda_temporal">
                     <input type="hidden" name="busqueda_total_paginas" id="busqueda_total_paginas" value="">
                     <input type="hidden" value="<?= $_REQUEST["variable_busqueda"] ?>" name="variable_busqueda" id="variable_busqueda">
                     <input type="hidden" name="rows" id="rows" value="20">
@@ -284,11 +285,13 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     },
                     onSuccess: function(data) {
                         let params = getParams(data.url);
-                        $('#idbusqueda_componente').val(params.idbusqueda_componente);
-                        $('#idbusqueda_filtro_temp').val(params.idbusqueda_filtro_temp);
+                        $('#idbusqueda_componente').val(params.idbusqueda_componente || '');
+                        $('#idbusqueda_filtro_temp').val(params.idbusqueda_filtro_temp || '');
+                        $('#idbusqueda_temporal').val(params.idbusqueda_temporal || '');
                         $('#busqueda_total_paginas').val(null);
 
                         procesamiento_buscar();
+                        top.closeTopModal();
                     }
                 });
             });

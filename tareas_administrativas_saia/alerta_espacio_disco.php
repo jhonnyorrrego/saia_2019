@@ -46,6 +46,3 @@ for ($i = 0; $i < count($particiones); $i++) {
 	$retorno["disco"][$i]['porcent_libre'] = $freespace_percent;
 }
 echo(json_encode($retorno));
-@session_unset();
-@session_destroy();
-?>

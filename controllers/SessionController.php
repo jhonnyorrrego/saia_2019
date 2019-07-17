@@ -6,7 +6,7 @@ class SessionController
      * tiempo de vida de la sesion
      */
     const TIME_LIFE = 86400; //1 DIA
-    
+
     private static $data;
     private $admin = Funcionario::CEROK;
 
@@ -135,10 +135,10 @@ class SessionController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-12
      */
-    public static function getTemporalDir(){
+    public static function getTemporalDir()
+    {
         return self::hasActiveSession() ?
-            self::getValue('ruta_temp_funcionario') :
-            TemporalController::$saiaDir;
+            self::getValue('ruta_temp_funcionario') : TemporalController::$saiaDir;
     }
 
     /**
@@ -160,8 +160,9 @@ class SessionController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-12
      */
-    public static function hasActiveSession(){
-        if($_SESSION){
+    public static function hasActiveSession()
+    {
+        if ($_SESSION) {
             self::$data = $_SESSION;
         }
 

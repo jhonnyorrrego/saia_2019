@@ -17,7 +17,6 @@ $_SESSION["usuario_actual"] = 1;
 
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "db_externo.php");
-ini_set("display_errors", true);
 
 /////// definicion de variables///////
 $tabla = "buzon_entrada";
@@ -78,4 +77,3 @@ if ($dato['numcampos'] && $conn2 && ($maximo > $_REQUEST['contador'])) {
 	}
 }
 die("Vamos aqui");
-?>

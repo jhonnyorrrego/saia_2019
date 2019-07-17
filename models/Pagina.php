@@ -7,7 +7,7 @@ class Pagina extends Model
     protected $ruta;
     protected $fecha_pagina;
     protected $consecutivo;
-    
+
 
     function __construct($id = null)
     {
@@ -31,7 +31,7 @@ class Pagina extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha_pagina'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes,
             'primary' => 'consecutivo'
@@ -49,7 +49,7 @@ class Pagina extends Model
      * */
     public function getTemporalRoute()
     {
-        $prefix = 'pagina' . $this->getPK();
+        $prefix = 'pagina' . $this->getPK();;
         $image = TemporalController::createTemporalFile($this->ruta, $prefix, true);
         return $image->success ? $image->route : false;
     }

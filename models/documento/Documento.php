@@ -38,12 +38,11 @@ class Documento extends Model
     protected $fecha_limite;
     protected $ventanilla_radicacion;
     protected $prioridad;
-    
 
     //relations
-    protected $User;
+    protected $Funcionario; //ejecutor
     protected $Serie;
-    protected $Format;
+    protected $Formato;
 
     function __construct($id = null)
     {
@@ -99,10 +98,97 @@ class Documento extends Model
             'fecha_limite'
         ];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /* funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-19
+     */
+    protected function beforeCreate()
+    {
+        if (!$this->fecha_creacion) {
+            $this->fecha_creacion = date('Y-m-d H:i:s');
+        }
+
+        if (!$this->fecha) {
+            $this->fecha = date('Y-m-d H:i:s');
+        }
+
+        return true;
+    }
+
+    /* funcionalidad a ejecutar posterior a crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-19
+     */
+    protected function afterCreate()
+    {
+        return
+            AccesoController::setFullAccess(Acceso::TIPO_DOCUMENTO, $this->getPK()) &&
+            $this->addTraceability(DocumentoRastro::ACCION_CREACION);
+    }
+
+    /**
+     * obtiene una instancia del funcionario del campo ejeuctor
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getUser()
+    {
+        if (!$this->Funcionario) {
+            $this->Funcionario = $this->getRelationFk('Funcionario', 'ejecutor');
+        }
+
+        return $this->Funcionario;
+    }
+
+    /**
+     * obtiene una instancia de la serie asociada
+     * en caso de no tener genera una con el nombre 
+     * sin asignar
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-04-30
+     */
+    public function getSerie()
+    {
+        if ($this->serie) {
+            if (!$this->Serie) {
+                $this->Serie = $this->getRelationFk('Serie', 'serie');
+            }
+        } else {
+            $this->Serie = new Serie();
+            $this->Serie->nombre = 'Sin asignar';
+        }
+
+        return $this->Serie;
+    }
+
+    /**
+     * obtiene una instancia del formato correspondiente
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-05-09
+     */
+    public function getFormat()
+    {
+        if (!$this->Formato) {
+            $this->Formato = self::getRelationFk('Formato', 'formato_idformato');
+        }
+
+        return $this->Formato;
     }
 
     /**
@@ -116,6 +202,41 @@ class Documento extends Model
     public function getDescription()
     {
         return strip_tags(html_entity_decode($this->descripcion));
+    }
+
+    /**
+     * crea los registros para el rastro
+     * sobre los cambios del documento
+     *
+     * @param integer $action ej. DocumentoRastro::ACCION_CREACION
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-08
+     */
+    public function addTraceability($action)
+    {
+        switch ($action) {
+            case DocumentoRastro::ACCION_CREACION:
+                $pk = DocumentoRastro::newRecord([
+                    'fk_documento' => $this->getPK(),
+                    'accion' => $action,
+                    'titulo' => 'Creación del documento'
+                ]);
+                break;
+            case DocumentoRastro::ACCION_ANULACION:
+                $pk = DocumentoRastro::newRecord([
+                    'fk_documento' => $this->getPK(),
+                    'accion' => $action,
+                    'titulo' => 'Anulación del documento'
+                ]);
+                break;
+
+            default:
+                $pk = 0;
+                break;
+        }
+
+        return $pk;
     }
 
     /**
@@ -133,30 +254,6 @@ class Documento extends Model
         return self::executeUpdate(['fecha_limite' => $data['fecha_inicial']], [
             self::getPrimaryLabel() => $documentId
         ]);
-    }
-
-    /* funcionalidad a ejecutar posterior a crear un registro
-     *
-     * @return boolean
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-03-19
-     */
-    protected function afterCreate()
-    {
-        return self::setPermissions($this->getPK());
-    }
-
-    /**
-     * asigna los permisos sobre el documento
-     *
-     * @param integer $documentId id del documento
-     * @return boolean
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-03-20
-     */
-    public static function setPermissions($documentId)
-    {
-        return AccesoController::setFullAccess(Acceso::TIPO_DOCUMENTO, $documentId);
     }
 
     /**
@@ -257,61 +354,12 @@ class Documento extends Model
             ], [
                 'iddocumento' => $documentId
             ]);
+
+            DocumentoRastro::newRecord([
+                'fk_documento' => $documentId,
+                'accion' => DocumentoRastro::ACCION_APROBACION,
+                'titulo' => $state == self::APROBADO ? 'Documento aprobado' : 'Documento rechazado'
+            ]);
         }
-    }
-
-    /**
-     * obtiene una instancia del funcionario del campo ejeuctor
-     *
-     * @return object
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-04-30
-     */
-    public function getUser()
-    {
-        if (!$this->User) {
-            $this->User = $this->getRelationFk('Funcionario', 'ejecutor');
-        }
-
-        return $this->User;
-    }
-
-    /**
-     * obtiene una instancia de la serie asociada
-     * en caso de no tener genera una con el nombre 
-     * sin asignar
-     *
-     * @return object
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-04-30
-     */
-    public function getSerie()
-    {
-        if ($this->serie) {
-            if (!$this->Serie) {
-                $this->Serie = $this->getRelationFk('Serie', 'serie');
-            }
-        } else {
-            $this->Serie = new Serie();
-            $this->Serie->nombre = 'Sin asignar';
-        }
-
-        return $this->Serie;
-    }
-
-    /**
-     * obtiene una instancia del formato correspondiente
-     *
-     * @return object
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-09
-     */
-    public function getFormat()
-    {
-        if (!$this->Format) {
-            $this->Format = self::getRelationFk('Formato', 'formato_idformato');
-        }
-
-        return $this->Format;
     }
 }

@@ -9,9 +9,9 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once($ruta_db_superior."core/autoload.php");
+include_once($ruta_db_superior . "core/autoload.php");
 usuario_actual("login");
-require ($ruta_db_superior . 'vendor/autoload.php');
+require($ruta_db_superior . 'vendor/autoload.php');
 $array_export = array();
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -19,7 +19,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 if (@$_REQUEST["exportar_saia"] == 'excel') {
-    include_once ($ruta_db_superior . "pantallas/lib/convertir_estructura.php");
+    include_once($ruta_db_superior . "pantallas/lib/convertir_estructura.php");
 }
 
 $listado_funciones = array();
@@ -66,7 +66,7 @@ if (@$_REQUEST["exportar_saia"] == 'excel') {
                     $datos_imagenes = explode(",", str_replace(array(
                         "[",
                         "]"
-                                    ), "", $datos2[$j]));
+                    ), "", $datos2[$j]));
                     $imagenes[$a]["ruta"] = $ruta_db_superior . $datos_imagenes[0];
                     $imagenes[$a]["coordenada"] = $datos_imagenes[1];
                     $imagenes[$a]["ancho"] = $datos_imagenes[2];
@@ -131,10 +131,10 @@ if ($datos_busqueda["numcampos"]) {
     $tablas = array();
     $condicion = "";
     if ($datos_busqueda[0]["tablas"] != '') {
-        $tablas = array_merge((array) $tablas, (array) explode(",", $datos_busqueda[0]["tablas"]));
+        $tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas"]));
     }
     if ($datos_busqueda[0]["tablas_adicionales"] != '') {
-        $tablas = array_merge((array) $tablas, (array) explode(",", $datos_busqueda[0]["tablas_adicionales"]));
+        $tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
     }
 
     $distinct = false;
@@ -230,7 +230,7 @@ if (@$_REQUEST["idbusqueda_filtro_temp"]) {
     if ($filtro_temp["numcampos"]) {
         $cadena1 = '';
         for ($i = 0; $i < $filtro_temp["numcampos"]; $i++) {
-            $cadena1 = parsear_cadena($filtro_temp[$i]["detalle"]);
+            $cadena1 = UtilitiesController::convertTemporalFilter($filtro_temp[$i]["detalle"]);
             $cadena .= $cadena1;
             if (@$filtro_temp[$i + 1]["detalle"]) {
                 $cadena .= ' AND ';
@@ -255,7 +255,7 @@ $campos_consulta = strtolower(implode(",", $lcampos));
 $tablas_consulta = strtolower(implode(",", $tablas));
 
 $funciones_tablas = parsear_datos_plantilla_visual($tablas_consulta);
-foreach ($funciones_tablas AS $key => $valor) {
+foreach ($funciones_tablas as $key => $valor) {
     unset($valor_variables);
     $valor_variables = array();
     $funcion = explode("@", $valor);
@@ -504,7 +504,7 @@ if ($result["numcampos"]) {
         $info = $info_base;
         for ($j = 0; $j < $cant_campos; $j++) {
             $caden = ' \ ';
-            if (is_object($result[$i][$lcampos[$j]])) {// para mssql y sqlserver
+            if (is_object($result[$i][$lcampos[$j]])) { // para mssql y sqlserver
                 $fecha_doc = $result[$i][$lcampos[$j]];
                 if ($fecha_doc instanceof DateTime) {
                     $result[$i][$lcampos[$j]] = $fecha_doc->format('Y-m-d H:i:s');
@@ -541,12 +541,12 @@ if ($result["numcampos"]) {
         }
         if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
             if (!@$_REQUEST["estilo_actualizar_informacion"])
-                $response["rows"][$i] ["info"] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'>";
+                $response["rows"][$i]["info"] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'>";
 
             if (!@$_REQUEST["estilo_actualizar_informacion"])
-                $response["rows"][$i] ["info"] .= "</div>";
-            $response["rows"][$i] ["info"] = str_replace("\n", "", str_replace("\r", "", $info));
-            $response["rows"][$i] ["llave"] = $result[$i][$llave];
+                $response["rows"][$i]["info"] .= "</div>";
+            $response["rows"][$i]["info"] = str_replace("\n", "", str_replace("\r", "", $info));
+            $response["rows"][$i]["llave"] = $result[$i][$llave];
 
             if (@$_REQUEST["exportar_saia"] == 'excel' || @$_REQUEST["exportar_saia"] == 'csv') {
                 for ($k = 0; $k < $cant_columnas_excel; $k++) {
@@ -597,12 +597,14 @@ if (!@$_REQUEST["no_imprime"]) {
 }
 clearstatcache();
 
-function crear_log_busqueda_excel($file, $texto) {
+function crear_log_busqueda_excel($file, $texto)
+{
     // Solo sirve para validar la informacion que se genera al momento de modificar el reporte
     file_put_contents($file, $texto, FILE_APPEND);
 }
 
-function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
+function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
+{
     global $conn;
     $condicion_filtro = '';
     $datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
@@ -640,13 +642,14 @@ function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
     return ('(' . $condicion . ')');
 }
 
-function parsear_datos_plantilla_visual($cadena, $campos = array()) {
+function parsear_datos_plantilla_visual($cadena, $campos = array())
+{
     $result = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cadena, $resultado);
     if ($result !== FALSE) {
         $patrones = str_replace(array(
             "{*",
             "*}"
-                ), "", $resultado[0]);
+        ), "", $resultado[0]);
         if ($campos) {
             $listado_campos = array_unique(explode(",", $campos));
             $listado_funciones = array_diff($patrones, $listado_campos);
@@ -657,9 +660,8 @@ function parsear_datos_plantilla_visual($cadena, $campos = array()) {
     return ($listado_funciones);
 }
 
-function incluir_librerias_busqueda($elemento, $indice) {
+function incluir_librerias_busqueda($elemento, $indice)
+{
     global $ruta_db_superior;
-    include_once ($ruta_db_superior . $elemento);
+    include_once($ruta_db_superior . $elemento);
 }
-
-?>

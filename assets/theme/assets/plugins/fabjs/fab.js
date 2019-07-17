@@ -30,25 +30,23 @@ function Fab(json) {
 
     __element.insertAdjacentHTML('afterbegin', `<dl></dl>`);
 
-    json.buttons.forEach(function(e, i) {
+    Object.values(json.buttons).forEach(function(e, i) {
         __element.querySelector('dl').insertAdjacentHTML(
             'afterbegin',
             `<dt>
                 <button
-                    class="fab ${e.button.style} btn${i}" 
+                    id="${e.button.id || Math.random()}"
+                    class="fab ${e.button.class} btn${i} 
+                        ${!e.button.visible ? 'd-none' : ''}"
+                    data-info='${JSON.stringify(e.button.data)}'
                     data-toggle="tooltip"
                     data-placement="bottom"
                     title="${e.button.tooltip || ''}">
                     ${e.button.html}
-                    <i class="${e.icon.style}">${e.icon.html}</i>
+                    <i class="${e.icon.class}">${e.icon.html}</i>
                 </button>
             </dt>`
         );
-        __element
-            .querySelector('dl .fab.btn' + i)
-            .addEventListener('click', function() {
-                e.onClick();
-            });
     });
     var button = __element.querySelectorAll('dl dt button');
 

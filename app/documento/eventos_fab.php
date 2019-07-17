@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => [],
     'message' => '',
     'success' => 0
@@ -46,31 +46,101 @@ try {
         ]);
     }
 
-    $Response->data = [
-        'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
+    $buttons = [
+        'return' => [
+            'button' => [
+                'id' => 'returnButton',
+                'class' => 'small yellow',
+                'html' => '',
+                'tooltip' => 'Devolver Documento',
+                'visible' => $returnButton
+            ],
+            'icon' => [
+                'class' => 'fa fa-backward',
+                'html' => ''
+            ]
+        ],
         'managers' => [
-            'see' => $seeManagers,
-            'route' => 'views/documento/responsables.php',
-            'tooltip' => 'Asignar Responsables'
+            'button' => [
+                'id' => 'managersButton',
+                'class' => 'small yellow',
+                'html' => '',
+                'tooltip' => 'Asignar Responsables',
+                'visible' => $seeManagers,
+                'data' => [
+                    'route' => 'views/documento/responsables.php'
+                ]
+            ],
+            'icon' => [
+                'class' => 'fa fa-users',
+                'html' => ''
+            ]
         ],
         'edit' => [
-            'see' =>  $editButton,
-            'route' => $editRoute ?? '',
-            'tooltip' => 'Editar Documento'
-        ],
-        'return' => [
-            'see' =>  $returnButton,
-            'tooltip' => 'Devolver Documento'
+            'button' => [
+                'id' => 'editButton',
+                'class' => 'small yellow',
+                'html' => '',
+                'tooltip' => 'Editar Documento',
+                'visible' => $editButton,
+                'data' => [
+                    'route' => $editRoute ?? ''
+                ]
+            ],
+            'icon' => [
+                'class' => 'fa fa-edit',
+                'html' => ''
+            ]
         ],
         'confirm' => [
-            'see' =>  $confirmButton,
-            'tooltip' => 'Aprobar Documento'
+            'button' => [
+                'id' => 'confirmButton',
+                'class' => 'small yellow',
+                'html' => '',
+                'tooltip' => 'Aprobar Documento',
+                'visible' => $confirmButton,
+                'data' => [
+                    'action' => 1
+                ]
+            ],
+            'icon' => [
+                'class' => 'fa fa-check',
+                'html' => ''
+            ]
         ],
         'reject' => [
-            'see' => $rejectButton,
-            'tooltip' => 'Rechazar Documento'
+            'button' => [
+                'id' => 'rejectButton',
+                'class' => 'small orange',
+                'html' => '',
+                'tooltip' => 'Rechazar Documento',
+                'visible' => $rejectButton,
+                'data' => [
+                    'action' => 0
+                ]
+            ],
+            'icon' => [
+                'class' => 'fa fa-times',
+                'html' => ''
+            ]
         ]
     ];
+
+    $functionsFile = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . "/funciones.php";
+    if (is_file($functionsFile)) {
+        include_once $functionsFile;
+
+        $functionName = $Formato->nombre . "fabButtons";
+        if (function_exists($functionName)) {
+            $otherButtons = $functionName();
+
+            if (is_array($otherButtons)) {
+                $buttons += $otherButtons;
+            }
+        }
+    }
+
+    $Response->data = $buttons;
     $Response->success = 1;
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();

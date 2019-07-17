@@ -1,10 +1,16 @@
 <?php
 abstract class Sql
 {
-	public $Conn;
+	public $connection = null;
+	public $motor;
+	public $host;
+	public $usuario;
+	public $password;
+	public $nombreDb;
+	public $db;
+	public $puerto;
 	public $res = null;
 	protected $consulta;
-	protected $motor;
 	protected $error = null;
 	protected $nombres_campos = [];
 	protected $tipos_campos = [];
@@ -13,61 +19,99 @@ abstract class Sql
 	protected $ultimoInsert = null;
 	protected $filas = 0;
 
-	public function __construct($conn, $motorBd)
+	/**
+	 * instancia de sql segun el motor
+	 *
+	 * @var object
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	private static $instance;
+
+	/**
+	 * inicio del proceso
+	 * seteo credenciales y conecto la db
+	 *
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	function __construct()
 	{
-		$this->Conn = $conn;
-		$this->motor = $motorBd;
+		$this->setAttributes();
+		$this->connect();
 	}
 
 	/**
-	 * Devuelve una instancia a partir de los datos de conexion y el tipo de motor
-	 * @param $conn
-	 * @param $motorBd
+	 * setea las credenciales de la base de datos
+	 *
 	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-06-20
 	 */
-	public static function getInstance()
+	public function setAttributes()
 	{
-		$conn = new Conexion();
-		$motorBd = $conn->Motor;
-
-		switch ($motorBd) {
-			case "MySql":
-				$instance = new SqlMysql($conn, $motorBd);
-				break;
-			case "Oracle":
-				$instance = new SqlOracle($conn, $motorBd);
-				break;
-			case "SqlServer":
-				$instance = new SqlSqlServer($conn, $motorBd);
-				break;
-			case "MSSql":
-				$instance = new SqlMsSql($conn, $motorBd);
-				break;
-			case "Postgres":
-				$instance = new SqlPostgres($conn, $motorBd);
-				break;
-			default:
-				$instance = null;
-				break;
-		}
-
-		return $instance;
+		$this->motor = MOTOR;
+		$this->host = HOST;
+		$this->usuario = USER;
+		$this->password = PASS;
+		$this->nombreDb = BASEDATOS;
+		$this->db = DB;
+		$this->puerto = PORT;
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Buscar.
-	 * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-	 * where-el filtro de la búsqueda; order_by-parametro para el orden.
-	 * <Responsabilidades>Enmascarar una búsqueda de tipo select para cualquier motor,
-	 * dependiendo del motor llama a la funcion que corresponda.
-	 * <Notas>
-	 * <Excepciones> las generadas por errores en la consulta, o permisos sobre las bd
-	 * <Salida>devuelve una matriz con el resultado de la consulta
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
+	/**
+	 * gestiona la conexion a la base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
 	 */
-	public abstract function Buscar($campos, $tablas, $where, $order_by);
+	public abstract function connect();
+
+	/**
+	 * finaliza la conexion de base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	public abstract function disconnect();
+
+	/**
+	 * obtiene la instancia de sql, en caso de no
+	 * existir la genera
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-06-19
+	 */
+	public static function getInstance($newInstance = false)
+	{
+		if (!Sql::$instance || $newInstance) {
+			switch (MOTOR) {
+				case "MySql":
+					Sql::$instance = new SqlMysql();
+					break;
+				case "Oracle":
+					Sql::$instance = new SqlOracle();
+					break;
+				case "SqlServer":
+					Sql::$instance = new SqlSqlServer();
+					break;
+				case "MSSql":
+					Sql::$instance = new SqlMsSql();
+					break;
+				case "Postgres":
+					Sql::$instance = new SqlPostgres();
+					break;
+				default:
+					Sql::$instance = null;
+					break;
+			}
+		}
+
+		return Sql::$instance;
+	}
 
 	/**
 	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
@@ -75,23 +119,6 @@ abstract class Sql
 	 * @return string sentencia concatenar adecuada para el motor configurado
 	 */
 	public abstract function concatenar_cadena($arreglo_cadena);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>el objeto de conexion
-	 * <Pre-condiciones>
-	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
-	 */
-	function Ejecutar_Sql_Noresult($sql)
-	{
-		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		return $this->Ejecutar_Sql($sql, "2");
-	}
 
 	public abstract function liberar_resultado($rs);
 
@@ -110,64 +137,6 @@ abstract class Sql
 
 	public abstract function sacar_fila($rs);
 
-	public abstract function sacar_fila_vector($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Insertar.
-	 * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
-	 * valores-los valores a insertar
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la inserción
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Insertar($campos, $tabla, $valores);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Modificar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
-	 * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
-	 * where-filtro de los registros que serán modificados
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la modificacion
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Modificar($tabla, $actualizaciones, $where);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_tipo.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>según el motor llamar a la función que ejecutará la cadena sql
-	 * <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// ejecuta un sql que debe devuelve un solo registro
-	public abstract function Ejecutar_Sql_Tipo($sql);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Eliminar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-	 * <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la eliminacion
-	 * <Notas>Enmascarada para agregar otros motores de bases de datos
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Eliminar($tabla, $where);
-
 	/*
 	 * <Clase>SQL
 	 * <Nombre>Numero_Filas
@@ -181,21 +150,8 @@ abstract class Sql
 	 */
 	function Numero_Filas($rs = null)
 	{
-		return ($this->filas);
+		return $this->filas;
 	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Tipo_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>tipo del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	public abstract function Tipo_Campo($rs, $pos);
 
 	/*
 	 * <Clase>SQL
@@ -276,8 +232,6 @@ abstract class Sql
 	 * <Post-condiciones>
 	 */
 	public abstract function Numero_Campos($rs);
-
-	// Fin Funcion General Ultimo Insert
 
 	/*
 	 * <Clase>SQL

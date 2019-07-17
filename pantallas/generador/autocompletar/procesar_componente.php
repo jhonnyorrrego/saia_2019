@@ -8,7 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 
 function procesar_autocompletar($idcampo = '', $seleccionado = '', $accion = '', $campo = '') {
     global $conn, $ruta_db_superior;

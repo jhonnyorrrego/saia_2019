@@ -2,31 +2,20 @@
 class SqlMsSql extends Sql
 {
 
-	public function __construct($conn, $motorBd)
+	public function __construct()
 	{
-		parent::__construct($conn, $motorBd);
+		return parent::__construct();
 	}
 
-	function Buscar($campos, $tablas, $where, $order_by)
+	function connect()
 	{
-		if ($campos == "" || $campos == null)
-			$campos = "*";
-		$this->consulta = "SELECT " . $campos . " FROM " . $tablas;
-		if ($where != "" && $where != null)
-			$this->consulta .= " WHERE " . $where;
-		if ($order_by != "" && $order_by != null)
-			$this->consulta .= " ORDER BY " . $order_by;
-		// ejecucion de la consulta, a $this->res se le asigna el resource
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($this->consulta, $this->Conn->conn);
-		// se le asignan a $resultado los valores obtenidos
-		if ($this->Numero_Filas() > 0) {
-			for ($i = 0; $i < $this->Numero_Filas(); $i++)
-				$resultado[] = mssql_fetch_array($this->res, MSSQL_ASSOC);
-			return $resultado;
-		} // se retorna la matriz
-		else
-			return (false);
+		$this->connection = mssql_connect($this->host, $this->usuario, $this->password) or print_r(mssql_get_last_message());
+		mssql_query("USE " . $this->db, $this->connection);
+	}
+
+	function disconnect()
+	{
+		return mssql_close($this->connection);
 	}
 
 	function liberar_resultado($rs)
@@ -50,8 +39,8 @@ class SqlMsSql extends Sql
 
 		$this->filas = 0;
 		if ($sql && $sql != "") {
-			// mssql_query("USE ".$this->Conn->Db,$this->Conn->conn);
-			$this->res = mssql_query($sql, $this->Conn->conn);
+			// mssql_query("USE ".$this->db,$this->connection);
+			$this->res = mssql_query($sql, $this->connection);
 			if (!$this->res) {
 				// La consulta ha fallado, muestra un mensaje de error
 				// utilizando mssql_get_last_message()
@@ -91,66 +80,6 @@ class SqlMsSql extends Sql
 		}
 	}
 
-	function sacar_fila_vector($rs = Null)
-	{
-		if ($rs == Null)
-			$rs = $this->res;
-		if ($arreglo = @mssql_fetch_array($rs, MSSQL_NUM)) {
-			return ($arreglo);
-		} else
-			return (FALSE);
-	}
-
-	function Insertar($campos, $tabla, $valores)
-	{
-		if ($campos == "" || $campos == null)
-			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
-		else
-			$insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($insert, $this->Conn->conn);
-		$this->Guardar_log($insert);
-	}
-
-	function Modificar($tabla, $actualizaciones, $where)
-	{
-		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
-		if ($where != null && $where != "")
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
-		else
-			$update = "UPDATE " . $tabla . " SET " . $actualizaciones;
-		$this->Guardar_log($update);
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($update, $this->Conn->conn);
-	}
-
-	function Ejecutar_Sql_Tipo($sql)
-	{
-		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		$this->consulta = $sql;
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($this->consulta, $this->Conn->conn);
-		$this->Guardar_log($sql);
-		while ($fila = mssql_fetch_array($this->res, MSSQL_NUM)) {
-			foreach ($fila as $valor)
-				$resultado[] = $valor;
-		}
-		return $resultado;
-	}
-
-	function Eliminar($tabla, $where)
-	{
-		if ($where != null && $where != "")
-			$delete = "DELETE FROM " . $tabla . " WHERE " . $where;
-		else
-			$delete = "DELETE FROM " . $tabla;
-		// ejecucion de la consulta
-		$this->Guardar_log($delete);
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($delete, $this->Conn->conn);
-		//
-	}
-
 	function Resultado()
 	{
 		$resultado["sql"] = $this->consulta;
@@ -166,23 +95,6 @@ class SqlMsSql extends Sql
 			}
 		}
 		return $resultado;
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Tipo_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>tipo del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Tipo_Campo($rs, $pos)
-	{
-		$dato = mssql_field_type($rs, $pos);
-		return ($dato);
 	}
 
 	/*
@@ -215,8 +127,8 @@ class SqlMsSql extends Sql
 	 */
 	function Lista_Tabla($db)
 	{
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query("select name AS nombre from sysobjects where type='U'", $this->Conn->conn) or die("Error en la Ejecucucion del Proceso MSSQL: " . mssql_get_last_message());
+		mssql_query("USE " . $this->db, $this->connection);
+		$this->res = mssql_query("select name AS nombre from sysobjects where type='U'", $this->connection) or die("Error en la Ejecucucion del Proceso MSSQL: " . mssql_get_last_message());
 		while ($row = mssql_fetch_array($this->res, MSSQL_NUM))
 			$resultado[] = $row[0];
 		asort($resultado);
@@ -231,8 +143,8 @@ class SqlMsSql extends Sql
 			return (false);
 		$this->consulta = "select COLUMN_NAME from information_schema.columns WHERE TABLE_NAME LIKE '" . $tabla . "'";
 		// echo "select * from information_schema.columns WHERE TABLE_NAME LIKE '".$tabla."'<br />";
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn) or die($this->consulta);
-		$this->res = mssql_query($this->consulta, $this->Conn->conn);
+		mssql_query("USE " . $this->db, $this->connection) or die($this->consulta);
+		$this->res = mssql_query($this->consulta, $this->connection);
 		while ($row = mssql_fetch_array($this->res, MSSQL_NUM))
 			$resultado[] = $row[0];
 		asort($resultado);
@@ -275,11 +187,11 @@ class SqlMsSql extends Sql
 			$order = "order by (select 1)";
 		}
 
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
+		mssql_query("USE " . $this->db, $this->connection);
 		$complemento = substr($sql_count, strpos($sql_count, ' '));
 		/*
 		 * $sql_cantidad="SELECT COUNT(*) as cant FROM (".$sql_count.") cantidad_reg";
-		 * $res_cant=mssql_query($sql_cantidad,$conn->Conn->conn) or die("consulta fallida ---- $sql_cantidad ");
+		 * $res_cant=mssql_query($sql_cantidad,$conn->connection) or die("consulta fallida ---- $sql_cantidad ");
 		 * $total=mssql_fetch_array($res_cant,MSSQL_NUM);
 		 * $cant=intval($total[0]);
 		 */
@@ -292,15 +204,15 @@ class SqlMsSql extends Sql
 	SELECT *,ROW_NUMBER() OVER(" . $order . ") as numfila__oculto FROM (" . $select . ") datos
 	) SELECT * FROM informacion_tabla WHERE numfila__oculto BETWEEN " . ($inicio + 1) . " AND " . ($fin);
 
-		$res = mssql_query($consulta, $this->Conn->conn) or die("consulta fallida ---- $consulta ");
+		$res = mssql_query($consulta, $this->connection) or die("consulta fallida ---- $consulta ");
 		return ($res);
 	}
 
 	function Total_Registros_Tabla($tabla)
 	{
 		$this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query($this->consulta, $this->Conn->conn);
+		mssql_query("USE " . $this->db, $this->connection);
+		$this->res = mssql_query($this->consulta, $this->connection);
 		$total = mssql_fetch_array($this->res, MSSQL_NUM);
 		return ($total[0]);
 	}
@@ -327,8 +239,8 @@ class SqlMsSql extends Sql
 
 	function Ultimo_Insert()
 	{
-		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-		$this->res = mssql_query("SELECT @@identity", $this->Conn->conn) or print_r(mssql_get_last_message());
+		mssql_query("USE " . $this->db, $this->connection);
+		$this->res = mssql_query("SELECT @@identity", $this->connection) or print_r(mssql_get_last_message());
 		$total = mssql_fetch_array($this->res, MSSQL_NUM) or print_r(mssql_get_last_message());
 		return ($total[0]);
 	}
@@ -350,8 +262,8 @@ class SqlMsSql extends Sql
 		if (isset($_SESSION)) {
 			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
-				mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
-				$result = mssql_query($sqleve, $this->Conn->conn);
+				mssql_query("USE " . $this->db, $this->connection);
+				$result = mssql_query($sqleve, $this->connection);
 				if (!$result)
 					die(" Error en la consulta: " . mssql_get_last_message());
 				$registro = $this->Ultimo_Insert();
@@ -522,10 +434,10 @@ class SqlMsSql extends Sql
 				}
 			}
 			if (MOTOR == "SqlServer") {
-				sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
-				sqlsrv_query($this->Conn->conn, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
+				sqlsrv_query($this->connection, "USE " . $this->db);
+				sqlsrv_query($this->connection, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
 			} else {
-				mssql_query($sql, $this->Conn->conn) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
+				mssql_query($sql, $this->connection) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
 			}
 		}
 

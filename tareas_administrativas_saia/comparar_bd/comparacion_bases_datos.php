@@ -11,12 +11,8 @@ while ($max_salida > 0) {
 }
 $texto_alter = '';
 
-
-
-ini_set("display_errors", true);
 include_once ($ruta_db_superior . "db_externo.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-ini_set("display_errors", true);
 echo(estilo_bootstrap());
 /*$conexion1 = phpmkr_db_connect_externo('santa-rosa.ct00qljbq3lp.us-east-1.rds.amazonaws.com', "saia", "cerok_saia421_5", "saia_migracion", "MySql", 3306, "saia_migracion");
 $conexion2 = phpmkr_db_connect_externo('santa-rosa.ct00qljbq3lp.us-east-1.rds.amazonaws.com', "saia", "cerok_saia421_5", "saia_santa_rosa", "MySql", 3306, "saia_santa_rosa");*/
@@ -386,4 +382,3 @@ function verificar_campos($campo1, $campo2, $tabla) {
 
 	return (false);
 }
-?>

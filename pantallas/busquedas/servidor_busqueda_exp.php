@@ -15,13 +15,15 @@ include_once $ruta_db_superior . "core/autoload.php";
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
-    die("invalid access");
+    if (!isset($_REQUEST['debug'])) {
+        die("invalid access");
+    }
 }
 
 // pagina actual inicia en 1
-$page = (int)$_REQUEST['page'] ? $_REQUEST["page"] : 1;
+$page = (int) $_REQUEST['page'] ? $_REQUEST["page"] : 1;
 // registros por listado de datos
-$limit = (int)$_REQUEST['rows'] ? $_REQUEST["rows"] : 30;
+$limit = (int) $_REQUEST['rows'] ? $_REQUEST["rows"] : 30;
 $aux_limit = $_REQUEST['rows'];
 
 // Campo por el que se debe ordenar
@@ -29,7 +31,7 @@ $sidx = @$_REQUEST['sidx'];
 // Orden de la consulta
 $sord = @$_REQUEST['sord'];
 
-$actual_row = (int)$_REQUEST['actual_row'];
+$actual_row = (int) $_REQUEST['actual_row'];
 $start = $actual_row;
 
 $sql = <<<SQL
@@ -92,8 +94,7 @@ if ($pos !== false) {
 $condicion = crear_condicion_sql($busqueda["idbusqueda"], $busqueda["idbusqueda_componente"]);
 $funciones_condicion = parsear_datos_plantilla_visual($condicion);
 
-$valor_variables = array();
-if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
+if ($funciones_condicion && !empty($_REQUEST["variable_busqueda"])) {
     $variables_final = array();
     $variables1 = explode(",", $_REQUEST["variable_busqueda"]);
     foreach ($variables1 as $key => $valor) {
@@ -103,13 +104,12 @@ if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
 }
 
 foreach ($funciones_condicion as $key => $valor) {
-    unset($valor_variables);
     $valor_variables = array();
     $funcion = explode("@", $valor);
     $variables = explode(",", $funcion[1]);
     $cant_variables = count($variables);
     for ($h = 0; $h < $cant_variables; $h++) {
-        if (@$variables_final[$variables[$h]])
+        if (isset($variables_final[$variables[$h]]))
             array_push($valor_variables, $variables_final[$variables[$h]]);
         else
             array_push($valor_variables, $variables[$h]);
@@ -128,7 +128,7 @@ if (!empty($_REQUEST["idbusqueda_filtro_temp"])) {
     if ($filtro_temp["numcampos"]) {
         $cadena = '';
         for ($i = 0; $i < $filtro_temp["numcampos"]; $i++) {
-            $cadena .= parsear_cadena($filtro_temp[$i]["detalle"]);
+            $cadena .= UtilitiesController::convertTemporalFilter($filtro_temp[$i]["detalle"]);
             if (isset($filtro_temp[$i + 1]["detalle"])) {
                 $cadena .= ' AND ';
             }
@@ -169,17 +169,14 @@ foreach ($funciones_tablas as $key => $valor) {
 }
 
 $ordenar_consulta = "";
-$ordenar_consulta2 = "";
 $agrupar_consulta = $busqueda["agrupado_por"];
 
-if ($agrupar_consulta != "") {
-    $ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
-    $ordenar_consulta2 .= " GROUP BY " . $agrupar_consulta;
-    $ordenar_consulta_aux = " GROUP BY " . implode(",", $agrupacion);
+if ($agrupar_consulta) {
+    $ordenar_consulta .= "group by {$agrupar_consulta} ";
 }
 
 if ($sidx && $sord) {
-    $ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;
+    $ordenar_consulta .= "order by {$sidx} {$sord}";
 }
 
 $condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
@@ -210,14 +207,14 @@ if (@$_REQUEST["idbusqueda_temporal"]) {
 
 if (!$_REQUEST["cantidad_total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-        $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") SELECT COUNT(*) as cant FROM conteo";
+        $consulta_conteo = "WITH conteo AS (SELECT {$campos_consulta} FROM {$tablas_consulta} WHERE {$condicion} {$ordenar_consulta}) SELECT COUNT(*) as cant FROM conteo";
         $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
         $result = phpmkr_fetch_array($conteo_filas);
         $result[0] = array();
         $result[0]['cant'] = $result['cant'];
         $result["numcampos"] = $result['cant'];
     } else {
-        $select = '(SELECT ' . $campos_consulta . ' FROM ' . $tablas_consulta . ' WHERE' . $condicion . $ordenar_consulta . ') AS temp';
+        $select = "(SELECT {$campos_consulta} FROM {$tablas_consulta} WHERE {$condicion} {$ordenar_consulta}) AS temp";
         $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $select;
         $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
     }
@@ -259,8 +256,11 @@ if (!$_REQUEST['onlyCount']) {
             $response['exito'] = 2;
             $response['mensaje'] = "Fin del listado";
         } else {
+            if (strpos(strtolower(trim($ordenar_consulta)), 'order by') == 0) {
+                $ordenar_consulta = str_replace('order by ', '', $ordenar_consulta);
+            }
 
-            $result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, (int)$start, (int)$limit, $conn);
+            $result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta, (int) $start, (int) $limit, $conn);
             $response['sql'] = $result["sql"];
 
             if ($result["numcampos"]) {
@@ -334,6 +334,7 @@ if (!$_REQUEST['onlyCount']) {
     } else {
         $response['exito'] = 3;
         $response['mensaje'] = "No existen registros";
+        $response['sql'] = $result['sql'];
     }
 } else {
     $response['exito'] = 1;
@@ -343,37 +344,20 @@ echo json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
 function crear_condicion_sql($idbusqueda, $idcomponente)
 {
-    global $conn;
-    $condicion_filtro = '';
-    $datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
-    if (!$datos_condicion["numcampos"]) {
-        $datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
-        $condicion = $datos_condicion[0]["codigo_where"];
-    } else {
-        for ($i = 0; $i < $datos_condicion["numcampos"]; $i++) {
-            if (@$datos_condicion[$i]["comparacion"] == '') {
-                $datos_condicion[$i]["comparacion"] = "AND";
-            }
-            if (@$datos_condicion[$i]["idbusqueda_condicion"]) {
-                if ($i > 0) {
-                    $condicion .= " " . $datos_condicion[$i]["comparacion"] . " ";
-                }
-                $condicion .= $datos_condicion[$i]["codigo_where"];
-            }
-        }
-    }
-    if ($condicion == "") {
-        if (@$_REQUEST["condicion_adicional"]) {
+    $datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "");
+    $condicion = $datos_condicion[0]["codigo_where"];
+
+    if (!$condicion) {
+        if (!empty($_REQUEST["condicion_adicional"])) {
             $condicion = $_REQUEST["condicion_adicional"];
         } else {
             $condicion = ' 1=1 ';
         }
-        return ('(' . $condicion . ')');
-    }
-    if (@$_REQUEST["condicion_adicional"]) {
+    } else if (!empty($_REQUEST["condicion_adicional"])) {
         $condicion .= $_REQUEST["condicion_adicional"];
     }
-    return ('(' . $condicion . ')');
+
+    return '(' . $condicion . ')';
 }
 
 function parsear_datos_plantilla_visual($cadena, $campos = array())

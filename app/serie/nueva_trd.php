@@ -18,7 +18,7 @@ $Response = (object)array(
     'success' => 0,
 );
 
-$urlExcel = $ruta_db_superior . 'temporal/temporal_cerok/TRD.xlsx';
+$urlExcel = $ruta_db_superior . 'temporal/temporal_cerok/TRD_DEV.xlsx';
 try {
     $trd = new TRDcontroller($urlExcel);
     $infoResponse = $trd->validateDataExcel();

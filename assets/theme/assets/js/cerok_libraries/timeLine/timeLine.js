@@ -24,21 +24,21 @@ class TimeLine {
         let list = new String();
         this.events = this.options.source();
 
-        if(!this.events.length){
+        if (!this.events.length) {
             list = 'no data found';
-        }else{
+        } else {
             list = this.createTemplate();
         }
 
         var div = document.createElement('section');
         div.setAttribute('class', 'timeline');
         div.innerHTML = list;
-        
+
         document.querySelector(this.options.selector).appendChild(div);
         this.createEvent();
     }
 
-    createTemplate(){
+    createTemplate() {
         let data = [];
 
         this.events.forEach(e => {
@@ -51,8 +51,10 @@ class TimeLine {
 
     createItem() {
         let baseUrl = this.options.baseUrl;
+        let showIcon = !this.activeItem.icon ? 'd-none' : '';
         let response = `<div class="timeline-block">
-            <div class="timeline-point success" data-identificator="${this.activeItem.id}">
+            <div class="timeline-point complete ${showIcon}" 
+                data-identificator="${this.activeItem.id}">
                 <i class="${this.activeItem.icon}"></i>
             </div>
             <div class="timeline-content">
@@ -61,31 +63,41 @@ class TimeLine {
                     </div>
                     <div class="card-header clearfix">
                         <div class="user-pic">
-                            <img alt="Profile Image" width="33" height="33" src="${baseUrl + this.activeItem.imgRoute}">
+                            <img alt="Profile Image" width="33" height="33"
+                                src="${baseUrl + this.activeItem.imgRoute}">
                         </div>
-                        <h5>${this.activeItem.userName}-${this.activeItem.title}</h5>
+                        <h5 class="my-auto">
+                        ${this.activeItem.userName} - ${this.activeItem.title}
+                        </h5>
                     </div>
-                    <div class="card-description">
+                    <div class="card-description
+                        ${!this.activeItem.content ? 'd-none' : ''}">
                         <p>${this.activeItem.content}</p>
                     </div>
                 </div>
                 <div class="event-date">
-                    <small class="fs-12 hint-text">${this.activeItem.date}</small>
+                    <small class="fs-12 hint-text">
+                        ${this.activeItem.date}
+                    </small>
                 </div>
             </div>
-            <!-- timeline-content -->
         </div>`;
-    
+
         return response;
     }
 
     createEvent() {
+        return true;
         let options = this.options;
-        document.querySelectorAll(`${this.options.selector} .timeline-point`).forEach(e => {
-            let item = this.events.find(i => i.id == e.getAttribute('data-identificator'));
-            e.addEventListener('click', function () {
-                options.iconClick(item);
+        document
+            .querySelectorAll(`${this.options.selector} .timeline-point`)
+            .forEach(e => {
+                let item = this.events.find(
+                    i => i.id == e.getAttribute('data-identificator')
+                );
+                e.addEventListener('click', function() {
+                    options.iconClick(item);
+                });
             });
-        });
     }
 }

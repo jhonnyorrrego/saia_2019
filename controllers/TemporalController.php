@@ -61,10 +61,16 @@ class TemporalController
             'route' => ''
         ];
 
-        $binary = StorageUtils::get_file_content($dbString);
+        $binary = StorageUtils::get_file_content($dbString);;
         if ($binary) {
             $fileName = $prefix . Anexo::getNameFromJson($dbString);
-            $temporalRoute = SessionController::getTemporalDir() . '/' . $fileName;
+            $directory = SessionController::getTemporalDir();
+
+            if (!is_dir($ruta_db_superior . $directory)) {
+                mkdir($ruta_db_superior . $directory, PERMISOS_CARPETAS, TRUE);
+            }
+
+            $temporalRoute = $directory . '/' . $fileName;
             $relativeRoute = $ruta_db_superior . $temporalRoute;
 
             if (!is_file($relativeRoute) || $force) {

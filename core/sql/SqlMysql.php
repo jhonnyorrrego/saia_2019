@@ -2,43 +2,25 @@
 class SqlMysql extends Sql
 {
 
-    public function __construct($conn, $motorBd)
+    public function __construct()
     {
-        parent::__construct($conn, $motorBd);
+        return parent::__construct();
     }
 
-    /*
-     * <Clase>SQL
-     * <Nombre>Buscar.
-     * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-     * where-el filtro de la búsqueda; order_by-parametro para el orden.
-     * <Responsabilidades>ejecutar consulta de selección para mysql
-     * <Notas>
-     * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-     * <Salida>una matriz con los resultados de la consulta
-     * la matriz es del tipo: resultado[0]['campo']='valor'
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Buscar($campos, $tablas, $where, $order_by)
+    public function connect()
     {
-        if ($campos == "" || $campos == null)
-            $campos = "*";
-        $this->consulta = "SELECT " . $campos . " FROM " . $tablas;
-        if ($where != "" && $where != null)
-            $this->consulta .= " WHERE " . $where;
-        if ($order_by != "" && $order_by != null)
-            $this->consulta .= " ORDER BY " . $order_by;
-        // ejecucion de la consulta, a $this->res se le asigna el resource
-        $this->res = mysqli_query($this->Conn->conn, $this->consulta);
-        // se le asignan a $resultado los valores obtenidos
-        if ($this->Numero_Filas() > 0) {
-            for ($i = 0; $i < $this->Numero_Filas(); $i++)
-                $resultado[] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
-            return $resultado;
-        } else { // se retorna la matriz
-            return (false);
-        }
+        $this->connection = mysqli_connect(
+            $this->host,
+            $this->usuario,
+            $this->password,
+            $this->db,
+            $this->puerto
+        ) or alerta("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this->db . ": " . mysqli_connect_error());
+    }
+
+    function disconnect()
+    {
+        return mysqli_close($this->connection);
     }
 
     function liberar_resultado($rs)
@@ -73,8 +55,8 @@ class SqlMysql extends Sql
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
         }
 
-        if ($sql && $this->Conn->conn) {
-            $this->res = mysqli_query($this->Conn->conn, $sql);
+        if ($sql && $this->connection) {
+            $this->res = mysqli_query($this->connection, $sql);
 
             if ($this->res) {
                 if ($accion == "insert") {
@@ -85,7 +67,7 @@ class SqlMysql extends Sql
 
                 $this->consulta = $sql;
             } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
-                $e = mysqli_error($this->Conn->conn);
+                $e = mysqli_error($this->connection);
                 debug_print_backtrace();
                 trigger_error($e . " $sql", E_USER_ERROR);
             }
@@ -103,112 +85,6 @@ class SqlMysql extends Sql
         } else {
             return (false);
         }
-    }
-
-    function sacar_fila_vector($rs = null)
-    {
-        if ($rs == null)
-            $rs = $this->res;
-        if ($arreglo = @mysqli_fetch_row($rs)) {
-            return ($arreglo);
-        } else
-            return (false);
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Insertar.
-     * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
-     * valores-los valores a insertar
-     * <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos mysql
-     * <Notas>
-     * <Excepciones>Cualquier problema con la ejecucion del INSERT generará una excepcion
-     * <Salida>
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Insertar($campos, $tabla, $valores)
-    {
-        if ($campos == "" || $campos == null)
-            $insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
-        else
-            $insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-        $this->res = mysqli_query($this->Conn->conn, $insert);
-        $this->Guardar_log($insert);
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Modificar.
-     * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
-     * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
-     * where-filtro de los registros que serán modificados
-     * <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos MySql
-     * <Notas>
-     * <Excepciones>Cualquier problema con la ejecucion del UPDATE generará una excepcion
-     * <Salida>
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    // función update para mysql
-    function Modificar($tabla, $actualizaciones, $where)
-    {
-        $actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
-        if ($where != null && $where != "")
-            $update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
-        else
-            $update = "UPDATE " . $tabla . " SET " . $actualizaciones;
-        // ejecucion de la consulta
-        $this->Guardar_log($update);
-        $this->res = mysqli_query($this->Conn->conn, $update);
-        //
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>ejecutar_sql_tipo.
-     * <Parametros>sql-cadena con el codigo a ejecutar
-     * <Responsabilidades>Ejecuta una consulta sql
-     * <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
-     * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
-     * <Salida>un vector con los resultados de la consulta
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Ejecutar_Sql_Tipo($sql)
-    {
-        $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-        $this->consulta = $sql;
-        $this->res = mysqli_query($this->Conn->conn, $this->consulta);
-        $this->Guardar_log($sql);
-        while ($fila = mysqli_fetch_row($this->res)) {
-            foreach ($fila as $valor)
-                $resultado[] = $valor;
-        }
-        return $resultado;
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Eliminar.
-     * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-     * <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos MySql
-     * <Notas>
-     * <Excepciones>Cualquier problema con la ejecucion del DELETE generará una excepcion
-     * <Salida>
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Eliminar($tabla, $where)
-    {
-        if ($where != null && $where != "")
-            $delete = "DELETE FROM " . $tabla . " WHERE " . $where;
-        else
-            $delete = "DELETE FROM " . $tabla;
-        // ejecucion de la consulta
-        $this->Guardar_log($delete);
-        $this->res = mysqli_query($this->Conn->conn, $delete);
-        //
     }
 
     /*
@@ -246,23 +122,6 @@ class SqlMysql extends Sql
 
     /*
      * <Clase>SQL
-     * <Nombre>Tipo_Campo
-     * <Parametros>pos-posición del campo en el array resultado
-     * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-     * <Notas>se utiliza después de la función ejecutar_sql
-     * <Excepciones>
-     * <Salida>tipo del campos especificado
-     * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-     * <Post-condiciones>
-     */
-    function Tipo_Campo($rs, $pos)
-    {
-        $dato = mysqli_fetch_field_direct($rs, $pos);
-        return ($dato->type);
-    }
-
-    /*
-     * <Clase>SQL
      * <Nombre>Nombre_Campo
      * <Parametros>pos-posición del campo en el array resultado
      * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
@@ -291,7 +150,7 @@ class SqlMysql extends Sql
      */
     function Lista_Tabla($db)
     {
-        $this->res = mysqli_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
+        $this->res = mysqli_query($this->connection, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->connection));
         while ($row = mysqli_fetch_row($this->res))
             $resultado[] = $row[0];
         return ($resultado);
@@ -310,7 +169,7 @@ class SqlMysql extends Sql
      */
     function Lista_Bd()
     {
-        $this->res = mysqli_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . mysqli_error($this->Conn->conn));
+        $this->res = mysqli_query($this->connection, "SHOW DATABASES") or die("Error " . mysqli_error($this->connection));
         while ($row = mysqli_fetch_row($this->res))
             $resultado[] = $row[0];
         asort($resultado);
@@ -339,7 +198,7 @@ class SqlMysql extends Sql
             $tabla .= " where Field = '{$campo}'";
         }
         $this->consulta = "show columns from {$tabla}";
-        $this->res = mysqli_query($this->Conn->conn, $this->consulta);
+        $this->res = mysqli_query($this->connection, $this->consulta);
         $i = 0;
         $resultado = array();
         for (; $arreglo = $this->sacar_fila($this->res); $i++) {
@@ -374,7 +233,7 @@ class SqlMysql extends Sql
         $inicio = $inicio < 0 ? 0 : $inicio;
         $consulta = "$sql LIMIT $inicio,$cuantos";
 
-        return mysqli_query($this->Conn->conn, $consulta);
+        return mysqli_query($this->connection, $consulta);
     }
 
     /*
@@ -391,7 +250,7 @@ class SqlMysql extends Sql
     function Total_Registros_Tabla($tabla)
     {
         $this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-        $this->res = mysqli_query($this->Conn->conn, $this->consulta);
+        $this->res = mysqli_query($this->connection, $this->consulta);
         $total = mysqli_fetch_row($this->res);
         return ($total[0]);
     }
@@ -428,7 +287,7 @@ class SqlMysql extends Sql
      */
     function Ultimo_Insert()
     {
-        return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->Conn->conn);
+        return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->connection);
     }
 
     function Guardar_log($strsql)
@@ -448,9 +307,9 @@ class SqlMysql extends Sql
         if (isset($_SESSION)) {
             $fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
             if ($sqleve != "") {
-                $result = mysqli_query($this->Conn->conn, $sqleve);
+                $result = mysqli_query($this->connection, $sqleve);
                 if (!$result)
-                    die(" Error en la consulta: " . mysqli_error($this->Conn->conn));
+                    die(" Error en la consulta: " . mysqli_error($this->connection));
                 $registro = $this->Ultimo_Insert();
             }
         }
@@ -619,7 +478,7 @@ class SqlMysql extends Sql
         $resultado = true;
         if ($tipo == "archivo") {
             $sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
-            mysqli_query($this->Conn->conn, $sql);
+            mysqli_query($this->connection, $sql);
             // TODO verificar resultado de la insecion $resultado=FALSE;
         } elseif ($tipo == "texto") {
             $contenido = codifica_encabezado($contenido);
@@ -638,7 +497,7 @@ class SqlMysql extends Sql
                     evento_archivo($archivo);
                 }
             }
-            mysqli_query($this->Conn->conn, $sql) or die(mysqli_error($this->Conn->conn));
+            mysqli_query($this->connection, $sql) or die(mysqli_error($this->connection));
         }
         return ($resultado);
     }

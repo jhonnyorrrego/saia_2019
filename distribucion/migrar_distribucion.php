@@ -13,7 +13,6 @@ $max_salida--;
 
 include_once($ruta_db_superior."core/autoload.php");
 include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
-ini_set('display_errors',true);
 
 /*
 QUE TIENE LA RADICACION VIEJA?
@@ -102,9 +101,3 @@ for($i=0;$i<$distribuciones_antiguas['numcampos'];$i++){
 	$ingresar=ingresar_distribucion($iddoc,$datos_distribucion,$iddistribucion_antigua);
 	
 }
-
-
-	
-
-
-?>

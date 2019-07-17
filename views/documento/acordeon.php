@@ -24,7 +24,7 @@ include_once $ruta_db_superior . 'core/autoload.php';
                     <div class="card card-default mb-0" id="first_occordion_card">
                         <div class="card-header py-2" role="tab" style="height:32px;min-height:32px;">
                             <h4 class="card-title">
-                                <a class="p-0 text-capitalize" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                <a class="p-0 text-capitalize" data-toggle="collapse" data-parent="#first_occordion_card" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                     Documento
                                 </a>
                             </h4>

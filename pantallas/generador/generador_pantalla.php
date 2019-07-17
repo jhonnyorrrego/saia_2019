@@ -1430,6 +1430,7 @@ $(document).ready(function() {
         });
     });
     $(document).on('click', '.element', function() {
+        console.log("1---");
         var componente = $(this).attr("nombre");
         var ulr_hs =
             "<?php echo ($ruta_db_superior); ?>pantallas/generador/editar_componente_generico.php?idpantalla_componente=" +
@@ -1450,9 +1451,11 @@ $(document).ready(function() {
             width: 600,
             height: 500
         };
+        hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
         hs.htmlExpand(null, opciones);
     });
 
+   
 
     $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
         e.preventDefault();

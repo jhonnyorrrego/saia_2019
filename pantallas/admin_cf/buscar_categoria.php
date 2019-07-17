@@ -10,7 +10,7 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once $ruta_db_superior . "core/autoload.php";
 
 if(@$_REQUEST['categoria']){
 	$datos=busca_filtro_tabla("DISTINCT ".$_REQUEST['campo'],$_REQUEST['tabla'],$_REQUEST['campo']." LIKE ('".$_REQUEST['categoria']."%')");

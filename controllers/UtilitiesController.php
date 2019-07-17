@@ -81,7 +81,7 @@ class UtilitiesController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019
      */
-    function remoteServer()
+    public static function remoteServer()
     {
         $client_ip = !empty($_SERVER['REMOTE_ADDR']) ?
             $_SERVER['REMOTE_ADDR'] : (!empty($_ENV['REMOTE_ADDR']) ?
@@ -89,68 +89,110 @@ class UtilitiesController
         return $client_ip;
     }
 
-    public static function readFileExcel($archivo, $key = array(), $fieldName = array()) {
-		$ok1 = false;
-		if (in_array(1, $key)) {// Retorna las columnas con Numeros "1"
-			$ok1 = true;
-		}
-		$ok2 = false;
-		if (in_array(2, $key)) {// Retorna las columnas con letras "A"
-			$ok2 = true;
-		}
-		$ok3 = false;
-		if (in_array(3, $key)) {// Retorna las columnas con el encabezado "nombre"
-			$ok3 = true;
-		}
-		$ok4 = false;
-		if (in_array(4, $key)) {// Retorna las columnas con el nombre que le lleguen en $fieldName
-			$ok4 = true;
-		}
-		if (!$ok1 && !$ok2 && !$ok3 && !$ok4) {
-			$ok1 = true;
-		}
+    public static function readFileExcel($archivo, $key = array(), $fieldName = array())
+    {
+        $ok1 = false;
+        if (in_array(1, $key)) { // Retorna las columnas con Numeros "1"
+            $ok1 = true;
+        }
+        $ok2 = false;
+        if (in_array(2, $key)) { // Retorna las columnas con letras "A"
+            $ok2 = true;
+        }
+        $ok3 = false;
+        if (in_array(3, $key)) { // Retorna las columnas con el encabezado "nombre"
+            $ok3 = true;
+        }
+        $ok4 = false;
+        if (in_array(4, $key)) { // Retorna las columnas con el nombre que le lleguen en $fieldName
+            $ok4 = true;
+        }
+        if (!$ok1 && !$ok2 && !$ok3 && !$ok4) {
+            $ok1 = true;
+        }
 
-		$inputFileType = PhpOffice\PhpSpreadsheet\IOFactory::identify($archivo);
-		$objReader = PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-		$objReader -> setReadDataOnly(true);
-		$objPHPExcel = $objReader -> load($archivo);
-		$objWorksheet = $objPHPExcel -> getActiveSheet();
+        $inputFileType = PhpOffice\PhpSpreadsheet\IOFactory::identify($archivo);
+        $objReader = PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+        $objReader->setReadDataOnly(true);
+        $objPHPExcel = $objReader->load($archivo);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
 
-		$retorno = array();
-		if ($ok3) {
-			$encabezado = array();
-		}
-		$i = 1;
-		foreach ($objWorksheet->getRowIterator() as $row) {
-			$j = 0;
-			$col = 'A';
-			$cellIterator = $row -> getCellIterator();
-			$cellIterator -> setIterateOnlyExistingCells(false);
-			foreach ($cellIterator as $cell) {
-				if ($i == 1) {
-					if (trim($cell -> getValue())) {
-						$encabezado[$j] = str_replace(" ", "_", $cell -> getValue());
-					} else {
-						$encabezado[$j] = $col;
-					}
-				}
-				if ($ok1) {
-					$retorno[$i][$j] = $cell -> getValue();
-				}
-				if ($ok2) {
-					$retorno[$i][$col] = $cell -> getValue();
-				}
-				if ($ok3) {
-					$retorno[$i][$encabezado[$j]] = $cell -> getValue();
-				}
-				if ($ok4) {
-					$retorno[$i][$fieldName[$j]] = $cell -> getValue();
-				}
-				$j++;
-				$col++;
-			}
-			$i++;
-		}
-		return $retorno;
-	}
+        $retorno = array();
+        if ($ok3) {
+            $encabezado = array();
+        }
+        $i = 1;
+        foreach ($objWorksheet->getRowIterator() as $row) {
+            $j = 0;
+            $col = 'A';
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false);
+            foreach ($cellIterator as $cell) {
+                if ($i == 1) {
+                    if (trim($cell->getValue())) {
+                        $encabezado[$j] = str_replace(" ", "_", $cell->getValue());
+                    } else {
+                        $encabezado[$j] = $col;
+                    }
+                }
+                if ($ok1) {
+                    $retorno[$i][$j] = $cell->getValue();
+                }
+                if ($ok2) {
+                    $retorno[$i][$col] = $cell->getValue();
+                }
+                if ($ok3) {
+                    $retorno[$i][$encabezado[$j]] = $cell->getValue();
+                }
+                if ($ok4) {
+                    $retorno[$i][$fieldName[$j]] = $cell->getValue();
+                }
+                $j++;
+                $col++;
+            }
+            $i++;
+        }
+        return $retorno;
+    }
+    /**
+     * convierte el string de busqueda_filtro_temp
+     * a un sql
+     *
+     * @param string $string
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public static function convertTemporalFilter($string)
+    {
+        $old = ["|+|", "|=|", "|like|", "|-|", "|<|", "|>|", "|>=|", "|<=|", "|in|", "||"];
+        $new = [" AND ", " = ", " like ", " OR ", " < ", " > ", " >= ", " <= ", " in ", " LIKE "];
+
+        return str_replace($old, $new, $string);
+    }
+
+    /**
+     * convierte los nombres de las funciones de un sql
+     * a su respectivo valor
+     *
+     * @param string $string
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-06-27
+     */
+    public static function sqlGetFunctionValue($string)
+    {
+        $match = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $string, $resultado);
+
+        if (!$match) {
+            return $string;
+        }
+
+        $functions = str_replace(["{*", "*}"], "", $resultado[0]);
+        foreach ($functions as $functionName) {
+            $string = str_replace("{*{$functionName}*}", $functionName(), $string);
+        }
+
+        return $string;
+    }
 }

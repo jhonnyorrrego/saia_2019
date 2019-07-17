@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => false,
     'message' => '',
     'success' => 0

@@ -5,6 +5,7 @@ class TRDController
     protected $urlEXcel;
     protected $data;
     protected $messageError = [];
+    private $row;
 
     public function __construct(string $url)
     {
@@ -38,7 +39,7 @@ class TRDController
             'subserie',
             'tipo',
             'ret_gestion',
-            'rete_central',
+            'ret_central',
             'sop_papel',
             'sop_electronico',
             'disp_eliminacion',
@@ -69,49 +70,43 @@ class TRDController
         ];
 
         $fila = 2;
+        $rowAnterior = array();
         foreach ($this->data as $registro) {
 
-            $row = $this->validateFields($registro);
+            $this->row = $this->validateFields($registro);
+
             if (empty($this->messageError)) {
 
-                if (!$row['idserie']) {
-                    $r_ges = 0;
-                    $r_cen = 0;
-                    $pro = '-';
-                    
-                    if ($row['idsubserie'] == -1) {
-                        $r_ges = $row['ret_gestion'];
-                        $r_cen = $row['ret_central'];
-                        $pro = $row['procedimiento'];
-                    }
-                    $attributes = [
-                        'cod_padre' => 0,
-                        'nombre' => $row['serie'],
-                        'codigo' => $row['cod_serie'],
-                        'retencion_gestion' => $r_ges,
-                        'retencion_central' => $r_cen,
-                        'procedimiento' => $pro,
-                        'dias_respuesta' => 0,
-                        'tipo' => 1,
-                        'fk_serie_version' => 0,
-                        'cod_arbol' => 0,
-                        'estado' => 1
-                    ];
-                    $idserie = $this->insertSerieTemp($attributes);
-                    die("aqui voy");
-                    if ($idserie) {
-                        $row['idserie'] = $idserie;
-                    } else {
-                        throw new Exception("Error al insertar la serie, contacte al administrador");
-                    }
-                }
+                $this->row['idserie'] = $this->insertSerie();
+                if ($this->row['idserie']) {
 
-                if ($row['idserie']) { }
+                    $this->row['id'] = $this->row['idserie'];
+                    if (!$this->row['cod_subserie']) {
+                        // TODO: TRD cuando sea una serie sin subserie
+                        $idtipo = $this->insertTipoDocumental();
+                    } else {
+
+                        $idsubserie = $this->insertSubserie();
+                        if ($idsubserie) {
+                            $this->row['id'] = $idsubserie;
+                            $this->row['idsubserie']=$idsubserie;
+
+                            $idtipo = $this->insertTipoDocumental();
+                        } else {
+                            throw new Exception("Error al insertar la Subserie, contacte al administrador");
+                        }
+                    }
+                } else {
+                    throw new Exception("Error al insertar la serie, contacte al administrador");
+                }
             } else {
                 $ul = '<ul><li>' . implode('</li><li>', $this->messageError) . '</li></ul>';
                 $response['message'] = "Se encontraron los siguientes errores para el registro # {$fila}:{$ul}";
             }
             $fila++;
+            $rowAnterior = $this->row;
+
+            die("--");
         }
 
         return $response;
@@ -122,28 +117,24 @@ class TRDController
         if (empty($row['ret_gestion'])) {
             $row['ret_gestion'] = 0;
         }
-        if (!is_int($row['ret_gestion'])) {
+        if (!is_numeric($row['ret_gestion'])) {
             $this->error("La retencion gestion debe ser un numero entero ({$row['ret_gestion']})");
         }
-
         if (empty($row['ret_central'])) {
             $row['ret_central'] = 0;
         }
-        if (!is_int($row['ret_central'])) {
+        if (!is_numeric($row['ret_central'])) {
             $this->error("La retencion gestion debe ser un numero entero ({$row['ret_central']})");
         }
-
         if (empty($row['sop_papel']) && empty($row['sop_electronico'])) {
             $this->error("Debe seleccionar un tipo de soporte");
         }
-
         if (
             empty($row['disp_eliminacion']) && empty($row['disp_seleccion'])
             && empty($row['disp_conservacion']) && empty($row['disp_microfilmacion'])
         ) {
             $this->error("Debe seleccionar un tipo de Disposicion");
         }
-
         if (!empty($row['disp_eliminacion']) && !empty($row['disp_conservacion'])) {
             $this->error("NO pueden estar seleccionadas la diposicion CT y E en una misma serie/subserie");
         }
@@ -153,7 +144,7 @@ class TRDController
             $row['iddependencia'] = $iddep;
         }
 
-        return $this->validateSerieSubserie($row);
+        return $row;
     }
 
     private function validateDependencia($codDependencia)
@@ -178,53 +169,95 @@ class TRDController
     }
 
 
-    private function validateSerieSubserie($row)
+    private function insertSerie()
     {
-        $row['serie'] = htmlentities(trim($row['serie']));
-        $row['serie'] = htmlentities(trim($row['subserie']));
+        $data = [
+            'serie' => $this->row['serie'],
+            'cod_serie' => $this->row['cod_serie']
+        ];
+        $idserie = $this->validateSerieSubserie($data);
 
-        $idserie = 0;
-        $idsubserie = -1;
+        if (!$idserie) {
+            $r_ges = 0;
+            $r_cen = 0;
+            $pro = '-';
 
+            if (!$this->row['cod_subserie']) {
+                $r_ges = $this->row['ret_gestion'];
+                $r_cen = $this->row['ret_central'];
+                $pro = $this->row['procedimiento'];
+            }
+
+            $attributes = [
+                'cod_padre' => 0,
+                'nombre' => $this->row['serie'],
+                'codigo' => $this->row['cod_serie'],
+                'retencion_gestion' => $r_ges,
+                'retencion_central' => $r_cen,
+                'procedimiento' => $pro,
+                'dias_respuesta' => 0,
+                'tipo' => 1,
+                'fk_serie_version' => 0,
+                'cod_arbol' => 0,
+                'estado' => 1
+            ];
+            $idserie = SerieTemp::newRecord($attributes);
+        }
+        return $idserie;
+    }
+
+    private function insertSubserie()
+    {
+        $data = [
+            'idseriePadre' => $this->row['idserie'],
+            'serie' => $this->row['subserie'],
+            'cod_serie' => $this->row['cod_subserie']
+        ];
+
+        $idsubserie = $this->validateSerieSubserie($data, 2);
+        if (!$idsubserie) {
+
+            $attributes = [
+                'cod_padre' => $this->row['idserie'],
+                'nombre' => $this->row['subserie'],
+                'codigo' => $this->row['cod_subserie'],
+                'retencion_gestion' => $this->row['ret_gestion'],
+                'retencion_central' => $this->row['ret_central'],
+                'procedimiento' => $this->row['procedimiento'],
+                'dias_respuesta' => 0,
+                'tipo' => 2,
+                'fk_serie_version' => 0,
+                'cod_arbol' => 0,
+                'estado' => 1
+            ];
+            $idsubserie = SerieTemp::newRecord($attributes);
+        }
+        return $idsubserie;
+    }
+
+    private function insertTipoDocumental(){
+
+    }
+
+    private function validateSerieSubserie($data = array(), $tipo = 1)
+    {
+        $nameSerie = htmlentities(trim($data['serie']));
+        $parteWhere = '';
+        if ($tipo == 2) {
+            $parteWhere = "and cod_padre={$data['idseriePadre']}";
+        }
         $sqlSerie = "SELECT idserie,nombre FROM serie_temp 
-        WHERE codigo like '{$row['cod_serie']}' and tipo=1";
+        WHERE codigo like '{$data['cod_serie']}' and tipo={$tipo} {$parteWhere}";
         $existSerie = StaticSql::search($sqlSerie);
 
         if ($existSerie) {
-            if ($existSerie[0]['nombre'] != $row['serie']) {
-                $this->error("La serie con codigo {$row['cod_serie']} ya existe con otro nombre");
+            if ($existSerie[0]['nombre'] != $nameSerie) {
+                $this->error("La serie/subserie con codigo {$data['cod_serie']} ya existe con otro nombre");
             } else {
-                $idserie = $existSerie[0]['idserie'];
-                if ($row['cod_subserie']) {
-
-                    $idsubserie = 0;
-                    $sqlSubSerie = "SELECT idserie,nombre FROM serie_temp 
-                    WHERE codigo like '{$row['cod_subserie']}' and tipo=2 and cod_padre={$idserie}";
-                    $existSubSerie = StaticSql::search($sqlSubSerie);
-                    if ($existSubSerie) {
-                        $idsubserie = $existSubSerie[0]['idserie'];
-
-                        if ($existSubSerie[0]['nombre'] != $row['subserie']) {
-                            $this->error("La Subserie con codigo {$row['cod_subserie']} de la serie ({$row['serie']}) ya existe con otro nombre");
-                        }
-                    }
-                }
-            }
-        } else {
-            if ($row['cod_subserie']) {
-                $idsubserie = 0;
+                return $existSerie[0]['idserie'];
             }
         }
-        $row['idserie'] = $idserie;
-        $row['idsubserie'] = $idsubserie;
-
-        return $row;
-    }
-
-    private function insertSerieTemp($data)
-    {
-        $insert = "INSERT INTO serie_temp (cod_padre, cod_arbol, nombre, codigo, tipo, dias_respuesta, retencion_gestion, retencion_central, fk_serie_version, procedimiento, estado)
-        VALUES (0, '0', '{$row['serie']}', '{$row['cod_serie']}', 1, NULL, '5', '8', '1', 'procedimiento', '1');";
+        return false;
     }
 
     private function error($message)
