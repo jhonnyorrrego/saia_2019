@@ -45,6 +45,7 @@ function cambiar_mensajero_distribucion()
                         break;
                     case 'ENTREGA' :
                         $update_adicional = ',mensajero_empresad=0';
+
                         if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {
                             $retorno["msn"] = "No es posible asignar un mensajero externo";
                             $retorno["exito"] = 0;
@@ -57,6 +58,8 @@ function cambiar_mensajero_distribucion()
                             $upm = "UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . ",mensajero_empresad=0 WHERE iddistribucion in(" . $iddistribucion . ")";
                             $retorno = array('exito' => 1, 'sql' . $i => $upm);
                             phpmkr_query($upm) or die(json_encode($retorno));
+                        }else if($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'i'){
+                            $retorno = array('exito' => 0, 'msn' => 'No puede seleccionar un mensajero interno para un destino externo');
                         }
                         break;
                 }
