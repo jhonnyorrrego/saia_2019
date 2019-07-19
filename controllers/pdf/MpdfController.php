@@ -1,16 +1,5 @@
 <?php
 set_time_limit(0);
-$max_salida = 10;
-$ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
-}
-
-include_once $ruta_db_superior . "core/autoload.php";
 
 try {
 	JwtController::check($_REQUEST['token'], $_REQUEST['key']);
@@ -18,20 +7,20 @@ try {
 	die("invalid access");
 }
 
-require_once $ruta_db_superior . 'vendor/tecnickcom/tcpdf/tcpdf.php';
 include_once $ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'pantallas/qr/librerias.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_archivo.php';
 
 class Imprime_Pdf
 {
 	private $orientacion = 'P';
 	// P-vertical ,L-horizontal
 	private $margenes = array(
-		"superior" => "10",
-		"inferior" => "10",
-		"izquierda" => "10",
-		"derecha" => "10"
+		"superior" => "5",
+		"inferior" => "5",
+		"izquierda" => "5",
+		"derecha" => "5"
 	);
 	private $font_size = "12";
 	// tamaño de la letra
@@ -66,11 +55,9 @@ class Imprime_Pdf
 	private $imprimir_vistas = 0;
 	// variable que indica si vienen seleccionadas vistas para imprimir
 	private $idvistas = "";
-	private $extra_xmp = "";
 	// id de las vistas seleccionadas para impresion
 	private $info_ft = array();
 	// todos los datos de la ft
-	private $pmargen = 2;
 	public $nombre_archivo = false;
 
 	function __construct($iddocumento)
@@ -101,10 +88,10 @@ class Imprime_Pdf
 				}
 				$vmargen = explode(",", $formato[0]["margenes"]);
 				$this->margenes = array(
-					"izquierda" => ($vmargen[0] * $this->pmargen),
-					"derecha" => ($vmargen[1] * $this->pmargen),
-					"superior" => ($vmargen[2] * $this->pmargen),
-					"inferior" => ($vmargen[3] * $this->pmargen)
+					"izquierda" => $vmargen[0],
+					"derecha" => $vmargen[1],
+					"superior" => $vmargen[2],
+					"inferior" => $vmargen[3]
 				);
 
 				$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra_pdf'", "", $conn);
@@ -237,16 +224,27 @@ class Imprime_Pdf
 
 	public function imprimir()
 	{
-		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
+		global $conn;
+		$this->pdf = new \Mpdf\Mpdf([
+			'mode' => 'utf-8',
+			'format' => $this->papel,
+			'margin_left' => $this->margenes["izquierda"],
+			'margin_right' => $this->margenes["derecha"],
+			'margin_top' => $this->margenes["superior"],
+			'margin_bottom' => $this->margenes["inferior"],
+			'margin_header' => 5,
+			'margin_footer' => $this->margenes["inferior"],
+			'orientation' => $this->orientacion
+		]);
+		//$this->pdf->PDFA = true;
+		$this->pdf->setAutoTopMargin = "stretch";
+		$this->pdf->setAutoBottomMargin = "stretch";
 
-		$this->pdf->margenes = $this->margenes;
-		$this->pdf->documento = $this->documento;
-		$this->pdf->papel = $this->papel;
-		$this->pdf->orientacion = $this->orientacion;
-
-		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
-		$this->pdf->SetFont($this->font_family, '', $this->font_size);
-		$this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		/*
+		 //Agregar style al PDF
+		 $stylesheet = file_get_contents($ruta_db_superior . 'vendor/mpdf/style/mpdfstyletables.css');//utilizar style en el html
+		 $this -> pdf -> WriteHTML($stylesheet, 1);
+		 */
 		$this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
 
 		if (!$this->documento && $_REQUEST["iddoc_pag"]) {
@@ -260,16 +258,15 @@ class Imprime_Pdf
 		if ($autor["numcampos"]) {
 			$this->pdf->SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
-		$cad_etiquetas = ',PDF/a-1b';
+		$cad_etiquetas = '';
+
+		/*$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
+		if ($etiquetas["numcampos"]) {
+			$letiquetas = extrae_campo($etiquetas, "nombre");
+			$cad_etiquetas .= ',' . implode(",", $letiquetas);
+		}*/
 		$this->pdf->SetKeywords("SAIA" . $cad_etiquetas);
 		$this->pdf->SetSubject(codifica_encabezado(strip_tags($this->documento[0]["descripcion"])));
-
-		$campos_pdfa = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "", $conn);
-		if ($campos_pdfa['numcampos']) {
-			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
-				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this->formato[0]['idformato'], $this->documento[0]["iddocumento"], 1));
-			}
-		}
 		//
 		if ($this->mostrar_encabezado) {
 			$this->configurar_encabezado();
@@ -302,7 +299,6 @@ class Imprime_Pdf
 			$this->imprimir_hijos();
 		}
 
-		include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 		$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 
 		if (!$_REQUEST['url']) {
@@ -313,8 +309,17 @@ class Imprime_Pdf
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;
 		}
 
+		$prefijo_nombre = "";
+		if ($this->documento[0]["serie_idserie"] && $this->formato[0]["mostrar_tipodoc_pdf"]) {
+			$datos_serie = busca_filtro_tabla("nombre, codigo", "serie", "idserie=" . $this->documento[0]["serie_idserie"], "", $conn);
+			if ($datos_serie["numcampos"] && !empty($datos_serie[0]["codigo"])) {
+				$prefijo_nombre = str_replace("-", "_", $datos_serie[0]["codigo"]);
+				$prefijo_nombre .= "_";
+			}
+		}
+
 		if ($this->nombre_archivo !== false) {
-			$this->pdf->Output(__DIR__ . "/" . $this->nombre_archivo, $this->tipo_salida);
+			$this->pdf->Output(__DIR__ . "/" . $prefijo_nombre . $this->nombre_archivo, $this->tipo_salida);
 		} else {
 			$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
 			chmod($pdf_temp, 0777);
@@ -328,11 +333,15 @@ class Imprime_Pdf
 				$carpeta = $formato_ruta . "/pdf";
 
 				$adicional = "";
+				$versiones = busca_filtro_tabla("", "documento_version", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "numero_version ASC", $conn);
+				if ($versiones["numcampos"]) {
+					$adicional = "_V" . $versiones[0]["numero"];
+				}
 				if ($this->imprimir_vistas) {
-					$adicional = "_vista" . @$_REQUEST["vista"];
+					$adicional .= "_vista" . @$_REQUEST["vista"];
 				}
 
-				$nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha1"]) . $adicional . ".pdf";
+				$nombre_pdf = $carpeta . "/" . strtoupper($prefijo_nombre . $this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha1"]) . $adicional . ".pdf";
 			} else {
 				$tipo_almacenamiento = new SaiaStorage("archivos");
 				$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha1"]) . ".pdf";
@@ -340,7 +349,6 @@ class Imprime_Pdf
 			$paginas_pdf = 0;
 			if ($this->documento[0]["estado"] != 'ACTIVO' || $this->formato[0]["mostrar_pdf"] == 1) {
 				$actualizar_y_hash = true;
-				$paginas_pdf = $this->pdf->getNumPages();
 			}
 			$ruta_pdf = array(
 				"servidor" => $tipo_almacenamiento->get_ruta_servidor(),
@@ -348,44 +356,42 @@ class Imprime_Pdf
 			);
 			$this->pdf->Output($pdf_temp, $this->tipo_salida);
 			$codigo_hash = $tipo_almacenamiento->almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
-			if ($actualizar_y_hash) {
-				$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"];
-				phpmkr_query($sqlu) or die($sqlu);
-			}
+			//if ($actualizar_y_hash) {
+			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"];
+			phpmkr_query($sqlu) or die($sqlu);
+			//}
 		}
 	}
 
 	public function configurar_encabezado()
 	{
 		global $conn;
-		$this->pdf->marca_agua = 0;
-		if ($this->documento[0]["estado"] == "ACTIVO" || $this->documento[0]["estado"] == "ANULADO") {
-			$this->pdf->marca_agua = 1;
-		}
+		/*Marca de agua, no sirve para PDFA/
+		   /*if ($this -> documento[0]["estado"] == "ACTIVO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_borrador.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }
+		    if ($this -> documento[0]["estado"] == "ANULADO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_anulado.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }*/
+
 		if ($this->formato[0]["encabezado"]) {
 			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["encabezado"], "", $conn);
 			if ($encabezado["numcampos"]) {
-				$this->pdf->encabezado = crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
+				//$this -> pdf ->setHeader('{PAGENO}');
+				//$this -> pdf ->setHeader('Pagina {PAGENO} de {nbpg}');
+				$header = crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
+				$this->pdf->SetHTMLHeader($header, 'O', TRUE);
 			}
 		}
 
 		if ($this->formato[0]["pie_pagina"]) {
 			$pie_pag = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["pie_pagina"], "", $conn);
 			if ($pie_pag["numcampos"]) {
-				$this->pdf->pie_pagina = crear_encabezado_pie_pagina($pie_pag[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
+				$this->pdf->SetHTMLFooter(crear_encabezado_pie_pagina($pie_pag[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"]), 'O');
 			}
 		}
-
-		$this->pdf->setHeaderFont(array(
-			$this->font_family,
-			'',
-			$this->font_size
-		));
-		$this->pdf->setFooterFont(array(
-			$this->font_family,
-			'',
-			$this->font_size
-		));
 	}
 
 	public function imprimir_paginas()
@@ -438,17 +444,33 @@ class Imprime_Pdf
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 			if ($vista > 0) {
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
+				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?";
+				$queryParams = http_build_query([
+					'tipo' => 5,
+					'iddoc' => $datos_plantilla[0]["documento_iddocumento"]
+				]);
+
+				$direccion[] = $url . $queryParams;
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 				foreach ($destinos as $fila) {
-					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto . "&destino=$fila";
+					$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
+					$queryParams = http_build_query([
+						'tipo' => 5,
+						'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
+						'destino' => $fila
+					]);
+					$direccion[] = $url . $queryParams;
 				}
 			} else {
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
+				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
+				$queryParams = http_build_query([
+					'tipo' => 5,
+					'iddoc' => $datos_plantilla[0]["documento_iddocumento"]
+				]);
+				$direccion[] = $url . $queryParams;
 			}
 		}
-
 		$userId = SessionController::getValue('idfuncionario');
 		$Funcionario = new Funcionario($userId);
 		foreach ($direccion as $fila) {
@@ -468,20 +490,16 @@ class Imprime_Pdf
 
 			$contenido = str_replace("../../../images", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);
 			$contenido = str_replace("<pagebreak/>", "<br pagebreak=\"true\"/>", $contenido);
-			$contenido = str_replace("<p> </p>", "<p></p>", $contenido);
-			$contenido = str_replace("<p>&nbsp;</p>", "<p></p>", $contenido);
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
-			$contenido = preg_replace("/([^0-9]*)([0-9]+)px/", "$1$2pt", $contenido);
-			//Cambia los px por pt
 
-			if ($datos_formato[0]["orientacion"] == 1) {
+			if ($datos_formato[0]["orientacion"]) {
 				$datos_formato[0]["orientacion"] = "L";
-			} else if ($datos_formato[0]["orientacion"] == 0) {
+			} else {
 				$datos_formato[0]["orientacion"] = "P";
 			}
 			$this->pdf->AddPage($datos_formato[0]["orientacion"], $datos_formato[0]["papel"]);
-			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
+			$this->pdf->writeHTML(stripslashes($contenido), 0);
 		}
 		curl_close($ch);
 	}
@@ -519,6 +537,7 @@ class Imprime_Pdf
 				$i++;
 				$nombre_revisar = str_replace('.pdf', 'version' . $i . '.pdf', $nombre);
 			}
+
 			if (is_file($nombre)) {
 				chmod($nombre, 0777);
 				rename($nombre, $nombre_revisar);
@@ -532,154 +551,9 @@ class Imprime_Pdf
 	{
 		$this->$campo = $valor;
 	}
-}
-
-class MYPDF extends TCPDF
-{
-	public $encabezado = "";
-	public $pie_pagina = "";
-	public $marca_agua = 0;
-	public $margenes = array();
-	public $documento = array();
-	public $papel = "";
-	public $orientacion;
-	public $extra_metadata = array();
-
-	public function Header()
+	function TotalPaginas()
 	{
-		$texto = str_replace("##PAGES##", "    " . $this->total_paginas(), $this->encabezado);
-		$texto = str_replace("##PAGE##", $this->pagina_actual(), $texto);
-		$texto = preg_replace("/([^0-9]*)([0-9]+)px/", "$1$2pt", $texto);
-		//cambia px por pt
-
-		$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 5, stripslashes($texto), 0, 1, 0, false, '', true);
-
-		if ($this->marca_agua) {
-			$img_file = 'imagenes/marca_agua_borrador.png';
-			if ($this->documento[0]["estado"] == 'ANULADO') {
-				$img_file = 'imagenes/marca_agua_anulado.png';
-			}
-			$bMargin = $this->getBreakMargin();
-			$auto_page_break = $this->AutoPageBreak;
-			$this->SetAutoPageBreak(false, 0);
-
-			if ($this->orientacion == "L") {
-				$this->Image($img_file, 20, 40, 200, 100, '', '', '', false, 300, '', false, false, 0);
-			} else {
-				$this->Image($img_file, 10, 50, 200, 197, '', '', '', false, 300, '', false, false, 0);
-			}
-			$this->SetAutoPageBreak($auto_page_break, $bMargin);
-			$this->setPageMark();
-		}
-	}
-
-	public function Footer()
-	{
-		$texto = str_replace("##PAGES##", $this->total_paginas(), $this->pie_pagina);
-		$texto = str_replace("##PAGE##", $this->pagina_actual(), $texto);
-		$texto = preg_replace("/([^0-9]*)([0-9]+)px/", "$1$2pt", $texto);
-		//cambia px por pt
-
-		if ($this->papel == "Letter") {
-			if ($this->orientacion == "L") {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
-			} else {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
-			}
-		} else if ($this->papel == "A4") {
-			if ($this->orientacion == "L") {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 190, stripslashes($texto), 0, 2, 0, false, '', true);
-			} else {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
-			}
-		} else if ($this->papel == "A5") {
-			if ($this->orientacion == "L") {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 130, stripslashes($texto), 0, 2, 0, false, '', true);
-			} else {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 185, stripslashes($texto), 0, 2, 0, false, '', true);
-			}
-		} else if ($this->papel == "Legal") {
-			if ($this->orientacion == "L") {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
-			} else {
-				$this->writeHTMLCell(0, 0, $this->margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
-			}
-		}
-	}
-
-	public function pagina_actual()
-	{
-		if (empty($this->pagegroups)) {
-			return (trim($this->getAliasNumPage()));
-		} else {
-			return (trim($this->getPageNumGroupAlias()));
-		}
-	}
-
-	public function total_paginas()
-	{
-		if (empty($this->pagegroups)) {
-			return (trim($this->getAliasNbPages()));
-		} else {
-			return (trim($this->getPageGroupAlias()));
-		}
-	}
-
-	public function SetExtraMetadata($campo, $valor)
-	{
-		$this->extra_metadata[$campo] = $valor;
-	}
-
-	protected function _putinfo()
-	{
-		$oid = $this->_newobj();
-		$out = '<<';
-		// store current isunicode value
-		$prev_isunicode = $this->isunicode;
-		if ($this->docinfounicode) {
-			$this->isunicode = true;
-		}
-
-		if (!TCPDF_STATIC::empty_string($this->title)) {
-			// The document's title.
-			$out .= ' /Title ' . $this->_textstring($this->title, $oid);
-		}
-		if (!TCPDF_STATIC::empty_string($this->author)) {
-			// The name of the person who created the document.
-			$out .= ' /Author ' . $this->_textstring($this->author, $oid);
-		}
-		if (!TCPDF_STATIC::empty_string($this->subject)) {
-			// The subject of the document.
-			$out .= ' /Subject ' . $this->_textstring($this->subject, $oid);
-		}
-		if (!TCPDF_STATIC::empty_string($this->keywords)) {
-			// Keywords associated with the document.
-			$out .= ' /Keywords ' . $this->_textstring($this->keywords, $oid);
-		}
-		if (!TCPDF_STATIC::empty_string($this->creator)) {
-			// If the document was converted to PDF from another format, the name of the conforming product that created the original document from which it was converted.
-			$out .= ' /Creator ' . $this->_textstring($this->creator, $oid);
-		}
-		if (count($this->extra_metadata)) {
-			foreach ($this->extra_metadata as $key => $value) {
-				$out .= ' /' . str_replace(" ", "_", html_entity_decode($key)) . ' ' . $this->_textstring($value, $oid);
-			}
-		}
-
-		// restore previous isunicode value
-		$this->isunicode = $prev_isunicode;
-		// default producer
-		$out .= ' /Producer ' . $this->_textstring(TCPDF_STATIC::getTCPDFProducer(), $oid);
-		// The date and time the document was created, in human-readable form
-		$out .= ' /CreationDate ' . $this->_datestring(0, $this->doc_creation_timestamp);
-		// The date and time the document was most recently modified, in human-readable form
-		$out .= ' /ModDate ' . $this->_datestring(0, $this->doc_modification_timestamp);
-		// A name object indicating whether the document has been modified to include trapping information
-		$out .= ' /Trapped /False';
-		$out .= ' >>';
-		$out .= "\n" . 'endobj';
-		$this->_out($out);
-		return $oid;
+		return count($this->pages);
 	}
 }
 

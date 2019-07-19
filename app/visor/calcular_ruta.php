@@ -40,7 +40,8 @@ try {
                 $Funcionario = new Funcionario($userId);
                 $_REQUEST['token'] = FuncionarioController::generateToken($Funcionario, 5, true);
 
-                include_once $ruta_db_superior . 'class_impresion_' . $_REQUEST['exportar'] . '.php';
+                $fileName = ucfirst($_REQUEST['exportar']) . "Controller.php";
+                include_once "{$ruta_db_superior}/controllers/pdf/{$fileName}";
 
                 $Documento = new Documento($_REQUEST['iddoc']);
                 $route = $Documento->pdf;
