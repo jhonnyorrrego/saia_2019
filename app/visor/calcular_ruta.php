@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -64,7 +64,6 @@ try {
     } else {
         $Response->message = "Error al resolver la ruta del pdf";
     }
-
 
     $Response->success = 1;
 } catch (Throwable $th) {
