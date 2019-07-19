@@ -60,7 +60,6 @@ class Imprime_Pdf
 	// id de las vistas seleccionadas para impresion
 	private $info_ft = array();
 	// todos los datos de la ft
-	private $pmargen = 2;
 	public $nombre_archivo = false;
 
 	function __construct($iddocumento)
@@ -91,10 +90,10 @@ class Imprime_Pdf
 				}
 				$vmargen = explode(",", $formato[0]["margenes"]);
 				$this->margenes = array(
-					"izquierda" => ($vmargen[0] * $this->pmargen),
-					"derecha" => ($vmargen[1] * $this->pmargen),
-					"superior" => ($vmargen[2] * $this->pmargen),
-					"inferior" => ($vmargen[3] * $this->pmargen)
+					"izquierda" => $vmargen[0],
+					"derecha" => $vmargen[1],
+					"superior" => $vmargen[2],
+					"inferior" => $vmargen[3]
 				);
 
 				$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra_pdf'", "", $conn);
