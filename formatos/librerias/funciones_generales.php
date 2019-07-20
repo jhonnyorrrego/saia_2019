@@ -1565,12 +1565,18 @@ function submit_formato($formato, $iddoc = null)
                 }
             }
         }
-        echo ('<div class="col-md-9 form-group px-0 pt-3">
-                     <button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
-        if ($datos_f["numcampos"] && $datos_f[0]["item"]) {
+
+        if($datos_f[0]["item"] == 1){
+            echo ('<div class="col-md-9 form-group px-0 pt-3"><button class="btn btn-complete" item="1" id="continuar" value="Continuar">Continuar</button>');
             echo ('<button class="btn btn-danger cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" >Cancelar</button>');
+            echo ('<div>');
+        }else{
+            echo ('<div class="col-md-9 form-group px-0 pt-3"><button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
+            echo ('<div>');
         }
-        echo ('<div>');
+
+
+        
     } else {
 
         echo '
@@ -1590,7 +1596,7 @@ function submit_formato($formato, $iddoc = null)
                     var content = tinyMCE.get(identification).getContent();
                     $(this).val(content);
                 });
-
+                
                 $("#formulario_formatos").validate({
                     ignore: [],
                     submitHandler: function(form) {
@@ -1603,7 +1609,40 @@ function submit_formato($formato, $iddoc = null)
                                 text: 'Enviando...'
                             })
                         );
-                        form.submit();
+
+                        if($("#continuar").attr("item") == 1){
+                            $.ajax({
+                                async: false,
+                                type:'POST',
+                                url: "../../formatos/librerias/funciones_item.php",
+                                dataType: "json",
+                                data: $("#formulario_formatos").serialize(),
+                                success:function (data){                                    
+                                    if(data.success){
+                                        top.notification({
+                                            type: 'success',
+                                            message: data.message
+                                        });
+                                        top.successModalEvent(data);
+                                        if(data.refresh){
+                                           // $(".modal-body").empty();
+                                            $(".modal-body").load('../../formatos/funcionarios_ruta/adicionar_funcionarios_ruta.php');
+                                        }else{
+                                            top.closeTopModal();
+                                        }
+                                    }else{
+                                        top.notification({
+                                            type: 'error',
+                                            message: data.message
+                                        });
+                                    }				
+                                }
+                            });
+                            return false;
+                        }else{
+                            form.submit();
+                        }
+
                     },
                     invalidHandler: function() {
                         $("#continuar").show();
@@ -1611,6 +1650,10 @@ function submit_formato($formato, $iddoc = null)
                     }
                 });
             });
+
+            
+
+
         });
     </script>
 <?php

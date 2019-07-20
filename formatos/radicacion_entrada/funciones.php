@@ -9,10 +9,10 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-include_once($ruta_db_superior . "pantallas/qr/librerias.php");
-include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
+include_once $ruta_db_superior . "pantallas/qr/librerias.php";
+include_once $ruta_db_superior . "distribucion/funciones_distribucion.php";
 /* ADICIONAR */
 
 function mostrar_radicado_entrada($idformato, $iddoc)
@@ -312,9 +312,9 @@ function buscar_dependencias_principal($iddependencia)
     $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "", $conn);
 
     if ($cod_dep['numcampos']) {
-        return (buscar_dependencias_principal($cod_dep[0]["cod_padre"]));
+        return buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
     } else {
-        return ($iddependencia);
+        return $iddependencia;
     }
 }
 

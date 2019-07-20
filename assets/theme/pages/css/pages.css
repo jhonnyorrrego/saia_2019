@@ -2800,10 +2800,8 @@ code:hover {
 
 p {
   display: block;
-  font-size: 14px;
   font-weight: normal;
   letter-spacing: 0.01em;
-  line-height: 22px;
   margin: 0px 0px 10px 0px;
   font-style: normal;
   white-space: normal;
@@ -3452,42 +3450,6 @@ hr.dotted {
 
 .jumbotron p.small {
   font-size: 85%;
-}
-
-/* Responsive Handlers : Typo
-------------------------------------
-*/
-
-@media (max-width: 1400px) {
-  body, p {
-    font-size: 13px;
-    line-height: 20px;
-  }
-  h1 {
-    font-size: 33px;
-    line-height: 44px;
-    letter-spacing: -0.08px;
-  }
-  h2 {
-    font-size: 28px;
-    line-height: 40px;
-  }
-  h3 {
-    font-size: 24px;
-    line-height: 35.88px;
-  }
-  h4 {
-    font-size: 18px;
-    line-height: 33.88px;
-  }
-  h5 {
-    font-size: 16px;
-    line-height: 25.88px;
-  }
-  small, .small {
-    font-size: 89%;
-    line-height: 17px;
-  }
 }
 
 /* For Windows : Fixes 

@@ -246,7 +246,7 @@ class Imprime_Pdf
 			'margin_footer' => $this->margenes["inferior"],
 			'orientation' => $this->orientacion
 		]);
-		$this->pdf->PDFA = true;
+		//$this->pdf->PDFA = true;
 		$this->pdf->setAutoTopMargin = "stretch";
 		$this->pdf->setAutoBottomMargin = "stretch";
 

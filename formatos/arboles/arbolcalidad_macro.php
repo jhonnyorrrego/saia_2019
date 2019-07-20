@@ -33,7 +33,7 @@ $cadena = "";
 					echo(librerias_notificaciones());
         ?>
       
-    	<div id="esperando"><img src="../../imagenes/cargando.gif"></div>
+    	<div id="esperando"><img src="../../assets/images/cargando.gif"></div>
       <hr/>   
     	<div id="treeboxbox_tree_calidad"></div>
 			<script type="text/javascript">

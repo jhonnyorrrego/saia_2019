@@ -230,7 +230,7 @@ function phpmkr_db_close($conn)
 /*
 <Clase>
 <Nombre>phpmkr_query
-<Parametros>strsql: cadena que contiene la sentencia sql a ejecutar
+<Parametros>sql: cadena que contiene la sentencia sql a ejecutar
             conectar: objeto que contiene la conexion con la base de datos
 <Responsabilidades>ejecutar la sentencia sql y guardar el registro de dicha transaccion en el log, es decir, en la tabla evento
 <Notas>Examina la cadena y realiza las acciones dependiendo del tipo de evento que se quiera realizar sobre la base de datos
@@ -240,10 +240,10 @@ function phpmkr_db_close($conn)
 <Pre-condiciones>
 <Post-condiciones>
  */
-function phpmkr_query($strsql)
+function phpmkr_query($sql)
 {
     global $conn;
-    return $conn->Ejecutar_Sql($strsql);
+    return $conn->Ejecutar_Sql($sql);
 }
 
 /*

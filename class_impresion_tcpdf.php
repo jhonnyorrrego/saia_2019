@@ -449,9 +449,15 @@ class Imprime_Pdf
 			}
 		}
 
-		//$this -> pdf -> startPageGroup();
+		$userId = SessionController::getValue('idfuncionario');
+		$Funcionario = new Funcionario($userId);
 		foreach ($direccion as $fila) {
-			$fila .= "&font_size=" . $this->font_size;
+			$fila .= "&" . http_build_query([
+				"font_size" => $this->font_size,
+				"token" => FuncionarioController::generateToken($Funcionario, 5, true),
+				"key" => $userId
+			]);
+
 			if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

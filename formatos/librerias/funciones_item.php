@@ -1,5 +1,3 @@
-<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
@@ -10,10 +8,10 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once $ruta_db_superior . "core/autoload.php";
+//include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 
-desencriptar_sqli('form_info');
+//desencriptar_sqli('form_info');
 
 if (isset($_REQUEST["accion"])) {
 	$_REQUEST["accion"]();
@@ -181,7 +179,14 @@ function guardar_item() {
 		$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "", $conn);
 		$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "", $conn);
 
-		if ($_REQUEST["opcion_item"] <> "adicionar") {
+		if ($_REQUEST["opcion_item"] <> "adicionar") { 
+			echo(json_encode([
+				"success" => 1, 
+				"message" => "Creación Exitosa", 
+				"id" => $insertado
+			]));
+			//echo(json_encode(["refresca"=>2]));
+			/*die();
 			if ($superior["numcampos"] && @$_REQUEST["pantalla"] <> "externo")
 				echo "<script>
              var direccion = new String(window.parent.frames[0].location);
@@ -196,11 +201,23 @@ function guardar_item() {
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1];
              parent.location=direccion+'&mostrar_formato=item&rand=" . rand(0, 100) . "';  
-             </script>";
+             </script>";*/
 		}
 		if ($_REQUEST["opcion_item"] == "adicionar") {
-			redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
+			echo(json_encode([
+					"success" => 1, 
+					"message" => "Creación Exitosa", 
+					"id" => $insertado,
+					"refresh" => 1
+				]));
+			//die();
+			//redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 		}
+	}else{
+		echo(json_encode([
+				"success" => 1, 
+				"message" => "No fue posible crear el item", 
+		]));
 	}
 }
 

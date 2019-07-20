@@ -21,7 +21,6 @@ $(function () {
             key: localStorage.getItem('key'),
             id: id
         }, function (response) {
-            console.log(response);
             if (response.success) {
                 fillForm(response.data);
             } else {
