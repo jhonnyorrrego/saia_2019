@@ -51,7 +51,7 @@ function campoNatural($campos){
     $html .= '<div class="col-md-6">
                  <div class="form-group ">
                     <label class="mb-0" for="nombre_ejecutor">NOMBRES Y APELLIDOS</label>
-                    <input type="text" class="form-control"  id="nombre_ejecutor" name="nombre">
+                    <input type="text" class="form-control elementos_remitente"  id="nombre_ejecutor" name="nombre">
                 </div>
               </div>';
 
@@ -59,7 +59,7 @@ function campoNatural($campos){
     $html .= '<div class="col-md-6 pl-s-1">
                 <div class="form-group ">
                     <label class="mb-0" for="identificacion_ejecutor">IDENTIFICACI&Oacute;N</label>
-                    <input type="text" class="form-control pt-mb-0" id="identificacion_ejecutor" name="identificacion">
+                    <input type="text" class="form-control pt-mb-0 elementos_remitente" id="identificacion_ejecutor" name="identificacion">
                 </div>
             </div>';
 
@@ -72,7 +72,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_cargo">Cargo</label>
-                        <input type="text" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="cargo_ejecutor" name="cargo_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -81,7 +81,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="direccion_ejecutor" name="direccion_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -90,7 +90,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="telefono_ejecutor" name="telefono_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -99,7 +99,7 @@ function campoNatural($campos){
         $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_email">Email</label>
-                        <input type="text" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="email_ejecutor" name="email_ejecutor" value="">
                     </div>
                 </div>';
     }
@@ -114,14 +114,14 @@ function campoJuridica($campos){
             <div class="col-md-6">
                 <div class="form-group ">
                     <label class="mb-0" for="nombre_ejecutor">Entidad</label>
-                    <input type="text" class="form-control"  id="nombre_ejecutor" name="nombre">
+                    <input type="text" class="form-control elementos_remitente"  id="nombre_ejecutor" name="nombre">
                 </div>
             </div>';
 
         $html .= '<div class="col-md-6">
                 <div class="form-group ">
                     <label class="mb-0" for="identificacion_ejecutor">IDENTIFICACI&Oacute;N</label>
-                    <input type="text" class="form-control" id="identificacion_ejecutor" name="identificacion">
+                    <input type="text" class="form-control elementos_remitente" id="identificacion_ejecutor" name="identificacion">
                 </div>
             </div>';
 
@@ -129,7 +129,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_cargo">Cargo</label>
-                        <input type="text" class="form-control" id="cargo_ejecutor" name="cargo_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="cargo_ejecutor" name="cargo_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -138,7 +138,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion_ejecutor" name="direccion_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="direccion_ejecutor" name="direccion_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -147,7 +147,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono_ejecutor" name="telefono_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="telefono_ejecutor" name="telefono_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -156,7 +156,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_telefono">Contacto</label>
-                        <input type="text" class="form-control" id="contacto_ejecutor" name="contacto_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="contacto_ejecutor" name="contacto_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -165,7 +165,7 @@ function campoJuridica($campos){
             $html .= '<div class="' . agregarResponsive() . '">
                     <div class="form-group ">
                         <label class="mb-0" id="label_email">Email</label>
-                        <input type="text" class="form-control" id="email_ejecutor" name="email_ejecutor" value="">
+                        <input type="text" class="form-control elementos_remitente" id="email_ejecutor" name="email_ejecutor" value="">
                     </div>
                 </div>';
         }
@@ -180,7 +180,7 @@ function campoJuridica($campos){
         $texto ='<div class="' . agregarResponsive() . '" id="div_titulo_ejecutor" >
                 <div class="form-group form-group-default-select2 pb-md-0 pt-md-0" id="div_select_titulo_ejecutor">
                     <label class="mb-0" id="label_' . $nombre . '">Titulo</label>
-                    <select class="full-width" name="titulo_ejecutor" id="titulo_ejecutor">
+                    <select class="full-width elementos_remitente" name="titulo_ejecutor" id="titulo_ejecutor">
                     <option value="" >Seleccione...</option>';
                     
                     $titulos = array('Doctor', 'Doctora', 'Ingeniero', 'Ingeniera', "Se&ntilde;or", "Se&ntilde;ora");

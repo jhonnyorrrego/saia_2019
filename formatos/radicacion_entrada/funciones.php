@@ -393,7 +393,7 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#area_responsable').removeClass('required');
                 $('#destino').addClass('required');
                 $('#tr_tipo_destino').hide();
-                $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
+                $("#tipo_destino1").prop('checked', true);
                 $('#tr_destino').show();
                 $('#tr_copia_a').show();
                 $('#tr_persona_natural_dest').hide();
@@ -805,7 +805,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
             }
         }
         if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {//EXT - INT
-            pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);
+            pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 2, $estado_distribucion);
         }
     }
     return;

@@ -108,8 +108,7 @@ foreach($campos AS $key=>$valor){
                       </div>
                       <div class="pl-sm-3 pl-md-1">
                         <span id="actualizar" class="label label-success"  style="cursor:pointer">Guardar datos</span>
-                        <span id="apuntador" class="spinner-grow spinner-grow-sm slow text-success hide"></span>
-                                                  
+                        <span id="editar" class="label label-info hide"  style="cursor:pointer">Editar datos</span>                                            
                       </div>
                     </div>
                     <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
@@ -120,14 +119,14 @@ foreach($campos AS $key=>$valor){
                   <div id="datos_ejecutor">
                     <div class="row">
                       <div class="pl-3 pl-md-0"> 
-                          <span id="limpiar"  class="label label-danger"  style="cursor:pointer">Limpiar formulario</span>
+                          <span id="limpiar"  class="label label-info"  style="cursor:pointer">Adicionar Nuevo</span>
                       </div> 
                       <div class="pl-1"> 
-                          <span id="borrar_todos" class="label label-success"  style="cursor:pointer">Quitar todos</span>
+                        <span id="actualizar"  class="label label-success"  style="cursor:pointer">Guardar datos</span>
+                        <span id="editar" class="label label-info hide"  style="cursor:pointer">Editar datos</span>
                       </div> 
                       <div class="pl-3 pl-md-1"> 
-                        <span id="actualizar"  class="label label-success"  style="cursor:pointer">Seleccionar datos</span>
-                        <span id="apuntador" class="spinner-grow spinner-grow-sm slow text-success hide"></span>
+                        <span id="borrar_todos" class="label label-danger"  style="cursor:pointer">Quitar todos</span>
                       </div> 
                     </div>
                     
@@ -164,13 +163,11 @@ foreach($campos AS $key=>$valor){
                 $("#label_nombre").html('Persona Juridica');
                 $("#camposTipoRemitente").html(datos);
                 $("#nombre_ejecutor").hide();
-                $("#nombre_ejecutor").parent().append("<input class='form-control' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");           
+                $("#nombre_ejecutor").parent().append("<input class='form-control elementos_remitente' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");           
                 $("#buscar_nombre").keyup(function (){
                   if($(this).val()==0 || $(this).val()==""){
-                    $("#apuntador").addClass('hide');
                     notificacion_saia('Debe Ingresar el Nombre','error','',3000);
                   }else{
-                    $("#apuntador").removeClass('hide');
                     $("#ul_completar").load( "<?php echo $ruta_db_superior;?>formatos/librerias/seleccionar_ejecutor.php?tipo=nombre", { nombre: $(this).val() },function(response){
                       if(response){
                         $("#ul_completar").html(response);
@@ -239,12 +236,18 @@ foreach($campos AS $key=>$valor){
                     $("#estado_actualizacion option[value="+ vector[0] +"]").attr("selected",true);
                     $("#div_seleccionados_multiple").show();
                   }
-                  $("#apuntador").addClass('hide');
                   $("#destinos_seleccionados").val(vector[0]);
                   llenar_llamado();
                   notificacion_saia('<b>ATENCI&Oacute;N</b><br>Contacto actualizado satisfactoriamente','success','',4000);
-                  limpiarRemitente();
+                  //limpiarRemitente();
                   $("#buscar_nombre").focus();
+                  var cantidad = "<?php echo $_REQUEST['tipo']?>";
+                  //if(cantidad == "unico"){
+                    $("#actualizar").addClass("hide");
+                    $("#limpiar").removeClass("hide");
+                  //}
+                  $(".elementos_remitente").attr("disabled",true);
+                  $("#editar").removeClass("hide");
 				  $("#"+window.frames.name+"",window.parent.document).height($(document).height());
                 }
               });
@@ -255,18 +258,22 @@ foreach($campos AS $key=>$valor){
 
           $("#limpiar").click(function(e){
             e.preventDefault();
-            $("#apuntador").addClass('hide');
             limpiarRemitente();
+            $("#editar").addClass("hide");
+            $(".elementos_remitente").attr("disabled",false);
+            $("#actualizar").removeClass("hide");
           });
 
           $("#borrar_todos").click(function(e){
             e.preventDefault();
-            $("#apuntador").addClass('hide');
             $("#estado_actualizacion").empty();
             if("multiple"=="<?php echo $_REQUEST['tipo'];?>"){
               $("#estado_actualizacion").append('<option value="0">Listado de Seleccionados</option>');
               $("#div_seleccionados_multiple").hide();
             }
+            $(".elementos_remitente").attr("disabled",false);
+            $("#editar").addClass("hide");
+            $("#actualizar").removeClass("hide");
             limpiarRemitente();
           });
 
@@ -280,7 +287,7 @@ foreach($campos AS $key=>$valor){
               },success: function(datos){
                 $("#camposTipoRemitente").html(datos);
                 $("#nombre_ejecutor").hide();
-                $("#nombre_ejecutor").parent().append("<input class='form-control' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");           
+                $("#nombre_ejecutor").parent().append("<input class='form-control elementos_remitente' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");           
                 $("#buscar_nombre").keyup(function (){
                   if($(this).val()==0 || $(this).val()==""){
                     notificacion_saia('Debe Ingresar el Nombre','error','',3000);
@@ -298,6 +305,13 @@ foreach($campos AS $key=>$valor){
                 $("#"+window.frames.name+"",window.parent.document).height($(document).height());
               }
             });
+          });
+          
+          $("#editar").click(function(e){ 
+            $(".elementos_remitente").attr("disabled",false);
+            $("#actualizar").removeClass("hide");
+            $("#editar").addClass("hide");
+            $("#limpiar").addClass("hide");
           });
 
           $("#eliminar").click(function(e){  
@@ -405,7 +419,7 @@ foreach($campos AS $key=>$valor){
 			$("#buscar_nombre").val(nombre);
 			$("#telefono_ejecutor").val(telefono);
 			$("#cargo_ejecutor").val(cargo);
-		  	$("#email_ejecutor").val(email);
+		  $("#email_ejecutor").val(email);
       tipoTitulos  = ["Se&ntilde;or", "Se&ntilde;ora", 'Doctor', 'Doctora', 'Ingeniero', 'Ingeniera'];
       if(tipoTitulos.indexOf(titulo)>0){
         $("#titulo_ejecutor option[value="+ titulo +"]").attr("selected",true);
@@ -430,8 +444,11 @@ foreach($campos AS $key=>$valor){
           setTimeout ("$('#ciudad').val("+ciudad+").trigger('change.select2')", 1700); 
         }
       });
+      
+      $("#actualizar").trigger("click");     
 		}
 	};
+
 	function eliminar_asociado(idejecutor){
 		$("#fila_"+idejecutor).remove();
 		var datos=$("#nombre_ejecutor").val().split(",");
