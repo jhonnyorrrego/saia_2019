@@ -21,8 +21,10 @@ class Anexos extends LogModel
     protected $descripcion;
     protected $eliminado;
     protected $versionamiento;
-    protected $user;
-    protected $log;
+
+    //relations
+    protected $Funcionario;
+    protected $Log;
 
     function __construct($id = null)
     {
@@ -82,15 +84,15 @@ class Anexos extends LogModel
      */
     public function getLastUser()
     {
-        if (!$this->user) {
+        if (!$this->Funcionario) {
             if ($this->getLastLog()) {
-                $this->user = $this->getLastLog()->getUser();
+                $this->Funcionario = $this->getLastLog()->getUser();
             } else {
-                $this->user = new Funcionario($this->fk_funcionario);
+                $this->Funcionario = new Funcionario($this->fk_funcionario);
             }
         }
 
-        return $this->user;
+        return $this->Funcionario;
     }
 
     public function getDate()
@@ -127,17 +129,17 @@ class Anexos extends LogModel
      */
     public function getLastLog()
     {
-        if (!$this->log) {
+        if (!$this->Log) {
             $sql = <<<SQL
             select max(fk_log) as idlog
             from anexos_log 
             where fk_anexos = {$this->getPK()}
 SQL;
             $record = StaticSql::search($sql);
-            $this->log = $record[0]['idlog'] ? new Log($record[0]['idlog']) : null;
+            $this->Log = $record[0]['idlog'] ? new Log($record[0]['idlog']) : null;
         }
 
-        return $this->log;
+        return $this->Log;
     }
 
     /**

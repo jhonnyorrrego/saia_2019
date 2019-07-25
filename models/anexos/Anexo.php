@@ -1,6 +1,6 @@
 <?php
 
-class Anexo extends Model
+class Anexo extends LogModel
 {
     use TAnexo;
 
@@ -15,12 +15,9 @@ class Anexo extends Model
     protected $eliminado;
     protected $fk_anexo;
     protected $user;
-    
 
     //relations
-    protected $log;
-    //utilities
-    public $clone;
+    protected $Log;
 
     function __construct($id = null)
     {
@@ -32,7 +29,7 @@ class Anexo extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'ruta',
                 'etiqueta',
@@ -55,34 +52,10 @@ class Anexo extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-03-18
      */
-    protected function afterCreate()
+    public function afterCreate()
     {
-        if (AccesoController::setFullAccess(Acceso::TIPO_ANEXO, $this->getPK())) {
-            return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * evento de base de datos
-     * se ejecuta antes de modificar un registro
-     * @return void
-     */
-    protected function beforeUpdate()
-    {
-        $this->clone = new self($this->getPK());
-        return $this->clone->getPK();
-    }
-
-    /**
-     * evento de base de datos
-     * se ejecuta despues de modificar un registro
-     * @return void
-     */
-    protected function afterUpdate()
-    {
-        return LogController::create(LogAccion::EDITAR, 'AnexoLog', $this);
+        return AccesoController::setFullAccess(Acceso::TIPO_ANEXO, $this->getPK()) &&
+            parent::afterCreate();
     }
 
     /**
@@ -93,17 +66,17 @@ class Anexo extends Model
      */
     public function getLastLog()
     {
-        if (!$this->log) {
+        if (!$this->Log) {
             $sql = <<<SQL
             select max(fk_log) as idlog
             from anexo_log 
             where fk_anexo = {$this->getPK()}
 SQL;
             $record = StaticSql::search($sql);
-            $this->log = new Log($record[0]['idlog']);
+            $this->Log = new Log($record[0]['idlog']);
         }
 
-        return $this->log;
+        return $this->Log;
     }
 
     /**

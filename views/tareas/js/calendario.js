@@ -31,7 +31,7 @@ $(function() {
         select: function(start, end) {
             let params = {
                 initialTime: start.format('YYYY-MM-DD HH:mm:ss'),
-                finalTime: end.format('YYYY-MM-DD HH:mm:ss')
+                finalTime: start.format('YYYY-MM-DD HH:mm:ss')
             };
             modalTask(params);
         },
