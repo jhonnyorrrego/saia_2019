@@ -46,12 +46,21 @@ $(function() {
 
     $('#save_task').on('click', function() {
         params = JSON.parse($('script[data-params]').attr('data-params'));
-        let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a')
+        let momentDate = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a');
+
+        if (momentDate.hour() == 0 && momentDate.minute() == 0) {
+            momentDate.set({
+                hour: moment().hour(),
+                minute: moment().minute(),
+                second: moment().second(),
+                millisecond: moment().milliseconds()
+            });
+        }
+
+        let final = momentDate.format('YYYY-MM-DD HH:mm:ss');
+        let initial = momentDate
             .subtract(30, 'minutes')
             .format('YYYY-MM-DD HH:mm:ss');
-        let final = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a').format(
-            'YYYY-MM-DD HH:mm:ss'
-        );
 
         data = {
             task: params.id || 0,
