@@ -211,7 +211,7 @@ class RecurrenciaTareaController
         $DateTime->setTime(
             $Reference->format('H'),
             $Reference->format('i'),
-            $Reference->format('s'),
+            $Reference->format('s')
         );
         return $DateTime;
     }
