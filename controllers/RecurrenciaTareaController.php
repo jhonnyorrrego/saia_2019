@@ -22,18 +22,7 @@ class RecurrenciaTareaController
      */
     public function generate()
     {
-        if (!$this->configuration->unity && !$this->configuration->period) {
-            throw new Exception("consultar y eliminar tareas del mismo grupo", 1);
-
-            $this->Tarea->fk_recurrencia_tarea = 0;
-            $this->Tarea->save();
-
-            return true;
-        }
-
-        if ($this->configuration->unity < 0) {
-            throw new Exception("La cantidad de repeticiones debe ser positiva", 1);
-        }
+        $this->checkConfiguration();
 
         $date = $this->Tarea->fecha_final;
         $InitialDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
@@ -65,7 +54,6 @@ class RecurrenciaTareaController
                 break;
         }
 
-
         if ($this->configuration->endType == RecurrenciaTarea::TERMINAR_FECHA) {
             $FinalDateTime = new DateTime($this->configuration->endValue);
             $FinalDateTime->setTime(23, 59, 59);
@@ -90,6 +78,31 @@ class RecurrenciaTareaController
 
             $this->createNewTask($DateTime);
         };
+    }
+
+    /**
+     * valida la configuracion para la recurrencia
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-25
+     */
+    public function checkConfiguration()
+    {
+        if (!$this->configuration->unity && !$this->configuration->period) {
+            throw new Exception("consultar y eliminar tareas del mismo grupo", 1);
+
+            $this->Tarea->fk_recurrencia_tarea = 0;
+            $this->Tarea->save();
+
+            return true;
+        }
+
+        if ($this->configuration->unity < 0) {
+            throw new Exception("La cantidad de repeticiones debe ser positiva", 1);
+        }
+
+        return true;
     }
 
     /**
@@ -211,7 +224,7 @@ class RecurrenciaTareaController
         $DateTime->setTime(
             $Reference->format('H'),
             $Reference->format('i'),
-            $Reference->format('s'),
+            $Reference->format('s')
         );
         return $DateTime;
     }

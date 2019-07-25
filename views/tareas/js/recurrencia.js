@@ -107,7 +107,7 @@ $(function() {
         $('[name="end_date"]').datetimepicker({
             locale: 'es',
             format: 'YYYY-MM-DD',
-            defaultDate: moment().add(20, 'months')
+            defaultDate: moment()
         });
     }
 
