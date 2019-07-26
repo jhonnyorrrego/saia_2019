@@ -264,21 +264,21 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
         $tabla = '
             <div class="row">
             <div class="col-md-12">
-            <table class="table  table-condensed" style="width: 100%; text-align:left;margin-bottom:5%;" border="0">
-            <thead>
-            <tr>
-            <td style="text-align:center;" style="width:8%;"><b class="hint-text">NO. ITEM</b></td>
-            <td style="text-align:center;" style="width:8%;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
-            <td style="text-align:center;" style="width:10%;"><b class="hint-text">ORIGEN</b></td>
-            <td style="text-align:center;" style="width:20%;"><b class="hint-text">DESTINO</b></td>
-	      	</tr>';
+            <table border="1" class="table table-bordered" style="width:100%;border-collapse: collapse;">
+                <tr>
+                    <td style="text-align:center;"><b class="hint-text">NO. ITEM</b></td>
+                    <td style="text-align:center;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
+                    <td style="text-align:center;"><b class="hint-text">ORIGEN</b></td>
+                    <td style="text-align:center;"><b class="hint-text">DESTINO</b></td>
+                </tr>
+            ';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
             $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
 
             $tabla .= '<tr>
-				<td style="text-align:center;" style="width:8%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td style="text-align:center;" style="width:8%;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
+				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
+				<td style="text-align:center;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
 				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
@@ -292,7 +292,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 			</tr>';
         }
 
-        $tabla .= '<thead></table></div></div>';
+        $tabla .= '</table></div></div>';
         $tabla .= generar_enlace_finalizar_distribucion(0, 1);
     }
     if ($retorno) {

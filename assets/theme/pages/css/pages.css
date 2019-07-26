@@ -8222,6 +8222,7 @@ body.rtl .checkbox label::after {
   position: absolute;
   right: 12px;
   top: 6px;
+  z-index: 9999;
 }
 
 .form-group-default.disabled {

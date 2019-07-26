@@ -551,7 +551,7 @@ function llenar_datos_funcion($idformato, $iddoc)
         $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $datos[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $iddoc;
         phpmkr_query($sql);
         $texto = '<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_radicacion_entrada.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '\';">Llenar datos</button>';
-        echo $texto;
+        echo $texto; 
     }
 }
 
@@ -584,16 +584,10 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
     }
 
     $img = mostrar_codigo_qr($idformato, $iddoc, true);
-    $tabla = '<style>
-        .table.table-condensed thead tr td {
-        padding-top: 2px;
-        padding-bottom: 2px;            
-    }
-
-    </style>
-        <div class="row" cris="1">
+    $tabla = '
+        <div class="row">
             <div class="col-md-12">
-                <table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">
+                <table class="table table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;border-collapse: collapse;" border="0" cellspacing="0">
                     <thead>
                         <tr>
                             <td style="width:40%; border:none;">
@@ -607,8 +601,11 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                         </tr>
                     </thead>
                 </table>
-            
-                <table class="table" style="width: 100%;margin-top: 2%;margin-bottom: 2%;" border="0" cellspacing="0">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-condensed" style="width: 100%;margin-top: 2%;margin-bottom: 2%;border-collapse: collapse;" border="0" cellspacing="0">
                 <thead>';
     if ($datos[0]['tipo_origen'] == 1) {
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);

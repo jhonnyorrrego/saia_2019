@@ -1,14 +1,16 @@
 <?php
 
-class Tarea extends Model
+class Tarea extends LogModel
 {
     protected $idtarea;
     protected $nombre;
     protected $fecha_inicial;
     protected $fecha_final;
     protected $descripcion;
-    
-    public $clone;
+    protected $fk_recurrencia_tarea;
+
+    //relations
+    protected $RecurrenciaTarea;
 
     function __construct($id = null)
     {
@@ -20,20 +22,15 @@ class Tarea extends Model
      */
     protected function defineAttributes()
     {
-        // set the safe attributes to update and consult
-        $safeDbAttributes = [
-            'nombre',
-            'fecha_inicial',
-            'fecha_final',
-            'descripcion',
-        ];
-
-        // set the date attributes on the schema
-        $dateAttributes = ['fecha_inicial', 'fecha_final'];
-
-        $this->dbAttributes = (object)[
-            'safe' => $safeDbAttributes,
-            'date' => $dateAttributes
+        $this->dbAttributes = (object) [
+            'safe' => [
+                'nombre',
+                'fecha_inicial',
+                'fecha_final',
+                'descripcion',
+                'fk_recurrencia_tarea'
+            ],
+            'date' => ['fecha_inicial', 'fecha_final']
         ];
     }
 
@@ -42,22 +39,11 @@ class Tarea extends Model
      * se ejecuta despues de crear un nuevo registro
      * @return void
      */
-    protected function afterCreate()
+    public function afterCreate()
     {
         return
-            LogController::create(LogAccion::CREAR, 'TareaLog', $this) &&
+            parent::afterCreate() &&
             $this->setDefaultState();
-    }
-
-    /**
-     * evento de base de datos
-     * se ejecuta antes de modificar un registro
-     * @return void
-     */
-    protected function beforeUpdate()
-    {
-        $this->clone = new self($this->getPK());
-        return $this->clone->getPK();
     }
 
     /**
@@ -65,31 +51,28 @@ class Tarea extends Model
      * se ejecuta despues de modificar un registro
      * @return void
      */
-    protected function afterUpdate()
+    public function afterUpdate()
     {
         return
-            LogController::create(LogAccion::EDITAR, 'TareaLog', $this) &&
+            parent::afterUpdate() &&
             $this->refreshDocumentLimitDate();
     }
 
     /**
-     * refresca la fecha limite del documento enlazado
+     * obtiene una instancia del grupo de recurrencia
+     * al que pertenece la tarea
      *
-     * @return boolean
+     * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-03-21
+     * @date 2019-07-23
      */
-    public function refreshDocumentLimitDate()
+    public function getRecurrence()
     {
-        $DocumentoTarea = DocumentoTarea::findByAttributes(['fk_tarea' => $this->getPK()]);
-
-        if ($DocumentoTarea) {
-            $response = Documento::setLimitDate($DocumentoTarea->fk_documento);
-        } else {
-            $response = true;
+        if (!$this->RecurrenciaTarea) {
+            $this->RecurrenciaTarea = $this->getRelationFk('RecurrenciaTarea');
         }
 
-        return $response;
+        return $this->RecurrenciaTarea;
     }
 
     /**
@@ -153,6 +136,26 @@ class Tarea extends Model
             'estado' => 1,
             'valor' => TareaEstado::PENDIENTE
         ]);
+    }
+
+    /**
+     * refresca la fecha limite del documento enlazado
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-03-21
+     */
+    public function refreshDocumentLimitDate()
+    {
+        $DocumentoTarea = DocumentoTarea::findByAttributes(['fk_tarea' => $this->getPK()]);
+
+        if ($DocumentoTarea) {
+            $response = Documento::setLimitDate($DocumentoTarea->fk_documento);
+        } else {
+            $response = true;
+        }
+
+        return $response;
     }
 
     /**
