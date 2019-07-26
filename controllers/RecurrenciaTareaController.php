@@ -71,6 +71,9 @@ class RecurrenciaTareaController
             $finalItem,
             DatePeriod::EXCLUDE_START_DATE
         );
+
+        $this->generateGroup();
+
         foreach ($daterange as $DateTime) {
             if (!empty($dayPosition)) {
                 $DateTime = $this->findMonthDay($DateTime);
@@ -78,6 +81,28 @@ class RecurrenciaTareaController
 
             $this->createNewTask($DateTime);
         };
+    }
+
+    /**
+     * crea el nuevo grupo para las tareas
+     * de la recurrencia
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-25
+     */
+    public function generateGroup()
+    {
+        $pk = RecurrenciaTarea::newRecord([
+            'recurrencia' => $this->configuration->recurrence,
+            'periodo' => $this->configuration->period,
+            'unidad_tiempo' => $this->configuration->unity,
+            'opcion_unidad' => $this->configuration->option,
+            'terminar' => $this->configuration->endValue
+        ]);
+
+        $this->Tarea->fk_recurrencia_tarea = $pk;
+        return $this->Tarea->save();
     }
 
     /**

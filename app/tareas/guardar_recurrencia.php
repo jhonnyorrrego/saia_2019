@@ -46,6 +46,7 @@ try {
     }
 
     $configuration = (object) [
+        'recurrence' => $data->default_recurrence,
         'unity' => $data->unity,
         'period' => $data->period,
         'option' => $option
