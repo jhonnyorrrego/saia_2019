@@ -816,7 +816,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 if ($j == 0) {
                     $texto .= $obligatorio;
                 }
-                $texto .= ' aria-required="true"><label class="" for="' . $nombre . $j . '">' . $llenado[$j]['item'] . "</label>";
+                $texto .= ' aria-required="true"><label class="" for="' . $nombre . $j . '">' . $llenado[$j]['item'] . '</label>';
             }
             $texto .= "</div>";
             break;

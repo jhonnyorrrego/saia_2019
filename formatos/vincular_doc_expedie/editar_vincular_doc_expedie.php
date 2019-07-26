@@ -66,7 +66,7 @@
                       <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">VINCULAR DOCUMENTOS A UN EXPEDIENTE</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],312,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',312,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(312,3657,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_fecha_documento"><label title="">FECHA*</label><?php fecha_formato(312,3662,$_REQUEST['iddoc']);?></div><div class="form-group "  id="tr_asunto">
-                                        <label title="">NOMBRE O ASUNTO</label>
+                                        <label title="">NOMBRE O ASUNTO*</label>
                                         <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="asunto" name="asunto" required value="<?php echo(mostrar_valor_campo('asunto',312,$_REQUEST['iddoc'])); ?>">
                                        </div><input type="hidden" name="fk_idexpediente" value="<?php echo(mostrar_valor_campo('fk_idexpediente',312,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_anexos">
                                         <label title="">ADJUNTAR ARCHIVO*</label>
@@ -91,8 +91,8 @@
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
-                    var upload_max_size = 5;
-                    var maximo = 5;
+                    var upload_max_size = 2;
+                    var maximo = 2;
                     var tamanoMaximo = $(this).attr('data-longitud');
                     var archivosMaximo = $(this).attr('data-cantidad');
                     var multiple_text = $(this).attr('data-multiple');
@@ -109,7 +109,7 @@
                   var multiple = false;
                   var form_uuid = $('#form_uuid').val();
                     var maxFiles = 1;
-                    var maxFilesize = 5;
+                    var maxFilesize = 2;
                   if(multiple_text == 'multiple') {
                       multiple = true;
                         if(tamanoMaximo > upload_max_size){

@@ -11,7 +11,7 @@ $(function () {
                 idformato: params.idformato,
                 padre: params.padre
             },
-            size: 'modal-xl',
+            size: 'modal-lg',
             title: 'Adicionar mensajeros a la Ruta',
             buttons: {},
             onSuccess: function (data) {
@@ -40,7 +40,7 @@ $(function () {
                 idformato: params.idformato,
                 padre: params.padre
             },
-            size: 'modal-xl',
+            size: 'modal-lg',
             title: 'Adicionar Dependencias a la Ruta',
             buttons: {},
             onSuccess: function (data) { 
@@ -53,10 +53,11 @@ $(function () {
                         idItem: data.id
                     },
                     success: function (dataItem) {
+                        $("#dependenciaDistribucion").removeClass("hide");
                         $("#dependenciaDistribucion").append(dataItem);
                     }
                 });                
             }
         });
     });
-});
+}); 

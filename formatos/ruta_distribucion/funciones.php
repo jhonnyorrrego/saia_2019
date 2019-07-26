@@ -124,8 +124,14 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
             for ($j = 0; $j < $item["numcampos"]; $j++) {
                 $tabla .= crearItemDependencia($item[$j],$dato);
             }
-            $tabla .= '</table></form>';
+          
+        }else{
+            $tabla .=' <table id="dependenciaDistribucion" class="table table-bordered hide">
+            <tr>
+            <td style="text-align:center; font-weight:bold;" colspan="4">Dependencias de la ruta</td>
+            </tr>';
         }
+        $tabla .= '</table></form>';
     }
     echo $tabla;
     if ($_REQUEST["tipo"] != 5) {

@@ -86,6 +86,8 @@ function datos_editar_radicacion($idformato, $iddoc)
             $('[name="tipo_mensajeria"]').addClass('required');
 
             $('#tr_numero_guia').hide();
+            $('#numero_guia').val('');
+            $('#numero_guia').prop("required", false);
         </script>
         <?php
 
@@ -213,16 +215,16 @@ function serie_documental_radicacion($idformato, $iddoc)
     <script>
         $(document).ready(function () {
             //tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
-            $('#tr_serie_idserie').hide();
+            //$('#tr_serie_idserie').hide();
 
-            function onNodeSelect_dependencia_serie(nodeId) {
+            /*function onNodeSelect_dependencia_serie(nodeId) {
                 tree_serie_idserie.setCheck(tree_serie_idserie.getAllChecked(), 0);
                 tree_serie_idserie.setCheck(nodeId, 1);
                 var ids = nodeId.split("sub");
                 var idserie = ids[1];
                 $('#serie_idserie').val(idserie);
 
-            }
+            }*/
 
             var dependencia_principal = '<?php echo($dependencia_principal); ?>';
             var cargado = [<?php echo($cargo); ?>];
@@ -280,7 +282,7 @@ function serie_documental_radicacion($idformato, $iddoc)
 
             $('#tipo_origen1').click(function () {
                 var dependencia = $('#dependencia').val();
-                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
+               // tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
 
                 function obtener_dependencia(rol) {
                     $.ajax({
@@ -391,7 +393,7 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#area_responsable').removeClass('required');
                 $('#destino').addClass('required');
                 $('#tr_tipo_destino').hide();
-                $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
+                $("#tipo_destino1").prop('checked', true);
                 $('#tr_destino').show();
                 $('#tr_copia_a').show();
                 $('#tr_persona_natural_dest').hide();
@@ -430,6 +432,8 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('[name="tipo_mensajeria"]').addClass('required');
 
                 $('#tr_numero_guia').hide();
+                $('#numero_guia').val('');
+                $('#numero_guia').prop("required", false);
             }
             $.ajax({
                 type: 'POST',
@@ -490,9 +494,9 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                         parametro_adicional = '&carga_partes_dependencia=1';
                     }
 
-                    tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia=" + dependencia + parametro_adicional);
-                    tree_serie_idserie.smartRefreshItem("d" + padre);
-                    tree_serie_idserie.openItem("d" + padre); //ARBOL: expande nodo hasta el item indicado
+                    //tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia=" + dependencia + parametro_adicional);
+                    //tree_serie_idserie.smartRefreshItem("d" + padre);
+                    //tree_serie_idserie.openItem("d" + padre); //ARBOL: expande nodo hasta el item indicado
                 }
             }
 
@@ -586,8 +590,14 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                 <table class="table table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;border-collapse: collapse;" border="0" cellspacing="0">
                     <thead>
                         <tr>
-                            <td style="border:none;"><b>FECHA DE RADICACI&Oacute;N: </b> ' . $fecha_radicacion . '<br><b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br><b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '</td>
-                            <td style="text-align:center;border:none;" colspan="2" rowspan="3"><p style="text-align:center;">' . $img . '</p><b style="text-align:center;">REGISTRO No. : ' . $numero_radicado . '</b></td>
+                            <td style="width:40%; border:none;">
+                                <b>FECHA DE RADICACI&Oacute;N: </b> ' . $fecha_radicacion . '<br>
+                                <b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br>
+                                <b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '
+                            </td>
+                            <td style="text-align:right; border:none;" colspan="2" rowspan="3">
+                                <p style="text-align:right;">' . $img . '</p><b style="text-align:right;">REGISTRO No. : ' . $numero_radicado . '</b>
+                            </td>
                         </tr>
                     </thead>
                 </table>
@@ -600,50 +610,34 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
     if ($datos[0]['tipo_origen'] == 1) {
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
-                        <td class='pr-0' style='border:none;width: 19%;'><strong>TIPO DE ORIGEN:</strong></td>
-                        <td style='border:none;width: 18%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
-                        <td style='border:none;width: 23%;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
-                        <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
-                </tr>
-                    <tr>
-                        <td style='border:none;'><strong>NO. DOCUMENTO:</strong></td>
-                        <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
-                        <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
-                        <td px-0 style='border:none;'>" . $empresa_transportadora . "</td>
-                        
-                </tr>
-                <tr>
-                    <td style='border:none;'><strong>FECHA DEL DOCUMENTO:</strong></td>
-                    <td style='border:none;'>" . $datos[0]['fecha_documento'] . "</td>
-                    <td style='border:none;'><strong>ANEXOS F&Iacute;SICOS:</strong></td>
-                    <td style='border:none;'>" . $datos[0]['descripcion_anexos'] . "</td>
-                    
-                </tr>";
+                        <td class='pr-0' style='width: 50%; border:none;'>
+                            <div><strong>TIPO DE ORIGEN:</strong> " . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</div>
+                            <div><strong>NO. DOCUMENTO:</strong> " . $datos[0]['numero_oficio'] . "</div>
+                            <div><strong>FECHA DEL DOCUMENTO:</strong> " . $datos[0]['fecha_documento'] . "</div>
+                        </td>
+                        <td style='width: 50%; border:none;' class='pl-0'>
+                            <div><strong>N&Uacute;MERO DE GU&Iacute;A:</strong> " . $datos[0]['numero_guia'] . "</div> 
+                            <div><strong>EMPRESA TRANSPORTADORA:</strong> " . $empresa_transportadora . "</div>
+                            <div><strong>ANEXOS FÍSICOS:</strong> " . $datos[0]['descripcion_anexos'] . "</div>
+                        </td>
+                    </tr>";
     } else {
         $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
         $tabla .= "
                             <tr>
-                            <td class='pr-0' style='border:none;width: 23%;'><strong>TIPO DE ORIGEN:</strong></td>
-                            <td style='border:none;width: 23%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
-                            <td style='border:none;width: 23%;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
-                            <td style='border:none;'>" . $recogida . "</td>
-                        </tr>
-                        <tr>
-                            <td style='border:none;'><strong>REQUIERE SERVICIO DE ENTREGA?:</strong></td>
-                            <td style='border:none;'>" . $entrega . "</td>
-                            <td style='border:none;'><strong>ANEXOS F&Iacute;SICOS:</strong></td>
-                            <td style='border:none;'>" . $datos[0]['descripcion_anexos'] . "</td>      
+                            <td style='width: 50%; border:none;'>
+                                <div><b>TIPO DE ORIGEN:</b> " . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</div>
+                                <div><b>REQUIERE SERVICIO DE ENTREGA?:</b> " . $entrega . "</div>
+                                <div><b>ANEXOS DIGITALES:</b> " . $nombre_anexos . "</div>
+                            </td>
+                            <td style='width: 50%; border:none;' class='pl-0'>
+                                <div><b>REQUIERE SERVICIO DE RECOGIDA?:</b> " . $recogida . "</div>
+                                <div><b>ANEXOS F&Iacute;SICOS:</b> " . $datos[0]['descripcion_anexos'] . "</div>
+                            </td>
                         </tr>";
-
     }
 
-    $tabla .= '
-                    <tr>
-                        <td style="border:none;"><b>ANEXOS DIGITALES:</b></td>
-                        <td style="border:none;" colspan="2">' . $nombre_anexos . '</td>
-                    
-                    </tr>';
     $tabla .= '</div></div></thead></table></div></div>';
     echo $tabla;
 }
@@ -774,42 +768,61 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
     }
 }
 
-function ingresar_item_destino_radicacion($idformato, $iddoc)
-{//posterior al adicionar - editar
+//posterior al adicionar - editar
+function ingresar_item_destino_radicacion($idformato, $iddoc){
     global $conn, $ruta_db_superior;
     $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "", $conn);
-    //area_responsable --->  origen
-    //persona_natural ---> origen_externo
-    //destino ---> destino
-    //persona_natural_dest ---> destino_externo
+
+    /**
+     * Para la radicacion de correspondencia los campos para la distribucion son: 
+     * area_responsable = origen interno; persona natural = origen externo
+     * destino = destino interno; persona_natural_dest = destino externo 
+     * 
+     * Para almacenar en distribucion se debe utilizar la funcion pre_ingresar_distribucion para la cual se debe realizar un cambio en el flujo de datos.
+     * pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
+     * 
+     * En el valor de $campo_origen va el nombre del campo del formulario que se va a gestionar como origen. Nota(el campo del formulario solo puede tener un iddependencia_cargo o un iddatos_ejecutor)
+     * cuando el $campo_origen corresponde a un iddependencia_cargo se debe colocar en el $tipo_origen el valor (1)
+     * cuando el $campo_origen corresponde a un iddatos_ejecutor se debe colocar en el $tipo_origen el valor (2)
+     * En el valor de $campo_destino va el nombre del campo del formulario que se va a gestionar como destino. Nota(el campo del formulario puede tener uno o varios iddependencia_cargo separado por comas, uno o varios iddatos_ejecutor separado por coma o una iddependencia con (#iddependencia)
+     * cuando el $campo_destino corresponde a un iddependencia_cargo o iddependencia se debe colocar en el $tipo_destino el valor (1)
+     * cuando el $campo_destino corresponde a un iddatos_ejecutor se debe colocar en el $tipo_destino el valor (2)
+     * El $estado_distribucion determina el buzon en donde esta el tramite 0,Pediente o entrega interna a ventanilla; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
+     * El $estado_recogida corresponde a si se necesita una acción de recogida en este caso se debe enviar el valor (1) para cuando es si y el valor de (0) cuando es no 
+     */
+
     if ($datos['numcampos']) {
+        //por defecto se maneja que si se necesita entrega (1)
         $estado_distribucion = 1;
+        //Cuando no se necesita entrega (3)
         if ($datos[0]['tipo_mensajeria'] == 3) {
             $estado_distribucion = 3;
         }
 
-        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 2) {//INT - INT
-            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {//no quiere recogida
+        //caso 1: Origen Externo y destino Interno
+        if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {
+            pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);
+        }
+
+        //caso 2: Origen Interno y destino Interno
+        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 2) {
+            //Cuando si se necesita entrega y no se requiere recogida
+            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, 0, 1);
-                //INT -INT
             } else {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, $estado_distribucion);
-                //INT -INT
             }
         }
 
-        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 1) {//INT - EXT
-            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {//no quiere recogida
+        //caso 3: Origen Interno y destino Externo
+        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 1) {
+            //si no se necesita entrega y tampoco se necesita recogida
+            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, 0, 1);
-                //INT -EXT
             } else {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, $estado_distribucion);
-                //INT -EXT
             }
-        }
-        if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {//EXT - INT
-            pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);
-        }
+        }      
     }
     return;
 }
@@ -832,7 +845,11 @@ function actualizar_campos_documento($idformato, $iddoc)
         if ($datos[0]["persona_natural"]) {
             $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
         }
-        $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["descripcion_anexos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_documento"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
+        $fecha = '';
+        if(!empty($datos[0]["fecha_documento"])){
+            $fecha = ", fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_documento"], 'Y-m-d H:i:s');
+        }
+        $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["descripcion_anexos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "'" . $fecha . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
     }
     return;

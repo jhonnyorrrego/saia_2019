@@ -354,8 +354,8 @@
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
-                    var upload_max_size = 5;
-                    var maximo = 5;
+                    var upload_max_size = 2;
+                    var maximo = 2;
                     var tamanoMaximo = $(this).attr('data-longitud');
                     var archivosMaximo = $(this).attr('data-cantidad');
                     var multiple_text = $(this).attr('data-multiple');
@@ -372,7 +372,7 @@
                   var multiple = false;
                   var form_uuid = $('#form_uuid').val();
                     var maxFiles = 1;
-                    var maxFilesize = 5;
+                    var maxFilesize = 2;
                   if(multiple_text == 'multiple') {
                       multiple = true;
                         if(tamanoMaximo > upload_max_size){
