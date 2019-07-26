@@ -115,7 +115,6 @@ include_once $ruta_db_superior . "core/autoload.php";
         </div>
         <div id="div_resultados">
             <div id="menu_buscador">
-
                 <?php
                 if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
                     if (strpos($datos_busqueda[0]["busqueda_avanzada"], "?")) {
@@ -309,13 +308,15 @@ include_once $ruta_db_superior . "core/autoload.php";
 
         $table.on('check.bs.table uncheck.bs.table ' +
             'check-all.bs.table uncheck-all.bs.table',
-            function() {
-
+            function(e) {
                 // save your data, here just save the current page
                 selections[paginaActual] = getIdSelections();
                 // push or splice the selections if you want to save all data selections
+                if(e.type == 'uncheck-all'){
+                    selections = [[0, -1]];
+                }
             });
-    });
+        });
 
     function responseHandler(res) {
         var options = $table.bootstrapTable('getOptions');
@@ -337,6 +338,17 @@ include_once $ruta_db_superior . "core/autoload.php";
         return $.map($table.bootstrapTable('getSelections'), function(row) {
             return row[llave];
         });
+    }
+
+    function totalSelection(){
+        registros_seleccionados = new Array();
+        var seleccionadosGlobal = $(selections);
+        for(var i=1; i < seleccionadosGlobal.length ; i++){
+            seleccionadosGlobal[i].forEach( function(valor) {
+                registros_seleccionados.push(valor);
+            });
+        }
+        return registros_seleccionados;
     }
 
     function procesamiento_buscar(externo) {

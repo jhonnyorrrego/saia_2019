@@ -88,7 +88,7 @@ include_once($ruta_db_superior . "librerias_saia.php");
                         var checkbox = $(this);
                         if (checkbox.is(':checked') === true) {
                             var iddistribucion = $(this).val();
-                            registros_seleccionados += iddistribucion + ",";
+                            registros_seleccionados += iddistribucion + ","; 
                         }
                     });
 
@@ -210,19 +210,9 @@ include_once($ruta_db_superior . "librerias_saia.php");
 
                 var elemento = e.params.data.element;
                 if ($(elemento).hasClass("select_mensajeros_ditribucion")) {
-
                     var mensajero = $(this).val();
-                    var registros_seleccionados = "";
-                    $("input[name=btSelectItem]").each(function () {
-                        var checkbox = $(this);
-                        if (checkbox.is(':checked') === true) {
-                            var iddistribucion = $(this).val();
-                            registros_seleccionados += iddistribucion + ",";
-                        }
-                    });
-
-                    registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
-                    if (registros_seleccionados == "") {
+                    registros_seleccionados = totalSelection();
+                    if (registros_seleccionados.length === 0) {
                         top.notification({
                             message: "No ha seleccionado ninguna distribuci&oacute;n",
                             type: "warning",
@@ -240,11 +230,24 @@ include_once($ruta_db_superior . "librerias_saia.php");
                             url: '<?php echo($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
                             success: function (data) {
                                 if (data.exito) {
-                                    notificacion_saia('Mensajero asignado exitosamente', 'success', '', 4000);
+                                    var seleccionados = $("#tabla_resultados").bootstrapTable("getSelections");
+                                    seleccionados.forEach( function(valor, indice, array) {
+                                        var dataIndex = $('input[name="btSelectItem"][value="'+valor["llave"]+'"]').attr("data-index");
+                                        $("#tabla_resultados").bootstrapTable('updateCell', {index: dataIndex, field: 'select_mensajeros_ruta_distribucion', value: $('[value="'+mensajero+'"]').html()})
+                                    });
+                                    top.notification({
+                                        message: 'Mensajero asignado exitosamente',
+                                        type: "success",
+                                        duration: 4000
+                                    });
                                 } else {
-                                    notificacion_saia(data.msn, 'error', '', 4000);
+                                    top.notification({
+                                        message: data.msn,
+                                        type: "error",
+                                        duration: 4000
+                                    });
                                 }
-                                window.location.reload();
+                                //window.location.reload();
                             }
                         });
                     }
