@@ -46,9 +46,10 @@ try {
     }
 
     $configuration = (object) [
+        'recurrence' => $data->default_recurrence,
         'unity' => $data->unity,
         'period' => $data->period,
-        'option' => $option
+        'option' => $option,
     ];
 
     if ($data->end == RecurrenciaTarea::TERMINAR_FECHA) {
@@ -61,10 +62,9 @@ try {
 
     $RecurrenciaTareaController = new RecurrenciaTareaController(
         $Tarea,
-        $configuration
+        $configuration,
+        $data->notifications
     );
-    $RecurrenciaTareaController->generate();
-
     $Response->message = "Recurrencia creada correctamente";
     $Response->success = 1;
 } catch (Throwable $th) {
