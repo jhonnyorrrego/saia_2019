@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace SAIA\Migrations;
 
@@ -55,164 +55,144 @@ final class Version20190626022741 extends AbstractMigration
             'comment' => '1:serie;2:subserie;3:tipo'
         ]);
 
+        $table->addColumn('retencion_gestion', 'float', [
+            'notnull' => false,
+            'length' => 4,
+            'comment' => 'Cant anios'
+        ]);
+
+        $table->addColumn('retencion_central', 'float', [
+            'notnull' => false,
+            'length' => 4,
+            'comment' => 'Cant anios'
+        ]);
+
+        $table->addColumn('procedimiento', 'text',[
+            'notnull'=>false
+        ]);
+
         $table->addColumn('dias_respuesta', 'integer', [
             'notnull' => false,
             'length' => 4
         ]);
 
-        $table->addColumn('retencion_gestion', 'integer', [
-            'notnull' => false,
-            'length' => 4,
-            'comment' => 'Cant Meses'
+        $table->addColumn('sop_papel', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        $table->addColumn('retencion_central', 'integer', [
-            'notnull' => false,
-            'length' => 4,
-            'comment' => 'Cant Meses'
+        $table->addColumn('sop_electronico', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
+        ]);
+
+        $table->addColumn('dis_eliminacion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
+        ]);
+
+        $table->addColumn('dis_conservacion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
+        ]);
+
+        $table->addColumn('dis_seleccion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
+        ]);
+
+        $table->addColumn('dis_microfilma', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
         $table->addColumn('fk_serie_version', 'integer', [
             'length' => 11
         ]);
 
-        $table->addColumn('procedimiento', 'text');
-
         $table->addColumn('estado', 'boolean', [
             'default' => 1,
-            'comment' => '1:activo;0:inactivo'
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
         //----------------------------------------------
 
-        $serieTemp = $schema->createTable('serie_temp');
-        $serieTemp->addColumn('idserie', 'integer', [
+        $tableTemp = $schema->createTable('serie_temp');
+        $tableTemp->addColumn('idserie', 'integer', [
             'autoincrement' => true,
             'length' => 11
         ]);
-        $serieTemp->setPrimaryKey(['idserie']);
+        $tableTemp->setPrimaryKey(['idserie']);
 
-        $serieTemp->addColumn('cod_padre', 'integer', [
+        $tableTemp->addColumn('cod_padre', 'integer', [
             'notnull' => false,
             'length' => 11
         ]);
 
-        $serieTemp->addColumn('cod_arbol', 'string', [
+        $tableTemp->addColumn('nombre', 'string', [
             'length' => 255
         ]);
 
-        $serieTemp->addColumn('nombre', 'string', [
+        $tableTemp->addColumn('codigo', 'string', [
             'length' => 255
         ]);
 
-        $serieTemp->addColumn('codigo', 'string', [
-            'length' => 255
-        ]);
-
-        $serieTemp->addColumn('tipo', 'integer', [
+        $tableTemp->addColumn('tipo', 'integer', [
             'length' => 1,
             'default' => 1,
             'comment' => '1:serie;2:subserie;3:tipo'
         ]);
 
-        $serieTemp->addColumn('dias_respuesta', 'integer', [
+        $tableTemp->addColumn('retencion_gestion', 'float', [
+            'notnull' => false,
+            'length' => 4,
+            'comment' => 'Cant anios'
+        ]);
+
+        $tableTemp->addColumn('retencion_central', 'float', [
+            'notnull' => false,
+            'length' => 4,
+            'comment' => 'Cant anios'
+        ]);
+
+        $tableTemp->addColumn('procedimiento', 'text',[
+            'notnull'=>false
+        ]);
+
+        $tableTemp->addColumn('dias_respuesta', 'integer', [
             'notnull' => false,
             'length' => 4
         ]);
 
-        $serieTemp->addColumn('retencion_gestion', 'integer', [
-            'notnull' => false,
-            'length' => 4,
-            'comment' => 'Cant Meses'
+        $tableTemp->addColumn('sop_papel', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        $serieTemp->addColumn('retencion_central', 'integer', [
-            'notnull' => false,
-            'length' => 4,
-            'comment' => 'Cant Meses'
+        $tableTemp->addColumn('sop_electronico', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        $serieTemp->addColumn('fk_serie_version', 'integer', [
-            'length' => 11
+        $tableTemp->addColumn('dis_eliminacion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        $serieTemp->addColumn('procedimiento', 'text');
-
-        $serieTemp->addColumn('estado', 'boolean', [
-            'default' => 1,
-            'comment' => '1:activo;0:inactivo'
+        $tableTemp->addColumn('dis_conservacion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        //----------------------------------------------
-
-        $retencion = $schema->createTable('retencion');
-        $retencion->addColumn('idretencion', 'integer', [
-            'autoincrement' => true,
-            'length' => 11
-        ]);
-        $retencion->setPrimaryKey(['idretencion']);
-
-        $retencion->addColumn('nombre', 'string', [
-            'length' => 255
+        $tableTemp->addColumn('dis_seleccion', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
 
-        $retencion->addColumn('etiqueta', 'string', [
-            'length' => 255
+        $tableTemp->addColumn('dis_microfilma', 'boolean', [
+            'default' => 0,
+            'comment' => '1,Seleccionado;0,No selecionado'
         ]);
-
-        $retencion->addColumn('tipo', 'integer', [
-            'comment' => '1:Datos Soporte;2:Disposicion',
-            'length' => 1
-        ]);
-
-        $retencion->addColumn('descripcion', 'text', [
-            'notnull' => false
-        ]);
-
-        $retencion->addColumn('estado', 'boolean', [
-            'default' => 1,
-            'comment' => '1:activo;0:inactivo'
-        ]);
-
-        //----------------------------------------------
-
-        $serie_retencion = $schema->createTable('serie_retencion');
-        $serie_retencion->addColumn('idserie_retencion', 'integer', [
-            'autoincrement' => true,
-            'length' => 11
-        ]);
-        $serie_retencion->setPrimaryKey(['idserie_retencion']);
-
-        $serie_retencion->addColumn('fk_serie', 'integer', [
-            'length' => 11
-        ]);
-
-        $serie_retencion->addColumn('fk_retencion', 'integer', [
-            'length' => 11
-        ]);
-
-        //----------------------------------------------
-
-        $dep_serieTemp = $schema->createTable('dependencia_serie_temp');
-        $dep_serieTemp->addColumn('iddependencia_serie', 'integer', [
-            'autoincrement' => true,
-            'length' => 11
-        ]);
-        $dep_serieTemp->setPrimaryKey(['iddependencia_serie']);
-
-        $dep_serieTemp->addColumn('fk_serie', 'integer', [
-            'length' => 11
-        ]);
-
-        $dep_serieTemp->addColumn('fk_dependencia', 'integer', [
-            'length' => 11
-        ]);
-
-        $dep_serieTemp->addColumn('estado', 'boolean', [
-            'default' => 1,
-            'comment' => '1:activo;0:inactivo'
-        ]);
-
         //----------------------------------------------
 
         $dep_serie = $schema->createTable('dependencia_serie');
@@ -232,7 +212,25 @@ final class Version20190626022741 extends AbstractMigration
 
         $dep_serie->addColumn('estado', 'boolean', [
             'default' => 1,
-            'comment' => '1:activo;0:inactivo'
+            'comment' => '1,Seleccionado;0,No selecionado'
+        ]);
+
+        //----------------------------------------------
+
+
+        $dep_serieTemp = $schema->createTable('dependencia_serie_temp');
+        $dep_serieTemp->addColumn('iddependencia_serie', 'integer', [
+            'autoincrement' => true,
+            'length' => 11
+        ]);
+        $dep_serieTemp->setPrimaryKey(['iddependencia_serie']);
+
+        $dep_serieTemp->addColumn('fk_serie', 'integer', [
+            'length' => 11
+        ]);
+
+        $dep_serieTemp->addColumn('fk_dependencia', 'integer', [
+            'length' => 11
         ]);
 
         //----------------------------------------------
@@ -285,63 +283,6 @@ final class Version20190626022741 extends AbstractMigration
         //----------------------------------------------
 
         $conn = $this->connection;
-        $insertRetencion = [
-            'nombre' => 'papel',
-            'etiqueta' => 'P',
-            'tipo' => 1,
-            'descripcion' => 'Soporte Papel',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
-        $insertRetencion = [
-            'nombre' => 'electronico',
-            'etiqueta' => 'EL',
-            'tipo' => 1,
-            'descripcion' => 'Soporte Electronico',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
-        //----------------------------------------------
-
-
-        $insertRetencion = [
-            'nombre' => 'eliminacion',
-            'etiqueta' => 'E',
-            'tipo' => 2,
-            'descripcion' => 'Disposicion Eliminacion',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
-        $insertRetencion = [
-            'nombre' => 'conservacion total',
-            'etiqueta' => 'CT',
-            'tipo' => 2,
-            'descripcion' => 'Disposicion Conservacion Total',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
-        $insertRetencion = [
-            'nombre' => 'seleccion',
-            'etiqueta' => 'S',
-            'tipo' => 2,
-            'descripcion' => 'Disposicion Seleccion',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
-        $insertRetencion = [
-            'nombre' => 'microfilmacion u otro',
-            'etiqueta' => 'M/D',
-            'tipo' => 2,
-            'descripcion' => 'Disposicion Microfilmacion u otro',
-            'estado' => 1
-        ];
-        $conn->insert('retencion', $insertRetencion);
-
 
         $insertModulo = [
             'idmodulo' => 2151,
@@ -354,7 +295,7 @@ final class Version20190626022741 extends AbstractMigration
             'cod_padre' => 1942,
             'orden' => 1
         ];
-        $conn->insert('modulo', $insertModulo);
+        //$conn->insert('modulo', $insertModulo);
 
         $insertModulo = [
             'idmodulo' => 2152,
@@ -367,7 +308,7 @@ final class Version20190626022741 extends AbstractMigration
             'cod_padre' => 2151,
             'orden' => 1
         ];
-        $conn->insert('modulo', $insertModulo);
+        // $conn->insert('modulo', $insertModulo);
     }
 
 
@@ -382,12 +323,6 @@ final class Version20190626022741 extends AbstractMigration
         }
         if ($schema->hasTable("serie_temp")) {
             $schema->dropTable('serie_temp');
-        }
-        if ($schema->hasTable("retencion")) {
-            $schema->dropTable('retencion');
-        }
-        if ($schema->hasTable("serie_retencion")) {
-            $schema->dropTable('serie_retencion');
         }
         if ($schema->hasTable("entidad_serie")) {
             $schema->dropTable('entidad_serie');

@@ -8,11 +8,20 @@ class Serie extends Model
     protected $nombre;
     protected $codigo;
     protected $tipo;
-    protected $dias_respuesta;
     protected $retencion_gestion;
     protected $retencion_central;
-    protected $fk_serie_version;
     protected $procedimiento;
+    protected $dias_respuesta;
+
+    protected $sop_papel;
+    protected $sop_electronico;
+
+    protected $dis_eliminacion;
+    protected $dis_conservacion;
+    protected $dis_seleccion;
+    protected $dis_microfilma;
+
+    protected $fk_serie_version;
     protected $estado;
 
     protected $dbAttributes;
@@ -25,23 +34,32 @@ class Serie extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'cod_padre',
                 'cod_arbol',
                 'nombre',
                 'codigo',
+                'tipo',
                 'retencion_gestion',
                 'retencion_central',
-                'tipo',
-                'dias_respuesta',
-                'fk_serie_version',
                 'procedimiento',
+                'dias_respuesta',
+                'sop_papel',
+                'sop_electronico',
+                'dis_eliminacion',
+                'dis_conservacion',
+                'dis_seleccion',
+                'dis_microfilma',
+                'fk_serie_version',
                 'estado'
             ]
         ];
     }
 
+
+
+    
     public function beforeCreate()
     {
         $SerieVersion = SerieVersion::VersionActual();

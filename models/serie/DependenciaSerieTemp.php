@@ -1,10 +1,10 @@
 <?php
 
-class SerieRetencion extends Model
+class DependenciaSerieTemp extends Model
 {
-    protected $idserie_retencion;
+    protected $iddependencia_serie;
     protected $fk_serie;
-    protected $fk_retencion;
+    protected $fk_dependencia;
 
     protected $dbAttributes;
 
@@ -18,8 +18,9 @@ class SerieRetencion extends Model
         $this->dbAttributes = (object)[
             'safe' => [
                 'fk_serie',
-                'fk_retencion'
-            ]
+                'fk_dependencia'
+            ],
+            'primary'=>'iddependencia_serie'
         ];
     }
 }

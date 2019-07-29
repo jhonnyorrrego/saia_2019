@@ -4,16 +4,21 @@ class SerieTemp extends Model
 {
     protected $idserie;
     protected $cod_padre;
-    protected $cod_arbol;
     protected $nombre;
     protected $codigo;
     protected $tipo;
-    protected $dias_respuesta;
     protected $retencion_gestion;
     protected $retencion_central;
-    protected $fk_serie_version;
     protected $procedimiento;
-    protected $estado;
+    protected $dias_respuesta;
+
+    protected $sop_papel;
+    protected $sop_electronico;
+
+    protected $dis_eliminacion;
+    protected $dis_conservacion;
+    protected $dis_seleccion;
+    protected $dis_microfilma;
 
     protected $dbAttributes;
 
@@ -30,15 +35,21 @@ class SerieTemp extends Model
                 'cod_arbol',
                 'nombre',
                 'codigo',
+                'tipo',
                 'retencion_gestion',
                 'retencion_central',
-                'tipo',
-                'dias_respuesta',
-                'fk_serie_version',
                 'procedimiento',
+                'dias_respuesta',
+                'sop_papel',
+                'sop_electronico',
+                'dis_eliminacion',
+                'dis_conservacion',
+                'dis_seleccion',
+                'dis_microfilma',
+                'fk_serie_version',
                 'estado'
             ],
-            'primary' => 'idserie'
+            'primary'=>'idserie'
         ];
     }
 }
