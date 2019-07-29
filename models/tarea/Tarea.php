@@ -11,6 +11,7 @@ class Tarea extends LogModel
 
     //relations
     protected $RecurrenciaTarea;
+    protected $DocumentoTarea;
 
     function __construct($id = null)
     {
@@ -73,6 +74,26 @@ class Tarea extends LogModel
         }
 
         return $this->RecurrenciaTarea;
+    }
+
+    /**
+     * obtiene una instancia de DocumentoTarea
+     * vinculada a la tarea
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-29
+     */
+    public function getDocument()
+    {
+        if (!$this->DocumentoTarea) {
+            $this->DocumentoTarea = DocumentoTarea::findByAttributes([
+                'fk_tarea' => $this->getPK(),
+                'estado' => 1
+            ]);
+        }
+
+        return $this->DocumentoTarea;
     }
 
     /**
@@ -147,15 +168,8 @@ class Tarea extends LogModel
      */
     public function refreshDocumentLimitDate()
     {
-        $DocumentoTarea = DocumentoTarea::findByAttributes(['fk_tarea' => $this->getPK()]);
-
-        if ($DocumentoTarea) {
-            $response = Documento::setLimitDate($DocumentoTarea->fk_documento);
-        } else {
-            $response = true;
-        }
-
-        return $response;
+        return $this->getDocument() ?
+            Documento::setLimitDate($this->getDocument()->fk_documento) : true;
     }
 
     /**

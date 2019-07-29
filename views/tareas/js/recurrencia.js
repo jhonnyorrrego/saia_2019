@@ -99,6 +99,28 @@ $(function() {
         );
     });
 
+    $('#addNotification').on('click', function() {
+        let notifications = [
+            {
+                index: $('#notification_items').children().length,
+                type: 2,
+                duration: 10,
+                period: 1
+            }
+        ];
+
+        paintNotifications(notifications);
+    });
+
+    $(document)
+        .off('click', '.tashNotification')
+        .on('click', '.tashNotification', function() {
+            $(this)
+                .parents('.row')
+                .first()
+                .remove();
+        });
+
     (function init() {
         createSelects();
         createDatePicker();
@@ -203,33 +225,43 @@ $(function() {
     function paintNotifications(notifications) {
         let div = $('#notification_items');
         notifications.forEach((n, i) => {
-            let template = `
-                <div class="row pt-2">
-                    <div class="col-3">
-                        <select name="period" class="form-control d-inline select2 full-width">
-                            <option value="1">Días</option>
-                            <option value="2">Semanas</option>
-                            <option value="3">Meses</option>
-                            <option value="4">Años</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <input type="number" class="form-control">
-                    </div>
-                    <div class="col-3">
-                        <select name="period" class="form-control d-inline select2 full-width">
-                            <option value="1">Días</option>
-                            <option value="2">Semanas</option>
-                            <option value="3">Meses</option>
-                            <option value="4">Años</option>
-                        </select>
-                    </div>
-                </div>
-            `;
+            let index = n.index || i;
+            let template = createNotificationTemplate(index);
             div.append(template);
+            $(`[name="notifications[${index}][type]"]`).val(n.type);
+            $(`[name="notifications[${index}][duration]"]`).val(n.duration);
+            $(`[name="notifications[${index}][period]"]`).val(n.period);
         });
 
         createSelects();
+    }
+
+    function createNotificationTemplate(index) {
+        return `
+        <div class="row pt-2">
+            <div class="col">
+                <select name="notifications[${index}][type]" class="form-control d-inline select2 full-width">
+                    <option value="1">Notificación</option>
+                    <option value="2">Correo</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" name="notifications[${index}][duration]">
+            </div>
+            <div class="col">
+                <select name="notifications[${index}][period]" class="form-control d-inline select2 full-width">
+                    <option value="1">Minutos</option>
+                    <option value="2">Horas</option>
+                    <option value="3">Dias</option>
+                    <option value="4">Semanas</option>
+                </select>
+            </div>
+            <div class="col">
+                <button class="btn btn-small tashNotification" type="button">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
     }
 
     function createRecurrenceOptions(momentDate) {

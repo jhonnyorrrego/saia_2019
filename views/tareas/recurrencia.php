@@ -120,9 +120,9 @@ include_once $ruta_db_superior . "assets/librerias.php";
 		<div class="row">
 			<div class="col-12" id="notification_items"></div>
 		</div>
-		<div class="row">
+		<div class="row pt-2 mx-3">
 			<div class="col-12">
-				<button class="btn btn-small btn-success">
+				<button class="btn btn-small btn-success" id="addNotification" type="button">
 					Crear Notificación
 				</button>
 			</div>
