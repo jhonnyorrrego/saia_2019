@@ -1,15 +1,34 @@
 <?php
 
+/**
+ * gestiona la recurrencia de una tarea
+ *
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
 class RecurrenciaTareaController
 {
     protected $Tarea;
     protected $TareaFuncionario;
     protected $configuration;
+    protected $notifications;
 
-    function __construct(Tarea $Tarea, object $configuration)
+    /**
+     * inicia el proceso para calcular la recurrencia
+     *
+     * @param Tarea $Tarea
+     * @param object $configuration nueva recurrencia 
+     * @param array $notifications notificaciones a vincular
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    function __construct(Tarea $Tarea, object $configuration, array $notifications)
     {
         $this->Tarea = $Tarea;
         $this->configuration = $configuration;
+        $this->notifications = $notifications;
+
+        $this->generate();
     }
 
     /**
@@ -22,7 +41,13 @@ class RecurrenciaTareaController
      */
     public function generate()
     {
-        $this->checkConfiguration();
+        if (!$this->configuration->recurrence) {
+            return $this->deleteRecurrence();
+        }
+
+        if ($this->configuration->unity < 0) {
+            throw new Exception("La cantidad de repeticiones debe ser positiva", 1);
+        }
 
         $date = $this->Tarea->fecha_final;
         $InitialDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
@@ -71,6 +96,9 @@ class RecurrenciaTareaController
             $finalItem,
             DatePeriod::EXCLUDE_START_DATE
         );
+
+        $this->generateGroup();
+
         foreach ($daterange as $DateTime) {
             if (!empty($dayPosition)) {
                 $DateTime = $this->findMonthDay($DateTime);
@@ -81,28 +109,25 @@ class RecurrenciaTareaController
     }
 
     /**
-     * valida la configuracion para la recurrencia
+     * crea el nuevo grupo para las tareas
+     * de la recurrencia
      *
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-25
      */
-    public function checkConfiguration()
+    public function generateGroup()
     {
-        if (!$this->configuration->unity && !$this->configuration->period) {
-            throw new Exception("consultar y eliminar tareas del mismo grupo", 1);
+        $pk = RecurrenciaTarea::newRecord([
+            'recurrencia' => $this->configuration->recurrence,
+            'periodo' => $this->configuration->period,
+            'unidad_tiempo' => $this->configuration->unity,
+            'opcion_unidad' => $this->configuration->option,
+            'terminar' => $this->configuration->endValue
+        ]);
 
-            $this->Tarea->fk_recurrencia_tarea = 0;
-            $this->Tarea->save();
-
-            return true;
-        }
-
-        if ($this->configuration->unity < 0) {
-            throw new Exception("La cantidad de repeticiones debe ser positiva", 1);
-        }
-
-        return true;
+        $this->Tarea->fk_recurrencia_tarea = $pk;
+        return $this->Tarea->save();
     }
 
     /**
@@ -124,7 +149,9 @@ class RecurrenciaTareaController
             throw new Exception("Error al guardar la tarea", 1);
         }
 
-        $this->setTaskUsers($Tarea->getPK());
+        $this->bindTaskUsers($Tarea->getPK());
+        $this->bindTaskDocument($Tarea->getPK());
+        $this->bindNotifications($Tarea->getPK());
     }
 
     /**
@@ -135,7 +162,7 @@ class RecurrenciaTareaController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-23
      */
-    public function setTaskUsers($taskId)
+    public function bindTaskUsers($taskId)
     {
         $users = $this->getUsers();
 
@@ -157,6 +184,31 @@ class RecurrenciaTareaController
             [SessionController::getValue('idfuncionario')],
             TareaFuncionario::TIPO_CREADOR
         );
+    }
+
+    /**
+     * vincula el documento de la tarea principal
+     * a las nuevas tareas de la recurrencia
+     *
+     * @param integer $taskId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-29
+     */
+    public function bindTaskDocument($taskId)
+    {
+        $DocumentoTarea = $this->Tarea->getDocument();
+        if ($DocumentoTarea) {
+            DocumentoTarea::newRecord([
+                'fk_tarea' => $taskId,
+                'fk_documento' => $DocumentoTarea->fk_documento
+            ]);
+        }
+    }
+
+    public function bindNotifications()
+    {
+        return true;
     }
 
     /**
@@ -246,5 +298,29 @@ class RecurrenciaTareaController
         if (!$this->Tarea->save()) {
             throw new Exception("Error al mover la tarea", 1);
         }
+    }
+
+    /**
+     * elimina las tareas de una recurrencia
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-29
+     */
+    public function deleteRecurrence()
+    {
+        if (!$this->Tarea->fk_recurrencia_tarea) {
+            return true;
+        }
+
+        $fk_recurrence = $this->Tarea->fk_recurrencia_tarea;
+        $this->Tarea->fk_recurrencia_tarea = 0;
+        $this->Tarea->save();
+
+        Tarea::executeDelete([
+            'fk_recurrencia_tarea' => $fk_recurrence
+        ]);
+
+        return true;
     }
 }

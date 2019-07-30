@@ -4,6 +4,12 @@ $(function() {
     let taskMomentDate = null;
 
     $('[name="default_recurrence"]').on('change', function() {
+        if (+$(this).val() == 0) {
+            $('#finish_container').addClass('d-none');
+        } else {
+            $('#finish_container').removeClass('d-none');
+        }
+
         //personalizar
         if (+$(this).val() == 5) {
             $('#recurrence_container').removeClass('d-none');
@@ -93,6 +99,28 @@ $(function() {
         );
     });
 
+    $('#addNotification').on('click', function() {
+        let notifications = [
+            {
+                index: $('#notification_items').children().length,
+                type: 2,
+                duration: 10,
+                period: 1
+            }
+        ];
+
+        paintNotifications(notifications);
+    });
+
+    $(document)
+        .off('click', '.tashNotification')
+        .on('click', '.tashNotification', function() {
+            $(this)
+                .parents('.row')
+                .first()
+                .remove();
+        });
+
     (function init() {
         createSelects();
         createDatePicker();
@@ -136,10 +164,104 @@ $(function() {
     function fillForm(data) {
         taskMomentDate = moment(data.date);
         createRecurrenceOptions(taskMomentDate);
-        $(`[name="week_day[]"][value=${taskMomentDate.day()}]`).prop(
+        $(`[name="week_day"][value=${taskMomentDate.day()}]`).prop(
             'checked',
             1
         );
+
+        if (data.recurrence) {
+            $('[name="default_recurrence"]')
+                .val(data.recurrence)
+                .trigger('change');
+
+            $('[name="unity"]').val(data.unity);
+            $('[name="period"]')
+                .val(data.period)
+                .trigger('change');
+
+            //semana
+            if (data.period == 2) {
+                $(`[name="week_day"][value=${data.option}]`).prop('checked', 1);
+            } else if (data.period == 3) {
+                //mes
+                if (+data.option) {
+                    $('[name="month_day"]').val(data.option);
+                } else {
+                    let day = $('[name="month_day"]')
+                        .children()
+                        .last()
+                        .val();
+                    $('[name="month_day"]')
+                        .val(day)
+                        .trigger('change');
+                }
+            }
+
+            //mes
+            if (+data.finish) {
+                $('[name="end"][value=2]').prop('checked', true);
+                $('#iterations').val(data.finish);
+            } else {
+                $('[name="end"][value=1]').prop('checked', true);
+                $('[name="end_date"]')
+                    .data('DateTimePicker')
+                    .defaultDate(moment(data.finish));
+            }
+        }
+
+        let notifications = data.notifications.length
+            ? data.notifications
+            : [
+                  {
+                      type: 2,
+                      duration: 10,
+                      period: 1
+                  }
+              ];
+
+        paintNotifications(notifications);
+    }
+
+    function paintNotifications(notifications) {
+        let div = $('#notification_items');
+        notifications.forEach((n, i) => {
+            let index = n.index || i;
+            let template = createNotificationTemplate(index);
+            div.append(template);
+            $(`[name="notifications[${index}][type]"]`).val(n.type);
+            $(`[name="notifications[${index}][duration]"]`).val(n.duration);
+            $(`[name="notifications[${index}][period]"]`).val(n.period);
+        });
+
+        createSelects();
+    }
+
+    function createNotificationTemplate(index) {
+        return `
+        <div class="row pt-2">
+            <div class="col">
+                <select name="notifications[${index}][type]" class="form-control d-inline select2 full-width">
+                    <option value="1">Notificación</option>
+                    <option value="2">Correo</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="number" class="form-control" name="notifications[${index}][duration]">
+            </div>
+            <div class="col">
+                <select name="notifications[${index}][period]" class="form-control d-inline select2 full-width">
+                    <option value="1">Minutos</option>
+                    <option value="2">Horas</option>
+                    <option value="3">Dias</option>
+                    <option value="4">Semanas</option>
+                </select>
+            </div>
+            <div class="col">
+                <button class="btn btn-small tashNotification" type="button">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </div>`;
     }
 
     function createRecurrenceOptions(momentDate) {

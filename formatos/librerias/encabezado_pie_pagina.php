@@ -16,7 +16,7 @@ $incluidos = array();
 
 function imagen_firma_faltante()
 {
-    echo PROTOCOLO_CONEXION . RUTA_PDF . "/firmas/faltante.jpg' />";
+    echo PROTOCOLO_CONEXION . RUTA_PDF . "/assets/images/firmas/faltante.jpg' />";
 }
 
 function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1)
@@ -229,9 +229,9 @@ function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
         if (is_object($ruta_imagen)) {
             if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                 $image = TemporalController::createTemporalFile($logo[0]['valor']);
-                if($image->success){
+                if ($image->success) {
                     $route = PROTOCOLO_CONEXION . RUTA_PDF . '/' . $image->route;
-                }else{
+                } else {
                     $route = '';
                 }
 

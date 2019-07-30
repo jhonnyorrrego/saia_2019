@@ -19,10 +19,14 @@ final class Version20190722221105 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        if ($schema->hasTable('recurrencia_tarea')) {
+            $schema->dropTable('recurrencia_tarea');
+        }
         $table = $schema->createTable('recurrencia_tarea');
         $table->addColumn('idrecurrencia_tarea', 'integer', [
             'notnull' => true,
-            'length' => 11
+            'length' => 11,
+            'autoincrement' => true
         ]);
         $table->setPrimaryKey(['idrecurrencia_tarea']);
         $table->addColumn('recurrencia', 'integer', [
@@ -47,9 +51,14 @@ final class Version20190722221105 extends AbstractMigration
         ]);
 
         $table = $schema->getTable('tarea');
+        if ($table->hasColumn('fk_recurrencia_tarea')) {
+            $table->dropColumn('fk_recurrencia_tarea');
+        }
+
         $table->addColumn('fk_recurrencia_tarea', 'integer', [
             'notnull' => false,
-            'length' => 11
+            'length' => 11,
+            'default' => 0
         ]);
     }
 
@@ -73,7 +82,6 @@ final class Version20190722221105 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-
+        $schema->dropTable('recurrencia_tarea');
     }
 }

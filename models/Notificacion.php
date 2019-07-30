@@ -13,7 +13,6 @@ class Notificacion extends Model
     protected $notificado;
     protected $tipo;
     protected $tipo_id;
-    
 
     function __construct($id = null)
     {
@@ -25,7 +24,7 @@ class Notificacion extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'origen',
                 'destino',
