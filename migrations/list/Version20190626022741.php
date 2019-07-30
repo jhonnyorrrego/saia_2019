@@ -67,8 +67,8 @@ final class Version20190626022741 extends AbstractMigration
             'comment' => 'Cant anios'
         ]);
 
-        $table->addColumn('procedimiento', 'text',[
-            'notnull'=>false
+        $table->addColumn('procedimiento', 'text', [
+            'notnull' => false
         ]);
 
         $table->addColumn('dias_respuesta', 'integer', [
@@ -155,8 +155,8 @@ final class Version20190626022741 extends AbstractMigration
             'comment' => 'Cant anios'
         ]);
 
-        $tableTemp->addColumn('procedimiento', 'text',[
-            'notnull'=>false
+        $tableTemp->addColumn('procedimiento', 'text', [
+            'notnull' => false
         ]);
 
         $tableTemp->addColumn('dias_respuesta', 'integer', [
@@ -244,10 +244,6 @@ final class Version20190626022741 extends AbstractMigration
 
         $serie_version->addColumn('version', 'integer', [
             'length' => 4
-        ]);
-
-        $serie_version->addColumn('nombre', 'string', [
-            'length' => 255
         ]);
 
         $serie_version->addColumn('tipo', 'integer', [
