@@ -133,7 +133,7 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0)
     foreach ($patronesBusqueda as $key => $nombreFuncion) {
 
         if ($excluirFunciones == 1 && $nombreFuncion == 'mostrar_estado_proceso') {
-            $rutaContenido = $ruta_db_superior . "firmas/faltante.jpg";
+            $rutaContenido = $ruta_db_superior . "assets/images/firmas/faltante.jpg";
             $contenidoFuncion = "<img src={$rutaContenido} width='109' />";
         } else if ($excluirFunciones == 1 && $nombreFuncion != 'mostrar_codigo_qr') {
             $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
@@ -3330,9 +3330,9 @@ function consultarPermisosPerfil($nombreFormato)
     if ($consultaPermisos['numcampos']) {
         $permisos = '<div>';
         for ($i = 0; $i < $consultaPermisos['numcampos']; $i++) {
-            $permisosPerfil = busca_filtro_tabla("b.perfil_idperfil","modulo a, permiso_perfil b","a.idmodulo=b.modulo_idmodulo and b.perfil_idperfil = " . $consultaPermisos[$i]["idperfil"] ." and a.nombre='crear_{$nombreFormato}' and a.enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php'","",$conn);
+            $permisosPerfil = busca_filtro_tabla("b.perfil_idperfil", "modulo a, permiso_perfil b", "a.idmodulo=b.modulo_idmodulo and b.perfil_idperfil = " . $consultaPermisos[$i]["idperfil"] . " and a.nombre='crear_{$nombreFormato}' and a.enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php'", "", $conn);
             $checked = '';
-            if($permisosPerfil["numcampos"]){
+            if ($permisosPerfil["numcampos"]) {
                 $checked = "checked='checked'";
             }
             $permisos .= "<label class='checkbox inline'>

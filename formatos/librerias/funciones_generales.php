@@ -1566,17 +1566,14 @@ function submit_formato($formato, $iddoc = null)
             }
         }
 
-        if($datos_f[0]["item"] == 1){
+        if ($datos_f[0]["item"] == 1) {
             echo ('<div class="col-md-9 form-group px-0 pt-3"><button class="btn btn-complete" item="1" id="continuar" value="Continuar">Continuar</button>');
             echo ('<button class="btn btn-danger cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" >Cancelar</button>');
             echo ('<div>');
-        }else{
+        } else {
             echo ('<div class="col-md-9 form-group px-0 pt-3"><button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
             echo ('<div>');
         }
-
-
-        
     } else {
 
         echo '
@@ -1596,7 +1593,7 @@ function submit_formato($formato, $iddoc = null)
                     var content = tinyMCE.get(identification).getContent();
                     $(this).val(content);
                 });
-                
+
                 $("#formulario_formatos").validate({
                     ignore: [],
                     submitHandler: function(form) {
@@ -1610,36 +1607,36 @@ function submit_formato($formato, $iddoc = null)
                             })
                         );
 
-                        if($("#continuar").attr("item") == 1){
+                        if ($("#continuar").attr("item") == 1) {
                             $.ajax({
                                 async: false,
-                                type:'POST',
+                                type: 'POST',
                                 url: "../../formatos/librerias/funciones_item.php",
                                 dataType: "json",
                                 data: $("#formulario_formatos").serialize(),
-                                success:function (data){                                    
-                                    if(data.success){
+                                success: function(data) {
+                                    if (data.success) {
                                         top.notification({
                                             type: 'success',
                                             message: data.message
                                         });
                                         top.successModalEvent(data);
-                                        if(data.refresh){
-                                           // $(".modal-body").empty();
+                                        if (data.refresh) {
+                                            // $(".modal-body").empty();
                                             $(".modal-body").load('../../formatos/funcionarios_ruta/adicionar_funcionarios_ruta.php');
-                                        }else{
+                                        } else {
                                             top.closeTopModal();
                                         }
-                                    }else{
+                                    } else {
                                         top.notification({
                                             type: 'error',
                                             message: data.message
                                         });
-                                    }				
+                                    }
                                 }
                             });
                             return false;
-                        }else{
+                        } else {
                             form.submit();
                         }
 
@@ -1651,7 +1648,7 @@ function submit_formato($formato, $iddoc = null)
                 });
             });
 
-            
+
 
 
         });
@@ -2426,7 +2423,7 @@ function mostrar_firma_funcionario($func, $fechadoc, $retorno = 0)
     if ($func["firma"] != "") {
         $texto = '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/librerias/mostrar_foto.php?codigo=' . $func[0]["funcionario_codigo"] . '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/>';
     } else {
-        $texto = '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" >';
+        $texto = '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/assets/images/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" >';
     }
     $texto .= "<br /><b>" . mayusculas($func[0]["nombres"] . " " . $func[0]["apellidos"]) . "</b><br />" . $cargo;
 
@@ -2943,7 +2940,7 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc)
         </td>
     <?php
 
-}
+    }
 }
 
 /*
@@ -3288,9 +3285,9 @@ function numerotexto($numero)
 
         $num = implode("", array_slice($digitos, $offset, $corte));
         $resultado[$i] = "";
-        $cen = (int)($num / 100);              //Cifra de las centenas
+        $cen = (int) ($num / 100);              //Cifra de las centenas
         $doble = $num - ($cen * 100);             //Cifras de las decenas y unidades
-        $dec = (int)($num / 10) - ($cen * 10);    //Cifra de las decenas
+        $dec = (int) ($num / 10) - ($cen * 10);    //Cifra de las decenas
         $uni = $num - ($dec * 10) - ($cen * 100);   //Cifra de las unidades
         if ($cen > 0) {
             if ($num == 100)

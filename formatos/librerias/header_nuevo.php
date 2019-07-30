@@ -44,10 +44,10 @@ $tam_pagina = [
         'ancho' => 793,
         'alto' => 1122
     ],
-    'margen_izquierda' => $margenes[0] * 5,
-    'margen_derecha' => $margenes[1] * 5,
-    'margen_superior' => $margenes[2] * 5,
-    'margen_inferior' => $margenes[3] * 5
+    'margen_izquierda' => $margenes[0],
+    'margen_derecha' => $margenes[1],
+    'margen_superior' => $margenes[2],
+    'margen_inferior' => $margenes[3]
 ];
 
 if ($formato[0]["orientacion"]) {
@@ -118,28 +118,26 @@ if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
             -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
             box-shadow: 2px 2px 8px #c6c6c6;
         }
+        .page_margin_top,
+        .page_content,
+        .page_margin_bottom {
+            overflow: hidden;
+            margin-left: 5%;
+            margin-right: 5%;
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .page_margin_top {
+            height: <?= $tam_pagina["margen_superior"] . 'mm' ?>;
+        }
+
+        .page_margin_bottom {
+            height: <?= $tam_pagina["margen_inferior"] . 'mm' ?>;
+        }
     </style>
 <?php endif; ?>
 
-<style type="text/css">
-    .page_margin_top,
-    .page_content,
-    .page_margin_bottom {
-        overflow: hidden;
-        margin-left: 5%;
-        margin-right: 5%;
-        margin-top: 5%;
-        margin-bottom: 5%;
-    }
-
-    .page_margin_top {
-        height: <?= $tam_pagina["margen_superior"] . 'px' ?>;
-    }
-
-    .page_margin_bottom {
-        height: <?= $tam_pagina["margen_inferior"] . 'px' ?>;
-    }
-</style>
 </head>
 
 <body>

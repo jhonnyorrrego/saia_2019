@@ -104,7 +104,7 @@ if (isset($_REQUEST["genera"])) {
             }
             include_once $ruta_db_superior . "/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
-            
+
             if ($_REQUEST['permisosPerfil']) {
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             } else {
@@ -689,7 +689,6 @@ CODE;
                 }
             }
             if ($archivos) {
-                $includes .= $this->incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
                 $includes .= $this->incluir("'../../anexosdigitales/funciones_archivo.php'", "librerias");
                 $includes .= $this->incluir("../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js", "javascript");
                 $includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" />
@@ -1496,7 +1495,7 @@ CODE;
                                 $tam = $estilo["size"];
                                 $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
                             }
-                            
+
                             if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
@@ -1639,8 +1638,8 @@ CODE;
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }
-            if($formato[0]["item"] <> 1){
-            $includes .= '<?= pace() ?>
+            if ($formato[0]["item"] <> 1) {
+                $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
@@ -1764,7 +1763,6 @@ span.fancytree-expander {
 
             $js_archivos = "";
             if ($archivo) {
-                // $includes .= $this->incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js', "javascript");
                 $includes .= $this->incluir("'<?= $ruta_db_superior ?>anexosdigitales/funciones_archivo.php'", "librerias");
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js', "javascript");

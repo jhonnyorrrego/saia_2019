@@ -137,12 +137,6 @@ function librerias_bootstrap($version = "saia")
 {
     global $raiz_saia;
     switch ($version) {
-        case "2.3":
-            $version = "2.3.2";
-            break;
-        case "3.2":
-            $version = "3.2.0";
-            break;
         case "3.3":
             $version = "3.3.7";
             break;

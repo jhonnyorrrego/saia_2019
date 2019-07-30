@@ -11,7 +11,6 @@ class DependenciaCargo extends LogModel
     protected $fecha_final;
     protected $fecha_ingreso;
     protected $tipo;
-    
 
     function __construct($id = null)
     {
@@ -20,7 +19,7 @@ class DependenciaCargo extends LogModel
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'iddependencia_cargo',
                 'funcionario_idfuncionario',

@@ -32,7 +32,33 @@ class DocumentoTarea extends Model
     }
 
     /**
-     * funcionalidad ejecutada despues de crear un nuevo registro
+     * evento de base de datos
+     * se ejecuta antes de crear un nuevo registro
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-07-29
+     */
+    public function beforeCreate()
+    {
+        if (!$this->fk_funcionario) {
+            $this->fk_funcionario = SessionController::getValue('idfuncionario');
+        }
+
+        if (!$this->fecha) {
+            $this->fecha = date('Y-m-d H:i:s');
+        }
+
+        if (!$this->estado) {
+            $this->estado = 1;
+        }
+
+        return true;
+    }
+
+    /**
+     * evento de base de datos
+     * se ejecuta despues de crear un nuevo registro
      *
      * @return boolean
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>

@@ -14,7 +14,7 @@ include_once $ruta_db_superior . "core/autoload.php";
 $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $_REQUEST["codigo"]]);
 
 if (!$Funcionario->firma) {
-	$route = $ruta_db_superior . 'firmas/blanco.jpg';
+	$route = $ruta_db_superior . 'assets/images/firmas/blanco.jpg';
 } else {
 	$route = $ruta_db_superior . $Funcionario->getImage('firma');
 }

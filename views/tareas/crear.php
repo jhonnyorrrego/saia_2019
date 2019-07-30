@@ -34,7 +34,7 @@ $tabs = [
         'tooltip' => 'Seguidores'
     ], [
         'href' => 'concurrence',
-        'url' => "{$ruta_db_superior}views/tareas/concurrencia.php",
+        'url' => "{$ruta_db_superior}views/tareas/recurrencia.php",
         'icon' => 'fa fa-history',
         'tooltip' => 'Recurrencia'
     ], [
