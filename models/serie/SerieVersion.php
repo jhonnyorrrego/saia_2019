@@ -21,10 +21,9 @@ class SerieVersion extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'version',
-                'nombre',
                 'tipo',
                 'descripcion',
                 'archivo_trd',
