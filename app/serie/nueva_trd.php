@@ -35,7 +35,6 @@ try {
         $urlExcel = $ruta_db_superior . $_REQUEST['file_trd'];
 
         if (is_file($urlExcel)) {
-
             new TRDLoadcontroller($urlExcel);
             $ok = true;
 

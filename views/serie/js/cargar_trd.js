@@ -75,6 +75,7 @@ $(function () {
 });
 
 
+
 $('#loadTRDForm').validate({
     ignore: '',
     rules: {
@@ -98,7 +99,51 @@ $('#loadTRDForm').validate({
                 token: localStorage.getItem('token')
             });
 
-        $.post(
+        let optionsDefaults = {
+            url: `${params.baseUrl}views/serie/progress.php`,
+            size: 'modal-lg',
+            buttons: {},
+            title: 'Cargando .....',
+            beforeShow: function () {
+                $("#modal_title", parent.document).next().hide();
+            },
+            afterHide: function () {
+                $("#modal_title", parent.document).next().show();
+            }
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: `${params.baseUrl}app/serie/nueva_trd.php`,
+            data,
+            dataType: 'json',
+            beforeSend: function () {
+                top.topModal(optionsDefaults);
+            },
+            success: function (response) {
+                if (response.success) {
+
+                    top.closeTopModal();
+
+                    top.notification({
+                        message: response.message,
+                        type: 'success'
+                    });
+                } else {
+                    options = {
+                        params: {
+                            message: response.message,
+                        },
+                        title: 'Error!'
+                    };
+                    var options = $.extend({}, optionsDefaults, options);
+                    top.topModal(options);
+                }
+            }
+        });
+
+
+        /*$.post(
             `${params.baseUrl}app/serie/nueva_trd.php`,
             data,
             function (response) {
@@ -116,6 +161,6 @@ $('#loadTRDForm').validate({
                 }
             },
             'json'
-        );
+        );*/
     }
 });

@@ -372,7 +372,7 @@ class TRDLoadcontroller
     private function errorException($message)
     {
         if ($this->fila) {
-            $text = "En la fila: {$this->fila} se encontro el siguiente error: {$message}";
+            $text = "En la fila {$this->fila} : {$message}";
         } else {
             $text = $message;
         }
