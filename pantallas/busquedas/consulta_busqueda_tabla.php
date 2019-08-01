@@ -143,6 +143,8 @@ include_once $ruta_db_superior . "core/autoload.php";
                 ?>
                 <?php
             }
+print_r($datos_busqueda);
+
             if (@$datos_busqueda[0]["enlace_adicionar"]) {
                 ?>
                     <button class="btn btn-sm kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo ($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo ($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo ($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button>

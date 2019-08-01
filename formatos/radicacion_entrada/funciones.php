@@ -55,9 +55,9 @@ function datos_editar_radicacion($idformato, $iddoc)
                 $('#tr_tipo_mensajeria').hide();
                 $('[name="tipo_mensajeria"]').removeClass('required');
 
-                //$('#fecha_documento').addClass('required');
-                $('#fecha_documento').removeClass('required');
-                $('#tr_fecha_documento').show();
+                //$('#fecha_oficio_entrada').addClass('required');
+                $('#fecha_oficio_entrada').removeClass('required');
+                $('#tr_fecha_oficio_entrada').show();
                 $('#tr_numero_oficio').show();
                 $('#persona_natural').addClass('required');
                 $('#tr_persona_natural').show();
@@ -76,8 +76,8 @@ function datos_editar_radicacion($idformato, $iddoc)
             $('#area_responsable').addClass('required');
             $('#tr_tipo_destino').show();
 
-            $('#fecha_documento').removeClass('required');
-            $('#tr_fecha_documento').hide();
+            $('#fecha_oficio_entrada').removeClass('required');
+            $('#tr_fecha_oficio_entrada').hide();
             $('#tr_numero_oficio').hide();
             $('#persona_natural').removeClass('required');
             $('#tr_persona_natural').hide();
@@ -142,7 +142,7 @@ function quitar_descripcion_entrada($idformato, $iddoc)
         $('#formulario_formatos').validate({
             ignore: [],
             submitHandler: function (form) {
-                var fecha = $("#fecha_documento").val().split(" ");
+                var fecha = $("#fecha_oficio_entrada").val().split(" ");
                 var f = new Date();
                 var dia = f.getDate();
                 var mes = (f.getMonth() + 1);
@@ -155,8 +155,8 @@ function quitar_descripcion_entrada($idformato, $iddoc)
                 var fecha2 = f.getFullYear() + "-" + mes + "-" + dia;
 
                 if (fecha[0] > fecha2) {
-                    $("#fecha_documento").after("<font color='red'>La fecha es mayor a la de hoy</font>");
-                    $("#fecha_documento").focus();
+                    $("#fecha_oficio_entrada").after("<font color='red'>La fecha es mayor a la de hoy</font>");
+                    $("#fecha_oficio_entrada").focus();
                     $('#continuar').css('display', 'inherit');
                     $('#continuar').next('input').hide();
                     return false;
@@ -401,9 +401,9 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#tr_tipo_mensajeria').hide();
                 $('[name="tipo_mensajeria"]').removeClass('required');
 
-                //$('#fecha_documento').addClass('required');
-                $('#fecha_documento').removeClass('required');
-                $('#tr_fecha_documento').show();
+                //$('#fecha_oficio_entrada').addClass('required');
+                $('#fecha_oficio_entrada').removeClass('required');
+                $('#tr_fecha_oficio_entrada').show();
                 $('#tr_numero_oficio').show();
                 $('#persona_natural').addClass('required');
                 $('#tr_persona_natural').show();
@@ -422,8 +422,8 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#area_responsable').addClass('required');
                 $('#tr_tipo_destino').show();
 
-                $('#fecha_documento').removeClass('required');
-                $('#tr_fecha_documento').hide();
+                $('#fecha_oficio_entrada').removeClass('required');
+                $('#tr_fecha_oficio_entrada').hide();
                 $('#tr_numero_oficio').hide();
                 $('#persona_natural').removeClass('required');
                 $('#tr_persona_natural').hide();
@@ -559,7 +559,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
 
-    $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_documento", "Y-m-d") . " AS fecha_documento," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
     $documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
@@ -613,7 +613,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                         <td class='pr-0' style='width: 50%; border:none;'>
                             <div><strong>TIPO DE ORIGEN:</strong> " . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</div>
                             <div><strong>NO. DOCUMENTO:</strong> " . $datos[0]['numero_oficio'] . "</div>
-                            <div><strong>FECHA DEL DOCUMENTO:</strong> " . $datos[0]['fecha_documento'] . "</div>
+                            <div><strong>FECHA DEL DOCUMENTO:</strong> " . $datos[0]['fecha_oficio_entrada'] . "</div>
                         </td>
                         <td style='width: 50%; border:none;' class='pl-0'>
                             <div><strong>N&Uacute;MERO DE GU&Iacute;A:</strong> " . $datos[0]['numero_guia'] . "</div> 
@@ -830,7 +830,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc){
 function actualizar_campos_documento($idformato, $iddoc)
 {
     global $conn;
-    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos,fecha_documento", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
     if ($datos["numcampos"]) {
         $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "", $conn);
         $valores = array();
@@ -846,8 +846,8 @@ function actualizar_campos_documento($idformato, $iddoc)
             $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
         }
         $fecha = '';
-        if(!empty($datos[0]["fecha_documento"])){
-            $fecha = ", fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_documento"], 'Y-m-d H:i:s');
+        if(!empty($datos[0]["fecha_oficio_entrada"])){
+            $fecha = ", fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s');
         }
         $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["descripcion_anexos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "'" . $fecha . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
