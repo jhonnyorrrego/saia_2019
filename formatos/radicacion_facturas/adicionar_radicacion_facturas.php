@@ -69,7 +69,7 @@
                                         <label title="">TOTAL FACTURA</label>
                                         <input class="form-control"  maxlength="50"   tabindex='1'  type="text"  size="100" id="total_factura" name="total_factura"  value="<?php echo(validar_valor_campo(7053)); ?>">
                                        </div><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(7052)); ?>"><input type="hidden" name="idft_radicacion_facturas" value="<?php echo(validar_valor_campo(7046)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(7038)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(424,7036);?></div><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(7039)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(7045)); ?>"><div class="form-group "  id="tr_fecha_radicado">
-                                        <label title="">FECHA DE RADICACI&Oacute;N</label>
+                                        <label title="">FECHA DE RADICACI&Oacute;N*</label>
                                         <input class="form-control" required  class="required"   tabindex='2'  type="text"  size="100" id="fecha_radicado" name="fecha_radicado" required value="<?php echo(validar_valor_campo(7044)); ?>">
                                        </div><div class="form-group" id="tr_numero_radicado"><label title="">N&Uacute;MERO DE RADICADO*</label><?php mostrar_radicado_factura(424,7048);?></div><div class="form-group" id="tr_natural_juridica">
                                         <label title="">PROVEEDOR*</label>
@@ -191,8 +191,8 @@
             $(document).ready(function () {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
-                    var upload_max_size = 5;
-                    var maximo = 5;
+                    var upload_max_size = 2;
+                    var maximo = 2;
                     var tamanoMaximo = $(this).attr('data-longitud');
                     var archivosMaximo = $(this).attr('data-cantidad');
                     var multiple_text = $(this).attr('data-multiple');
@@ -209,7 +209,7 @@
                   var multiple = false;
                   var form_uuid = $('#form_uuid').val();
                     var maxFiles = 1;
-                    var maxFilesize = 5;
+                    var maxFilesize = 2;
                   if(multiple_text == 'multiple') {
                       multiple = true;
                         if(tamanoMaximo > upload_max_size){

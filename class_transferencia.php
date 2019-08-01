@@ -552,11 +552,11 @@ function aprobar($iddoc = 0, $opcion = 0)
                         transferir_archivo_prueba($datos, $destino_respuesta, "", "");
                     }
                 }
-
+ 
                 if ($datos_formato[0]["mostrar_pdf"] == 1) {
                     $sql1 = "UPDATE documento SET pdf=null WHERE iddocumento=" . $iddoc;
-                    phpmkr_query($sql1);
-                }
+                    phpmkr_query($sql1); 
+                } 
             }
             $array_banderas = explode(",", $nombre_tabla[0]["banderas"]);
         }
@@ -632,17 +632,25 @@ function mostrar_estado_proceso($idformato, $iddoc)
         $firmas = 0;
         $fila_abierta = 0;
         $ocultar_confirmar = 0;
+
         if ($resultado["numcampos"]) {
             array_unique($resultado);
             $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
             if (!$ancho_firma["numcampos"]) {
-                $ancho_firma[0]["valor"] = "40%";
+                $ancho_firma[0]["valor"] = "20%";
             }
 
             $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
             if (!$alto_firma["numcampos"]) {
-                $alto_firma[0]["valor"] = "40%";
+                $alto_firma[0]["valor"] = "20%";
             }
+            
+            if ($_REQUEST['tipo']==1){
+
+                $ancho_firma[0]["valor"] = "35%";
+                $alto_firma[0]["valor"] = "50%";
+            }
+ 
             $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
             if (!$tamano_fuente["numcampos"]) {
                 $tamano_fuente[0]["valor"] = '10pt';
@@ -770,7 +778,8 @@ function mostrar_estado_proceso($idformato, $iddoc)
         echo "</table><br/>";
     }
 
-    return !$firma_actual;
+    return $firma_actual; 
+ 
 }
 
 

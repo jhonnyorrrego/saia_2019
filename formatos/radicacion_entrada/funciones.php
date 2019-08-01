@@ -586,7 +586,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                 <table class="table table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;border-collapse: collapse;" border="0" cellspacing="0">
                     <thead>
                         <tr>
-                            <td style="border:none;"><b>FECHA DE RADICACI&Oacute;N: </b> ' . $fecha_radicacion . '<br><b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br><b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '</td>
+                            <td style="border:none;"><b>FECHA DE REGISTRO: </b> ' . $fecha_radicacion . '<br><b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br><b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '</td>
                             <td style="text-align:center;border:none;" colspan="2" rowspan="3"><p style="text-align:center;">' . $img . '</p><b style="text-align:center;">REGISTRO No. : ' . $numero_radicado . '</b></td>
                         </tr>
                     </thead>

@@ -93,8 +93,8 @@ span.fancytree-expander {
                                         <textarea  tabindex='2'  name="descripcion_ruta" id="descripcion_ruta" cols="53" rows="3" class="form-control"><?php echo(validar_valor_campo(4988)); ?></textarea></div></div><div class="form-group  required" id="tr_asignar_dependencias">
                                         <label title="">DEPENDENCIAS DE LA RUTA*</label><?php $origen_4998 = array(
                                     "url" => "arboles/arbol_dependencia.php",
-                                    "ruta_db_superior" => $ruta_db_superior,);$origen_4998["params"]["checkbox"]="checkbox";$opciones_arbol_4998 = array(
-                                    "keyboard" => true,"selectMode" => 2,"seleccionarClick" => 1,"obligatorio" => 1,
+                                    "ruta_db_superior" => $ruta_db_superior,);$origen_4998["params"]["checkbox"]="radio";$opciones_arbol_4998 = array(
+                                    "keyboard" => true,"selectMode" => 1,"seleccionarClick" => 1,"obligatorio" => 1,
                                 );
                                 $extensiones_4998 = array(
                                     "filter" => array()

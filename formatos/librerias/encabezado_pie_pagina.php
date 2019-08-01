@@ -218,7 +218,7 @@ function nombre_proceso($doc)
 }
 
 function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
-{
+{ 
     global $conn;
 
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
@@ -235,7 +235,7 @@ function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
                     $route = '';
                 }
 
-                return '<img src="' . $route . '" width="80px">';
+                return '<img src="' . $route . '" width="130px">';
             }
         }
     } else {
