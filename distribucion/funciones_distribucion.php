@@ -7,14 +7,30 @@ while ($max_salida > 0) {
         $ruta_db_superior = $ruta;
     }
     $ruta .= "../";
-    $max_salida--;
+    $max_salida--; 
 }
 
 include_once($ruta_db_superior."core/autoload.php");
 
-function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
-{
-    global $conn, $ruta_db_superior;
+/**
+ * En el valor de $campo_origen va el nombre del campo del formulario que se va a gestionar como origen. Nota(el campo del formulario solo puede tener un iddependencia_cargo o un iddatos_ejecutor)
+ * cuando el $campo_origen corresponde a un iddependencia_cargo se debe colocar en el $tipo_origen el valor (1)
+ * cuando el $campo_origen corresponde a un iddatos_ejecutor se debe colocar en el $tipo_origen el valor (2)
+ * En el valor de $campo_destino va el nombre del campo del formulario que se va a gestionar como destino. Nota(el campo del formulario puede tener uno o varios iddependencia_cargo separado por comas, uno o varios iddatos_ejecutor separado por coma o una iddependencia con (#iddependencia)
+ * cuando el $campo_destino corresponde a un iddependencia_cargo o iddependencia se debe colocar en el $tipo_destino el valor (1)
+ * cuando el $campo_destino corresponde a un iddatos_ejecutor se debe colocar en el $tipo_destino el valor (2)
+ * El $estado_distribucion determina el buzon en donde esta el tramite 0,Pediente o entrega interna a ventanilla; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
+ * El $estado_recogida corresponde a si se necesita una acción de recogida en este caso se debe enviar el valor (1) para cuando es si y el valor de (0) cuando es no
+ * @param $iddoc (int) identificador de documento
+ * @param $campo_origen (string) nombre del campo que contiene el usuario origen
+ * @param $tipo_origen (int) identificador del tipo de solicitud de origen (1-Externo, 2-Interno)
+ * @param $campo_destino (string) nombre del campo que contiene el usuario destino
+ * @param $tipo_destino (int) identificador del tipo de solicitud de destino (1-Externo, 2-Interno)
+ * @param $estado_distribucion (int) Establece si si se necesita Entrega (1-si, 3-no)
+ * @param $estado_recogida (int) Establece si se necesita recogida (1-si, 0-no)
+ */
+function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0){
+    global $conn;
 
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "", $conn);
     $nombre_tabla = $datos_plantilla[0]['nombre_tabla'];
@@ -34,20 +50,19 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
 
             $ingresar = ingresar_distribucion($iddoc, $datos_distribucion);
         }
-    } //fin if $datos_documento['numcampos']
+    }
 }
 
-function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
-{
+function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0){
     global $conn, $ruta_db_superior;
 
     /*
      * $iddoc = iddocumento de la tabla documento
      * $datos
-     * ['origen']   		---> iddependencia_cargo ó iddatos_ejecutor
-     * ['tipo_origen']	---> 1,funcionario;2,ejecutor
-     * ['destino']		---> iddependencia_cargo ó dependencia#, ó iddatos_ejecutor
-     * ['tipo_destino']	---> 1,funcionario;2,ejecutor
+     * ['origen']       ---> iddependencia_cargo ó iddatos_ejecutor
+     * ['tipo_origen']  ---> 1,funcionario; 2,ejecutor
+     * ['destino']	    ---> iddependencia_cargo ó dependencia#, ó iddatos_ejecutor
+     * ['tipo_destino'] ---> 1,funcionario;2,ejecutor
      * ['estado_distribucion']  ---> 0,Pediente; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
      * ['estado_recogida'] ---> 0, No; 1, Si
      * $iddistribucion = si se desea ingresar la distribucion que una llave especifica, se usa para migrar viejas distribuciones a la nueva distribucion
@@ -68,10 +83,13 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
     //---------------------------------------------------------------
     //ESTADO RECOGIDA
     $estado_recogida = 0;
-    if ($datos['tipo_origen'] == 2) {//SI VIENE DE AFUERA
+    //Si el origen es externo es decir iddatos_ejecutor
+    if ($datos['tipo_origen'] == 2) {
         $estado_recogida = 1;
     }
-    if (@$datos['estado_recogida']) {//SI NO REQUIEREN RECOGER
+
+    //Si no se requiere recogida se almacena 1 para simular que ya fue realizada
+    if (@$datos['estado_recogida']) {
         $estado_recogida = 1;
     }
 
@@ -246,32 +264,41 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
         $tabla = '
             <div class="row">
             <div class="col-md-12">
-            <table border="1" class="table table-bordered" style="width:100%;border-collapse: collapse;">
+            <table border="0" style="width:100%;border-collapse: collapse;">
                 <tr>
-                    <td style="text-align:center;"><b class="hint-text">NO. ITEM</b></td>
-                    <td style="text-align:center;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
-                    <td style="text-align:center;"><b class="hint-text">ORIGEN</b></td>
-                    <td style="text-align:center;"><b class="hint-text">DESTINO</b></td>
+                    <td style="width:15%;"><b class="hint-text">NO. ITEM</b></td>
+                    <td style="width:20%;"><b class="hint-text">TIPO DE ORIGEN</b></td>
+                    <td style="width:20%;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
+                    <td style="width:20%;"><b class="hint-text">ORIGEN</b></td>
+                    <td style="width:25%;"><b class="hint-text">DESTINO</b></td> 
+                </tr> 
+                <tr> 
+                    <td colspan=5 style="width:100%;" > <hr /></td>
                 </tr>
-            ';
-
+            '; 
+ 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
             $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
 
-            $tabla .= '<tr>
-				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td style="text-align:center;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
-				<td style="text-align:center;"> 
+            $tabla .= '
+                <tr> 
+                <td style="width:15%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
+                <td style="width:20%;"> ' . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . '</td>
+				<td style="width:20%;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>
+				<td style="width:20%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . '
 				</td>
-				<td style="text-align:center;"> 
+				<td style="width:25%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . '
 				</td>
-			</tr>';
+            </tr>
+            <tr>
+                    <td colspan=5 style="width:100%;" > <hr /></td>
+                </tr>';
         }
 
         $tabla .= '</table></div></div>';
@@ -332,9 +359,10 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
         $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
 
         $retornar_enlace = 0;
+    
         switch ($diligencia) {
             case 'RECOGIDA':
-                if (in_array($distribucion[0]['origen'], $vector_roles_usuario_actual)) {
+                if (in_array($distribucion[0]['destino'], $vector_roles_usuario_actual)) {
                     $retornar_enlace = 1;
                 }
                 break;
@@ -347,7 +375,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 
         if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
             //se comenta el boton hasta nueva indicacion de ubicacion
-            //$html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
+            $html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
         }
     }//fin if js
 

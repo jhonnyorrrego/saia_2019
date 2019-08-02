@@ -34,8 +34,15 @@ try {
     }
 
     $RecurrenciaTarea = $Tarea->getRecurrence();
-    $Response->data = ['date' => $Tarea->fecha_final] +
-        $RecurrenciaTarea->getAttributes();
+    $Response->data = [
+        'date' => $Tarea->fecha_final,
+        'recurrence' => $RecurrenciaTarea->recurrencia,
+        'unity' => $RecurrenciaTarea->unidad_tiempo,
+        'period' => $RecurrenciaTarea->periodo,
+        'option' => $RecurrenciaTarea->opcion_unidad,
+        'finish' => $RecurrenciaTarea->terminar,
+        'notifications' => []
+    ];
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

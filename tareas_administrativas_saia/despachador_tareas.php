@@ -42,4 +42,3 @@ if ($cant) {
 }
 curl_close($ch);
 fclose($abrir);
-?>

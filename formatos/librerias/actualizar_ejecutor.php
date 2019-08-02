@@ -59,6 +59,9 @@ if ($ejecutor["numcampos"]) {
 	$sql = "INSERT INTO ejecutor(nombre,identificacion)VALUES('" . @$nombre . "','" . @$identificacion . "')";
 	phpmkr_query($sql, $conn);
 	$idejecutor = phpmkr_insert_id();
+	if (isset($_REQUEST["tipo_ejecutor"]) && $_REQUEST["tipo_ejecutor"])
+		phpmkr_query("update ejecutor set tipo_ejecutor='" . $_REQUEST["tipo_ejecutor"] . "' where idejecutor=$idejecutor", $conn);
+		
 	if (isset($_REQUEST["lugar_expedicion"]) && $_REQUEST["lugar_expedicion"])
 		phpmkr_query("update ejecutor set lugar_expedicion='" . $_REQUEST["lugar_expedicion"] . "' where idejecutor=$idejecutor", $conn);
 

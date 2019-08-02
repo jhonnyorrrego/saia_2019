@@ -19,16 +19,16 @@ function cambiar_mensajero_distribucion()
         'exito' => 0,
         'msn' => "Error al actualizar el mensajero"
     );
-
-    $iddistribucion = @$_REQUEST['iddistribucion'];
+    $iddistribucion = implode(",",$_REQUEST['iddistribucion']);
 
     if ($iddistribucion) {
 
         $vector_mensajero_nuevo = explode('-', @$_REQUEST['mensajero']);
         $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "", $conn);
-
-        //$retorno = validar_oriden_destino_distribucion($iddistribucion); Valida que todos los items sean internos o externos
-        $retorno['exito']=1;
+        
+        //Valida que todos los items sean internos o externos
+        $retorno = validar_oriden_destino_distribucion($iddistribucion); 
+        //$retorno['exito']=1;
         if ($retorno['exito'] == 1) {
             for ($i = 0; $i < $distribucion['numcampos']; $i++) {
                 $diligencia = mostrar_diligencia_distribucion($distribucion[$i]['tipo_origen'], $distribucion[$i]['estado_recogida']);
@@ -45,18 +45,21 @@ function cambiar_mensajero_distribucion()
                         break;
                     case 'ENTREGA' :
                         $update_adicional = ',mensajero_empresad=0';
-                        if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {
+
+                        if ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e') {
                             $retorno["msn"] = "No es posible asignar un mensajero externo";
                             $retorno["exito"] = 0;
-                        } elseif ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e') { //si es una empresa_transportadora es decir mensajero_empresad
+                        } elseif ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') { //si es una empresa_transportadora es decir mensajero_empresad
                             $update_adicional = ',mensajero_empresad=1';
                             $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . ",mensajero_empresad=1 WHERE iddistribucion in(" . $iddistribucion . ")";
                             $retorno = array('exito' => 1, 'sql' . $i => $upm);
                             phpmkr_query($upm) or die(json_encode($retorno));
-                        } elseif ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'i'){
+                        } elseif ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'i'){
                             $upm = "UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . ",mensajero_empresad=0 WHERE iddistribucion in(" . $iddistribucion . ")";
                             $retorno = array('exito' => 1, 'sql' . $i => $upm);
                             phpmkr_query($upm) or die(json_encode($retorno));
+                        }else if($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e'){
+                            $retorno = array('exito' => 0, 'msn' => 'No puede seleccionar un mensajero interno para un destino externo');
                         }
                         break;
                 }
@@ -85,16 +88,16 @@ function validar_oriden_destino_distribucion($distribucion)
         if ($tipo_origen_externo[0]['cantidad'] == $cantidad) {
             $retorno['tipo_origen'] = 1;
         } else {
-            $retorno['tipo_origen'] = 1;
+            $retorno['tipo_origen'] = 2;
         }
-        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
 
         if ($tipo_destino_externo[0]['cantidad'] == $cantidad || $tipo_destino_interno[0]['cantidad'] == $cantidad) {
             if ($tipo_destino_externo[0]['cantidad'] == $cantidad) {
                 $retorno['tipo_destino'] = 1;
             } else {
-                $retorno['tipo_destino'] = 1;
+                $retorno['tipo_destino'] = 2;
             }
             $retorno['exito'] = 1;
         } else {

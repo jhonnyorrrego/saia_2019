@@ -122,19 +122,25 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
                 2 => "Inactivo"
             );
             $tabla .= '<form id="item_prerequisitos" action="'.$ruta_db_superior.'formatos/ruta_distribucion/guardar_datos_dependencias.php">
-            <table class="table table-bordered" style="width:100%;font-size:80%;">
+            <table style="width:100%;font-size:80%;">
 			<tr style="font-weight:bold"> 
 			    <td style="width:20%"><strong>Fecha</strong></td>
 			    <td style="width:30%"><strong>Dependencia</strong></td>
 			    <td style="width:30%"><strong>Observaci&oacute;n</strong></td>
 			    <td style="width:20%"><strong><center>Estado</center></strong></td>
-            </tr></table><hr /> <table id="dependenciaDistribucion" class="table-bordered" style="width:100%; font-size:80%;">'; 
+            </tr></table><hr /> <table id="dependenciaDistribucion" style="width:100%; font-size:80%;">'; 
 
             for ($j = 0; $j < $item["numcampos"]; $j++) {
                 $tabla .= crearItemDependencia($item[$j],$dato);
             }
-            $tabla .= '</table></form>';
+          
+        }else{
+            $tabla .=' <table id="dependenciaDistribucion">
+            <tr>
+            <td style="text-align:center; font-weight:bold;" colspan="4">Dependencias de la ruta</td>
+            </tr>';
         }
+        $tabla .= '</table></form>';
     }
     echo $tabla;
     if ($_REQUEST["tipo"] != 5) {
@@ -211,7 +217,7 @@ function crearItemFuncionario($item){
             </select>
         </td>///////////////////////*/
 
-        $tabla .='<td style="width:20%;font-size:90%;text-align:center;" > TEST</td>';
+        $tabla .='<td style="width:20%;font-size:90%;text-align:center;" > (En Desarrollo)</td>';
 
         $tabla .='</tr>';      
 
@@ -232,13 +238,13 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
                 2 => "Inactivo"
             );
 
-            $tabla .= '<table class="table table-bordered" style="width:100%;font-size:80%;">
+            $tabla .= '<table style="width:100%;font-size:80%;">
 			<tr>
 		    <td style="width:20%;"><strong>Fecha</strong></td>
             <td style="width:30%;"><strong>Mensajero</strong></td>
             <td style="width:30%;"><strong>Observaci&oacute;n</strong></td>
 		    <td style="width:20%;text-align:center;"><strong>Estado</strong></td>
-			</tr></table><hr /> <table class="table table-bordered" id="funcionarioRuta" style="width:100%;font-size:80%;">'; 
+			</tr></table><hr /> <table id="funcionarioRuta" style="width:100%;font-size:80%;">'; 
  
             for ($j = 0; $j < $item['numcampos']; $j++) {
                 $tabla .= crearItemFuncionario($item[$j]);

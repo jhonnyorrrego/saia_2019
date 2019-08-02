@@ -118,6 +118,7 @@ if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
             -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
             box-shadow: 2px 2px 8px #c6c6c6;
         }
+
         .page_margin_top,
         .page_content,
         .page_margin_bottom {

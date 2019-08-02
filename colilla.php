@@ -222,14 +222,18 @@ if ($doc <> FALSE) {
         $usu = $radicador[0]["nombre"];
     } else {
         if (strtolower($datos[0]["plantilla"]) == 'radicacion_entrada') {
-            $destino_radicacion = busca_filtro_tabla("b.funcionario_codigo", "ft_radicacion_entrada a, vfuncionario_dc b", "a.destino=b.iddependencia_cargo AND a.documento_iddocumento=" . $doc, "", $conn);
-            $fun_destino = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $destino_radicacion[0]['funcionario_codigo'], "", $conn);
-
-            if ($fun_destino['numcampos']) {
-                $usu = $nombre_fun_destino = ucwords(strtolower(codifica_encabezado(html_entity_decode($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]))));
-            } else {
+            $destino_radicacion = busca_filtro_tabla("b.funcionario_codigo", "ft_radicacion_entrada a, vfuncionario_dc b", "a.destino=b.iddependencia_cargo AND a.documento_iddocumento=" . $doc, "", $conn);         
+            if($destino_radicacion["numcampos"]){
+                $fun_destino = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $destino_radicacion[0]['funcionario_codigo'], "", $conn);
+                if ($fun_destino['numcampos']) {
+                    $usu = $nombre_fun_destino = ucwords(strtolower(codifica_encabezado(html_entity_decode($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]))));
+                } else {
+                    $usu = "RADICACION";
+                }
+            }else{
                 $usu = "RADICACION";
             }
+           
         } else {
             $usu = "RADICACION";
         }
