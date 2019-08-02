@@ -8,20 +8,24 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-
+include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
-echo jquery();
-echo select2();
+
 if(empty($_REQUEST['id'])){
     $_REQUEST['id'] = '';
 }
 if(empty($_REQUEST['parent'])){
   $_REQUEST['parent'] = '';
 }
+if(empty($_REQUEST['table'])){
+  $_REQUEST['table'] = '';
+}
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
     'id' => $_REQUEST['id'],
-    'parent' => $_REQUEST['parent']
+    'parent' => $_REQUEST['parent'],
+    'table' => $_REQUEST['table']
+
 ]);
 ?>
 <!doctype html>
@@ -31,7 +35,7 @@ $params = json_encode([
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Cargo</title>
+    <title>Crear</title>
 </head>
 
 <body>
@@ -39,28 +43,11 @@ $params = json_encode([
         <!-- START card -->
         <div class="card card-default mb-0">
             <div class="card-body py-2">
-                <form id="area_form">
+                <form id="transportadora_form">
                     <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
-                    <div class="form-group form-group-default">
-                        <label>Código:</label>
-                        <input name="codigo_cargo" type="text" class="form-control">
-                    </div>
                     <div class="form-group form-group-default required">
                         <label>Nombre:</label>
                         <input name="nombre" type="text" class="form-control">
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-2">
-                            <div id="areas_tree">Cargo superior</div>
-                            <input type="hidden" name="cod_padre">
-                        </div>
-                    </div>
-                    <div class="form-group form-group-default form-group-default-select2 required">
-                        <label class="">Tipo</label>
-                        <select class="full-width" name="tipo_cargo" id="type_select">
-                            <option value="1">Administrativo</option>
-                            <option value="2">Funcional</option>
-                        </select>
                     </div>
                     <div class="form-group">
                         <label class="pl-1 mb-0 mt-1">Estado</label>
@@ -71,15 +58,14 @@ $params = json_encode([
                             <label for="inactivo">Inactivo</label>
                         </div>
                     </div>
+                    <input name="id" id="id" type="hidden" class="form-control" value="<?= $_REQUEST['id'] ?>">
                 </form>
             </div>
         </div>
     </div>
     <?= select2() ?>
-    <?= fancyTree() ?>
-    <?= dropzone() ?>
     <?= validate() ?>
-    <script id="area_script" src="<?= $ruta_db_superior ?>views/cargo/js/formulario.js" data-params='<?= $params ?>'>
+    <script id="transportadora_script" src="<?= $ruta_db_superior ?>views/distribucion/js/transportadoras.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

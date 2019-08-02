@@ -55,7 +55,11 @@ if ($datos_busqueda[0]["busqueda_avanzada"]) {
 }
 
 if ($datos_busqueda[0]["enlace_adicionar"]) {
-    $datos_busqueda[0]["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
+    if(strpos($datos_busqueda[0]["enlace_adicionar"], '?') === false){
+        $datos_busqueda[0]["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
+    }else{
+        $datos_busqueda[0]["enlace_adicionar"] .= '&idbusqueda_componente=' . $componentId;
+    }  
     $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$datos_busqueda[0]["enlace_adicionar"]}'>
         <i class='fa fa-plus'></i>
         <span class='d-none d-sm-inline'>Adicionar</span>
@@ -366,7 +370,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
 
                 return params;
             }
-
+            
             function getIdSelections() {
                 return $.map($table.bootstrapTable('getSelections'), function(row) {
                     return row[llave];

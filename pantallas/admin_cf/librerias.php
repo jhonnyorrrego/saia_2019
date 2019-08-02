@@ -1,4 +1,6 @@
 <?php
+use function GuzzleHttp\json_encode;
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -18,4 +20,14 @@ function barra_superior_cf($idcf, $tabla, $campos="") {
     </div>';
 	return ($texto);
 }
+
+function editar_cf($id,$table){
+	global $ruta_db_superior;
+	$enlace = StaticSql::search("select enlace_adicionar from busqueda_componente where idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"]);
+	$datos = '<div><button class="btn btn-cf" type="button" aria-haspopup="true" aria-expanded="false" enlace="' . $ruta_db_superior . $enlace[0]["enlace_adicionar"] . '" table="' . $table . '" editar_id="' . $id  . '">
+				<i class="fa fa-ellipsis-v"></i>
+			</button></div>';
+	return $datos;
+}
+
 ?>
