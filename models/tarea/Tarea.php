@@ -58,7 +58,8 @@ class Tarea extends LogModel
     {
         return
             parent::afterUpdate() &&
-            $this->refreshDocumentLimitDate();
+            $this->refreshDocumentLimitDate() &&
+            $this->checkInactiveTask();
     }
 
     /**
@@ -172,6 +173,28 @@ class Tarea extends LogModel
     {
         return $this->getDocument() ?
             Documento::setLimitDate($this->getDocument()->fk_documento) : true;
+    }
+
+    /**
+     * verifica si la tarea esta en estado inactivo
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function checkInactiveTask()
+    {
+        $history = $this->attributeWasChanged('estado');
+
+        if ($history->changed && $history->newValue == 0) {
+            TareaNotificacion::executeUpdate([
+                'estado' => 0
+            ], [
+                'fk_tarea' => $this->getPK()
+            ]);
+        }
+
+        return true;
     }
 
     /**

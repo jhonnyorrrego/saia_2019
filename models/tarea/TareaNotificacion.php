@@ -1,9 +1,13 @@
 <?php
 
-class TareaAnexo extends Model
+class TareaNotificacion extends Model
 {
+    protected $idtarea_notificacion;
     protected $fk_tarea;
-    protected $fk_anexo;
+    protected $estado;
+    protected $tipo;
+    protected $duracion;
+    protected $periodo;
 
     function __construct($id = null)
     {
@@ -18,9 +22,11 @@ class TareaAnexo extends Model
         $this->dbAttributes = (object) [
             'safe' => [
                 'fk_tarea',
-                'fk_anexo'
-            ],
-            'date' => []
+                'estado',
+                'tipo',
+                'duracion',
+                'periodo'
+            ]
         ];
     }
 }

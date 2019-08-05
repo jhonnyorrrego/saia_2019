@@ -11,7 +11,6 @@ class TareaFuncionario extends Model
     protected $fk_tarea;
     protected $tipo;
     protected $estado;
-    
 
     function __construct($id = null)
     {
@@ -23,7 +22,7 @@ class TareaFuncionario extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcionario',
                 'fk_tarea',

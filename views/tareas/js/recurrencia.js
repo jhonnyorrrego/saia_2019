@@ -2,6 +2,7 @@ $(function() {
     let params = JSON.parse($('script[data-params]').attr('data-params'));
     let baseUrl = Session.getBaseUrl();
     let taskMomentDate = null;
+    let hasRecurrence = null;
 
     $('[name="default_recurrence"]').on('change', function() {
         if (+$(this).val() == 0) {
@@ -70,33 +71,46 @@ $(function() {
     });
 
     $('#save_recurrence').on('click', function() {
-        let data =
-            $('#recurrence_form').serialize() +
-            '&' +
-            $.param({
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                taskId: params.id
+        if (hasRecurrence) {
+            top.confirm({
+                id: 'question',
+                type: 'error',
+                title: 'Precaución!',
+                message: 'Esta acción eliminará la recurrencia actual',
+                position: 'center',
+                timeout: 0,
+                overlay: true,
+                overlayClose: true,
+                closeOnEscape: true,
+                closeOnClick: true,
+                buttons: [
+                    [
+                        '<button><b>Si</b>, Eliminar tareas posteriores</button>',
+                        function(instance, toast) {
+                            instance.hide(
+                                { transitionOut: 'fadeOut' },
+                                toast,
+                                'button'
+                            );
+                            saveRecurrence();
+                        },
+                        true
+                    ],
+                    [
+                        '<button><b>Cancelar</b></button>',
+                        function(instance, toast) {
+                            instance.hide(
+                                { transitionOut: 'fadeOut' },
+                                toast,
+                                'button'
+                            );
+                        }
+                    ]
+                ]
             });
-        $.post(
-            `${baseUrl}app/tareas/guardar_recurrencia.php`,
-            data,
-            function(response) {
-                if (response.success) {
-                    top.notification({
-                        type: 'success',
-                        message: response.message
-                    });
-                    top.successModalEvent();
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
-                }
-            },
-            'json'
-        );
+        } else {
+            saveRecurrence();
+        }
     });
 
     $('#addNotification').on('click', function() {
@@ -161,6 +175,37 @@ $(function() {
         );
     }
 
+    function saveRecurrence() {
+        let data =
+            $('#recurrence_form').serialize() +
+            '&' +
+            $.param({
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                taskId: params.id
+            });
+        $.post(
+            `${baseUrl}app/tareas/guardar_recurrencia.php`,
+            data,
+            function(response) {
+                if (response.success) {
+                    hasRecurrence = true;
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                    top.successModalEvent();
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    }
+
     function fillForm(data) {
         taskMomentDate = moment(data.date);
         createRecurrenceOptions(taskMomentDate);
@@ -169,7 +214,8 @@ $(function() {
             1
         );
 
-        if (data.recurrence) {
+        hasRecurrence = +data.recurrence > 0;
+        if (hasRecurrence) {
             $('[name="default_recurrence"]')
                 .val(data.recurrence)
                 .trigger('change');

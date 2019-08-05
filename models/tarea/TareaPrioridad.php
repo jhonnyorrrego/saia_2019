@@ -8,16 +8,17 @@ class TareaPrioridad extends Model
     protected $prioridad;
     protected $estado;
     protected $fecha;
-    
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcionario',
@@ -30,11 +31,13 @@ class TareaPrioridad extends Model
         ];
     }
 
-    public static function takeOffByTask($taskId){
+    public static function takeOffByTask($taskId)
+    {
         return self::executeUpdate(['estado' => 0], ['fk_tarea' => $taskId]);
     }
 
-    public static function findHistoryByTask($taskId){
+    public static function findHistoryByTask($taskId)
+    {
         global $conn;
 
         $sql = <<<SQL
@@ -57,7 +60,8 @@ SQL;
         return StaticSql::search($sql);
     }
 
-    public static function getPriority($priority){
+    public static function getPriority($priority)
+    {
         switch ($priority) {
             case '1':
                 $response = 'Alta';

@@ -41,8 +41,10 @@ class RecurrenciaTareaController
      */
     public function generate()
     {
+        $this->deleteRecurrence();
+
         if (!$this->configuration->recurrence) {
-            return $this->deleteRecurrence();
+            return true;
         }
 
         if ($this->configuration->unity < 0) {
@@ -313,13 +315,21 @@ class RecurrenciaTareaController
             return true;
         }
 
-        $fk_recurrence = $this->Tarea->fk_recurrencia_tarea;
-        $this->Tarea->fk_recurrencia_tarea = 0;
-        $this->Tarea->save();
-
-        Tarea::executeDelete([
-            'fk_recurrencia_tarea' => $fk_recurrence
+        $tasks = Tarea::findAllByAttributes([
+            'fk_recurrencia_tarea' => $this->Tarea->fk_recurrencia_tarea
         ]);
+
+        $referenceDateTime = new DateTime($this->Tarea->fecha_final);
+        foreach ($tasks as $Tarea) {
+            $taskDateTime = new DateTime($Tarea->fecha_final);
+            if ($referenceDateTime < $taskDateTime) {
+                $Tarea->setAttributes([
+                    'estado' => 0,
+                    'fk_recurrencia_tarea' => 0
+                ]);
+                $Tarea->save();
+            }
+        }
 
         return true;
     }
