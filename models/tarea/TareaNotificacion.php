@@ -29,4 +29,19 @@ class TareaNotificacion extends Model
             ]
         ];
     }
+
+    /* funcionalidad a ejecutar antes de crear un registro
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-05
+     */
+    protected function beforeCreate()
+    {
+        if (!$this->estado) {
+            $this->estado = 1;
+        }
+
+        return true;
+    }
 }

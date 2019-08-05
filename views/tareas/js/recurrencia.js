@@ -71,46 +71,7 @@ $(function() {
     });
 
     $('#save_recurrence').on('click', function() {
-        if (hasRecurrence) {
-            top.confirm({
-                id: 'question',
-                type: 'error',
-                title: 'Precaución!',
-                message: 'Esta acción eliminará la recurrencia actual',
-                position: 'center',
-                timeout: 0,
-                overlay: true,
-                overlayClose: true,
-                closeOnEscape: true,
-                closeOnClick: true,
-                buttons: [
-                    [
-                        '<button><b>Si</b>, Eliminar tareas posteriores</button>',
-                        function(instance, toast) {
-                            instance.hide(
-                                { transitionOut: 'fadeOut' },
-                                toast,
-                                'button'
-                            );
-                            saveRecurrence();
-                        },
-                        true
-                    ],
-                    [
-                        '<button><b>Cancelar</b></button>',
-                        function(instance, toast) {
-                            instance.hide(
-                                { transitionOut: 'fadeOut' },
-                                toast,
-                                'button'
-                            );
-                        }
-                    ]
-                ]
-            });
-        } else {
-            saveRecurrence();
-        }
+        saveRecurrence();
     });
 
     $('#addNotification').on('click', function() {
