@@ -39,9 +39,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <textarea class="form-control" id="description" rows="3"></textarea>
 </div>
 <div class="form-group text-right">
+    <button class="btn btn-danger d-none" id="delete_task">Eliminar tarea</button>
     <button class="btn btn-complete" id="save_task"></button>
     <div class="float-right progress-circle-indeterminate" id="spiner" style="display:none"></div>
 </div>
 <?= select2() ?>
 <?= dateTimePicker() ?>
-<script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script> 
+<script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script>

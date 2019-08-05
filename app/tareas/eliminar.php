@@ -23,27 +23,30 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['task']) {
+    if (!$_REQUEST['taskId']) {
         throw new Exception('Debe indicar la tarea', 1);
     }
 
-    $Tarea = new Tarea($_REQUEST['task']);
-    $managers = TareaFuncionario::findUsersByType($_REQUEST['task'], 1);
+    $Tarea = new Tarea($_REQUEST['taskId']);
 
-    $users = [];
-    foreach ($managers as $key => $Funcionario) {
-        $users[] = $Funcionario->getPK();
+    if ($_REQUEST['all']) {
+        $tasks = Tarea::findAllByAttributes([
+            'fk_recurrencia_tarea' => $Tarea->fk_recurrencia_tarea,
+            'estado' => 1
+        ]);
+    } else {
+        $tasks = [$Tarea];
     }
 
-    $Response->data = [
-        'task' => [
-            'nombre' => $Tarea->getName(),
-            'fecha_final' => $Tarea->fecha_final,
-            'descripcion' => $Tarea->descripcion,
-            'recurrence' => $Tarea->fk_recurrencia_tarea
-        ],
-        'users' => $users
-    ];
+    foreach ($tasks as $Tarea) {
+        $Tarea->estado = 0;
+        if (!$Tarea->save()) {
+            throw new Exception("Error al eliminar la tarea", 1);
+        }
+    }
+
+    $message = $_REQUEST['all'] ? "Tareas Eliminadas" : "Tarea Eliminada";
+    $Response->message = $message;
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
