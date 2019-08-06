@@ -54,7 +54,6 @@ try {
     }
 
     if ($ok) {
-
         if (!empty($_REQUEST['file_anexos'])) {
 
             $urlAnexo = $ruta_db_superior . $_REQUEST['file_anexos'];
@@ -67,15 +66,17 @@ try {
             $dataAditional['anexos'] = $json;
         }
 
+        $TRDVersionController = new TRDVersionController();
         $attributes = [
             'version' => $_REQUEST['version'],
             'tipo' => $_REQUEST['tipo'],
-            'descripcion' => $_REQUEST['descripcion']
+            'descripcion' => $_REQUEST['descripcion'],
+            'json_trd' => $TRDVersionController->getTrdData(),
+            'json_clasificacion' => $TRDVersionController->getClasificationData()
         ];
         $attributes = array_merge($attributes, $dataAditional);
 
         if (SerieVersion::newRecord($attributes)) {
-
             $Response->success = 1;
         } else {
             $Response->message = "No se pudo almacenar la información";
