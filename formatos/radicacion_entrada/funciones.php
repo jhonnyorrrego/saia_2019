@@ -587,7 +587,6 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
             <div class="col-md-12">
                 <table style="width: 100%; text-align:left;margin-bottom: 5%;border-collapse: collapse;" border="0" cellspacing="0">
                     <thead>
-                       <tr><td colspan="2" style="height:50px;"></td></tr>
                         <tr> 
                             <td style="width:70%;height:50px;">
                                

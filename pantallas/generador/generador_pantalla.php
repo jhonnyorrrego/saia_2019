@@ -9,11 +9,13 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+  
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
-include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
-
+include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'pantallas/generador/librerias_pantalla.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_componentes.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . 'arboles/crear_arbol_ft.php';
 
 $idpantalla = 0;
 $idencabezadoFormato = 0;
@@ -21,6 +23,7 @@ $contenidoEncabezado = 0;
 $contenidoPie = 0;
 $ocultarTexto = 0;
 $publicar = 0;
+
 if ($_REQUEST["idformato"]) {
     include_once $ruta_db_superior . "pantallas/generador/librerias.php";
     $idpantalla = $_REQUEST["idformato"];
@@ -48,6 +51,11 @@ if ($_REQUEST["idformato"]) {
     }
 }
 
+$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['idformato'], "cargar_seleccionado" => 1 ));
+$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
+$extensiones = array("filter" => array());
+$arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones, $validaciones);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -61,13 +69,18 @@ if ($_REQUEST["idformato"]) {
         position: relative;
         border: none;
     }
-
     </style>
+
+    <?= jquery() ?> 
+    <?= librerias_acciones_kaiten() ?>
+    <?= librerias_html5() ?>
+    <?= estilo_bootstrap() ?>
+    <?= jqueryUi() ?>
+    <?= icons() ?>
+    <?= librerias_arboles_ft("2.24", 'filtro') ?>
+
     <?php
-echo estilo_bootstrap();
-echo librerias_jquery("1.8.3");
-echo librerias_acciones_kaiten();
-echo librerias_html5();
+
 include_once $ruta_db_superior . "assets/librerias.php";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "nombre not in ('textarea_tiny')", "", $conn);
@@ -109,6 +122,32 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 
     <link href="<?php echo ($ruta_db_superior); ?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
     <style>
+
+	.estilo-dependencia {
+			font-family: verdana;
+            font-size: 7pt;
+            font-weight: bold;
+    }
+
+    .estilo-serie {
+        font-family: verdana;
+        font-size: 7pt;
+    }
+
+    .estilo-serie-sa {
+        font-family: verdana;
+        font-size: 7pt;
+        color: red;
+    }
+
+    ul.fancytree-container {
+        width: 100%;
+        height: 80%;
+        overflow: auto;
+        position: relative;
+        border: none;
+    }
+
     .well {
         margin-bottom: 3px;
         min-height: 11px;
@@ -145,6 +184,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
        }
 
     </style>
+
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 </head>
 
@@ -152,7 +192,37 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span9">
+            <div class="span2 mx-3">
+
+                    <div class="container"><br>
+                        <div class="row mx-0 px-0">
+                            <div class="col-auto px-0 mx-0">
+                                <?= $arbol->generar_html() ?>
+                            </div>
+                        </div>
+                    </div>
+
+                <script type="text/javascript">
+                    $(".buscar_arboles").hide(); 
+                    $("#contenido_arbol").css({
+                        "margin-top": "8px"
+                    });
+                    var ruta_db_superior = "<?= $ruta_db_superior ?>";
+                    var idformato = "<?= $_REQUEST['idformato'] ?>";
+
+                    if (!idformato) {
+                        function evento_click(event, data) {
+                            var nodeId = data.node.key;
+                            var title = data.node.title;
+                            var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
+                            if (elemento_evento == 'title') {
+                                abrir_kaiten("pantallas/formato/listado_formatos.php?no_kaiten=1&cargar_seleccionado=1&tabla=formato&id=" + nodeId, title);
+                            }
+                        }
+                    }
+                </script>
+            </div>
+            <div class="span6">
                 <div class="tabbable"><br>
                     <ul class="nav nav-tabs" id="tabs_formulario">
                         <li style="width:100px;" id="pantalla_principal">
@@ -356,9 +426,9 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             </form><br>
 
                             <script type="text/javascript">
-                            var encabezados = <?php echo json_encode($contenido_enc); ?>;
-                            var idencabezado = <?php echo $idencabezadoFormato; ?>;
-                            var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
+                                var encabezados = <?php echo json_encode($contenido_enc); ?>;
+                                var idencabezado = <?php echo $idencabezadoFormato; ?>;
+                                var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
                             </script>
                         </div>
                         <div class="tab-pane" id="pantalla_listar-tab">

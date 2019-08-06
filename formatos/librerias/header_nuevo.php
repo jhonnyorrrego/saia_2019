@@ -120,13 +120,22 @@ if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
         }
 
         .page_margin_top,
-        .page_content,
         .page_margin_bottom {
             overflow: hidden;
             margin-left: 5%;
             margin-right: 5%;
             margin-top: 5%;
             margin-bottom: 5%;
+        }
+
+        .page_content {
+
+            overflow: hidden;
+            margin-left: 5%;
+            margin-right: 5%;
+            margin-top: 0%;
+            margin-bottom: 5%;
+
         }
 
         .page_margin_top {

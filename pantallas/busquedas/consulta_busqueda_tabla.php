@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -126,38 +127,33 @@ include_once $ruta_db_superior . "core/autoload.php";
                     ?>
                     <button class="btn btn-secondary kenlace_saia" titulo="B&uacute;squeda <?php echo ($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo ($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo ($datos_busqueda[0]['busqueda_avanzada']); ?>"><i class="fa fa-search"></i></button>
                 <?php
-            }
-            $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
-            if ($tiene_acciones) {
-                $acciones_selecionados = '';
-                if ($datos_busqueda[0]["acciones_seleccionados"] != '') {
-                    $datos_reporte = array();
-                    $datos_reporte['idbusqueda_componente'] = $datos_busqueda[0]["idbusqueda_componente"];
-                    $datos_reporte['variable_busqueda'] = @$_REQUEST["variable_busqueda"];
-                    $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
-                    $cantidad = count($acciones);
-                    for ($i = 0; $i < $cantidad; $i++) {
-                        echo $acciones[$i]($datos_reporte);
-                    }
                 }
-                ?>
+                $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
+                if ($tiene_acciones) {
+                    $acciones_selecionados = '';
+                    if ($datos_busqueda[0]["acciones_seleccionados"] != '') {
+                        $datos_reporte = array();
+                        $datos_reporte['idbusqueda_componente'] = $datos_busqueda[0]["idbusqueda_componente"];
+                        $datos_reporte['variable_busqueda'] = @$_REQUEST["variable_busqueda"];
+                        $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
+                        $cantidad = count($acciones);
+                        for ($i = 0; $i < $cantidad; $i++) {
+                            echo $acciones[$i]($datos_reporte);
+                        }
+                    }
+                    ?>
                 <?php
-            }
-print_r($datos_busqueda);
+                }
 
-            if (@$datos_busqueda[0]["enlace_adicionar"]) {
-                ?>
-                    <button class="btn btn-sm kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo ($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo ($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo ($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button>
-                <?php
-            } /* if(@$datos_busqueda[0]["menu_busqueda_superior"]){
+                /* if(@$datos_busqueda[0]["menu_busqueda_superior"]){
                       $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
                       echo($funcion_menu[0](@$funcion_menu[1]));
                       } */
-            if (@$datos_busqueda[0]["menu_busqueda_superior"]) {
-                $funcion_menu = explode("@", $datos_busqueda[0]["menu_busqueda_superior"]);
-                echo ($funcion_menu[0](@$funcion_menu[1]));
-            }
-            ?>
+                if (@$datos_busqueda[0]["menu_busqueda_superior"]) {
+                    $funcion_menu = explode("@", $datos_busqueda[0]["menu_busqueda_superior"]);
+                    echo ($funcion_menu[0](@$funcion_menu[1]));
+                }
+                ?>
                 <button class="btn btn-secondary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Descargar" id="boton_exportar_excel" style=""><i class="fa fa-download"></i></button>
 
                 <div class="pull-right d-none" valign="middle">
@@ -314,11 +310,13 @@ print_r($datos_busqueda);
                 // save your data, here just save the current page
                 selections[paginaActual] = getIdSelections();
                 // push or splice the selections if you want to save all data selections
-                if(e.type == 'uncheck-all'){
-                    selections = [[0, -1]];
+                if (e.type == 'uncheck-all') {
+                    selections = [
+                        [0, -1]
+                    ];
                 }
             });
-        });
+    });
 
     function responseHandler(res) {
         var options = $table.bootstrapTable('getOptions');
@@ -342,11 +340,11 @@ print_r($datos_busqueda);
         });
     }
 
-    function totalSelection(){
+    function totalSelection() {
         registros_seleccionados = new Array();
         var seleccionadosGlobal = $(selections);
-        for(var i=1; i < seleccionadosGlobal.length ; i++){
-            seleccionadosGlobal[i].forEach( function(valor) {
+        for (var i = 1; i < seleccionadosGlobal.length; i++) {
+            seleccionadosGlobal[i].forEach(function(valor) {
                 registros_seleccionados.push(valor);
             });
         }

@@ -141,11 +141,12 @@ $(function() {
          * newFontSize -> ?
          */
         let relation = (newFontSize * 100) / baseFontSize;
+
+        changeHeaderDimensions(relation * 2);
         changeImageSize(relation);
-        changeHeaderFooterDimensions(relation);
     }
 
-    function changeHeaderFooterDimensions(relation) {
+    function changeHeaderDimensions(relation) {
         $("#doc_header").each(function() {
             if (!$(this).attr("data-basedimensions")) {
                 $(this).attr(
@@ -155,8 +156,8 @@ $(function() {
                     })
                 );
             }
-
             let dimensions = JSON.parse($(this).attr("data-basedimensions"));
+
             $(this).height((relation * dimensions.height) / 100);
         });
     }
