@@ -3,25 +3,28 @@
 class Serie extends Model
 {
     protected $idserie;
-    protected $nombre;
     protected $cod_padre;
-    protected $dias_entrega;
+    protected $cod_arbol;
+    protected $nombre;
     protected $codigo;
+    protected $tipo;
     protected $retencion_gestion;
     protected $retencion_central;
-    protected $conservacion;
-    protected $digitalizacion;
-    protected $seleccion;
-    protected $otro;
     protected $procedimiento;
-    protected $copia;
-    protected $tipo;
-    protected $estado;
-    protected $categoria;
-    protected $cod_arbol;
-    
-    
+    protected $dias_respuesta;
 
+    protected $sop_papel;
+    protected $sop_electronico;
+
+    protected $dis_eliminacion;
+    protected $dis_conservacion;
+    protected $dis_seleccion;
+    protected $dis_microfilma;
+
+    protected $fk_serie_version;
+    protected $estado;
+
+    protected $dbAttributes;
     protected $seriePadre;
 
     function __construct($id = null)
@@ -31,27 +34,38 @@ class Serie extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
-                'nombre',
                 'cod_padre',
-                'dias_entrega',
+                'cod_arbol',
+                'nombre',
                 'codigo',
+                'tipo',
                 'retencion_gestion',
                 'retencion_central',
-                'conservacion',
-                'digitalizacion',
-                'seleccion',
-                'otro',
                 'procedimiento',
-                'copia',
-                'tipo',
-                'estado',
-                'categoria',
-                'cod_arbol'
+                'dias_respuesta',
+                'sop_papel',
+                'sop_electronico',
+                'dis_eliminacion',
+                'dis_conservacion',
+                'dis_seleccion',
+                'dis_microfilma',
+                'fk_serie_version',
+                'estado'
             ]
         ];
     }
+
+
+
+    
+    public function beforeCreate()
+    {
+        $SerieVersion = SerieVersion::VersionActual();
+        $this->fk_serie_version = $SerieVersion->getPK();
+    }
+
     /**
      * Se ejecuta despues de crear la serie
      * actualiza el cod padre 
@@ -70,16 +84,6 @@ class Serie extends Model
         return $this->update();
     }
 
-    protected function afterDelete(){
-        $PermisoSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
-        if($PermisoSerie){
-            foreach ($PermisoSerie as $instance) {
-                $instance->delete();
-            }
-        }
-        return;
-    }
-
     /**
      * Crea la serie con sus correspondientes vinculaciones (expedientes, entidad serie)
      * NO utilizar create() para crear una serie
@@ -88,69 +92,41 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function createSerie(string $dependenciasVinculadas = '') : array
+    public function createSerie(array $data): array
     {
         $response = [
             'data' => [],
-            'exito' => 0,
+            'success' => 0,
             'message' => ''
         ];
-
-        if ($this->categoria == 3) {
-            if ($this->create()) {
-                $response['exito'] = 1;
-                $response['message'] = 'Datos almacenados';
-            } else {
-                $response['message'] = 'Error al crear la serie';
-            }
-        } else {
-            if (!empty($dependenciasVinculadas)) {
-                if ($this->create()) {
-                    $dependencia = explode(",", $dependenciasVinculadas);
-                    $cd = count($dependencia);
-
-                    $ok = 0;
-                    $attributes = [
-                        'fk_serie' => $this->idserie,
-                        'estado' => 1,
-                        'fecha_creacion' => date('Y-m-d H:i:s')
-                    ];
-                    $idsEntSe = [];
-                    for ($i = 0; $i < $cd; $i++) {
-                        $attributes['fk_dependencia'] = $dependencia[$i];
-
-                        $EntidadSerie = new EntidadSerie();
-                        $EntidadSerie->SetAttributes($attributes);
-                        $infoEntidadSerie = $EntidadSerie->CreateEntidadSerie();
-                        if ($infoEntidadSerie['exito']) {
-                            $idsEntSe[] = $EntidadSerie->getPK();
-                            $ok++;
-                        }
-                        ExpedienteController::createEntidadSerieCodArbol($this->cod_arbol, $attributes);
-                    }
-
-                    if ($ok == $cd) {
-                        $response['exito'] = 1;
-                        $response['data']['identidad_serie'] = $idsEntSe;
-                        $response['message'] = 'Datos almacenados';
-                    } else if ($ok) {
-                        $response['exito'] = 2;
-                        $response['data']['identidad_serie'] = $idsEntSe;
-                        $response['message'] = 'Serie creada, NO se vincularon todas las dependencias';
-                    } else {
-                        $this->delete();
-                        $response['message'] = 'No se pudo vincular las dependencias a la serie';
-                    }
-                } else {
-                    $response['message'] = 'Error al guardar la Serie';
+        $newId = $this->newRecord($data);
+        if ($newId) {
+            $infoData['idserie'] = $newId;
+            foreach ($data['soporte'] as $value) {
+                $id = SerieRetencion::newRecord([
+                    'fk_serie' => $newId,
+                    'fk_retencion' => $value
+                ]);
+                if ($id) {
+                    $infoData['idserie_retencion'][] = $id;
                 }
-            } else {
-                $response['message'] = 'Faltan las dependencias para vincular la serie';
             }
-        }
 
+            foreach ($data['disposicion'] as $value) {
+                $id = SerieRetencion::newRecord([
+                    'fk_serie' => $newId,
+                    'fk_retencion' => $value
+                ]);
+                if ($id) {
+                    $infoData['idserie_retencion'][] = $id;
+                }
+            }
+            $response['success'] = 1;
+        }
         return $response;
     }
+
+
     /**
      * Actualiza la serie y sus correspondientes vinculados (expedientes)
      * NO utilizar update() para actualizar una serie
@@ -158,7 +134,7 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateSerie() : array
+    public function updateSerie(): array
     {
         $response = [
             'exito' => 0,
@@ -221,7 +197,6 @@ class Serie extends Model
                         }
                     }
                 }
-
             }
         }
 
@@ -234,7 +209,7 @@ class Serie extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getTipo() : string
+    public function getTipo(): string
     {
         $tipo = array(
             1 => 'SERIE',
@@ -243,34 +218,9 @@ class Serie extends Model
         );
         return $tipo[$this->tipo];
     }
-    /**
-     * retorna la etiqueta de la categoria de la serie
-     *
-     * @return string
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getCategoria() : string
-    {
-        $categoria = array(
-            2 => 'PRODUCCION DOCUMENTAL',
-            3 => 'OTRAS CATAGORIAS'
-        );
-        return $categoria[$this->categoria];
-    }
-    /**
-     * retorna la etiqueta de la conservacion de la serie
-     *
-     * @return string
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getConservacion() : string
-    {
-        $conservacion = array(
-            1 => 'Conservacion',
-            0 => 'Eliminacion'
-        );
-        return $conservacion[$this->conservacion];
-    }
+
+
+
     /**
      * retorna el label si/no utilizado en etiquetas de la serie
      *
@@ -278,7 +228,7 @@ class Serie extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getLabelCampo(string $nameCampo) : string
+    public function getLabelCampo(string $nameCampo): string
     {
         $sel = array(
             0 => 'NO',
@@ -292,7 +242,7 @@ class Serie extends Model
      * @return string
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEstado() : string
+    public function getEstado(): string
     {
         $estado = array(
             0 => 'INACTIVO',
@@ -317,36 +267,7 @@ class Serie extends Model
         }
         return $this->seriePadre;
     }
-    /**
-     * retorna la cantidad de docuementos vinculados a la serie
-     *
-     * @return integer
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function countDocuments() : int
-    {
-        $filtroDocs = false;
-        $cant = 0;
-        switch ($this->tipo) {
-            case 0:
-            case 3:
-                $filtroDocs = $this->idserie;
-                break;
-            case 1:
-                break;
-            case 2:
-                $filtroDocs = "select distinct idserie from serie where cod_arbol like '{$this->cod_arbol}.%'";
-                break;
-        }
-        if ($filtroDocs !== false) {
-            $select = "select count(*) as cant from documento where estado not in ('ELIMINADO') and serie in ({$filtroDocs})";
-            $docsVinculados = $this->search($select);
-            if ($docsVinculados[0]["cant"]) {
-                $cant = $docsVinculados[0]["cant"];
-            }
-        }
-        return $cant;
-    }
+
     /**
      * retorna array con ids o instancia de la series hijas
      *
@@ -356,7 +277,7 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getChildren($instance = true, int $estado = null, int $tipo = null) : array
+    public function getChildren($instance = true, int $estado = null, int $tipo = null): array
     {
         $parteWhere = '';
         if (!is_null($estado)) {
@@ -380,19 +301,20 @@ class Serie extends Model
         return $data;
     }
 
-    public function getInfoCodArbol():array{
-        $response=[];
-        $codArbol=str_replace('.',',',$this->cod_arbol);
-        $sql="SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
-        $records=$this->findBySql($sql,false);
-        if($records){
-            $etiq=[];
+    public function getInfoCodArbol(): array
+    {
+        $response = [];
+        $codArbol = str_replace('.', ',', $this->cod_arbol);
+        $sql = "SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
+        $records = $this->findBySql($sql, false);
+        if ($records) {
+            $etiq = [];
             foreach ($records as $record) {
-                $etiq[]=$record['nombre'];
-                $response[$record['tipo']]=$record['idserie'];
+                $etiq[] = $record['nombre'];
+                $response[$record['tipo']] = $record['idserie'];
             }
             $response['id'] = $response[2] ?? $response[1];
-            $response['etiqueta']=implode(' - ',$etiq);
+            $response['etiqueta'] = implode(' - ', $etiq);
         }
         return $response;
     }
@@ -405,7 +327,7 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function hasChild(int $estado = null, int $tipo = null) : bool
+    public function hasChild(int $estado = null, int $tipo = null): bool
     {
         $parteWhere = '';
         if (!is_null($estado)) {
@@ -416,7 +338,7 @@ class Serie extends Model
         }
         $sql = "SELECT count(idserie) as cant FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
         $hijos = $this->search($sql);
-        return $hijos[0]['cant'] ? true : false ;
+        return $hijos[0]['cant'] ? true : false;
     }
     /**
      * retorna las instancias de EntidadSerie vinculadas
@@ -447,10 +369,9 @@ class Serie extends Model
         if ($instance) {
             $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
         } else {
-            $data = Expediente::findColumn('idexpediente',['fk_serie' => $this->idserie]);
+            $data = Expediente::findColumn('idexpediente', ['fk_serie' => $this->idserie]);
         }
 
         return $data;
     }
-
 }

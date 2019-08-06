@@ -20,32 +20,32 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $dir = $_SESSION["ruta_temp_funcionario"];
+    $dir = SessionController::getTemporalDir() . '/';
 
-    if(!empty($_REQUEST['dir'])){
+    if (!empty($_REQUEST['dir'])) {
         $dir .= '/anexos/' . $_REQUEST['dir'] . '/';
     }
 
     $relative = $ruta_db_superior . $dir;
 
     if (!is_dir($relative)) {
-        mkdir($relative, 0777, true);
-    }else{
-        chmod($relative, 0777);
+        mkdir($relative, PERMISOS_CARPETAS, true);
+    } else {
+        chmod($relative, PERMISOS_CARPETAS);
     }
 
     $temporalRoutes = [];
-    foreach($_FILES as $key => $file){
+    foreach ($_FILES as $key => $file) {
         $content = file_get_contents($file['tmp_name']);
-        if(file_put_contents($relative . $file['name'], $content) !== false){
+        if (file_put_contents($relative . $file['name'], $content) !== false) {
             $temporalRoutes[] = $dir . $file['name'];
         }
     }
 
-    if(count($temporalRoutes)){
+    if (count($temporalRoutes)) {
         $Response->data = $temporalRoutes;
         $Response->message = 'Documentos almacenado en el temporal';
-    }else{
+    } else {
         $Response->message = 'Imposible guardar';
         $Response->success = 0;
     }
