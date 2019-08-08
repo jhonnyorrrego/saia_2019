@@ -114,6 +114,16 @@ abstract class Sql
 	}
 
 	/**
+	 * ejecuta una consulta
+	 *
+	 * @param string $sql
+	 * @param integer $start limite inicial
+	 * @param integer $end limite final
+	 * @return array
+	 */
+	public abstract function search($sql, $start = 0, $end = 0);
+
+	/**
 	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
 	 * @param array $arreglo_cadena
 	 * @return string sentencia concatenar adecuada para el motor configurado
@@ -136,22 +146,6 @@ abstract class Sql
 	public abstract function Ejecutar_Sql($sql);
 
 	public abstract function sacar_fila($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Numero_Filas
-	 * <Parametros>
-	 * <Responsabilidades>Retornar el número de filas devueltas en la última consulta
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>número de filas devueltas en la última consulta
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Numero_Filas($rs = null)
-	{
-		return $this->filas;
-	}
 
 	/*
 	 * <Clase>SQL
@@ -209,19 +203,6 @@ abstract class Sql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>total_registros_tabla.
-	 * <Parametros>tabla-nombre de la tabla a consultar
-	 * <Responsabilidades>llama a la función deseada
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-	 * <Salida>devuelve un entero con el numero de filas de la tabla
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Total_Registros_Tabla($tabla);
-
-	/*
-	 * <Clase>SQL
 	 * <Nombre>Numero_Campos
 	 * <Parametros>
 	 * <Responsabilidades>segun el motor llama la función deseada
@@ -246,8 +227,6 @@ abstract class Sql
 	 */
 	public abstract function Ultimo_Insert();
 
-	public abstract function Guardar_log($strsql);
-
 	public abstract function resta_fechas($fecha1, $fecha2);
 
 	public static abstract function fecha_db_almacenar($fecha, $formato);
@@ -256,47 +235,13 @@ abstract class Sql
 
 	public abstract function mostrar_error();
 
-	public abstract function fecha_db($campo, $formato);
-
-	public abstract function case_fecha($dato, $compara, $valor1, $valor2);
-
 	public abstract function suma_fechas($fecha1, $cantidad, $tipo);
 
 	public abstract function resta_horas($fecha1, $fecha2);
 
-	public abstract function fecha_actual($fecha1, $fecha2);
-
 	public abstract function compara_fechas($fecha_control, $fecha_inicial);
 
 	public abstract function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
-
-	protected function ejecuta_filtro_tabla($sql2)
-	{
-		$retorno = array();
-		$rs = $this->Ejecutar_Sql($sql2);
-		// or alerta("Error en Busqueda de Proceso SQL: $sql2");
-		$temp = $this->sacar_fila($rs);
-		$i = 0;
-		if ($temp) {
-			array_push($retorno, $temp);
-			$i++;
-		}
-		for ($temp; $temp = $this->sacar_fila($rs); $i++) {
-			array_push($retorno, $temp);
-		}
-		$retorno["numcampos"] = $i;
-		$retorno["sql"] = $sql2;
-		$this->liberar_resultado($rs);
-		return ($retorno);
-	}
-
-	protected function maximo_valor($valor, $maximo)
-	{
-		if ($valor > $maximo || $valor == "NULL") {
-			return ($maximo);
-		}
-		return ($valor);
-	}
 
 	public abstract function listar_campos_tabla($tabla, $tipo_retorno);
 
@@ -327,6 +272,50 @@ abstract class Sql
 	public abstract function verificar_existencia($tabla);
 
 	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
+
+	/*
+	 * <Clase>SQL
+	 * <Nombre>Numero_Filas
+	 * <Parametros>
+	 * <Responsabilidades>Retornar el número de filas devueltas en la última consulta
+	 * <Notas>se utiliza después de la función ejecutar_sql
+	 * <Excepciones>
+	 * <Salida>número de filas devueltas en la última consulta
+	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+	 * <Post-condiciones>
+	 */
+	function Numero_Filas($rs = null)
+	{
+		return $this->filas;
+	}
+
+	protected function ejecuta_filtro_tabla($sql2)
+	{
+		$retorno = array();
+		$rs = $this->Ejecutar_Sql($sql2);
+		// or alerta("Error en Busqueda de Proceso SQL: $sql2");
+		$temp = $this->sacar_fila($rs);
+		$i = 0;
+		if ($temp) {
+			array_push($retorno, $temp);
+			$i++;
+		}
+		for ($temp; $temp = $this->sacar_fila($rs); $i++) {
+			array_push($retorno, $temp);
+		}
+		$retorno["numcampos"] = $i;
+		$retorno["sql"] = $sql2;
+		$this->liberar_resultado($rs);
+		return ($retorno);
+	}
+
+	protected function maximo_valor($valor, $maximo)
+	{
+		if ($valor > $maximo || $valor == "NULL") {
+			return ($maximo);
+		}
+		return ($valor);
+	}
 
 	public function formato_generar_tabla($idformato, $formato)
 	{
@@ -508,26 +497,5 @@ abstract class Sql
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
-	}
-
-	/**
-	 * ejecuta una consulta
-	 *
-	 * @param string $sql
-	 * @param integer $start limite inicial
-	 * @param integer $end limite final
-	 * @return array
-	 */
-	public function executeSelect($sql, $start = 0, $end = 0)
-	{
-		$response = [];
-		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
-
-		while (($row = $this->sacar_fila($result)) !== false) {
-			$response[] = $row;
-		}
-
-		$this->liberar_resultado($result);
-		return $response;
 	}
 }

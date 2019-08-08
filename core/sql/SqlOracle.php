@@ -17,6 +17,27 @@ class SqlOracle extends Sql
         return oci_close($this->connection);
     }
 
+    /**
+     * ejecuta una consulta
+     *
+     * @param string $sql
+     * @param integer $start limite inicial
+     * @param integer $end limite final
+     * @return array
+     */
+    public function search($sql, $start = 0, $end = 0)
+    {
+        $response = [];
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+
+        while (($row = $this->sacar_fila($result)) !== false) {
+            $response[] = $row;
+        }
+
+        $this->liberar_resultado($result);
+        return $response;
+    }
+
     /*
      * <Clase>SQL
      * <Nombre>Buscar.
@@ -206,9 +227,6 @@ class SqlOracle extends Sql
         return $stmt;
     }
 
-    function Total_Registros_Tabla($tabla)
-    { }
-
     /*
      * <Clase>SQL
      * <Nombre>Numero_Campos
@@ -298,36 +316,6 @@ class SqlOracle extends Sql
         return ($identificador);
     }
 
-    function Guardar_log($strsql)
-    {
-        $sqleve = "";
-        $sql = trim($strsql);
-        $sql = str_replace('', '', $sql);
-        $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-        // echo $strsql;
-        if ($accion == 'SELECT')
-            return false;
-        $tabla = "";
-        $llave = 0;
-        $string_detalle = "";
-        $func = $_SESSION["usuario_actual"];
-        $this->ultimoInsert = 0;
-        if (isset($_SESSION)) {
-            $fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
-            if ($sqleve != "") {
-                $rs = @OCIParse($this->connection, $sqleve);
-                if ($rs) {
-                    if (@OCIExecute($rs, OCI_COMMIT_ON_SUCCESS)) {
-                        $this->res = $rs;
-                    } else {
-                        $this->error = OCIError($rs);
-                    }
-                }
-                $registro = $this->Ultimo_Insert();
-            }
-        }
-    }
-
     function resta_fechas($fecha1, $fecha2)
     {
         if ($fecha2 == "")
@@ -409,42 +397,10 @@ class SqlOracle extends Sql
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_obtener
     function mostrar_error()
     {
         if ($this->error != "")
             echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
-    }
-
-    function fecha_db($campo, $formato = NULL)
-    {
-        if (!$formato)
-            $formato = "Y-m-d"; // formato por defecto php
-
-        $reemplazos = array(
-            'd' => 'DD',
-            'm' => 'MM',
-            'y' => 'YY',
-            'Y' => 'YYYY',
-            'h' => 'HH',
-            'H' => 'HH24',
-            'i' => 'MI',
-            's' => 'SS',
-            'M' => 'MON',
-            'yyyy' => 'YYYY'
-        );
-        $resfecha = $formato;
-        foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-            $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-        }
-
-        return $fsql;
-    }
-
-    // Fin Funcion fecha_db_obtener
-    function case_fecha($dato, $compara, $valor1, $valor2)
-    {
-        return ("decode($dato,$compara,$valor1,$valor2)");
     }
 
     function suma_fechas($fecha1, $cantidad, $tipo = "")
@@ -465,11 +421,6 @@ class SqlOracle extends Sql
         if ($fecha2 == "")
             $fecha2 = "sysdate";
         return "($fecha1-$fecha2)*24";
-    }
-
-    function fecha_actual($fecha1, $fecha2)
-    {
-        return "sysdate";
     }
 
     // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
