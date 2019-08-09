@@ -289,11 +289,9 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
             ';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
-            $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
-
             $tabla .= '<tr>
 				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td style="text-align:center;" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
+				<td style="text-align:center;" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>
 				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>

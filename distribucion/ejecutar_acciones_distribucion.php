@@ -120,7 +120,7 @@ function finalizar_distribucion()
         for ($i = 0; $i < count($vector_iddistribucion); $i++) {
             $iddistribucion = $vector_iddistribucion[$i];
 
-            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
+            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
             $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
             $upd = '';
             switch ($diligencia) {
@@ -130,9 +130,12 @@ function finalizar_distribucion()
                         $estado_distribucion = 0;
                     }
                     $upd = " UPDATE distribucion SET estado_recogida=1,estado_distribucion=" . $estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
+                    $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
                     break;
                 case 'ENTREGA' :
-                    $upd = " UPDATE distribucion SET estado_distribucion=3 WHERE iddistribucion=" . $iddistribucion;
+                    $estado_distribucion = 3;
+                    $upd = " UPDATE distribucion SET estado_distribucion=" .$estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
+                    $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
                     break;
             }//fin switch
 
@@ -141,7 +144,7 @@ function finalizar_distribucion()
             }
         }//fin for $vector_iddistribucion
         $retorno['exito'] = 1;
-        $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
+        
     }//fin if $_REQUEST['iddistribucion']
     return ($retorno);
 }
