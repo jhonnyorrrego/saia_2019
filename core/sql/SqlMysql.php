@@ -1,7 +1,6 @@
 <?php
 class SqlMysql extends Sql
 {
-
     public function __construct()
     {
         return parent::__construct();
@@ -21,6 +20,27 @@ class SqlMysql extends Sql
     function disconnect()
     {
         return mysqli_close($this->connection);
+    }
+
+    /**
+     * ejecuta una consulta
+     *
+     * @param string $sql
+     * @param integer $start limite inicial
+     * @param integer $end limite final
+     * @return array
+     */
+    public function search($sql, $start = 0, $end = 0)
+    {
+        $response = [];
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+
+        while (($row = $this->sacar_fila($result)) !== false) {
+            $response[] = $row;
+        }
+
+        $this->liberar_resultado($result);
+        return $response;
     }
 
     function liberar_resultado($rs)
@@ -75,6 +95,28 @@ class SqlMysql extends Sql
         }
     }
 
+    /*
+     * <Clase>SQL
+     * <Nombre>Ejecutar_Limit
+     * <Parametros>$sql-consulta a ejecutar; $inicio-primer registro a buscar; $fin-ultimo registro a buscar;
+     * $conn-objeto de tipo sql
+     * <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
+     * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
+     * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
+     * <Salida>una matriz con los "limit" resultados de la busqueda
+     * <Pre-condiciones>
+     * <Post-condiciones>
+     */
+    // devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
+    function Ejecutar_Limit($sql, $inicio, $fin)
+    {
+        $cuantos = $fin - $inicio + 1;
+        $inicio = $inicio < 0 ? 0 : $inicio;
+        $consulta = "$sql LIMIT $inicio,$cuantos";
+
+        return mysqli_query($this->connection, $consulta);
+    }
+
     function sacar_fila($rs = null)
     {
         if ($rs)
@@ -85,39 +127,6 @@ class SqlMysql extends Sql
         } else {
             return (false);
         }
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Resultado.
-     * <Parametros>
-     * <Responsabilidades>Retornar en una matriz el resultado de la última consulta
-     * <Notas>se utiliza para obtener los resultados de la función Ejecutar_Sql
-     * <Excepciones>
-     * <Salida>devuelve una matriz asociativa con los valores de la última consulta
-     * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-     * <Post-condiciones>
-     */
-    function Resultado()
-    {
-        $resultado["sql"] = $this->consulta;
-        $resultado["numcampos"] = $this->Numero_Filas();
-        if ($this->Numero_Filas() > 0) {
-            for ($i = 0; $i < $this->Numero_Filas(); $i++) {
-                $resultado[$i] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
-                $j = 0;
-                foreach ($resultado[$i] as $key => $valor) {
-                    $resultado[$i][$j] = $resultado[$i][$key];
-                    $j++;
-                }
-            }
-        }
-        return $resultado;
-        // se retorna la matriz
-        /*
-         * else
-         * return(false);
-         */
     }
 
     /*
@@ -153,26 +162,6 @@ class SqlMysql extends Sql
         $this->res = mysqli_query($this->connection, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->connection));
         while ($row = mysqli_fetch_row($this->res))
             $resultado[] = $row[0];
-        return ($resultado);
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Lista_Bd
-     * <Parametros>
-     * <Responsabilidades>Retornar en una matriz la lista de las bases de datos existentes
-     * <Notas>
-     * <Excepciones>
-     * <Salida>
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Lista_Bd()
-    {
-        $this->res = mysqli_query($this->connection, "SHOW DATABASES") or die("Error " . mysqli_error($this->connection));
-        while ($row = mysqli_fetch_row($this->res))
-            $resultado[] = $row[0];
-        asort($resultado);
         return ($resultado);
     }
 
@@ -216,47 +205,6 @@ class SqlMysql extends Sql
 
     /*
      * <Clase>SQL
-     * <Nombre>Ejecutar_Limit
-     * <Parametros>$sql-consulta a ejecutar; $inicio-primer registro a buscar; $fin-ultimo registro a buscar;
-     * $conn-objeto de tipo sql
-     * <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
-     * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-     * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
-     * <Salida>una matriz con los "limit" resultados de la busqueda
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    // devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
-    function Ejecutar_Limit($sql, $inicio, $fin)
-    {
-        $cuantos = $fin - $inicio + 1;
-        $inicio = $inicio < 0 ? 0 : $inicio;
-        $consulta = "$sql LIMIT $inicio,$cuantos";
-
-        return mysqli_query($this->connection, $consulta);
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>total_registros_tabla.
-     * <Parametros>tabla-nombre de la tabla a consultar
-     * <Responsabilidades>consultar el número total de registros de una tabla para mysql
-     * <Notas>
-     * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-     * <Salida>devuelve un entero con el numero de filas de la tabla
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Total_Registros_Tabla($tabla)
-    {
-        $this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-        $this->res = mysqli_query($this->connection, $this->consulta);
-        $total = mysqli_fetch_row($this->res);
-        return ($total[0]);
-    }
-
-    /*
-     * <Clase>SQL
      * <Nombre>Numero_Campos
      * <Parametros>
      * <Responsabilidades>segun el motor llama la función deseada
@@ -288,31 +236,6 @@ class SqlMysql extends Sql
     function Ultimo_Insert()
     {
         return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->connection);
-    }
-
-    function Guardar_log($strsql)
-    {
-        $sqleve = "";
-        $sql = trim($strsql);
-        $sql = str_replace('', '', $sql);
-        $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-        // echo $strsql;
-        if ($accion == 'SELECT')
-            return false;
-        $tabla = "";
-        $llave = 0;
-        $string_detalle = "";
-        $func = $_SESSION["usuario_actual"];
-        $this->ultimoInsert = 0;
-        if (isset($_SESSION)) {
-            $fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
-            if ($sqleve != "") {
-                $result = mysqli_query($this->connection, $sqleve);
-                if (!$result)
-                    die(" Error en la consulta: " . mysqli_error($this->connection));
-                $registro = $this->Ultimo_Insert();
-            }
-        }
     }
 
     function resta_fechas($fecha1, $fecha2)
@@ -393,36 +316,6 @@ class SqlMysql extends Sql
             echo $this->error . " en \"" . $this->consulta . "\"";
     }
 
-    function fecha_db($campo, $resfecha = null)
-    {
-        $resfecha = $resfecha ?? "Y-m-d";
-        $reemplazos = array(
-            'd' => '%d',
-            'm' => '%m',
-            'y' => '%y',
-            'Y' => '%Y',
-            'h' => '%h',
-            'H' => '%H',
-            'i' => '%i',
-            's' => '%s',
-            'M' => '%b',
-            'yyyy' => '%Y'
-        );
-
-        foreach ($reemplazos as $ph => $mot) {
-            $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-        }
-
-        return "DATE_FORMAT($campo,'$resfecha')";
-    }
-
-    function case_fecha($dato, $compara, $valor1, $valor2)
-    {
-        if ($compara = "" || $compara == 0)
-            $compara = ">0";
-        return ("IF($dato $compara,$valor2,$valor1)");
-    }
-
     function suma_fechas($fecha1, $cantidad, $tipo = "")
     {
         if ($tipo == "")
@@ -435,11 +328,6 @@ class SqlMysql extends Sql
         if ($fecha2 == "")
             $fecha2 = "CURDATE()";
         return "timediff($fecha1,$fecha2)";
-    }
-
-    function fecha_actual($fecha1, $fecha2)
-    {
-        return "CURDATE()";
     }
 
     // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control

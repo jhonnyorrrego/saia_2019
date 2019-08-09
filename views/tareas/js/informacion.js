@@ -92,6 +92,7 @@ $(function() {
                     $('.tasktab.disabled').removeClass('disabled');
                     top.successModalEvent();
                     defineButtonLabel();
+                    bindDeleteEvent(0);
                 } else {
                     top.notification({
                         type: 'error',
@@ -107,6 +108,7 @@ $(function() {
         $.post(
             `${baseUrl}app/tareas/consulta.php`,
             {
+                token: localStorage.getItem('token'),
                 key: localStorage.getItem('key'),
                 task: id
             },
@@ -136,6 +138,7 @@ $(function() {
         data.users.forEach(e => {
             defaultUser(e);
         });
+        bindDeleteEvent(data.task.recurrence);
     }
 
     function defaultUser(userId) {
@@ -192,9 +195,98 @@ $(function() {
         params = JSON.parse($('script[data-params]').attr('data-params'));
 
         if (params.id) {
+            $('#delete_task').removeClass('d-none');
             $('#save_task').text('Guardar');
         } else {
             $('#save_task').text('Crear Tarea');
         }
+    }
+
+    function bindDeleteEvent(recurrence) {
+        $('#delete_task')
+            .off('click')
+            .on('click', function() {
+                var buttons = [];
+                if (+recurrence) {
+                    buttons = [
+                        [
+                            '<button>Eliminar Todas las tareas</button>',
+                            function(instance, toast) {
+                                instance.hide(
+                                    { transitionOut: 'fadeOut' },
+                                    toast,
+                                    'button'
+                                );
+                                deleteTask(1);
+                            }
+                        ]
+                    ];
+                }
+
+                buttons.push(
+                    [
+                        '<button>Eliminar esta tarea</button>',
+                        function(instance, toast) {
+                            instance.hide(
+                                { transitionOut: 'fadeOut' },
+                                toast,
+                                'button'
+                            );
+                            deleteTask(0);
+                        },
+                        true
+                    ],
+                    [
+                        '<button>Cancelar</button>',
+                        function(instance, toast) {
+                            instance.hide(
+                                { transitionOut: 'fadeOut' },
+                                toast,
+                                'button'
+                            );
+                        }
+                    ]
+                );
+                top.confirm({
+                    id: 'question',
+                    type: 'error',
+                    title: 'Eliminando!',
+                    position: 'center',
+                    timeout: 0,
+                    overlay: true,
+                    overlayClose: true,
+                    closeOnEscape: true,
+                    closeOnClick: true,
+                    buttons: buttons
+                });
+            });
+    }
+
+    function deleteTask(all) {
+        $.post(
+            `${baseUrl}app/tareas/eliminar.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                taskId: params.id,
+                all: all
+            },
+            function(response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                    top.successModalEvent();
+                    top.closeTopModal();
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });

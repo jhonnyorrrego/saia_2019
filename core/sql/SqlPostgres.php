@@ -12,6 +12,27 @@ class SqlPostgres extends Sql
 		throw new Exception("Error Processing Request", 1);
 	}
 
+	/**
+	 * ejecuta una consulta
+	 *
+	 * @param string $sql
+	 * @param integer $start limite inicial
+	 * @param integer $end limite final
+	 * @return array
+	 */
+	public function search($sql, $start = 0, $end = 0)
+	{
+		$response = [];
+		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+
+		while (($row = $this->sacar_fila($result)) !== false) {
+			$response[] = $row;
+		}
+
+		$this->liberar_resultado($result);
+		return $response;
+	}
+
 	function liberar_resultado($rs)
 	{
 		if (!$rs) {
@@ -85,39 +106,6 @@ class SqlPostgres extends Sql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>Resultado.
-	 * <Parametros>
-	 * <Responsabilidades>Retornar en una matriz el resultado de la última consulta
-	 * <Notas>se utiliza para obtener los resultados de la función Ejecutar_Sql
-	 * <Excepciones>
-	 * <Salida>devuelve una matriz asociativa con los valores de la última consulta
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Resultado()
-	{
-		$resultado["sql"] = $this->consulta;
-		$resultado["numcampos"] = $this->Numero_Filas();
-		if ($this->Numero_Filas() > 0) {
-			for ($i = 0; $i < $this->Numero_Filas(); $i++) {
-				$resultado[$i] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
-				$j = 0;
-				foreach ($resultado[$i] as $key => $valor) {
-					$resultado[$i][$j] = $resultado[$i][$key];
-					$j++;
-				}
-			}
-		}
-		return $resultado;
-		// se retorna la matriz
-		/*
-		 * else
-		 * return(false);
-		 */
-	}
-
-	/*
-	 * <Clase>SQL
 	 * <Nombre>Nombre_Campo
 	 * <Parametros>pos-posición del campo en el array resultado
 	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
@@ -148,26 +136,6 @@ class SqlPostgres extends Sql
 		$this->res = pg_query($this->connection, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . pg_last_error($this->connection));
 		while ($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
-		return ($resultado);
-	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Lista_Bd
-	 * <Parametros>
-	 * <Responsabilidades>Retornar en una matriz la lista de las bases de datos existentes
-	 * <Notas>
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Lista_Bd()
-	{
-		$this->res = pg_query($this->connection, "SHOW DATABASES") or die("Error " . pg_last_error($this->connection));
-		while ($row = pg_fetch_row($this->res))
-			$resultado[] = $row[0];
-		asort($resultado);
 		return ($resultado);
 	}
 
@@ -239,25 +207,6 @@ class SqlPostgres extends Sql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>total_registros_tabla.
-	 * <Parametros>tabla-nombre de la tabla a consultar
-	 * <Responsabilidades>consultar el número total de registros de una tabla para postgres
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-	 * <Salida>devuelve un entero con el numero de filas de la tabla
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	function Total_Registros_Tabla($tabla)
-	{
-		$this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-		$this->res = pg_query($this->connection, $this->consulta);
-		$total = pg_fetch_row($this->res);
-		return ($total[0]);
-	}
-
-	/*
-	 * <Clase>SQL
 	 * <Nombre>Numero_Campos
 	 * <Parametros>
 	 * <Responsabilidades>segun el motor llama la función deseada
@@ -295,31 +244,6 @@ class SqlPostgres extends Sql
 		$insert_row = pg_fetch_row($this->connection, $insert_query);
 		$insert_id = $insert_row[0];
 		return $insert_id;
-	}
-
-	function Guardar_log($strsql)
-	{
-		$sqleve = "";
-		$sql = trim($strsql);
-		$sql = str_replace('', '', $sql);
-		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-		// echo $strsql;
-		if ($accion == 'SELECT')
-			return false;
-		$tabla = "";
-		$llave = 0;
-		$string_detalle = "";
-		$func = $_SESSION["usuario_actual"];
-		$this->ultimoInsert = 0;
-		if (isset($_SESSION)) {
-			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
-			if ($sqleve != "") {
-				$result = pg_query($this->connection, $sqleve);
-				if (!$result)
-					die(" Error en la consulta: " . pg_last_error($this->connection));
-				$registro = $this->Ultimo_Insert();
-			}
-		}
 	}
 
 	function resta_fechas($fecha1, $fecha2)
@@ -411,40 +335,6 @@ class SqlPostgres extends Sql
 			echo ($this->error . " en \"" . $this->consulta . "\"");
 	}
 
-	function fecha_db($campo, $formato = NULL)
-	{
-		if (!$formato)
-			$formato = "Y-m-d"; // formato por defecto php
-
-		$reemplazos = array(
-			'd' => '%d',
-			'm' => '%m',
-			'y' => '%y',
-			'Y' => '%Y',
-			'h' => '%h',
-			'H' => '%H',
-			'i' => '%i',
-			's' => '%s',
-			'M' => '%b',
-			'yyyy' => '%Y'
-		);
-		$resfecha = $formato;
-		foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-		}
-		$fsql = "DATE_FORMAT($campo,'$resfecha')";
-
-		return $fsql;
-	}
-
-	// Fin Funcion fecha_db_obtener
-	function case_fecha($dato, $compara, $valor1, $valor2)
-	{
-		if ($compara = "" || $compara == 0)
-			$compara = ">0";
-		return ("IF($dato $compara,$valor2,$valor1)");
-	}
-
 	function suma_fechas($fecha1, $cantidad, $tipo = "")
 	{
 		if ($tipo == "")
@@ -457,11 +347,6 @@ class SqlPostgres extends Sql
 		if ($fecha2 == "")
 			$fecha2 = "CURDATE()";
 		return "timediff($fecha1,$fecha2)";
-	}
-
-	function fecha_actual($fecha1, $fecha2)
-	{
-		return "CURDATE()";
 	}
 
 	// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control

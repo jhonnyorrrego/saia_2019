@@ -8,6 +8,7 @@ class Tarea extends LogModel
     protected $fecha_final;
     protected $descripcion;
     protected $fk_recurrencia_tarea;
+    protected $estado;
 
     //relations
     protected $RecurrenciaTarea;
@@ -29,7 +30,8 @@ class Tarea extends LogModel
                 'fecha_inicial',
                 'fecha_final',
                 'descripcion',
-                'fk_recurrencia_tarea'
+                'fk_recurrencia_tarea',
+                'estado'
             ],
             'date' => ['fecha_inicial', 'fecha_final']
         ];
@@ -56,7 +58,8 @@ class Tarea extends LogModel
     {
         return
             parent::afterUpdate() &&
-            $this->refreshDocumentLimitDate();
+            $this->refreshDocumentLimitDate() &&
+            $this->checkInactiveTask();
     }
 
     /**
@@ -173,6 +176,28 @@ class Tarea extends LogModel
     }
 
     /**
+     * verifica si la tarea esta en estado inactivo
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function checkInactiveTask()
+    {
+        $history = $this->attributeWasChanged('estado');
+
+        if ($history->changed && $history->newValue == 0) {
+            TareaNotificacion::executeUpdate([
+                'estado' => 0
+            ], [
+                'fk_tarea' => $this->getPK()
+            ]);
+        }
+
+        return true;
+    }
+
+    /**
      * busca las tareas entre fechas
      * segun el tipo de funcionario
      *
@@ -188,15 +213,16 @@ class Tarea extends LogModel
         $final =  StaticSql::getDateFormat('a.fecha_final', 'Y-m-d H:i:s');
         $sql = <<<SQL
             SELECT
-                a.* 
+                a.*
             FROM
-                tarea a 
+                tarea a
             JOIN
                 tarea_funcionario b
             ON
                 a.idtarea = b.fk_tarea
             WHERE
-                b.estado=1 AND
+                a.estado = 1 AND
+                b.estado = 1 AND
                 b.fk_funcionario = {$userId} AND
                 b.tipo= {$type} AND
                 {$initial} >='{$initialDate}' AND
@@ -216,17 +242,17 @@ SQL;
     public static function findActiveFiles($params)
     {
         $sql = <<<SQL
-            select a.*
-            from anexo a 
-            join tarea_anexo b 
-                on a.idanexo = b.fk_anexo 
-            join tarea c
-                on b.fk_tarea = c.idtarea
-            where 
-                c.idtarea = $params->task and
-                a.eliminado = 0 and 
+            SELECT a.*
+            FROM anexo a 
+            JOIN tarea_anexo b 
+                ON a.idanexo = b.fk_anexo 
+            JOIN tarea c
+                ON b.fk_tarea = c.idtarea
+            WHERE
+                c.idtarea = $params->task AND
+                a.eliminado = 0 AND 
                 a.estado = 1
-            order by $params->order
+            ORDER BY $params->order
 SQL;
         return Anexo::findBySql($sql, true, $params->offset, $params->limit);
     }

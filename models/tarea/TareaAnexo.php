@@ -4,7 +4,6 @@ class TareaAnexo extends Model
 {
     protected $fk_tarea;
     protected $fk_anexo;
-    
 
     function __construct($id = null)
     {
@@ -16,7 +15,7 @@ class TareaAnexo extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_tarea',
                 'fk_anexo'

@@ -118,7 +118,6 @@ class NotificationWsController
 
             $buf = @socket_read($changed_socket, 1024, PHP_NORMAL_READ);
             if ($buf === false) { // check disconnected client
-
                 foreach ($this->clients as $clientId => $sockets) {
                     if (!in_array($changed_socket, $sockets)) {
                         continue;

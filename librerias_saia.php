@@ -280,18 +280,6 @@ function librerias_rotate()
     return $texto;
 }
 
-function librerias_file_upload()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/anexos/js/jquery.ui.widget.js" type="text/javascript"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/anexos/js/jquery.iframe-transport.js" type="text/javascript"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/anexos/js/jquery.fileupload.js" type="text/javascript"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/anexos/js/jquery.fileupload-process.js" type="text/javascript"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'pantallas/anexos/js/jquery.fileupload-validate.js" type="text/javascript"></script>';
-    return $texto;
-}
-
 function estilo_file_upload()
 {
     global $raiz_saia;

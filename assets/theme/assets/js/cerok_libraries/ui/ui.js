@@ -128,7 +128,7 @@ class Ui {
 
     static close() {
         Session.close();
-        window.location = Session.getBaseUrl() + 'logout.php';
+        window.location = Session.getBaseUrl() + 'app/funcionario/logout.php';
     }
 
     static setWorkspacePosition() {
