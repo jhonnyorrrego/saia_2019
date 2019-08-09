@@ -1,5 +1,5 @@
 <?php
-class SqlMysql extends Sql
+class SqlMysql extends Sql implements ISql
 {
     public function __construct()
     {
@@ -503,7 +503,7 @@ class SqlMysql extends Sql
         return $traza;
     }
 
-    protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+    public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
     {
         $lcampos = array();
         for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -540,7 +540,7 @@ class SqlMysql extends Sql
         return $lcampos;
     }
 
-    protected function formato_elimina_indices_tabla($tabla)
+    public function formato_elimina_indices_tabla($tabla)
     {
         global $conn;
 
@@ -552,7 +552,7 @@ class SqlMysql extends Sql
         return;
     }
 
-    protected function elimina_indice_campo($tabla, $campo)
+    public function elimina_indice_campo($tabla, $campo)
     {
         if ($campo["Key_name"] == "PRIMARY") {
             if ($this->verificar_existencia($tabla)) {
