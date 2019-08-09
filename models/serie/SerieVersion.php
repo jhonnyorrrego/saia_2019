@@ -23,6 +23,7 @@ class SerieVersion extends Model
     {
         $this->dbAttributes = (object) [
             'safe' => [
+                'nombre',
                 'version',
                 'tipo',
                 'descripcion',

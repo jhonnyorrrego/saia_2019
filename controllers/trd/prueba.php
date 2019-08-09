@@ -14,6 +14,19 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-echo time();
 $TRDVersionController = new TRDVersionController();
-$fk_serie_version = $TRDVersionController->generateVersion();
+
+SerieVersion::newRecord([
+    'version' => 2,
+    'tipo' => 2,
+    'descripcion' => 2,
+    'archivo_trd' => 'prueba.txt',
+    'anexos' => 2,
+    'json_clasificacion' => TemporalController::createFileDbRoute(
+        'trd',
+        'archivos',
+        $TRDVersionController->getClasificationData()
+    ),
+    'json_trd' => $TRDVersionController->getTrdData(),
+    'nombre' => 'nombre de prueba'
+]);
