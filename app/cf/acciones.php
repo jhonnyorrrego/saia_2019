@@ -19,27 +19,25 @@ $Response = (object)[
     'success' => 0
 ];
 
-echo json_encode($Response);
-/*if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
-    
-    print_r("1234");
+if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     if (isset($_REQUEST['key']) && $_REQUEST['key'] != $_SESSION['idfuncionario']) {
         $Response->message = "Debe iniciar sesion";
     }else{
-       print_r("123");
-        $data["nombre"] = "llamado";
-        $Response->data = $data;
-        /*switch ($_REQUEST['type']) {
-            case: 'editar':
+        switch ($_REQUEST['type']) {
+            case 'edit':
+            $consulta = StaticSql::search("select * from " . $_REQUEST['table'] . " where id" . $_REQUEST['table'] . "=" . $_REQUEST['id']);
+            foreach($consulta[0] as $key => $value){
+                if(!is_numeric($key)){
+                    $data[$key] = $value;
+                }
+            }
                 $Response->data = $data;
-                //StaticSql::search("");
+                $Response->success = 1;
             break;
-        }*/
-   /* }
+        }
+    }
 
     echo json_encode($Response);
- 
-
-}*/
+}
 
 ?>

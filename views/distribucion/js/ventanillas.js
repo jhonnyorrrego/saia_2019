@@ -1,9 +1,9 @@
 $(function () {
-    let params = $('#transportadora_script').data('params');
+    let params = $('#ventanilla_script').data('params');
     let id = params.id;
     let table = params.table;
     $('#btn_success').on('click', function () {
-        $('#transportadora_form').trigger('submit');
+        $('#ventanilla_form').trigger('submit');
     });
 
     if(id != ''){
@@ -43,7 +43,7 @@ $(function () {
     }
 });
 
-$("#transportadora_form").validate({
+$("#ventanilla_form").validate({
     ignore: '',
     rules: {
         nombre: {
@@ -69,8 +69,8 @@ $("#transportadora_form").validate({
         }
     },
     submitHandler: function (form) {
-        let params = $("#transportadora_script").data('params');
-        let data = $("#transportadora_form").serialize();
+        let params = $("#ventanilla_script").data('params');
+        let data = $("#ventanilla_form").serialize();
         data = data + '&' + $.param({
             key: localStorage.getItem("key"),
             token: localStorage.getItem('token'),

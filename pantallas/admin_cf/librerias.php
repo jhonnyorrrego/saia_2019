@@ -25,7 +25,7 @@ function editar_cf($id,$table){
 	global $ruta_db_superior;
 	$enlace = StaticSql::search("select enlace_adicionar from busqueda_componente where idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"]);
 	$datos = '<div><button class="btn btn-cf" type="button" aria-haspopup="true" aria-expanded="false" enlace="' . $ruta_db_superior . $enlace[0]["enlace_adicionar"] . '" table="' . $table . '" editar_id="' . $id  . '">
-				<i class="fa fa-ellipsis-v"></i>
+				<i class="fa fa-edit"></i>
 			</button></div>';
 	return $datos;
 }

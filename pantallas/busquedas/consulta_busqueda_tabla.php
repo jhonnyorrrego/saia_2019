@@ -143,7 +143,6 @@ include_once $ruta_db_superior . "core/autoload.php";
                 ?>
                 <?php
             }
-print_r($datos_busqueda);
 
             if (@$datos_busqueda[0]["enlace_adicionar"]) {
                 ?>

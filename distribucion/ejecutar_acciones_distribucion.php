@@ -9,8 +9,8 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once  ($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "distribucion/funciones_distribucion.php";
 
 function cambiar_mensajero_distribucion()
 {
@@ -141,6 +141,7 @@ function finalizar_distribucion()
             }
         }//fin for $vector_iddistribucion
         $retorno['exito'] = 1;
+        $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
     }//fin if $_REQUEST['iddistribucion']
     return ($retorno);
 }

@@ -81,7 +81,7 @@ function crearItemDependencia($item){
         <td>' . $item['fecha_item_dependenc'] . '</td>
         <td>' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item['dependencia_asignada'] . '"></td>';
     
-    $tabla .= '<td>' . $item['descripcion'] . '</td>';
+    $tabla .= '<td>' . $item['descripcion_dependen'] . '</td>';
     
     $seleccionar = array(
         1 => "",
@@ -103,7 +103,7 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
     $tabla = '';
     $dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado not in ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
     if ($dato['numcampos']) {
-        $item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia,ft_ruta_distribucion,descripcion", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+        $item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia,ft_ruta_distribucion", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
         if ($item["numcampos"]) {
             $estado = array(
                 1 => "Activo",

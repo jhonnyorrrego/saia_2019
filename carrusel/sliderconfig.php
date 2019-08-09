@@ -85,7 +85,6 @@ echo librerias_jquery('1.7');
       $().ready(function() {
         $('#form1').validate({
           submitHandler: function(form) {
-            <?php encriptar_sqli("form1", 0, "form_info", $ruta_db_superior); ?>
             form.submit();
 
           }

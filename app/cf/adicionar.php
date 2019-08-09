@@ -29,20 +29,20 @@ try {
 
             $id = $_REQUEST["id"];
             $table = $_REQUEST["table"];
-            $datos_busqueda = StaticSql::search("describe " . $_REQUEST["table"]);
+            $datosBusqueda = StaticSql::search("describe " . $_REQUEST["table"]);
             $fields = array();
             $dateFields = array();
 
-            for($i = 0; $i <= count($datos_busqueda); $i++){
-                if(in_array(strtolower($datos_busqueda[$i]["Field"]),array_keys($_REQUEST))){
-                    if(strpos(strtolower($datos_busqueda[$i]["Type"]),'date') === false){
-                        if(strpos(strtolower($datos_busqueda[$i]["Type"]),'int') === false){
-                            $_REQUEST[$datos_busqueda[$i]["Field"]] = "'" . $_REQUEST[$datos_busqueda[$i]["Field"]] . "'";
+            for($i = 0; $i <= count($datosBusqueda); $i++){
+                if(in_array(strtolower($datosBusqueda[$i]["Field"]),array_keys($_REQUEST))){
+                    if(strpos(strtolower($datosBusqueda[$i]["Type"]),'date') === false){
+                        if(strpos(strtolower($datosBusqueda[$i]["Type"]),'int') === false){
+                            $_REQUEST[$datosBusqueda[$i]["Field"]] = "'" . $_REQUEST[$datosBusqueda[$i]["Field"]] . "'";
                         }
-                        $fields[] = $datos_busqueda[$i]["Field"];
+                        $fields[] = $datosBusqueda[$i]["Field"];
                     }else{
-                        $dateFields[] = $datos_busqueda[$i]["Field"];
-                        $_REQUEST[$datos_busqueda[$i]["Field"]] = StaticSql::setDateFormat($_REQUEST[$key],"Y-m-d");
+                        $dateFields[] = $datosBusqueda[$i]["Field"];
+                        $_REQUEST[$datosBusqueda[$i]["Field"]] = StaticSql::setDateFormat($_REQUEST[$key],"Y-m-d");
                     } 
                 }
             }

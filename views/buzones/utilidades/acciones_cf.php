@@ -4,7 +4,7 @@
             console.log($(this).attr("editar_id"));
             top.topModal({
                 url: $(this).attr("enlace"),
-                params: {
+                params: {   
                     id: $(this).attr("editar_id"),
                     table: $(this).attr("table"),
                     key: localStorage.getItem('key'),
@@ -13,14 +13,14 @@
                 },
                 size: 'modal-lg',
                 title: 'Editar',
-                buttons: {},
-                afterShow: function(){
-                    console.log("1");
-                    $("#id").show();
-                }, 
+                buttons: { 
+                    success: {
+                        label: "Guardar",
+                        class: "btn btn-complete"
+                    }
+                },
                 onSuccess: function() {
-                    
-                   
+                    $('#tabla_resultados').bootstrapTable("refresh");
                 }
             });
         });

@@ -36,9 +36,9 @@ try {
     $returnButton = !$Documento->numero && canReturn($userCode, $routes);
     $confirmButton = canConfirm($routes, $Documento);
     $rejectButton = $Documento->numero && canReject($userId, $Documento);
+    $Formato = $Documento->getFormat();
 
     if ($editButton) {
-        $Formato = $Documento->getFormat();
         $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . '/' . $Formato->ruta_editar;
         $editRoute .= '?' . http_build_query([
             'iddoc' => $documentId,
