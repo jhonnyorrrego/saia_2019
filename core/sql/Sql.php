@@ -188,21 +188,6 @@ abstract class Sql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>Buscar_Limit
-	 * <Parametros>campos-los campos a buscar; tablas-tablas donde se realizará la busqueda;
-	 * where-filtro de la búsqueda; order_by-columna para el orden; limit-numero de registros a recuperar
-	 * <Responsabilidades>segun el motor llama la función correspondiente
-	 * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-	 * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
-	 * <Salida>una matriz con los "limit" resultados de la busqueda
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// devuelve los primeros $limit registros de la consulta en un array
-	public abstract function Ejecutar_Limit($sql, $inicio, $fin);
-
-	/*
-	 * <Clase>SQL
 	 * <Nombre>Numero_Campos
 	 * <Parametros>
 	 * <Responsabilidades>segun el motor llama la función deseada
