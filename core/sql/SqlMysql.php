@@ -1,5 +1,5 @@
 <?php
-class SqlMysql extends Sql
+class SqlMysql extends Sql implements ISql
 {
     public function __construct()
     {
@@ -32,14 +32,21 @@ class SqlMysql extends Sql
      */
     public function search($sql, $start = 0, $end = 0)
     {
-        $response = [];
-        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
-
-        while (($row = $this->sacar_fila($result)) !== false) {
-            $response[] = $row;
+        if ($end) {
+            $total = $end - $start + 1;
+            $start = $start < 0 ? 0 : $start;
+            $sql .= " LIMIT $start,$total";
         }
 
-        $this->liberar_resultado($result);
+        $result = mysqli_query($this->connection, $sql);
+
+        if ($result) {
+            $response = $result->fetch_all(MYSQLI_BOTH);
+            $result->free();
+        } else {
+            $response = [];
+        }
+
         return $response;
     }
 
@@ -93,28 +100,6 @@ class SqlMysql extends Sql
             }
             return $this->res ?? false;
         }
-    }
-
-    /*
-     * <Clase>SQL
-     * <Nombre>Ejecutar_Limit
-     * <Parametros>$sql-consulta a ejecutar; $inicio-primer registro a buscar; $fin-ultimo registro a buscar;
-     * $conn-objeto de tipo sql
-     * <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
-     * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-     * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
-     * <Salida>una matriz con los "limit" resultados de la busqueda
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    // devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
-    function Ejecutar_Limit($sql, $inicio, $fin)
-    {
-        $cuantos = $fin - $inicio + 1;
-        $inicio = $inicio < 0 ? 0 : $inicio;
-        $consulta = "$sql LIMIT $inicio,$cuantos";
-
-        return mysqli_query($this->connection, $consulta);
     }
 
     function sacar_fila($rs = null)
@@ -518,7 +503,7 @@ class SqlMysql extends Sql
         return $traza;
     }
 
-    protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+    public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
     {
         $lcampos = array();
         for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -555,7 +540,7 @@ class SqlMysql extends Sql
         return $lcampos;
     }
 
-    protected function formato_elimina_indices_tabla($tabla)
+    public function formato_elimina_indices_tabla($tabla)
     {
         global $conn;
 
@@ -567,7 +552,7 @@ class SqlMysql extends Sql
         return;
     }
 
-    protected function elimina_indice_campo($tabla, $campo)
+    public function elimina_indice_campo($tabla, $campo)
     {
         if ($campo["Key_name"] == "PRIMARY") {
             if ($this->verificar_existencia($tabla)) {

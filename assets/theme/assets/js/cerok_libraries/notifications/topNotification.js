@@ -47,10 +47,10 @@ let iziDefaultOptions = {
     transitionOutMobile: 'fadeOutDown',
     buttons: {},
     inputs: {},
-    onOpening: function () { },
-    onOpened: function () { },
-    onClosing: function () { },
-    onClosed: function () { }
+    onOpening: function() {},
+    onOpened: function() {},
+    onClosing: function() {},
+    onClosed: function() {}
 };
 
 function showNotification(options) {
@@ -68,7 +68,7 @@ function convertTypeToColor(type) {
         error: 'red',
         info: 'blue',
         warning: 'yellow'
-    }
+    };
 
     return data[type];
 }
@@ -83,30 +83,46 @@ function showConfirm(options) {
     iziToast.question(options);
 }
 
-window.notification = function (options) {
+window.notification = function(options) {
     if (typeof top.iziToast == 'undefined') {
-        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
-        top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
-            $('head').append($('<style>').html(r));
-            top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`, function () {
-                showNotification(options);
-            })
-        })
+        let baseUrl = top
+            .jQuery('script[data-baseurl]', window.top.document)
+            .data('baseurl');
+        top.jQuery.get(
+            `${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`,
+            function(r) {
+                $('head').append($('<style>').html(r));
+                top.jQuery.getScript(
+                    `${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`,
+                    function() {
+                        showNotification(options);
+                    }
+                );
+            }
+        );
     } else {
         showNotification(options);
     }
-}
+};
 
-window.confirm = function (options) {
+window.confirm = function(options) {
     if (typeof top.iziToast == 'undefined') {
-        let baseUrl = top.jQuery("script[data-baseurl]", window.top.document).data('baseurl');
-        top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
-            $('head').append($('<style>').html(r));
-            top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`, function () {
-                showConfirm(options);
-            })
-        })
+        let baseUrl = top
+            .jQuery('script[data-baseurl]', window.top.document)
+            .data('baseurl');
+        top.jQuery.get(
+            `${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`,
+            function(r) {
+                $('head').append($('<style>').html(r));
+                top.jQuery.getScript(
+                    `${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`,
+                    function() {
+                        showConfirm(options);
+                    }
+                );
+            }
+        );
     } else {
         showConfirm(options);
     }
-}
+};
