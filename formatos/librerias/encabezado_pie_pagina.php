@@ -235,7 +235,7 @@ function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
                     $route = '';
                 }
 
-                return '<img src="' . $route . '" width="80px">';
+                return '<img src="' . $route . '" width="100px" height="55">';
             }
         }
     } else {

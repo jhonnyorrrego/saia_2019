@@ -15,12 +15,11 @@ $max_salida--;
 
 
 include_once $ruta_db_superior . 'core/autoload.php';
-// Inicialiaci�n de las variables del calendario del planeador
-require_once($ruta_db_superior."calendario/activecalendar/source/activecalendar.php");
-require_once($ruta_db_superior."calendario/activecalendar/source/activecalendarweek.php");
-echo "<script type='text/javascript' src='".$ruta_db_superior."calendario/activecalendar/source/functions.js'></script>\n";
-include_once($ruta_db_superior."class.funcionarios.php");
-include_once($ruta_db_superior."phpmkrfn.php");
+require_once $ruta_db_superior . 'calendario/activecalendar/source/activecalendar.php';
+require_once $ruta_db_superior . "calendario/activecalendar/source/activecalendarweek.php";
+echo "<script type='text/javascript' src='" . $ruta_db_superior . "calendario/activecalendar/source/functions.js'></script>\n";
+include_once $ruta_db_superior . "class.funcionarios.php";
+include_once $ruta_db_superior . "phpmkrfn.php";
 
 
 /*

@@ -453,6 +453,25 @@
                       });
                       });
                      </script></td>
+                    </tr><tr id="tr_archivo_2126970305"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_archivo_2126970305',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_archivo_2126970305',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_archivo_2126970305" id="bqsaiaenlace_archivo_2126970305" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ADJUNTOS</td><input type="hidden" name="bksaiacondicion_archivo_2126970305" id="bksaiacondicion_archivo_2126970305" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="archivo_2126970305" name="archivo_2126970305"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#archivo_2126970305").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
                     </tr><input type="hidden" name="campo_descripcion" value="6979"><?php submit_formato(422);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
