@@ -283,7 +283,7 @@ if (!isset($_REQUEST['id'])) {
 			</div>
 		</div>
 		<script type="text/javascript">
-			$(".buscar_arboles").hide(); 
+			$(".buscar_arboles").hide();
 			$("#contenido_arbol").css({
 				"margin-top": "8px"
 			})
@@ -302,7 +302,7 @@ if (!isset($_REQUEST['id'])) {
 			} else {
 				function evento_click(event, data) {
 					var nodeId = data.node.key;
-					var title = data.node.title
+					var title = data.node.title;
 					var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
 					if (elemento_evento == 'title') {
 						$("#iframe_generador", window.parent.document).attr("src", ruta_db_superior + "pantallas/generador/generador_pantalla.php?idformato=" + nodeId)

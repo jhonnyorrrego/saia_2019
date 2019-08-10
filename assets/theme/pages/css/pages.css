@@ -41,7 +41,7 @@ Generated From SASS
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 400;
-  src: local('Ubuntu Regular'), local('Ubuntu-Regular'), url('../fonts/ubuntu-font-family-0.83/UbuntuMono-R.ttf') format('ttf');
+  src: local('Ubuntu Regular'), local('Ubuntu-Regular'), url('fonts/ubuntu-font-family-0.83/UbuntuMono-R.ttf') format('ttf');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -16811,24 +16811,6 @@ Main components
   .hidden-xs {
     display: none;
   }
-}
-
-.etiqueta_titulo {
-  font-size: 13px !important;
-  text-transform: initial;
-  font-weight: bold;
-  color: #2C2C2C;
-}
-
-.etiqueta_campo {
-  font-size: 12px !important;
-  text-transform: initial !important;
-  font-weight: bold !important;
-  color: #626262;
-}
-
-.etiqueta_selector {
-  text-transform: none !important;
 }
 
 .notification {

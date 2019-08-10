@@ -22,7 +22,8 @@ if ($id_x) {
     $id_x = buscar_papa($_REQUEST['id']);
 }
 
-function buscar_papa($idformato) {
+function buscar_papa($idformato)
+{
     $exit = $exit + 1;
     if ($exit > 20) {
         return false;
@@ -42,9 +43,9 @@ $objetoJson = array(
 );
 
 $seleccionable = null;
-if(isset($_REQUEST["seleccionable"])) {
+if (isset($_REQUEST["seleccionable"])) {
     $seleccionable = $_REQUEST["seleccionable"];
-    if($seleccionable == "checkbox") {
+    if ($seleccionable == "checkbox") {
         $seleccionable = 1;
     } else {
         $seleccionable = "radio";
@@ -61,7 +62,8 @@ header('Content-Type: application/json');
 
 echo json_encode($objetoJson);
 
-function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = null, $cargar_seleccionado = null, $seleccionable = null) {
+function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = null, $cargar_seleccionado = null, $seleccionable = null)
+{
     global $conn;
     $formatoExcluido = '';
     if ($_REQUEST["excluido"]) {
@@ -79,12 +81,12 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
         $adicionales = ' AND idformato IN(' . $filtrar . ')';
     }
     if (empty($id)) {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", $valida_item . " (cod_padre=0 OR cod_padre IS NULL)" . $adicionales .$formatoExcluido , "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", $valida_item . " (cod_padre=0 OR cod_padre IS NULL)" . $adicionales . $formatoExcluido, "etiqueta ASC", $conn);
     } else if ($cargar_seleccionado == 1) {
         $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "idformato=" . $id, "etiqueta ASC", $conn);
         // $papas = busca_filtro_tabla("idformato, etiqueta", "formato", $valida_item . " idformato=" . $id . $adicionales, "etiqueta ASC", $conn);
     } else {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "cod_padre=" . $id . $adicionales. $formatoExcluido, "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "cod_padre=" . $id . $adicionales . $formatoExcluido, "etiqueta ASC", $conn);
     }
     $resp = array();
     if ($papas["numcampos"]) {
@@ -92,7 +94,7 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
 
             $hijos = busca_filtro_tabla("count(*) total", "formato", $valida_item . "  cod_padre=" . $papas[$i]["idformato"], "", $conn);
             $item = [
-                "extraClasses" => "estilo-arbol kenlace_saia"
+                "extraClasses" => "estilo-arbol karbol_saia"
             ];
 
             $item["expanded"] = true;
@@ -107,14 +109,14 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
                 'version' => $papas[$i]["version"]
             );
             if (!empty($hijos[0]["total"])) {
-                $children = llena_formato($papas[$i]["idformato"], $nivel++, $seleccionados,null,null, $seleccionable);
+                $children = llena_formato($papas[$i]["idformato"], $nivel++, $seleccionados, null, null, $seleccionable);
 
                 if (!empty($children)) {
 
                     $item["children"] = $children;
                 }
             }
-            if($seleccionable) {
+            if ($seleccionable) {
                 $item["checkbox"] = $seleccionable;
             }
 

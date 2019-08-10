@@ -117,8 +117,8 @@ class ArbolFt
         if (isset($this->opcionesArbol["lazy"])) {
             $this->opcionesArbol["lazyLoad"] = "###AquiFuncionLazy###";
         }
-        if(isset($this->opcionesArbol["obligatorio"])) {
-        	$this->obligatorio = $this -> opcionesArbol["obligatorio"];
+        if (isset($this->opcionesArbol["obligatorio"])) {
+            $this->obligatorio = $this->opcionesArbol["obligatorio"];
         }
     }
 
@@ -126,12 +126,15 @@ class ArbolFt
     {
         if ($this->con_filtro) {
             $this->html .= <<<FINHTML
-            <div id="contenido_arbol">
-               <p>
-                   <label class="buscar_arboles">Buscar:</label>
-                   <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
-                   <button type="button" id="btnSearch_{$this->campo}">&times;</button>
-                   <span id="matches_{$this->campo}"></span>
+            <div class="py-1">
+                <p>
+                   <div class="contenedor_campo_buscar">
+                        <i class="fa fa-search" style="left:8%;font-size:180%;width:25px;display:inline-block;"></i>
+                        <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off" class="input_buscar" />
+                        <button type="button" id="btnSearch_{$this->campo}" style="position:absolute;right:10%;font-weight: bold;
+                        width: 18px;border:none;background:transparent;"><i class="fa fa-times"></i></button>
+                    </div>
+                    <span id="matches_{$this->campo}"></span>
                 </p>
             </div> 
 FINHTML;
@@ -164,12 +167,12 @@ FINJS;
 FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
         $opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
-        if($this->obligatorio == 1) {
-        	$obligatorio = 'class="required"';
+        if ($this->obligatorio == 1) {
+            $obligatorio = 'class="required"';
         }
-        $this -> html .= <<<FINHTML
+        $this->html .= <<<FINHTML
         <div id="treebox_{$this->campo}"></div>
-        <input type="hidden" {$obligatorio} name="{$this->campo}" id="{$this->campo}" value="{$this -> seleccionados}">
+        <input type="hidden" {$obligatorio} name="{$this->campo}" id="{$this->campo}" value="{$this->seleccionados}">
         <script type="text/javascript">
         $(document).ready(function() {
             var configuracion={$opciones_json};
@@ -237,6 +240,4 @@ FINHTML;
 FINHTML;
         return $texto;
     }
-
 }
-?>

@@ -62,6 +62,6 @@ function contador_formatos()
 
 function boton_editar_formatos($idformato, $etiqueta)
 {
-	$response = "<div class='kenlace_saia' enlace='pantallas/generador/generador_pantalla.php?idformato=" . $idformato . "' conector='iframe' title='" . $etiqueta . "' > <button class='btn btn-complete'> Modificar </button></div>";
+	$response = "<div class='kenlace_saia' enlace='pantallas/generador/generador_pantalla.php?idformato=" . $idformato . "' name='nombre' conector='iframe' title='" . $etiqueta . "' > <button class='btn btn-complete'> Modificar </button></div>";
 	return $response;
 }
