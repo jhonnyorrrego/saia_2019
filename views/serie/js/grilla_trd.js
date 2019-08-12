@@ -52,7 +52,8 @@ $(function() {
                     {
                         field: 'procedimiento',
                         title: 'Procedimiento',
-                        rowspan: 2
+                        rowspan: 2,
+                        align: 'center'
                     }
                 ],
                 [
