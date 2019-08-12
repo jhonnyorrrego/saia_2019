@@ -114,6 +114,60 @@ function bootstrapTableEditable()
 
 /**
  * retorna los enlaces css y js
+ * del filter para bootstrap table
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-08-12
+ */
+function bootstrapTableFilter()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
+
+/**
+ * retorna los enlaces css y js
+ * del export para bootstrap table
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-08-12
+ */
+function bootstrapTableExport()
+{
+    global $ruta_db_superior;
+
+    $js = '';
+    $baseRoute = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/extensions/export/';
+    $routes = [
+        'libs/FileSaver/FileSaver.min.js',
+        'libs/js-xlsx/xlsx.core.min.js',
+        'libs/jsPDF/jspdf.min.js',
+        'libs/jsPDF-AutoTable/jspdf.plugin.autotable.js',
+        'libs/es6-promise/es6-promise.auto.min.js',
+        'libs/html2canvas/html2canvas.min.js',
+        'tableExport.min.js',
+        'bootstrap-table-export.js',
+    ];
+
+    foreach ($routes as $key => $route) {
+        $routeJs = $baseRoute . $route;
+        $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    }
+
+    return $js;
+}
+
+/**
+ * retorna los enlaces css y js
  * de izitoast v1.4.0 minificados
  */
 function notificacion()
