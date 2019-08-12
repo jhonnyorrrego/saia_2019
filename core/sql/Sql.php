@@ -111,24 +111,12 @@ abstract class Sql
 		return $this->filas;
 	}
 
-	protected function ejecuta_filtro_tabla($sql2)
+	protected function ejecuta_filtro_tabla($sql)
 	{
-		$retorno = array();
-		$rs = $this->Ejecutar_Sql($sql2);
-		// or alerta("Error en Busqueda de Proceso SQL: $sql2");
-		$temp = $this->sacar_fila($rs);
-		$i = 0;
-		if ($temp) {
-			array_push($retorno, $temp);
-			$i++;
-		}
-		for ($temp; $temp = $this->sacar_fila($rs); $i++) {
-			array_push($retorno, $temp);
-		}
-		$retorno["numcampos"] = $i;
-		$retorno["sql"] = $sql2;
-		$this->liberar_resultado($rs);
-		return ($retorno);
+		$response = $this->search($sql);
+		$response['numcampos'] = count($response);
+		$response['sql'] = $sql;
+		return $response;
 	}
 
 	protected function maximo_valor($valor, $maximo)
@@ -155,6 +143,7 @@ abstract class Sql
 
 		$Formato = new Formato($idformato);
 		$Formato->createDefaultFields();
+
 		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
 		if (empty($campos["numcampos"])) {
 			$resp["estado"] = "KO";
@@ -172,7 +161,6 @@ abstract class Sql
 			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
 			$sql_tabla .= implode(",", $lcampos);
 			$sql_tabla .= ") ";
-			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
 
 			if ($this->Ejecutar_Sql($sql_tabla)) {
 				$this->crear_indices_tabla($formato[0]["idformato"]);
@@ -266,7 +254,6 @@ abstract class Sql
 		// Valida si se uso por defecto int(11) o number(11)
 		if ((MOTOR == "MySql" || MOTOR == "Oracle") && empty($datos_campo["longitud"]) && preg_match("/(int\(|NUMBER\()11/", $campo)) {
 			$sql = "UPDATE campos_formato SET longitud=11 WHERE idcampos_formato=" . $datos_campo["idcampos_formato"];
-			guardar_traza($sql, $tabla);
 			$this->Ejecutar_Sql($sql);
 		}
 

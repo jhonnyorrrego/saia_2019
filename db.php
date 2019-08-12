@@ -1722,27 +1722,12 @@ function crear_destino($destino)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function ejecuta_filtro_tabla($sql2, $conn2 = null)
+function ejecuta_filtro_tabla($sql, $conn2 = null)
 {
-    global $conn;
-    if ($conn2) {
-        $conn = $conn2;
-    }
-
-    $retorno = array();
-    $rs = $conn->Ejecutar_Sql($sql2) or alerta("Error en Busqueda de Proceso SQL: $sql2");
-    $temp = phpmkr_fetch_array($rs);
-    $i = 0;
-    if ($temp) {
-        array_push($retorno, $temp);
-        $i++;
-    }
-    for ($temp; $temp = phpmkr_fetch_array($rs); $i++)
-        array_push($retorno, $temp);
-    $retorno["numcampos"] = $i;
-    $retorno["sql"] = $sql2;
-    phpmkr_free_result($rs);
-    return $retorno;
+    $response = StaticSql::search($sql);
+    $response['numcampos'] = count($response);
+    $response['sql'] = $sql;
+    return $response;
 }
 
 function ruta_almacenamiento($tipo, $raiz = 1)
