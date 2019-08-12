@@ -54,10 +54,6 @@ class Formato extends Model
     protected $mostrar_tipodoc_pdf;
     protected $publicar;
 
-    /**
-     * @param int $id value for idfuncionario attribute
-     * @author jhon.valencia@cerok.com
-     */
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -142,6 +138,125 @@ class Formato extends Model
     public function findFirstParent()
     {
         return $this->cod_padre ? (new self($this->cod_padre))->findFirstParent() : $this;
+    }
+
+    /**
+     * crea los campos predeterminados para el formato
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-12
+     */
+    public function createDefaultFields()
+    {
+        $sql = <<<SQL
+			SELECT 
+				nombre 
+			FROM
+				campos_formato
+			WHERE 
+				formato_idformato= {$this->getPK()} AND
+				nombre IN (
+					'id{$this->nombre_tabla}',
+					'documento_iddocumento',
+					'dependencia',
+					'encabezado',
+					'firma'
+				)
+SQL;
+        $records = CamposFormato::findBySql($sql);
+
+        $fields = [];
+        foreach ($records as $row) {
+            $fields[] = $row[0]['nombre'];
+        }
+
+        if (!in_array('id{$formato[0]["nombre_tabla"]}', $fields)) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'id{$this->nombre_tabla}',
+                'etiqueta' => strtoupper($this->nombre),
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'banderas' => 'ai,pk',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden'
+            ]);
+        }
+
+        if (!in_array('documento_iddocumento', $fields) && !$this->item) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'documento_iddocumento',
+                'etiqueta' => 'DOCUMENTO ASOCIADO',
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'banderas' => 'i',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden'
+            ]);
+        }
+
+        if (!in_array('dependencia', $fields) && !$this->item) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'dependencia',
+                'etiqueta' => 'DEPENDENCIA DEL CREADOR DEL DOCUMENTO',
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'banderas' => 'i,fdc',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden',
+                'valor' => '{*buscar_dependencia*}',
+                'orden' => 1
+            ]);
+        }
+
+        if (!in_array('encabezado', $fields) && !$this->item) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'encabezado',
+                'etiqueta' => 'ENCABEZADO',
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden',
+                'predeterminado' => 1
+            ]);
+        }
+
+        if (!in_array('firma', $fields) && !$this->item) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'firma',
+                'etiqueta' => 'FIRMAS DIGITALES',
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden',
+                'predeterminado' => 1
+            ]);
+        }
+
+        if (!in_array('estado_documento', $fields) && !$this->item) {
+            CamposFormato::newRecord([
+                'formato_idformato' => $this->getPK(),
+                'nombre' => 'estado_documento',
+                'etiqueta' => 'ESTADO DEL DOCUMENTO',
+                'tipo_dato' => 'INT',
+                'longitud' => '11',
+                'obligatoriedad' => '1',
+                'banderas' => '',
+                'acciones' => 'a,e',
+                'etiqueta_html' => 'hidden',
+                'predeterminado' => 1
+            ]);
+        }
     }
 
     /**

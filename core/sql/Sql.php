@@ -153,8 +153,8 @@ abstract class Sql
 			$campos_tabla = array();
 		}
 
-		$this->crear_campos_basicos_formato($idformato, $formato);
-		// 20160916 FIN Agregar el campo estado_documento si no existe
+		$Formato = new Formato($idformato);
+		$Formato->createDefaultFields();
 		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
 		if (empty($campos["numcampos"])) {
 			$resp["estado"] = "KO";
@@ -278,46 +278,5 @@ abstract class Sql
 		}
 
 		return ($campo);
-	}
-
-	protected function crear_campos_basicos_formato($idformato, $formato)
-	{
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='id{$formato[0]["nombre_tabla"]}'");
-		if (!$pos["numcampos"]) {
-			$sqlid = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','id{$formato[0]["nombre_tabla"]}','" . strtoupper($formato[0]["nombre"]) . "','INT','11','1','ai,pk','a,e','hidden')";
-			guardar_traza($sqlid, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqlid) or die($sqlid);
-		}
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='documento_iddocumento'");
-		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','documento_iddocumento','DOCUMENTO ASOCIADO','INT','11','1','i','a,e','hidden')";
-			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
-		}
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=$idformato and nombre='dependencia'");
-		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,valor,orden) VALUES('" . $idformato . "','dependencia','DEPENDENCIA DEL CREADOR DEL DOCUMENTO','INT','11','1','i,fdc','a,e','hidden','{*buscar_dependencia*}',1)";
-			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
-		}
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='encabezado'");
-		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','encabezado','ENCABEZADO','INT','11','1','a,e','hidden',1)";
-			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
-		}
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='firma'");
-		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','firma','FIRMAS DIGITALES','INT','11','1','','a,e','hidden',1)";
-			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
-		}
-		// 20160916 Agregar el campo estado_documento si no existe
-		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='estado_documento'");
-		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','estado_documento','ESTADO DEL DOCUMENTO','INT','11','1','','a,e','hidden',1)";
-			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
-		}
 	}
 }
