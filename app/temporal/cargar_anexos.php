@@ -23,7 +23,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $dir = SessionController::getTemporalDir() . '/';
 
     if (!empty($_REQUEST['dir'])) {
-        $dir .= '/anexos/' . $_REQUEST['dir'] . '/';
+        $dir .= 'anexos/' . $_REQUEST['dir'] . '/';
     }
 
     $relative = $ruta_db_superior . $dir;

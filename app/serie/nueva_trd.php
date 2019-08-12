@@ -28,61 +28,79 @@ try {
     if (!$_REQUEST['tipo']) {
         throw new Exception('Debe indicar una acción', 1);
     }
-    $ok = false;
-    $dataAditional = [];
-    if ($_REQUEST['tipo'] == 1) {
 
+    $dataAditional = [];
+    $folder = "TRD/version_{$_REQUEST['version']}";
+
+    $ok = 1;
+    $urlExcel = false;
+
+    if ($_REQUEST['tipo'] == 1) {
         $urlExcel = $ruta_db_superior . $_REQUEST['file_trd'];
 
         if (is_file($urlExcel)) {
-            new TRDLoadcontroller($urlExcel);
-            $ok = true;
-
             $filename = basename($urlExcel);
-            $route = "TRD/version_{$_REQUEST['tipo']}/trd_{$filename}";
+            $route = "{$folder}/trd_{$filename}";
 
             $content = file_get_contents($urlExcel);
             $jsonDB = TemporalController::createFileDbRoute($route, "archivos", $content);
 
             $dataAditional['archivo_trd'] = $jsonDB;
         } else {
-            $Response->message = 'No se pudo leer el anexo TRD';
+            $ok = 0;
+            $Response->message = 'No se pudo leer el archivo TRD';
         }
-    } else {
-        //new TRDClonecontroller();
-        $ok = true;
+    }
+
+    if (!empty($_REQUEST['file_anexos']) && $ok) {
+        $urlAnexo = $ruta_db_superior . $_REQUEST['file_anexos'];
+
+        if (is_file($urlAnexo)) {
+            $filename = basename($urlAnexo);
+            $route = "{$folder}/ane_{$filename}";
+
+            $content = file_get_contents($urlAnexo);
+            $json = TemporalController::createFileDbRoute($route, "archivos", $content);
+            $dataAditional['anexos'] = $json;
+        } else {
+            $ok = 0;
+            $Response->message = 'No se pudo cargar el anexo TRD';
+        }
     }
 
     if ($ok) {
-        if (!empty($_REQUEST['file_anexos'])) {
+        if ($SerieVersion = SerieVersion::getCurrentVersion()) {
 
-            $urlAnexo = $ruta_db_superior . $_REQUEST['file_anexos'];
-            $filename = basename($urlAnexo);
+            $TRDVersionController = new TRDVersionController($SerieVersion->getPK());
+            $folder = "TRD/version_{$SerieVersion->version}";
 
-            $route = "TRD/version_{$_REQUEST['tipo']}/ane_{$filename}";
-            $content = file_get_contents($urlAnexo);
-
-            $json = TemporalController::createFileDbRoute($route, "archivos", $content);
-            $dataAditional['anexos'] = $json;
+            $SerieVersion->setAttributes([
+                'json_trd' => TemporalController::createFileDbRoute($folder . "/trd.txt", "archivos", $TRDVersionController->getTrdData()),
+                'json_clasificacion' => TemporalController::createFileDbRoute($folder . "/clasificacion.txt", "archivos", $TRDVersionController->getClasificationData())
+            ]);
+            $SerieVersion->update();
         }
 
-        $TRDVersionController = new TRDVersionController();
         $attributes = [
             'version' => $_REQUEST['version'],
             'tipo' => $_REQUEST['tipo'],
-            'descripcion' => $_REQUEST['descripcion'],
-            'json_trd' => $TRDVersionController->getTrdData(),
-            'json_clasificacion' => $TRDVersionController->getClasificationData()
+            'nombre' => $_REQUEST['nombre'],
+            'descripcion' => $_REQUEST['descripcion']
         ];
         $attributes = array_merge($attributes, $dataAditional);
 
-        if (SerieVersion::newRecord($attributes)) {
+        if ($idSerieVersion = SerieVersion::newRecord($attributes)) {
+            if ($_REQUEST['tipo'] == 1) {
+                new TRDLoadController($urlExcel, $idSerieVersion);
+            } else {
+                new TRDCloneController($idSerieVersion, $SerieVersion->getPK());
+            }
+
             $Response->success = 1;
+            $Response->message = "Datos Guardados!";
         } else {
             $Response->message = "No se pudo almacenar la información";
         }
-    } else {
-        $Response->message = "No se pudo cargar/clonar la TRD";
     }
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();

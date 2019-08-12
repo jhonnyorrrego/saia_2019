@@ -27,16 +27,18 @@ try {
     }
 
     $SerieVersion = new SerieVersion($_REQUEST['id']);
-    $data = json_decode($SerieVersion->json_trd);
-    echo '<pre>';
-    var_dump($data, $SerieVersion->json_trd);
-    echo '</pre>';
-    exit;
-    foreach ($output->rows as $key => $value) {
-        $data['rows'][$key]['id'] = (int) $value->llave;
-        $data['rows'][$key]['info'] = $value->info;
+    $route = TemporalController::createTemporalFile($SerieVersion->json_trd, '', true);
+    if (!$route->success) {
+        throw new Exception("Error Processing Request", 1);
     }
 
+    $relativeRoute = $ruta_db_superior . $route->route;
+
+    if (!is_file($relativeRoute)) {
+        throw new Exception("Error Processing Request", 1);
+    }
+
+    $Response->rows = json_decode(file_get_contents($relativeRoute));
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
