@@ -426,7 +426,7 @@ class Imprime_Pdf
 					$this->pdf->Image($paginas[$i]["ruta"], $this->margenes["izquierda"], $this->margenes["superior"], 0, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, true);
 				}
 			}
-		}
+		} 
 	}
 
 	public function extraer_contenido($iddocumento, $vista = 0)
@@ -436,18 +436,21 @@ class Imprime_Pdf
 		$ch = curl_init();
 		$direccion = array();
 		$idfunc_crypto = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
+		
 		if ($_REQUEST["url"]) {
-			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']);
+			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']); 
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
+			
 		} else {
-			$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=" . $iddocumento, "", $conn);
+			$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato,exportar", "formato,documento", "lower(plantilla)=nombre and iddocumento=" . $iddocumento, "", $conn);
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 			if ($vista > 0) {
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
 				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?";
 				$queryParams = http_build_query([
 					'tipo' => 5,
-					'iddoc' => $datos_plantilla[0]["documento_iddocumento"]
+					'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
+					'tipo_pdf' => $datos_formato[0]["exportar"]
 				]);
 
 				$direccion[] = $url . $queryParams;
@@ -458,15 +461,17 @@ class Imprime_Pdf
 					$queryParams = http_build_query([
 						'tipo' => 5,
 						'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
+						'tipo_pdf' => $datos_formato[0]["exportar"],
 						'destino' => $fila
 					]);
 					$direccion[] = $url . $queryParams;
-				}
+				} 
 			} else {
 				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
 				$queryParams = http_build_query([
 					'tipo' => 5,
-					'iddoc' => $datos_plantilla[0]["documento_iddocumento"]
+					'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
+					'tipo_pdf' => $datos_formato[0]["exportar"]
 				]);
 				$direccion[] = $url . $queryParams;
 			}
@@ -488,7 +493,7 @@ class Imprime_Pdf
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$contenido = curl_exec($ch);
 
-			$contenido = str_replace("../../../images", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);
+			//$contenido = str_replace("../../../images", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);
 			$contenido = str_replace("<pagebreak/>", "<br pagebreak=\"true\"/>", $contenido);
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
@@ -498,10 +503,12 @@ class Imprime_Pdf
 			} else {
 				$datos_formato[0]["orientacion"] = "P";
 			}
+			//$contenido=(string) "</".$contenido;
 			$this->pdf->AddPage($datos_formato[0]["orientacion"], $datos_formato[0]["papel"]);
 			$this->pdf->writeHTML(stripslashes($contenido), 0);
 		}
 		curl_close($ch);
+	    
 	}
 
 	public function vincular_anexos()

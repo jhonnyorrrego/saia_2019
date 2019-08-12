@@ -33,12 +33,13 @@ function link_editar_funcion($idformato, $iddoc)
 }
 
 
+
 function cargar_destinos_carta($idformato, $idcampo, $iddoc = NULL)
 {
 	global $conn;
 	echo '<script>
- $("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><!--a href="#" id="carga_respuesta" anterior="' . $_REQUEST["anterior"] . '" >Cargar Remitente Origen</a--></td><td><!--a href="#" id="exportar_remitentes" >Exportar Remitentes</a--></td><td><a href="carga_remitentes.php?opcion=3&campo=destinos" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )" style="text-decoration:underline;">Importar Remitentes</a></td></tr></table>\');
-    </script>';
+$("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><!--a href="#" id="carga_respuesta" anterior="' . $_REQUEST["anterior"] . '" >Cargar Remitente Origen</a--></td><td><!--a href="#" id="exportar_remitentes" >Exportar Remitentes</a--></td><td><a href="carga_remitentes.php?opcion=3&campo=destinos" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )" style="text-decoration:underline;">Importar Remitentes</a></td></tr></table>\');
+</script>';
 }
 
 
@@ -134,15 +135,15 @@ function copias_carta($idformato, $idcampo, $iddoc = NULL)
 {
 	if ($iddoc == NULL) {
 		echo '<td bgcolor="#F5F5F5">
-    <input type="hidden" name="copia" id="nombre_copias" id="nombre_copias" value="" >
-    <b>DESTINOS ELEGIDOS:</b><br />
-    <input type="text" id="destinos_copias" value="" size=150 readonly=true >
-    <hr />
-    <iframe name="frame_copias" id="frame_copias" src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=elegir_destinos&copia=1" width=100% height=190px class=phpmkr border=0 frameborder="0" y framespacing="0">
-    </iframe></td>';
+<input type="hidden" name="copia" id="nombre_copias" id="nombre_copias" value="" >
+<b>DESTINOS ELEGIDOS:</b><br />
+<input type="text" id="destinos_copias" value="" size=150 readonly=true >
+<hr />
+<iframe name="frame_copias" id="frame_copias" src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=elegir_destinos&copia=1" width=100% height=190px class=phpmkr border=0 frameborder="0" y framespacing="0">
+</iframe></td>';
 	} else {
 		echo '<td bgcolor="#F5F5F5"><iframe src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=editar_copias&iddoc=' . $iddoc . '&tabla=ft_carta" width=100% height=170px class=phpmkr border=0 frameborder="0" framespacing="0" >
-            </iframe></td>';
+</iframe></td>';
 	}
 }
 function destinos_carta($idformato, $idcampo, $iddoc = NULL)
@@ -151,15 +152,15 @@ function destinos_carta($idformato, $idcampo, $iddoc = NULL)
 	$tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
 	if ($iddoc == NULL) {
 		echo '<td bgcolor="#F5F5F5">
-     <input type="hidden" name="destinos" id="nombre" value="" class="required" obligatorio="obligatorio">
-     <b>DESTINOS ELEGIDOS:</b><br />
-     <input type="text" id="destinos_nombres" value="" size=150 readonly=true >
-     <hr />
-     <iframe name="frame_destinos" id="frame_destinos" src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=elegir_destinos" width=100% height=210px class=phpmkr border=0 frameborder="0" y framespacing="0">
-     </iframe></td>';
+<input type="hidden" name="destinos" id="nombre" value="" class="required" obligatorio="obligatorio">
+<b>DESTINOS ELEGIDOS:</b><br />
+<input type="text" id="destinos_nombres" value="" size=150 readonly=true >
+<hr />
+<iframe name="frame_destinos" id="frame_destinos" src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=elegir_destinos" width=100% height=210px class=phpmkr border=0 frameborder="0" y framespacing="0">
+</iframe></td>';
 	} else {
 		echo '<td bgcolor="#F5F5F5"><iframe src="' . compara_ruta_archivos('/' . RUTA_SCRIPT . '/formatos/carta/funciones_adicionales.php') . '?funcion=editar_destinos&iddoc=' . $iddoc . '&tabla=' . $tabla[0]["nombre_tabla"] . '" width=100% height=210px class=phpmkr border=0 frameborder="0" framespacing="0" >
-            </iframe></td>';
+</iframe></td>';
 	}
 }
 function mostrar_copias_carta($idformato, $iddoc = NULL)
@@ -200,7 +201,7 @@ function mostrar_copia_interna($copia, $tipo = "", $fecha, $tipo_copia)
 				$lista[] = ucwords($resultado[0]["nombre"]);
 			} else //si el destino es un funcionario
 			{ /*$resultado=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre",DB.".funcionario,".DB.".cargo c,".DB.".dependencia_cargo dc","dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and funcionario_codigo=".$destinos[$i],"",$conn);
-                 $cargo=busca_filtro_tabla("nombre","cargo,dependencia_cargo","cargo_idcargo=idcargo and funcionario_idfuncionario=".$resultado[0]["idfuncionario"],"",$conn);*/
+$cargo=busca_filtro_tabla("nombre","cargo,dependencia_cargo","cargo_idcargo=idcargo and funcionario_idfuncionario=".$resultado[0]["idfuncionario"],"",$conn);*/
 				$condicion = "";
 				if ($tipo_copia == 1)
 					$condicion = " and funcionario_codigo='" . $destinos[$i] . "' ";
@@ -268,37 +269,37 @@ function arbol_copia_interna($idformato, $idcampo, $iddoc = Null)
 	else
 		$texto .= 'obligatorio="" ';
 	$texto .= ' value="' . $valor[0][0] . '" >
-  <script type="text/javascript">
-  <!--
-			tree_' . $campo[0]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campo[0]["nombre"] . '","100%","100%",0);
-			tree_' . $campo[0]["nombre"] . '.setImagePath("../../imgs/");
-			tree_' . $campo[0]["nombre"] . '.enableIEImageFix(true);
-			tree_' . $campo[0]["nombre"] . '.enableCheckBoxes(1);
-			tree_' . $campo[0]["nombre"] . '.enableThreeStateCheckboxes(true);
-			tree_' . $campo[0]["nombre"] . '.setXMLAutoLoading("' . $ruta . '");
-			tree_' . $campo[0]["nombre"] . '.loadXML("' . $ruta . '");
-      tree_' . $campo[0]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campo[0]["nombre"] . ');
-      function onNodeSelect_' . $campo[0]["nombre"] . '(nodeId)
-      {valor=document.getElementById("' . $campo[0]["nombre"] . '");
-       pos=nodeId.indexOf("_");
-       if(pos>0)
-           nodeId=nodeId.substring(0,pos);
-       if(valor.value!="")
-         {
-          existe=buscarItem(valor.value,nodeId);
-          if(existe>=0)
-            {nuevo=eliminarItem(valor.value,nodeId);
-             valor.value=nuevo;
-            }
-          else
-            valor.value+=","+nodeId;
-         }
-      else
-         valor.value=nodeId;
-      }
-	-->
-	</script>
-  </td></tr>';
+<script type="text/javascript">
+<!--
+tree_' . $campo[0]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campo[0]["nombre"] . '","100%","100%",0);
+tree_' . $campo[0]["nombre"] . '.setImagePath("../../imgs/");
+tree_' . $campo[0]["nombre"] . '.enableIEImageFix(true);
+tree_' . $campo[0]["nombre"] . '.enableCheckBoxes(1);
+tree_' . $campo[0]["nombre"] . '.enableThreeStateCheckboxes(true);
+tree_' . $campo[0]["nombre"] . '.setXMLAutoLoading("' . $ruta . '");
+tree_' . $campo[0]["nombre"] . '.loadXML("' . $ruta . '");
+tree_' . $campo[0]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campo[0]["nombre"] . ');
+function onNodeSelect_' . $campo[0]["nombre"] . '(nodeId)
+{valor=document.getElementById("' . $campo[0]["nombre"] . '");
+pos=nodeId.indexOf("_");
+if(pos>0)
+nodeId=nodeId.substring(0,pos);
+if(valor.value!="")
+{
+existe=buscarItem(valor.value,nodeId);
+if(existe>=0)
+{nuevo=eliminarItem(valor.value,nodeId);
+valor.value=nuevo;
+}
+else
+valor.value+=","+nodeId;
+}
+else
+valor.value=nodeId;
+}
+-->
+</script>
+</td></tr>';
 	echo $texto;
 	echo '<tr><td class="encabezado">VISIBLE LA COPIA INTERNA EN LA CARTA</td><td bgcolor="#F5F5F5"> <input type="radio" name="vercopiainterna" value="1" ';
 	if ($copia_interna)
@@ -364,8 +365,8 @@ function mostrar_imagenes_escaneadas($idformato, $iddoc)
 		$html .= '<div id="mainContainer"><div id="content">';
 		for ($i = 0; $i < $imagenes["numcampos"]; $i++) {
 			$html .= '<a href="#" onclick="displayImage(\'' . $imagenes[$i]["ruta"] . '\',\'P&aacute;gina ' . $imagenes[$i]["pagina"] . '\',\'\');return false">
-				<img src="" border="1">
-			</a>';
+<img src="" border="1">
+</a>';
 			if ($imagenes[$i]["pagina"] == (round($imagenes[$i]["pagina"] / 8) * 8))
 				$html .= "<br/><br/>";
 		}
@@ -458,7 +459,7 @@ function mostrar_datos_radicacion($idformato, $iddoc)
 		$margin = "margin-top:-30px;";
 	}
 	$datos = "<br/><b>
-	" . $nombre_empresa[0]['valor'] . "</b><br />";
+" . $nombre_empresa[0]['valor'] . "</b><br />";
 	$datos .= "<b>&nbsp;Radicación No:</b> " . formato_numero($idformato, $iddoc, 1) . '<br />';
 	$date = new DateTime($datos_radicacion[0]['fecha']);
 	$datos .= "<b>&nbsp;Fecha:</b> " . $date->format('Y-m-d H:i') . '<br />';
@@ -534,108 +535,108 @@ function parsear_arbol_expediente_serie_carta()
 {
 	global $conn, $ruta_db_superior;
 	?>
-					<script>
-						$(document).ready(function() {
-							tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
-						});
+	<script>
+		$(document).ready(function() {
+			tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
+		});
 
-						function parsear_expediente_serie(nodeId) {
-							console.log(nodeId);
-							var datos = tree_serie_idserie.getUserData(nodeId, "idexpediente");
-							console.log(datos);
-							if (datos) {
-								$('[name="expediente_serie"]').val(datos);
-							} else {
-								$('[name="expediente_serie"]').val("");
-							}
-							/*if(idexpediente_idserie.length > 1) {
-    										$('[name="expediente_serie"]').val(idexpediente_idserie[0]);
-										}
-										var seleccionados = tree_serie_idserie.getAllChecked();
-										var vector_seleccionados = seleccionados.split(',');
-										for ( i = 0; i < vector_seleccionados.length; i++) {
-											if (vector_seleccionados[i] != nodeId) {
-												tree_serie_idserie.setCheck(vector_seleccionados[i], 0);
-											}
-										}*/
-						}
-					</script>
-				<?php
+		function parsear_expediente_serie(nodeId) {
+			console.log(nodeId);
+			var datos = tree_serie_idserie.getUserData(nodeId, "idexpediente");
+			console.log(datos);
+			if (datos) {
+				$('[name="expediente_serie"]').val(datos);
+			} else {
+				$('[name="expediente_serie"]').val("");
 			}
-
-			function vincular_expediente_serie_carta($idformato, $iddoc)
-			{ //POSTERIOR AL APROBAR
-				global $conn, $ruta_db_superior;
-
-				$datos = busca_filtro_tabla("expediente_serie,documento_iddocumento", "ft_carta", "documento_iddocumento=" . $iddoc, "", $conn);
-				//print_r($datos);die();
-
-				$vinculado = busca_filtro_tabla("", "expediente_doc", "documento_iddocumento=" . $datos[0]['documento_iddocumento'] . " AND expediente_idexpediente=" . $datos[0]['expediente_serie'], "", $conn);
-				if (!$vinculado['numcampos']) {
-					$sql = "INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (" . $datos[0]['expediente_serie'] . "," . $datos[0]['documento_iddocumento'] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s') . ")";
-					phpmkr_query($sql);
-				}
+			/*if(idexpediente_idserie.length > 1) {
+			$('[name="expediente_serie"]').val(idexpediente_idserie[0]);
 			}
+			var seleccionados = tree_serie_idserie.getAllChecked();
+			var vector_seleccionados = seleccionados.split(',');
+			for ( i = 0; i < vector_seleccionados.length; i++) {
+			if (vector_seleccionados[i] != nodeId) {
+			tree_serie_idserie.setCheck(vector_seleccionados[i], 0);
+			}
+			}*/
+		}
+	</script>
+<?php
+}
 
-			function formato_radicado_enviada($idformato, $iddoc, $retorno = 0)
-			{
-				global $conn;
-				$cadena = "";
-				$formato = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
-				if ($formato["numcampos"]) {
-					$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*, B.*", "documento A, " . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND A.iddocumento=" . $iddoc, "", $conn);
-					if ($datos_documento["numcampos"]) {
-						$cadena .= str_replace("-", "", $datos_documento[0]["x_fecha"]);
-						$ruta = busca_filtro_tabla("origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "orden desc", $conn);
-						$ok = 0;
-						if ($ruta["numcampos"] > 1) {
-							if ($ruta[0]["tipo_origen"] == 5) {
-								$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[0]["origen"], "", $conn);
-								if ($dep["numcampos"]) {
-									$ok = 1;
-								}
-							} else {
-								$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "tipo_cargo=1 and funcionario_codigo=" . $ruta[0]["origen"], "iddependencia_cargo asc", $conn);
-								if ($dep["numcampos"]) {
-									$ok = 1;
-								}
-							}
-						}
-						if (!$ok) {
-							$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $datos_documento[0]["dependencia"], "", $conn);
-						}
-						$cadena .= str_pad("<b>" . $datos_documento[0]["numero"] . "</b>", 11, "0", STR_PAD_LEFT);
-						$cadena .= "-1";
+function vincular_expediente_serie_carta($idformato, $iddoc)
+{ //POSTERIOR AL APROBAR
+	global $conn, $ruta_db_superior;
+
+	$datos = busca_filtro_tabla("expediente_serie,documento_iddocumento", "ft_carta", "documento_iddocumento=" . $iddoc, "", $conn);
+	//print_r($datos);die();
+
+	$vinculado = busca_filtro_tabla("", "expediente_doc", "documento_iddocumento=" . $datos[0]['documento_iddocumento'] . " AND expediente_idexpediente=" . $datos[0]['expediente_serie'], "", $conn);
+	if (!$vinculado['numcampos']) {
+		$sql = "INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (" . $datos[0]['expediente_serie'] . "," . $datos[0]['documento_iddocumento'] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s') . ")";
+		phpmkr_query($sql);
+	}
+}
+
+function formato_radicado_enviada($idformato, $iddoc, $retorno = 0)
+{
+	global $conn;
+	$cadena = "";
+	$formato = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
+	if ($formato["numcampos"]) {
+		$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*, B.*", "documento A, " . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND A.iddocumento=" . $iddoc, "", $conn);
+		if ($datos_documento["numcampos"]) {
+			$cadena .= str_replace("-", "", $datos_documento[0]["x_fecha"]);
+			$ruta = busca_filtro_tabla("origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "orden desc", $conn);
+			$ok = 0;
+			if ($ruta["numcampos"] > 1) {
+				if ($ruta[0]["tipo_origen"] == 5) {
+					$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[0]["origen"], "", $conn);
+					if ($dep["numcampos"]) {
+						$ok = 1;
+					}
+				} else {
+					$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "tipo_cargo=1 and funcionario_codigo=" . $ruta[0]["origen"], "iddependencia_cargo asc", $conn);
+					if ($dep["numcampos"]) {
+						$ok = 1;
 					}
 				}
-				if ($retorno == 1) {
-					return ($cadena);
-				} else {
-					echo $cadena;
-				}
 			}
-
-
-
-			function vincular_distribucion_carta($idformato, $iddoc)
-			{  //POSTERIOR AL APROBAR
-				global $conn, $ruta_db_superior;
-
-				$datos = busca_filtro_tabla("tipo_mensajeria,requiere_recogida", "ft_carta", "documento_iddocumento=" . $iddoc, "", $conn);
-
-				$estado_recogida = 0;
-				$estado_distribucion = 1;
-				if (!$datos[0]['requiere_recogida']) {
-					$estado_recogida = 1;
-					$estado_distribucion = 0;
-				}
-				if ($datos[0]['tipo_mensajeria'] == 3) {
-					$estado_distribucion = 3;
-				}
-
-				include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
-
-				pre_ingresar_distribucion($iddoc, 'dependencia', 1, 'destinos', 2, $estado_distribucion, $estado_recogida); //INT -EXT
+			if (!$ok) {
+				$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $datos_documento[0]["dependencia"], "", $conn);
 			}
+			$cadena .= str_pad("<b>" . $datos_documento[0]["numero"] . "</b>", 11, "0", STR_PAD_LEFT);
+			$cadena .= "-1";
+		}
+	}
+	if ($retorno == 1) {
+		return ($cadena);
+	} else {
+		echo $cadena;
+	}
+}
 
-			?>
+
+
+function vincular_distribucion_carta($idformato, $iddoc)
+{  //POSTERIOR AL APROBAR
+	global $conn, $ruta_db_superior;
+
+	$datos = busca_filtro_tabla("tipo_mensajeria,requiere_recogida", "ft_carta", "documento_iddocumento=" . $iddoc, "", $conn);
+
+	$estado_recogida = 0;
+	$estado_distribucion = 1;
+	if (!$datos[0]['requiere_recogida']) {
+		$estado_recogida = 1;
+		$estado_distribucion = 0;
+	}
+	if ($datos[0]['tipo_mensajeria'] == 3) {
+		$estado_distribucion = 3;
+	}
+
+	include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+
+	pre_ingresar_distribucion($iddoc, 'dependencia', 1, 'destinos', 2, $estado_distribucion, $estado_recogida); //INT -EXT
+}
+
+?>
