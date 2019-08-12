@@ -36,6 +36,10 @@ $params = json_encode([
                 <form id="loadTRDForm">
                     <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
                     <div class="form-group form-group-default required">
+                        <label>Nombre:</label>
+                        <input name="nombre" type="text" class="form-control">
+                    </div>
+                    <div class="form-group form-group-default required">
                         <label>Numero Versión:</label>
                         <input name="version" type="text" class="form-control">
                     </div>

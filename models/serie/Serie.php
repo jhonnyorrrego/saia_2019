@@ -58,12 +58,13 @@ class Serie extends Model
     }
 
 
-
-    
     public function beforeCreate()
     {
-        $SerieVersion = SerieVersion::VersionActual();
-        $this->fk_serie_version = $SerieVersion->getPK();
+        if (!$this->fk_serie_version) {
+            $SerieVersion = SerieVersion::getCurrentVersion();
+            $this->fk_serie_version = $SerieVersion->getPK();
+        }
+        return true;
     }
 
     /**
@@ -73,6 +74,7 @@ class Serie extends Model
      * @return void
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
+
     protected function afterCreate()
     {
         $codArbol = $this->idserie;
@@ -85,45 +87,20 @@ class Serie extends Model
     }
 
     /**
-     * Crea la serie con sus correspondientes vinculaciones (expedientes, entidad serie)
      * NO utilizar create() para crear una serie
      *
      * @param string $dependenciasVinculadas : Dependencias a vinculadas a la serie
-     * @return array
+     * @return int
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function createSerie(array $data): array
+    public function createSerie(int $iddependencia)
     {
-        $response = [
-            'data' => [],
-            'success' => 0,
-            'message' => ''
-        ];
-        $newId = $this->newRecord($data);
-        if ($newId) {
-            $infoData['idserie'] = $newId;
-            foreach ($data['soporte'] as $value) {
-                $id = SerieRetencion::newRecord([
-                    'fk_serie' => $newId,
-                    'fk_retencion' => $value
-                ]);
-                if ($id) {
-                    $infoData['idserie_retencion'][] = $id;
-                }
-            }
+        return $this->create();
 
-            foreach ($data['disposicion'] as $value) {
-                $id = SerieRetencion::newRecord([
-                    'fk_serie' => $newId,
-                    'fk_retencion' => $value
-                ]);
-                if ($id) {
-                    $infoData['idserie_retencion'][] = $id;
-                }
-            }
-            $response['success'] = 1;
-        }
-        return $response;
+        // if ($iddependencia) { } else {
+        //     Es masivo desde clonar o cargar trd
+        // }
+        // return $newId;
     }
 
 
@@ -134,73 +111,74 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateSerie(): array
+    public function updateSerie()
     {
-        $response = [
-            'exito' => 0,
-            'message' => ''
-        ];
-        if ($this->categoria == 3) {
-            if ($this->update()) {
-                $response['exito'] = 1;
-                $response['message'] = 'Datos actualizados';
-            } else {
-                $response['message'] = 'Error al actualizar la serie';
-            }
-        } else {
-            $updateArbol = false;
-            $instance = new self($this->idserie);
-            if ($instance->cod_padre != $this->cod_padre) {
-                $updateArbol = true;
-                $codArbolAnt = $instance->cod_arbol;
-                $codArbol = $this->idserie;
-                if ($this->cod_padre) {
-                    $instancePadre = new self($this->cod_padre);
-                    $codArbol = $instancePadre->cod_arbol . '.' . $this->idserie;
-                }
-                $this->cod_arbol = $codArbol;
-            }
 
-            if ($this->update()) {
-                $response['exito'] = 1;
-                $response['message'] = 'Datos actualizados';
+        // $response = [
+        //     'exito' => 0,
+        //     'message' => ''
+        // ];
+        // if ($this->categoria == 3) {
+        //     if ($this->update()) {
+        //         $response['exito'] = 1;
+        //         $response['message'] = 'Datos actualizados';
+        //     } else {
+        //         $response['message'] = 'Error al actualizar la serie';
+        //     }
+        // } else {
+        //     $updateArbol = false;
+        //     $instance = new self($this->idserie);
+        //     if ($instance->cod_padre != $this->cod_padre) {
+        //         $updateArbol = true;
+        //         $codArbolAnt = $instance->cod_arbol;
+        //         $codArbol = $this->idserie;
+        //         if ($this->cod_padre) {
+        //             $instancePadre = new self($this->cod_padre);
+        //             $codArbol = $instancePadre->cod_arbol . '.' . $this->idserie;
+        //         }
+        //         $this->cod_arbol = $codArbol;
+        //     }
 
-                if ($updateArbol) {
-                    $update = "UPDATE serie SET cod_arbol=replace(cod_arbol,'{$codArbolAnt}','{$this->cod_arbol}') WHERE cod_arbol LIKE '{$codArbolAnt}.%'";
-                    if (!$this->query($update)) {
-                        $response['message2'] = 'Error al actualizar el cod arbol';
-                    }
-                }
+        //     if ($this->update()) {
+        //         $response['exito'] = 1;
+        //         $response['message'] = 'Datos actualizados';
 
-                $idsExpediente = $this->getExpedienteFk();
-                if ($idsExpediente) {
-                    foreach ($idsExpediente as $Expediente) {
-                        $attributes = [
-                            'nombre' => $this->nombre,
-                            'fondo' => $this->nombre,
-                            'descripcion' => $this->nombre,
-                            'codigo' => $this->codigo,
-                            'codigo_numero' => $this->codigo
-                        ];
-                        $Expediente->SetAttributes($attributes);
-                        if (!$Expediente->update()) {
-                            $response['message2'] .= 'Error al actualizar el expediente';
-                        }
-                    }
-                }
+        //         if ($updateArbol) {
+        //             $update = "UPDATE serie SET cod_arbol=replace(cod_arbol,'{$codArbolAnt}','{$this->cod_arbol}') WHERE cod_arbol LIKE '{$codArbolAnt}.%'";
+        //             if (!$this->query($update)) {
+        //                 $response['message2'] = 'Error al actualizar el cod arbol';
+        //             }
+        //         }
 
-                if (!$this->estado) {
-                    $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
-                    if ($EntidadSerie) {
-                        foreach ($EntidadSerie as $instance) {
-                            $instance->inactiveEntidadSerie();
-                        }
-                    }
-                }
-            }
-        }
+        //         $idsExpediente = $this->getExpedienteFk();
+        //         if ($idsExpediente) {
+        //             foreach ($idsExpediente as $Expediente) {
+        //                 $attributes = [
+        //                     'nombre' => $this->nombre,
+        //                     'fondo' => $this->nombre,
+        //                     'descripcion' => $this->nombre,
+        //                     'codigo' => $this->codigo,
+        //                     'codigo_numero' => $this->codigo
+        //                 ];
+        //                 $Expediente->SetAttributes($attributes);
+        //                 if (!$Expediente->update()) {
+        //                     $response['message2'] .= 'Error al actualizar el expediente';
+        //                 }
+        //             }
+        //         }
 
-        return $response;
+        //         if (!$this->estado) {
+        //             $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
+        //             if ($EntidadSerie) {
+        //                 foreach ($EntidadSerie as $instance) {
+        //                     $instance->inactiveEntidadSerie();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // return $response;
     }
 
     /**
@@ -218,8 +196,6 @@ class Serie extends Model
         );
         return $tipo[$this->tipo];
     }
-
-
 
     /**
      * retorna el label si/no utilizado en etiquetas de la serie
@@ -339,39 +315,5 @@ class Serie extends Model
         $sql = "SELECT count(idserie) as cant FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
         $hijos = $this->search($sql);
         return $hijos[0]['cant'] ? true : false;
-    }
-    /**
-     * retorna las instancias de EntidadSerie vinculadas
-     *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getEntidadSerieFk(int $instance = 1)
-    {
-        if ($instance) {
-            $data = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
-        } else {
-            $data = EntidadSerie::findColumn('idserie', ['fk_serie' => $this->idserie]);
-        }
-
-        return $data;
-    }
-    /**
-     * retorna las instancias de expedientes vinculadas a la serie
-     * 
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo    <andres.agudelo@cerok.com>
-     */
-    public function getExpedienteFk(int $instance = 1)
-    {
-        if ($instance) {
-            $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
-        } else {
-            $data = Expediente::findColumn('idexpediente', ['fk_serie' => $this->idserie]);
-        }
-
-        return $data;
     }
 }
