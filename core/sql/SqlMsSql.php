@@ -1,5 +1,5 @@
 <?php
-class SqlMsSql extends Sql
+class SqlMsSql extends Sql implements ISql
 {
 
 	public function __construct()
@@ -503,7 +503,7 @@ class SqlMsSql extends Sql
 		return $traza;
 	}
 
-	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+	public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
 	{
 		$lcampos = array();
 		for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -532,7 +532,7 @@ class SqlMsSql extends Sql
 		return $lcampos;
 	}
 
-	protected function formato_elimina_indices_tabla($tabla)
+	public function formato_elimina_indices_tabla($tabla)
 	{
 		$tabla = strtoupper($tabla);
 		$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
@@ -544,7 +544,7 @@ class SqlMsSql extends Sql
 		return;
 	}
 
-	protected function elimina_indice_campo($tabla, $campo)
+	public function elimina_indice_campo($tabla, $campo)
 	{
 		global $conn;
 		$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];

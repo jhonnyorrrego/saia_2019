@@ -471,51 +471,6 @@ function delimita($string, $length)
 
     return $string;
 }
-/*
-<Clase>
-<Nombre>busca_tabla
-<Parametros>$tabla: tabla sobre la que realiza la busqueda
-            $idtabla: identificador del registro que se quiere obtener
-<Responsabilidades> Obtener en un arreglo el registro cuyo identificador es $idtabla de la tabla $tabla
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function busca_tabla($tabla, $idtabla)
-{
-    global $sql, $conn;
-    $retorno = array();
-    $temp = array();
-    $retorno["tabla"] = $tabla;
-    switch ($tabla) {
-        case ("dependencia2"):
-            $tabla = "dependencia";
-            break;
-        case ("cargo2"):
-            $tabla = "cargo";
-            break;
-        case ("cargo3"):
-            $tabla = "dependencia_cargo";
-            break;
-        case ("funcionario2"):
-            $tabla = "funcionario";
-            break;
-    }
-    $motor = MOTOR;
-    if ($motor == "MySql") {
-        $campos = str_replace("to_char", "", $campos);
-    }
-    $sql = "Select DISTINCT * FROM " . $tabla . " WHERE id" . $tabla . "=" . $idtabla;
-    $rs = phpmkr_query($sql, $conn) or error("Error en Busqueda de Proceso SQL: $sql");
-    $temp = phpmkr_fetch_array($rs);
-    for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++)
-        array_push($retorno, $temp);
-    $retorno["numcampos"] = $i;
-    phpmkr_free_result($rs);
-    return $retorno;
-}
 
 /*
 <Clase>

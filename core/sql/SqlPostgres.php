@@ -1,5 +1,5 @@
 <?php
-class SqlPostgres extends Sql
+class SqlPostgres extends Sql implements ISql
 {
 
 	public function __construct()
@@ -561,7 +561,7 @@ class SqlPostgres extends Sql
 		}
 	}
 
-	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+	public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
 	{
 		$lcampos = array();
 		if (!$tabla_esta) {
@@ -613,7 +613,7 @@ class SqlPostgres extends Sql
 		return $lcampos;
 	}
 
-	protected function formato_elimina_indices_tabla($tabla)
+	public function formato_elimina_indices_tabla($tabla)
 	{
 		global $conn, $sql;
 		$tabla = strtoupper($tabla);
@@ -652,7 +652,7 @@ class SqlPostgres extends Sql
 		return;
 	}
 
-	protected function elimina_indice_campo($tabla, $campo)
+	public function elimina_indice_campo($tabla, $campo)
 	{
 		global $conn;
 
