@@ -24,7 +24,7 @@ function acceso_modulo($idmodulo = 0)
     }
 }
 
-$components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_componente A, busqueda B", "A.busqueda_idbusqueda=B.idbusqueda AND B.idbusqueda=" . $_REQUEST["idbusqueda"] . " AND A.estado<>0", "orden", $conn);
+$components = busca_filtro_tabla("A.*", "busqueda_componente A, busqueda B", "A.busqueda_idbusqueda=B.idbusqueda AND B.idbusqueda=" . $_REQUEST["idbusqueda"] . " AND A.estado<>0", "orden", $conn);
 ?>
 <div class="panel-body">
     <div class="block-nav">
@@ -69,10 +69,8 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
 
                     if ($components[$i]["url"]) {
                         $url = '../../' . $components[$i]["url"];
-                    } else if ($components[$i]["ruta_visualizacion"]) {
-                        $url = '../../' . $components[$i]["ruta_visualizacion"];
                     } else {
-                        $url = '../../' . 'pantallas/busquedas/consulta_busqueda.php';
+                        $url = '../../' . 'pantallas/busquedas/consulta_busqueda_tabla.php';
                     }
 
                     if ($url) {
