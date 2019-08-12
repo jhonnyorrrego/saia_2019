@@ -16,7 +16,6 @@ class TareaEstado extends Model
     protected $estado;
     protected $user;
 
-
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -27,7 +26,7 @@ class TareaEstado extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcionario',
                 'fk_tarea',

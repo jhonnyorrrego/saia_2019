@@ -292,7 +292,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
 						$tabla = "archivo";
 					}
-					$documento = busca_tabla($tabla, $x_id_documento);
+					$documento = busca_filtro_tabla('*', $tabla, "id{$tabla}={$x_id_documento}", "");
 					if ($documento["numcampos"] && $tabla != "archivo") {
 						echo stripslashes($documento[0]["descripcion"]);
 					} else if ($tabla == "archivo") {

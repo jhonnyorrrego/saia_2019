@@ -174,7 +174,7 @@ $(document).ready(function() {
         });
     }
 
-
+ 
     $(document).on("click", "#funcionesPropias", function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
         var funcion = $(this).attr("name");

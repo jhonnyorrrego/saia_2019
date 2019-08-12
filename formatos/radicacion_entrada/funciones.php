@@ -720,6 +720,16 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
 
     $tabla .= '</div></div></thead></table></div></div>';
     echo $tabla;
+
+    if ($_REQUEST['tipo'] != 5) {
+        $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
+        $params = json_encode([
+            'baseUrl' => $ruta_db_superior,
+            'iddoc' => $iddoc,
+            'idformato' => $idformato
+        ]);
+    ?><script id='correspondencia' src='<?= $ruta_db_superior ?>formatos/radicacion_entrada/funciones.js' data-params='<?= $params ?>'></script><?php
+    }
 }
 
 function obtener_informacion_proveedor($idformato, $iddoc)
@@ -934,6 +944,38 @@ function actualizar_campos_documento($idformato, $iddoc)
         phpmkr_query($sql1);
     }
     return;
+}
+
+function radicacion_entrada_fab_buttons(){
+ 
+    $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "", $conn);
+    $datos = array();
+    for($i=0; $i < $distribuciones["numcampos"]; $i++){
+        if(generar_enlace_finalizar_distribucion($distribuciones[$i]["iddistribucion"])){
+            $datos2 = array('confirmarRecibido' . $distribuciones[$i]["iddistribucion"] => [
+                'button' => [
+                    'id' => $distribuciones[$i]["iddistribucion"],
+                    'class' => 'small red finalizar_item_usuario_actual',
+                    'html' => '',
+                    'tooltip' => 'Confirmar Recibido item ' . $distribuciones[$i]["numero_distribucion"],
+                    'visible' => 1,
+                    'data' => [
+                        'action' => 0
+                    ]
+                ],
+                'icon' => [
+                    'class' => 'fa fa-times',
+                    'html' => ''
+                ]
+            ]);
+
+            $datos = array_merge($datos,$datos2);
+        }
+    }
+
+    $datos = array_merge($datos,$datos2);
+    return $datos;
+
 }
 
 ?>

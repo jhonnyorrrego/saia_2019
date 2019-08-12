@@ -60,24 +60,6 @@ abstract class Sql
 	}
 
 	/**
-	 * gestiona la conexion a la base de datos
-	 *
-	 * @return void
-	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-	 * @date 2019
-	 */
-	public abstract function connect();
-
-	/**
-	 * finaliza la conexion de base de datos
-	 *
-	 * @return void
-	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-	 * @date 2019
-	 */
-	public abstract function disconnect();
-
-	/**
 	 * obtiene la instancia de sql, en caso de no
 	 * existir la genera
 	 *
@@ -113,30 +95,6 @@ abstract class Sql
 		return Sql::$instance;
 	}
 
-	/**
-	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
-	 * @param array $arreglo_cadena
-	 * @return string sentencia concatenar adecuada para el motor configurado
-	 */
-	public abstract function concatenar_cadena($arreglo_cadena);
-
-	public abstract function liberar_resultado($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>una matriz con los resultados de la consulta, indices numericos y asociativos
-	 * <Pre-condiciones>
-	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
-	 */
-	public abstract function Ejecutar_Sql($sql);
-
-	public abstract function sacar_fila($rs);
-
 	/*
 	 * <Clase>SQL
 	 * <Nombre>Numero_Filas
@@ -152,123 +110,6 @@ abstract class Sql
 	{
 		return $this->filas;
 	}
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Nombre_Campo
-	 * <Parametros>pos-posición del campo en el array resultado
-	 * <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>nombre del campos especificado
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	public abstract function Nombre_Campo($rs, $pos);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Lista_Tabla
-	 * <Parametros>db-nombre de la base de datos a listar
-	 * <Responsabilidades>Retornar en una matriz las tablas de la base de datos especificada
-	 * <Notas>
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Lista_Tabla($db);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Busca_Tabla
-	 * <Parametros>tabla-nombre de la tabla a examinar
-	 * <Responsabilidades>segun el motor llama la función correspondiente
-	 * <Notas>
-	 * <Excepciones>
-	 * <Salida>matriz con la lista de los campos de una tabla
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Busca_tabla($tabla, $campo = "");
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Buscar_Limit
-	 * <Parametros>campos-los campos a buscar; tablas-tablas donde se realizará la busqueda;
-	 * where-filtro de la búsqueda; order_by-columna para el orden; limit-numero de registros a recuperar
-	 * <Responsabilidades>segun el motor llama la función correspondiente
-	 * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-	 * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
-	 * <Salida>una matriz con los "limit" resultados de la busqueda
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// devuelve los primeros $limit registros de la consulta en un array
-	public abstract function Ejecutar_Limit($sql, $inicio, $fin);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>total_registros_tabla.
-	 * <Parametros>tabla-nombre de la tabla a consultar
-	 * <Responsabilidades>llama a la función deseada
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-	 * <Salida>devuelve un entero con el numero de filas de la tabla
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Total_Registros_Tabla($tabla);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Numero_Campos
-	 * <Parametros>
-	 * <Responsabilidades>segun el motor llama la función deseada
-	 * <Notas>se utiliza después de la hacer una consulta de seleccion (select)
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Numero_Campos($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Ultimo_Insert
-	 * <Parametros>
-	 * <Responsabilidades>segun el motor llama la función deseada
-	 * <Notas>se utiliza después de la función insert
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public abstract function Ultimo_Insert();
-
-	public abstract function Guardar_log($strsql);
-
-	public abstract function resta_fechas($fecha1, $fecha2);
-
-	public static abstract function fecha_db_almacenar($fecha, $formato);
-
-	public static abstract function fecha_db_obtener($campo, $formato);
-
-	public abstract function mostrar_error();
-
-	public abstract function fecha_db($campo, $formato);
-
-	public abstract function case_fecha($dato, $compara, $valor1, $valor2);
-
-	public abstract function suma_fechas($fecha1, $cantidad, $tipo);
-
-	public abstract function resta_horas($fecha1, $fecha2);
-
-	public abstract function fecha_actual($fecha1, $fecha2);
-
-	public abstract function compara_fechas($fecha_control, $fecha_inicial);
-
-	public abstract function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
 
 	protected function ejecuta_filtro_tabla($sql2)
 	{
@@ -297,36 +138,6 @@ abstract class Sql
 		}
 		return ($valor);
 	}
-
-	public abstract function listar_campos_tabla($tabla, $tipo_retorno);
-
-	public abstract function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
-
-	public abstract function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null);
-
-	public abstract function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla);
-
-	protected abstract function formato_elimina_indices_tabla($tabla);
-
-	/*
-	 * <Clase>
-	 * <Nombre>elimina_indice_campo</Nombre>
-	 * <Parametros>$tabla:define la tabla donde se debe hacer el cambio;$campo:arreglo que debe contener los siguentes parametros:
-	 * Key_name:Nombre o tipo de LLave de la llave.
-	 * Column_name: Nombre de la Columna.</Parametros>
-	 * <Responsabilidades>Elimina el indice seleccionado<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
-	protected abstract function elimina_indice_campo($tabla, $campo);
-
-	public abstract function verificar_existencia($tabla);
-
-	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 
 	public function formato_generar_tabla($idformato, $formato)
 	{
@@ -508,26 +319,5 @@ abstract class Sql
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
-	}
-
-	/**
-	 * ejecuta una consulta
-	 *
-	 * @param string $sql
-	 * @param integer $start limite inicial
-	 * @param integer $end limite final
-	 * @return array
-	 */
-	public function executeSelect($sql, $start = 0, $end = 0)
-	{
-		$response = [];
-		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
-
-		while (($row = $this->sacar_fila($result)) !== false) {
-			$response[] = $row;
-		}
-
-		$this->liberar_resultado($result);
-		return $response;
 	}
 }

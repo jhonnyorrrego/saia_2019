@@ -6,7 +6,7 @@ class Funcion extends LogModel
     protected $nombre;
     protected $estado;
     protected $fecha;
-    
+
 
     function __construct($id = null)
     {
@@ -18,7 +18,7 @@ class Funcion extends LogModel
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'nombre',
                 'estado',
@@ -48,7 +48,7 @@ class Funcion extends LogModel
      */
     private function checkStateChange()
     {
-        $diff = array_diff($this->getAttributes(), $this->clone->getAttributes());
+        $diff = array_diff_assoc($this->getAttributes(), $this->clone->getAttributes());
 
         if (array_key_exists('estado', $diff) && $diff['estado'] == 0) {
             return $this->inactiveRelations();

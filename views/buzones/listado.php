@@ -123,7 +123,8 @@ $component = StaticSql::search($sql);
         function beautyTable() {
             table.parents('.bootstrap-table').addClass('w-100');
             table.find('tr[data-index] td').addClass('p-2');
-            $('.card-view .title').remove();
+            table.find('.card-view-value').addClass('w-100');
+            $('.card-view-title').remove();
             $('.pagination-detail .page-list').remove();
 
             if (window.resizeIframe) {
@@ -146,4 +147,4 @@ if ($component[0]['ruta_libreria_pantalla']) {
         include_once $ruta_db_superior . $librarie;
     }
 }
-?> 
+?>

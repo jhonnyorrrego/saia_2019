@@ -9,9 +9,9 @@
 class RecurrenciaTareaController
 {
     protected $Tarea;
-    protected $TareaFuncionario;
     protected $configuration;
     protected $notifications;
+    protected $createdTask;
 
     /**
      * inicia el proceso para calcular la recurrencia
@@ -27,6 +27,7 @@ class RecurrenciaTareaController
         $this->Tarea = $Tarea;
         $this->configuration = $configuration;
         $this->notifications = $notifications;
+        $this->createNewTask = [];
 
         $this->generate();
     }
@@ -42,13 +43,70 @@ class RecurrenciaTareaController
     public function generate()
     {
         if (!$this->configuration->recurrence) {
-            return $this->deleteRecurrence();
+            return true;
         }
 
         if ($this->configuration->unity < 0) {
             throw new Exception("La cantidad de repeticiones debe ser positiva", 1);
         }
 
+        if ($this->isDifferentRecurrence()) {
+            $this->deleteRecurrence();
+            $this->generateGroup();
+            $DatePeriodParams = $this->generatePeriodParams();
+            $DateInterval = new DateInterval("P{$this->configuration->unity}{$DatePeriodParams->sufix}");
+            $daterange = new DatePeriod(
+                $DatePeriodParams->initialDateTime,
+                $DateInterval,
+                $DatePeriodParams->finalItem,
+                DatePeriod::EXCLUDE_START_DATE
+            );
+
+            foreach ($daterange as $DateTime) {
+                if (!empty($dayPosition)) {
+                    $DateTime = $this->findMonthDay($DateTime);
+                }
+
+                $this->createNewTask($DateTime);
+            }
+
+            $this->bindTaskUsers();
+            $this->bindTaskDocument();
+        } else {
+            $this->inactiveNotifications();
+        }
+
+        $this->createNotifications();
+    }
+
+    /**
+     * verifica si la recurrencia a guardar es nueva
+     *
+     * @return boolean
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-05
+     */
+    public function isDifferentRecurrence()
+    {
+        $RecurrenciaTarea = $this->Tarea->getRecurrence();
+        return
+            !$RecurrenciaTarea ||
+            $RecurrenciaTarea->recurrencia != $this->configuration->recurrence ||
+            $RecurrenciaTarea->periodo != $this->configuration->period ||
+            $RecurrenciaTarea->unidad_tiempo != $this->configuration->unity ||
+            $RecurrenciaTarea->opcion_unidad != $this->configuration->option ||
+            $RecurrenciaTarea->terminar != $this->configuration->endValue;
+    }
+
+    /**
+     * genera los parametros para el DatePeriod
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-05
+     */
+    public function generatePeriodParams()
+    {
         $date = $this->Tarea->fecha_final;
         $InitialDateTime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
@@ -89,23 +147,11 @@ class RecurrenciaTareaController
             throw new Exception("Error Processing Request", 1);
         }
 
-        $DateInterval = new DateInterval("P{$this->configuration->unity}{$sufix}");
-        $daterange = new DatePeriod(
-            $InitialDateTime,
-            $DateInterval,
-            $finalItem,
-            DatePeriod::EXCLUDE_START_DATE
-        );
-
-        $this->generateGroup();
-
-        foreach ($daterange as $DateTime) {
-            if (!empty($dayPosition)) {
-                $DateTime = $this->findMonthDay($DateTime);
-            }
-
-            $this->createNewTask($DateTime);
-        };
+        return (object) [
+            'initialDateTime' => $InitialDateTime,
+            'sufix' => $sufix,
+            'finalItem' => $finalItem
+        ];
     }
 
     /**
@@ -149,85 +195,119 @@ class RecurrenciaTareaController
             throw new Exception("Error al guardar la tarea", 1);
         }
 
-        $this->bindTaskUsers($Tarea->getPK());
-        $this->bindTaskDocument($Tarea->getPK());
-        $this->bindNotifications($Tarea->getPK());
+        $this->createdTask[] = $Tarea->getPK();
+    }
+
+    /**
+     * crea las notificaciones de cada tarea
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-05
+     */
+    public function createNotifications()
+    {
+        if (!$this->notifications) {
+            return true;
+        }
+
+        $tasks = $this->createdTask;
+        if (!in_array($this->Tarea->getPK(), $tasks)) {
+            $tasks[] = $this->Tarea->getPK();
+        }
+
+        foreach ($tasks as $taskId) {
+            foreach ($this->notifications as $notification) {
+                TareaNotificacion::newRecord([
+                    'tipo' => $notification['type'],
+                    'duracion' => $notification['duration'],
+                    'periodo' => $notification['period'],
+                    'fk_tarea' => $taskId
+                ]);
+            }
+        }
+    }
+
+    /**
+     * inactiva las notificaciones de las tareas
+     * pertenecientes a la recurrencia
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-05
+     */
+    public function inactiveNotifications()
+    {
+        $tasks = Tarea::findColumn(Tarea::getPrimaryLabel(), [
+            'fk_recurrencia_tarea' => $this->Tarea->fk_recurrencia_tarea,
+            'estado' => 1
+        ]);
+
+        foreach ($tasks as $taskId) {
+            TareaNotificacion::executeUpdate([
+                'estado' => 0
+            ], [
+                'fk_tarea' => $taskId
+            ]);
+        }
+
+        $this->createdTask = $tasks;
     }
 
     /**
      * vincula los funcionarios a la nueva tarea
      *
-     * @param integer $taskId
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-23
      */
-    public function bindTaskUsers($taskId)
+    public function bindTaskUsers()
     {
-        $users = $this->getUsers();
+        $users = TareaFuncionario::findAllByAttributes([
+            'estado' => 1,
+            'fk_tarea' => $this->Tarea->getPK()
+        ]);
+        foreach ($this->createdTask as $taskId) {
+            foreach ($users as $TareaFuncionario) {
+                if ($TareaFuncionario->tipo == TareaFuncionario::TIPO_CREADOR) {
+                    continue;
+                }
 
-        foreach ($users as $TareaFuncionario) {
-            if ($TareaFuncionario->tipo == TareaFuncionario::TIPO_CREADOR) {
-                continue;
+                $TareaFuncionario = $TareaFuncionario->clone();
+                $TareaFuncionario->fk_tarea = $taskId;
+
+                if (!$TareaFuncionario->save()) {
+                    throw new Exception("Error al asignar los funcionarios", 1);
+                }
             }
 
-            $TareaFuncionario = $TareaFuncionario->clone();
-            $TareaFuncionario->fk_tarea = $taskId;
-
-            if (!$TareaFuncionario->save()) {
-                throw new Exception("Error al asignar los funcionarios", 1);
-            }
+            TareaFuncionario::assignUser(
+                $taskId,
+                [SessionController::getValue('idfuncionario')],
+                TareaFuncionario::TIPO_CREADOR
+            );
         }
-
-        TareaFuncionario::assignUser(
-            $taskId,
-            [SessionController::getValue('idfuncionario')],
-            TareaFuncionario::TIPO_CREADOR
-        );
     }
 
     /**
      * vincula el documento de la tarea principal
      * a las nuevas tareas de la recurrencia
      *
-     * @param integer $taskId
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-29
      */
-    public function bindTaskDocument($taskId)
+    public function bindTaskDocument()
     {
         $DocumentoTarea = $this->Tarea->getDocument();
         if ($DocumentoTarea) {
-            DocumentoTarea::newRecord([
-                'fk_tarea' => $taskId,
-                'fk_documento' => $DocumentoTarea->fk_documento
-            ]);
+            foreach ($this->createdTask as $taskId) {
+                DocumentoTarea::newRecord([
+                    'fk_tarea' => $taskId,
+                    'fk_documento' => $DocumentoTarea->fk_documento
+                ]);
+            }
         }
-    }
-
-    public function bindNotifications()
-    {
-        return true;
-    }
-
-    /**
-     * obtiene los funcionarios vinculados a la tarea
-     *
-     * @return array
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-07-24
-     */
-    public function getUsers()
-    {
-        if (!$this->TareaFuncionario) {
-            $this->TareaFuncionario = TareaFuncionario::findAllByAttributes([
-                'estado' => 1,
-                'fk_tarea' => $this->Tarea->getPK()
-            ]);
-        }
-
-        return $this->TareaFuncionario;
     }
 
     /**
@@ -313,13 +393,21 @@ class RecurrenciaTareaController
             return true;
         }
 
-        $fk_recurrence = $this->Tarea->fk_recurrencia_tarea;
-        $this->Tarea->fk_recurrencia_tarea = 0;
-        $this->Tarea->save();
-
-        Tarea::executeDelete([
-            'fk_recurrencia_tarea' => $fk_recurrence
+        $tasks = Tarea::findAllByAttributes([
+            'fk_recurrencia_tarea' => $this->Tarea->fk_recurrencia_tarea
         ]);
+
+        $referenceDateTime = new DateTime($this->Tarea->fecha_final);
+        foreach ($tasks as $Tarea) {
+            $taskDateTime = new DateTime($Tarea->fecha_final);
+            if ($referenceDateTime < $taskDateTime) {
+                $Tarea->setAttributes([
+                    'estado' => 0,
+                    'fk_recurrencia_tarea' => 0
+                ]);
+                $Tarea->save();
+            }
+        }
 
         return true;
     }

@@ -257,6 +257,21 @@ function buscar_dependencias_hijas_distribucion($iddependencia)
     return ($lista_hijas);
 }
 
+
+function accionFinalizarDistribucion($iddoc)
+{
+    global $conn;
+    $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+    $retorno = false;
+    for ($i = 0; $i < $distribuciones["numcampos"]; $i++) {
+        if (generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion'])) {
+            $retorno = true;
+            break;
+        }
+    }
+    return $retorno;
+}
+
 function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0)
 {
     global $conn, $ruta_db_superior;
@@ -286,7 +301,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
                 <tr> 
                 <td style="width:15%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
                 <td style="width:20%;"> ' . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . '</td>
-				<td style="width:20%;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>
+				<td style="width:20%" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>	
 				<td style="width:20%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
@@ -318,7 +333,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
     global $conn, $ruta_db_superior;
 
     $html = '';
-    if ($js) {
+    /* if ($js) {
         $html = '
 		<script>
                     $(document).ready(function(){
@@ -348,7 +363,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
                         });
                     });	//fin if document.ready
 		</script>';
-    }
+    }*/
 
     if (!$js && $iddistribucion) {
 
@@ -361,7 +376,6 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
         $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
 
         $retornar_enlace = 0;
-
         switch ($diligencia) {
             case 'RECOGIDA':
                 if (in_array($distribucion[0]['destino'], $vector_roles_usuario_actual)) {
@@ -376,10 +390,9 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
         }
 
         if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
-            //se comenta el boton hasta nueva indicacion de ubicacion
-            $html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
+            return true;
         }
-    } //fin if js
+    }
 
     return ($html);
 }

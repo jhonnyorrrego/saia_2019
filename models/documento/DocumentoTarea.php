@@ -129,14 +129,15 @@ SQL;
         SELECT 
             tarea.fecha_inicial,tarea_estado.valor
         FROM
-            documento_tarea  join 
-            tarea  on 
+            documento_tarea
+            JOIN tarea ON 
                 documento_tarea.fk_tarea = tarea.idtarea
-                JOIN
-            tarea_estado ON tarea.idtarea = tarea_estado.fk_tarea
+            JOIN tarea_estado ON
+                tarea.idtarea = tarea_estado.fk_tarea
         WHERE
-            tarea_estado.estado = 1 AND 
-            tarea_estado.valor <> {$state} and 
+            tarea.estado = 1 AND
+            tarea_estado.estado = 1 AND
+            tarea_estado.valor <> {$state} AND
             documento_tarea.fk_documento = {$documentId}
 SQL;
         $data = StaticSql::search($sql);

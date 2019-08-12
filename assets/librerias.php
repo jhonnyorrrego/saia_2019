@@ -1,4 +1,5 @@
 <?php
+
 /**
  * retorna script para cargar
  * jquery v3.2.1 minificado

@@ -14,7 +14,7 @@ class StaticSql
 
     public static function search(string $sql, $start = 0, $end = 0): array
     {
-        return Sql::getInstance()->executeSelect($sql, $start, $end);
+        return Sql::getInstance()->search($sql, $start, $end);
     }
 
     /**

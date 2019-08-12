@@ -10,6 +10,8 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
+echo jquery();
+echo select2();
 if(empty($_REQUEST['id'])){
     $_REQUEST['id'] = '';
 }

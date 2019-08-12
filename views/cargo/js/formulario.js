@@ -41,7 +41,6 @@ $(function () {
                 $(`[name='estado'][value=${data.estado}]`).prop('checked', true);
             }
         }
-        console.log(data.cod_padre);
         createTree(data.cod_padre, [data.key]);
     }
 

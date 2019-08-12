@@ -1,5 +1,5 @@
 <?php
-class SqlSqlServer extends Sql
+class SqlSqlServer extends Sql implements ISql
 {
     public function __construct()
     {
@@ -25,6 +25,27 @@ class SqlSqlServer extends Sql
     function disconnect()
     {
         return sqlsrv_close($this->connection);
+    }
+
+    /**
+     * ejecuta una consulta
+     *
+     * @param string $sql
+     * @param integer $start limite inicial
+     * @param integer $end limite final
+     * @return array
+     */
+    public function search($sql, $start = 0, $end = 0)
+    {
+        $response = [];
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+
+        while (($row = $this->sacar_fila($result)) !== false) {
+            $response[] = $row;
+        }
+
+        $this->liberar_resultado($result);
+        return $response;
     }
 
     function liberar_resultado($rs)
@@ -90,23 +111,6 @@ class SqlSqlServer extends Sql
         } else {
             return (FALSE);
         }
-    }
-
-    function Resultado()
-    {
-        $resultado["sql"] = $this->consulta;
-        $resultado["numcampos"] = $this->Numero_Filas();
-        if ($this->Numero_Filas() > 0) {
-            for ($i = 0; $i < $this->Numero_Filas(); $i++) {
-                $resultado[$i] = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_ASSOC);
-                $j = 0;
-                foreach ($resultado[$i] as $key => $valor) {
-                    $resultado[$i][$j] = $resultado[$i][$key];
-                    $j++;
-                }
-            }
-        }
-        return $resultado;
     }
 
     /*
@@ -239,26 +243,6 @@ class SqlSqlServer extends Sql
 
     /*
      * <Clase>SQL
-     * <Nombre>total_registros_tabla.
-     * <Parametros>tabla-nombre de la tabla a consultar
-     * <Responsabilidades>consultar el número total de registros de una tabla para SqlServer
-     * <Notas>
-     * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-     * <Salida>devuelve un entero con el numero de filas de la tabla
-     * <Pre-condiciones>
-     * <Post-condiciones>
-     */
-    function Total_Registros_Tabla($tabla)
-    {
-        $this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-        sqlsrv_query($this->connection, "USE " . $this->db);
-        $this->res = sqlsrv_query($this->connection, $this->consulta);
-        $total = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC);
-        return ($total[0]);
-    }
-
-    /*
-     * <Clase>SQL
      * <Nombre>Numero_Campos
      * <Parametros>
      * <Responsabilidades>segun el motor llama la función deseada
@@ -294,32 +278,6 @@ class SqlSqlServer extends Sql
         $this->res = sqlsrv_query($this->connection, "SELECT @@identity") or print_r(sqlsrv_errors());
         $total = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC) or print_r(sqlsrv_errors());
         return ($total[0]);
-    }
-
-    function Guardar_log($strsql)
-    {
-        $sqleve = "";
-        $sql = trim($strsql);
-        $sql = str_replace('', '', $sql);
-        $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-        // echo $strsql;
-        if ($accion == 'SELECT')
-            return false;
-        $tabla = "";
-        $llave = 0;
-        $string_detalle = "";
-        $func = $_SESSION["usuario_actual"];
-        $this->ultimoInsert = 0;
-        if (isset($_SESSION)) {
-            $fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
-            if ($sqleve != "") {
-                sqlsrv_query($this->connection, "USE " . $this->db);
-                $result = sqlsrv_query($this->connection, $sqleve);
-                if (!$result)
-                    die(" Error en la consulta: " . sqlsrv_errors());
-                $registro = $this->Ultimo_Insert();
-            }
-        }
     }
 
     function resta_fechas($fecha1, $fecha2)
@@ -394,22 +352,10 @@ class SqlSqlServer extends Sql
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_obtener
     function mostrar_error()
     {
         if ($this->error != "")
             echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
-    }
-
-    function fecha_db($campo, $formato = NULL)
-    { }
-
-    // Fin Funcion fecha_db_obtener
-    function case_fecha($dato, $compara, $valor1, $valor2)
-    {
-        if ($compara = "" || $compara == 0)
-            $compara = ">0";
-        return ("CASE WHEN $dato $compara THEN $valor2 ELSE $valor1 END");
     }
 
     function suma_fechas($fecha1, $cantidad, $tipo = "")
@@ -424,11 +370,6 @@ class SqlSqlServer extends Sql
         if ($fecha2 == "")
             $fecha2 = "CURRENT_TIMESTAMP";
         return "DATEDIFF(HOUR,$fecha2,$fecha1)";
-    }
-
-    function fecha_actual($fecha1, $fecha2)
-    {
-        return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";
     }
 
     // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
@@ -619,7 +560,7 @@ class SqlSqlServer extends Sql
         return $traza;
     }
 
-    protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+    public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
     {
         $lcampos = array();
         for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -645,7 +586,7 @@ class SqlSqlServer extends Sql
         return $lcampos;
     }
 
-    protected function formato_elimina_indices_tabla($tabla)
+    public function formato_elimina_indices_tabla($tabla)
     {
         global $conn, $sql;
         $tabla = strtoupper($tabla);
@@ -658,7 +599,7 @@ class SqlSqlServer extends Sql
         return;
     }
 
-    protected function elimina_indice_campo($tabla, $campo)
+    public function elimina_indice_campo($tabla, $campo)
     {
         global $conn;
         $sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
