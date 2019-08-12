@@ -85,6 +85,9 @@ $('#loadTRDForm').validate({
         },
         tipo: {
             required: true,
+        },
+        nombre: {
+            required: true
         }
     },
     submitHandler: function () {
@@ -129,6 +132,7 @@ $('#loadTRDForm').validate({
                         message: response.message,
                         type: 'success'
                     });
+                    window.location.reload();
                 } else {
                     options = {
                         params: {
@@ -142,25 +146,5 @@ $('#loadTRDForm').validate({
             }
         });
 
-
-        /*$.post(
-            `${params.baseUrl}app/serie/nueva_trd.php`,
-            data,
-            function (response) {
-                if (response.success) {
-                    top.notification({
-                        message: response.message,
-                        type: 'success'
-                    });
-                } else {
-                    top.notification({
-                        message: response.message,
-                        type: 'error',
-                        title: 'Error!'
-                    });
-                }
-            },
-            'json'
-        );*/
     }
 });

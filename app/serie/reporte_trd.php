@@ -27,7 +27,15 @@ try {
     }
 
     $SerieVersion = new SerieVersion($_REQUEST['id']);
-    $data = json_decode($SerieVersion->json_trd);
+    $route = TemporalController::createTemporalFile($SerieVersion->json_trd, '', true);
+    if ($route->success) {
+        $relativeRoute = $ruta_db_superior . $route->route;
+
+        if (is_file($relativeRoute)) {
+            $data = json_decode(file_get_contents($relativeRoute));
+        } else { }
+    } else { }
+
     echo '<pre>';
     var_dump($data, $SerieVersion->json_trd);
     echo '</pre>';
