@@ -38,7 +38,7 @@ class SqlSqlServer extends Sql implements ISql
     public function search($sql, $start = 0, $end = 0)
     {
         $response = [];
-        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
         while (($row = $this->sacar_fila($result)) !== false) {
             $response[] = $row;
@@ -56,7 +56,7 @@ class SqlSqlServer extends Sql implements ISql
         @sqlsrv_cancel($rs);
     }
 
-    function Ejecutar_Sql($sql)
+    function query($sql)
     {
         $strsql = trim($sql);
         $strsql = str_replace(" =", "=", $strsql);
@@ -435,7 +435,7 @@ class SqlSqlServer extends Sql implements ISql
                 $anterior = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $this);
                 $sql_anterior = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($anterior[0][0])) . "' where $condicion";
                 $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
-                $this->Ejecutar_Sql($sqleve);
+                $this->query($sqleve);
                 $registro = $this->Ultimo_Insert();
                 if ($registro) {
                     $archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
@@ -579,7 +579,7 @@ class SqlSqlServer extends Sql implements ISql
                         $dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
                     }
                     guardar_traza($dato, $formato[0]["nombre_tabla"]);
-                    $this->Ejecutar_Sql($dato);
+                    $this->query($dato);
                 }
             }
         }

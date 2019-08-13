@@ -58,47 +58,29 @@ class SqlMysql extends Sql implements ISql
         @mysqli_free_result($rs);
     }
 
-    /*
-     * <Clase>SQL
-     * <Nombre>ejecutar_sql_MySql
-     * <Parametros>sql-cadena con el codigo a ejecutar
-     * <Responsabilidades>ejecutar el comando recibido en la cadena sql
-     * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-     * la matriz con los valores del resultado se obtiene por medio de la función Resultado
-     * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-     * <Salida>
-     * <Pre-condiciones>
-     * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+    /**
+     * ejecuta una sentencia sql
+     *
+     * @param string $sql
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-13
      */
-    function Ejecutar_Sql($sql)
+    function query($sql)
     {
         $sql = trim($sql);
-        $accion = strtok(strtolower($sql), ' ');
-        $this->filas = 0;
-
-        if (in_array($accion, ["insert", "update"])) {
-            $this->ultimoInsert = 0;
-            $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
-            $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
-        }
+        $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
+        $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 
         if ($sql && $this->connection) {
             $this->res = mysqli_query($this->connection, $sql);
 
-            if ($this->res) {
-                if ($accion == "insert") {
-                    $this->ultimoInsert = $this->Ultimo_Insert();
-                } else if ($accion == "select") {
-                    $this->filas = $this->res->num_rows;
-                }
-
-                $this->consulta = $sql;
-            } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
+            if (!$this->res && DEBUGEAR == 1) {
                 $e = mysqli_error($this->connection);
                 debug_print_backtrace();
                 trigger_error($e . " $sql", E_USER_ERROR);
             }
-            return $this->res ?? false;
+            return $this->res ? $this->res : false;
         }
     }
 
@@ -171,8 +153,8 @@ class SqlMysql extends Sql implements ISql
         if ($campo) {
             $tabla .= " where Field = '{$campo}'";
         }
-        $this->consulta = "show columns from {$tabla}";
-        $this->res = mysqli_query($this->connection, $this->consulta);
+        $sql = "show columns from {$tabla}";
+        $this->res = mysqli_query($this->connection, $sql);
         $i = 0;
         $resultado = array();
         for (; $arreglo = $this->sacar_fila($this->res); $i++) {
@@ -207,20 +189,17 @@ class SqlMysql extends Sql implements ISql
         return ($rs->field_count);
     }
 
-    /*
-     * <Clase>SQL
-     * <Nombre>Ultimo_Insert
-     * <Parametros>
-     * <Responsabilidades>Retornar el identificador del ultimo registro insertado
-     * <Notas>se utiliza después de la función insert
-     * <Excepciones>
-     * <Salida>identificador del ultimo registro insertado
-     * <Pre-condiciones>
-     * <Post-condiciones>
+    /**
+     * retorna el identificador de la 
+     * ultima insercion
+     *
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-13
      */
     function Ultimo_Insert()
     {
-        return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->connection);
+        return mysqli_insert_id($this->connection);
     }
 
     function resta_fechas($fecha1, $fecha2)
@@ -295,12 +274,6 @@ class SqlMysql extends Sql implements ISql
         return $fsql;
     }
 
-    function mostrar_error()
-    {
-        if ($this->error)
-            echo $this->error . " en \"" . $this->consulta . "\"";
-    }
-
     function suma_fechas($fecha1, $cantidad, $tipo = "")
     {
         if ($tipo == "")
@@ -328,14 +301,14 @@ class SqlMysql extends Sql implements ISql
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
     {
         $strsql = "CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
-        $this->Ejecutar_Sql($strsql) or die($strsql);
+        $this->query($strsql) or die($strsql);
     }
 
     function listar_campos_tabla($tabla = null, $tipo_retorno = 0)
     {
         if ($tabla == null)
             $tabla = $_REQUEST["tabla"];
-        $datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
+        $datos_tabla = $this->query("DESCRIBE " . $tabla);
         while ($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
             if ($tipo_retorno) {
                 $lista_campos[] = array_map(strtolower, $fila);
@@ -363,7 +336,7 @@ class SqlMysql extends Sql implements ISql
                 $sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
                 $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
-                $this->Ejecutar_Sql($sqleve);
+                $this->query($sqleve);
                 $registro = $this->Ultimo_Insert();
                 if ($registro) {
                     $archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
@@ -532,7 +505,7 @@ class SqlMysql extends Sql implements ISql
                     }
                     if ($dato != "") {
                         guardar_traza($dato, $formato[0]["nombre_tabla"]);
-                        $this->Ejecutar_Sql($dato);
+                        $this->query($dato);
                     }
                 }
             }

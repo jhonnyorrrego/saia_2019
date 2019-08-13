@@ -27,7 +27,7 @@ class StaticSql
      */
     public static function query(string $sql): bool
     {
-        return Sql::getInstance(true)->Ejecutar_Sql($sql);
+        return Sql::getInstance(true)->query($sql);
     }
 
     /**
@@ -42,7 +42,7 @@ class StaticSql
     public static function insert(string $sql): int
     {
         $SqlInstance = Sql::getInstance(true);
-        $SqlInstance->Ejecutar_Sql($sql);
+        $SqlInstance->query($sql);
         return $SqlInstance->Ultimo_Insert();
     }
 

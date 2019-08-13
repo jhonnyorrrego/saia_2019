@@ -28,7 +28,7 @@ class SqlOracle extends Sql implements ISql
     public function search($sql, $start = 0, $end = 0)
     {
         $response = [];
-        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
         while (($row = $this->sacar_fila($result)) !== false) {
             $response[] = $row;
@@ -61,7 +61,7 @@ class SqlOracle extends Sql implements ISql
         if ($order_by != "" && $order_by != null)
             $this->consulta .= " ORDER BY " . $order_by;
         // ejecucion de la consulta, a $this->res se le asigna el resource
-        $this->res = $this->Ejecutar_Sql($this->consulta);
+        $this->res = $this->query($this->consulta);
         // se le asignan a $resultado los valores obtenidos
         $i = 0;
         $resultado = array();
@@ -85,7 +85,7 @@ class SqlOracle extends Sql implements ISql
         @OCIFreeStatement($rs);
     }
 
-    function Ejecutar_Sql($sql)
+    function query($sql)
     {
         $strsql = trim($sql);
         $strsql = str_replace(" =", "=", $strsql);
@@ -180,7 +180,7 @@ class SqlOracle extends Sql implements ISql
             $where_campo = " AND column_name='" . $campo . "'";
         }
         $this->consulta = "SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' " . $where_campo . " ORDER BY column_name ASC";
-        $this->res = $this->Ejecutar_Sql($this->consulta);
+        $this->res = $this->query($this->consulta);
         // se le asignan a $resultado los valores obtenidos
         $i = 0;
         $resultado = array();
@@ -436,14 +436,14 @@ class SqlOracle extends Sql implements ISql
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
     {
         $strsql = "CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
-        $this->Ejecutar_Sql($strsql) or die($strsql);
+        $this->query($strsql) or die($strsql);
     }
 
     function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
     {
         if ($tabla == NULL)
             $tabla = $_REQUEST["tabla"];
-        $datos_tabla = $this->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
+        $datos_tabla = $this->query("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
         $lista_campos = array();
         while ($fila = $this->sacar_fila($datos_tabla)) {
             if ($tipo_retorno) {
@@ -514,7 +514,7 @@ class SqlOracle extends Sql implements ISql
                         if ($log) {
                             $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('" . usuario_actual("funcionario_codigo") . "',to_date('" . date('Y-m-d H:i:s') . "','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
 
-                            $this->Ejecutar_Sql($sqleve);
+                            $this->query($sqleve);
                             $registro = $this->Ultimo_Insert();
                             $texto_ant = "DECLARE
 								cont$   CLOB;
@@ -672,7 +672,7 @@ class SqlOracle extends Sql implements ISql
             case "pk":
                 $sql2 = "SELECT LAST_NUMBER AS ULTIMO FROM all_sequences WHERE sequence_owner=upper('" . USER . "') AND sequence_name='" . $aux . "_SEQ'";
                 $this->filas = 0;
-                $siguiente = $this->Ejecutar_Sql($sql2);
+                $siguiente = $this->query($sql2);
 
                 if ($this->filas) {
                     $fila_seq = $this->sacar_fila($siguiente);
@@ -751,7 +751,7 @@ class SqlOracle extends Sql implements ISql
                         $sql .= " NOT NULL)";
                     }
                     guardar_traza($sql, $formato[0]["nombre_tabla"]);
-                    $this->Ejecutar_Sql($sql);
+                    $this->query($sql);
                 }
             }
 
@@ -773,7 +773,7 @@ class SqlOracle extends Sql implements ISql
                         }
                     }
                     guardar_traza($dato, $formato[0]["nombre_tabla"]);
-                    $this->Ejecutar_Sql($dato);
+                    $this->query($dato);
                 }
             }
         }
@@ -816,7 +816,7 @@ class SqlOracle extends Sql implements ISql
             if ($this->verificar_existencia($tabla)) {
                 $sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY DROP INDEX ";
                 guardar_traza($sql, strtolower($tabla));
-                $this->Ejecutar_Sql($sql);
+                $this->query($sql);
                 echo ($sql . "<br />");
             }
         }
@@ -824,14 +824,14 @@ class SqlOracle extends Sql implements ISql
             if ($this->verificar_existencia($tabla)) {
                 $sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"] . " DROP INDEX ";
                 guardar_traza($sql, strtolower($tabla));
-                $this->Ejecutar_Sql($sql);
+                $this->query($sql);
                 echo ($sql . "<br />");
             }
         }
         if ($campo["Key_name"] == "NONUNIQUE") {
             $sql = "DROP INDEX " . $campo["Column_name"];
             guardar_traza($sql, strtolower($tabla));
-            $this->Ejecutar_Sql($sql);
+            $this->query($sql);
             echo ($sql . "<br />");
         }
         return;

@@ -26,8 +26,14 @@ try {
         throw new Exception('Debe indicar la version', 1);
     }
 
+    if (!$_REQUEST['type']) {
+        throw new Exception("Debe indicar el tipo de reporte", 1);
+    }
+
+    $field = $_REQUEST['type'];
     $SerieVersion = new SerieVersion($_REQUEST['id']);
-    $route = TemporalController::createTemporalFile($SerieVersion->json_trd, '', true);
+    $route = TemporalController::createTemporalFile($SerieVersion->$field, '', true);
+
     if (!$route->success) {
         throw new Exception("Error Processing Request", 1);
     }

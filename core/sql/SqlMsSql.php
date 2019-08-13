@@ -29,7 +29,7 @@ class SqlMsSql extends Sql implements ISql
 	public function search($sql, $start = 0, $end = 0)
 	{
 		$response = [];
-		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
 		while (($row = $this->sacar_fila($result)) !== false) {
 			$response[] = $row;
@@ -47,7 +47,7 @@ class SqlMsSql extends Sql implements ISql
 		@mssql_free_result($rs);
 	}
 
-	function Ejecutar_Sql($sql)
+	function query($sql)
 	{
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
@@ -345,7 +345,7 @@ class SqlMsSql extends Sql implements ISql
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
 	{
 		$strsql = "EXEC sp_asignar_radicado @iddoc=$iddocumento, @tipo=$idcontador, @funcionario=$funcionario;";
-		$this->Ejecutar_Sql($strsql) or die($strsql);
+		$this->query($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
@@ -378,7 +378,7 @@ class SqlMsSql extends Sql implements ISql
 				$anterior = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $this);
 				$sql_anterior = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($anterior[0][0])) . "' where $condicion";
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
-				$this->Ejecutar_Sql($sqleve);
+				$this->query($sqleve);
 				$registro = $this->Ultimo_Insert();
 				if ($registro) {
 					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
@@ -523,7 +523,7 @@ class SqlMsSql extends Sql implements ISql
 					}
 					if ($dato != "") {
 						guardar_traza($dato, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($dato);
+						$this->query($dato);
 					}
 				}
 			}

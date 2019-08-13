@@ -95,22 +95,6 @@ abstract class Sql
 		return Sql::$instance;
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Numero_Filas
-	 * <Parametros>
-	 * <Responsabilidades>Retornar el número de filas devueltas en la última consulta
-	 * <Notas>se utiliza después de la función ejecutar_sql
-	 * <Excepciones>
-	 * <Salida>número de filas devueltas en la última consulta
-	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
-	 * <Post-condiciones>
-	 */
-	function Numero_Filas($rs = null)
-	{
-		return $this->filas;
-	}
-
 	protected function ejecuta_filtro_tabla($sql)
 	{
 		$response = $this->search($sql);
@@ -162,7 +146,7 @@ abstract class Sql
 			$sql_tabla .= implode(",", $lcampos);
 			$sql_tabla .= ") ";
 
-			if ($this->Ejecutar_Sql($sql_tabla)) {
+			if ($this->query($sql_tabla)) {
 				$this->crear_indices_tabla($formato[0]["idformato"]);
 				$resp["estado"] = "OK";
 				$resp["mensaje"] = "Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito";
@@ -254,7 +238,7 @@ abstract class Sql
 		// Valida si se uso por defecto int(11) o number(11)
 		if ((MOTOR == "MySql" || MOTOR == "Oracle") && empty($datos_campo["longitud"]) && preg_match("/(int\(|NUMBER\()11/", $campo)) {
 			$sql = "UPDATE campos_formato SET longitud=11 WHERE idcampos_formato=" . $datos_campo["idcampos_formato"];
-			$this->Ejecutar_Sql($sql);
+			$this->query($sql);
 		}
 
 		if ($estructura_campo["nulo"] != $datos_campo["obligatoriedad"] && MOTOR == "MySql") {

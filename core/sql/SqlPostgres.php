@@ -23,7 +23,7 @@ class SqlPostgres extends Sql implements ISql
 	public function search($sql, $start = 0, $end = 0)
 	{
 		$response = [];
-		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
 		while (($row = $this->sacar_fila($result)) !== false) {
 			$response[] = $row;
@@ -53,7 +53,7 @@ class SqlPostgres extends Sql implements ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
 	 */
-	function Ejecutar_Sql($sql)
+	function query($sql)
 	{
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
@@ -362,14 +362,14 @@ class SqlPostgres extends Sql implements ISql
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
 	{
 		$strsql = "select sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
-		$this->Ejecutar_Sql($strsql) or die($strsql);
+		$this->query($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
 	{
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
-		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
+		$datos_tabla = $this->query("DESCRIBE " . $tabla);
 		while ($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
@@ -397,7 +397,7 @@ class SqlPostgres extends Sql implements ISql
 				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
-				$this->Ejecutar_Sql($sqleve);
+				$this->query($sqleve);
 				$registro = $this->Ultimo_Insert();
 				if ($registro) {
 					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
@@ -582,7 +582,7 @@ class SqlPostgres extends Sql implements ISql
 							$sql .= " SET NOT NULL";
 						}
 						guardar_traza($sql, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($sql);
+						$this->query($sql);
 					}
 				}
 			}
@@ -605,7 +605,7 @@ class SqlPostgres extends Sql implements ISql
 						}
 					}
 					guardar_traza($dato, $formato[0]["nombre_tabla"]);
-					$this->Ejecutar_Sql($dato);
+					$this->query($dato);
 				}
 			}
 		}
@@ -659,7 +659,7 @@ class SqlPostgres extends Sql implements ISql
 		if ($this->verificar_existencia($tabla)) {
 			$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["constraint_name"];
 			guardar_traza($sql, strtolower($tabla));
-			$this->Ejecutar_Sql($sql);
+			$this->query($sql);
 			echo ($sql . "<br />");
 		}
 		return;

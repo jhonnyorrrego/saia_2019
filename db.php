@@ -243,7 +243,7 @@ function phpmkr_db_close($conn)
 function phpmkr_query($sql)
 {
     global $conn;
-    return $conn->Ejecutar_Sql($sql);
+    return $conn->query($sql);
 }
 
 /*
@@ -292,16 +292,9 @@ function phpmkr_field_name($rs, $pos)
  */
 function phpmkr_num_rows($rs)
 {
-    global $conn;
-    if ($conn) {
-        if (!$rs && $conn->res)
-            $rs = $conn->res;
-        return $conn->Numero_Filas($rs);
-    } else {
-        alerta("Error en numero de filas." . $rs->sql);
-        return false;
-    }
+    throw new Exception("Se debe actualizar el modo de consulta", 1);
 }
+
 /*
 <Clase>
 <Nombre>phpmkr_fetch_array
@@ -395,8 +388,7 @@ function phpmkr_insert_id()
  */
 function phpmkr_error()
 {
-    global $conn;
-    $conn->mostrar_error();
+    throw new Exception("se debe eliminar la funcion phpmkr_error", 1);
 }
 
 /**
