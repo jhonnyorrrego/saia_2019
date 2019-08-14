@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "librerias_saia.php";
+//include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_bpmni.php";
@@ -88,7 +88,7 @@ function carga_vista_previa($idFormato)
 
     $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo", "formato", "idformato=" . $idFormato, "", $conn);
     $encabezado = '';
-    $contenido_formato = '';
+    $contenidoformato = '';
     $piePagina = '';
 
     if ($consultaDatos['numcampos']) {
@@ -134,7 +134,7 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0)
 
         if ($excluirFunciones == 1 && $nombreFuncion == 'mostrar_estado_proceso') {
             $rutaContenido = $ruta_db_superior . "assets/images/firmas/faltante.jpg";
-            $contenidoFuncion = "<img src={$rutaContenido} width='109' />";
+            $contenidoFuncion = "<img src='{$rutaContenido}' width=109 />";
         } else if ($excluirFunciones == 1 && $nombreFuncion != 'mostrar_codigo_qr') {
             $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";
         } else if ($excluirFunciones == 1 && $nombreFuncion == 'mostrar_codigo_qr') {
@@ -150,7 +150,7 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0)
                 }
             }
             $rutaContenido = $ruta_db_superior . "imagenes/qrFormato.png";
-            $contenidoFuncion = "<img src={$archivo_binario} width='109' />";
+            $contenidoFuncion = "<img src='{$archivo_binario}' width=109 />";
         } else {
             $contenidoFuncion = call_user_func($nombreFuncion, $idFormato, $iddoc, $tipo, "width");
         }

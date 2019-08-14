@@ -8,16 +8,21 @@ while ($max_salida > 0) {
   $ruta .= "../";
   $max_salida--;
 }
-include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
-include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
-include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
-include_once $ruta_db_superior . "assets/librerias.php";
+
+////// Ya se han cargado en generador_pantalla.php
+
+//include_once $ruta_db_superior . 'core/autoload.php';
+//include_once $ruta_db_superior . "librerias_saia.php";
+//include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
+//include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
+//include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+//include_once $ruta_db_superior . "assets/librerias.php";
+
+//////////////////////////////////////////////////////////////////////////
+
 echo librerias_notificaciones();
 echo select2();
 echo librerias_UI("1.12");
-echo librerias_arboles_ft("2.24", 'filtro');
 
 if ($_REQUEST['idformato']) {
   $formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST['idformato'], "", $conn);
@@ -150,6 +155,18 @@ function procesar_cadena_json($resultado, $lista_valores)
 
           </div>
 
+          <?php
+          $valor_item = 0;
+          $valor_mostrar = "0";
+
+          if ($formato["numcampos"]) {
+            $valor_item = $formato[0]["item"];
+            $valor_mostrar = $formato[0]["mostrar_pdf"];
+            $descripcionFormato = html_entity_decode($formato[0]["descripcion_formato"]);
+          }
+          ?>
+
+
           <div class="my-3">
             <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong><span class="require-input">*</span></label>
 
@@ -168,17 +185,16 @@ function procesar_cadena_json($resultado, $lista_valores)
                     <?php
                     $tipo = '';
                     for ($i = 0; $i < $tipoDocumental["numcampos"]; $i++) {
-                      echo '<option value="' . $tipoDocumental[$i]["idserie"] . '">' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
+                      echo '<option value="' . $tipoDocumental[$i]["idserie"] . '" class="codigoSerie" codigo="' . $tipoDocumental[$i]["codigo"] . '" >' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
                     }
                     ?>
                   </select>
 
-
-
                   <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
 
                   <?php
-                  crear_arbol("arbol_serie_formato", $url);
+                  /// buscando error!!! 
+                  //crear_arbol("arbol_serie_formato", $url);
                   ?>
                 </div>
               </div>
@@ -187,7 +203,7 @@ function procesar_cadena_json($resultado, $lista_valores)
                   <strong>C&oacute;digo</strong>
                 </div>
                 <div class="my-2">
-                  <input type="text" disabled style="background:#fff;height:36px;width:100%" />
+                  <input type="text" disabled id="codigoSerieInput" style="background:#fff;height:36px;width:100%" />
                 </div>
               </div>
             </div>
@@ -427,10 +443,6 @@ function procesar_cadena_json($resultado, $lista_valores)
       <input type="hidden" name="pertenece_nucleo" value="0">
       <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
 
-
-
-
-
   </form>
 
   <?php
@@ -563,7 +575,7 @@ function procesar_cadena_json($resultado, $lista_valores)
         //$('#tabla_formato').val(formato[0].tabla);
         $('#descripcion_formato').val(descripcion_formato);
         $('#proceso_pertenece').val(formato[0].proceso_pertenece);
-        $('#serie_idserie').val(formato[0].serie_idserie);
+        $('#serie_id_serie').val(formato[0].serie_idserie);
         $('#version').val(formato[0].version);
         $('#librerias_formato').val(formato[0].librerias);
         $('#etiqueta_formato').val(formato[0].etiqueta);
@@ -608,9 +620,28 @@ function procesar_cadena_json($resultado, $lista_valores)
         $('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
       }
 
-      tree_arbol_serie_formato.setOnCheckHandler(parsear_serie_formato);
+      //tree_arbol_serie_formato.setOnCheckHandler(parsear_serie_formato);
+
+      $("#serie_idserie").change(function() {
+
+        obtenerCodigoSerie();
+
+      });
 
     });
+
+    function obtenerCodigoSerie() {
+
+      $(".codigoSerie").each(function() {
+
+        if ($(this).val() == $("#serie_idserie").val()) {
+          $("#codigoSerieInput").val($(this).attr("codigo"));
+        }
+
+      });
+    }
+
+    obtenerCodigoSerie();
 
     function parsear_serie_formato(nodeId) {
       //console.log(nodeId);
@@ -680,91 +711,91 @@ function procesar_cadena_json($resultado, $lista_valores)
   {
     global $ruta_db_superior;
     ?>
-    <script>
-      $("document").ready(function() {
-        var browserType;
-        if (document.layers) {
-          browserType = "nn4"
-        }
-        if (document.all) {
-          browserType = "ie"
-        }
-        if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-          browserType = "gecko"
-        }
+  <script>
+    $("document").ready(function() {
+      var browserType;
+      if (document.layers) {
+        browserType = "nn4"
+      }
+      if (document.all) {
+        browserType = "ie"
+      }
+      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+        browserType = "gecko"
+      }
 
-        tree_<?php echo ($nombre); ?> = new dhtmlXTreeObject("treebox_<?php echo ($nombre); ?>", "100%", "", 0);
-        tree_<?php echo ($nombre); ?>.setImagePath("<?php echo ($ruta_db_superior); ?>imgs/");
-        tree_<?php echo ($nombre); ?>.enableTreeImages(false);
-        tree_<?php echo ($nombre); ?>.enableTextSigns(true);
-        tree_<?php echo ($nombre); ?>.enableIEImageFix(true);
-        tree_<?php echo ($nombre); ?>.setOnLoadingStart(cargando_arbol_<?php echo ($nombre); ?>);
-        tree_<?php echo ($nombre); ?>.setOnLoadingEnd(fin_cargando_arbol_<?php echo ($nombre); ?>);
+      tree_<?php echo ($nombre); ?> = new dhtmlXTreeObject("treebox_<?php echo ($nombre); ?>", "100%", "", 0);
+      tree_<?php echo ($nombre); ?>.setImagePath("<?php echo ($ruta_db_superior); ?>imgs/");
+      tree_<?php echo ($nombre); ?>.enableTreeImages(false);
+      tree_<?php echo ($nombre); ?>.enableTextSigns(true);
+      tree_<?php echo ($nombre); ?>.enableIEImageFix(true);
+      tree_<?php echo ($nombre); ?>.setOnLoadingStart(cargando_arbol_<?php echo ($nombre); ?>);
+      tree_<?php echo ($nombre); ?>.setOnLoadingEnd(fin_cargando_arbol_<?php echo ($nombre); ?>);
 
-        tree_<?php echo ($nombre); ?>.enableCheckBoxes(1);
-        <?php if ($tipo == "radio") { ?>
-          tree_<?php echo ($nombre); ?>.enableRadioButtons(true);
-          tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_<?php echo ($nombre); ?>);
+      tree_<?php echo ($nombre); ?>.enableCheckBoxes(1);
+      <?php if ($tipo == "radio") { ?>
+      tree_<?php echo ($nombre); ?>.enableRadioButtons(true);
+      tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_<?php echo ($nombre); ?>);
 
-          function onNodeSelect_<?php echo ($nombre); ?>(nodeId) {
-            //alert(nodeId);
-            var valor_destino = document.getElementById("<?php echo ($nombre); ?>");
-            if (tree_<?php echo ($nombre); ?>.isItemChecked(nodeId)) {
-              //alert(valor_destino.value);
-              if (valor_destino.value !== "") {
-                tree_<?php echo ($nombre); ?>.setCheck(valor_destino.value, false);
-              }
-              if (nodeId.indexOf("_") != -1) {
-                nodeId = nodeId.substr(0, nodeId.indexOf("_"));
-              }
-              valor_destino.value = nodeId;
-            } else {
-              valor_destino.value = "";
-            }
+      function onNodeSelect_<?php echo ($nombre); ?>(nodeId) {
+        //alert(nodeId);
+        var valor_destino = document.getElementById("<?php echo ($nombre); ?>");
+        if (tree_<?php echo ($nombre); ?>.isItemChecked(nodeId)) {
+          //alert(valor_destino.value);
+          if (valor_destino.value !== "") {
+            tree_<?php echo ($nombre); ?>.setCheck(valor_destino.value, false);
           }
-        <?php
+          if (nodeId.indexOf("_") != -1) {
+            nodeId = nodeId.substr(0, nodeId.indexOf("_"));
+          }
+          valor_destino.value = nodeId;
+        } else {
+          valor_destino.value = "";
+        }
+      }
+      <?php
         } else {
           ?>
-          tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_check_<?php echo ($nombre); ?>);
+      tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_check_<?php echo ($nombre); ?>);
 
-          function onNodeSelect_check_<?php echo ($nombre); ?>(nodeId) {
-            var valor_destino = document.getElementById("<?php echo ($nombre); ?>");
-            valor_destino.value = tree_<?php echo ($nombre); ?>.getAllChecked();
-          }
-        <?php
+      function onNodeSelect_check_<?php echo ($nombre); ?>(nodeId) {
+        var valor_destino = document.getElementById("<?php echo ($nombre); ?>");
+        valor_destino.value = tree_<?php echo ($nombre); ?>.getAllChecked();
+      }
+      <?php
 
         }
         ?>
-        /*tree_<?php echo ($nombre); ?>.enableThreeStateCheckboxes(true);*/
+      /*tree_<?php echo ($nombre); ?>.enableThreeStateCheckboxes(true);*/
 
 
-        tree_<?php echo ($nombre); ?>.loadXML("<?php echo ($url); ?>");
+      tree_<?php echo ($nombre); ?>.loadXML("<?php echo ($url); ?>");
 
-        function fin_cargando_arbol_<?php echo ($nombre); ?>() {
-          if (browserType == "gecko")
-            document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")')
-          else if (browserType == "ie")
-            document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
-          else
-            document.poppedLayer = eval('document.layers["esperando_<?php echo ($nombre); ?>"]');
-          document.poppedLayer.style.display = "none";
-        }
+      function fin_cargando_arbol_<?php echo ($nombre); ?>() {
+        if (browserType == "gecko")
+          document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")')
+        else if (browserType == "ie")
+          document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
+        else
+          document.poppedLayer = eval('document.layers["esperando_<?php echo ($nombre); ?>"]');
+        document.poppedLayer.style.display = "none";
+      }
 
-        function cargando_arbol_<?php echo ($nombre); ?>() {
-          if (browserType == "gecko")
-            document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
-          else if (browserType == "ie")
-            document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
-          else
-            document.poppedLayer = eval('document.layers["esperando_<?php echo ($nombre); ?>"]');
-          document.poppedLayer.style.display = "";
-        }
-      });
-    </script>
+      function cargando_arbol_<?php echo ($nombre); ?>() {
+        if (browserType == "gecko")
+          document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
+        else if (browserType == "ie")
+          document.poppedLayer = eval('document.getElementById("esperando_<?php echo ($nombre); ?>")');
+        else
+          document.poppedLayer = eval('document.layers["esperando_<?php echo ($nombre); ?>"]');
+        document.poppedLayer.style.display = "";
+      }
+    });
+  </script>
 
-  </body>
+</body>
 
-  </html>
+</html>
 <?php
 
 }
