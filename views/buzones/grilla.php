@@ -123,9 +123,9 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     <?= $actions ?>
                     <?= $btn_add ?>
 
-                    <button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
+                    <!--button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
                         <i class="fa fa-download"></i>
-                    </button>
+                    </button-->
                     <div class="pull-right d-none" valign="middle">
                         <iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe>
                     </div>
@@ -133,8 +133,10 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                 <table id="tabla_resultados" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
                     <thead>
                         <tr>
-                            <th data-field="state" data-checkbox="true"></th>
                             <?php
+                            if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
+                                echo '<th data-field="state" data-checkbox="true"></th>';
+                            }
                             $lcampos1 = $datos_busqueda[0]["campos"];
                             if ($datos_busqueda[0]["campos_adicionales"]) {
                                 $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
@@ -165,7 +167,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                                     $ordenable = 'data-sortable="true"';
                                 }
 
-                                echo '<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
+                                echo '<th data-field="' . $dato_campo . '" data-align="center" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
                             }
                             ?>
                         </tr>

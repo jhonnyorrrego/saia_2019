@@ -53,6 +53,7 @@ function plantilla($documentId, $transferId = 0)
     global $ruta_db_superior;
 
     $Documento = new Documento($documentId);
+    $Formato = $Documento->getFormat();
     $Transfer = getTransfer($transferId);
     $temporality = $Transfer->fecha ? temporality($Transfer->fecha) : '';
 
@@ -175,6 +176,7 @@ function plantilla($documentId, $transferId = 0)
     </div>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
     <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-headerparams='<?= $params ?>'></script>
+    <script src='<?= $ruta_db_superior . "formatos/{$Formato->nombre}/funciones.js" ?>' data-format-params='<?= $params ?>'></script>
 <?php
 
 }

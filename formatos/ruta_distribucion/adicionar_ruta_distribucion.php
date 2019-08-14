@@ -100,8 +100,11 @@ span.fancytree-expander {
                                     "filter" => array()
                                 );
                                 $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
-                                echo $arbol_4998->generar_html();?></div><div class="form-group" id="tr_asignar_mensajeros">
-                                        <label title="">MENSAJEROS DE LA RUTA*</label><?php genera_campo_listados_editar(404,4999,$_REQUEST['iddoc']);?></div><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(4993)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(4992)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4990)); ?>"><input type="hidden" name="idft_ruta_distribucion" value="<?php echo(validar_valor_campo(4989)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(4985)); ?>"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4984)); ?>"><?php add_edit_ruta_dist(404,NULL);?><input type="hidden" name="campo_descripcion" value="4987"><tr><td colspan='2'><?php submit_formato(404);?></td></tr></table></form></body>
+                                echo $arbol_4998->generar_html();?></div><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(4993)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(4992)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4990)); ?>"><input type="hidden" name="idft_ruta_distribucion" value="<?php echo(validar_valor_campo(4989)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(4985)); ?>"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4984)); ?>"><div class="form-group" id="tr_asignar_mensajeros">
+                                        <label title="">MENSAJEROS DE LA RUTA*</label><?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']);?></div><?php add_edit_ruta_dist(404,NULL);?><input type="hidden" name="campo_descripcion" value="4987"><tr><td colspan='2'><?php submit_formato(404);?></td></tr></table></form></body>
+      <script type="text/javascript">
+      setInterval("auto_save('asignar_mensajeros','ruta_distribucion')",300000);
+      </script>
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 $(".form-group.form-group-default").click(function() {
