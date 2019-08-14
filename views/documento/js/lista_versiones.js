@@ -59,7 +59,7 @@ $(function() {
                             url: `${
                                 params.baseUrl
                             }views/documento/detalles_version.php`,
-                            title: 'Detalles de la versión',
+                            title: 'Detalles de la versión ' + item.version,
                             params: {
                                 versionId: item.id
                             },

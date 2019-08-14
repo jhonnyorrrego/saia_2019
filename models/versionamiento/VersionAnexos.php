@@ -8,6 +8,9 @@ class VersionAnexos extends Model
     protected $fk_idversion_documento;
     protected $anexos_idanexos;
 
+    //relations
+    protected $Anexos;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -27,5 +30,21 @@ class VersionAnexos extends Model
             ],
             'date' => []
         ];
+    }
+
+    /**
+     * obtiene la instancia del anexo relacionado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-14
+     */
+    public function getFile()
+    {
+        if (!$this->Anexos) {
+            $this->Anexos = $this->getRelationFk('Anexos', 'anexos_idanexos');
+        }
+
+        return $this->Anexos;
     }
 }

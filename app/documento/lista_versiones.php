@@ -37,6 +37,7 @@ try {
         $label = "Versión {$VersionDocumento->version} : $date <br> {$Funcionario->getName()}";
         $Response->data[] = [
             'label' => $label,
+            'version' => $VersionDocumento->version,
             'id' => $VersionDocumento->getPK()
         ];
     }

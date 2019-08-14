@@ -76,7 +76,8 @@ class VersionDocumento extends Model
     {
         if (!$this->pages) {
             $this->pages = VersionPagina::findAllByAttributes([
-                'documento_iddocumento' => $this->documento_iddocumento
+                'documento_iddocumento' => $this->documento_iddocumento,
+                'fk_idversion_documento' => $this->getPK()
             ]);
         }
 
@@ -95,7 +96,8 @@ class VersionDocumento extends Model
     {
         if (!$this->attachments) {
             $this->attachments = VersionAnexos::findAllByAttributes([
-                'documento_iddocumento' => $this->documento_iddocumento
+                'documento_iddocumento' => $this->documento_iddocumento,
+                'fk_idversion_documento' => $this->getPK()
             ]);
         }
 

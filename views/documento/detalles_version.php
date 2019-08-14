@@ -19,8 +19,20 @@ $params = json_encode([
 ?>
 <div class="container-fluid">
     <div class="row">
+        <div class="col-12" id="pdf_container">
+            <span class="bold"> Documento: &nbsp;</span>
+        </div>
+    </div>
+    <div class="row pt-3 d-none">
         <div class="col-12">
-            Lorem ipsum dolor sit amet.
+            <span class="bold"> Listado de anexos: &nbsp;</span>
+            <ul id="attachments_container"></ul>
+        </div>
+    </div>
+    <div class="row pt-3 d-none">
+        <div class="col-12">
+            <span class="bold"> Listado de páginas: &nbsp;</span>
+            <ul id="pages_container"></ul>
         </div>
     </div>
 </div>

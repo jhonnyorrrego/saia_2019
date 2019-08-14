@@ -37,23 +37,25 @@ try {
     $pages = $VersionDocumento->getPages();
     $attachments = $VersionDocumento->getAttachments();
 
-    foreach ($pages as $VersionPagina) {
+    foreach ($pages as $key => $VersionPagina) {
         $prefix = $VersionDocumento->documento_iddocumento . '-' . $VersionPagina->getPK();
         $json = $VersionPagina->ruta;
         $temporalRoute = TemporalController::createTemporalFile($json, $prefix);
         $Response->data->pages[] = [
             'id' => $VersionPagina->getPK(),
-            'route' => $temporalRoute->route
+            'route' => $temporalRoute->route,
+            'label' => 'Página ' . ($key + 1)
         ];
     }
 
-    foreach ($attachments as $VersionAnexos) {
+    foreach ($attachments as $key => $VersionAnexos) {
         $prefix = $VersionDocumento->documento_iddocumento . '-' . $VersionAnexos->getPK();
         $json = $VersionAnexos->ruta;
         $temporalRoute = TemporalController::createTemporalFile($json, $prefix);
-        $Response->data->pages[] = [
+        $Response->data->attachments[] = [
             'id' => $VersionAnexos->getPK(),
-            'route' => $temporalRoute->route
+            'route' => $temporalRoute->route,
+            'label' => $VersionAnexos->getFile()->etiqueta
         ];
     }
 
