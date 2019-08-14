@@ -76,8 +76,14 @@ final class Version20190812210209 extends AbstractMigration
         ]);
 
         $table = $schema->getTable('serie_version');
-        $table->dropIndex('uniq_8b85a064bf1cd3c3');
-        $table->addUniqueIndex(['version']);
+
+        if ($table->hasIndex('uniq_8b85a064bf1cd3c3')) {
+            $table->dropIndex('uniq_8b85a064bf1cd3c3');
+        }
+
+        if (!$table->hasIndex('Iversion_serie_version')) {
+            $table->addUniqueIndex(['version'], 'Iversion_serie_version');
+        }
     }
 
     public function down(Schema $schema): void
@@ -94,6 +100,16 @@ final class Version20190812210209 extends AbstractMigration
         $this->connection->delete('modulo', [
             'nombre' => 'cuadro_clasificacion_trd'
         ]);
+
+        $table = $schema->getTable('serie_version');
+
+        if ($table->hasIndex('uniq_8b85a064bf1cd3c3')) {
+            $table->dropIndex('uniq_8b85a064bf1cd3c3');
+        }
+
+        if ($table->hasIndex('Iversion_serie_version')) {
+            $table->dropIndex('Iversion_serie_version');
+        }
     }
 
     public function preUp(Schema $schema): void
