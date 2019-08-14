@@ -58,7 +58,6 @@ class SqlMsSql extends Sql implements ISql
 			$sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 		}
 
-		$this->filas = 0;
 		if ($sql && $sql != "") {
 			// mssql_query("USE ".$this->db,$this->connection);
 			$this->res = mssql_query($sql, $this->connection);
@@ -67,24 +66,7 @@ class SqlMsSql extends Sql implements ISql
 				// utilizando mssql_get_last_message()
 				die('MSSQL error: ' . mssql_get_last_message() . " " . $sql);
 			} // or die($sql);
-			// echo $sql.'<br />';
-			// print_r(mssql_get_last_message());
-			if ($this->res) {
-				if ($this->res != 1)
-					$filas = mssql_num_rows($this->res);
-				if (strpos(strtolower($sql), "insert") !== false)
-					$this->ultimoInsert = $this->Ultimo_Insert();
-				else if (strpos(strtolower($sql), "select") !== false) {
-					$this->ultimoInsert = 0;
-					$this->filas = $filas;
-				} else {
-					$this->ultimoInsert = 0;
-				}
 
-				$this->consulta = trim($sql);
-				$fin = strpos($this->consulta, " ");
-				$accion = substr($this->consulta, 0, $fin);
-			}
 			return ($this->res);
 		}
 	}
@@ -94,7 +76,6 @@ class SqlMsSql extends Sql implements ISql
 		if ($rs)
 			$this->res = $rs;
 		if ($arreglo = @mssql_fetch_array($this->res, MSSQL_BOTH)) {
-			$this->filas++;
 			return (array_map("trim", $arreglo));
 		} else {
 			return (FALSE);
@@ -145,10 +126,10 @@ class SqlMsSql extends Sql implements ISql
 			$tabla = $_REQUEST["tabla"];
 		else if (!$tabla)
 			return (false);
-		$this->consulta = "select COLUMN_NAME from information_schema.columns WHERE TABLE_NAME LIKE '" . $tabla . "'";
+		$sql = "select COLUMN_NAME from information_schema.columns WHERE TABLE_NAME LIKE '" . $tabla . "'";
 		// echo "select * from information_schema.columns WHERE TABLE_NAME LIKE '".$tabla."'<br />";
-		mssql_query("USE " . $this->db, $this->connection) or die($this->consulta);
-		$this->res = mssql_query($this->consulta, $this->connection);
+		mssql_query("USE " . $this->db, $this->connection) or die($sql);
+		$this->res = mssql_query($sql, $this->connection);
 		while ($row = mssql_fetch_array($this->res, MSSQL_NUM))
 			$resultado[] = $row[0];
 		asort($resultado);
@@ -232,7 +213,7 @@ class SqlMsSql extends Sql implements ISql
 		return ($numero);
 	}
 
-	function Ultimo_Insert()
+	function lastInsertId()
 	{
 		mssql_query("USE " . $this->db, $this->connection);
 		$this->res = mssql_query("SELECT @@identity", $this->connection) or print_r(mssql_get_last_message());
@@ -312,12 +293,6 @@ class SqlMsSql extends Sql implements ISql
 		return $fsql;
 	}
 
-	function mostrar_error()
-	{
-		if ($this->error != "")
-			echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
-	}
-
 	function suma_fechas($fecha1, $cantidad, $tipo = "")
 	{
 		if ($tipo == "")
@@ -379,7 +354,7 @@ class SqlMsSql extends Sql implements ISql
 				$sql_anterior = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($anterior[0][0])) . "' where $condicion";
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
 				$this->query($sqleve);
-				$registro = $this->Ultimo_Insert();
+				$registro = $this->lastInsertId();
 				if ($registro) {
 					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
 					evento_archivo($archivo);

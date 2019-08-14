@@ -78,12 +78,12 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			if (MOTOR == "Oracle") {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 				$conn->query($sql2);
-				$idbusqueda_temp = $conn->Ultimo_Insert();
+				$idbusqueda_temp = $conn->lastInsertId();
 				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 				$conn->query($sql2);
-				$idbusqueda_temp = $conn->Ultimo_Insert();
+				$idbusqueda_temp = $conn->lastInsertId();
 			}
 
 			$idbusqueda_fil = filtros_adicionales();
@@ -250,7 +250,7 @@ function filtros_adicionales()
 		}
 		$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
 		$conn->query($sql1);
-		$idbusqueda = $conn->Ultimo_Insert();
+		$idbusqueda = $conn->lastInsertId();
 		return $idbusqueda;
 	}
 }

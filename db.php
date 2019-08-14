@@ -373,7 +373,7 @@ function phpmkr_free_result($rs)
 function phpmkr_insert_id()
 {
     global $conn;
-    return $conn->Ultimo_Insert();
+    return $conn->lastInsertId();
 }
 /*
 <Clase>

@@ -67,27 +67,13 @@ class SqlSqlServer extends Sql implements ISql
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
         }
 
-        $this->filas = 0;
         if ($sql && $sql != "") {
             sqlsrv_query($this->connection, "USE " . $this->db);
             $this->res = sqlsrv_query($this->connection, $sql, array(), array(
                 "Scrollable" => SQLSRV_CURSOR_KEYSET
             ));
-            if ($this->res) {
-                $filas = sqlsrv_num_rows($this->res) or print_r(sqlsrv_errors());
-                if (strpos(strtolower($sql), "insert") !== false)
-                    $this->ultimoInsert = $this->Ultimo_Insert();
-                else if (strpos(strtolower($sql), "select") !== false) {
-                    $this->ultimoInsert = 0;
-                    $this->filas = $filas;
-                } else {
-                    $this->ultimoInsert = 0;
-                }
 
-                $this->consulta = trim($sql);
-                $fin = strpos($this->consulta, " ");
-                $accion = substr($this->consulta, 0, $fin);
-            } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
+            if (!$this->res && defined("DEBUGEAR") && DEBUGEAR == 1) {
                 if (($errors = sqlsrv_errors()) != null) {
                     $mensajes = array();
                     foreach ($errors as $error) {
@@ -106,7 +92,6 @@ class SqlSqlServer extends Sql implements ISql
         if ($rs)
             $this->res = $rs;
         if ($arreglo = @sqlsrv_fetch_array($this->res, SQLSRV_FETCH_BOTH)) {
-            $this->filas++;
             return ($arreglo);
         } else {
             return (FALSE);
@@ -158,12 +143,12 @@ class SqlSqlServer extends Sql implements ISql
         else if (!$tabla)
             return (false);
         if ($campo != "") {
-            $this->consulta = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME like '" . $tabla . "' AND COLUMN_NAME='" . $campo . "'";
+            $sql = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME like '" . $tabla . "' AND COLUMN_NAME='" . $campo . "'";
         } else {
-            $this->consulta = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME like '" . $tabla . "'";
+            $sql = "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME like '" . $tabla . "'";
         }
-        sqlsrv_query($this->connection, "USE " . $this->db) or die($this->consulta);
-        $this->res = sqlsrv_query($this->connection, $this->consulta);
+        sqlsrv_query($this->connection, "USE " . $this->db) or die($sql);
+        $this->res = sqlsrv_query($this->connection, $sql);
         while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
             $resultado[] = $row[0];
 
@@ -263,7 +248,7 @@ class SqlSqlServer extends Sql implements ISql
 
     /*
      * <Clase>SQL
-     * <Nombre>Ultimo_Insert
+     * <Nombre>lastInsertId
      * <Parametros>
      * <Responsabilidades>Retornar el identificador del ultimo registro insertado
      * <Notas>se utiliza después de la función insert
@@ -272,7 +257,7 @@ class SqlSqlServer extends Sql implements ISql
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Ultimo_Insert()
+    function lastInsertId()
     {
         sqlsrv_query($this->connection, "USE " . $this->db);
         $this->res = sqlsrv_query($this->connection, "SELECT @@identity") or print_r(sqlsrv_errors());
@@ -350,12 +335,6 @@ class SqlSqlServer extends Sql implements ISql
                 break;
         }
         return $fsql;
-    }
-
-    function mostrar_error()
-    {
-        if ($this->error != "")
-            echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
     }
 
     function suma_fechas($fecha1, $cantidad, $tipo = "")
@@ -436,7 +415,7 @@ class SqlSqlServer extends Sql implements ISql
                 $sql_anterior = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($anterior[0][0])) . "' where $condicion";
                 $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
                 $this->query($sqleve);
-                $registro = $this->Ultimo_Insert();
+                $registro = $this->lastInsertId();
                 if ($registro) {
                     $archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
                     evento_archivo($archivo);

@@ -41,6 +41,16 @@ interface ISql
 	public function query($sql);
 
 	/**
+	 * obtiene el identificador del ultimo
+	 * registro insertado
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-08-13
+	 */
+	public function lastInsertId();
+
+	/**
 	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
 	 * @param array $arreglo_cadena
 	 * @return string sentencia concatenar adecuada para el motor configurado
@@ -102,19 +112,6 @@ interface ISql
 	 * <Post-condiciones>
 	 */
 	public function Numero_Campos($rs);
-
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Ultimo_Insert
-	 * <Parametros>
-	 * <Responsabilidades>segun el motor llama la función deseada
-	 * <Notas>se utiliza después de la función insert
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	public function Ultimo_Insert();
 
 	public function resta_fechas($fecha1, $fecha2);
 

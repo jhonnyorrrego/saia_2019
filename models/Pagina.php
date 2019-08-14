@@ -8,7 +8,6 @@ class Pagina extends Model
     protected $fecha_pagina;
     protected $consecutivo;
 
-
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -19,37 +18,29 @@ class Pagina extends Model
      */
     protected function defineAttributes()
     {
-        // set the safe attributes to update and consult
-        $safeDbAttributes = [
-            'id_documento',
-            'imagen',
-            'pagina',
-            'ruta',
-            'fecha_pagina'
-        ];
-
-        // set the date attributes on the schema
-        $dateAttributes = ['fecha_pagina'];
-
         $this->dbAttributes = (object) [
-            'safe' => $safeDbAttributes,
-            'date' => $dateAttributes,
+            'safe' => [
+                'id_documento',
+                'imagen',
+                'pagina',
+                'ruta',
+                'fecha_pagina'
+            ],
+            'date' => ['fecha_pagina'],
             'primary' => 'consecutivo'
         ];
     }
 
     /**
-     * @param string $campo nombre del campo (DB) de la imagen
-     * @param string $sufijo para agregarle un sufijo al nombre, util cuando las imagenes se llaman iguales
-     * @param string $nameFile Nombre de la imagen
-     * @param boolean $force para sobreescribir la imagen
-     * @return string/boolean false en caso de error o string de la ruta de la imagen en completa
-     * @author Andres.Agudelo
+     * crea la pagina en el temporal del usuario
      *
-     * */
+     * @return mixed
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public function getTemporalRoute()
     {
-        $prefix = 'pagina' . $this->getPK();;
+        $prefix = 'pagina' . $this->getPK();
         $image = TemporalController::createTemporalFile($this->ruta, $prefix, true);
         return $image->success ? $image->route : false;
     }

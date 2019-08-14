@@ -1,19 +1,23 @@
-$(function () {
-    let baseUrl = $("script[data-baseurl]", parent.document).data('baseurl') || "../../";
-    let params = $("script[data-params]").data("params")
-    console.log("params", params);
-    idnotificacion = params.idnotificacion; 
+$(function() {
+    let baseUrl =
+        $('script[data-baseurl]', parent.document).data('baseurl') || '../../';
+    let params = $('script[data-params]').data('params');
+    console.log('params', params);
+    idnotificacion = params.idnotificacion;
     if (typeof Files == 'undefined') {
-        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
-            files = initAnexosNotificacion(idnotificacion);
-        });
+        $.getScript(
+            `${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`,
+            function() {
+                files = initAnexosNotificacion(idnotificacion);
+            }
+        );
     } else {
         files = initAnexosNotificacion(idnotificacion);
     }
 
-    window.initAnexosNotificacion = function (id) {
+    window.initAnexosNotificacion = function(id) {
         //console.log("id", id);
-        if(id == 0) {
+        if (id == 0) {
             return false;
         }
         let options = {
@@ -22,42 +26,48 @@ $(function () {
             dropzone: {
                 url: `${baseUrl}app/temporal/cargar_anexos.php`,
                 params: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key'),
                     dir: 'flujo'
                 }
             },
             bootstrapTable: {
                 url: `${baseUrl}app/flujo/consulta_anexos.php`,
-                queryParams: function (queryParams) {
+                queryParams: function(queryParams) {
                     queryParams.sortOrder = 'desc';
-                    queryParams.modelName = "Notificacion";
+                    queryParams.modelName = 'Notificacion';
                     queryParams.key = localStorage.getItem('key');
-                    queryParams["id"] = id;
+                    queryParams['id'] = id;
                     return queryParams;
                 },
-                onEditableSave: function (field, row) {
+                onEditableSave: function(field, row) {
                     let data = {
                         key: localStorage.getItem('key'),
                         fileId: row.id,
                         fields: {}
                     };
                     data.fields[field] = row[field];
-                    $.post(`${baseUrl}app/anexos/modificar.php`, data, function (response) {
-                        if (response.success) {
-                            top.notification({
-                                type: 'success',
-                                message: response.message,
-                            });
-                        } else {
-                            top.notification({
-                                type: 'error',
-                                message: response.message,
-                            });
-                        }
-                    }, 'json');
+                    $.post(
+                        `${baseUrl}app/anexos/modificar.php`,
+                        data,
+                        function(response) {
+                            if (response.success) {
+                                top.notification({
+                                    type: 'success',
+                                    message: response.message
+                                });
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
                 }
             },
-            save: function (description, files, fileId) {
+            save: function(description, files, fileId) {
                 let success = false;
                 $.ajax({
                     type: 'POST',
@@ -73,12 +83,12 @@ $(function () {
                         fileId: fileId,
                         fkName: 'fk_notificacion',
                         modelName: 'AnexoNotificacion'
-                    }, 
-                    success: function (response) {
+                    },
+                    success: function(response) {
                         if (response.success) {
                             top.notification({
                                 type: 'success',
-                                message: response.message,
+                                message: response.message
                             });
                             success = true;
                         }
@@ -87,7 +97,7 @@ $(function () {
 
                 return success;
             },
-            delete: function (key) {
+            delete: function(key) {
                 let success = false;
                 $.ajax({
                     type: 'POST',
@@ -98,7 +108,7 @@ $(function () {
                         key: localStorage.getItem('key'),
                         fileId: key
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             success = true;
                         }
@@ -110,5 +120,5 @@ $(function () {
         };
 
         return new Files(options);
-    }
+    };
 });

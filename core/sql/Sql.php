@@ -10,14 +10,6 @@ abstract class Sql
 	public $db;
 	public $puerto;
 	public $res = null;
-	protected $consulta;
-	protected $error = null;
-	protected $nombres_campos = [];
-	protected $tipos_campos = [];
-	protected $numcampos = null;
-	protected $numfilas = null;
-	protected $ultimoInsert = null;
-	protected $filas = 0;
 
 	/**
 	 * instancia de sql segun el motor
@@ -152,7 +144,7 @@ abstract class Sql
 				$resp["mensaje"] = "Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito";
 			} else {
 				$resp["estado"] = "KO";
-				$resp["mensaje"] = "No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . $this->mostrar_error();
+				$resp["mensaje"] = "No es posible Generar la tabla para el Formato " . $sql_tabla;
 				return $resp;
 			}
 		} else {

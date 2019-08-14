@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_formatos_generales.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -31,7 +31,6 @@ try {
     $documentId = $_REQUEST['documentId'];
     $userId = SessionController::getValue('idfuncionario');
     $Funcionario = new Funcionario($userId);
-
     $Documento = new Documento($_REQUEST['documentId']);
 
     $url = PROTOCOLO_CONEXION . RUTA_PDF . "/app/visor/calcular_ruta.php?";

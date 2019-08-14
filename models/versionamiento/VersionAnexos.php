@@ -7,7 +7,6 @@ class VersionAnexos extends Model
     protected $ruta;
     protected $fk_idversion_documento;
     protected $anexos_idanexos;
-    
 
     function __construct($id = null)
     {
@@ -19,7 +18,7 @@ class VersionAnexos extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'documento_iddocumento',
                 'ruta',

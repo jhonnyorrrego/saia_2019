@@ -43,7 +43,7 @@ class StaticSql
     {
         $SqlInstance = Sql::getInstance(true);
         $SqlInstance->query($sql);
-        return $SqlInstance->Ultimo_Insert();
+        return $SqlInstance->lastInsertId();
     }
 
     /**

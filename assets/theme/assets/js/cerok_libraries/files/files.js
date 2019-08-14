@@ -353,6 +353,7 @@ class Files {
                 dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
                 dictMaxFilesExceeded: 'Máximo 3 archivos',
                 params: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key'),
                     dir: 'dir'
                 },

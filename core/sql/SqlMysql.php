@@ -89,7 +89,6 @@ class SqlMysql extends Sql implements ISql
         if ($rs)
             $this->res = $rs;
         if ($arreglo = @mysqli_fetch_array($this->res, MYSQLI_BOTH)) {
-            $this->filas++;
             return ($arreglo);
         } else {
             return (false);
@@ -162,7 +161,6 @@ class SqlMysql extends Sql implements ISql
             array_push($resultado, $arreglo);
         }
         $resultado["numcampos"] = $i;
-        $this->filas = $i;
         if ($i) {
             return $resultado;
         } else {
@@ -197,7 +195,7 @@ class SqlMysql extends Sql implements ISql
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-13
      */
-    function Ultimo_Insert()
+    function lastInsertId()
     {
         return mysqli_insert_id($this->connection);
     }
@@ -337,7 +335,7 @@ class SqlMysql extends Sql implements ISql
 
                 $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
                 $this->query($sqleve);
-                $registro = $this->Ultimo_Insert();
+                $registro = $this->lastInsertId();
                 if ($registro) {
                     $archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
                     evento_archivo($archivo);
@@ -438,11 +436,9 @@ class SqlMysql extends Sql implements ISql
         } else {
             $aux = $nombre_tabla;
         }
-        $this->filas = 0;
 
         switch (strtolower($bandera)) {
             case "pk":
-                $this->filas = 0;
                 $tabla_existe = $this->verificar_existencia($nombre_tabla);
                 $crear_llave = $tabla_existe && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo);
                 if ($crear_llave) {

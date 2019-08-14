@@ -14,6 +14,7 @@ $(function() {
         findCounters();
         findMenu();
         checkRouteNotification();
+        setStateColor();
 
         setTimeout(() => {
             $('[data-toggle="tooltip"]').tooltip();
@@ -130,6 +131,23 @@ $(function() {
                 documentId: documentId
             },
             title: 'Tareas',
+            buttons: {
+                cancel: {
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
+                }
+            }
+        };
+        top.topModal(options);
+    });
+
+    $('#show_versions').on('click', function() {
+        let options = {
+            url: `${baseUrl}views/documento/lista_versiones.php`,
+            params: {
+                documentId: documentId
+            },
+            title: 'Listado de versiones',
             buttons: {
                 cancel: {
                     label: 'Cerrar',
@@ -811,5 +829,11 @@ $(function() {
             },
             'json'
         );
+    }
+
+    function setStateColor() {
+        let state = $('#document_state').text();
+        let className = state != 'Aprobado' ? 'label-danger' : 'label-info';
+        $('#document_state').addClass(className);
     }
 });
