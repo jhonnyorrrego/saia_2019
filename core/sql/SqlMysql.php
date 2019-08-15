@@ -444,19 +444,19 @@ class SqlMysql extends Sql implements ISql
                 if ($crear_llave) {
                     $dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD PRIMARY KEY ( " . strtolower($nombre_campo) . ")";
                     guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
+                    $this->query($dato);
                 }
                 //var_dump($nombre_tabla, $tabla_existe, $crear_llave, $dato);die();
                 $dato = "ALTER TABLE " . strtolower($nombre_tabla) . " CHANGE " . strtolower($nombre_campo) . " " . strtolower($nombre_campo) . " INT(11) NOT NULL AUTO_INCREMENT ";
                 guardar_traza($dato, $nombre_tabla);
-                $this->Ejecutar_sql($dato);
+                $this->query($dato);
 
                 break;
             case "u":
                 if ($this->verificar_existencia($nombre_tabla)) {
                     $dato = "ALTER TABLE " . $nombre_tabla . " ADD UNIQUE( " . $nombre_campo . " )";
                     guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
+                    $this->query($dato);
                 }
                 break;
             case "i":
@@ -464,7 +464,7 @@ class SqlMysql extends Sql implements ISql
                     if (!$this->verificar_existencia_idx_col($nombre_tabla, $nombre_campo)) {
                         $dato = "ALTER TABLE " . $nombre_tabla . " ADD INDEX ( " . $nombre_campo . " )";
                         guardar_traza($dato, $nombre_tabla);
-                        $this->Ejecutar_sql($dato);
+                        $this->query($dato);
                     }
                 }
                 break;
@@ -542,7 +542,7 @@ class SqlMysql extends Sql implements ISql
 
     public function verificar_existencia($table)
     {
-        $res = $this->Ejecutar_sql("SHOW TABLES LIKE '$table'");
+        $res = $this->query("SHOW TABLES LIKE '$table'");
         return mysqli_num_rows($res) > 0;
     }
 
@@ -550,7 +550,7 @@ class SqlMysql extends Sql implements ISql
     {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND COLUMN_NAME='$campo'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             if ($ret_iname) {
@@ -565,7 +565,7 @@ class SqlMysql extends Sql implements ISql
     {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND INDEX_NAME='$nombre_idx'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));
@@ -577,7 +577,7 @@ class SqlMysql extends Sql implements ISql
     {
         $sql_existe_idx = "SELECT COLUMN_KEY as existe FROM information_schema.columns WHERE table_schema = '" . DB . "' and table_name='$tabla' and column_key = 'PRI'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));

@@ -613,26 +613,26 @@ class SqlOracle extends Sql implements ISql
 
                 $dato = "DROP SEQUENCE " . $aux . "_SEQ";
                 guardar_traza($dato, $nombre_tabla);
-                $this->Ejecutar_sql($dato);
+                $this->query($dato);
 
                 if ($this->verificar_existencia($nombre_tabla) && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo)) {
                     $dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
                     guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
+                    $this->query($dato);
                 }
 
                 $dato = "CREATE SEQUENCE " . $aux . "_SEQ START WITH " . $inicio . " MAXVALUE 999999999999999999999999 MINVALUE 1  NOCYCLE NOORDER";
                 guardar_traza($dato, $nombre_tabla);
-                $this->Ejecutar_sql($dato);
+                $this->query($dato);
                 $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
                 guardar_traza($dato, $nombre_tabla);
-                $this->Ejecutar_sql($dato);
+                $this->query($dato);
                 break;
             case "u":
                 if ($this->verificar_existencia($nombre_tabla)) {
                     $dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
                     guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
+                    $this->query($dato);
                 }
                 break;
             case "i":
@@ -654,7 +654,7 @@ class SqlOracle extends Sql implements ISql
                 if (!$this->verificar_existencia_idx_col($nombre_tabla, $nombre_campo)) {
                     $dato = "CREATE INDEX $iname ON " . $nombre_tabla . " (" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
                     guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
+                    $this->query($dato);
                 }
                 break;
         }
@@ -764,7 +764,7 @@ class SqlOracle extends Sql implements ISql
     public function verificar_existencia($tabla)
     {
         $sql = "select tname as existe from tab where tname = '$tabla'";
-        $rs = $this->Ejecutar_sql($sql);
+        $rs = $this->query($sql);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));
@@ -776,7 +776,7 @@ class SqlOracle extends Sql implements ISql
     {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM USER_IND_COLUMNS WHERE TABLE_NAME='$tabla' AND COLUMN_NAME='$campo'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));
@@ -788,7 +788,7 @@ class SqlOracle extends Sql implements ISql
     {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM USER_INDEXES WHERE TABLE_NAME='$tabla' AND INDEX_NAME='$nombre_idx'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));
@@ -800,7 +800,7 @@ class SqlOracle extends Sql implements ISql
     {
         $sql_existe_idx = "select cc.CONSTRAINT_NAME as existe from USER_CONS_COLUMNS cc join USER_CONSTRAINTS c ON cc.TABLE_NAME = C.TABLE_NAME AND cc.OWNER = C.OWNER AND c.CONSTRAINT_NAME = cc.CONSTRAINT_NAME WHERE CONSTRAINT_TYPE='P' AND cc.TABLE_NAME='$tabla' AND cc.COLUMN_NAME='$campo'";
 
-        $rs = $this->Ejecutar_sql($sql_existe_idx);
+        $rs = $this->query($sql_existe_idx);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return (!empty($fila["existe"]));

@@ -977,7 +977,7 @@ function radicacion_entrada_fab_buttons(){
                     ]
                 ],
                 'icon' => [
-                    'class' => 'fa fa-times',
+                    'class' => 'fa fa-suitcase',
                     'html' => ''
                 ]
             ]);

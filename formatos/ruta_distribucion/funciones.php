@@ -365,7 +365,7 @@ function ruta_distribucion_fab_buttons(){
             ]
         ],
         'icon' => [
-            'class' => 'fa fa-times',
+            'class' => 'fa fa-bank',
             'html' => ''
         ]
     ],'addmessage' => [
@@ -380,7 +380,7 @@ function ruta_distribucion_fab_buttons(){
             ]
         ],
         'icon' => [
-            'class' => 'fa fa-times',
+            'class' => 'fa fa-users',
             'html' => ''
         ]
     ]);
