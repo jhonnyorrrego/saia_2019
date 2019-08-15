@@ -29,50 +29,51 @@ $sql = <<<SQL
 
 SQL;
 $datos_busqueda = StaticSql::search($sql);
+$component = $datos_busqueda[0];
 
-$phpLibraries = explode(",", $datos_busqueda[0]["ruta_libreria"]);
-$jsLibraries = explode(",", $datos_busqueda[0]["ruta_libreria_pantalla"]);
+$phpLibraries = explode(",", $component["ruta_libreria"]);
+$jsLibraries = explode(",", $component["ruta_libreria_pantalla"]);
 $libraries = array_merge($phpLibraries, $jsLibraries);
 
-preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
+preg_match("/(\w*)\.(\w*)/", $component["llave"], $valor_campos);
 if (!empty($valor_campos)) {
     $llave = $valor_campos[2];
 } else {
-    $llave = trim($datos_busqueda[0]["llave"]);
+    $llave = trim($component["llave"]);
 }
 if (empty($llave)) {
-    $campos = explode(",", $datos_busqueda[0]["campos"]);
+    $campos = explode(",", $component["campos"]);
     $llave = trim($campos[0]);
 }
 
 $btn_search = $btn_add = $actions = '';
 
-if ($datos_busqueda[0]["busqueda_avanzada"]) {
-    $datos_busqueda[0]["busqueda_avanzada"] .= '?idbusqueda_componente=' . $componentId;
-    $btn_search = "<button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='{$datos_busqueda[0]["busqueda_avanzada"]}'>
+if ($component["busqueda_avanzada"]) {
+    $component["busqueda_avanzada"] .= '?idbusqueda_componente=' . $componentId;
+    $btn_search = "<button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='{$component["busqueda_avanzada"]}'>
         <i class='fa fa-search'></i>
     </button>";
 }
 
-if ($datos_busqueda[0]["enlace_adicionar"]) {
-    if(strpos($datos_busqueda[0]["enlace_adicionar"], '?') === false){
-        $datos_busqueda[0]["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
-    }else{
-        $datos_busqueda[0]["enlace_adicionar"] .= '&idbusqueda_componente=' . $componentId;
-    }  
-    $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$datos_busqueda[0]["enlace_adicionar"]}'>
+if ($component["enlace_adicionar"]) {
+    if (strpos($component["enlace_adicionar"], '?') === false) {
+        $component["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
+    } else {
+        $component["enlace_adicionar"] .= '&idbusqueda_componente=' . $componentId;
+    }
+    $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$component["enlace_adicionar"]}'>
         <i class='fa fa-plus'></i>
         <span class='d-none d-sm-inline'>Adicionar</span>
     </button>";
 }
 
-if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
+if (!empty($component["acciones_seleccionados"])) {
     $datos_reporte = [
         'idbusqueda_componente' => $componentId,
         'variable_busqueda' => @$_REQUEST["variable_busqueda"]
     ];
 
-    $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
+    $acciones = explode(",", $component["acciones_seleccionados"]);
     foreach ($acciones as $key => $value) {
         $actions = $value($datos_reporte);
     }
@@ -91,11 +92,9 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/buzones/css/grilla.css">
 
     <?php
-
     foreach ($libraries as $key => $ruta) {
         include_once $ruta_db_superior . $ruta;
     }
-
     ?>
 </head>
 
@@ -104,7 +103,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
         <div class="row">
             <div class="col-12">
                 <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
-                    <input type="hidden" value="<?= $datos_busqueda[0]['cantidad_registros'] ?>" name="busqueda_total_registros" id="busqueda_registros">
+                    <input type="hidden" value="<?= $component['cantidad_registros'] ?>" name="busqueda_total_registros" id="busqueda_registros">
                     <input type="hidden" name="sord" id="sord" value="desc">
                     <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $componentId ?>">
                     <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
@@ -122,22 +121,17 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     <?= $btn_search ?>
                     <?= $actions ?>
                     <?= $btn_add ?>
-
-                    <button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
-                        <i class="fa fa-download"></i>
-                    </button>
-                    <div class="pull-right d-none" valign="middle">
-                        <iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe>
-                    </div>
                 </div>
                 <table id="tabla_resultados" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
                     <thead>
                         <tr>
-                            <th data-field="state" data-checkbox="true"></th>
                             <?php
-                            $lcampos1 = $datos_busqueda[0]["campos"];
-                            if ($datos_busqueda[0]["campos_adicionales"]) {
-                                $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
+                            if (!empty($component["acciones_seleccionados"])) {
+                                echo '<th data-field="state" data-checkbox="true"></th>';
+                            }
+                            $lcampos1 = $component["campos"];
+                            if ($component["campos_adicionales"]) {
+                                $lcampos1 .= ',' . $component["campos_adicionales"];
                             }
                             $lcampos2 = explode(",", $lcampos1);
                             $lcampos = array();
@@ -149,7 +143,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                                     array_push($lcampos, trim($valor));
                                 }
                             }
-                            $info = explode("|-|", $datos_busqueda[0]["info"]);
+                            $info = explode("|-|", $component["info"]);
                             $can_info = count($info);
                             for ($i = 0; $i < $can_info; $i++) {
                                 $ordenable = "";
@@ -165,7 +159,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                                     $ordenable = 'data-sortable="true"';
                                 }
 
-                                echo '<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
+                                echo '<th data-field="' . $dato_campo . '" data-align="center" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
                             }
                             ?>
                         </tr>
@@ -183,6 +177,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <?= bootstrapTable() ?>
     <?= icons() ?>
     <?= select2() ?>
+    <?= librerias_acciones_kaiten() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $.fn.serializeObject = function() {
             var o = {};
@@ -322,26 +317,6 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                 });
             });
 
-            $("#boton_exportar_excel").click(function(obj) {
-                isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-                // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-                isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
-                isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-                // At least Safari 3+: "[object HTMLElementConstructor]"
-                isChrome = !!window.chrome && !isOpera; // Chrome 1+
-                isIE = /*@cc_on!@*/ false || !!document.documentMode; // At least IE6
-                if (isChrome || isIE) {
-                    var busqueda_total = $("#busqueda_total_paginas").val();
-                    if (parseInt(busqueda_total) != 0) {
-                        top.notification({
-                            message: 'Espere un momento por favor, hasta que se habilite el boton de descarga <i class="fa fa-download></i>',
-                            type: 'success'
-                        });
-                    }
-                }
-                exportar_funcion_excel_reporte();
-            });
-
             $(document).keypress(function(event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 if (keycode == '13') {
@@ -370,7 +345,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
 
                 return params;
             }
-            
+
             function getIdSelections() {
                 return $.map($table.bootstrapTable('getSelections'), function(row) {
                     return row[llave];
@@ -413,21 +388,6 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
 
             function getHeight() {
                 return $(window).height() - $('h1').outerHeight(true);
-            }
-
-            function exportar_funcion_excel_reporte() {
-                var busqueda_total = $("#busqueda_total_paginas").val();
-                if (parseInt(busqueda_total) != 0) {
-                    var ruta_file = "<?= SessionController::getTemporalDir() ?>/reporte_<?= $datos_busqueda[0]["nombre"] . '_' . date('Ymd') . '.xls' ?>";
-                    var url = "<?= $ruta_db_superior ?>pantallas/busquedas/exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?= $componentId ?>&page=1&exportar_saia=excel&ruta_exportar_saia=" + ruta_file + "&rows=" + $("#busqueda_registros").val() * 4 + "&actual_row=0&variable_busqueda=" + $("#variable_busqueda").val() + "&idbusqueda_filtro_temp=<?php echo (@$_REQUEST['idbusqueda_filtro_temp']); ?>&idbusqueda_filtro=<?php echo (@$_REQUEST['idbusqueda_filtro']); ?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']); ?>";
-                    window.open(url, "iframe_exportar_saia");
-                    $('#iframe_exportar_saia').parent().removeClass('d-none');
-                } else {
-                    top.notification({
-                        message: 'ATENCIÓN! No hay registros para exportar',
-                        type: 'warning'
-                    });
-                }
             }
         });
     </script>

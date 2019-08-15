@@ -8,7 +8,6 @@ class VersionPagina extends Model
     protected $ruta_miniatura;
     protected $fk_idversion_documento;
     protected $pagina_idpagina;
-    
 
     function __construct($id = null)
     {
@@ -20,7 +19,7 @@ class VersionPagina extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'documento_iddocumento',
                 'ruta',

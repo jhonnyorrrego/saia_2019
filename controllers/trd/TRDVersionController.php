@@ -8,13 +8,15 @@ class TRDVersionController
     protected $documentaryTypes;
     protected $trdData;
     protected $clasificationData;
+    protected $idSerieVersion;
 
-    function __construct()
+    function __construct($idSerieVersion)
     {
         $this->dependencies = [];
         $this->series = [];
         $this->subSeries = [];
         $this->documentaryTypes = [];
+        $this->idSerieVersion = $idSerieVersion;
 
         $this->generateVersion();
     }
@@ -112,7 +114,8 @@ class TRDVersionController
                 b.estado = 1 AND
                 b.fk_dependencia = {$dependencieId} AND
                 a.tipo = 1 AND 
-                a.estado = 1
+                a.estado = 1 AND
+                a.fk_serie_version={$this->idSerieVersion}
 SQL;
 
         $this->series = Serie::findBySql($sql);
@@ -150,7 +153,8 @@ SQL;
                 b.fk_dependencia = {$dependencieId} AND
                 a.tipo = 2 AND 
                 a.estado = 1 AND
-                a.cod_padre = {$serieId}
+                a.cod_padre = {$serieId} AND
+                a.fk_serie_version={$this->idSerieVersion}
 SQL;
 
         $this->subSeries = Serie::findBySql($sql);
@@ -177,7 +181,8 @@ SQL;
         WHERE
             a.tipo = 3 AND 
             a.estado = 1 AND
-            a.cod_padre = {$serieId}
+            a.cod_padre = {$serieId} AND
+            a.fk_serie_version={$this->idSerieVersion}
 SQL;
         $this->documentaryTypes = Serie::findBySql($sql);
     }
@@ -234,7 +239,7 @@ SQL;
      * obtiene la informacion de la tabla
      * de retencion codificada
      *
-     * @return void
+     * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-06
      */
@@ -247,7 +252,7 @@ SQL;
      * obtiene la informacion de la tabla de
      * clasificacion documental codificada
      *
-     * @return void
+     * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-06
      */

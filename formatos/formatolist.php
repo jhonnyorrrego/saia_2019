@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 
 include $ruta_db_superior . "core/autoload.php";
+global $conn;
 // Initialize common variables
 $x_idformato = Null;
 $x_nombre = Null;
@@ -134,8 +135,8 @@ if ($sOrderBy != "") {
 </script>
 <?php
 // Set up Record Set
-$rs = phpmkr_query($sSql) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-$nTotalRecs = phpmkr_num_rows($rs);
+$rs = $conn->query($sSql);
+$nTotalRecs = count($conn->search($sSql));
 if ($nDisplayRecs <= 0) { // Display All Records
 	$nDisplayRecs = $nTotalRecs;
 }
@@ -163,8 +164,8 @@ SetUpStartRec(); // Set Up Start Record Position
 <?php
 if (@$_SESSION["ewmsg"] <> "") {
 	?>
-	<p><span class="phpmaker" style="color: Red;"><?php echo $_SESSION["ewmsg"]; ?></span></p>
-	<?php
+<p><span class="phpmaker" style="color: Red;"><?php echo $_SESSION["ewmsg"]; ?></span></p>
+<?php
 	$_SESSION["ewmsg"] = ""; // Clear message
 }
 ?>
@@ -172,37 +173,37 @@ if (@$_SESSION["ewmsg"] <> "") {
 <form method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<?php if ($nTotalRecs > 0) { ?>
-			<!-- Table header -->
-			<tr class="encabezado_list">
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("idformato"); ?>" style="color: #FFFFFF;">idformato<?php if (@$_SESSION["formato_x_idformato_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_idformato_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("nombre"); ?>" style="color: #FFFFFF;">Nombre&nbsp;(*)<?php if (@$_SESSION["formato_x_nombre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_nombre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("etiqueta"); ?>" style="color: #FFFFFF;">Etiqueta&nbsp;(*)<?php if (@$_SESSION["formato_x_etiqueta_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_etiqueta_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("contador_idcontador"); ?>" style="color: #FFFFFF;">Contador<?php if (@$_SESSION["formato_x_contador_idcontador_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_contador_idcontador_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("cod_padre"); ?>" style="color: #FFFFFF;">Padre<?php if (@$_SESSION["formato_x_padre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_padre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("margenes"); ?>" style="color: #FFFFFF;">M&aacute;rgenes(Izq, Der, Sup, Inf)&nbsp;(*)<?php if (@$_SESSION["formato_x_margenes_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_margenes_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("orientacion"); ?>" style="color: #FFFFFF;">Orientaci&oacute;n&nbsp;(*)<?php if (@$_SESSION["formato_x_orientacion_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_orientacion_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("papel"); ?>" style="color: #FFFFFF;">Tama&ntilde;o del Papel&nbsp;(*)<?php if (@$_SESSION["formato_x_papel_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_papel_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-						<a href="formatolist.php?order=<?php echo urlencode("exportar"); ?>" style="color: #FFFFFF;">M&eacute;todo Exportar&nbsp;(*)<?php if (@$_SESSION["formato_x_exportar_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_exportar_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-					</span></td>
-				<td colspan="12">Acciones</td>
-			</tr>
+		<!-- Table header -->
+		<tr class="encabezado_list">
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("idformato"); ?>" style="color: #FFFFFF;">idformato<?php if (@$_SESSION["formato_x_idformato_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_idformato_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("nombre"); ?>" style="color: #FFFFFF;">Nombre&nbsp;(*)<?php if (@$_SESSION["formato_x_nombre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_nombre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("etiqueta"); ?>" style="color: #FFFFFF;">Etiqueta&nbsp;(*)<?php if (@$_SESSION["formato_x_etiqueta_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_etiqueta_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("contador_idcontador"); ?>" style="color: #FFFFFF;">Contador<?php if (@$_SESSION["formato_x_contador_idcontador_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_contador_idcontador_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("cod_padre"); ?>" style="color: #FFFFFF;">Padre<?php if (@$_SESSION["formato_x_padre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_padre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("margenes"); ?>" style="color: #FFFFFF;">M&aacute;rgenes(Izq, Der, Sup, Inf)&nbsp;(*)<?php if (@$_SESSION["formato_x_margenes_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_margenes_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("orientacion"); ?>" style="color: #FFFFFF;">Orientaci&oacute;n&nbsp;(*)<?php if (@$_SESSION["formato_x_orientacion_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_orientacion_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("papel"); ?>" style="color: #FFFFFF;">Tama&ntilde;o del Papel&nbsp;(*)<?php if (@$_SESSION["formato_x_papel_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_papel_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+					<a href="formatolist.php?order=<?php echo urlencode("exportar"); ?>" style="color: #FFFFFF;">M&eacute;todo Exportar&nbsp;(*)<?php if (@$_SESSION["formato_x_exportar_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["formato_x_exportar_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+				</span></td>
+			<td colspan="12">Acciones</td>
+		</tr>
 		<?php } ?>
 		<?php
 
@@ -216,9 +217,7 @@ if (@$_SESSION["ewmsg"] <> "") {
 
 		// Move to first record directly for performance reason
 		$nRecCount = $nStartRec - 1;
-		//if (phpmkr_num_rows($rs) > 0) {
-		//	phpmkr_data_seek($rs, $nStartRec -1);
-		//}
+
 		$nRecActual = 0;
 		while (($row = @phpmkr_fetch_array($rs)) && ($nRecCount < $nStopRec)) {
 			$nRecActual = $nRecActual + 1;
@@ -252,23 +251,23 @@ if (@$_SESSION["ewmsg"] <> "") {
 				$x_exportar = $row["exportar"];
 				$x_padre = $row["cod_padre"];
 				?>
-				<!-- Table body -->
-				<tr<?php echo $sItemRowClass; ?>>
-					<!-- idformato -->
-					<td><span class="phpmaker">
-							<?php echo $x_idformato; ?>
-						</span></td>
-					<!-- nombre -->
-					<td><span class="phpmaker">
-							<?php echo $x_nombre; ?>
-						</span></td>
-					<!-- etiqueta -->
-					<td><span class="phpmaker">
-							<?php echo $x_etiqueta; ?>
-						</span></td>
-					<!-- contador_idcontador -->
-					<td><span class="phpmaker">
-							<?php
+		<!-- Table body -->
+		<tr<?php echo $sItemRowClass; ?>>
+			<!-- idformato -->
+			<td><span class="phpmaker">
+					<?php echo $x_idformato; ?>
+				</span></td>
+			<!-- nombre -->
+			<td><span class="phpmaker">
+					<?php echo $x_nombre; ?>
+				</span></td>
+			<!-- etiqueta -->
+			<td><span class="phpmaker">
+					<?php echo $x_etiqueta; ?>
+				</span></td>
+			<!-- contador_idcontador -->
+			<td><span class="phpmaker">
+					<?php
 							if ((!is_null($x_contador_idcontador)) && ($x_contador_idcontador <> "")) {
 								$sSqlWrk = "SELECT DISTINCT *  FROM contador";
 								$sTmp = $x_contador_idcontador;
@@ -285,28 +284,28 @@ if (@$_SESSION["ewmsg"] <> "") {
 							$ox_contador_idcontador = $x_contador_idcontador; // Backup Original Value
 							$x_contador_idcontador = $sTmp;
 							?>
-							<?php echo $x_contador_idcontador; ?>
-							<?php $x_contador_idcontador = $ox_contador_idcontador; // Restore Original Value 
+					<?php echo $x_contador_idcontador; ?>
+					<?php $x_contador_idcontador = $ox_contador_idcontador; // Restore Original Value 
 							?>
-						</span></td>
-					<!-- padre -->
-					<td><span class="phpmaker">
-							<?php echo $x_padre; ?>
-						</span></td><!-- margenes -->
-					<td><span class="phpmaker">
-							<?php echo $x_margenes; ?>
-						</span></td>
-					<!-- orientacion -->
-					<td><span class="phpmaker">
-							<?php echo $x_orientacion; ?>
-						</span></td>
-					<!-- papel -->
-					<td><span class="phpmaker">
-							<?php echo $x_papel; ?>
-						</span></td>
-					<!-- exportar -->
-					<td><span class="phpmaker">
-							<?php
+				</span></td>
+			<!-- padre -->
+			<td><span class="phpmaker">
+					<?php echo $x_padre; ?>
+				</span></td><!-- margenes -->
+			<td><span class="phpmaker">
+					<?php echo $x_margenes; ?>
+				</span></td>
+			<!-- orientacion -->
+			<td><span class="phpmaker">
+					<?php echo $x_orientacion; ?>
+				</span></td>
+			<!-- papel -->
+			<td><span class="phpmaker">
+					<?php echo $x_papel; ?>
+				</span></td>
+			<!-- exportar -->
+			<td><span class="phpmaker">
+					<?php
 							$ar_x_exportar = explode(",", @$x_exportar);
 							$sTmp = "";
 							$rowcntwrk = 0;
@@ -336,72 +335,72 @@ if (@$_SESSION["ewmsg"] <> "") {
 							$ox_exportar = $x_exportar; // Backup Original Value
 							$x_exportar = $sTmp;
 							?>
-							<?php echo $x_exportar; ?>
-							<?php $x_exportar = $ox_exportar; // Restore Original Value 
+					<?php echo $x_exportar; ?>
+					<?php $x_exportar = $ox_exportar; // Restore Original Value 
 							?>
-						</span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+				</span></td>
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "rutas_automaticas.php?idformato=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Rutas Automaticas</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "transferencias_automaticas.php?idformato=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Transferencias Automaticas</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatoedit.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Editar</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatoadd_paso2.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Editar cuerpo</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "generar_formato.php?genera=formato&idformato=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														}  ?>">Generar</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatoview.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Ver</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatodelete.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														}  ?>">Borrar</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatoadd.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Copiar</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "generar_formato_detalle.php?idformato=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														}  ?>">Generar<br />Detalle</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "vista_formatolist.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Vista</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "formatoexport.php?key=" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Exportar</a></span></td>
-					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
 															echo "llamado_formatos.php?acciones_formato=tabla,formato,adicionar,buscar,editar,mostrar&accion=generar&condicion=idformato@" . urlencode($sKey);
 														} else {
 															echo "javascript:alert('Invalid Record! Key is null');";
 														} ?>">Recrear</a></span></td>
-					</tr>
-				<?php
+			</tr>
+			<?php
 				}
 			}
 			?>
@@ -431,39 +430,39 @@ phpmkr_free_result($rs);
 					}
 					$LastStart = intval(($nTotalRecs - 1) / $nDisplayRecs) * $nDisplayRecs + 1;
 					?>
-					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-							<td><span class="phpmaker">Page&nbsp;</span></td>
-							<!--first page button-->
-							<?php if ($nStartRec == 1) { ?>
-								<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/firstdisab.gif" alt="First" width="16" height="16" border="0"></td>
-							<?php } else { ?>
-								<td><a href="formatolist.php?start=1"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/first.gif" alt="First" width="16" height="16" border="0"></a></td>
-							<?php } ?>
-							<!--previous page button-->
-							<?php if ($PrevStart == $nStartRec) { ?>
-								<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/prevdisab.gif" alt="Previous" width="16" height="16" border="0"></td>
-							<?php } else { ?>
-								<td><a href="formatolist.php?start=<?php echo $PrevStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/prev.gif" alt="Previous" width="16" height="16" border="0"></a></td>
-							<?php } ?>
-							<!--current page number-->
-							<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
-							<!--next page button-->
-							<?php if ($NextStart == $nStartRec) { ?>
-								<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/nextdisab.gif" alt="Next" width="16" height="16" border="0"></td>
-							<?php } else { ?>
-								<td><a href="formatolist.php?start=<?php echo $NextStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/next.gif" alt="Next" width="16" height="16" border="0"></a></td>
-							<?php  } ?>
-							<!--last page button-->
-							<?php if ($LastStart == $nStartRec) { ?>
-								<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/lastdisab.gif" alt="Last" width="16" height="16" border="0"></td>
-							<?php } else { ?>
-								<td><a href="formatolist.php?start=<?php echo $LastStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/last.gif" alt="Last" width="16" height="16" border="0"></a></td>
-							<?php } ?>
-							<td><span class="phpmaker">&nbsp;of <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
-						</tr>
-					</table>
-					<?php if ($nStartRec > $nTotalRecs) {
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><span class="phpmaker">Page&nbsp;</span></td>
+						<!--first page button-->
+						<?php if ($nStartRec == 1) { ?>
+						<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/firstdisab.gif" alt="First" width="16" height="16" border="0"></td>
+						<?php } else { ?>
+						<td><a href="formatolist.php?start=1"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/first.gif" alt="First" width="16" height="16" border="0"></a></td>
+						<?php } ?>
+						<!--previous page button-->
+						<?php if ($PrevStart == $nStartRec) { ?>
+						<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/prevdisab.gif" alt="Previous" width="16" height="16" border="0"></td>
+						<?php } else { ?>
+						<td><a href="formatolist.php?start=<?php echo $PrevStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/prev.gif" alt="Previous" width="16" height="16" border="0"></a></td>
+						<?php } ?>
+						<!--current page number-->
+						<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
+						<!--next page button-->
+						<?php if ($NextStart == $nStartRec) { ?>
+						<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/nextdisab.gif" alt="Next" width="16" height="16" border="0"></td>
+						<?php } else { ?>
+						<td><a href="formatolist.php?start=<?php echo $NextStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/next.gif" alt="Next" width="16" height="16" border="0"></a></td>
+						<?php  } ?>
+						<!--last page button-->
+						<?php if ($LastStart == $nStartRec) { ?>
+						<td><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/lastdisab.gif" alt="Last" width="16" height="16" border="0"></td>
+						<?php } else { ?>
+						<td><a href="formatolist.php?start=<?php echo $LastStart; ?>"><img src="<?php echo PROTOCOLO_CONEXION . RUTA_PDF; ?>/images/last.gif" alt="Last" width="16" height="16" border="0"></a></td>
+						<?php } ?>
+						<td><span class="phpmaker">&nbsp;of <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
+					</tr>
+				</table>
+				<?php if ($nStartRec > $nTotalRecs) {
 						$nStartRec = $nTotalRecs;
 					}
 					$nStopRec = $nStartRec + $nDisplayRecs - 1;
@@ -474,9 +473,9 @@ phpmkr_free_result($rs);
 					if ($nStopRec > $nRecCount) {
 						$nStopRec = $nRecCount;
 					} ?>
-					<span class="phpmaker">Records <?php echo $nStartRec; ?> to <?php echo $nStopRec; ?> of <?php echo $nTotalRecs; ?></span>
+				<span class="phpmaker">Records <?php echo $nStartRec; ?> to <?php echo $nStopRec; ?> of <?php echo $nTotalRecs; ?></span>
 				<?php } else { ?>
-					<span class="phpmaker">No records found</span>
+				<span class="phpmaker">No records found</span>
 				<?php } ?>
 			</td>
 		</tr>

@@ -23,7 +23,7 @@ class SqlPostgres extends Sql implements ISql
 	public function search($sql, $start = 0, $end = 0)
 	{
 		$response = [];
-		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+		$result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
 		while (($row = $this->sacar_fila($result)) !== false) {
 			$response[] = $row;
@@ -53,38 +53,22 @@ class SqlPostgres extends Sql implements ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
 	 */
-	function Ejecutar_Sql($sql)
+	function query($sql)
 	{
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
 		$strsql = str_replace("= ", "=", $strsql);
 		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
 		if ($accion == "INSERT" || $accion == "UPDATE") {
-			$this->ultimoInsert = 0;
 			$sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
 			$sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 		}
 
-		$this->filas = 0;
 		if ($sql && $sql != "" && $this->connection) {
 			// Quitar "from dual".
 			$sql = preg_replace("/from\s+dual\s*$/i", "", $sql);
 			$this->res = pg_query($this->connection, $sql); // or die("ERROR SQL " . pg_last_error($this->connection) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
 
-			if ($this->res) {
-				if (strpos(strtolower($sql), "insert") !== false)
-					$this->ultimoInsert = $this->Ultimo_Insert();
-				else if (strpos(strtolower($sql), "select") !== false) {
-					$this->ultimoInsert = 0;
-					$this->filas = pg_num_rows($this->res);
-				} else {
-					$this->ultimoInsert = 0;
-				}
-
-				$this->consulta = trim($sql);
-				// $fin=strpos($this->consulta," ");
-				// $accion=substr($this->consulta,0,$fin);
-			}
 			return ($this->res);
 		}
 	}
@@ -97,7 +81,6 @@ class SqlPostgres extends Sql implements ISql
 		// $arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH) or die("ERROR PG_FETCH ".pg_last_error($rs)." en ".$_SERVER["PHP_SELF"]);
 
 		if ($arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH)) {
-			$this->filas++;
 			return ($arreglo);
 		} else {
 			return (FALSE);
@@ -161,8 +144,8 @@ class SqlPostgres extends Sql implements ISql
 			$where_campo = " AND column_name='" . $campo . "'";
 		}
 
-		$this->consulta = "select * from information_schema.columns where table_schema = 'public' AND table_name  = '$tabla'" . $where_campo;
-		$this->res = pg_query($this->connection, $this->consulta);
+		$sql = "select * from information_schema.columns where table_schema = 'public' AND table_name  = '$tabla'" . $where_campo;
+		$this->res = pg_query($this->connection, $sql);
 		$resultado = array();
 		$i = 0;
 		$resultado = array();
@@ -226,7 +209,7 @@ class SqlPostgres extends Sql implements ISql
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>Ultimo_Insert
+	 * <Nombre>lastInsertId
 	 * <Parametros>
 	 * <Responsabilidades>Retornar el identificador del ultimo registro insertado
 	 * <Notas>se utiliza después de la función insert
@@ -235,11 +218,8 @@ class SqlPostgres extends Sql implements ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	function Ultimo_Insert()
+	function lastInsertId()
 	{
-		if ($this->ultimoInsert) {
-			return $this->ultimoInsert;
-		}
 		$insert_query = pg_query($this->connection, "SELECT lastval()");
 		$insert_row = pg_fetch_row($this->connection, $insert_query);
 		$insert_id = $insert_row[0];
@@ -328,13 +308,6 @@ class SqlPostgres extends Sql implements ISql
 		return $fsql;
 	}
 
-	// Fin Funcion fecha_db_obtener
-	function mostrar_error()
-	{
-		if ($this->error != "")
-			echo ($this->error . " en \"" . $this->consulta . "\"");
-	}
-
 	function suma_fechas($fecha1, $cantidad, $tipo = "")
 	{
 		if ($tipo == "")
@@ -362,14 +335,14 @@ class SqlPostgres extends Sql implements ISql
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
 	{
 		$strsql = "select sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
-		$this->Ejecutar_Sql($strsql) or die($strsql);
+		$this->query($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
 	{
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
-		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
+		$datos_tabla = $this->query("DESCRIBE " . $tabla);
 		while ($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
@@ -397,8 +370,8 @@ class SqlPostgres extends Sql implements ISql
 				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
-				$this->Ejecutar_Sql($sqleve);
-				$registro = $this->Ultimo_Insert();
+				$this->query($sqleve);
+				$registro = $this->lastInsertId();
 				if ($registro) {
 					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
 					evento_archivo($archivo);
@@ -500,7 +473,6 @@ class SqlPostgres extends Sql implements ISql
 		} else {
 			$aux = $nombre_tabla;
 		}
-		$this->filas = 0;
 
 		switch (strtolower($bandera)) {
 			case "pk":
@@ -582,7 +554,7 @@ class SqlPostgres extends Sql implements ISql
 							$sql .= " SET NOT NULL";
 						}
 						guardar_traza($sql, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($sql);
+						$this->query($sql);
 					}
 				}
 			}
@@ -605,7 +577,7 @@ class SqlPostgres extends Sql implements ISql
 						}
 					}
 					guardar_traza($dato, $formato[0]["nombre_tabla"]);
-					$this->Ejecutar_Sql($dato);
+					$this->query($dato);
 				}
 			}
 		}
@@ -659,7 +631,7 @@ class SqlPostgres extends Sql implements ISql
 		if ($this->verificar_existencia($tabla)) {
 			$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["constraint_name"];
 			guardar_traza($sql, strtolower($tabla));
-			$this->Ejecutar_Sql($sql);
+			$this->query($sql);
 			echo ($sql . "<br />");
 		}
 		return;

@@ -720,17 +720,6 @@ function EditData($sKey, $conn) {
 			phpmkr_query($sql_serie);
 			$fieldList["serie_idserie"] = phpmkr_insert_id();
 		}
-
-		$sql = "update campos_formato set predeterminado=" . $fieldList["serie_idserie"] . "  where lower(nombre)='serie_idserie' and formato_idformato=" . $sKeyWrk;
-            $sql_export = array(
-                "sql" => "update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|",
-                "variables" => array(
-                    "idserie" => "select idserie FROM serie WHERE nombre='" . $x_etiqueta . "' AND categoria=3",
-                    "idformato" => "select idformato FROM formato WHERE nombre='" . $x_nombre . "'"
-                )
-            );
-		guardar_traza($sql, $x_tabla, $sql_export);
-		phpmkr_query($sql);
 	}else{  //otra serie elegida o sin serie
 		$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
 		$fieldList["serie_idserie"] = $theValue;
@@ -925,18 +914,7 @@ detalles_mostrar_".$x_nombre.".php";
           $campo_padre=1;
         }
       }
-      if(!$campo_serie){
-        $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
-                $strsql_export = array(
-                    "sql" => "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (|-idformato-|,'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,|-idserie-|, 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')",
-                    "variables" => array(
-                        "idserie" => "select idserie FROM serie WHERE nombre='" . $x_etiqueta . "' AND categoria=3",
-                        "idformato" => "select idformato FROM formato WHERE nombre='" . $x_nombre . "'"
-                    )
-                );
-		guardar_traza($strsql,$x_tabla,$strsql_export);
-      	phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-      }
+     
       if(!$campo_padre && $fieldList["cod_padre"] && $cod_padre["numcampos"] && $fieldList["cod_padre"]){
         $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'".$cod_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,".$fieldList["cod_padre"].", 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')";
                 $strsql_export = array(

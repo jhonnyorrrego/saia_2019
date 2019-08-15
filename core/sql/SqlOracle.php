@@ -28,7 +28,7 @@ class SqlOracle extends Sql implements ISql
     public function search($sql, $start = 0, $end = 0)
     {
         $response = [];
-        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->Ejecutar_Sql($sql);
+        $result = $end ? $this->Ejecutar_Limit($sql, $start, $end) : $this->query($sql);
 
         while (($row = $this->sacar_fila($result)) !== false) {
             $response[] = $row;
@@ -55,13 +55,13 @@ class SqlOracle extends Sql implements ISql
     {
         if ($campos == "" || $campos == null)
             $campos = "*";
-        $this->consulta = "SELECT " . $campos . " FROM " . $tablas;
+        $sql = "SELECT " . $campos . " FROM " . $tablas;
         if ($where != "" && $where != null)
-            $this->consulta .= " WHERE " . $where;
+            $sql .= " WHERE " . $where;
         if ($order_by != "" && $order_by != null)
-            $this->consulta .= " ORDER BY " . $order_by;
+            $sql .= " ORDER BY " . $order_by;
         // ejecucion de la consulta, a $this->res se le asigna el resource
-        $this->res = $this->Ejecutar_Sql($this->consulta);
+        $this->res = $this->query($sql);
         // se le asignan a $resultado los valores obtenidos
         $i = 0;
         $resultado = array();
@@ -70,7 +70,6 @@ class SqlOracle extends Sql implements ISql
             array_push($resultado, $arreglo);
         }
         $resultado["numcampos"] = $i;
-        $this->filas = $i;
         if ($i)
             return $resultado;
         else
@@ -85,7 +84,7 @@ class SqlOracle extends Sql implements ISql
         @OCIFreeStatement($rs);
     }
 
-    function Ejecutar_Sql($sql)
+    function query($sql)
     {
         $strsql = trim($sql);
         $strsql = str_replace(" =", "=", $strsql);
@@ -96,20 +95,12 @@ class SqlOracle extends Sql implements ISql
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
         }
 
-        $this->consulta = $sql;
         $rs = oci_parse($this->connection, $sql);
         if ($rs) {
             $rs_fecha = oci_parse($this->connection, "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY/MM/DD HH24:MI:SS'");
             oci_execute($rs_fecha);
             if (oci_execute($rs, OCI_COMMIT_ON_SUCCESS)) {
                 $this->res = $rs;
-
-                if (strpos(strtolower($sql), "insert") !== false) {
-                    $this->ultimoInsert = $this->Ultimo_Insert();
-                }
-                if (strpos(strtolower($sql), "alter") !== false) { } else {
-                    $this->ultimoInsert = 0;
-                }
             } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = oci_error($this->connection);
                 debug_print_backtrace();
@@ -130,7 +121,6 @@ class SqlOracle extends Sql implements ISql
                 // die();
             }
             $temp = $this->sacar_fila($rs2);
-            $this->filas = $temp["contarfilas"];
         }
         return ($rs);
     }
@@ -142,7 +132,6 @@ class SqlOracle extends Sql implements ISql
         $arreglo = array();
         if (@OCIFetchInto($this->res, $arreglo, OCI_ASSOC + OCI_NUM + OCI_RETURN_NULLS + OCI_RETURN_LOBS)) {
             $arreglo = array_change_key_case($arreglo, CASE_LOWER);
-            $this->filas++;
             return ($arreglo);
         } else {
             // print_r(oci_error($this->res));
@@ -179,8 +168,8 @@ class SqlOracle extends Sql implements ISql
         if ($campo != '') {
             $where_campo = " AND column_name='" . $campo . "'";
         }
-        $this->consulta = "SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' " . $where_campo . " ORDER BY column_name ASC";
-        $this->res = $this->Ejecutar_Sql($this->consulta);
+        $sql = "SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' " . $where_campo . " ORDER BY column_name ASC";
+        $this->res = $this->query($sql);
         // se le asignan a $resultado los valores obtenidos
         $i = 0;
         $resultado = array();
@@ -189,7 +178,6 @@ class SqlOracle extends Sql implements ISql
             array_push($resultado, $arreglo);
         }
         $resultado["numcampos"] = $i;
-        $this->filas = $i;
         if ($i) {
             return $resultado;
         } else {
@@ -222,8 +210,8 @@ class SqlOracle extends Sql implements ISql
 		WHERE FILA >= $inicio";
         $stmt = OCIParse($this->connection, $sql);
         // echo $sql;
-        if (!OCIExecute($stmt, OCI_COMMIT_ON_SUCCESS))
-            $this->error = OCIError();
+        OCIExecute($stmt, OCI_COMMIT_ON_SUCCESS);
+
         return $stmt;
     }
 
@@ -248,7 +236,7 @@ class SqlOracle extends Sql implements ISql
 
     /*
      * <Clase>SQL
-     * <Nombre>Ultimo_Insert
+     * <Nombre>lastInsertId
      * <Parametros>
      * <Responsabilidades>Retornar el identificador del ultimo registro insertado
      * <Notas>se utiliza después de la función insert
@@ -257,63 +245,14 @@ class SqlOracle extends Sql implements ISql
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Ultimo_Insert()
+    function lastInsertId()
     {
-        $identificador = 0;
-        $sql = $this->consulta;
-        $this->consulta = trim($sql);
-        $fin = strpos($this->consulta, " ");
-        $accion = strtoupper(substr($this->consulta, 0, $fin));
-        if (empty($sql)) {
-            die("No hay consulta para calcular del ID");
-        }
-        switch ($accion) {
-            case "SELECT":
-                $identificador = 0;
-                break;
-            case "UPDATE":
-                $identificador = 0;
-                break;
-            case "INSERT":
-                $posinto = strpos(strtoupper($this->consulta), "INTO");
-                $posval = strpos(strtoupper($this->consulta), "VALUES");
-                $tabla = substr($this->consulta, $posinto + 4, $posval - $posinto);
-                $tabla = trim($tabla);
+        /*
+            se debe desarrollar ya que se obtenia consultando
+            a la base de datos segun el ultimo sql :'(
+        */
 
-                $parent = strpos($tabla, "(");
-                if ($parent) {
-                    $tabla = substr($tabla, 0, $parent);
-                }
-                $tabla = trim($tabla);
-                $posicion = strpos($tabla, ".");
-                if ($posicion) {
-                    $long = strlen($tabla);
-                    $tabla = substr($tabla, ($posicion + 1), $long);
-                }
-                if (strlen($tabla) > 26) {
-                    $aux = substr($tabla, 0, 26);
-                } else {
-                    $aux = $tabla;
-                }
-                $sql_id = "SELECT " . $aux . "_SEQ.currval FROM DUAL";
-
-                $rs_temp = oci_parse($this->connection, $sql_id);
-                if (oci_execute($rs_temp)) {
-                    $arreglo = oci_fetch_array($rs_temp, OCI_NUM);
-                    $identificador = $arreglo[0];
-                } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
-
-                    $e = oci_error($this->connection);
-                    trigger_error($e['message'] . " $sql_id", E_USER_ERROR);
-                    die("NO HAY SECUENCIA");
-                    return false;
-                }
-
-                oci_free_statement($rs_temp);
-                oci_cancel($rs_temp);
-                break;
-        }
-        return ($identificador);
+        throw new Exception("Se debe desarrollar", 1);
     }
 
     function resta_fechas($fecha1, $fecha2)
@@ -397,12 +336,6 @@ class SqlOracle extends Sql implements ISql
         return $fsql;
     }
 
-    function mostrar_error()
-    {
-        if ($this->error != "")
-            echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
-    }
-
     function suma_fechas($fecha1, $cantidad, $tipo = "")
     {
         if ($tipo == "HOUR") {
@@ -436,14 +369,14 @@ class SqlOracle extends Sql implements ISql
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
     {
         $strsql = "CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
-        $this->Ejecutar_Sql($strsql) or die($strsql);
+        $this->query($strsql) or die($strsql);
     }
 
     function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
     {
         if ($tabla == NULL)
             $tabla = $_REQUEST["tabla"];
-        $datos_tabla = $this->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
+        $datos_tabla = $this->query("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
         $lista_campos = array();
         while ($fila = $this->sacar_fila($datos_tabla)) {
             if ($tipo_retorno) {
@@ -514,8 +447,8 @@ class SqlOracle extends Sql implements ISql
                         if ($log) {
                             $sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('" . usuario_actual("funcionario_codigo") . "',to_date('" . date('Y-m-d H:i:s') . "','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
 
-                            $this->Ejecutar_Sql($sqleve);
-                            $registro = $this->Ultimo_Insert();
+                            $this->query($sqleve);
+                            $registro = $this->lastInsertId();
                             $texto_ant = "DECLARE
 								cont$   CLOB;
 								BEGIN
@@ -671,25 +604,17 @@ class SqlOracle extends Sql implements ISql
         switch (strtolower($bandera)) {
             case "pk":
                 $sql2 = "SELECT LAST_NUMBER AS ULTIMO FROM all_sequences WHERE sequence_owner=upper('" . USER . "') AND sequence_name='" . $aux . "_SEQ'";
-                $this->filas = 0;
-                $siguiente = $this->Ejecutar_Sql($sql2);
+                $siguiente = $this->query($sql2);
 
-                if ($this->filas) {
-                    $fila_seq = $this->sacar_fila($siguiente);
-                    if ($fila_seq) {
-                        $inicio = $fila_seq["ultimo"];
-                    }
-
-                    $dato = "DROP SEQUENCE " . $aux . "_SEQ";
-                    guardar_traza($dato, $nombre_tabla);
-                    $this->Ejecutar_sql($dato);
-                } else {
-                    $inicio = 1;
+                $fila_seq = $this->sacar_fila($siguiente);
+                if ($fila_seq) {
+                    $inicio = $fila_seq["ultimo"];
                 }
-                // $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
-                // guardar_traza($dato, $nombre_tabla);
-                // $this->Ejecutar_sql($dato);
-                $this->filas = 0;
+
+                $dato = "DROP SEQUENCE " . $aux . "_SEQ";
+                guardar_traza($dato, $nombre_tabla);
+                $this->Ejecutar_sql($dato);
+
                 if ($this->verificar_existencia($nombre_tabla) && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo)) {
                     $dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
                     guardar_traza($dato, $nombre_tabla);
@@ -704,7 +629,6 @@ class SqlOracle extends Sql implements ISql
                 $this->Ejecutar_sql($dato);
                 break;
             case "u":
-                $this->filas = 0;
                 if ($this->verificar_existencia($nombre_tabla)) {
                     $dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
                     guardar_traza($dato, $nombre_tabla);
@@ -751,7 +675,7 @@ class SqlOracle extends Sql implements ISql
                         $sql .= " NOT NULL)";
                     }
                     guardar_traza($sql, $formato[0]["nombre_tabla"]);
-                    $this->Ejecutar_Sql($sql);
+                    $this->query($sql);
                 }
             }
 
@@ -773,7 +697,7 @@ class SqlOracle extends Sql implements ISql
                         }
                     }
                     guardar_traza($dato, $formato[0]["nombre_tabla"]);
-                    $this->Ejecutar_Sql($dato);
+                    $this->query($dato);
                 }
             }
         }
@@ -816,7 +740,7 @@ class SqlOracle extends Sql implements ISql
             if ($this->verificar_existencia($tabla)) {
                 $sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY DROP INDEX ";
                 guardar_traza($sql, strtolower($tabla));
-                $this->Ejecutar_Sql($sql);
+                $this->query($sql);
                 echo ($sql . "<br />");
             }
         }
@@ -824,14 +748,14 @@ class SqlOracle extends Sql implements ISql
             if ($this->verificar_existencia($tabla)) {
                 $sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"] . " DROP INDEX ";
                 guardar_traza($sql, strtolower($tabla));
-                $this->Ejecutar_Sql($sql);
+                $this->query($sql);
                 echo ($sql . "<br />");
             }
         }
         if ($campo["Key_name"] == "NONUNIQUE") {
             $sql = "DROP INDEX " . $campo["Column_name"];
             guardar_traza($sql, strtolower($tabla));
-            $this->Ejecutar_Sql($sql);
+            $this->query($sql);
             echo ($sql . "<br />");
         }
         return;

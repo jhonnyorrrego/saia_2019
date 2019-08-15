@@ -9,24 +9,27 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
-include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 
+include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'pantallas/generador/librerias_pantalla.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_componentes.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . 'arboles/crear_arbol_ft.php';
 
 $idpantalla = 0;
-$idencabezadoFormato = 0;
+$idencabezadoFormato = 0; 
 $contenidoEncabezado = 0;
 $contenidoPie = 0;
 $ocultarTexto = 0;
 $publicar = 0;
+
 if ($_REQUEST["idformato"]) {
     include_once $ruta_db_superior . "pantallas/generador/librerias.php";
     $idpantalla = $_REQUEST["idformato"];
     $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idpantalla)) . "')";
     $camposFormato = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $_REQUEST['idformato'] . " and etiqueta_html<>'campo_heredado' " . $camposNucleo . "", "A.orden", $conn);
-    if($camposFormato['numcampos']){
+    if ($camposFormato['numcampos']) {
         $ocultarTexto = 1;
     }
     $consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina,publicar,nombre", "formato f", "idformato=" . $idpantalla, "", $conn);
@@ -48,147 +51,131 @@ if ($_REQUEST["idformato"]) {
     }
 }
 
+/////////////////////////////////////////// Configuracion del arbol /////////////////////////////////////////////////////
+
+$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['idformato'], "cargar_seleccionado" => 1));
+$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
+$extensiones = array("filter" => array());
+$arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones, $validaciones);
+
 ?>
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Generador Pantallas SAIA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
-    ul.fancytree-container {
-        width: 50%;
-        overflow: auto;
-        position: relative;
-        border: none;
-    }
+    <link href="<?php echo ($ruta_db_superior); ?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
 
-    </style>
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= jqueryUi() ?>
+    <?= icons() ?>
+    <?= validate()?> 
+    <?= librerias_highslide()?>
+    <?= librerias_arboles_ft("2.24", 'filtro') ?>
+    <?= librerias_notificaciones() ?>
+    <?= librerias_validar_formulario() ?>
+    <?= librerias_tooltips()?>
     <?php
-echo estilo_bootstrap();
-echo librerias_jquery("1.8.3");
-echo librerias_acciones_kaiten();
-echo librerias_html5();
-include_once $ruta_db_superior . "assets/librerias.php";
 
-$campos = busca_filtro_tabla("", "pantalla_componente B", "nombre not in ('textarea_tiny')", "", $conn);
-$librerias_js = array();
-$librerias_jsh = array();
-for ($i = 0; $i < $campos["numcampos"]; $i++) {
-    $librerias = array_filter(array_map('trim', explode(",", $campos[$i]["librerias"])));
-    foreach ($librerias as $libreria) {
-        $extension = explode(".", $libreria);
-        $cant = count($extension);
-        if ($extension[$cant - 1] !== '') {
-            switch ($extension[($cant - 1)]) {
-                case "php":
-                    include_once($ruta_db_superior . $libreria);
-                    break;
-                case "js":
-                    array_push($librerias_js, $libreria);
-                    break;
-                case "js@h":
-                    $header = array_filter(explode("@", $libreria));
-                    if (!empty($header) && !in_array($header[0], $librerias_jsh)) {
-                        array_push($librerias_jsh, $header[0]); 
-                        echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
-                    }
-                    break;
-                case "css":
-                    $texto = '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . $libreria . '"/>';
-                    break;
-                default:
-                    $texto = ""; // retorna un vacio si no existe el tipo
-                    break;
+
+    $campos = busca_filtro_tabla("", "pantalla_componente B", "nombre not in ('textarea_tiny')", "", $conn);
+    $librerias_js = array();
+    $librerias_jsh = array();
+
+    for ($i = 0; $i < $campos["numcampos"]; $i++) {
+        $librerias = array_filter(array_map('trim', explode(",", $campos[$i]["librerias"])));
+        foreach ($librerias as $libreria) {
+            $extension = explode(".", $libreria);
+            $cant = count($extension);
+            if ($extension[$cant - 1] !== '') {
+                switch ($extension[($cant - 1)]) {
+                    case "php":
+                        include_once($ruta_db_superior . $libreria);
+                        break;
+                    case "js":
+                        array_push($librerias_js, $libreria);
+                        break;
+                    case "js@h":
+                        $header = array_filter(explode("@", $libreria));
+                        if (!empty($header) && !in_array($header[0], $librerias_jsh)) {
+                            array_push($librerias_jsh, $header[0]);
+                            echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
+                        }
+                        break;
+                    case "css":
+                        $texto = '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . $libreria . '"/>';
+                        break;
+                    default:
+                        $texto = ""; // retorna un vacio si no existe el tipo
+                        break;
+                }
+                echo $texto;
             }
-            echo $texto;
         }
     }
-}
 
-?>
+    ?>
 
-    <link href="<?php echo ($ruta_db_superior); ?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
-    <style>
-    .well {
-        margin-bottom: 3px;
-        min-height: 11px;
-        padding: 4px;
-    }
-
-    .progress {
-        margin-bottom: 0px;
-    }
-
-    #tabs_formulario,
-    #tabs_opciones {
-        margin-bottom: 0px;
-    }
-
-    .tab-content {
-        padding-top: 0px;
-    }
-
-    .nav-tabs>li>a {
-        background: #fff !important;
-    }
-
-    #droppable {
-        width: 85%;
-        padding: 0.5em;
-        float: left;
-        margin: 10px;
-        margin-bottom: 20px;
-        border: 1px dashed #48b0f7;
-    }
-    #droppable ul{
-       list-style:none;
-       }
-
-    </style>
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
+
 </head>
 
 <body>
 
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span9">
-                <div class="tabbable"><br>
+    <div class="container-fluid mx-4 px-0">
+        <div class="row">
+
+
+            <div class="col-12 col-sm-12 col-md-3 col-lg-2 mx-0">
+                <div class="section">
+                    <div class="col-12 px-0 mb-2">
+                        <?= $arbol->generar_html() ?>
+                    </div>
+                </div>
+                <script src="js/funciones_arbol.js"></script>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-9 col-lg-9 pl-1" id="contenedor_generador" style="border-left:1px solid #eee;">
+
+                <div class="tabbable section">
+
                     <ul class="nav nav-tabs" id="tabs_formulario">
-                        <li style="width:100px;" id="pantalla_principal">
-                            <a href="#datos_formulario-tab" data-toggle="tab"
-                                style="text-align:center;">Informaci&oacute;n</a>
-                                <div class="progress-circle-indeterminate"></div>
+                        <li style="width:225px;" class="button_tab_formulario active" id="pantalla_principal">
+                            <a href="#datos_formulario-tab" data-toggle="tab" id="nav-active" style="text-align:center;">Paso 1. Informaci&oacute;n</a>
+                             
                         </li>
-                        <li style="width:100px;" id="generar_formulario_pantalla">
-                            <a href="#formulario-tab" data-toggle="tab" style="text-align:center;">Campos</a>
+                        <li style="width:225px" class="button_tab_formulario" id=" generar_formulario_pantalla">
+                            <a href="#formulario-tab" data-toggle="tab" style="text-align:center;">
+                                <center>Paso 2. Campos</center>
+                            </a>
                         </li>
                         <!-- <li>
-                			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
-						</li> -->
-                        <li style="width:100px;" id="diseno_formulario_pantalla">
-                            <a href="#pantalla_mostrar-tab" data-toggle="tab" style="text-align:center;">Dise&ntilde;o</a>
+                                <a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
+                            </li> -->
+                        <li style="width:225px" class="button_tab_formulario" id=" diseno_formulario_pantalla">
+                            <a href="#pantalla_mostrar-tab" data-toggle="tab" style="text-align:center;">Paso 3. Dise&ntilde;o</a>
                         </li>
-                        <li style="width:110px;" id="vista_formulario_pantalla">
+                        <li style="width:225px;" class="button_tab_formulario" id=" vista_formulario_pantalla">
                             <a href="#pantalla_previa-tab" data-toggle="tab" style="text-align:center;">Vista previa</a>
                         </li>
-                        <li style="width:100px;" id="vista_formulario_permisos">
-                            <a href="#pantalla_previa-permiso" data-toggle="tab" style="text-align:center;">Permisos</a>
-                        </li>
                         <!-- li>
-							<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
-						</li -->
+                                <a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
+                            </li -->
                         <!--<li>
-									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
-						</li>-->
+                                        <a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
+                            </li>-->
                         <!--li>
-									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
-								</li-->
+                                    <a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
+                                </li-->
                         <li>
                             <!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
                             <div class="container-fluid">
-                                <div class="row" class="span3 offset2" style="float:left">
-                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span  style="color:fff; background: #48b0f7;">Siguiente</span></button>
+                                <div class="row" class="col-3 offset2" style="float:left">
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_basico"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="vista_previa" id="cambiar_vista"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>
@@ -202,389 +189,252 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             </div>
                         </li>
                     </ul>
+
+
+
+                    
+
+
+
+
                     <div class="tab-content">
-                        <div class="tab-pane" id="formulario-tab">                       
-                            <div id="droppable" class="ui-widget-header">                            
-								<ul id="list">
-                                    <li id="list_one" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Arrastre los campos aquí</li>
-                                <?php
-								$formatosCampo = load_pantalla($idpantalla);
-								if($formatosCampo) : ?>
-                                    <?= $formatosCampo;  ?>
-                                <?php endif; ?>
-								</ul>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="pantalla_previa-tab"></div>
-                        <div class="tab-pane" id="pantalla_previa-permiso">
-                        
-                        <h5 class="title">Permisos del formato a:</h5><br>
-                        <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>">
-                            <?= consultarPermisosPerfil($consulta_formato[0]['nombre']); ?>
-                             <div class="control-group">
-                                <div class="controls">
-                                    <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
-                                    <!--<button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="nuevo_formato"><i class="fa fa-plus"></i> Nuevo</button>-->
-
-                                </div>
-                               
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="datos_formulario-tab">
-                            <?php
-                                include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php';
-                            ?>
-                        </div>
-                        
-                        <div class="tab-pane" id="pantalla_mostrar-tab"><br>
-                            <h5 class="title">Encabezado del formato</h5><br>
-                            <select name="sel_encabezado" id="sel_encabezado">
-                                <option value="0">Por favor Seleccione</option>
-                                <?php
-									$encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
-									$contenido_enc = array();
-									$etiqueta_enc = array();
-
-									if ($idpantalla) {
-										$idencabezado = $idencabezadoFormato;
-										$etiqueta_encabezado = json_encode($consultaEncabezado[0]['etiqueta']);
-									} else {
-										$idencabezado = 0;
-										$etiqueta_encabezado = "";
-									}
-
-									for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
-										$contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
-										$etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
-										echo ("<option value='" . $encabezados[$i]["idencabezado_formato"] . "'");
-										if ($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
-											$idencabezado = $encabezados[$i]["idencabezado_formato"];
-											$etiqueta_encabezado = $encabezados[$i]["etiqueta"];
-											echo (' selected="selected" ');
-										}
-										echo (">" . $encabezados[$i]["etiqueta"] . "</option>");
-									}
-								?>
-                            </select>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_encabezado"
-                                id="crear_encabezado">
-                                <i class="fa fa-plus-circle"></i>
-                            </span>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_encabezado"
-                                id="adicionar_encabezado">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;"
-                                <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">
-                                <i class="fa fa-trash"></i>
-                            </span>
-                            <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
-                                <input type="hidden" name="idencabezado" id="idencabezado"
-                                    value="<?php echo $idencabezado; ?>">
-                                <input type="hidden" name="idformato" id="idformato" value="<?php echo $idpantalla; ?>">
-                                <input type="hidden" name="accion_encab" id="accion_encabezado" value="1">
-                                <div id="div_etiqueta_encabezado">
-                                    <label style="display:none" for="etiqueta_encabezado">Etiqueta:
-                                        <input type="hidden" id="etiqueta_encabezado" name="etiqueta_encabezado"
-                                            value="<?php echo $etiqueta_encabezado; ?>"></label>
-                                </div>
-                                <div id="encabezado_formato" name="encabezado_formato" class="container-fluid">
-                                    <?php
-									if ($idencabezado) {
-										echo $contenido_enc[$idencabezado];
-									}
-									?>
-                                </div>
-                            </form>
-                            <h5 class="title">Cuerpo del formato</h5><br>
-                            <form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
-                                <textarea name="editor_mostrar" id="editor_mostrar" class="">
-									<?=$datos_formato[0]["cuerpo"];?>
-								</textarea>
-                                <script>
-                                var editor_mostrar = CKEDITOR.replace("editor_mostrar");
-                                </script>
-                            </form>
-                            <button style="background: #48b0f7;color:fff;float:right" class="btn btn-info"
-                                id="actualizar_cuerpo_formato"><span style="color:fff; background: #48b0f7;"> Guardar
-                                    cambios</span></button><br><br>
-                            <h5>Pie del formato :</h5><br>
-                            <select name="sel_pie_pagina" id="sel_pie_pagina">
-                                <option value="0">Por favor Seleccione</option>
-                                <?php
-        if ($idpantalla) {
-            $idpie = $idpie;
-            $etiqueta_pie = json_encode($consultaPie[0]['etiqueta']);
-        } else {
-            $idpie = 0;
-            $etiqueta_pie = "";
-        }
-        $pie_pagina = $encabezados; // No volver a consultar	
-        for ($i = 0; $i < $pie_pagina["numcampos"]; $i++) {
-            echo ("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
-            if ($pie_pagina[$i]["idencabezado_formato"] == $datos_formato[0]["pie_pagina"]) {
-                $idpie = $pie_pagina[$i]["idencabezado_formato"];
-                $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
-                echo (' selected="selected" ');
-            }
-            echo (">" . $pie_pagina[$i]["etiqueta"] . "</option>");
-        }
-        ?>
-                            </select>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_pie"
-                                id="crear_pie">
-                                <i class="fa fa-plus-circle"></i>
-                            </span>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_pie"
-                                id="adicionar_pie">
-                                <i class="fa fa-edit"></i>
-                            </span>
-                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;"
-                                <?php echo ($idpie ? "" : "disabled"); ?> id="eliminar_pie">
-                                <i class="fa fa-trash"></i>
-                            </span>
-                            <form name="formulario_editor_pie" id="formulario_editor_pie" action="" style="">
-                                <input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie; ?>">
-
-                                <div id="div_etiqueta_pie">
-                                    <label style="display:none" for="etiqueta_pie">Etiqueta: </label>
-                                    <input type="hidden" id="etiqueta_pie" name="etiqueta_pie"
-                                        value="<?php echo $etiqueta_pie; ?>">
-                                </div>
-                                <div id="pie_formato" name="pie_formato"></div>
-
-                            </form><br>
-
-                            <script type="text/javascript">
-                            var encabezados = <?php echo json_encode($contenido_enc); ?>;
-                            var idencabezado = <?php echo $idencabezadoFormato; ?>;
-                            var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
-                            </script>
-                        </div>
-                        <div class="tab-pane" id="pantalla_listar-tab">
-                            <form name="formulario_editor_listar" id="formulario_editor_listar" action=""> <br />
-                                <div id="tipo_listar">Por favor seleccione un tipo de visualizaci&oacute;n:
-                                    <select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
-                                        <option value="0">Por favor seleccione</option>
-                                        <?php
-        $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
-        for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
-            echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
-        }
-        ?>
-                                    </select>
-                                    <?php if ($tipo_listado["numcampos"]) { ?>
-                                    <div width="100%" id="frame_tipo_listado"></div>
-                                    <?php 
-    }
-    ?>
-                                </div>
-                            </form>
-                        </div>
                         <div class="tab-pane" id="librerias_formulario-tab">
                             <div id="configurar_libreria_pantalla"></div>
                             <div id="librerias_en_uso"></div>
                         </div>
+
+
                         <div class="tab-pane" id="asignar_funciones-tab">
                             <?php include_once "asignar_funciones.php"; ?>
                         </div>
 
                         <div class="tab-pane" id="generar_formulario-tab">
-                            <div class="accordion" id="acordion_generar">
-                                <!-- div class="accordion-group">
-							<div class="accordion-heading">
-								<input type="checkbox" checked="true"class="pull-left check_genera" value="version">
-								<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_version_pantalla">
-									Crear versi&oacute;n archivos
-								</a>
-							</div>
-							<div id="generar_version_pantalla" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div-->
-                                <!-- div class="accordion-group">
-									    <div class="accordion-heading">
-                        <input type="checkbox" checked="true"class="pull-left check_genera"  value="clase">
-									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_clase">
-									      	Crear /actualizar Clase
-									      </a>
-									    </div>
-									    <div id="generar_clase" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div-->
-                                <!-- <div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="tabla">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_tabla">
-									      	Crear /actualizar tablas
-									      </a>
-									    </div>
-									    <div id="generar_tabla" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div> -->
-                                <!-- div class="accordion-group">
-									    <div class="accordion-heading">
-                        <input type="checkbox" checked="true"class="pull-left check_genera" value="librerias">
-									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_pantalla_libreria">
-									      	Crear /actualizar librerias
-									      </a>
-									    </div>
-									    <div id="generar_pantalla_libreria" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div-->
-                                <!-- <div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="adicionar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_adicionar">
-									      	Crear archivo adicionar
-									      </a>
-									    </div>
-									    <div id="generar_adicionar" class="accordion-body collapse generador_pantalla">
-									      <div class="accordion-inner">
-									      </div>
-									    </div>
-										</div>  -->
-                                <!-- <div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true" class="pull-left check_genera" value="editar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_editar">
-									      	Crear archivo editar
-									      </a>
-									    </div>
-									    <div id="generar_editar" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div>  -->
-                                <!--  div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="eliminar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_eliminar">
-									      	Crear archivo eliminar
-									      </a>
-									    </div>
-									    <div id="generar_eliminar" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div-->
-                                <!-- <div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="mostrar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_mostrar">
-									      	Crear archivo mostrar
-									      </a>
-									    </div>
-									    <div id="generar_mostrar" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div>  -->
 
-                                <!-- <div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="buscar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_buscar">
-									      	Crear archivo buscar
-									      </a>
-									    </div>
-									    <div id="generar_buscar" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div>  -->
-                                <!-- div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="listar">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_listar">
-									      	Crear archivo listar
-									      </a>
-									    </div>
-									    <div id="generar_listar" class="accordion-body collapse generador_pantalla">
-								<div class="accordion-inner"></div>
-									    </div>
-										</div -->
-                                <!-- div class="accordion-group">
-									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="modulo">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_modulo">
-									      	Generar m&oacute;dulo
-									      </a>
-									    </div>
-									    <div id="generar_modulo" class="accordion-body collapse generador_pantalla">
-									      <div class="accordion-inner">
-									        Generar el m&oacute;dulo vinculado con la pantalla que direcciona a la b&uacute;squeda
-									      </div>
-									    </div>
-										</div-->
+                            <div class="accordion" id="acordion_generar">
+
                             </div>
                             <!--<div >
-                    <button id="generar_pantalla" class="btn btn-primary">Generar<span id="cargando_generar_pantalla"></span></button>
-                  </div>-->
+                                    <button id="generar_pantalla" class="btn btn-primary">Generar<span id="cargando_generar_pantalla"></span></button>
+                                </div>-->
                         </div>
                     </div>
                 </div>
+
+
+
+                <div class="tab-pane" id="datos_formulario-tab">
+                    <?php
+                    include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php';
+                    ?>
+                </div>
+
+
+
             </div>
-            <div class="span3">
-                <div class="tabbable" id="componentes_acciones">
-                    <ul class="nav" id="tabs_opciones">
-                        <li class="active invisible" id="componente_tab">
-                            <a href="#componentes-tab" data-toggle="tab">Componentes</a>
-                        </li>
-                        <!--<li>
-									<a href="#archivos-tab" data-toggle="tab">Archivos</a>
-								</li>
-								<li>
-									<a href="#includes-tab" data-toggle="tab">S</a>
-								</li-->
-                        <!--<li>
-									<a href="#acciones-tab" data-toggle="tab">Acciones</a>
-								</li>-->
-                        <li id="funciones_tab" class="invisible">
-                            <a href="#funciones-tab" data-toggle="tab">Funciones</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="contenidos_componentes">
-                        <div class="tab-pane active" id="componentes-tab" style="overflow:auto;">
-                        </div>
-                        <div class="tab-pane" id="archivos-tab">
-                            <input type="hidden" name="ruta_archivo_actual" id="ruta_archivo_actual" value="">
-                            <div id="esperando_archivo">
-                                <img src="<?php echo ($ruta_db_superior); ?>assets/images/cargando.gif">
-                            </div>
-                            <div id="treeboxbox_tree3" class="arbol_saia"></div>
-                        </div>
-                        <div class="tab-pane" id="librerias-tab">
-                        </div>
-                        <div class="tab-pane" id="funciones-tab">
-                            <input type="hidden" name="idpantalla_funcion_exe" id="idpantalla_funcion_exe">
-                            <input type="hidden" name="nombre_funcion_insertar" id="nombre_funcion_insertar">
-                            <div id="funciones_desplegables" style="height:90%;"></div>
-                        </div>
 
-                    </div>
+            
+            <div class="tab-pane" id="pantalla_mostrar-tab"><br>
 
-                </div>
+
+<h5 class="title">Encabezado del formato</h5><br>
+<select name="sel_encabezado" id="sel_encabezado">
+    <option value="0">Por favor Seleccione</option>
+    <?php
+    $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
+    $contenido_enc = array();
+    $etiqueta_enc = array();
+
+    if ($idpantalla) {
+        $idencabezado = $idencabezadoFormato;
+        $etiqueta_encabezado = json_encode($consultaEncabezado[0]['etiqueta']);
+    } else {
+        $idencabezado = 0;
+        $etiqueta_encabezado = "";
+    }
+
+    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+        $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
+        $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
+        echo ("<option value='" . $encabezados[$i]["idencabezado_formato"] . "'");
+        if ($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
+            $idencabezado = $encabezados[$i]["idencabezado_formato"];
+            $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
+            echo (' selected="selected" ');
+        }
+        echo (">" . $encabezados[$i]["etiqueta"] . "</option>");
+    }
+    ?>
+</select>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_encabezado" id="crear_encabezado">
+    <i class="fa fa-plus-circle"></i>
+</span>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_encabezado" id="adicionar_encabezado">
+    <i class="fa fa-edit"></i>
+</span>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">
+    <i class="fa fa-trash"></i>
+</span>
+<form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
+    <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado; ?>">
+    <input type="hidden" name="idformato" id="idformato" value="<?php echo $idpantalla; ?>">
+    <input type="hidden" name="accion_encab" id="accion_encabezado" value="1">
+    <div id="div_etiqueta_encabezado">
+        <label style="display:none" for="etiqueta_encabezado">Etiqueta:
+            <input type="hidden" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado; ?>"></label>
+    </div>
+    <div id="encabezado_formato" name="encabezado_formato" class="container-fluid">
+        <?php
+        if ($idencabezado) {
+            echo $contenido_enc[$idencabezado];
+        }
+        ?>
+    </div>
+</form>
+<h5 class="title">Cuerpo del formato</h5><br>
+<form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
+    <textarea name="editor_mostrar" id="editor_mostrar" class="">
+<?= $datos_formato[0]["cuerpo"]; ?>
+</textarea>
+    <script>
+        var editor_mostrar = CKEDITOR.replace("editor_mostrar");
+    </script>
+</form>
+<button style="background: #48b0f7;color:fff;float:right" class="btn btn-info" id="actualizar_cuerpo_formato"><span style="color:fff; background: #48b0f7;"> Guardar
+        cambios</span></button><br><br>
+<h5>Pie del formato :</h5><br>
+<select name="sel_pie_pagina" id="sel_pie_pagina">
+    <option value="0">Por favor Seleccione</option>
+    <?php
+    if ($idpantalla) {
+        $idpie = $idpie;
+        $etiqueta_pie = json_encode($consultaPie[0]['etiqueta']);
+    } else {
+        $idpie = 0;
+        $etiqueta_pie = "";
+    }
+    $pie_pagina = $encabezados; // No volver a consultar	
+    for ($i = 0; $i < $pie_pagina["numcampos"]; $i++) {
+        echo ("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
+        if ($pie_pagina[$i]["idencabezado_formato"] == $datos_formato[0]["pie_pagina"]) {
+            $idpie = $pie_pagina[$i]["idencabezado_formato"];
+            $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
+            echo (' selected="selected" ');
+        }
+        echo (">" . $pie_pagina[$i]["etiqueta"] . "</option>");
+    }
+    ?>
+</select>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_pie" id="crear_pie">
+    <i class="fa fa-plus-circle"></i>
+</span>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_pie" id="adicionar_pie">
+    <i class="fa fa-edit"></i>
+</span>
+<span style="cursor:pointer;font-size:18px;margin-left: 5px;" <?php echo ($idpie ? "" : "disabled"); ?> id="eliminar_pie">
+    <i class="fa fa-trash"></i>
+</span>
+<form name="formulario_editor_pie" id="formulario_editor_pie" action="" style="">
+    <input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie; ?>">
+
+    <div id="div_etiqueta_pie">
+        <label style="display:none" for="etiqueta_pie">Etiqueta: </label>
+        <input type="hidden" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie; ?>">
+    </div>
+    <div id="pie_formato" name="pie_formato"></div>
+
+</form><br>
+
+<script type="text/javascript">
+    var encabezados = <?php echo json_encode($contenido_enc); ?>;
+    var idencabezado = <?php echo $idencabezadoFormato; ?>;
+    var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
+</script>
+</div>
+<div class="tab-pane" id="pantalla_listar-tab">
+<form name="formulario_editor_listar" id="formulario_editor_listar" action=""> <br />
+    <div id="tipo_listar">Por favor seleccione un tipo de visualizaci&oacute;n:
+        <select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
+            <option value="0">Por favor seleccione</option>
+            <?php
+            $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
+            for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
+                echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
+            }
+            ?>
+        </select>
+        <?php if ($tipo_listado["numcampos"]) { ?>
+            <div width="100%" id="frame_tipo_listado"></div>
+        <?php
+        }
+        ?>
+    </div>
+</form>
+</div>
+<div class="tab-pane" id="librerias_formulario-tab">
+<div id="configurar_libreria_pantalla"></div>
+<div id="librerias_en_uso"></div>
+</div>
+<div class="tab-pane" id="asignar_funciones-tab">
+<?php include_once "asignar_funciones.php"; ?>
+</div>
+
+<div class="tab-pane" id="generar_formulario-tab">
+<div class="accordion" id="acordion_generar">
+
+</div>
+
+</div>
+
+<div class="span3">
+<div class="tabbable" id="componentes_acciones">
+    <ul class="nav" id="tabs_opciones">
+        <li class="active invisible" id="componente_tab">
+            <a href="#componentes-tab" data-toggle="tab">Componentes</a>
+        </li>
+
+        <li id="funciones_tab" class="invisible">
+            <a href="#funciones-tab" data-toggle="tab">Funciones</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="contenidos_componentes">
+        <div class="tab-pane active" id="componentes-tab" style="overflow:auto;">
+        </div>
+        <div class="tab-pane" id="archivos-tab">
+            <input type="hidden" name="ruta_archivo_actual" id="ruta_archivo_actual" value="">
+            <div id="esperando_archivo">
+                <img src="<?php echo ($ruta_db_superior); ?>assets/images/cargando.gif">
+            </div>
+            <div id="treeboxbox_tree3" class="arbol_saia"></div>
+        </div>
+        <div class="tab-pane" id="librerias-tab">
+        </div>
+
+        <div class="tab-pane" id="funciones-tab">
+            <input type="hidden" name="idpantalla_funcion_exe" id="idpantalla_funcion_exe">
+            <input type="hidden" name="nombre_funcion_insertar" id="nombre_funcion_insertar">
+            <div id="funciones_desplegables" style="height:90%;">
             </div>
         </div>
     </div>
+</div>
+</div>
+
+
+
 
 </body>
 
 </html>
-<?php
-echo librerias_highslide();
-echo librerias_UI("1.12");
-echo librerias_bootstrap();
-echo librerias_notificaciones();
-echo librerias_validar_formulario();
-echo librerias_arboles();
-echo librerias_tooltips();
-include_once $ruta_db_superior . "assets/librerias.php";
 
+<?php
+
+//// Aqui estaban los llamados a librerias viejas /////////////////////////////////////
 
 echo icons();
 $cant_js = count($librerias_js);
 $incluidas = array();
+
 for ($i = 0; $i < $cant_js; $i++) {
     if (!in_array($librerias_js[$i], $librerias_jsh) && !in_array($librerias_js[$i], $incluidas) && !empty($librerias_js[$i])) {
         array_push($incluidas, $librerias_js[$i]);
@@ -592,12 +442,10 @@ for ($i = 0; $i < $cant_js; $i++) {
     }
 }
 ?>
-<!--script src="<?php echo ($ruta_db_superior) ?>pantallas/generador/editor/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?php echo ($ruta_db_superior) ?>pantallas/generador/editor/ext-language_tools.js"></script-->
 
-
-<script type="text/javascript">
-$(document).ready(function() {
+ <script>
+    
+    $(document).ready(function() {
     /*$("#nuevo_formato").click(function() {
 		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
 	});*/
@@ -619,7 +467,8 @@ $(document).ready(function() {
                 }
             }
         }
-    });
+    }); 
+    
     var idpantalla = "<?php echo $idpantalla ?>";
     $("#cambiar_vista").hide();
     $("#generar_pantalla").hide();
@@ -650,9 +499,9 @@ $(document).ready(function() {
                     }else{
                         $("#diseno_formulario_pantalla").removeClass("disabled");
                         $("#generar_formulario_pantalla").next().find("a").trigger("click");
-                    }
+                    } 
                 }
-               
+                
             }
         });
        
@@ -676,7 +525,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response) {
                     var objeto = jQuery.parseJSON(response);
-                    if (objeto.exito) {
+                    if (objeto.exito) { 
                         $("#diseno_formulario_pantalla").removeClass("disabled");
                         $("#generar_formulario_pantalla").next().find("a").trigger("click");
                         generar_pantalla("full");
@@ -707,8 +556,11 @@ $(document).ready(function() {
             $("#cambiar_nav_basico").hide();
             $("#cambiar_nav").hide();
         }
-        
-        $('#componentes_acciones').show();
+
+        //////////////////////// Maximizar la pantalla inicial del generador de formatos ////////////////////////////
+        maximizar_pantalla();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         var contenidoPie = <?php echo $contenidoPie ?>;
         var contenidoEncabezado = <?php echo $contenidoEncabezado ?>;
         if (contenidoEncabezado) {
@@ -769,7 +621,7 @@ $(document).ready(function() {
         });
     }
 
-
+ 
     $(document).on("click", "#funcionesPropias", function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
         var funcion = $(this).attr("name");
@@ -1442,11 +1294,10 @@ $(document).ready(function() {
         hs.htmlExpand(null, opciones);
     });
 
-   
-
     $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
         e.preventDefault();
     });
+
     $("#list").droppable({
             accept: '.component',
             hoverClass: 'content-hover',
@@ -1489,36 +1340,7 @@ $(document).ready(function() {
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.setOnClickHandler(cargar_editor);
     tree3.enableThreeStateCheckboxes(true);
-    /*function cargar_archivo(ruta_archivo){
-    	if(ruta_archivo!=''){
-    		$.ajax({
-          type:'POST',
-          url: '<?php echo ($ruta_db_superior); ?>pantallas/lib/convertir_archivo_a_texto.php',
-          data:'ruta='+ruta_archivo+"&accion=cargar",
-          success: function(html){
-            if(html){
-            	var objeto=jQuery.parseJSON(html);
-              if(objeto.exito){
-                var re = /(?:\.([^.]+))?$/;
-                var extension=re.exec(ruta_archivo)[1];
-                if(extension=='undefined'){
-                  extension='php';
-                }
-                else if(extension=="js"){
-                  extension="javascript";
-                }
-                editor.getSession().setMode("ace/mode/"+extension);
-              	editor.setValue(objeto.codigo_html);
-              	$("#acciones_archivo-tab").show();
-              	$("#ruta_archivo_actual").val(ruta_archivo);
-              	notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
-
-              }
-          	}
-          }
-      	});
-      }
-    } */
+    
     function cargar_editor(nodeId) {
 
         var ruta_archivo = tree3.getUserData(nodeId, "myurl");
@@ -1575,6 +1397,8 @@ $(document).ready(function() {
         $("#componentes_acciones").show();
         var id = e.target.toString().split("#");
 
+        alert(id); 
+
         switch (id[1]) {
             case 'archivos-tab':
                 $('#tabs_formulario a[href="#librerias_formulario-tab"]').tab('show');
@@ -1589,6 +1413,7 @@ $(document).ready(function() {
                 }
             break;
             case 'pantalla_previa-tab':
+                maximizar_pantalla();
                 $('#cambiar_vista').hide();
                 $('#cambiar_nav').hide();
                 $('#enviar_datos_formato').hide();
@@ -1620,6 +1445,7 @@ $(document).ready(function() {
                 });
                 break;
              case 'pantalla_previa-permiso':
+                maximizar_pantalla();
                 $('#cambiar_nav').hide();
                 $('#enviar_datos_formato').hide();
                 $('#cambiar_vista').hide();
@@ -1686,6 +1512,7 @@ $(document).ready(function() {
                 });
                 break;
             case 'pantalla_mostrar-tab':
+                minimizar_pantalla();
                 if(publicar!=1){
                      //$("#generar_pantalla").trigger("click");
                 }else{
@@ -1711,6 +1538,7 @@ $(document).ready(function() {
                 $('#tabs_formulario a[href="#formulario-tab"]').tab('show');
                 break;
             case 'formulario-tab':
+                minimizar_pantalla();
                 tab_acciones = false;
                 $('#tabs_opciones a[href="#componentes-tab"]').tab('show');
                 $('#componente_tab').show();
@@ -1727,6 +1555,7 @@ $(document).ready(function() {
                 }
                 break;
             case 'datos_formulario-tab':
+                maximizar_pantalla();
                 tab_acciones = false;
                 $('#componentes_acciones').hide();
                 $('#enviar_datos_formato').show();
@@ -1735,7 +1564,6 @@ $(document).ready(function() {
                 $("#cambiar_nav_basico").hide();
                 $('#generar_pantalla').hide();
                 $('#cambiar_nav_permiso').hide();
-
                 break;
             case 'librerias_formulario-tab':
                 tab_acciones = false;
@@ -1925,6 +1753,17 @@ $(document).ready(function() {
     }
 
     window.addEventListener("message", receiveMessage, false);
+
+    function maximizar_pantalla(){
+        $("#contenedor_generador").removeClass('col-6');
+        $("#contenedor_generador").addClass('col-10');
+    }
+
+    function minimizar_pantalla(){a
+        $("#contenedor_generador").removeClass('col-10');
+        $("#contenedor_generador").addClass('col-6');
+    }
+
 }); //Fin Document ready
 /*
 function generar_archivos_ignorados(){
@@ -1934,4 +1773,5 @@ function generar_archivos_ignorados(){
     data:'ejecutar_libreria_pantalla=generar_archivos_ignorados&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)
 	});
 }*/
-</script>
+    
+    </script>

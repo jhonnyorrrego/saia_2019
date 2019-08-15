@@ -10,7 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once($ruta_db_superior."core/autoload.php");
+include_once($ruta_db_superior . "core/autoload.php");
 
 /**
  * En el valor de $campo_origen va el nombre del campo del formulario que se va a gestionar como origen. Nota(el campo del formulario solo puede tener un iddependencia_cargo o un iddatos_ejecutor)
@@ -29,7 +29,8 @@ include_once($ruta_db_superior."core/autoload.php");
  * @param $estado_distribucion (int) Establece si si se necesita Entrega (1-si, 3-no)
  * @param $estado_recogida (int) Establece si se necesita recogida (1-si, 0-no)
  */
-function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0){
+function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
+{
     global $conn;
 
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "", $conn);
@@ -53,7 +54,8 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
     }
 }
 
-function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0){
+function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
+{
     global $conn, $ruta_db_superior;
 
     /*
@@ -256,18 +258,18 @@ function buscar_dependencias_hijas_distribucion($iddependencia)
 }
 
 
-function accionFinalizarDistribucion($iddoc){
+function accionFinalizarDistribucion($iddoc)
+{
     global $conn;
     $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
     $retorno = false;
-    for($i=0; $i < $distribuciones["numcampos"]; $i++){
-        if(generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion'])){
+    for ($i = 0; $i < $distribuciones["numcampos"]; $i++) {
+        if (generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion'])) {
             $retorno = true;
             break;
         }
     }
     return $retorno;
-    
 }
 
 function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0)
@@ -279,30 +281,41 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
         $tabla = '
             <div class="row">
             <div class="col-md-12">
-            <table border="1" class="table table-bordered" style="width:100%;border-collapse: collapse;">
+            <table border="0" style="width:100%;border-collapse: collapse;">
                 <tr>
-                    <td style="text-align:center;"><b class="hint-text">NO. ITEM</b></td>
-                    <td style="text-align:center;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
-                    <td style="text-align:center;"><b class="hint-text">ORIGEN</b></td>
-                    <td style="text-align:center;"><b class="hint-text">DESTINO</b></td>
+                    <td style="width:15%;"><b class="hint-text">NO. ITEM</b></td>
+                    <td style="width:20%;"><b class="hint-text">TIPO DE ORIGEN</b></td>
+                    <td style="width:20%;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
+                    <td style="width:20%;"><b class="hint-text">ORIGEN</b></td>
+                    <td style="width:25%;"><b class="hint-text">DESTINO</b></td> 
+                </tr> 
+                <tr> 
+                    <td colspan=5 style="width:100%;" > <hr /></td>
                 </tr>
             ';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
-            $tabla .= '<tr>
-				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td style="text-align:center;" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>
-				<td style="text-align:center;"> 
+            $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
+
+            $tabla .= '
+                <tr> 
+                <td style="width:15%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
+                <td style="width:20%;"> ' . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . '</td>
+				<td style="width:20%" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>	
+				<td style="width:20%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . '
 				</td>
-				<td style="text-align:center;"> 
+				<td style="width:25%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . '
 				</td>
-			</tr>';
+            </tr>
+            <tr>
+                    <td colspan=5 style="width:100%;" > <hr /></td>
+                </tr>';
         }
 
         $tabla .= '</table></div></div>';
@@ -320,7 +333,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
     global $conn, $ruta_db_superior;
 
     $html = '';
-   /* if ($js) {
+    /* if ($js) {
         $html = '
 		<script>
                     $(document).ready(function(){
@@ -388,7 +401,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 //REPORTE DE DISTRIBUCION
 
 function ver_documento_distribucion($iddocumento, $tipo_origen)
-{//Radicado
+{ //Radicado
     global $conn;
 
     $cadena_fecha_obtener = fecha_db_obtener('a.fecha', 'Y-m-d') . " AS fecha";
@@ -407,8 +420,9 @@ function ver_documento_distribucion($iddocumento, $tipo_origen)
 
     return ($enlace_documento);
 }
+
 function ver_documento_planilla($iddocumento, $numero)
-{//Radicado
+{ //Radicado
     global $conn;
 
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $numero . '</button></center></div>';
@@ -416,7 +430,7 @@ function ver_documento_planilla($iddocumento, $numero)
     return ($enlace_documento);
 }
 function ver_estado_distribucion($estado_distribucion)
-{//Estado
+{ //Estado
     $array_estado_distribucion = array(
         'estado_distribucion' => 'Pendiente',
         0 => 'Pendiente',
@@ -427,7 +441,8 @@ function ver_estado_distribucion($estado_distribucion)
     return ($array_estado_distribucion[$estado_distribucion]);
 }
 
-function mostrar_diligencia_distribucion($tipo_origen, $estado_recogida){ //Diligencia
+function mostrar_diligencia_distribucion($tipo_origen, $estado_recogida)
+{ //Diligencia
     if ($estado_recogida == 'estado_recogida') {
         $estado_recogida = 0;
     }
@@ -450,7 +465,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
 }
 
 function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
-{//Ruta
+{ //Ruta
     global $conn;
     if ($estado_recogida == 'estado_recogida') {
         $estado_recogida = 0;
@@ -464,7 +479,7 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
 
     $idft_ruta_distribucion = $ruta_destino;
     //ENTREGA
-    if ($tipo_origen == 1 && !$estado_recogida) {//RECOGIDA
+    if ($tipo_origen == 1 && !$estado_recogida) { //RECOGIDA
         $idft_ruta_distribucion = $ruta_origen;
     }
 
@@ -476,14 +491,15 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         }
     }
 
-    if ($tipo_destino == 2 && $estado_recogida) {//DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
+    if ($tipo_destino == 2 && $estado_recogida) { //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
         $nombre_ruta_distribucion = 'Distribuci&oacute;n Externa';
     }
 
     return ($nombre_ruta_distribucion);
 }
 
-function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
+function select_mensajeros_ruta_distribucion($iddistribucion)
+{ //Mensajero
     global $conn;
 
     $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
@@ -491,46 +507,47 @@ function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
     $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
 
     switch ($diligencia) {
-        case 'RECOGIDA' :
-            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['mensajero_origen'], $datos_distribucion[0]['mensajero_destino'], 0,$iddistribucion,$diligencia);
+        case 'RECOGIDA':
+            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['mensajero_origen'], $datos_distribucion[0]['mensajero_destino'], 0, $iddistribucion, $diligencia);
             break;
         case 'ENTREGA':
-            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['ruta_destino'], $datos_distribucion[0]['mensajero_destino'], $datos_distribucion[0]['mensajero_empresad'],$iddistribucion,$diligencia);
+            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['ruta_destino'], $datos_distribucion[0]['mensajero_destino'], $datos_distribucion[0]['mensajero_empresad'], $iddistribucion, $diligencia);
             break;
     } //fin switch
 
     return ($select_mensajeros);
 }
 
-function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion,$diligencia){
+function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion, $diligencia)
+{
     global $conn;
     $html = '';
     if ($tipo_origen == 1) { //internos
-        if($diligencia=='RECOGIDA'){
-            if($mensajero_origen){
-                $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_origen=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
+        if ($diligencia == 'RECOGIDA') {
+            if ($mensajero_origen) {
+                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_origen=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "", $conn);
                 $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
-                $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
+                $html .= '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $datos_mensajero[0]['iddependencia_cargo'] . '-i">' . $nombre_mensajero . '</label>';
             } else {
                 $html .= '<label> No tiene mensajero asignado</label>';
             }
-        }elseif ($diligencia == 'ENTREGA'){
-            if($mensajero_destino && $tipo_destino==2){
-                $datos_mensajero=busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo","distribucion a, vfuncionario_dc b","a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=".$iddistribucion,"",$conn);
+        } elseif ($diligencia == 'ENTREGA') {
+            if ($mensajero_destino && $tipo_destino == 2) {
+                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "", $conn);
                 $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
-                $html .= '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$datos_mensajero[0]['iddependencia_cargo'].'-i">' . $nombre_mensajero . '</label>';
-            } elseif($empresa_transportadora && $tipo_destino==1){
+                $html .= '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $datos_mensajero[0]['iddependencia_cargo'] . '-i">' . $nombre_mensajero . '</label>';
+            } elseif ($empresa_transportadora && $tipo_destino == 1) {
                 $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
-                $html = '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$mensajero_destino.'-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
-            } else{
+                $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
+            } else {
                 $html .= '<label> No tiene mensajero asignado</label>';
             }
         }
-    } else {//externos
-        if($empresa_transportadora){
+    } else { //externos
+        if ($empresa_transportadora) {
             $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
-            $html = '<label id="select_mensajeros_ditribucion_'.$iddistribucion.'" valor="'.$mensajero_destino.'-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
-        }elseif ($mensajero_destino) {
+            $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
+        } elseif ($mensajero_destino) {
             $array_concat = array(
                 "nombres",
                 "' '",
@@ -538,12 +555,12 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             );
             $cadena_concat = concatenar_cadena_sql($array_concat);
             $mensajeros_externos = busca_filtro_tabla("iddependencia_cargo as id," . $cadena_concat . " AS nombre,cargo", "vfuncionario_dc", "iddependencia_cargo=" . $mensajero_destino, "", $conn);
-            if($mensajeros_externos[0]['cargo']=="Mensajero"){
-                $tipo_mensajero="i";
-            }else{
-                $tipo_mensajero="e";
+            if ($mensajeros_externos[0]['cargo'] == "Mensajero") {
+                $tipo_mensajero = "i";
+            } else {
+                $tipo_mensajero = "e";
             }
-            $html = '<label>' . $mensajeros_externos[0]['nombre'] . '-'.$tipo_mensajero.'</label>';
+            $html = '<label>' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
         } else { //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
             $html .= '<label> No tiene mensajero asignado</label>';
         }
@@ -551,17 +568,18 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
     //return $tipo_origen." - ".$tipo_destino." - ". $mensajero_origen." - ". $mensajero_destino." - ". $empresa_transportadora." - ". $iddistribucion." - ".$diligencia;
     return ($html);
 }
-function filtro_planilla_distribucion(){
-    if($_REQUEST['variable_busqueda']){
-        $variables=explode("|",$_REQUEST['variable_busqueda']);
-        $sql="iddocumento=".$variables[1];
+function filtro_planilla_distribucion()
+{
+    if ($_REQUEST['variable_busqueda']) {
+        $variables = explode("|", $_REQUEST['variable_busqueda']);
+        $sql = "iddocumento=" . $variables[1];
         return $sql;
-    }else{
+    } else {
         return '1=1';
     }
 }
 function mostrar_planilla_diligencia_distribucion($iddistribucion)
-{//Planilla Asociada
+{ //Planilla Asociada
     global $conn;
 
     $planillas = busca_filtro_tabla("b.iddocumento,b.numero", "ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c", "a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=" . $iddistribucion, "", $conn);
@@ -643,12 +661,12 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
     global $conn;
 
     $ubicacion = '';
-    if ($tipo == 1) {//iddependencia_cargo
+    if ($tipo == 1) { //iddependencia_cargo
         $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
         $ubicacion = $datos[0]['dependencia'] . '<br> ' . $datos[0]['cargo'] . '';
-    } else {//iddatos_ejecutor
+    } else { //iddatos_ejecutor
         $datos = busca_filtro_tabla("direccion,cargo,c.nombre", "ejecutor a, datos_ejecutor b, municipio c", "c.idmunicipio=b.ciudad AND a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
-        $ubicacion = $datos[0]['direccion'] . '<br/> ' .$datos[0]['nombre'];
+        $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['nombre'];
     }
     return ($ubicacion);
 }
@@ -657,10 +675,10 @@ function retornar_origen_destino_distribucion($tipo, $valor)
 {
     global $conn;
 
-    if ($tipo == 1) {//iddependencia_cargo
+    if ($tipo == 1) { //iddependencia_cargo
         $datos = busca_filtro_tabla("nombres,apellidos,login", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
         $nombre = $datos[0]['nombres'] . ' ' . $datos[0]['apellidos'] . ' (' . $datos[0]['login'] . ')';
-    } else {//iddatos_ejecutor
+    } else { //iddatos_ejecutor
         $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
         $nombre = $datos[0]['nombre'];
     }
@@ -690,9 +708,7 @@ function condicion_adicional_distribucion()
             } else {
                 $condicion_adicional .= " AND ( b.ventanilla_radicacion=" . $ventanilla_radicacion . " ) ";
             }
-        } else if ($es_mensajero['numcampos']) {
-
-        } else {
+        } else if ($es_mensajero['numcampos']) { } else {
             $condicion_adicional .= " AND ( 1=2 ) ";
             //la consulta sale vacia si no pertenece a dependencia ventanilla
         }
@@ -700,19 +716,19 @@ function condicion_adicional_distribucion()
 
     //FIN CONDICION VENTANILLA
     //FILTRO MENSAJERO
-    if (!$administrador_mensajeria && $es_mensajero['numcampos']) {//si no es un administrador filtramos como si fuera un mensajero
-        if ($es_mensajero['numcampos']) {//si es mensajero
+    if (!$administrador_mensajeria && $es_mensajero['numcampos']) { //si no es un administrador filtramos como si fuera un mensajero
+        if ($es_mensajero['numcampos']) { //si es mensajero
             $lista_roles_funcionarios = '';
             for ($i = 0; $i < $es_mensajero['numcampos']; $i++) {
                 $lista_roles_funcionarios .= $es_mensajero[$i]['iddependencia_cargo'];
                 if (($i + 1) != $es_mensajero['numcampos']) {
                     $lista_roles_funcionarios .= ',';
                 }
-            }//fin for rol funcionario mensajero
+            } //fin for rol funcionario mensajero
 
             $condicion_adicional .= $conector_mensajero . "  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(" . $lista_roles_funcionarios . ") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(" . $lista_roles_funcionarios . ") AND a.estado_recogida=1  ) ) " . $conector_final_mensajero;
         } //fin $es_mensajero mensajero
-    }// FIN: si no es un administrador filtramos como si fuera un mensajero
+    } // FIN: si no es un administrador filtramos como si fuera un mensajero
     //FIN FILTRO MENSAJERO
 
     if (@$_REQUEST['variable_busqueda']) {
@@ -722,7 +738,7 @@ function condicion_adicional_distribucion()
         //FILTRO POR VENTANILLA DE RADICACION
         if ($vector_variable_busqueda[0] == 'filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]) {
             $condicion_adicional .= " AND ( b.ventanilla_radicacion=" . $vector_variable_busqueda[1] . " )";
-        }//fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'
+        } //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'
         //FILTRO POR RUTA DE DISTRIBUCION
         if ($vector_variable_busqueda[0] == 'idft_ruta_distribucion' && $vector_variable_busqueda[1]) {
 
@@ -731,7 +747,7 @@ function condicion_adicional_distribucion()
 
             //CONDICION RUTA DESTINO
             $condicion_adicional .= " OR ( a.tipo_destino=1 AND a.ruta_destino=" . $vector_variable_busqueda[1] . " AND a.estado_recogida=1  ) )";
-        }//fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
+        } //fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
         //FILTRO POR MENSAJERO
         if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1]) {
 
@@ -750,7 +766,7 @@ function condicion_adicional_distribucion()
                 $coondicion_tipo_mensajero_destino = 1;
             }
             $condicion_adicional .= "  (a.mensajero_empresad=" . $coondicion_tipo_mensajero_destino . " AND a.mensajero_destino=" . $mensajero_tipo[0] . " AND a.estado_recogida=1  ) )";
-        }//fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
+        } //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
         //FILTRO POR TIPO ORIGEN filtro_tipo_origen
         if ($vector_variable_busqueda[0] == 'filtro_tipo_origen' && $vector_variable_busqueda[1]) {
             switch ($vector_variable_busqueda[1]) {
@@ -769,7 +785,7 @@ function condicion_adicional_distribucion()
             }
         }
         //FIN FILTRO POR TIPO ORIGEN
-    }//fin if $_REQUEST['variable_busqueda']
+    } //fin if $_REQUEST['variable_busqueda']
 
     return ($condicion_adicional);
 }
@@ -791,7 +807,7 @@ function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion, $idde
 
     //ASIGNO O RETIRO RUTA DE DISTRIBUCION, SEGUN SI ACTIVAN O INACTIVAN UNA DEPENDENCIA EN UNA RUTA DE DISTRIBUCION.
 
-    if ($estado == 1) {//ASIGNO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
+    if ($estado == 1) { //ASIGNO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
         //ACTUALIZACION_ORIGEN (RECOGIDA)
         for ($i = 0; $i < $busca_distribuciones_origen['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_origen[$i]['iddistribucion'];
@@ -805,9 +821,9 @@ function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion, $idde
             $uprd = " UPDATE distribucion SET mensajero_destino=0,ruta_destino=" . $idft_ruta_distribucion . " WHERE iddistribucion=" . $iddistribucion;
             phpmkr_query($uprd);
         }
-    }//fin if $estado==1
+    } //fin if $estado==1
 
-    if ($estado == 2) {//RETIRO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
+    if ($estado == 2) { //RETIRO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
         //ACTUALIZACION_ORIGEN (RECOGIDA)
         for ($i = 0; $i < $busca_distribuciones_origen['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_origen[$i]['iddistribucion'];
@@ -830,7 +846,7 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 {
     global $conn;
 
-    if ($estado == 2) {//SI INACTIVAN EL MENSAJERO, LO RETIRO DE LAS DISTRIBUCIONES
+    if ($estado == 2) { //SI INACTIVAN EL MENSAJERO, LO RETIRO DE LAS DISTRIBUCIONES
         //ACTUALIZACION_ORIGEN (RECOGIDA)
         $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND mensajero_origen=" . $iddependencia_cargo_mensajero . " AND a.ruta_origen=" . $idft_ruta_distribucion, "", $conn);
 
@@ -848,9 +864,9 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
             $uprd = " UPDATE distribucion SET mensajero_destino=0 WHERE iddistribucion=" . $iddistribucion;
             phpmkr_query($uprd);
         }
-    }//fin if $estado==2
+    } //fin if $estado==2
 
-    if ($estado == 3) {//ASIGNA UN MENSAJERO A LAS DISTRIBUCIONES QUE NO TIENEN MENSAJERO ASIGNADO
+    if ($estado == 3) { //ASIGNA UN MENSAJERO A LAS DISTRIBUCIONES QUE NO TIENEN MENSAJERO ASIGNADO
         //ACTUALIZACION_ORIGEN (RECOGIDA)
         $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND a.mensajero_origen=0 AND a.ruta_origen=" . $idft_ruta_distribucion, "", $conn);
 
@@ -873,7 +889,8 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 
 //fin function actualizar_mensajero_ruta_distribucion()
 //---------------------------------------------------------------------------------------------
-function select_mensajero_distribucion() {
+function select_mensajero_distribucion()
+{
     global $ruta_db_superior, $conn;
 
     $array_concat = array(
@@ -966,5 +983,3 @@ function condicion_por_ingresar_ventanilla_distribucion()
     }
     return ($condicion_adicional);
 }
-
-?>

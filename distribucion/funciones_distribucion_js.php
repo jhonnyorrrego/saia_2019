@@ -67,7 +67,7 @@ include_once($ruta_db_superior . "librerias_saia.php");
                             type: "warning",
                             duration: "3500"
                         });
-                    } else if (error == 2) {
+                    } else if (error != 2) {
                         top.notification({
                             message: "ATENCI&Oacute;N</b><br>No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado",
                             type: "warning",

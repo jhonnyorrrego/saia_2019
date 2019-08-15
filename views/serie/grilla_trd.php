@@ -16,7 +16,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
-    'id' => $_REQUEST['id']
+    'id' => $_REQUEST['id'],
+    'type' => $_REQUEST['type']
 ]);
 ?>
 
@@ -31,11 +32,14 @@ $params = json_encode([
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= bootstrapTable() ?>
+    <?= bootstrapTableFilter() ?>
+    <?= bootstrapTableExport() ?>
     <?= theme() ?>
+    <?= icons() ?>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-fluid h-100" style="overflow-y:auto">
         <div class="row">
             <div class="col-12">
                 <table id="trd_table"></table>

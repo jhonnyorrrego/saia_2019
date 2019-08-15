@@ -99,7 +99,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			function onNodeSelect(nodeId) {
 				if (nodeId.indexOf('#', 0) == -1) {
 					$('#generar_consecutivo').val(nodeId);
-					$('#enlace').val("views/documento/index_acordeon.php");
+					$('#enlace').val("formatos/radicacion_entrada/radicacion_rapida.php");
 
 				}
 			}

@@ -8,20 +8,156 @@ $(function() {
                 queryParams = $.extend(queryParams, {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
-                    id: params.id
+                    id: params.id,
+                    type: params.type
                 });
                 return queryParams;
             },
+            classes: 'table table-hover table-bordered mt-0',
+            theadClasses: 'thead-light',
             queryParamsType: 'other',
             pagination: true,
             paginationSuccessivelySize: 1,
             paginationPagesBySide: 1,
-            columns: [
-                {
-                    field: 'info',
-                    title: ''
-                }
-            ]
+            filterControl: true,
+            showExport: true,
+            exportTypes: ['csv', 'txt', 'excel', 'pdf'],
+            exportDataType: 'all',
+            columns: getColumns()
         });
     })();
+
+    function getColumns() {
+        return params.type == 'json_clasificacion'
+            ? clasificationColumns()
+            : trdColumns();
+    }
+
+    function trdColumns() {
+        return [
+            [
+                {
+                    title: 'Códigos',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Descripción documental',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Retención',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Soporte',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Disposición',
+                    colspan: 4,
+                    align: 'center'
+                },
+                {
+                    field: 'procedimiento',
+                    title: 'Procedimiento',
+                    rowspan: 2,
+                    align: 'center'
+                }
+            ],
+            [
+                {
+                    field: 'dependencia',
+                    title: 'Dependencia',
+                    align: 'center'
+                },
+                {
+                    field: 'serie',
+                    title: 'Serie',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerie',
+                    title: 'SubSerie',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'serieDocumental',
+                    title: 'Serie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerieDocumental',
+                    title: 'SubSerie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'tipoDocumental',
+                    title: 'Tipo Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                { field: 'gestion', title: 'Gestion', align: 'center' },
+                { field: 'central', title: 'Central', align: 'center' },
+                { field: 'p', title: 'P', align: 'center' },
+                { field: 'el', title: 'El', align: 'center' },
+                { field: 'e', title: 'E', align: 'center' },
+                { field: 's', title: 'S', align: 'center' },
+                { field: 'ct', title: 'Ct', align: 'center' },
+                { field: 'md', title: 'Md', align: 'center' }
+            ]
+        ];
+    }
+
+    function clasificationColumns() {
+        return [
+            {
+                field: 'No',
+                title: 'No.',
+                align: 'center'
+            },
+            {
+                field: 'SiglaDependencia',
+                title: 'Sigla Dependencia',
+                align: 'center'
+            },
+            {
+                field: 'codigoDependencia',
+                title: 'Código Dependencia',
+                filterControl: 'input',
+                align: 'center'
+            },
+            {
+                field: 'CodigoSerie',
+                title: 'Código Serie',
+                filterControl: 'input',
+                align: 'center'
+            },
+            {
+                field: 'serieDocumental',
+                title: 'Serie documental',
+                filterControl: 'input',
+                align: 'center'
+            },
+            {
+                field: 'subSerie',
+                title: 'Código subserie',
+                filterControl: 'input',
+                align: 'center'
+            },
+            {
+                field: 'subSerieDocumental',
+                title: 'Subserie Documental',
+                filterControl: 'input',
+                align: 'center'
+            }
+        ];
+    }
 });

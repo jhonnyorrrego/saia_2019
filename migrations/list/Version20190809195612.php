@@ -77,7 +77,7 @@ final class Version20190809195612 extends AbstractMigration
 
         $this->connection->update('campos_formato', [
             'valor' => '1,Array',
-            'opciones' => '[{\"llave\":1,\"item\":\"1\"}]'
+            'opciones' => "[{\"llave\":1,\"item\":\"1\"}]"
         ], [
             'nombre' => 'mensajero_ruta',
             'idcampos_formato' => 5005
@@ -143,46 +143,51 @@ final class Version20190809195612 extends AbstractMigration
             'nombre' => 'serie_idserie',
             'idcampos_formato' => 52
         ]);
-
-        $this->connection->insert('campos_formato', [
-            'formato_idformato' => '3',
-            'nombre' => 'fecha_documento',
-            'etiqueta' => 'FECHA DOCUMENTO',
-            'tipo_dato' => 'DATE',
-            'longitud' => NULL,
-            'obligatoriedad' => '0',
-            'valor' => NULL,
-            'acciones' => 'a,e,b',
-            'ayuda' => NULL,
-            'predeterminado' => NULL,
-            'banderas' => NULL,
-            'etiqueta_html' => 'fecha',
-            'orden' => '8',
-            'mascara' => NULL,
-            'adicionales' => NULL,
-            'autoguardado' => '0',
-            'fila_visible' => '1',
-            'placeholder' => NULL,
-            'longitud_vis' => NULL,
-            'opciones' => NULL,
-            'estilo' => NULL,
-        ]);
-
-        $this->connection->insert('modulo', [
-            'idmodulo' => 2017,
-            'pertenece_nucleo' => '0',
-            'nombre' => 'configuracion_radicacion',
-            'tipo' => '2',
-            'imagen' => 'fa fa-gears',
-            'etiqueta' => 'Configuraci&oacute;n',
-            'enlace' => 'views/dashboard/kaiten_dashboard.php?panels=[{\"kConnector\": \"html.page\",\"url\": \"pantallas/busquedas/componentes_busqueda.php?idbusqueda=133\"}]',
-            'cod_padre' => '2007',
-            'orden' => '8'
-        ]);
+		
+		$query = $this->connection->fetchAll("select idcampos_formato from campos_formato where nombre='fecha_documento' and formato_idformato='3'");
+		if(!$query[0]['idcampos_formato']){
+	        $this->connection->insert('campos_formato', [
+	            'formato_idformato' => '3',
+	            'nombre' => 'fecha_documento',
+	            'etiqueta' => 'FECHA DOCUMENTO',
+	            'tipo_dato' => 'DATE',
+	            'longitud' => NULL,
+	            'obligatoriedad' => '0',
+	            'valor' => NULL,
+	            'acciones' => 'a,e,b',
+	            'ayuda' => NULL,
+	            'predeterminado' => NULL,
+	            'banderas' => NULL,
+	            'etiqueta_html' => 'fecha',
+	            'orden' => '8',
+	            'mascara' => NULL,
+	            'adicionales' => NULL,
+	            'autoguardado' => '0',
+	            'fila_visible' => '1',
+	            'placeholder' => NULL,
+	            'longitud_vis' => NULL,
+	            'opciones' => NULL,
+	            'estilo' => NULL,
+	        ]);
+        }
+		
+		$query = $this->connection->fetchAll("select idmodulo from modulo where nombre='configuracion_radicacion'");
+		if(!$query[0]['idmodulo']){
+	        $this->connection->insert('modulo', [
+	            'pertenece_nucleo' => '0',
+	            'nombre' => 'configuracion_radicacion',
+	            'tipo' => '2',
+	            'imagen' => 'fa fa-gears',
+	            'etiqueta' => 'Configuraci&oacute;n',
+	            'enlace' => "views/dashboard/kaiten_dashboard.php?panels=[{\"kConnector\": \"html.page\",\"url\": \"pantallas/busquedas/componentes_busqueda.php?idbusqueda=133\"}]",
+	            'cod_padre' => '2007',
+	            'orden' => '8'
+	        ]);
+	    }
 
         $this->connection->update('busqueda_componente', [
             'info' => 'Nombre|{*nombre*}|center|-|Estado|{*estado*}|center|-|Acciones|{*editar_cf@idcf_empresa_trans,nombre_tabla*}|center',
-            'campos_adicionales' => 'idcf_empresa_trans,nombre,case estado when 1 then \'Activo\' else \'inactivo\' end as estado, \'cf_empresa_trans\' as nombre_tabla'
+            'campos_adicionales' => "idcf_empresa_trans,nombre,case estado when 1 then 'Activo' else 'inactivo' end as estado, 'cf_empresa_trans' as nombre_tabla"
         ], [
             'idbusqueda_componente' => 299
         ]);
@@ -190,9 +195,8 @@ final class Version20190809195612 extends AbstractMigration
         $this->connection->update('busqueda_componente', [
             'url' => 'views/buzones/grilla.php?idbusqueda_componente=322&table=cf_ventanilla',
             'info' => 'Nombre|{*nombre*}|center|-|Estado|{*estado*}|center|-|Acciones|{*editar_cf@idcf_ventanilla,nombre_tabla*}|center',
-            'campos_adicionales' => 'idcf_ventanilla,nombre, case estado when 1 then \'Activo\' else \'Inactivo\' end as estado, \'cf_ventanilla\' as nombre_tabla',
-            'enlace_adicionar' => 'views/distribucion/transportadoras.php?table=cf_ventanilla',
-            ''
+            'campos_adicionales' => "idcf_ventanilla,nombre, case estado when 1 then \'Activo\' else \'Inactivo\' end as estado, \'cf_ventanilla\' as nombre_tabla",
+            'enlace_adicionar' => 'views/distribucion/transportadoras.php?table=cf_ventanilla'
         ], [
             'idbusqueda_componente' => 322
         ]);

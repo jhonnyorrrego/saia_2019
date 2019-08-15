@@ -32,6 +32,7 @@ $(function() {
             dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
             dictMaxFilesExceeded: 'Máximo 1 archivo',
             params: {
+                token: localStorage.getItem('token'),
                 key: localStorage.getItem('key'),
                 dir: 'firma_funcionario'
             },
