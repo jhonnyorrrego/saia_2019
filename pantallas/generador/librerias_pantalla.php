@@ -3335,8 +3335,8 @@ function consultarPermisosPerfil($nombreFormato)
             if ($permisosPerfil["numcampos"]) {
                 $checked = "checked='checked'";
             }
-            $permisos .= "<label class='checkbox inline'>
-            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
+            $permisos .= "<label class='input-group' style='display:inline-block;width:200px;'>
+                <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
             </label>";
         }
         $permisos .= '</div>';

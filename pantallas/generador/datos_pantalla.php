@@ -138,15 +138,15 @@ function procesar_cadena_json($resultado, $lista_valores)
 <body>
 
   <form name="datos_formato" id="datos_formato">
-    <div class="row mx-4 mb-1">
-
-      <div class="col-9">
+    <div class="row mx-4">
+      <div class="col-9 mt-4">
         <div class="title my-0">
           Información general
         </div>
         <hr />
 
         <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
+
         <div class="row-fluid">
 
           <div class="my-3">
@@ -209,34 +209,15 @@ function procesar_cadena_json($resultado, $lista_valores)
             </div>
           </div>
 
-
-          <div class="col 12">
-
-            <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece"><strong>Relaci&oacute;n con otro Formato</strong></label>
-
-            <?php echo ($nombre_cod_padre[0]["etiqueta"]); ?>
-            <div class="col-6">
-              <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo ($cod_padre); ?>">
-              <?= $arbol->generar_html() ?>
-            </div>
-
-
-
-          </div>
-
-
-          <div class="col-12 my-4">
+          <div class="col-12 mt-4">
             <div class="col-12">
               <label for="banderas"><strong>Atributos del formato</strong></label>
             </div>
-            <div class="col-12">
-              <input type="checkbox" class="paginar" name="paginar" id="paginar" <?php check_banderas('paginar'); ?>><span class="paginar">Paginar al mostrar</span>
-              <input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>>Aprobacion Automatica
+            <div class="col-12 mt-5 text-left">
+              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="paginar" name="paginar" id="paginar" <?php check_banderas('paginar'); ?>><span class="paginar">Paginar al mostrar</span></div>
+              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>><span class="tipo_edicion">Aprobacion Automatica</span></div>
               <input type="checkbox" name="banderas[]" style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked>
-              <input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span>
-              <!--<input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar'); ?>>Mostrar-->
-
-              <!--Tomar el asunto del padre al responder-->
+              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span></div>
             </div>
 
             <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false); ?>>
@@ -250,9 +231,9 @@ function procesar_cadena_json($resultado, $lista_valores)
 
       </div>
 
-      <div class="col-3 my-4 pl-4">
+      <div class="col-3 my-3 pl-0">
 
-        <div class="my-3 pt-3">
+        <div class="my-3 pt-5">
 
           <label class="control-label" for="version"><strong>Versi&oacute;n<span class="require-input">*</span></strong></label>
           <div class="my-0">
@@ -275,7 +256,7 @@ function procesar_cadena_json($resultado, $lista_valores)
 
         </div>
 
-        <div class="my-3">
+        <div class="my-4">
 
           <label class="control-label" for="mostrar_tipodoc_pdf">&nbsp;</label>
           <div class="my-1 py-2">
@@ -285,7 +266,7 @@ function procesar_cadena_json($resultado, $lista_valores)
 
         </div>
 
-        <div class="my-3 py-3">
+        <div class="mt-2 py-3">
 
           <label class="control-label" for="contador"><strong>Consecutivo asociado<span class="require-input">*</span></strong></label>
           <div class="mt-4">
@@ -313,7 +294,7 @@ function procesar_cadena_json($resultado, $lista_valores)
 
 
 
-    <div class="row mx-4 mb-5">
+    <div class="row mx-4">
 
       <div class="col-9">
 
@@ -345,7 +326,7 @@ function procesar_cadena_json($resultado, $lista_valores)
           </div>
 
           <div class="col-6 mx-0>
-              <label class=" control-label" for="font_size"><strong>Tama&ntilde;o de letra</strong></label>
+                    <label class=" control-label" for="font_size"><strong>Tama&ntilde;o de letra</strong></label>
             <div class="my-2 mx-4">
               <select name="font_size" id="font_size" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos" style="height:44px;">
                 <?php
@@ -426,7 +407,7 @@ function procesar_cadena_json($resultado, $lista_valores)
             </div>
 
 
-            <div class="my-3">
+            <div class="mt-3">
               <label for="mder">Derecha</label>
               <input type="number" min="0" max="10" step="0.1" class="ml-4 input-mini" name="mder" id="mder" value="<?= $margen_defecto[1] ?>" style="width:50%;height:44px">
 
@@ -438,10 +419,31 @@ function procesar_cadena_json($resultado, $lista_valores)
 
       </div>
 
+    </div>
 
-      <input type="hidden" name="exportar" value="mpdf">
-      <input type="hidden" name="pertenece_nucleo" value="0">
-      <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
+    <div class="row my-3 pt-3">
+
+      <div class="col 12">
+
+        <label class="control-label title" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece"><strong>Relaci&oacute;n con otro Formato</strong></label>
+
+        <hr />
+        <?php echo ($nombre_cod_padre[0]["etiqueta"]); ?>
+        <div class="col-6">
+          <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo ($cod_padre); ?>">
+          <?= $arbol->generar_html() ?>
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+
+    <input type="hidden" name="exportar" value="mpdf">
+    <input type="hidden" name="pertenece_nucleo" value="0">
+    <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
 
   </form>
 
@@ -469,7 +471,7 @@ function procesar_cadena_json($resultado, $lista_valores)
         $("#mostrar_tipodoc_pdf").hide();
         $("#texto_tipodoc").hide();
       }
-      $(".paginar").hide();
+      //$(".paginar").hide();
       $('[data-toggle="tooltip"]').tooltip();
       /*$("#nombre_formato").blur(function() {
       	//console.log($("#nombre_formato").val());
@@ -509,7 +511,7 @@ function procesar_cadena_json($resultado, $lista_valores)
         var nombre_formato = $("#nombre_formato").val();
       }
 
-      $("#enviar_datos_formato").click(function(event) {
+      $("#guardar").click(function(event) {
         event.preventDefault();
         if (formulario.valid()) {
 
@@ -682,6 +684,7 @@ function procesar_cadena_json($resultado, $lista_valores)
       $("#prefijo_formato").val("ft_");
     }
   </script>
+
 
   <?php
   function check_banderas($bandera, $chequear = true)
