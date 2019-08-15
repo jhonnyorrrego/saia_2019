@@ -78,23 +78,35 @@ function crearItemDependencia($item){
     }
     $dependencia = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $item['dependencia_asignada'], '', $conn);
     $tabla .= '<tr>
-        <td>' . $item['fecha_item_dependenc'] . '</td>
-        <td>' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item['dependencia_asignada'] . '"></td>';
+        <td style="width:20%;font-size:90%">' . $item['fecha_item_dependenc'] . '</td>
+        <td style="width:30%;font-size:90%">' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item['dependencia_asignada'] . '"></td>';
     
-    $tabla .= '<td>' . $item['descripcion'] . '</td>';
+    $tabla .= '<td style="width:30%;font-size:90%">' . $item['descripcion_dependen'] . '</td>';  
     
-    $seleccionar = array(
-        1 => "",
-        2 => ""
-    );
-    $seleccionar[$item['estado_dependencia']] = 'selected';
-    $tabla .= '<td>
-        <select class="cambio_estado_dependencia form-control" data-idft_ruta_distribucion=' . $item['ft_ruta_distribucion'] . ' data-idft=' . $item['dependencia_asignada'] . ' name="estado[]">
-            <option value="1" ' . $seleccionar[1] . '>Activo</option>
-            <option value="2" ' . $seleccionar[2] . '>Inactivo</option>
-        </select>
-        </td>
-    </tr>';
+    /////////////////////////  PARA ACTIVAR EN HTML FALTA SCRIPT QUE DETECTE SI ES PDF O HTML ////////// Julian Otalvaro ////////////////////////
+     /*
+            $seleccionar = array(
+                1 => "",
+                2 => ""
+            );
+            $seleccionar[$item['estado_dependencia']] = 'selected';
+            $tabla .= '<td style="font-size:90%;text-align:center;">
+                <select class="cambio_estado_dependencia form-control" data-idft_ruta_distribucion=' . $item['ft_ruta_distribucion'] . ' data-idft=' . $item['dependencia_asignada'] . ' name="estado[]">
+                    <option value="1" ' . $seleccionar[1] . '>Activo</option>
+                    <option value="2" ' . $seleccionar[2] . '>Inactivo</option>
+                </select>
+                </td>
+            </tr>'; 
+            ///////////////////////////////*/
+
+
+    $seleccionado = array(
+                1 => "ACTIVO",
+                2 => "INACTIVO"
+            );  
+
+    $tabla .='<td style="width:20%;font-size:90%;text-align:center;">'.$seleccionado[$item['estado_dependencia']].'</td></tr>'; 
+
     return $tabla;
 }
 
@@ -103,30 +115,27 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
     $tabla = '';
     $dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado not in ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
     if ($dato['numcampos']) {
-        $item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia,ft_ruta_distribucion,descripcion", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+        $item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia,ft_ruta_distribucion", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
         if ($item["numcampos"]) {
             $estado = array(
                 1 => "Activo",
                 2 => "Inactivo"
             );
             $tabla .= '<form id="item_prerequisitos" action="'.$ruta_db_superior.'formatos/ruta_distribucion/guardar_datos_dependencias.php">
-            <table id="dependenciaDistribucion" class="table table-bordered">
-            <tr>
-            <td style="text-align:center; font-weight:bold;" colspan="4">Dependencias de la ruta</td>
-            </tr>
-			<tr style="font-weight:bold">
-			    <td><center> Fecha</center></td>
-			    <td><center>Dependencia</center></td>
-			    <td><center>Descripci&oacute;n</center></td>
-			    <td><center>Estado</center></td>
-			</tr>';
+            <table style="width:100%;font-size:80%;">
+			<tr style="font-weight:bold"> 
+			    <td style="width:20%"><strong>Fecha</strong></td>
+			    <td style="width:30%"><strong>Dependencia</strong></td>
+			    <td style="width:30%"><strong>Observaci&oacute;n</strong></td>
+			    <td style="width:20%"><strong><center>Estado</center></strong></td>
+            </tr></table><hr /> <table id="dependenciaDistribucion" style="width:100%; font-size:80%;">'; 
 
             for ($j = 0; $j < $item["numcampos"]; $j++) {
                 $tabla .= crearItemDependencia($item[$j],$dato);
             }
           
         }else{
-            $tabla .=' <table id="dependenciaDistribucion" class="table table-bordered hide">
+            $tabla .=' <table id="dependenciaDistribucion">
             <tr>
             <td style="text-align:center; font-weight:bold;" colspan="4">Dependencias de la ruta</td>
             </tr>';
@@ -186,6 +195,8 @@ function crearItemFuncionario($item){
     );
     $cadena_concat = concatenar_cadena_sql($array_concat);
     $mensajero = busca_filtro_tabla($cadena_concat . ' AS nombre', 'vfuncionario_dc', 'iddependencia_cargo=' . $item['mensajero_ruta'], '', $conn);        
+    
+    
     $seleccionar = array(
         1 => "",
         2 => ""
@@ -193,15 +204,23 @@ function crearItemFuncionario($item){
 
     $seleccionar[$item['estado_mensajero']] = 'selected';
     $tabla = '<tr id="' . $item['idft_funcionarios_ruta'] .'">
-        <td>' . $item['fecha_mensajero'] . '</td>
-        <td>' . $mensajero[0]['nombre'] . '</td>
+        <td style="width:20%;font-size:90%">' . $item['fecha_mensajero'] . '</td>
+        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['nombre'] . '</td>
+        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['descripcion'] . '</td>';
+ 
+        //////// La seleccion esta desahbilitada para pdf. falta desarrollo de script que detecte html o pdf para activarlo si es necesario  - Julian Otalvaro //////////////////////
+        /*
         <td>
             <select class="form-control cambio_estado" name="estado[]" data-idft="' . $item['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item['mensajero_ruta'] . '">
                 <option value="1" ' . $seleccionar[1] . '>Activo</option>
                 <option value="2" ' . $seleccionar[2] . '>Inactivo</option>
             </select>
-        </td>					
-    </tr>';
+        </td>///////////////////////*/
+
+        $tabla .='<td style="width:20%;font-size:90%;text-align:center;" > (En Desarrollo)</td>';
+
+        $tabla .='</tr>';      
+
     return $tabla;
 }
 
@@ -219,15 +238,13 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
                 2 => "Inactivo"
             );
 
-            $tabla .= '<table class="table table-bordered" id="funcionarioRuta">
-            <tr>
-            <td style="text-align:center; font-weight:bold;" colspan="3">Mensajeros de la Ruta</td>
-            </tr>
+            $tabla .= '<table style="width:100%;font-size:80%;">
 			<tr>
-		    <td style="text-align:center;">Fecha</td>
-		    <td style="text-align:center;">Mensajero</td>
-		    <td style="text-align:center;">Estado</td>
-			</tr>';
+		    <td style="width:20%;"><strong>Fecha</strong></td>
+            <td style="width:30%;"><strong>Mensajero</strong></td>
+            <td style="width:30%;"><strong>Observaci&oacute;n</strong></td>
+		    <td style="width:20%;text-align:center;"><strong>Estado</strong></td>
+			</tr></table><hr /> <table id="funcionarioRuta" style="width:100%;font-size:80%;">'; 
  
             for ($j = 0; $j < $item['numcampos']; $j++) {
                 $tabla .= crearItemFuncionario($item[$j]);

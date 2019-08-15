@@ -14,6 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "librerias_saia.php";   
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 echo estilo_bootstrap();
 echo librerias_jquery('1.7');
@@ -84,7 +85,6 @@ echo librerias_jquery('1.7');
       $().ready(function() {
         $('#form1').validate({
           submitHandler: function(form) {
-            <?php encriptar_sqli("form1", 0, "form_info", $ruta_db_superior); ?>
             form.submit();
 
           }

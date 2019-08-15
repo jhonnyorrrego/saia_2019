@@ -73,7 +73,6 @@ echo estilo_bootstrap();
         ?>
         <script type="text/javascript" src="../js/jquery.js"></script>
         <script type="text/javascript" src="../js/jquery.validate.js"></script>
-        <script type="text/javascript" src="../js/jquery.spin.js"></script>
         <style>
             .error {
                 color: red;
@@ -84,14 +83,9 @@ echo estilo_bootstrap();
             $().ready(function() {
                 $('#form1').validate({
                     submitHandler: function(form) {
-                        <?php encriptar_sqli("form1", 0, "form_info", $ruta_db_superior); ?>
                         form.submit();
 
                     }
-                });
-                $.spin.imageBasePath = '../images/';
-                $('#orden').spin({
-                    min: 1
                 });
 
             });
@@ -166,7 +160,7 @@ echo estilo_bootstrap();
             echo ">$nombre&nbsp;&nbsp;";
         }
         echo "</td></tr>";
-        echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>Orden*</td><td><input class='required'  type='input' name='orden' id='orden' value='" . @$contenido[0]["orden"] . "'></td></tr>";
+        echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>Orden*</td><td><input class='required'  type='number' min=0 name='orden' id='orden' value='" . @$contenido[0]["orden"] . "'></td></tr>";
         echo "<tr><td><input class='btn btn-primary' type='submit' value='Continuar'>
    <input type='hidden' name='id' value='" . @$contenido[0]["idcontenidos_carrusel"] . "'>
    <input type='hidden' name='accion' value='guardar_" . @$accion . "'>

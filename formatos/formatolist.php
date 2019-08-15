@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 
 include $ruta_db_superior . "core/autoload.php";
+global $conn;
 // Initialize common variables
 $x_idformato = Null;
 $x_nombre = Null;
@@ -134,8 +135,8 @@ if ($sOrderBy != "") {
 </script>
 <?php
 // Set up Record Set
-$rs = phpmkr_query($sSql) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-$nTotalRecs = phpmkr_num_rows($rs);
+$rs = $conn->query($sSql);
+$nTotalRecs = count($conn->search($sSql));
 if ($nDisplayRecs <= 0) { // Display All Records
 	$nDisplayRecs = $nTotalRecs;
 }

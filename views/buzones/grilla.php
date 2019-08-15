@@ -56,7 +56,11 @@ if ($component["busqueda_avanzada"]) {
 }
 
 if ($component["enlace_adicionar"]) {
-    $component["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
+    if (strpos($component["enlace_adicionar"], '?') === false) {
+        $component["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
+    } else {
+        $component["enlace_adicionar"] .= '&idbusqueda_componente=' . $componentId;
+    }
     $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$component["enlace_adicionar"]}'>
         <i class='fa fa-plus'></i>
         <span class='d-none d-sm-inline'>Adicionar</span>
@@ -121,8 +125,10 @@ if (!empty($component["acciones_seleccionados"])) {
                 <table id="tabla_resultados" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
                     <thead>
                         <tr>
-                            <th data-field="state" data-checkbox="true"></th>
                             <?php
+                            if (!empty($component["acciones_seleccionados"])) {
+                                echo '<th data-field="state" data-checkbox="true"></th>';
+                            }
                             $lcampos1 = $component["campos"];
                             if ($component["campos_adicionales"]) {
                                 $lcampos1 .= ',' . $component["campos_adicionales"];
@@ -153,7 +159,7 @@ if (!empty($component["acciones_seleccionados"])) {
                                     $ordenable = 'data-sortable="true"';
                                 }
 
-                                echo '<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
+                                echo '<th data-field="' . $dato_campo . '" data-align="center" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
                             }
                             ?>
                         </tr>
@@ -171,6 +177,7 @@ if (!empty($component["acciones_seleccionados"])) {
     <?= bootstrapTable() ?>
     <?= icons() ?>
     <?= select2() ?>
+    <?= librerias_acciones_kaiten() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $.fn.serializeObject = function() {
             var o = {};

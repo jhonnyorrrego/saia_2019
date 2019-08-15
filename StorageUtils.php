@@ -122,7 +122,7 @@ class StorageUtils
 					}
 				} else {
 					$wtf = "data:$type;base64,";
-				}
+				} 
 				$contenido_binario = base64_encode($contenido_binario);
 				$contenido_binario = $wtf . $contenido_binario;
 				break;

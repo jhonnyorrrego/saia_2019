@@ -46,8 +46,8 @@ $libraries = [
 <script type="text/javascript">
     function evento_click(event, data) {
         var nodeId = data.node.key;
-        
-        if(data.node.isFolder()) {
+
+        if (data.node.isFolder()) {
             data.tree.activateKey(nodeId);
         }
         console.log(nodeId);

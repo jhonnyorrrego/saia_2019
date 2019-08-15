@@ -9,8 +9,8 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once  ($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "distribucion/funciones_distribucion.php";
 
 function cambiar_mensajero_distribucion()
 {
@@ -25,9 +25,10 @@ function cambiar_mensajero_distribucion()
 
         $vector_mensajero_nuevo = explode('-', @$_REQUEST['mensajero']);
         $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "", $conn);
-
-        //$retorno = validar_oriden_destino_distribucion($iddistribucion); Valida que todos los items sean internos o externos
-        $retorno['exito']=1;
+        
+        //Valida que todos los items sean internos o externos
+        $retorno = validar_oriden_destino_distribucion($iddistribucion); 
+        //$retorno['exito']=1;
         if ($retorno['exito'] == 1) {
             for ($i = 0; $i < $distribucion['numcampos']; $i++) {
                 $diligencia = mostrar_diligencia_distribucion($distribucion[$i]['tipo_origen'], $distribucion[$i]['estado_recogida']);
@@ -45,19 +46,19 @@ function cambiar_mensajero_distribucion()
                     case 'ENTREGA' :
                         $update_adicional = ',mensajero_empresad=0';
 
-                        if ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') {
+                        if ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e') {
                             $retorno["msn"] = "No es posible asignar un mensajero externo";
                             $retorno["exito"] = 0;
-                        } elseif ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e') { //si es una empresa_transportadora es decir mensajero_empresad
+                        } elseif ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'e') { //si es una empresa_transportadora es decir mensajero_empresad
                             $update_adicional = ',mensajero_empresad=1';
                             $upm = " UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . $update_adicional . ",mensajero_empresad=1 WHERE iddistribucion in(" . $iddistribucion . ")";
                             $retorno = array('exito' => 1, 'sql' . $i => $upm);
                             phpmkr_query($upm) or die(json_encode($retorno));
-                        } elseif ($distribucion[0]['tipo_destino'] == 2 && $vector_mensajero_nuevo[1] == 'i'){
+                        } elseif ($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'i'){
                             $upm = "UPDATE  distribucion SET mensajero_destino=" . $vector_mensajero_nuevo[0] . ",mensajero_empresad=0 WHERE iddistribucion in(" . $iddistribucion . ")";
                             $retorno = array('exito' => 1, 'sql' . $i => $upm);
                             phpmkr_query($upm) or die(json_encode($retorno));
-                        }else if($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'i'){
+                        }else if($distribucion[0]['tipo_destino'] == 1 && $vector_mensajero_nuevo[1] == 'e'){
                             $retorno = array('exito' => 0, 'msn' => 'No puede seleccionar un mensajero interno para un destino externo');
                         }
                         break;
@@ -87,16 +88,16 @@ function validar_oriden_destino_distribucion($distribucion)
         if ($tipo_origen_externo[0]['cantidad'] == $cantidad) {
             $retorno['tipo_origen'] = 1;
         } else {
-            $retorno['tipo_origen'] = 1;
+            $retorno['tipo_origen'] = 2;
         }
-        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
 
         if ($tipo_destino_externo[0]['cantidad'] == $cantidad || $tipo_destino_interno[0]['cantidad'] == $cantidad) {
             if ($tipo_destino_externo[0]['cantidad'] == $cantidad) {
                 $retorno['tipo_destino'] = 1;
             } else {
-                $retorno['tipo_destino'] = 1;
+                $retorno['tipo_destino'] = 2;
             }
             $retorno['exito'] = 1;
         } else {
@@ -119,7 +120,7 @@ function finalizar_distribucion()
         for ($i = 0; $i < count($vector_iddistribucion); $i++) {
             $iddistribucion = $vector_iddistribucion[$i];
 
-            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
+            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
             $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
             $upd = '';
             switch ($diligencia) {
@@ -129,9 +130,12 @@ function finalizar_distribucion()
                         $estado_distribucion = 0;
                     }
                     $upd = " UPDATE distribucion SET estado_recogida=1,estado_distribucion=" . $estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
+                    $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
                     break;
                 case 'ENTREGA' :
-                    $upd = " UPDATE distribucion SET estado_distribucion=3 WHERE iddistribucion=" . $iddistribucion;
+                    $estado_distribucion = 3;
+                    $upd = " UPDATE distribucion SET estado_distribucion=" .$estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
+                    $retorno['estado'] = ver_estado_distribucion($estado_distribucion);
                     break;
             }//fin switch
 
@@ -140,6 +144,7 @@ function finalizar_distribucion()
             }
         }//fin for $vector_iddistribucion
         $retorno['exito'] = 1;
+        
     }//fin if $_REQUEST['iddistribucion']
     return ($retorno);
 }
