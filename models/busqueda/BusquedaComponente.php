@@ -15,8 +15,6 @@ class BusquedaComponente extends Model
     protected $exportar_encabezado;
     protected $encabezado_componente;
     protected $estado;
-    protected $ancho;
-    protected $cargar;
     protected $campos_adicionales;
     protected $tablas_adicionales;
     protected $ordenado_por;
@@ -24,30 +22,44 @@ class BusquedaComponente extends Model
     protected $agrupado_por;
     protected $busqueda_avanzada;
     protected $acciones_seleccionados;
-    protected $modulo_idmodulo;
-    protected $menu_busqueda_superior;
     protected $enlace_adicionar;
-    protected $encabezado_grillas;
     protected $llave;
-    
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
-        // set the safe attributes to update and consult
-        $safeDbAttributes = ['busqueda_idbusqueda','tipo','conector','url','etiqueta','nombre','orden','info','exportar','exportar_encabezado','encabezado_componente','estado','ancho','cargar','campos_adicionales','tablas_adicionales','ordenado_por','direccion','agrupado_por','busqueda_avanzada','acciones_seleccionados','modulo_idmodulo','menu_busqueda_superior','enlace_adicionar','encabezado_grillas','llave'];
-
-        // set the date attributes on the schema
-        $dateAttributes = [];
-
+    protected function defineAttributes()
+    {
         $this->dbAttributes = (object) [
-            'safe' => $safeDbAttributes,
-            'date' => $dateAttributes
+            'safe' =>  [
+                'busqueda_idbusqueda',
+                'tipo',
+                'conector',
+                'url',
+                'etiqueta',
+                'nombre',
+                'orden',
+                'info',
+                'exportar',
+                'exportar_encabezado',
+                'encabezado_componente',
+                'estado',
+                'campos_adicionales',
+                'tablas_adicionales',
+                'ordenado_por',
+                'direccion',
+                'agrupado_por',
+                'busqueda_avanzada',
+                'acciones_seleccionados',
+                'enlace_adicionar',
+                'llave'
+            ],
+            'date' => []
         ];
     }
 }
