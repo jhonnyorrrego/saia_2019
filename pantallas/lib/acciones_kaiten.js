@@ -261,11 +261,9 @@ $(document).on("click", ".enlace_parent", function() {
     parent.window.open(enlace, destino);
 });
 
-function abrir_kaiten(enlace, titulo) {
+function abrir_kaiten(enlace, titulo, eliminar_hijos = 0) {
     var conector = "iframe";
     var ancho_columna = "100%";
-    var eliminar_hijos = 0;
-
     var datos_pantalla = {
         kConnector: conector,
         url: enlace,
@@ -279,6 +277,6 @@ function abrir_kaiten(enlace, titulo) {
     } else if (typeof crear_pantalla_busqueda == "function") {
         crear_pantalla_busqueda(datos_pantalla, eliminar_hijos);
     } else {
-        alert("Error en la matix crear pantalla");
+        console.error("No existe kaiten");
     }
 }

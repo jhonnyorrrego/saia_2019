@@ -34,33 +34,40 @@ final class Version20190813211623 extends AbstractMigration
         $this->connection->update('formato', [
             'etiqueta' => 'Registro de Correspondencia'
         ], [
-            'formato' => 3
+            'idformato' => 3
         ]);
 
         $this->connection->update('campos_formato', [
             'etiqueta' => 'Registro'
         ], [
-            'campos_formato' => 54
+            'idcampos_formato' => 54
         ]);
 
         $this->connection->update('campos_formato', [
             'etiqueta' => 'FECHA DE REGISTRO'
         ], [
-            'campos_formato' => 53
+            'idcampos_formato' => 53
         ]);
 
 
         $this->connection->update('busqueda_componente', [
             'url' => 'views/buzones/grilla.php?idbusqueda_componente=16',
-            'info' => 'Numero|{*mostrar_numero_enlace@numero,iddocumento*}|center|-|Fecha|{*fecha*}|center|-|Asunto|{*descripcion*}|center'
+            'info' => 'N&uacute;mero|{*mostrar_numero_enlace@numero,iddocumento*}|center|-|Fecha|{*fecha*}|center|-|Asunto|{*descripcion*}'
         ], [
             'idbusqueda_componente' => 16
         ]);
 
         $this->connection->update('busqueda_componente', [
-           
+            'url' => 'views/buzones/grilla.php?idbusqueda_componente=280',
+            'info' => 'N&uacute;mero|{*mostrar_numero_enlace@numero,iddocumento*}|center|-|Fecha|{*fecha*}|center|-|Asunto|{*descripcion*}'
         ], [
-            'idbusqueda_componente' => 16
+            'idbusqueda_componente' => 280
+        ]);
+
+        $this->connection->update('campos_formato', [
+            'etiqueta_html' => 'hidden'
+        ], [
+            'idcampos_formato' => 52
         ]);
 
     }

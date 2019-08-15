@@ -2,7 +2,7 @@
 
 /**
  * VALIDACIONES IMPORTANTES:
- * 1. Una misma serie NO puede estar vinculada a dos dependencias, 
+ * 1. Una misma serie/subserie NO puede estar vinculada a dos dependencias, 
  * se debe crea una serie por dependencia en caso que la serie/subserie comparta el mismo nombre con el
  * mismo codigo
  * 2. La subserie es quien define el tiempo de retencion, en caso de no existir subserie es la serie, pero
@@ -10,16 +10,18 @@
  * 3. el -1 en la retencion central/gestion de las series/subserie equivale a que siempre se conservara en gestion (Permanentemente)
  */
 
-class TRDLoadcontroller
+class TRDLoadController
 {
     protected $urlEXcel;
+    protected $fk_serie_version;
     protected $data;
     public $fila;
     private $row;
 
-    public function __construct(string $url)
+    public function __construct(string $url, int $fk_serie_version)
     {
         $this->urlEXcel = $url;
+        $this->fk_serie_version = $fk_serie_version;
         $this->init();
     }
 
@@ -27,7 +29,8 @@ class TRDLoadcontroller
     {
         $this->truncateTables()
             ->getDataExcel()
-            ->loadTRD();
+            ->loadTRD()
+            ->saveSerie();
     }
 
     protected function truncateTables()
@@ -118,6 +121,44 @@ class TRDLoadcontroller
 
             $this->row['idtipo'] = $this->insertTipoDocumental();
             $rowAnterior = $this->row;
+        }
+        return $this;
+    }
+
+    protected function saveSerie()
+    {
+        $sql = "SELECT * FROM serie_temp ORDER BY idserie ASC";
+        $data = SerieTemp::findBySql($sql);
+        $ids = [0 => 0];
+
+        foreach ($data as $SerieTemp) {
+            $attributesSerie = $SerieTemp->getAttributes();
+            $attributesSerie['estado'] = 1;
+            $attributesSerie['cod_arbol'] = 0;
+            $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
+            $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
+
+            $Serie = new Serie();
+            $Serie->setAttributes($attributesSerie);
+
+            if ($id = $Serie->createSerie(0)) {
+                $ids[$id] = $SerieTemp->getPK();
+            } else {
+                $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
+            }
+        }
+        unset($this->fila);
+        $sql = "SELECT * FROM dependencia_serie_temp ORDER BY iddependencia_serie ASC";
+        $data = DependenciaSerieTemp::findBySql($sql);
+
+        foreach ($data as $DependenciaSerie) {
+
+            $attributesDep = $DependenciaSerie->getAttributes();
+            $attributesDep['fk_serie'] = array_search($attributesDep['fk_serie'], $ids);
+
+            if (!DependenciaSerie::newRecord($attributesDep)) {
+                $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$DependenciaSerie->getPK()}");
+            }
         }
         return $this;
     }
@@ -371,6 +412,9 @@ class TRDLoadcontroller
 
     private function errorException($message)
     {
+        $SerieVersion = new SerieVersion($this->fk_serie_version);
+        $SerieVersion->delete();
+
         if ($this->fila) {
             $text = "En la fila {$this->fila} : {$message}";
         } else {

@@ -336,10 +336,10 @@ class Imprime_Pdf
 			);
 			$this->pdf->Output($pdf_temp, $this->tipo_salida);
 			$codigo_hash = $tipo_almacenamiento->almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
-			if ($actualizar_y_hash) {
-				$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"];
-				phpmkr_query($sqlu) or die($sqlu);
-			}
+			//if ($actualizar_y_hash) {
+			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"];
+			phpmkr_query($sqlu) or die($sqlu);
+			//}
 		}
 	}
 

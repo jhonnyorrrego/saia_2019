@@ -243,7 +243,7 @@ function phpmkr_db_close($conn)
 function phpmkr_query($sql)
 {
     global $conn;
-    return $conn->Ejecutar_Sql($sql);
+    return $conn->query($sql);
 }
 
 /*
@@ -292,16 +292,9 @@ function phpmkr_field_name($rs, $pos)
  */
 function phpmkr_num_rows($rs)
 {
-    global $conn;
-    if ($conn) {
-        if (!$rs && $conn->res)
-            $rs = $conn->res;
-        return $conn->Numero_Filas($rs);
-    } else {
-        alerta("Error en numero de filas." . $rs->sql);
-        return false;
-    }
+    throw new Exception("Se debe actualizar el modo de consulta", 1);
 }
+
 /*
 <Clase>
 <Nombre>phpmkr_fetch_array
@@ -380,7 +373,7 @@ function phpmkr_free_result($rs)
 function phpmkr_insert_id()
 {
     global $conn;
-    return $conn->Ultimo_Insert();
+    return $conn->lastInsertId();
 }
 /*
 <Clase>
@@ -395,8 +388,7 @@ function phpmkr_insert_id()
  */
 function phpmkr_error()
 {
-    global $conn;
-    $conn->mostrar_error();
+    throw new Exception("se debe eliminar la funcion phpmkr_error", 1);
 }
 
 /**
@@ -1722,27 +1714,12 @@ function crear_destino($destino)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function ejecuta_filtro_tabla($sql2, $conn2 = null)
+function ejecuta_filtro_tabla($sql, $conn2 = null)
 {
-    global $conn;
-    if ($conn2) {
-        $conn = $conn2;
-    }
-
-    $retorno = array();
-    $rs = $conn->Ejecutar_Sql($sql2) or alerta("Error en Busqueda de Proceso SQL: $sql2");
-    $temp = phpmkr_fetch_array($rs);
-    $i = 0;
-    if ($temp) {
-        array_push($retorno, $temp);
-        $i++;
-    }
-    for ($temp; $temp = phpmkr_fetch_array($rs); $i++)
-        array_push($retorno, $temp);
-    $retorno["numcampos"] = $i;
-    $retorno["sql"] = $sql2;
-    phpmkr_free_result($rs);
-    return $retorno;
+    $response = StaticSql::search($sql);
+    $response['numcampos'] = count($response);
+    $response['sql'] = $sql;
+    return $response;
 }
 
 function ruta_almacenamiento($tipo, $raiz = 1)

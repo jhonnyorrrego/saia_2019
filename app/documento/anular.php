@@ -32,7 +32,10 @@ try {
     }
 
     $Documento = new Documento($_REQUEST['documentId']);
-    $Documento->estado = 'ANULADO';
+    $Documento->setAttributes([
+        'estado' => 'Anulado',
+        'estado_aprobacion' => 'Anulado'
+    ]);
 
     if (!$Documento->save()) {
         throw new Exception("Error Processing Request", 1);

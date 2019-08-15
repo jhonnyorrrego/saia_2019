@@ -9,6 +9,10 @@ class VersionDocumento extends Model
     protected $version;
     protected $pdf;
 
+    //relations
+    private $Funcionario;
+    private $pages;
+    private $attachments;
 
     function __construct($id = null)
     {
@@ -42,6 +46,76 @@ class VersionDocumento extends Model
     protected function afterCreate()
     {
         return $this->addTraceability();
+    }
+
+    /**
+     * obtiene una instancia del funcionario vinculado
+     *
+     * @return object Funcionario
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-14
+     */
+    public function getUser()
+    {
+        if (!$this->Funcionario) {
+            $this->Funcionario = $this->getRelationFk('Funcionario', 'funcionario_idfuncionario');
+        }
+
+        return $this->Funcionario;
+    }
+
+    /**
+     * obtiene todas las paginas almacenadas 
+     * en la version
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-14
+     */
+    public function getPages()
+    {
+        if (!$this->pages) {
+            $this->pages = VersionPagina::findAllByAttributes([
+                'documento_iddocumento' => $this->documento_iddocumento,
+                'fk_idversion_documento' => $this->getPK()
+            ]);
+        }
+
+        return $this->pages;
+    }
+
+    /**
+     * obtiene todas las paginas almacenadas 
+     * en la version
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-14
+     */
+    public function getAttachments()
+    {
+        if (!$this->attachments) {
+            $this->attachments = VersionAnexos::findAllByAttributes([
+                'documento_iddocumento' => $this->documento_iddocumento,
+                'fk_idversion_documento' => $this->getPK()
+            ]);
+        }
+
+        return $this->attachments;
+    }
+
+    /**
+     * crea el pdf del documento en el temporal del usuario
+     *
+     * @return mixed
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-14
+     */
+    public function getPdf()
+    {
+        $prefix = 'pdf-' . $this->getPK();
+        $image = TemporalController::createTemporalFile($this->pdf, $prefix);
+        return $image->success ? $image->route : false;
     }
 
     /**

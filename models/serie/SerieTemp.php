@@ -32,7 +32,6 @@ class SerieTemp extends Model
         $this->dbAttributes = (object) [
             'safe' => [
                 'cod_padre',
-                'cod_arbol',
                 'nombre',
                 'codigo',
                 'tipo',
@@ -46,10 +45,8 @@ class SerieTemp extends Model
                 'dis_conservacion',
                 'dis_seleccion',
                 'dis_microfilma',
-                'fk_serie_version',
-                'estado'
             ],
-            'primary'=>'idserie'
+            'primary' => 'idserie'
         ];
     }
 }

@@ -2,59 +2,66 @@
 
 interface ISql
 {
-    /**
-     * gestiona la conexion a la base de datos
-     *
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019
-     */
-    public function connect();
-
-    /**
-     * finaliza la conexion de base de datos
-     *
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019
-     */
-    public function disconnect();
-
-    /**
-     * ejecuta una consulta
-     *
-     * @param string $sql
-     * @param integer $start limite inicial
-     * @param integer $end limite final
-     * @return array
-     */
-    public function search($sql, $start = 0, $end = 0);
-
-    /**
-     * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
-     * @param array $arreglo_cadena
-     * @return string sentencia concatenar adecuada para el motor configurado
-     */
-    public function concatenar_cadena($arreglo_cadena);
-
-    public function liberar_resultado($rs);
-
-    /*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>una matriz con los resultados de la consulta, indices numericos y asociativos
-	 * <Pre-condiciones>
-	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+	/**
+	 * gestiona la conexion a la base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
 	 */
-    public function Ejecutar_Sql($sql);
+	public function connect();
 
-    public function sacar_fila($rs);
+	/**
+	 * finaliza la conexion de base de datos
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019
+	 */
+	public function disconnect();
 
-    /*
+	/**
+	 * ejecuta una consulta
+	 *
+	 * @param string $sql
+	 * @param integer $start limite inicial
+	 * @param integer $end limite final
+	 * @return array
+	 */
+	public function search($sql, $start = 0, $end = 0);
+
+	/**
+	 * ejecuta una sentencia sql
+	 *
+	 * @param string $sql
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-08-13
+	 */
+	public function query($sql);
+
+	/**
+	 * obtiene el identificador del ultimo
+	 * registro insertado
+	 *
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-08-13
+	 */
+	public function lastInsertId();
+
+	/**
+	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
+	 * @param array $arreglo_cadena
+	 * @return string sentencia concatenar adecuada para el motor configurado
+	 */
+	public function concatenar_cadena($arreglo_cadena);
+
+	public function liberar_resultado($rs);
+
+	public function sacar_fila($rs);
+
+	/*
 	 * <Clase>SQL
 	 * <Nombre>Nombre_Campo
 	 * <Parametros>pos-posición del campo en el array resultado
@@ -65,9 +72,9 @@ interface ISql
 	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
 	 * <Post-condiciones>
 	 */
-    public function Nombre_Campo($rs, $pos);
+	public function Nombre_Campo($rs, $pos);
 
-    /*
+	/*
 	 * <Clase>SQL
 	 * <Nombre>Lista_Tabla
 	 * <Parametros>db-nombre de la base de datos a listar
@@ -78,9 +85,9 @@ interface ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-    public function Lista_Tabla($db);
+	public function Lista_Tabla($db);
 
-    /*
+	/*
 	 * <Clase>SQL
 	 * <Nombre>Busca_Tabla
 	 * <Parametros>tabla-nombre de la tabla a examinar
@@ -91,9 +98,9 @@ interface ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-    public function Busca_tabla($tabla, $campo = "");
+	public function Busca_tabla($tabla, $campo = "");
 
-    /*
+	/*
 	 * <Clase>SQL
 	 * <Nombre>Numero_Campos
 	 * <Parametros>
@@ -104,48 +111,33 @@ interface ISql
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-    public function Numero_Campos($rs);
+	public function Numero_Campos($rs);
 
-    /*
-	 * <Clase>SQL
-	 * <Nombre>Ultimo_Insert
-	 * <Parametros>
-	 * <Responsabilidades>segun el motor llama la función deseada
-	 * <Notas>se utiliza después de la función insert
-	 * <Excepciones>
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-    public function Ultimo_Insert();
+	public function resta_fechas($fecha1, $fecha2);
 
-    public function resta_fechas($fecha1, $fecha2);
+	public static function fecha_db_almacenar($fecha, $formato);
 
-    public static function fecha_db_almacenar($fecha, $formato);
+	public static function fecha_db_obtener($campo, $formato);
 
-    public static function fecha_db_obtener($campo, $formato);
+	public function suma_fechas($fecha1, $cantidad, $tipo);
 
-    public function mostrar_error();
+	public function resta_horas($fecha1, $fecha2);
 
-    public function suma_fechas($fecha1, $cantidad, $tipo);
+	public function compara_fechas($fecha_control, $fecha_inicial);
 
-    public function resta_horas($fecha1, $fecha2);
+	public function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
 
-    public function compara_fechas($fecha_control, $fecha_inicial);
+	public function listar_campos_tabla($tabla, $tipo_retorno);
 
-    public function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
+	public function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
 
-    public function listar_campos_tabla($tabla, $tipo_retorno);
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null);
 
-    public function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
+	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla);
 
-    public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null);
+	public function formato_elimina_indices_tabla($tabla);
 
-    public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla);
-
-    public function formato_elimina_indices_tabla($tabla);
-
-    /*
+	/*
 	 * <Clase>
 	 * <Nombre>elimina_indice_campo</Nombre>
 	 * <Parametros>$tabla:define la tabla donde se debe hacer el cambio;$campo:arreglo que debe contener los siguentes parametros:
@@ -159,9 +151,9 @@ interface ISql
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-    public function elimina_indice_campo($tabla, $campo);
+	public function elimina_indice_campo($tabla, $campo);
 
-    public function verificar_existencia($tabla);
+	public function verificar_existencia($tabla);
 
-    public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
+	public function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 }

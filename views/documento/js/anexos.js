@@ -1,11 +1,14 @@
-$(function () {
+$(function() {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-fileparams]').data('fileparams');
 
     if (typeof Files == 'undefined') {
-        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
-            files = init();
-        });
+        $.getScript(
+            `${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`,
+            function() {
+                files = init();
+            }
+        );
     } else {
         files = init();
     }
@@ -18,20 +21,21 @@ $(function () {
             dropzone: {
                 url: `${baseUrl}app/temporal/cargar_anexos.php`,
                 params: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key'),
                     dir: 'documento'
                 }
             },
             bootstrapTable: {
                 url: `${baseUrl}app/documento/consulta_anexos.php`,
-                queryParams: function (queryParams) {
+                queryParams: function(queryParams) {
                     queryParams.sortOrder = 'desc';
                     queryParams.documentId = params.documentId;
                     queryParams.key = localStorage.getItem('key');
                     return queryParams;
                 }
             },
-            save: function (description, files, fileId) {
+            save: function(description, files, fileId) {
                 let success = false;
                 $.ajax({
                     type: 'POST',
@@ -46,11 +50,11 @@ $(function () {
                         dir: 'documento',
                         fileId: fileId
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             top.notification({
                                 type: 'success',
-                                message: response.message,
+                                message: response.message
                             });
                             success = true;
                         }
@@ -59,7 +63,7 @@ $(function () {
 
                 return success;
             },
-            delete: function (key) {
+            delete: function(key) {
                 let success = false;
                 $.ajax({
                     type: 'POST',
@@ -72,7 +76,7 @@ $(function () {
                         fileId: key,
                         type: this.sourceReference
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             success = true;
                         }
@@ -81,17 +85,17 @@ $(function () {
 
                 return success;
             },
-            expandBootstrapTable: function (row) {
+            expandBootstrapTable: function(row) {
                 return {
                     url: `${baseUrl}app/documento/consulta_anexos.php`
-                }
+                };
             }
         };
 
         return new Files(options);
     }
 
-    $('#show_pages').on('click', function () {
+    $('#show_pages').on('click', function() {
         let route = `${baseUrl}views/visor/viewer_annotate_image.php?`;
         route += $.param({
             typeId: params.documentId,

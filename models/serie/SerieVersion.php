@@ -35,13 +35,11 @@ class SerieVersion extends Model
         ];
     }
 
-    public static function VersionActual()
+    public static function getCurrentVersion()
     {
-        $id = SerieVersion::search("SELECT MAX(idserie_version) AS id FROM serie_version");
-        if (!empty($id)) {
-            return new SerieVersion($id[0]);
-        } else {
-            throw new Exception("No existe una version actual de la TRD");
-        }
+        $subConsulta = "(SELECT MAX(version) FROM serie_version)";
+        $sql = "SELECT * FROM serie_version WHERE version={$subConsulta}";
+        $data = SerieVersion::findBySql($sql);
+        return !empty($data) ? $data[0] : false;
     }
 }

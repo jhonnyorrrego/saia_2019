@@ -123,9 +123,9 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
                     <?= $actions ?>
                     <?= $btn_add ?>
 
-                    <!--button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
+                    <button class="btn btn-secondary" title="Descargar" id="boton_exportar_excel">
                         <i class="fa fa-download"></i>
-                    </button-->
+                    </button>
                     <div class="pull-right d-none" valign="middle">
                         <iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src="" hspace="0" vspace="0" height="40px"></iframe>
                     </div>
@@ -185,6 +185,7 @@ if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
     <?= bootstrapTable() ?>
     <?= icons() ?>
     <?= select2() ?>
+    <?= librerias_acciones_kaiten() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $.fn.serializeObject = function() {
             var o = {};

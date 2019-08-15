@@ -548,8 +548,6 @@ function llenar_datos_funcion($idformato, $iddoc)
     if ($datos[0]["estado"] == 'INICIADO') {
         $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $datos[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $iddoc;
         phpmkr_query($sql);
-        $texto = '<button class="btn btn-mini btn-warning" onclick="window.location=\'editar_radicacion_entrada.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '\';">Llenar datos</button>';
-        echo $texto;
     }
 }
 

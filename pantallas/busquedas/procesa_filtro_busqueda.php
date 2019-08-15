@@ -77,13 +77,13 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			}
 			if (MOTOR == "Oracle") {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn->Ejecutar_Sql($sql2);
-				$idbusqueda_temp = $conn->Ultimo_Insert();
+				$conn->query($sql2);
+				$idbusqueda_temp = $conn->lastInsertId();
 				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
 				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn->Ejecutar_Sql($sql2);
-				$idbusqueda_temp = $conn->Ultimo_Insert();
+				$conn->query($sql2);
+				$idbusqueda_temp = $conn->lastInsertId();
 			}
 
 			$idbusqueda_fil = filtros_adicionales();
@@ -249,8 +249,8 @@ function filtros_adicionales()
 			$where = stripslashes($valores[1]);
 		}
 		$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
-		$conn->Ejecutar_Sql($sql1);
-		$idbusqueda = $conn->Ultimo_Insert();
+		$conn->query($sql1);
+		$idbusqueda = $conn->lastInsertId();
 		return $idbusqueda;
 	}
 }
@@ -937,7 +937,7 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 			$clob_blob = 'blob';
 		}
 		$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
-		$conn->Ejecutar_Sql($up_clob);
+		$conn->query($up_clob);
 		$stmt = OCIParse($conn->connection, $sql) or print_r(OCIError($stmt));
 
 		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));

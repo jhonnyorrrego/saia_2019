@@ -177,8 +177,10 @@ include_once $ruta_db_superior . "core/autoload.php";
             <table id="tabla_resultados" data-height="" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
                 <thead style="font-size: 11px;">
                     <tr>
-                        <th data-field="state" data-checkbox="true"></th>
                         <?php
+                        if (!empty($datos_busqueda[0]["acciones_seleccionados"])) {
+                            echo '<th data-field="state" data-checkbox="true"></th>';
+                        }
                         $lcampos1 = $datos_busqueda[0]["campos"];
                         if ($datos_busqueda[0]["campos_adicionales"]) {
                             $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
