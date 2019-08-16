@@ -67,17 +67,7 @@ if ($component["enlace_adicionar"]) {
     </button>";
 }
 
-if (!empty($component["acciones_seleccionados"])) {
-    $datos_reporte = [
-        'idbusqueda_componente' => $componentId,
-        'variable_busqueda' => @$_REQUEST["variable_busqueda"]
-    ];
 
-    $acciones = explode(",", $component["acciones_seleccionados"]);
-    foreach ($acciones as $key => $value) {
-        $actions = $value($datos_reporte);
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,6 +84,18 @@ if (!empty($component["acciones_seleccionados"])) {
     <?php
     foreach ($libraries as $key => $ruta) {
         include_once $ruta_db_superior . $ruta;
+    }
+
+    if (!empty($component["acciones_seleccionados"])) {
+        $datos_reporte = [
+            'idbusqueda_componente' => $componentId,
+            'variable_busqueda' => @$_REQUEST["variable_busqueda"]
+        ];
+    
+        $acciones = explode(",", $component["acciones_seleccionados"]);
+        foreach ($acciones as $key => $value) {
+            $actions = $value($datos_reporte);
+        }
     }
     ?>
 </head>
@@ -390,6 +392,17 @@ if (!empty($component["acciones_seleccionados"])) {
                 return $(window).height() - $('h1').outerHeight(true);
             }
         });
+
+        function totalSelection() {
+            registros_seleccionados = new Array();
+            var seleccionadosGlobal = $(selections);
+            for (var i = 1; i < seleccionadosGlobal.length; i++) {
+                seleccionadosGlobal[i].forEach(function(valor) {
+                    registros_seleccionados.push(valor);
+                });
+            }
+            return registros_seleccionados;
+        }
     </script>
 </body>
 

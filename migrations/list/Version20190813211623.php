@@ -116,7 +116,7 @@ final class Version20190813211623 extends AbstractMigration
         ]);
         
         $query = $this->connection->fetchAll("select idfunciones_formato from funciones_formato where idfunciones_formato=1472");
-		if(!$query[0]['idmodulo']){
+		if(!$query[0]['idfunciones_formato']){
             $this->connection->insert('funciones_formato', [
                 'idfunciones_formato' => '1472',
                 'nombre' => '{*mostrar_num_pagina*}',
@@ -126,7 +126,17 @@ final class Version20190813211623 extends AbstractMigration
                 'formato' => '',
                 'acciones' => 'm'
             ]);
-        }  
+        }
+
+        $query = $this->connection->fetchAll("select idfunciones_formato_enlace from funciones_formato_enlace where idfunciones_formato_enlace=1555");
+		if(!$query[0]['idfunciones_formato_enlace']){
+            $this->connection->insert('funciones_formato_enlace', [
+                'idfunciones_formato_enlace' => '1555',
+                'formato_idformato' => '353',
+                'funciones_formato_fk' => '1472'
+            ]);
+        }
+
     }
 
     public function down(Schema $schema) : void

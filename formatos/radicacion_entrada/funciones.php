@@ -968,7 +968,7 @@ function radicacion_entrada_fab_buttons(){
             $datos2 = array('confirmarRecibido' . $distribuciones[$i]["iddistribucion"] => [
                 'button' => [
                     'id' => $distribuciones[$i]["iddistribucion"],
-                    'class' => 'small red finalizar_item_usuario_actual',
+                    'class' => 'small blue finalizar_item_usuario_actual',
                     'html' => '',
                     'tooltip' => 'Confirmar Recibido item ' . $distribuciones[$i]["numero_distribucion"],
                     'visible' => 1,
