@@ -202,7 +202,6 @@ if (!$_REQUEST["total"]) {
         $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $sql;
         $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
     }
-
     $total = $result["numcampos"] > 1 ? $result["numcampos"] : $result[0]["cant"];
 } else {
     $total = $_REQUEST["total"];

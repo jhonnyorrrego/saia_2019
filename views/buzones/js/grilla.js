@@ -15,6 +15,10 @@ $(function() {
             queryParams = $.extend(queryParams, request);
             return queryParams;
         },
+        responseHandler: function(response) {
+            request.total = response.total;
+            return response;
+        },
         toolbar: '#toolbar',
         classes: 'table table-hover mt-0',
         theadClasses: 'thead-light',
