@@ -10,7 +10,7 @@ $(function() {
     };
 
     $table.bootstrapTable({
-        url: baseUrl + 'app/busquedas/datosBootstrapTable.php',
+        url: baseUrl + 'app/busquedas/generar_reporte.php',
         queryParams: function(queryParams) {
             queryParams = $.extend(queryParams, request);
             return queryParams;
@@ -20,12 +20,12 @@ $(function() {
         theadClasses: 'thead-light',
         sidePagination: 'server',
         queryParamsType: 'other',
+        columns: getColumns(),
         pagination: true,
         maintainSelected: true,
         pageSize: params.pageSize,
         paginationSuccessivelySize: 1,
         paginationPagesBySide: 1,
-        columns: getColumns(),
         showExport: true,
         exportTypes: ['csv', 'txt', 'excel', 'pdf'],
         exportDataType: 'all'
@@ -83,6 +83,10 @@ $(function() {
             c.field = c.field.replace(/[{**}]/g, '').split('@')[0];
             return c;
         });
+        if (params.showCheckbox) {
+            data.unshift({ checkbox: true });
+        }
+
         return data;
     }
 

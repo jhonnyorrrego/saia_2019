@@ -33,9 +33,7 @@ class SqlMysql extends Sql implements ISql
     public function search($sql, $start = 0, $end = 0)
     {
         if ($end) {
-            $total = $end - $start + 1;
-            $start = $start < 0 ? 0 : $start;
-            $sql .= " LIMIT $start,$total";
+            $sql .= " LIMIT $start,$end";
         }
 
         $result = mysqli_query($this->connection, $sql);

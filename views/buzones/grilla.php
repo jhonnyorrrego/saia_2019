@@ -12,15 +12,32 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
+$sql = <<<SQL
+    SELECT
+        A.cantidad_registros,
+        A.ruta_libreria_pantalla,
+        B.idbusqueda_componente,
+        B.info,
+        B.busqueda_avanzada,
+        B.enlace_adicionar,
+        B.acciones_seleccionados
+    FROM
+        busqueda A JOIN
+        busqueda_componente B
+            ON A.idbusqueda=B.busqueda_idbusqueda
+    WHERE
+        B.idbusqueda_componente={$_REQUEST["idbusqueda_componente"]}
+SQL;
+$component = StaticSql::search($sql, 0, 1)[0];
 
-$BusquedaComponente = new BusquedaComponente($_REQUEST['idbusqueda_componente']);
 $params = json_encode(array_merge($_REQUEST, [
     'baseUrl' => $ruta_db_superior,
-    'pageSize' => $BusquedaComponente->getSearch()->cantidad_registros,
-    'columns' => $BusquedaComponente->info
+    'pageSize' => $component['cantidad_registros'],
+    'columns' => $component['info'],
+    'showCheckbox' => empty($component['acciones_seleccionados']) ? 0 : 1
 ]));
 $btn_search = $btn_add = $actions = '';
-$query = "idbusqueda_componente={$BusquedaComponente->getPK()}";
+$query = "idbusqueda_componente={$component['idbusqueda_componente']}";
 
 echo jquery();
 echo bootstrap();
@@ -29,37 +46,20 @@ echo bootstrapTableExport();
 echo theme();
 echo icons();
 
-$phpLibraries = explode(",", $BusquedaComponente->getSearch()->ruta_libreria);
-$jsLibraries = explode(",", $BusquedaComponente->getSearch()->ruta_libreria_pantalla);
-$libraries = array_merge($phpLibraries, $jsLibraries);
-
-foreach ($libraries as $library) {
-    include_once $ruta_db_superior . $library;
+$routes = $component['ruta_libreria_pantalla'];
+if ($routes) {
+    $libraries = array_unique(explode(",", $routes));
+    foreach ($libraries as $library) {
+        include_once $ruta_db_superior . $library;
+    }
 }
-
-if ($BusquedaComponente->busqueda_avanzada) {
-    $btn_search = "<button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='{$BusquedaComponente->busqueda_avanzada}?{$query}'>
-        <i class='fa fa-search'></i>
-        <span class='d-none d-sm-inline'>Buscar</span>
-    </button>";
-}
-
-if ($BusquedaComponente->enlace_adicionar) {
-    $BusquedaComponente->enlace_adicionar .= (strpos($BusquedaComponente->enlace_adicionar, '?') === false ? '?' : '&') . $query;
-
-    $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$BusquedaComponente->enlace_adicionar}'>
-        <i class='fa fa-plus'></i>
-        <span class='d-none d-sm-inline'>Adicionar</span>
-    </button>";
-}
-
-if ($BusquedaComponente->acciones_seleccionados) {
+if ($component['acciones_seleccionados']) {
     $datos_reporte = [
-        'idbusqueda_componente' => $BusquedaComponente->getPK(),
+        'idbusqueda_componente' => $component['idbusqueda_componente'],
         'variable_busqueda' => $_REQUEST["variable_busqueda"] ?? null
     ];
 
-    $acciones = explode(",", $BusquedaComponente->acciones_seleccionados);
+    $acciones = explode(",", $component['acciones_seleccionados']);
     foreach ($acciones as $key => $value) {
         $actions = $value($datos_reporte);
     }
@@ -69,8 +69,23 @@ if ($BusquedaComponente->acciones_seleccionados) {
     <div class="row mx-0" id="content">
         <div class="col-12">
             <div id="toolbar">
-                <?= $btn_search ?>
-                <?= $btn_add ?>
+                <?php if ($component['busqueda_avanzada']) : ?>
+                <button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='<?= "{$component['busqueda_avanzada']}?{$query}" ?>'>
+                    <i class='fa fa-search'></i>
+                    <span class='d-none d-sm-inline'>Buscar</span>
+                </button>
+                <?php endif; ?>
+
+                <?php
+                if ($component['enlace_adicionar']) :
+                    $component['enlace_adicionar'] .= (strpos($component['enlace_adicionar'], '?') === false ? '?' : '&') . $query;
+                    ?>
+                <button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='<?= $component['enlace_adicionar'] ?>'>
+                    <i class='fa fa-plus'></i>
+                    <span class='d-none d-sm-inline'>Adicionar</span>
+                </button>
+                <?php endif; ?>
+
                 <?= $actions ?>
             </div>
             <table id="table" data-selections=""></table>
