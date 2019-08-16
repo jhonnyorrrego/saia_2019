@@ -6,404 +6,90 @@ while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
         $ruta_db_superior = $ruta;
     }
-
     $ruta .= "../";
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "pantallas/documento/librerias.php";
-
-$componentId = $_REQUEST["idbusqueda_componente"];
+include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 $sql = <<<SQL
-    SELECT 
-        *
-    FROM 
-        busqueda A,
+    SELECT
+        A.cantidad_registros,
+        A.ruta_libreria_pantalla,
+        B.idbusqueda_componente,
+        B.info,
+        B.busqueda_avanzada,
+        B.enlace_adicionar,
+        B.acciones_seleccionados
+    FROM
+        busqueda A JOIN
         busqueda_componente B
+            ON A.idbusqueda=B.busqueda_idbusqueda
     WHERE
-        A.idbusqueda=B.busqueda_idbusqueda AND
-        B.idbusqueda_componente= {$componentId}
-
+        B.idbusqueda_componente={$_REQUEST["idbusqueda_componente"]}
 SQL;
-$datos_busqueda = StaticSql::search($sql);
-$component = $datos_busqueda[0];
+$component = StaticSql::search($sql, 0, 1)[0];
 
-$phpLibraries = explode(",", $component["ruta_libreria"]);
-$jsLibraries = explode(",", $component["ruta_libreria_pantalla"]);
-$libraries = array_merge($phpLibraries, $jsLibraries);
-
-preg_match("/(\w*)\.(\w*)/", $component["llave"], $valor_campos);
-if (!empty($valor_campos)) {
-    $llave = $valor_campos[2];
-} else {
-    $llave = trim($component["llave"]);
-}
-if (empty($llave)) {
-    $campos = explode(",", $component["campos"]);
-    $llave = trim($campos[0]);
-}
-
+$params = json_encode(array_merge($_REQUEST, [
+    'baseUrl' => $ruta_db_superior,
+    'pageSize' => $component['cantidad_registros'],
+    'columns' => $component['info'],
+    'showCheckbox' => empty($component['acciones_seleccionados']) ? 0 : 1
+]));
 $btn_search = $btn_add = $actions = '';
+$query = "idbusqueda_componente={$component['idbusqueda_componente']}";
 
-if ($component["busqueda_avanzada"]) {
-    $component["busqueda_avanzada"] .= '?idbusqueda_componente=' . $componentId;
-    $btn_search = "<button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='{$component["busqueda_avanzada"]}'>
-        <i class='fa fa-search'></i>
-    </button>";
-}
+echo jquery();
+echo bootstrap();
+echo bootstrapTable();
+echo bootstrapTableExport();
+echo theme();
+echo icons();
 
-if ($component["enlace_adicionar"]) {
-    if (strpos($component["enlace_adicionar"], '?') === false) {
-        $component["enlace_adicionar"] .= '?idbusqueda_componente=' . $componentId;
-    } else {
-        $component["enlace_adicionar"] .= '&idbusqueda_componente=' . $componentId;
+$routes = $component['ruta_libreria_pantalla'];
+if ($routes) {
+    $libraries = array_unique(explode(",", $routes));
+    foreach ($libraries as $library) {
+        include_once $ruta_db_superior . $library;
     }
-    $btn_add = "<button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='{$component["enlace_adicionar"]}'>
-        <i class='fa fa-plus'></i>
-        <span class='d-none d-sm-inline'>Adicionar</span>
-    </button>";
 }
+if ($component['acciones_seleccionados']) {
+    $datos_reporte = [
+        'idbusqueda_componente' => $component['idbusqueda_componente'],
+        'variable_busqueda' => $_REQUEST["variable_busqueda"] ?? null
+    ];
 
-
+    $acciones = explode(",", $component['acciones_seleccionados']);
+    foreach ($acciones as $key => $value) {
+        $actions = $value($datos_reporte);
+    }
+}
 ?>
-<!DOCTYPE html>
-<html>
+<div class="container-fluid px-0">
+    <div class="row mx-0" id="content">
+        <div class="col-12">
+            <div id="toolbar">
+                <?php if ($component['busqueda_avanzada']) : ?>
+                <button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='<?= "{$component['busqueda_avanzada']}?{$query}" ?>'>
+                    <i class='fa fa-search'></i>
+                    <span class='d-none d-sm-inline'>Buscar</span>
+                </button>
+                <?php endif; ?>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Consulta de información</title>
-    <?= jquery() ?>
-    <?= bootstrap() ?>
-    <?= theme() ?>
+                <?php
+                if ($component['enlace_adicionar']) :
+                    $component['enlace_adicionar'] .= (strpos($component['enlace_adicionar'], '?') === false ? '?' : '&') . $query;
+                    ?>
+                <button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='<?= $component['enlace_adicionar'] ?>'>
+                    <i class='fa fa-plus'></i>
+                    <span class='d-none d-sm-inline'>Adicionar</span>
+                </button>
+                <?php endif; ?>
 
-    <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/buzones/css/grilla.css">
-
-    <?php
-    foreach ($libraries as $key => $ruta) {
-        include_once $ruta_db_superior . $ruta;
-    }
-
-    if (!empty($component["acciones_seleccionados"])) {
-        $datos_reporte = [
-            'idbusqueda_componente' => $componentId,
-            'variable_busqueda' => @$_REQUEST["variable_busqueda"]
-        ];
-    
-        $acciones = explode(",", $component["acciones_seleccionados"]);
-        foreach ($acciones as $key => $value) {
-            $actions = $value($datos_reporte);
-        }
-    }
-    ?>
-</head>
-
-<body>
-    <div class="container-fluid mw-100 px-3" style="overflow-y:auto;height:100%">
-        <div class="row">
-            <div class="col-12">
-                <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
-                    <input type="hidden" value="<?= $component['cantidad_registros'] ?>" name="busqueda_total_registros" id="busqueda_registros">
-                    <input type="hidden" name="sord" id="sord" value="desc">
-                    <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $componentId ?>">
-                    <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
-                    <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?= $_REQUEST["idbusqueda_filtro_temp"] ?>">
-                    <input type="hidden" name="idbusqueda_temporal" id="idbusqueda_temporal">
-                    <input type="hidden" name="busqueda_total_paginas" id="busqueda_total_paginas" value="">
-                    <input type="hidden" value="<?= $_REQUEST["variable_busqueda"] ?>" name="variable_busqueda" id="variable_busqueda">
-                    <input type="hidden" name="rows" id="rows" value="20">
-                </form>
+                <?= $actions ?>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12" id="div_resultados">
-                <div id="menu_buscador">
-                    <?= $btn_search ?>
-                    <?= $actions ?>
-                    <?= $btn_add ?>
-                </div>
-                <table id="tabla_resultados" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-maintain-selected="true">
-                    <thead>
-                        <tr>
-                            <?php
-                            if (!empty($component["acciones_seleccionados"])) {
-                                echo '<th data-field="state" data-checkbox="true"></th>';
-                            }
-                            $lcampos1 = $component["campos"];
-                            if ($component["campos_adicionales"]) {
-                                $lcampos1 .= ',' . $component["campos_adicionales"];
-                            }
-                            $lcampos2 = explode(",", $lcampos1);
-                            $lcampos = array();
-                            foreach ($lcampos2 as $key => $valor) {
-                                if (strpos($valor, ".")) {
-                                    $valor_campos = explode(".", $valor);
-                                    array_push($lcampos, trim($valor_campos[count($valor_campos) - 1]));
-                                } else {
-                                    array_push($lcampos, trim($valor));
-                                }
-                            }
-                            $info = explode("|-|", $component["info"]);
-                            $can_info = count($info);
-                            for ($i = 0; $i < $can_info; $i++) {
-                                $ordenable = "";
-                                $detalle_info = explode("|", $info[$i]);
-                                $dato_campo = str_replace(array(
-                                    "{*",
-                                    "*}"
-                                ), "", $detalle_info[1]);
-                                if (!in_array($dato_campo, $lcampos)) {
-                                    $funcion = explode("@", $dato_campo);
-                                    $dato_campo = $funcion[0];
-                                } else {
-                                    $ordenable = 'data-sortable="true"';
-                                }
-
-                                echo '<th data-field="' . $dato_campo . '" data-align="center" ' . $ordenable . '>' . $detalle_info[0] . '</th>';
-                            }
-                            ?>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="cargando"></div>
-            </div>
+            <table id="table" data-selections=""></table>
         </div>
     </div>
-
-    <?= bootstrapTable() ?>
-    <?= icons() ?>
-    <?= select2() ?>
-    <?= librerias_acciones_kaiten() ?>
-    <script data-baseurl="<?= $ruta_db_superior ?>">
-        $.fn.serializeObject = function() {
-            var o = {};
-            var a = this.serializeArray();
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
-            });
-            return o;
-        };
-
-        var baseUrl = "<?= $ruta_db_superior ?>";
-        var $table = $('#tabla_resultados');
-        var $body = $("body");
-        var llave = "<?= $llave ?>";
-        var selections = [
-            [0, -1]
-        ];
-        var paginaActual = 1;
-
-        function responseHandler(res) {
-            var options = $table.bootstrapTable('getOptions');
-            paginaActual = options.pageNumber;
-
-            res.total = res.records;
-            if (res.rows) {
-                $.each(res.rows, function(i, row) {
-                    row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
-                });
-            } else {
-                res.rows = [];
-            }
-
-            return res;
-        }
-
-        $(document).ready(function() {
-            $table.bootstrapTable({
-                method: 'get',
-                classes: "table table-hover table-bordered mt-0",
-                theadClasses: "thead-light",
-                cache: false,
-                height: getHeight(),
-                striped: true,
-                pagination: true,
-                minimumCountColumns: 1,
-                clickToSelect: true,
-                sidePagination: 'server',
-                pageSize: $("#rows").val(),
-                search: false,
-                cardView: false,
-                pageList: [5, 10, 25, 50, 100],
-                paginationVAlign: 'bottom',
-                showColumns: true,
-                maintainSelected: true,
-                idField: llave,
-                sortable: true,
-                responseHandler: "responseHandler",
-                icons: {
-                    refresh: 'fa-refresh',
-                    toggle: 'fa-cogs',
-                    columns: 'fa-th-list',
-                    advancedSearchIcon: 'fa-search'
-                },
-                rowStyle: () => {
-                    return {
-                        classes: 'text-nowrap',
-                        css: {
-                            "font-size": "11px"
-                        }
-                    };
-                },
-            });
-
-            $table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', () => {
-                selections[paginaActual] = getIdSelections();
-            });
-
-            procesamiento_buscar();
-            $("#kformulario_saia").on('submit', function() {
-                procesamiento_buscar();
-            });
-
-            $("#btn_search").on('click', function() {
-                top.topModal({
-                    url: baseUrl + $(this).data('url'),
-                    size: 'modal-xl',
-                    title: 'Búsqueda',
-                    buttons: {
-                        success: {
-                            label: "Buscar",
-                            class: "btn btn-complete"
-                        },
-                        cancel: {
-                            label: "Cerrar",
-                            class: "btn btn-danger"
-                        }
-                    },
-                    onSuccess: function(data) {
-                        let params = getParams(data.url);
-                        $('#idbusqueda_componente').val(params.idbusqueda_componente || '');
-                        $('#idbusqueda_filtro_temp').val(params.idbusqueda_filtro_temp || '');
-                        $('#idbusqueda_temporal').val(params.idbusqueda_temporal || '');
-                        $('#busqueda_total_paginas').val(null);
-
-                        procesamiento_buscar();
-                        top.closeTopModal();
-                    }
-                });
-            });
-
-            $("#btn_add").on('click', function() {
-                top.topModal({
-                    url: baseUrl + $(this).data('url'),
-                    size: 'modal-xl',
-                    title: 'Crear',
-                    onSuccess: function() {
-                        top.closeTopModal();
-                        $table.bootstrapTable("refresh");
-                    },
-                    buttons: {
-                        success: {
-                            label: "Guardar",
-                            class: "btn btn-complete"
-                        },
-                        cancel: {
-                            label: "Cancelar",
-                            class: "btn btn-danger"
-                        }
-                    }
-                });
-            });
-
-            $(document).keypress(function(event) {
-                var keycode = (event.keyCode ? event.keyCode : event.which);
-                if (keycode == '13') {
-                    $("#ksubmit_saia").click();
-                }
-            });
-
-            $(document).on({
-                ajaxStart: function() {
-                    $body.addClass("loading");
-                },
-                ajaxStop: function() {
-                    $body.removeClass("loading");
-                }
-            });
-
-            function getParams(url) {
-                let queryString = url.split('?')[1];
-                let portions = queryString.split('&');
-                let params = new Object();
-
-                portions.forEach(p => {
-                    let param = p.split('=');
-                    params[param[0]] = param[1];
-                });
-
-                return params;
-            }
-
-            function getIdSelections() {
-                return $.map($table.bootstrapTable('getSelections'), function(row) {
-                    return row[llave];
-                });
-            }
-
-            function procesamiento_buscar(externo) {
-                var data = $('#kformulario_saia').serializeObject();
-                $('#tabla_resultados').bootstrapTable('refreshOptions', {
-                    url: `${baseUrl}pantallas/busquedas/servidor_busqueda_exp.php`,
-                    queryParams: function(params) {
-                        var pagina = 1;
-                        var filas = params.limit;
-                        if (filas > 0) {
-                            pagina = (params.offset / $("#rows").val()) + 1
-                        }
-                        var q = {
-                            "rows": filas,
-                            "numfilas": filas,
-                            "actual_row": params.offset,
-                            "pagina": pagina,
-                            "search": params.search,
-                            "sort": params.sort,
-                            "order": params.order,
-                            "cantidad_total": $("#busqueda_total_paginas").val(),
-                            "sidx": params.sort,
-                            "sord": params.order,
-                            "key": localStorage.getItem("key"),
-                            "token": localStorage.getItem("token")
-                        };
-                        $.extend(data, q);
-                        return data;
-                    },
-                    onLoadSuccess: function(data) {
-                        $("#busqueda_total_paginas").val(data.total);
-                    }
-                });
-                return false;
-            }
-
-            function getHeight() {
-                return $(window).height() - $('h1').outerHeight(true);
-            }
-        });
-
-        function totalSelection() {
-            registros_seleccionados = new Array();
-            var seleccionadosGlobal = $(selections);
-            for (var i = 1; i < seleccionadosGlobal.length; i++) {
-                seleccionadosGlobal[i].forEach(function(valor) {
-                    registros_seleccionados.push(valor);
-                });
-            }
-            return registros_seleccionados;
-        }
-    </script>
-</body>
-
-</html>
+</div>
+<script src="<?= $ruta_db_superior ?>views/buzones/js/grilla.js" id="script_grid" data-params='<?= $params ?>'></script>

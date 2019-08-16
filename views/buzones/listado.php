@@ -29,7 +29,6 @@ $component = StaticSql::search($sql);
         var baseUrl = $("script[data-baseurl]").data('baseurl');
         var params = <?= json_encode($params); ?>;
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>';
-        var UrlsourceData = 'app/busquedas/datosBootstrapTable.php';
         var table = $('#table');
         var sessionVars = {
             key: localStorage.getItem('key'),
@@ -37,7 +36,7 @@ $component = StaticSql::search($sql);
         };
 
         table.bootstrapTable({
-            url: baseUrl + UrlsourceData,
+            url: baseUrl + 'app/busquedas/generar_reporte.php',
             queryParams: function(queryParams) {
                 queryParams = $.extend(queryParams, params, sessionVars);
                 return queryParams;
@@ -55,6 +54,7 @@ $component = StaticSql::search($sql);
                 title: ''
             }],
             responseHandler: function(response) {
+                params.total = response.total;
                 for (let index = 0; index < response.rows.length; index++) {
                     let node = $(response.rows[index].info);
                     let identificador = node.find('.identificator').val();
@@ -143,8 +143,8 @@ $component = StaticSql::search($sql);
 if ($component[0]['ruta_libreria_pantalla']) {
     $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
-    foreach ($libraries as $librarie) {
-        include_once $ruta_db_superior . $librarie;
+    foreach ($libraries as $library) {
+        include_once $ruta_db_superior . $library;
     }
 }
 ?>

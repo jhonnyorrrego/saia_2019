@@ -21,7 +21,7 @@ $response = [
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $order = Anexos::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
     $offset = ($_REQUEST['pageNumber'] - 1)  * $_REQUEST['pageSize'];
-    $limit = $offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 :'(
+    $limit = $_REQUEST['pageSize'];
 
     if (!$_REQUEST['fileId']) {
         $anexos = Anexos::findAllByAttributes([
@@ -56,4 +56,3 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 }
 
 echo json_encode($response);
-

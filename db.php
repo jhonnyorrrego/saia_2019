@@ -441,7 +441,7 @@ function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $re
         $orden : "ORDER BY {$orden} ") : '';
     $sql = htmlspecialchars_decode($sql);
 
-    $return = StaticSql::search($sql, $inicio, $inicio + $registros);
+    $return = StaticSql::search($sql, $inicio, $registros);
     $return['numcampos'] = count($return);
     $return['tabla'] = $tabla;
     $return['sql'] = $sql;
