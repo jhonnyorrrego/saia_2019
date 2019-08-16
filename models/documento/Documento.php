@@ -38,6 +38,7 @@ class Documento extends Model
     protected $fecha_limite;
     protected $ventanilla_radicacion;
     protected $prioridad;
+    protected $estado_aprobacion;
 
     //relations
     protected $Funcionario; //ejecutor
@@ -88,7 +89,8 @@ class Documento extends Model
             'version',
             'fecha_limite',
             'ventanilla_radicacion',
-            'prioridad'
+            'prioridad',
+            'estado_aprobacion'
         ];
         // set the date attributes on the schema
         $dateAttributes = [

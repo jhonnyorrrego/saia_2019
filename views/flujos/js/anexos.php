@@ -33,6 +33,7 @@ $(function () {
             dropzone: {
                 url: `{$baseUrl}app/temporal/cargar_anexos.php`,
                 params: {
+                    token: localStorage.getItem('token'),
                     key: localStorage.getItem('key'),
                     dir: 'flujo'
                 }

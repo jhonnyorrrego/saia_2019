@@ -168,13 +168,13 @@ SQL;
 
         $fields = [];
         foreach ($records as $row) {
-            $fields[] = $row[0]['nombre'];
+            $fields[] = $row->nombre;
         }
 
-        if (!in_array('id{$formato[0]["nombre_tabla"]}', $fields)) {
+        if (!in_array("id{$this->nombre_tabla}", $fields)) {
             CamposFormato::newRecord([
                 'formato_idformato' => $this->getPK(),
-                'nombre' => 'id{$this->nombre_tabla}',
+                'nombre' => "id{$this->nombre_tabla}",
                 'etiqueta' => strtoupper($this->nombre),
                 'tipo_dato' => 'INT',
                 'longitud' => '11',
@@ -237,21 +237,6 @@ SQL;
                 'tipo_dato' => 'INT',
                 'longitud' => '11',
                 'obligatoriedad' => '1',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden',
-                'predeterminado' => 1
-            ]);
-        }
-
-        if (!in_array('estado_documento', $fields) && !$this->item) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => 'estado_documento',
-                'etiqueta' => 'ESTADO DEL DOCUMENTO',
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'banderas' => '',
                 'acciones' => 'a,e',
                 'etiqueta_html' => 'hidden',
                 'predeterminado' => 1

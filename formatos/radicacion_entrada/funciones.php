@@ -548,8 +548,6 @@ function llenar_datos_funcion($idformato, $iddoc)
     if ($datos[0]["estado"] == 'INICIADO') {
         $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $datos[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $iddoc;
         phpmkr_query($sql);
-        $texto = '<button class="btn btn-mini btn-warning" onclick="window.location=\'editar_radicacion_entrada.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '\';">Llenar datos</button>';
-        echo $texto;
     }
 }
 
@@ -720,16 +718,6 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
 
     $tabla .= '</div></div></thead></table></div></div>';
     echo $tabla;
-
-    if ($_REQUEST['tipo'] != 5) {
-        $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
-        $params = json_encode([
-            'baseUrl' => $ruta_db_superior,
-            'iddoc' => $iddoc,
-            'idformato' => $idformato
-        ]);
-    ?><script id='correspondencia' src='<?= $ruta_db_superior ?>formatos/radicacion_entrada/funciones.js' data-params='<?= $params ?>'></script><?php
-    }
 }
 
 function obtener_informacion_proveedor($idformato, $iddoc)
@@ -947,15 +935,40 @@ function actualizar_campos_documento($idformato, $iddoc)
 }
 
 function radicacion_entrada_fab_buttons(){
- 
-    $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "", $conn);
+    global $conn, $datos;
+
+    $entrada = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["documentId"], "", $conn);
     $datos = array();
+    if ($entrada[0]["estado"] == 'INICIADO') {
+        $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $entrada[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $_REQUEST["documentId"];
+        StaticSql::query($sql);
+        $datos2 = array('editarRadicacion' => [
+            'button' => [
+                'id' => "editarRadicacion",
+                'class' => 'small yellow',
+                'html' => '',
+                'tooltip' => 'LLenar Datos',
+                'visible' => 1,
+                'data' => [
+                    'action' => 0
+                ]
+            ],
+            'icon' => [
+                'class' => 'fa fa-edit',
+                'html' => ''
+            ]
+        ]);
+
+        $datos = array_merge($datos,$datos2);
+    }
+
+    $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "", $conn);
     for($i=0; $i < $distribuciones["numcampos"]; $i++){
         if(generar_enlace_finalizar_distribucion($distribuciones[$i]["iddistribucion"])){
             $datos2 = array('confirmarRecibido' . $distribuciones[$i]["iddistribucion"] => [
                 'button' => [
                     'id' => $distribuciones[$i]["iddistribucion"],
-                    'class' => 'small red finalizar_item_usuario_actual',
+                    'class' => 'small blue finalizar_item_usuario_actual',
                     'html' => '',
                     'tooltip' => 'Confirmar Recibido item ' . $distribuciones[$i]["numero_distribucion"],
                     'visible' => 1,
@@ -964,7 +977,7 @@ function radicacion_entrada_fab_buttons(){
                     ]
                 ],
                 'icon' => [
-                    'class' => 'fa fa-times',
+                    'class' => 'fa fa-suitcase',
                     'html' => ''
                 ]
             ]);

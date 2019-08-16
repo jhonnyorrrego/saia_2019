@@ -6,7 +6,7 @@ class NotificationWsController
     private $null = null;
     private $changed;
     private $socket;
-    public $clients = [];
+    private $clients = [];
 
     function __construct($host = 'localhost', $port = 1000)
     {
@@ -25,7 +25,7 @@ class NotificationWsController
     public function init()
     {
         $this->createSocket();
-        //start endless loop, so that our script doesn't stop
+
         while (true) {
             $this->checkNewConnections();
             $this->checkChanges();
@@ -73,8 +73,8 @@ class NotificationWsController
     public function checkNewConnections()
     {
         $this->changed = [];
-        foreach ($this->clients as $clientId => $sockets) {
-            $this->changed = array_merge($this->changed, $sockets);
+        foreach ($this->clients as $socket) {
+            $this->changed = array_merge($this->changed, $socket);
         }
 
         //returns the socket resources in $changed array
@@ -88,10 +88,14 @@ class NotificationWsController
             $this->perform_handshaking($header, $socket_new, $this->host, $this->port); //perform websocket handshake
 
             socket_getpeername($socket_new, $ip); //get ip address of connected socket
-            $response = $this->mask(json_encode(array('type' => 'system', 'message' => $ip . ' connected'))); //prepare json data
-            $this->sendMessage($response, $socket_new); //notify all users about new connection
+            $response = $this->mask(
+                json_encode([
+                    'type' => 'system',
+                    'message' => $ip . ' connected'
+                ])
+            ); //prepare json data
+            $this->sendMessage($response, $socket_new); //notify about new connection
 
-            //make room for new socket
             $found_socket = array_search($this->socket, $this->changed);
             unset($this->changed[$found_socket]);
         }
@@ -113,7 +117,7 @@ class NotificationWsController
             while (socket_recv($changed_socket, $buf, 1024, 0) >= 1) {
                 $received_text = $this->unmask($buf); //unmask data
                 $this->processCommunication($changed_socket, $received_text);
-                break 2; //exist this loop
+                break 2; //exits this loop
             }
 
             $buf = @socket_read($changed_socket, 1024, PHP_NORMAL_READ);
@@ -146,6 +150,8 @@ class NotificationWsController
      */
     public function sendNotifications()
     {
+        throw new Exception("Se debe validar el tiempo de 5 segundos", 1);
+
         if (!$this->getActiveClients()) {
             return;
         }

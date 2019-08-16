@@ -77,7 +77,7 @@ foreach($campos AS $key=>$valor){
                               }
                             ?>
                           </select>
-                          <span id="eliminar" class="label label-success"  style="cursor:pointer">Quitar</span>
+                          <span id="eliminar" class="label label-danger"  style="cursor:pointer">Quitar</span>
                         </div>
                       </div>
                     </div>                   
@@ -104,11 +104,11 @@ foreach($campos AS $key=>$valor){
                   <div id="datos_ejecutor">
                     <div class="row">
                       <div class="pl-3 pl-md-0">
-                        <span id="borrar_todos" class="label label-danger"  style="cursor:pointer">Limpiar campos</span>
+                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Guardar datos</span>
                       </div>
                       <div class="pl-sm-3 pl-md-1">
-                        <span id="actualizar" class="label label-success"  style="cursor:pointer">Guardar datos</span>
-                        <span id="editar" class="label label-info hide"  style="cursor:pointer">Editar datos</span>                                            
+                        <span id="editar" class="label label-info hide"  style="cursor:pointer">Editar datos</span>
+                        <span id="borrar_todos" class="label label-danger"  style="cursor:pointer">Limpiar campos</span>                                           
                       </div>
                     </div>
                     <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
@@ -247,6 +247,7 @@ foreach($campos AS $key=>$valor){
                     $("#limpiar").removeClass("hide");
                   //}
                   $(".elementos_remitente").attr("disabled",true);
+                  $(".elementos_remitente").css("color","#2c2c2c");
                   $("#editar").removeClass("hide");
 				  $("#"+window.frames.name+"",window.parent.document).height($(document).height());
                 }

@@ -356,7 +356,7 @@ function ruta_distribucion_fab_buttons(){
     return  array('adddependence' => [
         'button' => [
             'id' => 'adddependence',
-            'class' => 'small red',
+            'class' => 'small blue',
             'html' => '',
             'tooltip' => 'Adicionar Dependencias de la Ruta',
             'visible' => 1,
@@ -365,13 +365,13 @@ function ruta_distribucion_fab_buttons(){
             ]
         ],
         'icon' => [
-            'class' => 'fa fa-times',
+            'class' => 'fa fa-bank',
             'html' => ''
         ]
     ],'addmessage' => [
         'button' => [
             'id' => 'addmessage',
-            'class' => 'small red',
+            'class' => 'small blue',
             'html' => '',
             'tooltip' => 'Adicionar Mensajeros de la Ruta',
             'visible' => 1,
@@ -380,7 +380,7 @@ function ruta_distribucion_fab_buttons(){
             ]
         ],
         'icon' => [
-            'class' => 'fa fa-times',
+            'class' => 'fa fa-user',
             'html' => ''
         ]
     ]);

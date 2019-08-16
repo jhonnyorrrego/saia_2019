@@ -475,10 +475,9 @@ function mostrar_numero_enlace($number, $documentId)
         $titulo = nombre_plantilla(null, $documentId);
     }
 
-    $route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
-    $response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
-		<span class='badge cursor btn badge-inverse'>{$number}</span>
-	</div>";
+    $response = "<div titulo='{$titulo}'>
+        <button onclick='js:abrir_kaiten(\"views/documento/index_acordeon.php?documentId={$documentId}\", \"{$titulo}\", 1)' class='btn btn-complete'>{$number}</button>
+    </div>";
 
     return $response;
 }

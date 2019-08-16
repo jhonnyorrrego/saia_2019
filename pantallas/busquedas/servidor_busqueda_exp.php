@@ -208,7 +208,7 @@ if (@$_REQUEST["idbusqueda_temporal"]) {
 if (!$_REQUEST["cantidad_total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
         $consulta_conteo = "WITH conteo AS (SELECT {$campos_consulta} FROM {$tablas_consulta} WHERE {$condicion} {$ordenar_consulta}) SELECT COUNT(*) as cant FROM conteo";
-        $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
+        $conteo_filas = $conn->query($consulta_conteo);
         $result = phpmkr_fetch_array($conteo_filas);
         $result[0] = array();
         $result[0]['cant'] = $result['cant'];

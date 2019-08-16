@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     let params = $('#loadTrd_script').data('params');
     let baseUrl = params.baseUrl;
     $('#loadTrd_script').removeAttr('data-params');
@@ -27,12 +27,13 @@ $(function () {
             acceptedFiles: typeFiles,
             dictInvalidFileType: 'Tipo de archivo no permitido',
             params: {
+                token: localStorage.getItem('token'),
                 key: localStorage.getItem('key'),
                 dir: directorio
             },
             paramName: 'file',
-            init: function () {
-                this.on("success", function (file, response) {
+            init: function() {
+                this.on('success', function(file, response) {
                     response = JSON.parse(response);
                     if (response.success) {
                         $('[name="' + selector + '"]').val(response.data[0]);
@@ -44,7 +45,7 @@ $(function () {
                     }
                 });
 
-                this.on("maxfilesexceeded", function (file, response) {
+                this.on('maxfilesexceeded', function(file, response) {
                     top.notification({
                         type: 'error',
                         message: 'Máximo ' + this.options.maxFiles + ' archivo'
@@ -52,7 +53,7 @@ $(function () {
                     this.removeAllFiles();
                 });
             },
-            removedfile: function (file) {
+            removedfile: function(file) {
                 file.previewElement.remove();
                 $('[name="' + selector + '"]').val('');
             }
@@ -61,20 +62,17 @@ $(function () {
         return myDropzone;
     }
 
-    $("[name='tipo']").change(function () {
-        $("[name='file_trd']").rules("add", { required: $(this).val() == 1 });
+    $("[name='tipo']").change(function() {
+        $("[name='file_trd']").rules('add', { required: $(this).val() == 1 });
 
         if ($(this).val() == 1) {
-            $("#divTrd").show();
+            $('#divTrd').show();
         } else {
-            $("#divTrd").hide();
+            $('#divTrd').hide();
         }
     });
     $("[name='tipo']:checked").trigger('change');
-
 });
-
-
 
 $('#loadTRDForm').validate({
     ignore: '',
@@ -84,14 +82,13 @@ $('#loadTRDForm').validate({
             digits: true
         },
         tipo: {
-            required: true,
+            required: true
         },
         nombre: {
             required: true
         }
     },
-    submitHandler: function () {
-
+    submitHandler: function() {
         let params = $('#loadTrd_script').data('params');
         let data = $('#loadTRDForm').serialize();
         data =
@@ -107,11 +104,15 @@ $('#loadTRDForm').validate({
             size: 'modal-lg',
             buttons: {},
             title: 'Cargando .....',
-            beforeShow: function () {
-                $("#modal_title", parent.document).next().hide();
+            beforeShow: function() {
+                $('#modal_title', parent.document)
+                    .next()
+                    .hide();
             },
-            afterHide: function () {
-                $("#modal_title", parent.document).next().show();
+            afterHide: function() {
+                $('#modal_title', parent.document)
+                    .next()
+                    .show();
             }
         };
 
@@ -120,12 +121,11 @@ $('#loadTRDForm').validate({
             url: `${params.baseUrl}app/serie/nueva_trd.php`,
             data,
             dataType: 'json',
-            beforeSend: function () {
+            beforeSend: function() {
                 top.topModal(optionsDefaults);
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
-
                     top.closeTopModal();
 
                     top.notification({
@@ -136,7 +136,7 @@ $('#loadTRDForm').validate({
                 } else {
                     options = {
                         params: {
-                            message: response.message,
+                            message: response.message
                         },
                         title: 'Error!'
                     };
@@ -145,6 +145,5 @@ $('#loadTRDForm').validate({
                 }
             }
         });
-
     }
 });

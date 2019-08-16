@@ -133,7 +133,6 @@ try {
         $functionName = $Formato->nombre . "_fab_buttons";
         if (function_exists($functionName)) {
             $otherButtons = $functionName();
-            //print_r($otherButtons);
             if (is_array($otherButtons)) {
                 $buttons += $otherButtons;
             }
