@@ -46,20 +46,19 @@ if ($busqueda["ruta_libreria"]) {
     }
 }
 
-$select = $tablas = $ordenar = $agrupar = [];
-$condicion = "";
-
 /**
  * obtengo las tablas para el sql
  */
-array_push($tablas, $busqueda["tablas"], $busqueda["tablas_adicionales"]);
-$tablas = implode(",", array_filter($tablas));
+$temporal = [];
+array_push($temporal, $busqueda["tablas"], $busqueda["tablas_adicionales"]);
+$tablas = implode(",", array_filter($temporal));
 
 /**
  * obtengo los campos para el sql
  */
-array_push($select, $busqueda["llave"], $busqueda["campos"], $busqueda["campos_adicionales"]);
-$select = implode(",", array_filter($select));
+$temporal = [];
+array_push($temporal, $busqueda["llave"], $busqueda["campos"], $busqueda["campos_adicionales"]);
+$select = implode(",", array_filter($temporal));
 
 if (strpos($select, 'distinct') !== false) {
     $select = str_replace('distinct', '', $select);
@@ -194,7 +193,7 @@ SQL;
     }
 }
 
-if (!$_REQUEST["cantidad_total"]) {
+if (!$_REQUEST["total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
         $consulta_conteo = "WITH conteo AS (SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}) SELECT COUNT(*) as cant FROM conteo";
         throw new Exception("pendiente consulta para server", 1);
@@ -204,15 +203,13 @@ if (!$_REQUEST["cantidad_total"]) {
         $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
     }
 
-    if ($result["numcampos"] > 1) {
-        $result[0]["cant"] = $result["numcampos"];
-    }
+    $total = $result["numcampos"] > 1 ? $result["numcampos"] : $result[0]["cant"];
 } else {
-    $result["numcampos"] = $result[0]['cant'] = $_REQUEST["cantidad_total"];
+    $total = $_REQUEST["total"];
 }
 
 $response = [
-    'total' => $result[0]['cant']
+    'total' => $total
 ];
 
 if ($response['total']) {
