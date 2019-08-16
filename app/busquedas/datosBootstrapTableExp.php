@@ -22,12 +22,12 @@ $dataParams = [
     'rows' => $_REQUEST['pageSize'],
     'actual_row' => $actualRow
 ];
-$columns=$_REQUEST['nameColumns'];
+$columns = $_REQUEST['nameColumns'];
 
-unset($_REQUEST['pageNumber'], $_REQUEST['pageSize'],$_REQUEST['nameColumns']);
+unset($_REQUEST['pageNumber'], $_REQUEST['pageSize'], $_REQUEST['nameColumns']);
 
 $params = array_merge($dataParams, $_REQUEST);
-$url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda_exp.php?' . http_build_query($params);
+$url = PROTOCOLO_CONEXION . RUTA_PDF . '/app/busquedas/generar_reporte.php?' . http_build_query($params);
 
 $ch = curl_init();
 if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
@@ -41,10 +41,10 @@ curl_close($ch);
 
 $data = [
     'total' => $output->records,
-    'rows' =>[]
+    'rows' => []
 ];
 foreach ($output->rows as $key => $value) {
-    $data['rows'][$key]['id'] = (int)$value->llave;
+    $data['rows'][$key]['id'] = (int) $value->llave;
     foreach ($columns as $name) {
         $data['rows'][$key][$name] = $value->$name;
     }

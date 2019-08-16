@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 
-$Response = (object)[
+$Response = (object) [
     "total" => 0,
     "rows" => []
 ];
@@ -23,7 +23,7 @@ try {
 
     $order = Funcion::getPrimaryLabel() . " " . $_REQUEST["sortOrder"];
     $offset = ($_REQUEST["pageNumber"] - 1)  * $_REQUEST["pageSize"];
-    $limit = $offset + $_REQUEST["pageSize"] - 1; // se lo suman en sql2 :'(
+    $limit = $_REQUEST["pageSize"];
     $functions = Funcion::findAllByAttributes([], [], $order, $offset, $limit);
     $Response->total = Funcion::countRecords([]);
 
