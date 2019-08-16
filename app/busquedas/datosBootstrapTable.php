@@ -48,12 +48,12 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
 
     $data = array(
         'total' => $output->records,
-        'rows' => array()
+        'rows' => $output->rows
     );
-    foreach ($output->rows as $key => $value) {
+    /*foreach ($output->rows as $key => $value) {
         $data['rows'][$key]['id'] = (int) $value->llave;
         $data['rows'][$key]['info'] = $value->info;
-    }
+    }*/
 } else {
     $data['message'] = 'Debe iniciar sesion';
 }

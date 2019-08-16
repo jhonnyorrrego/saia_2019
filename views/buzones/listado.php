@@ -143,8 +143,8 @@ $component = StaticSql::search($sql);
 if ($component[0]['ruta_libreria_pantalla']) {
     $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
-    foreach ($libraries as $librarie) {
-        include_once $ruta_db_superior . $librarie;
+    foreach ($libraries as $library) {
+        include_once $ruta_db_superior . $library;
     }
 }
 ?>
