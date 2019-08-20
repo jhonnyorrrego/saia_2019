@@ -91,7 +91,7 @@ if ($component["enlace_adicionar"]) {
             'idbusqueda_componente' => $componentId,
             'variable_busqueda' => @$_REQUEST["variable_busqueda"]
         ];
-    
+
         $acciones = explode(",", $component["acciones_seleccionados"]);
         foreach ($acciones as $key => $value) {
             $actions = $value($datos_reporte);

@@ -33,9 +33,8 @@ function procesar_etiqueta_titulo($idcampo = '', $seleccionado = '', $accion = '
 
     $eliminarComponente = clase_eliminar_pantalla_componente($idcampo);
     $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
-        <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'> {$datos}</span>{$eliminarComponente}
+        <span style='font-size:12px;'> {$datos}</span>{$eliminarComponente}
     </li>";
 
     return $texto;
 }
-?>

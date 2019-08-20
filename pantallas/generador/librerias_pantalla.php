@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-//include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_bpmni.php";
@@ -33,11 +33,11 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
     $_REQUEST["ejecutar_datos_pantalla"]($_REQUEST, @$_REQUEST["tipo_retorno"]);
 }
 if ($_REQUEST['permisosFormato']) {
-    permisosFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
+    permisosFormato($_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
 }
 
 if ($_REQUEST['eliminarPermisoFormato']) {
-    eliminarPermisoFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
+    eliminarPermisoFormato($_REQUEST['nombreFormato']);
 }
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '')
@@ -251,8 +251,11 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1)
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
     }
-    $fieldList["mostrar_pdf"] = $datos["mostrar_pdf"];
-
+    if (isset($datos['mostrar_pdf'])) {
+        $fieldList["mostrar_pdf"] = $datos["mostrar_pdf"];
+    } else {
+        $fieldList["mostrar_pdf"] = 0;
+    }
     // Field nombre
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["nombre"]) : $datos["nombre"];
     $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -480,6 +483,25 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
      * Se validan y adicionan los campos adicionales al formato como iddocumento, serie_idserie, idft , etc
      */
 
+    $datos_permisos = $_REQUEST['permisosPerfil'];
+
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$_REQUEST['nombre_formato']}' and enlace='formatos/{$_REQUEST['nombre_formato']}/adicionar_{$_REQUEST['nombre_formato']}.php' ", "", $conn);
+    $idModulo = $consultaModulo[0]['idmodulo'];
+
+    //$guardar_permisos = new PermisoPerfil($idModulo);
+    $sqlDelete = "DELETE FROM permiso_perfil WHERE modulo_idmodulo='" . $idModulo . "'";
+    phpmkr_query($sqlDelete);
+
+    if (!empty($datos_permisos)) {
+        $N = count($datos_permisos);
+        for ($i = 0; $i < $N; $i++) {
+            $sqlPermiso = "INSERT INTO permiso_perfil (modulo_idmodulo,perfil_idperfil) VALUES ('" . $idModulo . "','" . $datos_permisos[$i] . "')";
+            phpmkr_query($sqlPermiso);
+            //$guardar_permisos->setAttributes(['perfil_idperfil'=>$datos_permisos[$i],'modulo_idmodulo'=>$idModulo]);
+            //$guardar_permisos->save();
+        }
+    }
+
     if ($idformato) {
         $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);
         $retorno["mensaje"] = "EL formato se guardó con éxito";
@@ -664,17 +686,21 @@ function editar_datos_formato($datos, $tipo_retorno = 1)
     if (is_array($datos["banderas"]))
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
 
-    $fieldList["mostrar_pdf"] = $datos["mostrar_pdf"];
+    if (isset($datos['mostrar_pdf'])) {
+        $fieldList["mostrar_pdf"] = $datos["mostrar_pdf"];
+    } else {
+        $fieldList["mostrar_pdf"] = 0;
+    }
 
     // Field firma_digital
     $theValue = ($datos["firma_digital"] != "") ? intval($datos["firma_digital"]) : 0;
     $fieldList["firma_digital"] = $theValue;
 
     // Field etiqueta
+    // Field etiqueta
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["etiqueta"]) : $datos["etiqueta"];
-    if (!empty($thevalue)) {
-        $fieldList["etiqueta"] = htmlentities($theValue);
-    }
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["etiqueta"] = htmlentities($theValue);
 
     // Field descripcion_formato
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["descripcion_formato"]) : $datos["descripcion_formato"];
@@ -880,6 +906,29 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         crear_modulo_formato($idformato);
     }
 
+    /////////////////////////////   Asignacion de permisos /////////////////////////////////
+
+    $datos_permisos = $_REQUEST['permisosPerfil'];
+
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$_REQUEST['nombre_formato']}' and enlace='formatos/{$_REQUEST['nombre_formato']}/adicionar_{$_REQUEST['nombre_formato']}.php' ", "", $conn);
+    $idModulo = $consultaModulo[0]['idmodulo'];
+
+    //$guardar_permisos = new PermisoPerfil($idModulo);
+    $sqlDelete = "DELETE FROM permiso_perfil WHERE modulo_idmodulo='" . $idModulo . "'";
+    phpmkr_query($sqlDelete);
+
+    if (!empty($datos_permisos)) {
+        $N = count($datos_permisos);
+        for ($i = 0; $i < $N; $i++) {
+            $sqlPermiso = "INSERT INTO permiso_perfil (modulo_idmodulo,perfil_idperfil) VALUES ('" . $idModulo . "','" . $datos_permisos[$i] . "')";
+            phpmkr_query($sqlPermiso);
+            //$guardar_permisos->setAttributes(['perfil_idperfil'=>$datos_permisos[$i],'modulo_idmodulo'=>$idModulo]);
+            //$guardar_permisos->save();
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////   
 
     if ($datos["idformato"]) {
         $retorno["mensaje"] = "EL formato se actualizó con éxito";
@@ -3336,7 +3385,7 @@ function consultarPermisosPerfil($nombreFormato)
                 $checked = "checked='checked'";
             }
             $permisos .= "<label class='input-group' style='display:inline-block;width:200px;'>
-                <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
+                <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil[]' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
             </label>";
         }
         $permisos .= '</div>';
@@ -3344,7 +3393,7 @@ function consultarPermisosPerfil($nombreFormato)
     return $permisos;
 }
 
-function permisosFormato($idformato, $idperfil, $nombreFormato)
+function permisosFormato($idperfil, $nombreFormato)
 {
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
@@ -3362,7 +3411,7 @@ function permisosFormato($idformato, $idperfil, $nombreFormato)
     return  $retorno;
 }
 
-function eliminarPermisoFormato($idformato, $nombreFormato)
+function eliminarPermisoFormato($nombreFormato)
 {
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];

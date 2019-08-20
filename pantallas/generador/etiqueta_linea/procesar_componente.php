@@ -23,10 +23,9 @@ function procesar_etiqueta_linea($idcampo = '', $seleccionado = '', $accion = ''
 
     $eliminarComponente = clase_eliminar_pantalla_componente($idcampo);
     $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
-        <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'> {$datos}</span> {$eliminarComponente}<hr style='background - color : brown;
+        <span style='font-size:12px;'> {$datos}</span> {$eliminarComponente}<hr style='background - color : brown;
     ' width='90 %' size='1'>
     </li>";
 
     return ($texto);
 }
-?>

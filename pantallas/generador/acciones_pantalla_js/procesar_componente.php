@@ -31,7 +31,7 @@ global $conn;
     $eliminarCampo = clase_eliminar_pantalla_componente($idcampo);                                   
     $adicionales_accion_pantalla=' type="text" class="elemento_formulario" placeholder="'.$campo["placeholder"].'"  disabled="disabled" ';
     $encabezado_accion_pantalla = "<li class ='ui-state-default element' idpantalla_componente = '{$campo["idpantalla_componente"]}' idpantalla_campo = '{$idcampo}' id = 'pc_{$idcampo}' nombre = '{$campo["etiqueta_html"]}' >{$eliminarCampo}
-    <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]}";
+    <span style='font-size:12px;'><b>{$campo["etiqueta"]}";
     if($campo["obligatoriedad"]){
       $encabezado_accion_pantalla.='*';
     }
@@ -51,4 +51,3 @@ function eliminar_funcion_accion_pantalla_js($pantalla_campos){
     phpmkr_query($sql2);
   }  
 }
-?>

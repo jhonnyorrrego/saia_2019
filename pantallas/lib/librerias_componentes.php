@@ -9,7 +9,7 @@ function obtener_ruta_db_superior($idpantalla_campos) {
 }
 
 function clase_eliminar_pantalla_componente($idpantalla_campos) {
-	return '<div class="close" idpantalla_campos="' . $idpantalla_campos . '">&times;</div>';
+	return '<div class="close" idpantalla_campos="' . $idpantalla_campos . '"><i class="fa fa-trash"></i></div>';
 }
 
 function cargar_default_arbol_funcionarios($campo, $seleccionado) {
@@ -29,4 +29,3 @@ function generar_llave_md5_saia() {
 	$md5 = md5(date("Y-m-d H:i:s"));
 	return $md5;
 }
-?>

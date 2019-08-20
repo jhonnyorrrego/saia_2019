@@ -138,20 +138,20 @@ function procesar_cadena_json($resultado, $lista_valores)
 <body>
 
   <form name="datos_formato" id="datos_formato">
-    <div class="row mx-4">
+    <div class="row mx-4 px-0">
       <div class="col-9 mt-4">
         <div class="title my-0">
           Información general
         </div>
         <hr />
 
-        <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
-
+        <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required />
+        <input type="hidden" name="idformato" id="idformato" value="<?= $_REQUEST["idformato"] ?>" />
         <div class="row-fluid">
 
           <div class="my-3">
             <label class="control-label" for="etiqueta"><strong>Nombre del formato<span class="require-input">*</span></strong></label>
-            <input type="text" class="col-12" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if ($_REQUEST["idformato"]) echo ("readonly"); ?>>
+            <input type="text" class="col-12" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required />
 
           </div>
 
@@ -215,15 +215,14 @@ function procesar_cadena_json($resultado, $lista_valores)
             </div>
             <div class="col-12 mt-5 text-left">
               <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="paginar" name="paginar" id="paginar" <?php check_banderas('paginar'); ?>><span class="paginar">Paginar al mostrar</span></div>
-              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>><span class="tipo_edicion">Aprobacion Automatica</span></div>
-              <input type="checkbox" name="banderas[]" style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked>
+              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>><span class="banderas">Aprobacion Automatica</span></div>
+              <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="mostrar_pdf" name="mostrar_pdf" id="mostrar_pdf" <?php check_banderas('mostrar_pdf'); ?>><span class="mostrar_pdf">Mostrar en PDF</span></div>
               <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span></div>
+              <input type="checkbox" name="banderas[]" style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked>
             </div>
 
             <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false); ?>>
             <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false); ?>>
-
-
 
           </div>
 
@@ -440,6 +439,17 @@ function procesar_cadena_json($resultado, $lista_valores)
 
     </div>
 
+    <div class="title my-0 mt-5 mx-4 pt-3">
+      Permisos del formato a:
+      <hr />
+    </div>
+
+    <div class="mx-4 my-3 pt-2">
+      <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>" />
+      <br>
+      <?= consultarPermisosPerfil($consulta_formato[0]['nombre']); ?>
+
+    </div>
 
     <input type="hidden" name="exportar" value="mpdf">
     <input type="hidden" name="pertenece_nucleo" value="0">
@@ -505,41 +515,48 @@ function procesar_cadena_json($resultado, $lista_valores)
       var formulario = $("#datos_formato");
       var formato = <?php echo (json_encode($formato)); ?>;
 
-
       var nombre_formato = "";
       if ($("#nombre_formato").val() != "") {
         var nombre_formato = $("#nombre_formato").val();
       }
 
-      $("#guardar").click(function(event) {
-        event.preventDefault();
-        if (formulario.valid()) {
+      $("#enviar_datos_formato").click(function(event) {
 
-          var buttonAcep = $(this);
-          //buttonAcep.attr('disabled', 'disabled');
-          //parsear_items();
-          $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php",
-            data: "ejecutar_datos_pantalla=" + buttonAcep.attr('value') + "&tipo_retorno=1&rand=" + Math.round(Math.random() * 100000) + '&' + formulario.serialize() + "&nombre=" + nombre_formato,
-            success: function(objeto) {
-              if (objeto.exito && objeto.editar != 1) {
-                notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
-                window.parent.location.href = window.parent.location.pathname + "?idformato=" + objeto.idformato;
-              } else if (objeto.exito && objeto.editar == 1) {
-                $("#pantalla_principal").next().find("a").trigger("click");
-                notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
-              } else {
-                notificacion_saia(objeto.error, 'error', 'topCenter', 3000);
-                buttonAcep.removeAttr('disabled');
+        if ($('#enviar_datos_formato').attr('pasoactual') == 1) {
+
+          event.preventDefault();
+          if (formulario.valid()) {
+
+            $(this).attr('pasoactual', '2');
+            $("#labelGuardar").css('background', '#ccc');
+
+            var buttonAcep = $(this);
+            //buttonAcep.attr('disabled', 'disabled');
+            //parsear_items();
+            $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php",
+              data: "ejecutar_datos_pantalla=" + buttonAcep.attr('value') + "&tipo_retorno=1&rand=" + Math.round(Math.random() * 100000) + '&' + formulario.serialize() + "&nombre=" + nombre_formato,
+              success: function(objeto) {
+                if (objeto.exito && objeto.editar != 1) {
+                  notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
+                  window.location.href = window.location.pathname + "?idformato=" + objeto.idformato;
+                } else if (objeto.exito && objeto.editar == 1) {
+                  $("#pantalla_principal").next().find("a").trigger("click");
+                  notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
+
+                } else {
+                  notificacion_saia(objeto.error, 'error', 'topCenter', 3000);
+                  buttonAcep.removeAttr('disabled');
+                }
               }
-            }
-          });
-        } else {
-          notificacion_saia('Debe diligenciar los campos obligatorios', 'warning', 'topCenter', 3000);
-          $(".error").first().focus();
-          return false;
+            });
+          } else {
+            notificacion_saia('Debe diligenciar los campos obligatorios', 'warning', 'topCenter', 3000);
+            $(".error").first().focus();
+            return false;
+          }
         }
       });
 
@@ -551,22 +568,26 @@ function procesar_cadena_json($resultado, $lista_valores)
             $("#mostrar_pdf").val("1");
             $(".tipo_edicion").show();
             $("input[name='paginar']").attr("checked", "checked");
+            $("input[name='mostrar_pdf']").attr("checked", true);
             break;
           case "2":
             $("#item").val("0");
             $("#mostrar_pdf").val("0");
             $(".tipo_edicion").hide();
             $("input[name='paginar']").attr("checked", false);
+            $("input[name='mostrar_pdf']").attr("checked", false);
             break;
           case "3":
             $("#item").val("1");
             $("#mostrar_pdf").val("0");
             $(".tipo_edicion").hide();
+            $("input[name='mostrar_pdf']").attr("checked", false);
             break;
           default:
             $("#item").val("0");
             $("#mostrar_pdf").val("0");
             $("input[name='paginar']").attr("checked", false);
+            $("input[name='mostrar_pdf']").attr("checked", false);
             break;
         }
       });

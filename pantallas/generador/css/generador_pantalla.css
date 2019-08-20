@@ -1,4 +1,10 @@
+#arbol {
+    position: relative;
+    top: -30px;
+}
+
 /* FORM CONTENT BOX */
+
 #content {
     border: 1px solid #eee;
     border-radius: 4px;
@@ -27,10 +33,12 @@
 
 /* COMPONENTS */
 .component {
-    background: #fafafa !important;
-    border: 1px solid #eee;
+    background: #f6f6f6 !important;
     cursor: move;
-    border: 1px solid #fff;
+    height: 36px;
+    margin: auto;
+    width: 60%;
+    padding-top: 12px;
 }
 
 .component:hover {
@@ -69,9 +77,14 @@
 .options {
     display: none;
 }
-.accordion-heading .accordion-toggle {
+.accordion-heading {
     padding: 0px 15px;
 }
+
+.accordion-toggle {
+    padding: 0px 50px;
+}
+
 .accordion-inner {
     padding: 5px;
 }
@@ -123,12 +136,38 @@ ul.fancytree-container {
     background: #49b0e8;
 }
 
+#labelGuardar {
+    background: #48b0f7;
+    color: #fff;
+    margin: auto;
+    color: white;
+    cursor: pointer;
+    height: 44px;
+    width: 140px;
+    padding-left: 32px;
+    padding-top: 10px;
+}
+
+.guardarDisabled button {
+    background: #959696;
+}
+
+#formulario-tab {
+    position: relative;
+    top: -20px;
+}
+
+#componentes_acciones {
+    background: #f6f6f6;
+    padding-bottom: 50px;
+}
+
 #droppable {
     position: relative;
-    width: 85%;
+    width: 100%;
     padding: 0.5em;
     float: left;
-    margin: 10px;
+    margin: 0px;
     margin-bottom: 20px;
     background: transparent;
 }
@@ -222,12 +261,33 @@ select {
 
 #list {
     position: relative;
-    background: transparent;
-    border: none;
+    background: #fff;
+    border: 6px dashed #eaf8ff;
+    margin: auto;
+    margin-top: 0px;
+    top: 0px;
+    padding-top: 10px;
 }
 
 #list_one {
     position: relative;
     background: transparent;
-    margin: 10px;
+    margin: auto;
+}
+
+.ui-state-default {
+    background: transparent;
+    color: #333;
+    border: 1px solid #eee;
+    width: 100%;
+}
+
+.accordion .funciones {
+    height: 36px;
+    padding-top: 12px;
+}
+
+.accordion .funciones:hover {
+    border: 2px solid #ddd;
+    background: #eee;
 }

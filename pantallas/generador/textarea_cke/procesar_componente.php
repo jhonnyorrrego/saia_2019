@@ -10,7 +10,8 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', $campo = '') {
+function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', $campo = '')
+{
     global $conn, $ruta_db_superior;
     $campo = '';
     if ($idcampo == '') {
@@ -26,14 +27,14 @@ function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', 
         $selec = $campo["predeterminado"];
     }
     $texto = <<<FINTAG
-    <li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
+    <li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]} background:white;'>
 FINTAG;
     $texto .= clase_eliminar_pantalla_componente($idcampo);
     $obligatoriedad = "";
     if ($campo["obligatoriedad"]) {
         $obligatoriedad = '*';
     }
-    $texto .="<span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatoriedad}</b></span>"; 
+    $texto .= "<span style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatoriedad}</b></span>";
 
     $texto .= '<div class="controls"><textarea name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '">' . $selec . '</textarea>';
     $texto .= <<<FINJS
@@ -49,4 +50,3 @@ FINTAG;
 FINJS;
     return $texto;
 }
-?>
