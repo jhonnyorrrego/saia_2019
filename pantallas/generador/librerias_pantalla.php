@@ -169,12 +169,8 @@ function ordenar_pantalla_campos($nuevo_orden)
 {
     global $conn;
     $pantalla_campos = explode(",", $nuevo_orden);
-    print_r($_REQUEST);
-    die();
     $i = 0;
     $consultarOrden = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$idFormato} and orden <> 0", "", $conn);
-    print_r($consultarOrden);
-    die();
     foreach ($pantalla_campos as $key => $valor) {
         $cadena = str_replace("pc_", "", $valor);
         if ($cadena != 'list_one') {
@@ -183,7 +179,7 @@ function ordenar_pantalla_campos($nuevo_orden)
             $i++;
             phpmkr_query($sql2);
         }
-    }
+    } 
 }
 
 function adicionar_datos_formato($datos, $tipo_retorno = 1)
