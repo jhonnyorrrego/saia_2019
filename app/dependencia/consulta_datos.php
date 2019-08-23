@@ -23,7 +23,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $Dependencia = new Dependencia($_REQUEST['id']);
 
     if ($Dependencia) {
-        $image = TemporalController::createTemporalFile($Dependencia->logo, uniqid(), true);
+        //$image = TemporalController::createTemporalFile($Dependencia->logo, uniqid(), true);
         $Response->data = $Dependencia->getAttributes();
         $Response->data['key'] = $Dependencia->getPK();
 
