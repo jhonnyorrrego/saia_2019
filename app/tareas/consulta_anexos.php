@@ -22,7 +22,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $params = new stdClass();
     $params->order = Anexo::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
     $params->offset = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
-    $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+    $params->limit = $_REQUEST['pageSize'];
     $params->task = $_REQUEST['task'];
 
     if (!$_REQUEST['fileId']) {
