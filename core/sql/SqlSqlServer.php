@@ -429,18 +429,18 @@ class SqlSqlServer extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " varchar";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -539,9 +539,8 @@ class SqlSqlServer extends Sql implements ISql
         global $conn, $sql;
         $tabla = strtoupper($tabla);
         $sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
-        $indices = $this->ejecuta_filtro_tabla($sql2);
-        $numero_indices = count($indices);
-        for ($i = 0; $i < $numero_indices; $i++) {
+        $indices = $this->search($sql2);
+        for ($i = 0, $total = count($indices); $i < $total; $i++) {
             $this->elimina_indice_campo($tabla, $indices[$i]);
         }
         return;

@@ -342,18 +342,18 @@ class SqlMysql extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " varchar";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -481,9 +481,9 @@ class SqlMysql extends Sql implements ISql
         global $conn;
 
         $tabla = strtoupper($tabla);
-        $indices = $this->ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
-        for ($i = 0; $i < $indices["numcampos"]; $i++) {
-            $this->elimina_indice_campo($tabla, $indices[$i]);
+        $indices = $this->search("SHOW INDEX FROM " . strtolower($tabla), $conn);
+        foreach ($indices as $key => $value) {
+            $this->elimina_indice_campo($tabla, $value);
         }
         return;
     }

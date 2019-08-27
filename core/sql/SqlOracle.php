@@ -496,18 +496,18 @@ class SqlOracle extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " VARCHAR2";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 40000) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 40000) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -674,16 +674,16 @@ class SqlOracle extends Sql implements ISql
         $tabla = strtoupper($tabla);
         $envio = array();
         $sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
-        $indices = $this->ejecuta_filtro_tabla($sql2);
-        for ($i = 0; $i < $indices["numcampos"]; $i++) {
+        $indices = $this->search($sql2);
+        for ($i = 0, $total = count($indices); $i < $total; $i++) {
             array_push($envio, array(
                 "Key_name" => $indices[$i]["key_name"],
                 "Column_name" => $indices[$i]["column_name"]
             ));
         }
         $sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
-        $primaria = $this->ejecuta_filtro_tabla($sql2, $conn);
-        for ($i = 0; $i < $primaria["numcampos"]; $i++) {
+        $primaria = $this->search($sql2, $conn);
+        for ($i = 0, $total = count($primaria); $i < $total; $i++) {
             array_push($envio, array(
                 "Key_name" => "PRIMARY",
                 "Column_name" => $primaria[$i]["Column_name"]

@@ -87,12 +87,19 @@ abstract class Sql
 		return Sql::$instance;
 	}
 
-	protected function maximo_valor($valor, $maximo)
+	/**
+	 * determina el valor maximo para 
+	 * la longitud de un campo
+	 *
+	 * @param integer $value
+	 * @param void $max
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-08-27
+	 */
+	protected function maxSize($value, $max)
 	{
-		if ($valor > $maximo || $valor == "NULL") {
-			return ($maximo);
-		}
-		return ($valor);
+		return ($value > $max || $value == "NULL") ? $max : $value;
 	}
 
 	public function formato_generar_tabla($idformato, $formato)

@@ -200,18 +200,18 @@ if (!$_REQUEST["total"]) {
     } else {
         $sql = "(SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}) AS temp";
         $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $sql;
-        $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
+        $result = StaticSql::search($consulta_conteo);
     }
-    $total = $result["numcampos"] > 1 ? $result["numcampos"] : $result[0]["cant"];
+    $total = count($result) > 1 ? count($result) : $result[0]["cant"];
 } else {
     $total = $_REQUEST["total"];
 }
 
-$response = [
+$response = (object) [
     'total' => $total
 ];
 
-if ($response['total']) {
+if ($response->total) {
     $sql = "SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}";
     $result = StaticSql::search($sql, $start, $end);
 
@@ -273,7 +273,7 @@ if ($response['total']) {
                 $data['info'] = str_replace("\n", "", str_replace("\r", "", $info));
             }
 
-            $response['rows'][] = $data;
+            array_push($response->rows, $data);
         }
     }
 }
