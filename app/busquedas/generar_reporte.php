@@ -234,7 +234,9 @@ if ($response->total) {
         $listado_funciones = parsear_datos_plantilla_visual($info, implode(",", $campos));
 
         foreach ($result as $row) {
-            $data = [];
+            $data = [
+                'id' => $row[$llave]
+            ];
             foreach ($campos as $key => $campo) {
                 if (is_object($row[$campo])) { // para mssql y sqlserver
                     $row[$campo] = $row[$campo]->date;

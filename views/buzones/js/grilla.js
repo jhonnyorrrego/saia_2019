@@ -114,7 +114,7 @@ $(function() {
             return c;
         });
         if (params.showCheckbox) {
-            data.unshift({ checkbox: true });
+            data.unshift({ checkbox: true, field: 'state' });
         }
 
         return data;

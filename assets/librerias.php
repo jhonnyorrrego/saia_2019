@@ -511,3 +511,21 @@ function kuku()
 
     return $js;
 }
+
+/**
+ * retorna la libreria lodash minificada
+ * v4.17.15
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-08-27
+ */
+function lodash()
+{
+    global $ruta_db_superior;
+
+    $route = $ruta_db_superior . "node_modules/lodash/lodash.min.js";
+    $js = '<script src="' . $route . '" type="text/javascript"></script>';
+
+    return $js;
+}

@@ -45,6 +45,7 @@ echo bootstrapTable();
 echo bootstrapTableExport();
 echo theme();
 echo icons();
+echo lodash();
 
 $routes = $component['ruta_libreria_pantalla'];
 if ($routes) {
