@@ -208,7 +208,8 @@ if (!$_REQUEST["total"]) {
 }
 
 $response = (object) [
-    'total' => $total
+    'total' => $total,
+    'rows' => []
 ];
 
 if ($response->total) {
