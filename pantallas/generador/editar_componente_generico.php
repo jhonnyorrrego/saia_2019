@@ -79,79 +79,57 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
         <?= $texto_titulo ?>
     </title>
 
-
-    <?= jquery() ?>
-    <?= jqueryUi() ?>
-    <?= bootstrap() ?>
     <style type="text/css">
         label {
             vertical-align: middle;
         }
+    </style>
+    <!-- handlebars -->
+
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/handlebars/dist/handlebars.js"></script>
+    <!-- alpaca -->
+    <!-- <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script> -->
+
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules\alpaca\dist\alpaca\bootstrap\alpaca.min.js"></script>
+
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
+
+    <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
+
+    <?= bootstrap() ?>
+
+    <style>
+        #tipo_campo {
+            font-size: 30px;
+        }
 
         .btn-complete {
-
-            width: 100px;
             background: #48b0f7;
-            border-color: #48b0f7;
-            color: white;
-            position: absolute;
-            bottom: 25px;
-            right: 40px;
-            height: 35px;
-            cursor: pointer;
-
+            color: #fff;
         }
 
-        .btn-complete:hover {
-
-            color: white;
-
+        .form-group label:not(.error) {
+            text-transform: none;
+            font-weight: bold;
+            color: #626262;
+            font-size: 12px;
         }
 
-        .btn-danger {
+        .form-control {
 
-            background: #f55753;
-            border: solid 1px #f55753;
-            color: white;
-            position: absolute;
-            bottom: 25px;
-            right: 150px;
-            border: none;
-            cursor: pointer;
-
-        }
-
-        .btn-danger:hover {
-
-            background: #F16C68;
-            border: solid 1px #F16C68;
-            color: white;
-            position: absolute;
-            bottom: 25px;
-            right: 150px;
-            border: none;
-            cursor: pointer;
-
-        }
-
-        #editar_pantalla_campo {
-
-            font-size: 300%;
+            font-size: 12px;
+            color: #626262;
 
         }
     </style>
-    <!-- handlebars -->
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/handlebars.js"></script>
-    <!-- alpaca -->
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script>
 
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
+
 </head>
 
 <body>
-    <strong><?= html_entity_decode(utf8_encode($texto_titulo)) ?></strong>
+    <h5 id="tipo_formato"><?= html_entity_decode(utf8_encode($texto_titulo)) ?></h5>
     <hr />
-    <div class="container pb-3">
+    <div class="container">
         <form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
         <div id="res" class="alert"></div>
     </div>
@@ -226,8 +204,9 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                 buttons: {
 
                     submit: {
-                        "title": "Aceptar",
-                        "styles": "btn btn-complete",
+                        "title": "Guardar",
+                        "styles": "btn btn-complete d-none",
+                        "id": "btnGuardar",
                         "click": function() {
                             this.refreshValidationState(true);
                             if (this.isValid(true)) {
@@ -238,21 +217,19 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                             }
                         }
                     },
-                    cancel: {
-
-                        "title": "Cerrar",
-                        "styles": "btn btn-danger",
-                        "click": function() {
-
-                            top.closeTopModal();
-
-                        }
-
-                    }
-
                 }
             };
 
+            $('#btnGuardar').hide();
+            $('#btnGuardar').css('display', 'none');
+            $('#btnGuardar').css('visibility', 'hidden');
+
+            $(".btn-complete").click(function() {
+
+
+                $("#btnGuardar").trigger("click");
+
+            });
 
 
             $('#editar_pantalla_campo').alpaca(opciones_form);

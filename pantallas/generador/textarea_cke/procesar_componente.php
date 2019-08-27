@@ -34,7 +34,7 @@ FINTAG;
     if ($campo["obligatoriedad"]) {
         $obligatoriedad = '*';
     }
-    $texto .= "<span style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatoriedad}</b></span>";
+    $texto .= "<span style='font-size:12px;'><b>{$campo['etiqueta']} {$obligatoriedad}</b></span>";
 
     $texto .= '<div class="controls"><textarea name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '">' . $selec . '</textarea>';
     $texto .= <<<FINJS

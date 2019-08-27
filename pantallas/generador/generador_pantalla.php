@@ -194,7 +194,7 @@ if ($_REQUEST["idformato"]) {
 
                                     <div class="tab-pane" id="pantalla_mostrar-tab"><br>
                                         <h5 class="title">Encabezado del formato</h5><br>
-                                        <select name="sel_encabezado" id="sel_encabezado">
+                                        <select name="sel_encabezado" id="sel_encabezado" style="width:250px;">
                                             <option value="0">Por favor Seleccione</option>
                                             <?php
 
@@ -264,8 +264,8 @@ if ($_REQUEST["idformato"]) {
                                                 cambios</span>
                                         </button><br><br>
                                         <h5>Pie del formato :</h5><br>
-                                        <select name="sel_pie_pagina" id="sel_pie_pagina">
-                                            <option value="0">Por favor Seleccione</option>
+                                        <select name="sel_pie_pagina" id="sel_pie_pagina" style="width:250px;">
+                                            <option value=" 0">Por favor Seleccione</option>
                                             <?php
                                             if ($idpantalla) {
                                                 $idpie = $idpie;
@@ -343,10 +343,10 @@ if ($_REQUEST["idformato"]) {
                                             <div class="mx-0 px-0 col-9" style="position:relative;display:inline-block;vertical-align:top">
 
                                                 <ul id="contenedorComponentes" class="sortable boxy px-4" style="margin-left: 1em;">
-                                                    <h6 style="text-align:center;position:absolute;top:150px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
+                                                    <h6 style="text-align:center;position:absolute;top:160px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
 
                                                     <?php
-                                                        $formatosCampo = load_pantalla($idpantalla);
+                                                    $formatosCampo = load_pantalla($idpantalla);
                                                     if ($formatosCampo) : ?>
                                                     <?= $formatosCampo;  ?>
                                                     <?php endif; ?>
@@ -391,9 +391,9 @@ if ($_REQUEST["idformato"]) {
                                                     this.style["border"] = "1px solid white";
                                                 };
                                             };
- 
 
-                                            $(document).on("click", ".agregado", function(e) {
+
+                                            $(document).off("click", ".agregado").on("click", ".agregado", function(e) {
 
                                                 if (e.target.attributes.idpantalla_componente != null) {
                                                     var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
@@ -402,23 +402,33 @@ if ($_REQUEST["idformato"]) {
                                                     top.topModal({
                                                         url: enlace,
                                                         params: {
-                                                            //pantalla: params.pantalla,
-                                                            //idpadre: params.idpadre,
                                                             idformato: $("#idformato").val(),
-                                                            //padre: params.padre
+                                                            idpantalla_campos: $(this).attr("idpantalla_campo"),
                                                         },
                                                         size: 'modal-xl',
                                                         title: 'Configurar campo',
-                                                        buttons: {},
+
+                                                        buttons: {
+                                                            success: {
+                                                                label: "Guardar",
+                                                                class: "btn btn-complete"
+                                                            },
+                                                            cancel: {
+                                                                label: "Cerrar",
+                                                                class: "btn btn-danger"
+                                                            }
+                                                        },
+
                                                         onSuccess: function(data) {
                                                             successModalComponente(data);
                                                         },
-                                                    }); 
-                                                }
- 
-                                            }); 
 
-                                            function successModalComponente(data){
+                                                    });
+                                                }
+
+                                            });
+
+                                            function successModalComponente(data) {
 
                                                 top.closeTopModal();
 
@@ -528,6 +538,8 @@ for ($i = 0; $i < $cant_js; $i++) {
         $('#labelGuardar').attr('for', 'enviar_datos_formato');
         $('#actualizar_cuerpo_formato').css('display', 'none');
         $('.ui-icon-arrowthick-2-n-s').css('visibility', 'hidden');
+        $('#sel_encabezado').select2();
+        $('#sel_pie_pagina').select2();
         $('#componentes_acciones').hide();
 
         $.ajax({
@@ -1107,7 +1119,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                     success: {
                         label: "Guardar",
                         class: "btn btn-complete"
-                    },  
+                    },
                     cancel: {
                         label: "Cerrar",
                         class: "btn btn-danger"
@@ -1153,7 +1165,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                     }
                 },
                 onSuccess: function(data) {
-                    
+
                     successModalPie(data);
                 },
             });

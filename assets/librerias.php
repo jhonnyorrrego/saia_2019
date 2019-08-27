@@ -8,10 +8,9 @@ function jquery()
 {
     global $ruta_db_superior;
 
-    $route = $ruta_db_superior . 'assets/theme/assets/plugins/jquery/jquery-3.2.1.min.js';
+    $route = $ruta_db_superior . 'node_modules/jquery/dist/jquery.min.js';
     return '<script type="text/javascript" src="' . $route . '"></script>';
 }
-
 /**
  * retorna script para cargar
  * jquery ui  v1.12.1 minificado
@@ -20,10 +19,10 @@ function jqueryUi()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.css';
+    $routeCss = $ruta_db_superior . 'node_modules/jquery-ui-dist/jquery-ui.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
+    $routeJs = $ruta_db_superior . 'node_modules/jquery-ui-dist/jquery-ui.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
@@ -49,10 +48,10 @@ function jsBootstrap()
 {
     global $ruta_db_superior;
 
-    $routePopper = $ruta_db_superior . 'assets/theme/assets/plugins/popper/umd/popper.min.js';
+    $routePopper = $ruta_db_superior . 'node_modules/popper.js/dist/umd/popper.min.js';
     $popper = '<script src="' . $routePopper . '" type="text/javascript"></script>';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js';
+    $routeJs = $ruta_db_superior . 'node_modules/bootstrap/dist/js/bootstrap.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $popper . $js;
@@ -67,7 +66,7 @@ function cssBootstrap()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css';
+    $routeCss = $ruta_db_superior . 'node_modules/bootstrap/dist/css/bootstrap.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
     return $css;

@@ -1,0 +1,29 @@
+{
+  "name": "saia",
+  "version": "1.0.0",
+  "description": "SGDA",
+  "main": "sw.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://laboratorio.netsaia.com:82/cerok/saia_2019.git"
+  },
+  "keywords": [
+    "saia"
+  ],
+  "author": "cerok",
+  "license": "ISC",
+  "dependencies": {
+    "alpaca": "^1.5.27",
+    "bootstrap": "^4.3.1",
+    "handlebars": "^4.1.2",
+    "jquery": "^3.4.1",
+    "jquery-ui-dist": "^1.12.1",
+    "popper.js": "^1.15.0"
+  }
+}
