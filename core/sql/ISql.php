@@ -113,17 +113,9 @@ interface ISql
 	 */
 	public function Numero_Campos($rs);
 
-	public function resta_fechas($fecha1, $fecha2);
-
 	public static function fecha_db_almacenar($fecha, $formato);
 
 	public static function fecha_db_obtener($campo, $formato);
-
-	public function suma_fechas($fecha1, $cantidad, $tipo);
-
-	public function resta_horas($fecha1, $fecha2);
-
-	public function compara_fechas($fecha_control, $fecha_inicial);
 
 	public function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
 

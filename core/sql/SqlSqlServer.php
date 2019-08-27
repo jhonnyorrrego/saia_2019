@@ -265,13 +265,6 @@ class SqlSqlServer extends Sql implements ISql
         return ($total[0]);
     }
 
-    function resta_fechas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURRENT_TIMESTAMP";
-        return "DATEDIFF(DAY,$fecha2,$fecha1)";
-    }
-
     static function fecha_db_almacenar($fecha, $formato = NULL)
     {
         if (is_object($fecha)) {
@@ -337,30 +330,6 @@ class SqlSqlServer extends Sql implements ISql
         return $fsql;
     }
 
-    function suma_fechas($fecha1, $cantidad, $tipo = "")
-    {
-        if ($tipo == "")
-            $tipo = 'DAY';
-        return "DATEADD($tipo,$cantidad,$fecha1)";
-    }
-
-    function resta_horas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURRENT_TIMESTAMP";
-        return "DATEDIFF(HOUR,$fecha2,$fecha1)";
-    }
-
-    // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial)
-    {
-        if (!strlen($fecha_control)) {
-            $fecha_control = date('Y-m-d');
-        }
-        $resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
-        return ($resultado);
-    }
-
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
     {
         sqlsrv_configure("WarningsReturnAsErrors", 0);
@@ -386,7 +355,7 @@ class SqlSqlServer extends Sql implements ISql
 
     function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
     {
-        return ($this->Busca_Tabla());
+        return $this->Busca_Tabla();
     }
 
     function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1)

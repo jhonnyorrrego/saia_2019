@@ -255,13 +255,6 @@ class SqlOracle extends Sql implements ISql
         throw new Exception("Se debe desarrollar", 1);
     }
 
-    function resta_fechas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "sysdate";
-        return "$fecha1-$fecha2 ";
-    }
-
     static function fecha_db_almacenar($fecha, $formato = NULL)
     {
         if (is_object($fecha)) {
@@ -334,36 +327,6 @@ class SqlOracle extends Sql implements ISql
         }
         $fsql = "TO_CHAR($campo,'$resfecha')";
         return $fsql;
-    }
-
-    function suma_fechas($fecha1, $cantidad, $tipo = "")
-    {
-        if ($tipo == "HOUR") {
-            return "$fecha1+($cantidad/24)";
-        }
-        if ($tipo == "" || $tipo == "DAY")
-            return "$fecha1+$cantidad";
-        else if ($tipo == "MONTH")
-            return "ADD_MONTHS($fecha1,$cantidad)";
-        else if ($tipo == "YEAR")
-            return "ADD_MONTHS($fecha1,$cantidad*12)";
-    }
-
-    function resta_horas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "sysdate";
-        return "($fecha1-$fecha2)*24";
-    }
-
-    // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial)
-    {
-        if (!strlen($fecha_control)) {
-            $fecha_control = date('Y-m-d');
-        }
-        $resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
-        return ($resultado);
     }
 
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
