@@ -11,10 +11,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior . "assets/librerias.php");
 
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
-echo librerias_notificaciones();
-
 
 $componente = busca_filtro_tabla("nombre, etiqueta, clase, opciones_propias", "pantalla_componente", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
 $texto_titulo = $componente[0]["etiqueta"];
@@ -81,42 +78,57 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
     <title>Configuraci&oacute;n del campo
         <?= $texto_titulo ?>
     </title>
-    <link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>/css/bootstrap/3.3.7/css/bootstrap.css" />
 
     <style type="text/css">
         label {
             vertical-align: middle;
         }
     </style>
-    <?php
-    echo librerias_jquery("2.2");
-    ?>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>js/bootstrap/3.3.7/bootstrap.js"></script>
-
     <!-- handlebars -->
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/handlebars.js"></script>
 
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/handlebars/dist/handlebars.js"></script>
     <!-- alpaca -->
-    <link type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script>
+    <!-- <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script> -->
 
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>js/jquery-ui/1.12.1/jquery-ui.js"></script>
-    <link type="text/css" href="<?= $ruta_db_superior ?>js/jquery-ui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
-
-    <!-- Required for jQuery UI DateTimePicker control -->
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.js"></script>
-    <link type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.css" rel="stylesheet" />
-
-    <!-- bootstrap datetimepicker for date, time and datetime controls -->
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
-    <?= dateTimePicker() ?>
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules\alpaca\dist\alpaca\bootstrap\alpaca.min.js"></script>
 
     <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
+
+    <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
+
+    <?= bootstrap() ?>
+
+    <style>
+        #tipo_campo {
+            font-size: 30px;
+        }
+
+        .btn-complete {
+            background: #48b0f7;
+            color: #fff;
+        }
+
+        .form-group label:not(.error) {
+            text-transform: none;
+            font-weight: bold;
+            color: #626262;
+            font-size: 12px;
+        }
+
+        .form-control {
+
+            font-size: 12px;
+            color: #626262;
+
+        }
+    </style>
+
+
 </head>
 
 <body>
-    <h5><b>Configuraci&oacute;n del campo -
-            <?= html_entity_decode(utf8_encode($texto_titulo)) ?></b></h5>
+    <h5 id="tipo_formato"><?= html_entity_decode(utf8_encode($texto_titulo)) ?></h5>
+    <hr />
     <div class="container">
         <form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
         <div id="res" class="alert"></div>
@@ -162,34 +174,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             };*/
 
             //console.log(opciones_form);
-            if (!opciones_form.hasOwnProperty("options")) {
-                console.log(opciones_form);
-            } else {
-                opciones_form["options"]['form'] = {
-                    buttons: {
-                        cancel: {
-                            "styles": "btn btn-danger",
-                            "type": "button",
-                            "value": "Cancelar",
-                            "click": function(evt) {
-                                parent.hs.close();
-                            }
-                        },
-                        submit: {
-                            "title": "Aceptar",
-                            "styles": "btn btn-primary",
-                            "click": function() {
-                                this.refreshValidationState(true);
-                                if (this.isValid(true)) {
-                                    var value = this.getValue();
-                                    //console.log(JSON.stringify(value, null, "  "));
-                                    funcion_enviar(value, idpantalla_campo);
-                                }
-                            }
-                        }
-                    }
-                };
-            }
 
             opciones_form["view"] = {
                 "locale": "es_ES",
@@ -215,24 +199,60 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                     });
                 }
             };
+
+            opciones_form["options"]['form'] = {
+                buttons: {
+
+                    submit: {
+                        "title": "Guardar",
+                        "styles": "btn btn-complete d-none",
+                        "id": "btnGuardar",
+                        "click": function() {
+                            this.refreshValidationState(true);
+                            if (this.isValid(true)) {
+                                var value = this.getValue();
+                                //console.log(JSON.stringify(value, null, "  "));
+                                funcion_enviar(value, idpantalla_campo);
+                                top.successModalEvent(value);
+                            }
+                        }
+                    },
+                }
+            };
+
+            $('#btnGuardar').hide();
+            $('#btnGuardar').css('display', 'none');
+            $('#btnGuardar').css('visibility', 'hidden');
+
+            $(".btn-complete").click(function() {
+
+
+                $("#btnGuardar").trigger("click");
+
+            });
+
+
             $('#editar_pantalla_campo').alpaca(opciones_form);
+
 
         });
 
         function funcion_enviar(datos, idpantalla_campo) {
-            datos["ejecutar_campos_formato"] = "set_pantalla_campos";
-            datos["tipo_retorno"] = 1;
-            datos["idpantalla_campos"] = idpantalla_campo;
+
+            // datos["ejecutar_campos_formato"] = "set_pantalla_campos";
+            ///datos["tipo_retorno"] = 1;
+            //datos["idpantalla_campos"] = idpantalla_campo;
 
             var evitar_html = ["datetime", "textarea_cke"];
 
             $.ajax({
                 type: 'POST',
-                url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias.php",
+                url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias.php?" + datos + "&ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&idpantalla_campos=" + idpantalla_campo,
                 data: datos,
                 async: false,
                 dataType: "json",
                 success: function(objeto) {
+                    console.log("datos: " + objeto);
                     if (objeto && objeto.exito) {
                         $('#cargando_enviar').html("Terminado ...");
                         $("#pc_" + idpantalla_campo, parent.document).find(".control-label").html("<b>" + objeto.etiqueta + "</b>");
@@ -249,12 +269,14 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                                 $("#pc_" + idpantalla_campo + " span:first", parent.document).html("<b>" + objeto.etiqueta + "</b>");
                             }
                         }
-                        parent.hs.close();
+
                     } else if (objeto && objeto.exito == 0) {
                         notificacion_saia("El nombre del campo ya existe en el formato", "error", "", 3500);
                     }
+
                 }
             });
+
         }
     </script>
 </body>
@@ -331,4 +353,4 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
 }
 
 
- ?>
+?>

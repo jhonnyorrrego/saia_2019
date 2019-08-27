@@ -106,9 +106,9 @@ if (isset($_REQUEST["genera"])) {
             $idmodulo = crear_modulo_formato($idformato);
 
             if ($_REQUEST['permisosPerfil']) {
-                $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
+                $permisosFormato = permisosFormato($_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             } else {
-                $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
+                $permisosFormato = eliminarPermisoFormato($_REQUEST['nombreFormato']);
             }
         }
     }
@@ -161,7 +161,9 @@ class GenerarFormato
     {
         $retorno = ["publicarFormato" => 1, "mensaje" => '', "error" => 1];
         $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
+        
         $camposFormato = StaticSql::search($consultaFormato);
+
         if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
             $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripciÃ³n de los documentos';

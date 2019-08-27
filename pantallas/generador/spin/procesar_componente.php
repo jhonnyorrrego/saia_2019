@@ -36,11 +36,10 @@ function procesar_contador($idcampo = '', $seleccionado = '', $accion = '', $cam
 
     $eliminarComponente = clase_eliminar_pantalla_componente($idcampo);
     $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
-        <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatorio}</b></span> {$eliminarComponente}";
+        <span style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatorio}</b></span> {$eliminarComponente}";
     $texto .= '<div class="controls"><div id=" class="input-append">';
     $texto .= '<input id="' . $campo["nombre"] . '" type="number" value="' . $valor . '" name="' . $campo["nombre"] . '">';
     $texto .= '</div></div></li>';
 
     return $texto;
 }
-?>

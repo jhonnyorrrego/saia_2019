@@ -196,7 +196,7 @@ function librerias_arboles($opciones = '')
     }
     return $texto;
 }
-
+/*
 function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion")
 {
     global $raiz_saia;
@@ -217,7 +217,7 @@ function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion")
         $texto .= '<script src="' . $raiz_saia . 'js/jquery.fancytree/' . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
     }
     return $texto;
-}
+}*/
 
 function librerias_tooltips()
 {
