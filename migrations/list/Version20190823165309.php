@@ -62,6 +62,24 @@ final class Version20190823165309 extends AbstractMigration
             'idformato' => 404
         ]);
 
+        $this->connection->update('busqueda_componente', [
+            'ordenado_por' => 'a.fecha'
+        ], [
+            'idbusqueda_componente' => 280
+        ]);
+
+        $this->connection->update('busqueda_condicion', [
+            'codigo_where' => 'lower(a.estado)=\'iniciado\' AND a.tipo_radicado=2 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}'
+        ], [
+            'idbusqueda_condicion' => 222
+        ]);
+
+        $this->connection->update('formato', [
+            'etiqueta' => 'Planilla de Distribuci&oacute;n'
+        ], [
+            'idformato' => 353
+        ]);
+
     }
 
     public function down(Schema $schema) : void

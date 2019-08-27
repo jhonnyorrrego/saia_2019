@@ -629,11 +629,11 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
                         <td class='pr-0' style='width: 20%; border:none;'>
-                            <strong>NO. OFICIO:</strong> 
+                            <strong>NO. DE DOCUMENTO:</strong> 
                         </td>
 
                         <td style='width: 30%;'>
-                            (En desarrollo)
+                        " . $datos[0]['numero_oficio'] . "
                             
                         </td>
 
@@ -675,27 +675,12 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                            
                         </td>
                     </tr>
-
                     <tr>
-                    <td class='pr-0' style='width: 20%; border:none;'>
-                         
-                        <strong>ANEXOS DIGITALES:</strong>
-                    </td>
-
-                    <td style='width:20%;'>
-                        
-                        (En desarrollo)
-                    </td>
-
-                    <td style='width:2%;'></td>
-
-                    <td style='width: 22%; border:none;' class='pl-0'>
-                        
-                        <strong>ANEXOS FÍSICOS:</strong>
-                    </td>
-                    <td style='width:30%;'>
-                        " . $datos[0]['descripcion_anexos'] . "
-                    </td>
+                        <td class='pr-0' style='width: 20%; border:none;'><strong>ANEXOS FÍSICOS:</strong></td>
+                        <td style='width:20%;'>" . $datos[0]['descripcion_anexos'] . "</td>
+                        <td style='width:2%;'></td>
+                        <td style='width: 22%; border:none;' class='pl-0'></td>
+                        <td style='width:30%;'></td>
                     </tr>
                     <tr><td colspan='5' style='height:30px;' ></td></tr>
                     ";
