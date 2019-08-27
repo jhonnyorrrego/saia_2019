@@ -62,8 +62,8 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '')
             $campos_lectura = str_replace("idft_", "id" . $consulta_ft[0]['nombre_tabla'], $campos_lectura);
             $campos_excluir[] =  $campos_lectura;
         }
-    }
-    $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
+    } 
+    $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')"; 
     $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla . $condicion_adicional, "B.orden", $conn);
 
     $texto = '';
@@ -1040,11 +1040,7 @@ function load_componentes($tipo_retorno)
     if (@$_REQUEST["categoria"]) {
         $where = " AND lower(categoria)='" . strtolower($_REQUEST["categoria"]) . "'";
     }
-    $pantalla = busca_filtro_tabla("", "pantalla", "idpantalla=" . $_REQUEST["idpantalla"], "", $conn);
-    // valida que el tipo de pantalla sea diferente de formato
-    if ($pantalla["numcampos"] && $pantalla[0]["tipo_pantalla"] != 2) {
-        $where .= " AND lower(categoria)<>'documento'";
-    }
+    
     $categorias = busca_filtro_tabla("categoria, nombre", "pantalla_componente", "estado=1" . $where, "GROUP BY categoria ORDER BY orden", $conn);
     if ($categorias["numcampos"]) {
         $retorno["exito"] = 1;

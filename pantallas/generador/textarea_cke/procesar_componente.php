@@ -29,8 +29,8 @@ function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', 
     $texto = <<<FINTAG
     <li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]} background:white;'>
 FINTAG;
-    $texto .= clase_eliminar_pantalla_componente($idcampo);
-    $obligatoriedad = "";
+    $texto .= "clase_eliminar_pantalla_componente($idcampo)";
+    $obligatoriedad = "";"
     if ($campo["obligatoriedad"]) {
         $obligatoriedad = '*';
     }

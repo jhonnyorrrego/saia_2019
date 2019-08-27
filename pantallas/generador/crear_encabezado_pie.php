@@ -118,6 +118,7 @@ $contenidoDefecto = json_encode('<div class="row">
 								message: 'Encabezado creado'
 							});
 							top.successModalEvent(data.datos);
+							top.closeTopModal();
 
 						} else {
 							top.notification({

@@ -125,7 +125,7 @@ if ($_REQUEST["idformato"]) {
 
     <div class="container-fluid mx-0 px-2 pb-5" style="min-width:1400px;">
 
-        <div class="row my-2 ml-0">
+        <div class="row my-2 mx-0">
             <div class="col-12 col-sm-12 col-md-3 col-lg-2 mx-0"></div>
             <div class="col-12 col-sm-12 col-md-3 col-lg-2 mx-0 fixed-top">
                 <div class="section" id="arbol">
@@ -337,16 +337,93 @@ if ($_REQUEST["idformato"]) {
 
                                     <div class="tab-pane" id="formulario-tab">
 
-                                        <div id="droppable">
-                                            <ul id="list" class="px-0">
-                                                <li id="list_one" class="ui-state-default mt-2 mb-3"><span></span>Arrastre los campos aquí</li>
-                                                <?php
-                                                $formatosCampo = load_pantalla($idpantalla);
-                                                if ($formatosCampo) : ?>
-                                                <?= $formatosCampo;  ?>
-                                                <?php endif; ?>
-                                            </ul>
+                                        <link href="css/lists.css" rel="stylesheet" />
+
+                                        <div class="row px-0 mx-0 pt-3">
+                                            <div class="mx-0 px-0 col-9" style="position:relative;display:inline-block;vertical-align:top">
+
+                                                <ul id="contenedorComponentes" class="sortable boxy px-4" style="margin-left: 1em;">
+                                                    <h6 style="text-align:center;position:absolute;top:150px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
+
+                                                    <?php
+                                                        $formatosCampo = load_pantalla($idpantalla);
+                                                    if ($formatosCampo) : ?>
+                                                    <?= $formatosCampo;  ?>
+                                                    <?php endif; ?>
+
+                                                </ul>
+                                            </div>
+                                            <div class="col-2" style="position:relative;display:inline-block;vertical-align:top">
+                                                <ul id="itemsComponentes" class="sortable boxier" style="margin-right: 1em;">
+                                                    <?php
+
+                                                    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1', '', $conn);
+
+                                                    for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
+                                                        $etiqueta = htmlentities(html_entity_decode(utf8_encode($listadoComponentes[$i]["etiqueta"])));
+                                                        echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}' idpantalla_campo='7037' ><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i>{$etiqueta}</li>";
+                                                    }
+                                                    ?>
+                                                </ul>
+                                            </div>
                                         </div>
+                                        <script src="js/coordinates.js"></script>
+                                        <script src="js/drag.js"></script>
+                                        <script src="js/dragdrop.js"></script>
+
+                                        <script language="JavaScript" type="text/javascript">
+                                            window.onload = function() {
+                                                var list = document.getElementById("contenedorComponentes");
+                                                DragDrop.makeListContainer(list);
+                                                list.onDragOver = function() {
+                                                    this.style["background"] = "#EEF";
+                                                };
+                                                list.onDragOut = function() {
+                                                    this.style["background"] = "#eee";
+                                                };
+
+                                                list = document.getElementById("itemsComponentes");
+                                                DragDrop.makeListContainer(list);
+                                                list.onDragOver = function() {
+                                                    this.style["border"] = "1px dashed #AAA";
+                                                };
+                                                list.onDragOut = function() {
+                                                    this.style["border"] = "1px solid white";
+                                                };
+                                            };
+ 
+
+                                            $(document).on("click", ".agregado", function(e) {
+
+                                                if (e.target.attributes.idpantalla_componente != null) {
+                                                    var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
+                                                    var enlace = directoryPath + "editar_componente_generico.php?idpantalla_componente=" + $(this).attr("idpantalla_componente") + "&idpantalla_campos=" + $(this).attr("idpantalla_campo");
+
+                                                    top.topModal({
+                                                        url: enlace,
+                                                        params: {
+                                                            //pantalla: params.pantalla,
+                                                            //idpadre: params.idpadre,
+                                                            idformato: $("#idformato").val(),
+                                                            //padre: params.padre
+                                                        },
+                                                        size: 'modal-xl',
+                                                        title: 'Configurar campo',
+                                                        buttons: {},
+                                                        onSuccess: function(data) {
+                                                            successModalComponente(data);
+                                                        },
+                                                    }); 
+                                                }
+ 
+                                            }); 
+
+                                            function successModalComponente(data){
+
+                                                top.closeTopModal();
+
+                                            }
+                                        </script>
                                     </div>
 
 
@@ -444,9 +521,6 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        /*$("#nuevo_formato").click(function() {
-		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
-    });*/
 
         var guardarPaso1 = 0;
 
@@ -1031,12 +1105,15 @@ for ($i = 0; $i < $cant_js; $i++) {
                 title: 'Crear encabezado del formato',
                 buttons: {
                     success: {
-                        label: "Guardar Cambios",
+                        label: "Guardar",
                         class: "btn btn-complete"
+                    },  
+                    cancel: {
+                        label: "Cerrar",
+                        class: "btn btn-danger"
                     }
                 },
                 onSuccess: function(data) {
-                    top.closeTopModal();
                     successModalEncabezado(data);
                 },
             });
@@ -1051,7 +1128,7 @@ for ($i = 0; $i < $cant_js; $i++) {
             }
             $("#encabezado_formato").html(data.contenido);
             encabezados[data.idencabezado] = data.contenido;
-
+            top.closeTopModal();
         }
 
         $(document).off("click", ".crear_pie").on("click", ".crear_pie", function(e) {
@@ -1076,7 +1153,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                     }
                 },
                 onSuccess: function(data) {
-                    top.closeTopModal();
+                    
                     successModalPie(data);
                 },
             });
@@ -1092,7 +1169,7 @@ for ($i = 0; $i < $cant_js; $i++) {
             }
             $("#pie_formato").html(data.contenido);
             encabezados[data.idencabezado] = data.contenido;
-
+            top.closeTopModal();
         }
 
         $(document).on("click", "#eliminar_pie", function(e) {
@@ -1444,7 +1521,6 @@ for ($i = 0; $i < $cant_js; $i++) {
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 
-            $("#componentes_acciones").show();
             var id = e.target.toString().split("#");
 
             switch (id[1]) {
@@ -1461,6 +1537,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                     }
                     break;
                 case 'pantalla_previa-tab':
+                    $("#componentes_acciones").hide();
                     botonDesactivado($("#labelGuardar"));
                     $('#enviar_datos_formato').attr('pasoactual', '4');
                     normalNavs();
@@ -1500,19 +1577,6 @@ for ($i = 0; $i < $cant_js; $i++) {
                             }
                         }
                     });
-                    break;
-                case 'pantalla_previa-permiso':
-
-                    $('#cambiar_nav').hide();
-                    //$('#enviar_datos_formato').hide();
-                    $('#cambiar_vista').hide();
-                    $("#cambiar_nav_basico").hide();
-                    $("#cambiar_nav_permiso").hide();
-                    if (tab_acciones == false) {
-                        $('#tabs_formulario a[href="#pantalla_previa-permiso"]').tab('show');
-                    }
-
-                    break;
                 case 'funciones-tab':
                     if (tab_acciones == false) {
                         $('#tabs_formulario a[href="#pantalla_mostrar-tab"]').tab('show');
@@ -1535,6 +1599,8 @@ for ($i = 0; $i < $cant_js; $i++) {
                     break;
                 case 'pantalla_mostrar-tab':
                     botonActivado($("#labelGuardar"));
+                    $("#componentes_acciones").show();
+                    $('#funciones_desplegables').show();
                     $('#enviar_datos_formato').attr('pasoactual', '3');
                     $('#labelGuardar').attr('for', 'actualizar_cuerpo_formato');
                     normalNavs();
@@ -1578,16 +1644,18 @@ for ($i = 0; $i < $cant_js; $i++) {
                     }
                     $('#enviar_datos_formato').attr('pasoactual', '2');
                     normalNavs();
-                    minimizar_pantalla();
+                    maximizar_pantalla();
                     $('#nav-campos').css({
                         'color': '#fff',
                         'background': '#49b0e8',
                         'font-weight': 'bold'
                     });
 
-                    $('#tabs_opciones a[href="#componentes-tab"]').tab('show');
-                    $('#componente_tab').show();
+                    //$('#tabs_opciones a[href="#componentes-tab"]').tab('show');
+                    //$('#componente_tab').show();
                     $('#funciones_tab').hide();
+                    $("#componentes_acciones").hide();
+                    $('#funciones_desplegables').hide();
                     //$("#generar_pantalla").hide();
                     $('#cambiar_vista').hide();
                     //$('#enviar_datos_formato').hide();
@@ -1644,24 +1712,6 @@ for ($i = 0; $i < $cant_js; $i++) {
                         });
 
                     }
-                    break;
-                case 'includes-tab':
-                    //alert('includes tab');
-                    //$('#tabs_formulario a[href="#librerias_formulario-tab"]').tab('show');
-                    /*$.ajax({
-        type:'POST',
-        url: '<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias.php?ejecutar_pantalla_campo=listado_archivos_incluidos',
-        data:'idpantalla_campos='+$("#idformato").val(),
-        success: function(html){
-          if(html){
-          	var objeto=jQuery.parseJSON(html);
-            if(objeto.exito){
-              $('#includes-tab').html(objeto.codigo_html);
-              iniciar_tooltip();
-            }
-        	}
-        }
-    	});*/
                     break;
             }
         });

@@ -10,9 +10,9 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once($ruta_db_superior . "librerias_saia.php");
-include_once($ruta_db_superior . "pantallas/lib/librerias_xml.php");
-include_once($ruta_db_superior . "pantallas/lib/librerias_componentes.php");
+include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_xml.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_componentes.php';
 
 function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_retorno = 1)
 {
@@ -83,6 +83,8 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         "exito" => 0,
         "idpantalla_campos" => $idpantalla_campos
     ];
+
+    print_r($_REQUEST);
 
     $pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html,formato_idformato", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
     $acciones = array("a", "e", "b");
@@ -190,6 +192,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 
             if (count($sql_update)) {
                 $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
+               
                 if ($valorArbol) {
                     $sqlArboles = "UPDATE campos_formato SET valor = '{$valorArbol}' WHERE idcampos_formato={$idpantalla_campos}";
                     phpmkr_query($sqlArboles) or die($sqlArboles);
@@ -352,14 +355,14 @@ function kma_valor_campo($datos, $tiqueta_html)
 
 function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_archivo = "", $accion = '', $campos_pantalla = '')
 {
-    global $ruta_db_superior;
+    global $conn, $ruta_db_superior; 
     $retorno = array(
         "exito" => 0
     );
     $pantalla_campos = get_pantalla_campos($idpantalla_campos, 0);
 
     if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
-        $retorno["exito"] = 1;
+        /*$retorno["exito"] = 1;
         $texto = $pantalla_campos[0]["componente"];
         $regs = array();
         preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $texto, $regs);
@@ -408,7 +411,11 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
                 $texto = str_replace($value, html_entity_decode(utf8_decode($proceso_componente)), $texto);
             }
         }
-        $retorno["codigo_html"] = $texto;
+        $retorno["codigo_html"] = $texto;/*/
+ 
+        $pantalla_componente=busca_filtro_tabla("clase,nombre","pantalla_componente","idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}","",$conn);
+        $retorno["codigo_html"] = "<li class='agregado' idpantalla_campo='".$pantalla_campos[0]['idpantalla_campos']."' idpantalla_componente='".$pantalla_campos[0]['idpantalla_componente']."' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> ".$pantalla_campos[0]["etiqueta"]." <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i id='eliminar' class='fa fa-trash eliminar'></i></div></li>";
+          
     }
     if ($tipo_retorno == 1) {
         echo json_encode($retorno);
