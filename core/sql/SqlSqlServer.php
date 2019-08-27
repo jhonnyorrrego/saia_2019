@@ -401,10 +401,10 @@ class SqlSqlServer extends Sql implements ISql
 
             if ($dato[0][0] == "") {
                 $sql = "UPDATE " . $tabla . " SET " . $campo . " .write(convert(varbinary(max),'XXX'),0,NULL) WHERE " . $condicion;
-                $this->ejecutar_sql($sql);
+                $this->query($sql);
             }
             $sql = "UPDATE " . $tabla . " SET " . $campo . " = " . $content . " WHERE " . $condicion;
-            $this->ejecutar_sql($sql);
+            $this->query($sql);
         } elseif ($tipo == "texto") {
             $contenido = codifica_encabezado($contenido);
             $sql = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($contenido)) . "' where $condicion";
@@ -535,7 +535,7 @@ class SqlSqlServer extends Sql implements ISql
                 $dato = "CREATE UNIQUE NONCLUSTERED INDEX (I_" . strtoupper($nombre_campo) . "_" . rand() . ") ON " . $nombre_tabla . "( " . $nombre_campo . " )";
                 break;
         }
-        $this->Ejecutar_sql($dato);
+        $this->query($dato);
         return $traza;
     }
 
@@ -582,14 +582,14 @@ class SqlSqlServer extends Sql implements ISql
     {
         global $conn;
         $sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
-        $this->Ejecutar_sql($sql);
+        $this->query($sql);
         return;
     }
 
     public function verificar_existencia($tabla)
     {
         $sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
-        $rs = $this->Ejecutar_sql($sql);
+        $rs = $this->query($sql);
         $fila = $this->sacar_fila($rs);
         if ($fila) {
             return ($fila["existe"] > 0);

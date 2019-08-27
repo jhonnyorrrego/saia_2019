@@ -485,34 +485,34 @@ class SqlPostgres extends Sql implements ISql
 					$inicio = $siguiente;
 					$dato = "DROP SEQUENCE " . $nombre_seq . " CASCADE";
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 				} else {
 					$inicio = 1;
 				}
 				// $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
 				// guardar_traza($dato, $nombre_tabla);
-				// $this->Ejecutar_sql($dato);
+				// $this->query($dato);
 				if ($this->verificar_existencia($nombre_tabla)) {
 					$dato = "CREATE SEQUENCE " . $nombre_seq . " INCREMENT 1 START " . $inicio . " MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1";
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 					$dato = "ALTER TABLE $nombre_tabla ALTER COLUMN $nombre_campo SET DEFAULT nextval('$nombre_seq')";
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 				}
 
 				// $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
 				// guardar_traza($dato, $nombre_tabla);
-				// $this->Ejecutar_sql($dato);
+				// $this->query($dato);
 				break;
 			case "u":
 				if ($this->verificar_existencia($nombre_tabla)) {
 					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 				}
 				break;
 			case "i":
@@ -526,7 +526,7 @@ class SqlPostgres extends Sql implements ISql
 				if (!$existe["numcampos"]) {
 					$dato = "CREATE INDEX i_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") TABLESPACE " . TABLESPACE;
 					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+					$this->query($dato);
 				}
 
 				break;
