@@ -2,6 +2,7 @@ $(function() {
     var params = $('#script_grid').data('params');
     var baseUrl = params.baseUrl;
     var $table = $('#table');
+    var selections = [];
     var request = {
         key: localStorage.getItem('key'),
         token: localStorage.getItem('token'),
@@ -17,6 +18,10 @@ $(function() {
         },
         responseHandler: function(response) {
             request.total = response.total;
+
+            $.each(response.rows, function(i, row) {
+                row.state = $.inArray(row.id, selections) !== -1;
+            });
             return response;
         },
         toolbar: '#toolbar',
@@ -34,6 +39,27 @@ $(function() {
         exportTypes: ['csv', 'txt', 'excel', 'pdf'],
         exportDataType: 'all'
     });
+
+    $table.on(
+        'check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table',
+        function(e, rowsAfter, rowsBefore) {
+            var rows = rowsAfter;
+
+            if (e.type == 'uncheck-all') {
+                rows = rowsBefore;
+            }
+
+            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function(row) {
+                return row.id;
+            });
+
+            var func =
+                $.inArray(e.type, ['check', 'check-all']) > -1
+                    ? 'union'
+                    : 'difference';
+            selections = window._[func](selections, ids);
+        }
+    );
 
     $('#btn_search').on('click', function() {
         top.topModal({
