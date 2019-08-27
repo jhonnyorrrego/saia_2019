@@ -13,7 +13,7 @@ function jquery()
 }
 /**
  * retorna script para cargar
- * jquery ui  v1.12.1 minificado
+ * jquery ui v1.12.1 minificado
  */
 function jqueryUi()
 {
