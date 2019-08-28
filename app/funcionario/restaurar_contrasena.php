@@ -13,13 +13,13 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
 );
 
-$userId = base64_decode(base64_decode($_REQUEST['token']));
+$userId = CriptoController::decrypt_blowfish($_REQUEST['token']);
 if (Funcionario::isValidToken($_REQUEST['token'], $userId)) {
     $update = Funcionario::executeUpdate([
         'token' => $_REQUEST['token'] . 'invalid',

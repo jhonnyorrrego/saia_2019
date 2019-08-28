@@ -1,69 +1,72 @@
 <?php
-$max_salida = 6;
-$ruta_db_superior = $ruta = "";
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
+    if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
-    $ruta .= "../";
+    $ruta .= '../';
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = new stdClass();
-$Response->success = 0;
-$Response->message = "";
+$Response = (object) [
+    'data' => new stdClass(),
+    'message' => '',
+    'success' => 0
+];
 
-if ($_REQUEST['username']) {
+try {
+    if (!$_REQUEST['username']) {
+        throw new Exception('Debe indicar el usuario', 1);
+    }
+
     $Funcionario = Funcionario::findByAttributes([
         'login' => $_REQUEST['username']
     ]);
 
-    if ($Funcionario) {
-        $Configuracion = Configuracion::findByAttributes(['nombre' => 'validar_acceso_ldap']);
-
-        if ($Configuracion->valor) {
-            $profile = Perfil::ADMIN_INTERNO;
-            $sql = "select * from funcionario where concat(',', perfil, ',') like '%,{$profile},%' and estado=1";
-            $users = Funcionario::findBySql($sql);
-
-            if (count($users)) {
-                if (isset($_REQUEST['message']) && $_REQUEST['message']) {
-                    $message = $_REQUEST['message'];
-                } else {
-                    $message = 'Por favor restablecer clave para ingreso al Sistema SAIA del usuario ' . $_REQUEST['username'];
-                }
-
-                foreach ($users as $key => $Funcionario) {
-                    enviar_mensaje('', ['para' => 'email'], ['para' => [$Funcionario->email]], 'Restablecer clave de acceso.', $message);
-                }
-
-                $administrador = html_entity_decode($users[0]->getName());
-                $Response->message = "Solicitud realizada, Comuniquese con " . $administrador;
-                $Response->success = 1;
-            } else {
-                $Response->message = "No se encuentra administrador";
-            }
-        } else {
-            $token = base64_encode(base64_encode($Funcionario->getPK()));
-
-            $Funcionario->token = $token;
-            $Funcionario->save();
-            
-            $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/funcionario/reestablecer_clave.php?token=" . $token;
-            $message = 'Para reestablecer la clave ingrese al siguiente enlace ' . $url;
-            enviar_mensaje('', ['para' => 'email'], ['para' => [$Funcionario->email]], 'Restablecer clave de acceso.', $message);
-            $Response->message = "Se ha enviado un enlace de recuperación al correo " . $Funcionario->email;
-            $Response->success = 1;
-        }
-    } else {
-        $Response->message = "Usuario invalido";
+    if (!$Funcionario) {
+        throw new Exception("Usuario invalido", 1);
     }
-} else {
-    $Response->message = "Usuario requerido";
+    $Configuracion = Configuracion::findByAttributes(['nombre' => 'validar_acceso_ldap']);
+
+    if ($Configuracion->valor) {
+        $profile = Perfil::ADMIN_INTERNO;
+        $sql = "select * from funcionario where concat(',', perfil, ',') like '%,{$profile},%' and estado=1";
+        $users = Funcionario::findBySql($sql);
+
+        if (!$users) {
+            throw new Exception("No se encuentra administrador", 1);
+        }
+
+        if (!empty($_REQUEST['message'])) {
+            $message = $_REQUEST['message'];
+        } else {
+            $message = 'Por favor restablecer clave para ingreso al Sistema SAIA del usuario ' . $_REQUEST['username'];
+        }
+
+        $mails = [];
+        foreach ($users as $key => $Funcionario) {
+            $mails[] = $Funcionario->email;
+        }
+        enviar_mensaje('', ['para' => 'email'], ['para' => $mails], 'Restablecer clave de acceso.', $message);
+
+        $Response->message = "Solicitud realizada, Comuniquese con " . $users[0]->getName();
+    } else {
+        $url = $Funcionario->getRecoveryPasswordRoute();
+        $message = 'Para reestablecer la clave ingrese al siguiente enlace ' . $url;
+        enviar_mensaje('', ['para' => 'email'], ['para' => [$Funcionario->email]], 'Restablecer clave de acceso.', $message);
+        $Response->message = "Se ha enviado un enlace de recuperación al correo " . $Funcionario->email;
+        $Response->success = 1;
+    }
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

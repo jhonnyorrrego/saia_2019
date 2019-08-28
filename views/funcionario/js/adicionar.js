@@ -299,7 +299,7 @@ $('#user_form').validate({
                         message: response.message,
                         type: 'success'
                     });
-                    top.successModalEvent();
+                    top.successModalEvent(response.data);
                 } else {
                     top.notification({
                         message: response.message,

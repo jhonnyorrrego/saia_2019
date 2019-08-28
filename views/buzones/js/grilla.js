@@ -90,9 +90,13 @@ $(function() {
             url: baseUrl + $(this).data('url'),
             size: 'modal-xl',
             title: 'Crear',
-            onSuccess: function() {
+            onSuccess: function(data) {
                 top.closeTopModal();
                 $table.bootstrapTable('refresh');
+
+                if (typeof window.successAdition === 'function') {
+                    successAdition(data);
+                }
             },
             buttons: {
                 success: {

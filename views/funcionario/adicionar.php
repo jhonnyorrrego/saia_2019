@@ -31,8 +31,11 @@ $params = json_encode([
         <!-- START card -->
         <div class="card card-default mb-0">
             <div class="card-body py-2">
-                <form id="user_form">
-                    <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
+                <form id="user_form" autocomplete='off'>
+                    <input style="display:none" type="text" name="fakeusernameremembered">
+                    <input style="display:none" type="password" name="fakepasswordremembered">
+
+                    <p>Los campos con <span class="bold" style="font-size:15px">*</span> son obligatorios</p>
                     <div class="form-group form-group-default required">
                         <label>Identificacion:</label>
                         <input name="nit" type="text" class="form-control">
@@ -47,11 +50,11 @@ $params = json_encode([
                     </div>
                     <div class="form-group form-group-default required">
                         <label>Nombre de usuario:</label>
-                        <input name="login" type="text" class="form-control">
+                        <input name="login" type="text" class="form-control" autocomplete="nope">
                     </div>
                     <div class="form-group form-group-default required">
                         <label>Contraseña:</label>
-                        <input name="clave" type="password" class="form-control" id="password">
+                        <input name="clave" type="password" class="form-control" id="password" autocomplete="new-password">
                     </div>
                     <div class="form-group">
                         <p class="pl-2">
