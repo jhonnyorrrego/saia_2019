@@ -255,13 +255,6 @@ class SqlOracle extends Sql implements ISql
         throw new Exception("Se debe desarrollar", 1);
     }
 
-    function resta_fechas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "sysdate";
-        return "$fecha1-$fecha2 ";
-    }
-
     static function fecha_db_almacenar($fecha, $formato = NULL)
     {
         if (is_object($fecha)) {
@@ -334,36 +327,6 @@ class SqlOracle extends Sql implements ISql
         }
         $fsql = "TO_CHAR($campo,'$resfecha')";
         return $fsql;
-    }
-
-    function suma_fechas($fecha1, $cantidad, $tipo = "")
-    {
-        if ($tipo == "HOUR") {
-            return "$fecha1+($cantidad/24)";
-        }
-        if ($tipo == "" || $tipo == "DAY")
-            return "$fecha1+$cantidad";
-        else if ($tipo == "MONTH")
-            return "ADD_MONTHS($fecha1,$cantidad)";
-        else if ($tipo == "YEAR")
-            return "ADD_MONTHS($fecha1,$cantidad*12)";
-    }
-
-    function resta_horas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "sysdate";
-        return "($fecha1-$fecha2)*24";
-    }
-
-    // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial)
-    {
-        if (!strlen($fecha_control)) {
-            $fecha_control = date('Y-m-d');
-        }
-        $resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
-        return ($resultado);
     }
 
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
@@ -533,18 +496,18 @@ class SqlOracle extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " VARCHAR2";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 40000) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 40000) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -711,16 +674,16 @@ class SqlOracle extends Sql implements ISql
         $tabla = strtoupper($tabla);
         $envio = array();
         $sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
-        $indices = $this->ejecuta_filtro_tabla($sql2);
-        for ($i = 0; $i < $indices["numcampos"]; $i++) {
+        $indices = $this->search($sql2);
+        for ($i = 0, $total = count($indices); $i < $total; $i++) {
             array_push($envio, array(
                 "Key_name" => $indices[$i]["key_name"],
                 "Column_name" => $indices[$i]["column_name"]
             ));
         }
         $sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
-        $primaria = $this->ejecuta_filtro_tabla($sql2, $conn);
-        for ($i = 0; $i < $primaria["numcampos"]; $i++) {
+        $primaria = $this->search($sql2, $conn);
+        for ($i = 0, $total = count($primaria); $i < $total; $i++) {
             array_push($envio, array(
                 "Key_name" => "PRIMARY",
                 "Column_name" => $primaria[$i]["Column_name"]

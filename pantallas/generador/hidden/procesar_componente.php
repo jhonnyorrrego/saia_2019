@@ -40,7 +40,7 @@ function procesar_hidden($idcampo = '', $seleccionado = '', $accion = '', $campo
     $eliminarCampo = clase_eliminar_pantalla_componente($idcampo);
     $adicionales_hidden = ' type="text" class="elemento_formulario" placeholder="' . $campo["placeholder"] . '"  disabled="disabled" ';
     $encabezado_hidden = "<li class ='ui-state-default element' idpantalla_componente = '{$campo["idpantalla_componente"]}' idpantalla_campo = '{$idcampo}' id = 'pc_{$idcampo}' nombre = '{$campo["etiqueta_html"]}' >{$eliminarCampo}
-    <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]}";
+    <span style='font-size:12px;'><b>{$campo["etiqueta"]}";
     if ($campo["obligatoriedad"]) {
       $encabezado_hidden .= '*';
     }
@@ -50,4 +50,3 @@ function procesar_hidden($idcampo = '', $seleccionado = '', $accion = '', $campo
   $texto .= $encabezado_hidden . '<input ' . $adicionales_hidden . ' name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '" value="' . $seleccionado . '">' . $pie_hidden;
   return $texto;
 }
-?>

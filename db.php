@@ -1577,45 +1577,6 @@ function fecha_db_almacenar($fecha, $formato = null)
     return StaticSql::setDateFormat($fecha, $formato);
 }
 
-/*<Clase>
-<Nombre>suma_fechas</Nombre>
-<Parametros>$fecha1:fecha inicial;$cantidad:cantidad de tiempo a sumarle;$tipo:tipo de medida de tiempo usada 'DAY','YEAR','MONTH'</Parametros>
-<Responsabilidades>Crea la cadena sql que se necesita para sumar cierta cantidad de tiempo a una fecha determinada<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function suma_fechas($fecha1, $cantidad, $tipo = "")
-{
-    global $conn;
-    return $conn->suma_fechas($fecha1, $cantidad, $tipo);
-}
-
-/*<Clase>
-<Nombre>resta_horas</Nombre>
-<Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
-<Responsabilidades>Crea la cadena para calcular el numero de horas de diferencia entre dos fechas<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function resta_horas($fecha1, $fecha2)
-{
-    global $conn;
-    return $conn->resta_horas($fecha1, $fecha2);
-}
-
-///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-function compara_fechas($fecha_control, $fecha_inicial)
-{
-    global $conn;
-    return $conn->compara_fechas($fecha_control, $fecha_inicial);
-}
-
 /**
  * obtiene un attributo del 
  * usuario logueado

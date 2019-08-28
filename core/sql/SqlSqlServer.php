@@ -265,13 +265,6 @@ class SqlSqlServer extends Sql implements ISql
         return ($total[0]);
     }
 
-    function resta_fechas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURRENT_TIMESTAMP";
-        return "DATEDIFF(DAY,$fecha2,$fecha1)";
-    }
-
     static function fecha_db_almacenar($fecha, $formato = NULL)
     {
         if (is_object($fecha)) {
@@ -337,30 +330,6 @@ class SqlSqlServer extends Sql implements ISql
         return $fsql;
     }
 
-    function suma_fechas($fecha1, $cantidad, $tipo = "")
-    {
-        if ($tipo == "")
-            $tipo = 'DAY';
-        return "DATEADD($tipo,$cantidad,$fecha1)";
-    }
-
-    function resta_horas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURRENT_TIMESTAMP";
-        return "DATEDIFF(HOUR,$fecha2,$fecha1)";
-    }
-
-    // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial)
-    {
-        if (!strlen($fecha_control)) {
-            $fecha_control = date('Y-m-d');
-        }
-        $resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
-        return ($resultado);
-    }
-
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
     {
         sqlsrv_configure("WarningsReturnAsErrors", 0);
@@ -386,7 +355,7 @@ class SqlSqlServer extends Sql implements ISql
 
     function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0)
     {
-        return ($this->Busca_Tabla());
+        return $this->Busca_Tabla();
     }
 
     function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1)
@@ -460,18 +429,18 @@ class SqlSqlServer extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " varchar";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -570,9 +539,8 @@ class SqlSqlServer extends Sql implements ISql
         global $conn, $sql;
         $tabla = strtoupper($tabla);
         $sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
-        $indices = $this->ejecuta_filtro_tabla($sql2);
-        $numero_indices = count($indices);
-        for ($i = 0; $i < $numero_indices; $i++) {
+        $indices = $this->search($sql2);
+        for ($i = 0, $total = count($indices); $i < $total; $i++) {
             $this->elimina_indice_campo($tabla, $indices[$i]);
         }
         return;

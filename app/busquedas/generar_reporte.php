@@ -15,9 +15,7 @@ include_once $ruta_db_superior . "core/autoload.php";
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
-    if (!isset($_REQUEST['debug'])) {
-        die("invalid access");
-    }
+    die("invalid access");
 }
 
 $page = (int) $_REQUEST['pageNumber'] ?? 1;
@@ -193,26 +191,28 @@ SQL;
     }
 }
 
+$sql = "SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}";
+print_r($sql);
+
 if (!$_REQUEST["total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-        $consulta_conteo = "WITH conteo AS (SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}) SELECT COUNT(*) as cant FROM conteo";
+        $consulta_conteo = "WITH conteo AS ({$sql}) SELECT COUNT(*) as cant FROM conteo";
         throw new Exception("pendiente consulta para server", 1);
     } else {
-        $sql = "(SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}) AS temp";
-        $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $sql;
-        $result = ejecuta_filtro_tabla($consulta_conteo, $conn);
+        $consulta_conteo = "SELECT COUNT(1) AS cant FROM ({$sql}) as temp";
+        $result = StaticSql::search($consulta_conteo);
     }
-    $total = $result["numcampos"] > 1 ? $result["numcampos"] : $result[0]["cant"];
+    $total = count($result) > 1 ? count($result) : $result[0]["cant"];
 } else {
     $total = $_REQUEST["total"];
 }
 
-$response = [
-    'total' => $total
+$response = (object) [
+    'total' => $total,
+    'rows' => []
 ];
 
-if ($response['total']) {
-    $sql = "SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}";
+if ($response->total) {
     $result = StaticSql::search($sql, $start, $end);
 
     if ($result) {
@@ -226,14 +226,16 @@ if ($response['total']) {
             }
             $pos = strpos($campo, ".");
             if ($pos !== false) {
-                $campos[$j] = substr($campo, ($pos + 1), strlen($campo));
+                $campos[$key] = substr($campo, ($pos + 1), strlen($campo));
             }
         }
 
         $listado_funciones = parsear_datos_plantilla_visual($info, implode(",", $campos));
 
         foreach ($result as $row) {
-            $data = [];
+            $data = [
+                'id' => $row[$llave]
+            ];
             foreach ($campos as $key => $campo) {
                 if (is_object($row[$campo])) { // para mssql y sqlserver
                     $row[$campo] = $row[$campo]->date;
@@ -273,7 +275,7 @@ if ($response['total']) {
                 $data['info'] = str_replace("\n", "", str_replace("\r", "", $info));
             }
 
-            $response['rows'][] = $data;
+            array_push($response->rows, $data);
         }
     }
 }

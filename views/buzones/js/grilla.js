@@ -2,6 +2,7 @@ $(function() {
     var params = $('#script_grid').data('params');
     var baseUrl = params.baseUrl;
     var $table = $('#table');
+    var selections = [];
     var request = {
         key: localStorage.getItem('key'),
         token: localStorage.getItem('token'),
@@ -17,9 +18,14 @@ $(function() {
         },
         responseHandler: function(response) {
             request.total = response.total;
+
+            $.each(response.rows, function(i, row) {
+                row.state = $.inArray(row.id, selections) !== -1;
+            });
             return response;
         },
         toolbar: '#toolbar',
+        showColumns: true,
         classes: 'table table-hover mt-0',
         theadClasses: 'thead-light',
         sidePagination: 'server',
@@ -34,6 +40,29 @@ $(function() {
         exportTypes: ['csv', 'txt', 'excel', 'pdf'],
         exportDataType: 'all'
     });
+    $(".keep-open").before("<div class='refresh-table btn-group'><button class='btn btn-secondary' title='Actualizar' id='btn_refresh'><i class='fa fa-refresh'></i><span class='d-none d-sm-inline'></span></button></div>");
+
+
+    $table.on(
+        'check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table',
+        function(e, rowsAfter, rowsBefore) {
+            var rows = rowsAfter;
+
+            if (e.type == 'uncheck-all') {
+                rows = rowsBefore;
+            }
+
+            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function(row) {
+                return row.id;
+            });
+
+            var func =
+                $.inArray(e.type, ['check', 'check-all']) > -1
+                    ? 'union'
+                    : 'difference';
+            selections = window._[func](selections, ids);
+        }
+    );
 
     $('#btn_search').on('click', function() {
         top.topModal({
@@ -81,6 +110,46 @@ $(function() {
         });
     });
 
+    $('#btn_refresh').on('click', function() {
+        top.confirm({
+            id: 'question',
+            type: 'warning',
+            message: '¿Desea continuar con los filtros aplicados?',
+            position: 'center',
+            timeout: 0,
+            overlay: true,
+            overlayClose: true,
+            closeOnEscape: true,
+            closeOnClick: true,
+            buttons: [
+                [
+                    '<button><b>Si</b></button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                        $("#table").bootstrapTable("refresh");
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: 'fadeOut' },
+                            toast,
+                            'button'
+                        );
+                        window.location.reload();
+                    },
+                    true                  
+                ]
+            ]
+        });	
+    });
+
     function getColumns() {
         let data = JSON.parse(params.columns);
         data = data.map(c => {
@@ -88,7 +157,7 @@ $(function() {
             return c;
         });
         if (params.showCheckbox) {
-            data.unshift({ checkbox: true });
+            data.unshift({ checkbox: true, field: 'state' });
         }
 
         return data;
@@ -105,5 +174,9 @@ $(function() {
         });
 
         return params;
+    }
+
+    top.window.gridSelection = function(){
+        return selections;
     }
 });
