@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once($ruta_db_superior."core/autoload.php");
 include_once($ruta_db_superior . "librerias_saia.php");
-
+echo(select2());
 //echo(librerias_jquery('1.7'));
 ?>
 

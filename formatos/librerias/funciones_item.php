@@ -160,7 +160,6 @@ function guardar_item() {
 	$sql = "insert into " . $_REQUEST["tabla"] . "(" . implode(",", $campos) . ") values(" . implode(",", $valores) . ")";
 	phpmkr_query($sql, $conn);
 	$insertado = phpmkr_insert_id();
-	phpmkr_error();
 	if ($insertado > 0) {
 		if (isset($_REQUEST["plantilla"]) && $_REQUEST["plantilla"] == 1) {
 			if ($_REQUEST["contenido"]) {

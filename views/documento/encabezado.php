@@ -65,7 +65,8 @@ function plantilla($documentId, $transferId = 0)
     $params = json_encode([
         'baseUrl' => $ruta_db_superior,
         'documentId' => $documentId,
-        'number' => $Documento->numero
+        'number' => $Documento->numero,
+        'fk' => $Formato->getPK()
     ]);
 
     $priorityClass = $Documento->prioridad ? 'text-danger' : '';
