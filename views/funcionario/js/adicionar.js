@@ -13,6 +13,7 @@ $(function() {
         if (params.userId) {
             find(params.userId);
         }
+        changeModalTitle();
     })();
 
     $('#btn_success').on('click', function() {
@@ -202,6 +203,10 @@ $(function() {
             $(selector).html('Optima');
             return true;
         }
+    }
+
+    function changeModalTitle() {
+        $('#modal_title').text('Crear usuario');
     }
 });
 
