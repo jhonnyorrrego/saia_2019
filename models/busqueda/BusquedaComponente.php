@@ -25,6 +25,9 @@ class BusquedaComponente extends Model
     protected $enlace_adicionar;
     protected $llave;
 
+    //relations
+    protected $Busqueda;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -61,5 +64,21 @@ class BusquedaComponente extends Model
             ],
             'date' => []
         ];
+    }
+
+    /**
+     * obtiene la instancia de Busqueda relacionada
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-15
+     */
+    public function getSearch()
+    {
+        if (!$this->Busqueda) {
+            $this->Busqueda = $this->getRelationFk('Busqueda', 'busqueda_idbusqueda');
+        }
+
+        return $this->Busqueda;
     }
 }

@@ -87,20 +87,19 @@ abstract class Sql
 		return Sql::$instance;
 	}
 
-	protected function ejecuta_filtro_tabla($sql)
+	/**
+	 * determina el valor maximo para 
+	 * la longitud de un campo
+	 *
+	 * @param integer $value
+	 * @param void $max
+	 * @return void
+	 * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+	 * @date 2019-08-27
+	 */
+	protected function maxSize($value, $max)
 	{
-		$response = $this->search($sql);
-		$response['numcampos'] = count($response);
-		$response['sql'] = $sql;
-		return $response;
-	}
-
-	protected function maximo_valor($valor, $maximo)
-	{
-		if ($valor > $maximo || $valor == "NULL") {
-			return ($maximo);
-		}
-		return ($valor);
+		return ($value > $max || $value == "NULL") ? $max : $value;
 	}
 
 	public function formato_generar_tabla($idformato, $formato)
@@ -120,8 +119,8 @@ abstract class Sql
 		$Formato = new Formato($idformato);
 		$Formato->createDefaultFields();
 
-		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
-		if (empty($campos["numcampos"])) {
+		$campos = $this->search("select * from campos_formato A where A.formato_idformato={$idformato}");
+		if (!$campos) {
 			$resp["estado"] = "KO";
 			$resp["mensaje"] = "Problemas al Generar la tabla, No existen Campos";
 			return $resp;
@@ -169,9 +168,9 @@ abstract class Sql
 	 */
 	protected function crear_indices_tabla($formato)
 	{
-		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato where formato_idformato=" . $formato . " AND (banderas IS NOT NULL OR banderas<>'')");
-		$tabla = $this->ejecuta_filtro_tabla("select nombre_tabla from formato where idformato=" . $formato);
-		for ($i = 0; $i < $campos["numcampos"]; $i++) {
+		$campos = $this->search("select * from campos_formato where formato_idformato={$formato} AND (banderas IS NOT NULL OR banderas<>'')");
+		$tabla = $this->search("select nombre_tabla from formato where idformato={$formato}");
+		for ($i = 0, $total = count($campos); $i < $total; $i++) {
 			$this->crear_indice($campos[$i]["banderas"], $campos[$i]["nombre"], $tabla[0]["nombre_tabla"]);
 		}
 	}
@@ -221,7 +220,7 @@ abstract class Sql
 			if (!is_numeric($datos_campo["nombre"]))
 				$campo .= strtolower(str_replace(" ", "_", trim($datos_campo["nombre"])));
 			else
-				return (false);
+				return false;
 		}
 		if ($datos_campo["etiqueta_html"] == "etiqueta") {
 			return false;
@@ -240,6 +239,6 @@ abstract class Sql
 				$campo .= " NOT NULL ";
 		}
 
-		return ($campo);
+		return $campo;
 	}
 }

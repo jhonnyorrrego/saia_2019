@@ -189,7 +189,7 @@ if(@$_REQUEST["idformato"]){
       <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value))">
       <img src="../assets/images/siguiente.png" border="0px" alt="Siguiente"></a>  
     <br /><div id="esperando_serie">
-    <img src="../imagenes/cargando.gif"></div>
+    <img src="../assets/images/cargando.gif"></div>
     <div id="treeboxbox_tree3"></div>
 	<script type="text/javascript">
   <!--

@@ -304,18 +304,6 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
         });
     </script>
     <?php
-
-if ($_REQUEST['tipo'] != 5) {
-    $dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
-    $params = json_encode([
-        'baseUrl' => $ruta_db_superior,
-        'pantalla' => 'padre',
-        'idpadre' => $iddoc,
-        'idformato' => $idformato,
-        'padre' => $dato[0]['idft_ruta_distribucion']
-    ]);
-?><script id='funcionariosDistribucion' src='<?= $ruta_db_superior ?>formatos/ruta_distribucion/funciones.js' data-params='<?= $params ?>'></script><?php
-}
 }
 
 function crear_items_ruta_distribucion($idformato, $iddoc) {

@@ -195,7 +195,7 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 ?>
 <span style="font-family: Verdana; font-size: 9px;">FORMATOS:&nbsp;<br><br></span>
 <div id="esperando_arbol">
-	<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+	<img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
 </div>
 <div id="treeboxbox_tree2"></div>
 <input type="hidden" name="x_formato" id="x_formato" value="<?php echo(implode(",",$x_formato))?>">

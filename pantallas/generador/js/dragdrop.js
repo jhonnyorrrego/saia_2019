@@ -30,7 +30,7 @@ var DragDrop = {
         list.onDragOver = new Function();
         list.onDragOut = new Function();
 
-        var items = list.getElementsByTagName("li");
+        var items = list.getElementsByTagName('li');
 
         for (var i = 0; i < items.length; i++) {
             DragDrop.makeItemDragable(items[i]);
@@ -68,7 +68,7 @@ var DragDrop = {
 
         var next = DragUtils.nextItem(this);
         if (next != null) {
-            nextInicial = next.getAttribute("idpantalla_campo");
+            nextInicial = next.getAttribute('idpantalla_campo');
         } else {
             nextInicial = 0;
         }
@@ -143,7 +143,7 @@ var DragDrop = {
                 this.parentNode.removeChild(this);
                 tempParent.appendChild(this);
                 document
-                    .getElementsByTagName("body")
+                    .getElementsByTagName('body')
                     .item(0)
                     .appendChild(tempParent);
                 return;
@@ -187,15 +187,15 @@ var DragDrop = {
             this.parentNode.removeChild(this);
             tempParent.parentNode.removeChild(tempParent);
 
-            if (this.classList.contains("panel")) {
+            if (this.classList.contains('panel')) {
                 var nuevo = this.cloneNode(true);
-                document.getElementById("itemsComponentes").appendChild(nuevo);
-                nuevo.setAttribute("class", "panel");
-                nuevo.style.top = "0px";
-                nuevo.style.left = "0px";
+                document.getElementById('itemsComponentes').appendChild(nuevo);
+                nuevo.setAttribute('class', 'panel');
+                nuevo.style.top = '0px';
+                nuevo.style.left = '0px';
                 DragDrop.makeItemDragable(nuevo);
             }
-            if (this.classList.contains("agregado")) {
+            if (this.classList.contains('agregado')) {
                 eliminarComponente(this);
             }
             return;
@@ -205,7 +205,7 @@ var DragDrop = {
         var previous = DragUtils.previousItem(this);
 
         if (next == null && previous == null) {
-            if (this.classList.contains("panel")) {
+            if (this.classList.contains('panel')) {
                 var nuevo = this.cloneNode(true);
                 clonarComponente(this, nuevo);
             }
@@ -213,20 +213,20 @@ var DragDrop = {
 
         if (next != null && previous != null) {
             if (
-                !next.classList.contains("panel") ||
-                !previous.classList.contains("panel")
+                !next.classList.contains('panel') ||
+                !previous.classList.contains('panel')
             ) {
-                if (this.classList.contains("panel")) {
+                if (this.classList.contains('panel')) {
                     var nuevo = this.cloneNode(true);
                     clonarComponente(this, nuevo);
                 }
             }
 
             if (
-                next.classList.contains("panel") ||
-                previous.classList.contains("panel")
+                next.classList.contains('panel') ||
+                previous.classList.contains('panel')
             ) {
-                if (this.classList.contains("agregado")) {
+                if (this.classList.contains('agregado')) {
                     this.parentNode.removeChild(this);
                     return;
                 }
@@ -234,8 +234,8 @@ var DragDrop = {
         }
 
         if (next == null && previous != null) {
-            if (!previous.classList.contains("panel")) {
-                if (this.classList.contains("panel")) {
+            if (!previous.classList.contains('panel')) {
+                if (this.classList.contains('panel')) {
                     var nuevo = this.cloneNode(true);
                     clonarComponente(this, nuevo);
                 }
@@ -243,8 +243,8 @@ var DragDrop = {
         }
 
         if (next != null && previous == null) {
-            if (!next.classList.contains("panel")) {
-                if (this.classList.contains("panel")) {
+            if (!next.classList.contains('panel')) {
+                if (this.classList.contains('panel')) {
                     var nuevo = this.cloneNode(true);
                     clonarComponente(this, nuevo);
                 }
@@ -254,19 +254,19 @@ var DragDrop = {
         //  $(next).position().top
 
         this.parentNode.onDragOut();
-        this.style["top"] = "0px";
-        this.style["left"] = "0px";
+        this.style['top'] = '0px';
+        this.style['left'] = '0px';
 
         if (nwPosition.y != posicionInicial.y) {
             if (next != null) {
-                if (next.getAttribute("idpantalla_campo") != nextInicial) {
-                    if (this.classList.contains("agregado")) {
+                if (next.getAttribute('idpantalla_campo') != nextInicial) {
+                    if (this.classList.contains('agregado')) {
                         actualizarOrdenComponente();
                     }
                 }
             } else {
                 if (nextInicial != 0) {
-                    if (this.classList.contains("agregado")) {
+                    if (this.classList.contains('agregado')) {
                         actualizarOrdenComponente();
                     }
                 }
@@ -275,15 +275,15 @@ var DragDrop = {
         //////////////////////////////////////////// Duplicar componente cuando se arrastra al listado creado /////////////////////////////////////////////////////
 
         function clonarComponente(actual, nuevo) {
-            document.getElementById("itemsComponentes").appendChild(nuevo);
-            nuevo.setAttribute("class", "panel");
-            nuevo.style.top = "0px";
-            nuevo.style.left = "0px";
+            document.getElementById('itemsComponentes').appendChild(nuevo);
+            nuevo.setAttribute('class', 'panel');
+            nuevo.style.top = '0px';
+            nuevo.style.left = '0px';
             $(actual).append(
                 "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
             );
             DragDrop.makeItemDragable(nuevo);
-            actual.setAttribute("class", "agregado");
+            actual.setAttribute('class', 'agregado');
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,32 +293,35 @@ var DragDrop = {
         function eliminarComponente(componente) {
             let filesInstance = componente;
             top.confirm({
-                id: "question",
-                type: "error",
-                title: "Eliminar Componente!",
-                message: "Está seguro de realizar esta acción",
-                position: "center",
+                id: 'question',
+                type: 'error',
+                title: 'Eliminar Componente!',
+                message: 'Está seguro de realizar esta acción',
+                position: 'center',
                 timeout: 0,
                 buttons: [
                     [
-                        "<button><b>Si</b></button>",
+                        '<button><b>Si</b></button>',
                         function(instance, toast) {
                             $.ajax({
                                 url:
-                                    "acciones_componentes/eliminarComponente.php",
-                                type: "POST",
+                                    'acciones_componentes/eliminarComponente.php',
+                                dataType: 'json',
+                                type: 'POST',
                                 data: {
                                     componente: $(filesInstance).attr(
-                                        "idpantalla_campo"
-                                    )
+                                        'idpantalla_campo'
+                                    ),
+                                    token: localStorage.getItem('token'),
+                                    key: localStorage.getItem('key')
                                 },
                                 success: function(respuesta) {
                                     console.log(respuesta);
 
                                     instance.hide(
-                                        { transitionOut: "fadeOut" },
+                                        { transitionOut: 'fadeOut' },
                                         toast,
-                                        "button"
+                                        'button'
                                     );
                                 }
                             });
@@ -326,21 +329,21 @@ var DragDrop = {
                         true
                     ],
                     [
-                        "<button>NO</button>",
+                        '<button>NO</button>',
                         function(instance, toast) {
                             var nuevo = filesInstance.cloneNode(true);
                             document
-                                .getElementById("contenedorComponentes")
+                                .getElementById('contenedorComponentes')
                                 .appendChild(nuevo);
-                            nuevo.setAttribute("class", "agregado");
-                            nuevo.style.top = "0px";
-                            nuevo.style.left = "0px";
+                            nuevo.setAttribute('class', 'agregado');
+                            nuevo.style.top = '0px';
+                            nuevo.style.left = '0px';
                             DragDrop.makeItemDragable(nuevo);
 
                             instance.hide(
-                                { transitionOut: "fadeOut" },
+                                { transitionOut: 'fadeOut' },
                                 toast,
-                                "button"
+                                'button'
                             );
                         }
                     ]
@@ -352,21 +355,21 @@ var DragDrop = {
         function actualizarOrdenComponente() {
             var listado = [];
 
-            var contenedor = document.getElementById("contenedorComponentes");
-            var componentes = contenedor.getElementsByTagName("li");
+            var contenedor = document.getElementById('contenedorComponentes');
+            var componentes = contenedor.getElementsByTagName('li');
 
             for (var i = 0; i < componentes.length; i++) {
-                listado.push(componentes[i].getAttribute("idpantalla_campo"));
+                listado.push(componentes[i].getAttribute('idpantalla_campo'));
             }
 
             $.ajax({
-                url: "acciones_componentes/modificarOrdenComponentes.php",
-                type: "POST",
-                dataType: "json",
+                url: 'acciones_componentes/modificarOrdenComponentes.php',
+                type: 'POST',
+                dataType: 'json',
                 data: {
                     ordenComponentes: listado,
-                    token: localStorage.getItem("token"),
-                    key: localStorage.getItem("key")
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key')
                 },
                 success: function(respuesta) {
                     console.log(respuesta);
@@ -382,8 +385,8 @@ var DragUtils = {
         parent.removeChild(item1);
         parent.insertBefore(item1, item2);
 
-        item1.style["top"] = "0px";
-        item1.style["left"] = "0px";
+        item1.style['top'] = '0px';
+        item1.style['left'] = '0px';
     },
 
     nextItem: function(item) {
@@ -408,55 +411,55 @@ var DragUtils = {
 $(document).ready(function() {
     ///////////////////////////////// Inicializar dragdrop //////////////////////////////////////
 
-    var list = document.getElementById("contenedorComponentes");
+    var list = document.getElementById('contenedorComponentes');
     DragDrop.makeListContainer(list);
     list.onDragOver = function() {
-        this.style["background"] = "#EEF";
+        this.style['background'] = '#EEF';
     };
     list.onDragOut = function() {
-        this.style["background"] = "#eee";
+        this.style['background'] = '#eee';
     };
 
-    list = document.getElementById("itemsComponentes");
+    list = document.getElementById('itemsComponentes');
     DragDrop.makeListContainer(list);
     list.onDragOver = function() {
-        this.style["border"] = "1px dashed #AAA";
+        this.style['border'] = '1px dashed #AAA';
     };
     list.onDragOut = function() {
-        this.style["border"] = "1px solid white";
+        this.style['border'] = '1px solid white';
     };
 
     //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
 
-    $(".agregado").click(function() {
+    $('.agregado').click(function() {
         var directoryPath = window.location.href.substring(
             0,
-            window.location.href.lastIndexOf("/") + 1
+            window.location.href.lastIndexOf('/') + 1
         );
         var enlace =
             directoryPath +
-            "editar_componente_generico.php?idpantalla_componente=" +
-            $(this).attr("idpantalla_componente") +
-            "&idpantalla_campos=" +
-            $(this).attr("idpantalla_campo");
+            'editar_componente_generico.php?idpantalla_componente=' +
+            $(this).attr('idpantalla_componente') +
+            '&idpantalla_campos=' +
+            $(this).attr('idpantalla_campo');
 
         top.topModal({
             url: enlace,
             params: {
-                idformato: $("#idformato").val(),
-                idpantalla_campos: $(this).attr("idpantalla_campo")
+                idformato: $('#idformato').val(),
+                idpantalla_campos: $(this).attr('idpantalla_campo')
             },
-            size: "modal-xl",
-            title: "Configurar campo",
+            size: 'modal-xl',
+            title: 'Configurar campo',
 
             buttons: {
                 success: {
-                    label: "Guardar",
-                    class: "btn btn-complete"
+                    label: 'Guardar',
+                    class: 'btn btn-complete'
                 },
                 cancel: {
-                    label: "Cerrar",
-                    class: "btn btn-danger"
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
                 }
             },
 
@@ -473,7 +476,7 @@ $(document).ready(function() {
 
     //////////////////////////////////////////////////////////////////  Eliminar componente //////////////////////////////////////////////////////////
 
-    $(".agregado .eliminar").click(function(event) {
+    $('.agregado .eliminar').click(function(event) {
         //event.preventDefault();
         event.stopPropagation();
 
@@ -485,35 +488,38 @@ $(document).ready(function() {
     function eliminarComponente(componente) {
         let filesInstance = componente;
         top.confirm({
-            id: "question",
-            type: "error",
-            title: "Eliminar Componente!",
-            message: "Está seguro de realizar esta acción",
-            position: "center",
+            id: 'question',
+            type: 'error',
+            title: 'Eliminar Componente!',
+            message: 'Está seguro de realizar esta acción',
+            position: 'center',
             timeout: 0,
             buttons: [
                 [
-                    "<button><b>Si</b></button>",
+                    '<button><b>Si</b></button>',
                     function(instance, toast) {
                         $.ajax({
-                            url: "acciones_componentes/eliminarComponente.php",
-                            type: "POST",
+                            url: 'acciones_componentes/eliminarComponente.php',
+                            type: 'POST',
+                            dataType: 'json',
                             data: {
                                 componente: $(filesInstance)
-                                    .parents(".agregado")
-                                    .attr("idpantalla_campo")
+                                    .parents('.agregado')
+                                    .attr('idpantalla_campo'),
+                                token: localStorage.getItem('token'),
+                                key: localStorage.getItem('key')
                             },
                             success: function(respuesta) {
                                 console.log(respuesta);
                                 if (
                                     $(filesInstance)
-                                        .parents(".agregado")
+                                        .parents('.agregado')
                                         .remove()
                                 ) {
                                     instance.hide(
-                                        { transitionOut: "fadeOut" },
+                                        { transitionOut: 'fadeOut' },
                                         toast,
-                                        "button"
+                                        'button'
                                     );
                                 }
                             }
@@ -522,12 +528,12 @@ $(document).ready(function() {
                     true
                 ],
                 [
-                    "<button>NO</button>",
+                    '<button>NO</button>',
                     function(instance, toast) {
                         instance.hide(
-                            { transitionOut: "fadeOut" },
+                            { transitionOut: 'fadeOut' },
                             toast,
-                            "button"
+                            'button'
                         );
                     }
                 ]

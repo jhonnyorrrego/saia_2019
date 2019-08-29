@@ -20,17 +20,27 @@ spl_autoload_register(function ($className) {
 
     //busca recursivamente en las subcarpetas
     foreach ($sourceFolders as $folder) {
-        $directory = new RecursiveDirectoryIterator(RUTA_ABS_SAIA . $folder, RecursiveDirectoryIterator::SKIP_DOTS);
-        $fileIterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::LEAVES_ONLY);
-
-        foreach ($fileIterator as $file) {
-            if ($file->getFilename() === $filename) {
-                require_once $file->getPathname();
-                break 2;
-                return;
-            }
+        if (findFile(RUTA_ABS_SAIA . $folder, $filename)) {
+            return;
         }
     }
 });
+
+function findFile($dir, $className)
+{
+    $scan = scandir($dir, SCANDIR_SORT_NONE);
+    foreach ($scan as $file) {
+        $directory = $dir . '/' . $file;
+        if (!is_dir($directory) || substr($file, 0, 1) == '.') {
+            continue;
+        }
+
+        if (is_file($directory . '/' . $className)) {
+            include_once $directory . '/' . $className;
+            return true;
+        }
+        findFile($directory, $className);
+    }
+}
 
 require_once RUTA_ABS_SAIA . 'db.php';

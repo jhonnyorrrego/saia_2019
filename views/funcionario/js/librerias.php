@@ -1,6 +1,7 @@
 <script>
     $(function() {
-        let baseUrl = $('script[data-baseurl]').data('baseurl');
+        let params = $('#script_grid').data('params');
+        let baseUrl = params.baseUrl;
 
         $(document).on('click', '.new_action', function() {
             let type = $(this).data('type');
@@ -89,6 +90,10 @@
                 title: 'Listado de funciones',
                 buttons: {}
             });
+        }
+
+        window.successAdition = function(data) {
+            addRole(data);
         }
     });
 </script>

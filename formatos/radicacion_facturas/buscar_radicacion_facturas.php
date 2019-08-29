@@ -377,7 +377,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_copia_electronica" id="bqsaiaenlace_copia_electronica" value="y" />
 		</div>
-                   <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia_electronica" id="bksaiacondicion_copia_electronica" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia_electronica"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(424,7035,'5',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia_electronica" id="bksaiacondicion_copia_electronica" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia_electronica"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(424,7035,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_copia_electronica" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>

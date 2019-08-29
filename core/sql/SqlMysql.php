@@ -33,9 +33,7 @@ class SqlMysql extends Sql implements ISql
     public function search($sql, $start = 0, $end = 0)
     {
         if ($end) {
-            $total = $end - $start + 1;
-            $start = $start < 0 ? 0 : $start;
-            $sql .= " LIMIT $start,$total";
+            $sql .= " LIMIT $start,$end";
         }
 
         $result = mysqli_query($this->connection, $sql);
@@ -200,13 +198,6 @@ class SqlMysql extends Sql implements ISql
         return mysqli_insert_id($this->connection);
     }
 
-    function resta_fechas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURDATE()";
-        return "DATEDIFF($fecha1,$fecha2)";
-    }
-
     static function fecha_db_almacenar($fecha, $formato = null)
     {
         if (is_object($fecha)) {
@@ -270,30 +261,6 @@ class SqlMysql extends Sql implements ISql
         }
         $fsql = "DATE_FORMAT($campo,'$resfecha')";
         return $fsql;
-    }
-
-    function suma_fechas($fecha1, $cantidad, $tipo = "")
-    {
-        if ($tipo == "")
-            $tipo = 'DAY';
-        return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
-    }
-
-    function resta_horas($fecha1, $fecha2)
-    {
-        if ($fecha2 == "")
-            $fecha2 = "CURDATE()";
-        return "timediff($fecha1,$fecha2)";
-    }
-
-    // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial)
-    {
-        if (!strlen($fecha_control)) {
-            $fecha_control = date('Y-m-d');
-        }
-        $resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
-        return ($resultado);
     }
 
     function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
@@ -375,18 +342,18 @@ class SqlMysql extends Sql implements ISql
             case "CHAR":
                 $campo .= " char ";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(10) ";
                 }
                 if ($predeterminado) {
-                    $campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+                    $campo .= " DEFAULT '" . $this->maxSize(intval($predeterminado), 255) . "' ";
                 }
                 break;
             case "VARCHAR":
                 $campo .= " varchar";
                 if ($longitud) {
-                    $campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+                    $campo .= "(" . $this->maxSize(intval($longitud), 255) . ") ";
                 } else {
                     $campo .= "(255) ";
                 }
@@ -514,9 +481,9 @@ class SqlMysql extends Sql implements ISql
         global $conn;
 
         $tabla = strtoupper($tabla);
-        $indices = $this->ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
-        for ($i = 0; $i < $indices["numcampos"]; $i++) {
-            $this->elimina_indice_campo($tabla, $indices[$i]);
+        $indices = $this->search("SHOW INDEX FROM " . strtolower($tabla), $conn);
+        foreach ($indices as $key => $value) {
+            $this->elimina_indice_campo($tabla, $value);
         }
         return;
     }

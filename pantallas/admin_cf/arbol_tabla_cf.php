@@ -30,7 +30,7 @@ echo(librerias_notificaciones());
 			  <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="<?php echo $ruta_db_superior;?>assets/images/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="<?php echo $ruta_db_superior;?>assets/images/buscar.png" alt="Buscar" border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="<?php echo $ruta_db_superior;?>assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
                           </span>
-			  <div id="esperando_serie"><img src="<?php echo $ruta_db_superior;?>imagenes/cargando.gif"></div>
+			  <div id="esperando_serie"><img src="<?php echo $ruta_db_superior;?>assets/images/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
 	<script type="text/javascript"	alert('termino');>
   <!--

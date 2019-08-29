@@ -13,7 +13,7 @@ function jquery()
 }
 /**
  * retorna script para cargar
- * jquery ui  v1.12.1 minificado
+ * jquery ui v1.12.1 minificado
  */
 function jqueryUi()
 {
@@ -336,10 +336,10 @@ function validate()
 {
     global $ruta_db_superior;
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
+    $routeJs = $ruta_db_superior . 'node_modules/jquery-validation/dist/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
-    $routeLocaleJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/localization/messages_es.min.js';
+    $routeLocaleJs = $ruta_db_superior . 'node_modules/jquery-validation/dist/localization/messages_es.min.js';
     $locale = '<script type="text/javascript" src="' . $routeLocaleJs . '"></script>';
 
     return $js . $locale;
@@ -508,6 +508,24 @@ function kuku()
         $routeJs = $ruta_db_superior . $route;
         $js .= '<script type="text/javascript" src="' . $routeJs . '"></script>';
     }
+
+    return $js;
+}
+
+/**
+ * retorna la libreria lodash minificada
+ * v4.17.15
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-08-27
+ */
+function lodash()
+{
+    global $ruta_db_superior;
+
+    $route = $ruta_db_superior . "node_modules/lodash/lodash.min.js";
+    $js = '<script src="' . $route . '" type="text/javascript"></script>';
 
     return $js;
 }

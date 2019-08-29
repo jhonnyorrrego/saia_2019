@@ -176,7 +176,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_responsable" id="bqsaiaenlace_responsable" value="y" />
 		</div>
-                   <td class="encabezado" width="20%" title="">RESPONSABLE</td><input type="hidden" name="bksaiacondicion_responsable" id="bksaiacondicion_responsable" value="like"><td bgcolor="#F5F5F5"><div id="esperando_responsable"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(425,7064,'5',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">RESPONSABLE</td><input type="hidden" name="bksaiacondicion_responsable" id="bksaiacondicion_responsable" value="like"><td bgcolor="#F5F5F5"><div id="esperando_responsable"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(425,7064,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_responsable" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_responsable.findItem((document.getElementById('stext_responsable').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_responsable.findItem((document.getElementById('stext_responsable').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>

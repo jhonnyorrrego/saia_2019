@@ -36,7 +36,6 @@ class Funcionario extends Model
     protected $pertenece_nucleo;
     protected $token;
 
-
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
@@ -98,6 +97,114 @@ class Funcionario extends Model
                 ]
             ]
         ];
+    }
+
+    /**
+     * evento posterior al crear
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-28
+     */
+    public function afterCreate()
+    {
+        return $this->updateCode() && $this->sendCreatedMail();
+    }
+
+    /**
+     * actualiza el id y el funcionario_codigo
+     * con el valor del nit
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-28
+     */
+    public function updateCode()
+    {
+        Funcionario::executeUpdate([
+            'idfuncionario' => $this->nit,
+            'funcionario_codigo' => $this->nit
+        ], [
+            'idfuncionario' => $this->getPK()
+        ]);
+
+        return $this->setPK($this->nit);
+    }
+    /**
+     * envia el mensaje de creacion del usuario
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-28
+     */
+    public function sendCreatedMail()
+    {
+        if (!$this->email) {
+            return;
+        }
+
+        $description = <<<TEXT
+        Listo para empezar?<br>
+        Tu nombre de usuario es: <b>{$this->login}</b><br>
+        <br>
+        Ingresa al siguiente enlace crea tu clave de acceso.<br>
+        {$this->getRecoveryPasswordRoute()}<br>
+        <br>
+        Que tengas un excelente dia!<br>
+        Atentamente, <br>
+        Equipo de atención al cliente de SAIA<br>
+        soporte@cerok.com
+TEXT;
+        return enviar_mensaje(
+            '',
+            ['para' => 'email'],
+            ['para' => [$this->email]],
+            'Bienvenido a SAIA!',
+            $description
+        );
+    }
+
+    /**
+     * retorna una lista de objectos perfil
+     *
+     * @return array
+     */
+    public function getProfiles()
+    {
+        $sql = "select * from perfil where idperfil in ({$this->perfil})";
+        return Perfil::findBySql($sql);
+    }
+
+    /**
+     * genera una ruta para reestablecer la contrasena
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-28
+     */
+    public function getRecoveryPasswordRoute()
+    {
+        $token = CriptoController::encrypt_blowfish($this->getPK());
+
+        $this->token = $token;
+        $this->save();
+
+        return PROTOCOLO_CONEXION . RUTA_PDF . "/views/funcionario/reestablecer_clave.php?token=" . $token;
+    }
+
+    /**
+     * verifica si un token es valido
+     *
+     * @param string $token
+     * @param integer $userId
+     * @return boolean
+     */
+    public function isValidToken($token, $userId)
+    {
+        return Funcionario::countRecords([
+            'token' => $token,
+            self::getPrimaryLabel() => $userId
+        ]);
     }
 
     /**
@@ -257,32 +364,6 @@ SQL;
         $sql = "select * from funcionario where funcionario_codigo in ({$list})";
 
         return self::findBySql($sql);
-    }
-
-    /**
-     * retorna una lista de objectos perfil
-     *
-     * @return array
-     */
-    public function getProfiles()
-    {
-        $sql = "select * from perfil where idperfil in ({$this->perfil})";
-        return Perfil::findBySql($sql);
-    }
-
-    /**
-     * verifica si un token es valido
-     *
-     * @param string $token
-     * @param integer $userId
-     * @return boolean
-     */
-    public function isValidToken($token, $userId)
-    {
-        return Funcionario::countRecords([
-            'token' => $token,
-            self::getPrimaryLabel() => $userId
-        ]);
     }
 
     /**

@@ -27,6 +27,7 @@
                                     <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../librerias/funciones_formatos_generales.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
+                        <?= theme() ?>
                         <?= icons() ?>
                         <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
                   <link
@@ -37,19 +38,13 @@
                                   rel="stylesheet" type="text/css" media="screen" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link class="main-stylesheet"
-                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                  rel="stylesheet" type="text/css" />
+                                  rel="stylesheet" type="text/css" media="screen" />                                
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
                                   rel="stylesheet" type="text/css" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
                                   rel="stylesheet" type="text/css" media="screen">
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
@@ -123,7 +118,7 @@
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value))">
                                     <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  name="copia_electronica" id="copia_electronica"   value="<?php if(isset($_REQUEST["iddoc"])){cargar_seleccionados(424,7035,1,$_REQUEST['iddoc']);}?>" ><div id="esperando_copia_electronica">
-                                    <img src="../../imagenes/cargando.gif">
+                                    <img src="../../assets/images/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_copia_electronica" height="90%"></div><script type="text/javascript">
                                 var browserType;
