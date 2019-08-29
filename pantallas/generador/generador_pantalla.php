@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'pantallas/generador/librerias_pantalla.php';
-//include_once $ruta_db_superior . 'pantallas/lib/librerias_componentes.php';
+include_once $ruta_db_superior . 'pantallas/lib/librerias_componentes.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'arboles/crear_arbol_ft.php';
 
@@ -77,6 +77,7 @@ if ($_REQUEST["idformato"]) {
     <?= fancyTree('filter') ?>
     <?= librerias_tooltips() ?>
     <?= validate() ?>
+    <?= notificacion() ?>
     <link href="<?php echo ($ruta_db_superior); ?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
     <?php
 
@@ -151,7 +152,7 @@ if ($_REQUEST["idformato"]) {
                         <li style="width:225px" class="button_tab_formulario" id="generar_formulario_pantalla">
                             <a href="#formulario-tab" data-toggle="tab" id="nav-campos" style="text-align:center;width:100%;height:100%;">Paso 2. Campos</a>
                         </li>
-
+ 
                         <li style="width:225px" class="button_tab_formulario" id="diseno_formulario_pantalla">
                             <a href="#pantalla_mostrar-tab" data-toggle="tab" id="nav-mostrar" style="text-align:center;width:100%;height:100%">Paso 3. Dise&ntilde;o</a>
                         </li>
@@ -367,73 +368,6 @@ if ($_REQUEST["idformato"]) {
                                                 </ul>
                                             </div>
                                         </div>
-                                        <script src="js/coordinates.js"></script>
-                                        <script src="js/drag.js"></script>
-                                        <script src="js/dragdrop.js"></script>
-
-                                        <script language="JavaScript" type="text/javascript">
-                                            window.onload = function() {
-                                                var list = document.getElementById("contenedorComponentes");
-                                                DragDrop.makeListContainer(list);
-                                                list.onDragOver = function() {
-                                                    this.style["background"] = "#EEF";
-                                                };
-                                                list.onDragOut = function() {
-                                                    this.style["background"] = "#eee";
-                                                };
-
-                                                list = document.getElementById("itemsComponentes");
-                                                DragDrop.makeListContainer(list);
-                                                list.onDragOver = function() {
-                                                    this.style["border"] = "1px dashed #AAA";
-                                                };
-                                                list.onDragOut = function() {
-                                                    this.style["border"] = "1px solid white";
-                                                };
-                                            };
-
-
-                                            $(document).off("click", ".agregado").on("click", ".agregado", function(e) {
-
-                                                if (e.target.attributes.idpantalla_componente != null) {
-                                                    var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
-                                                    var enlace = directoryPath + "editar_componente_generico.php?idpantalla_componente=" + $(this).attr("idpantalla_componente") + "&idpantalla_campos=" + $(this).attr("idpantalla_campo");
-
-                                                    top.topModal({
-                                                        url: enlace,
-                                                        params: {
-                                                            idformato: $("#idformato").val(),
-                                                            idpantalla_campos: $(this).attr("idpantalla_campo"),
-                                                        },
-                                                        size: 'modal-xl',
-                                                        title: 'Configurar campo',
-
-                                                        buttons: {
-                                                            success: {
-                                                                label: "Guardar",
-                                                                class: "btn btn-complete"
-                                                            },
-                                                            cancel: {
-                                                                label: "Cerrar",
-                                                                class: "btn btn-danger"
-                                                            }
-                                                        },
-
-                                                        onSuccess: function(data) {
-                                                            successModalComponente(data);
-                                                        },
-
-                                                    });
-                                                }
-
-                                            });
-
-                                            function successModalComponente(data) {
-
-                                                top.closeTopModal();
-
-                                            }
-                                        </script>
                                     </div>
 
 
@@ -511,6 +445,9 @@ if ($_REQUEST["idformato"]) {
     </div>
 
     <script src="js/generador_pantalla.js"></script>
+    <script src="js/coordinates.js"></script>
+    <script src="js/drag.js"></script>
+    <script src="js/dragdrop.js"></script>
 
 </body>
 

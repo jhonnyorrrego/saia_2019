@@ -68,9 +68,11 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '')
 
     $texto = '';
     if ($pantalla['numcampos']) {
+        $count=1;
         for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
-            $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
+            $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0,$count, $generar_archivo, $accion, $pantalla[$i]);
             $texto .= $cadena["codigo_html"];
+            $count++;
         }
 
         $texto = str_replace("? >", "?" . ">", $texto);

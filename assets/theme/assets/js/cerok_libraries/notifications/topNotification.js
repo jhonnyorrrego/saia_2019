@@ -1,22 +1,22 @@
 let iziDefaultOptions = {
     id: null,
-    class: '',
-    title: '',
-    titleColor: '',
-    titleSize: '',
-    titleLineHeight: '',
-    message: '',
-    messageColor: '',
-    messageSize: '',
-    messageLineHeight: '',
-    backgroundColor: '',
-    theme: 'light', // dark
-    color: 'blue', // blue, red, green, yellow
-    icon: '',
-    iconText: '',
-    iconColor: '',
+    class: "",
+    title: "",
+    titleColor: "",
+    titleSize: "",
+    titleLineHeight: "",
+    message: "",
+    messageColor: "",
+    messageSize: "",
+    messageLineHeight: "",
+    backgroundColor: "",
+    theme: "light", // dark
+    color: "blue", // blue, red, green, yellow
+    icon: "",
+    iconText: "",
+    iconColor: "",
     iconUrl: null,
-    image: '',
+    image: "",
     imageWidth: 50,
     maxWidth: null,
     zindex: 99999,
@@ -26,8 +26,8 @@ let iziDefaultOptions = {
     closeOnEscape: true,
     closeOnClick: false,
     displayMode: 0, // once, replace
-    position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
-    target: '',
+    position: "topRight", // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+    target: "",
     targetFirst: true,
     timeout: 5000,
     rtl: false,
@@ -36,15 +36,15 @@ let iziDefaultOptions = {
     pauseOnHover: true,
     resetOnHover: false,
     progressBar: false,
-    progressBarColor: '',
-    progressBarEasing: 'linear',
+    progressBarColor: "",
+    progressBarEasing: "linear",
     overlay: false,
     overlayClose: false,
-    overlayColor: 'rgba(0, 0, 0, 0.6)',
-    transitionIn: 'fadeInUp',
-    transitionOut: 'fadeOut',
-    transitionInMobile: 'fadeInUp',
-    transitionOutMobile: 'fadeOutDown',
+    overlayColor: "rgba(0, 0, 0, 0.6)",
+    transitionIn: "fadeInUp",
+    transitionOut: "fadeOut",
+    transitionInMobile: "fadeInUp",
+    transitionOutMobile: "fadeOutDown",
     buttons: {},
     inputs: {},
     onOpening: function() {},
@@ -64,10 +64,10 @@ function showNotification(options) {
 
 function convertTypeToColor(type) {
     let data = {
-        success: 'green',
-        error: 'red',
-        info: 'blue',
-        warning: 'yellow'
+        success: "green",
+        error: "red",
+        info: "blue",
+        warning: "yellow"
     };
 
     return data[type];
@@ -84,16 +84,16 @@ function showConfirm(options) {
 }
 
 window.notification = function(options) {
-    if (typeof top.iziToast == 'undefined') {
+    if (typeof top.iziToast == "undefined") {
         let baseUrl = top
-            .jQuery('script[data-baseurl]', window.top.document)
-            .data('baseurl');
+            .jQuery("script[data-baseurl]", window.top.document)
+            .data("baseurl");
         top.jQuery.get(
-            `${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`,
+            `${baseUrl}node_modules/izitoast/dist/css/iziToast.min.css`,
             function(r) {
-                $('head').append($('<style>').html(r));
+                $("head").append($("<style>").html(r));
                 top.jQuery.getScript(
-                    `${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`,
+                    `${baseUrl}node_modules/izitoast/dist/js/iziToast.min.js`,
                     function() {
                         showNotification(options);
                     }
@@ -106,16 +106,16 @@ window.notification = function(options) {
 };
 
 window.confirm = function(options) {
-    if (typeof top.iziToast == 'undefined') {
+    if (typeof top.iziToast == "undefined") {
         let baseUrl = top
-            .jQuery('script[data-baseurl]', window.top.document)
-            .data('baseurl');
+            .jQuery("script[data-baseurl]", window.top.document)
+            .data("baseurl");
         top.jQuery.get(
-            `${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`,
+            `${baseUrl}node_modules/izitoast/dist/css/iziToast.min.css`,
             function(r) {
-                $('head').append($('<style>').html(r));
+                $("head").append($("<style>").html(r));
                 top.jQuery.getScript(
-                    `${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`,
+                    `${baseUrl}node_modules/izitoast/dist/js/iziToast.min.js`,
                     function() {
                         showConfirm(options);
                     }

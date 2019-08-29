@@ -475,6 +475,9 @@ function procesar_cadena_json($resultado, $lista_valores)
 
     $("document").ready(function() {
       $("#serie_idserie").select2();
+      $("#tipo_registro").select2();
+      $("#contador_idcontador").select2();
+
       $($("#select2-serie_idserie-container").siblings()[0]).hide();
       $("input[name='when_is_escrow_set_to_close']").hide();
       if ($("#codigo_serie").val() == '') {

@@ -16,8 +16,8 @@ var filesToCache = [
     "assets/theme/assets/js/cerok_libraries/session/session.js",
     "assets/theme/assets/js/cerok_libraries/notifications/topNotification.js",
     "assets/theme/assets/js/cerok_libraries/ui/ui.js",
-    "assets/theme/assets/plugins/iziToast/js/iziToast.min.js",
-    "assets/theme/assets/plugins/iziToast/css/iziToast.min.css",
+    "node_modules/izitoast/dist/js/iziToast.min.js",
+    "node_modules/izitoast/dist/css/iziToast.min.css",
     "assets/theme/assets/js/cerok_libraries/session/global_ajax_validations.js",
     "assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js",
     "assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.css",
@@ -41,8 +41,6 @@ var filesToCache = [
     "assets/theme/assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js",
     "assets/theme/assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css"
 ];
-
-/// Hay que incluir a easy ---> assets/theme/assets/plugins/jquery/jquery-easy.js
 
 self.addEventListener("install", function(e) {
     e.waitUntil(

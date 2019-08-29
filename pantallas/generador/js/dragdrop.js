@@ -3,6 +3,8 @@
  http://tool-man.org/examples/sorting.html
  
  **********************************************************/
+var posicionInicial;
+var nextInicial;
 
 var DragDrop = {
     firstContainer: null,
@@ -61,6 +63,15 @@ var DragDrop = {
         }
 
         // item starts out over current parent
+
+        posicionInicial = nwPosition;
+
+        var next = DragUtils.nextItem(this);
+        if (next != null) {
+            nextInicial = next.getAttribute("idpantalla_campo");
+        } else {
+            nextInicial = 0;
+        }
 
         this.parentNode.onDragOver();
     },
@@ -169,30 +180,13 @@ var DragDrop = {
     },
 
     onDragEnd: function(nwPosition, sePosition, nwOffset, seOffset) {
-        // if the drag ends and we're still outside all containers
-        // it's time to remove ourselves from the document
-
-        ////////////////////////////////////////// Si borra el componente del listado  ///////////////////////////////////////
-
-        $(this)
-            .children(".eliminar")
-            .children(".eliminar")
-            .click(function() {
-                $(this)
-                    .parent()
-                    .parent()
-                    .remove();
-            });
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /////////////////////////////////////////////////////////// Clonando el objeto /////////////////////////////////////////
-        /////////////////////////////////////////////////////// Clonando el objeto /////////////////////////////////////////////
+        ////////////////////// Guardar el orden de los campos en la tabla campos_formato ////////////////////////////
 
         if (this.isOutside) {
-            var tempParent = this.parentNode;
+            tempParent = this.parentNode;
             this.parentNode.removeChild(this);
             tempParent.parentNode.removeChild(tempParent);
+
             if (this.classList.contains("panel")) {
                 var nuevo = this.cloneNode(true);
                 document.getElementById("itemsComponentes").appendChild(nuevo);
@@ -200,6 +194,9 @@ var DragDrop = {
                 nuevo.style.top = "0px";
                 nuevo.style.left = "0px";
                 DragDrop.makeItemDragable(nuevo);
+            }
+            if (this.classList.contains("agregado")) {
+                eliminarComponente(this);
             }
             return;
         }
@@ -210,15 +207,7 @@ var DragDrop = {
         if (next == null && previous == null) {
             if (this.classList.contains("panel")) {
                 var nuevo = this.cloneNode(true);
-                document.getElementById("itemsComponentes").appendChild(nuevo);
-                nuevo.setAttribute("class", "panel");
-                nuevo.style.top = "0px";
-                nuevo.style.left = "0px";
-                $(this).append(
-                    "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i id='eliminar' class='fa fa-trash eliminar'></i></div>"
-                );
-                DragDrop.makeItemDragable(nuevo);
-                this.setAttribute("class", "agregado");
+                clonarComponente(this, nuevo);
             }
         }
 
@@ -229,17 +218,7 @@ var DragDrop = {
             ) {
                 if (this.classList.contains("panel")) {
                     var nuevo = this.cloneNode(true);
-                    document
-                        .getElementById("itemsComponentes")
-                        .appendChild(nuevo);
-                    nuevo.setAttribute("class", "panel");
-                    nuevo.style.top = "0px";
-                    nuevo.style.left = "0px";
-                    $(this).append(
-                        "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i id='eliminar' class='fa fa-trash eliminar'></i></div>"
-                    );
-                    DragDrop.makeItemDragable(nuevo);
-                    this.setAttribute("class", "agregado");
+                    clonarComponente(this, nuevo);
                 }
             }
 
@@ -253,48 +232,147 @@ var DragDrop = {
                 }
             }
         }
- 
+
         if (next == null && previous != null) {
             if (!previous.classList.contains("panel")) {
                 if (this.classList.contains("panel")) {
                     var nuevo = this.cloneNode(true);
-                    document
-                        .getElementById("itemsComponentes")
-                        .appendChild(nuevo);
-                    nuevo.setAttribute("class", "panel");
-                    nuevo.style.top = "0px";
-                    nuevo.style.left = "0px";
-                    $(this).append(
-                        "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i id='eliminar' class='fa fa-trash eliminar'></i></div>"
-                    );
-                    DragDrop.makeItemDragable(nuevo);
-                    this.setAttribute("class", "agregado");
-                }
-            } 
-        }
- 
-        if (next != null && previous == null) {
-            if (!next.classList.contains("panel")) {
-                if (this.classList.contains("panel")) {
-                    var nuevo = this.cloneNode(true);
-                    document
-                        .getElementById("itemsComponentes")
-                        .appendChild(nuevo);
-                    nuevo.setAttribute("class", "panel");
-                    nuevo.style.top = "0px";
-                    nuevo.style.left = "0px";
-                    $(this).append(
-                        "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i id='eliminar' class='fa fa-trash eliminar'></i></div>"
-                    );
-                    DragDrop.makeItemDragable(nuevo);
-                    this.setAttribute("class", "agregado");
+                    clonarComponente(this, nuevo);
                 }
             }
         }
 
+        if (next != null && previous == null) {
+            if (!next.classList.contains("panel")) {
+                if (this.classList.contains("panel")) {
+                    var nuevo = this.cloneNode(true);
+                    clonarComponente(this, nuevo);
+                }
+            }
+        }
+
+        //  $(next).position().top
+
         this.parentNode.onDragOut();
         this.style["top"] = "0px";
         this.style["left"] = "0px";
+
+        if (nwPosition.y != posicionInicial.y) {
+            if (next != null) {
+                if (next.getAttribute("idpantalla_campo") != nextInicial) {
+                    if (this.classList.contains("agregado")) {
+                        actualizarOrdenComponente();
+                    }
+                }
+            } else {
+                if (nextInicial != 0) {
+                    if (this.classList.contains("agregado")) {
+                        actualizarOrdenComponente();
+                    }
+                }
+            }
+        }
+        //////////////////////////////////////////// Duplicar componente cuando se arrastra al listado creado /////////////////////////////////////////////////////
+
+        function clonarComponente(actual, nuevo) {
+            document.getElementById("itemsComponentes").appendChild(nuevo);
+            nuevo.setAttribute("class", "panel");
+            nuevo.style.top = "0px";
+            nuevo.style.left = "0px";
+            $(actual).append(
+                "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
+            );
+            DragDrop.makeItemDragable(nuevo);
+            actual.setAttribute("class", "agregado");
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////  Eliminar Componente arrastrando afuera //////////////////////////////////////////
+
+        function eliminarComponente(componente) {
+            let filesInstance = componente;
+            top.confirm({
+                id: "question",
+                type: "error",
+                title: "Eliminar Componente!",
+                message: "Está seguro de realizar esta acción",
+                position: "center",
+                timeout: 0,
+                buttons: [
+                    [
+                        "<button><b>Si</b></button>",
+                        function(instance, toast) {
+                            $.ajax({
+                                url:
+                                    "acciones_componentes/eliminarComponente.php",
+                                type: "POST",
+                                data: {
+                                    componente: $(filesInstance).attr(
+                                        "idpantalla_campo"
+                                    )
+                                },
+                                success: function(respuesta) {
+                                    console.log(respuesta);
+
+                                    instance.hide(
+                                        { transitionOut: "fadeOut" },
+                                        toast,
+                                        "button"
+                                    );
+                                }
+                            });
+                        },
+                        true
+                    ],
+                    [
+                        "<button>NO</button>",
+                        function(instance, toast) {
+                            var nuevo = filesInstance.cloneNode(true);
+                            document
+                                .getElementById("contenedorComponentes")
+                                .appendChild(nuevo);
+                            nuevo.setAttribute("class", "agregado");
+                            nuevo.style.top = "0px";
+                            nuevo.style.left = "0px";
+                            DragDrop.makeItemDragable(nuevo);
+
+                            instance.hide(
+                                { transitionOut: "fadeOut" },
+                                toast,
+                                "button"
+                            );
+                        }
+                    ]
+                ]
+            });
+        }
+        /////////////////////////////////////////////// Actualizar el orden de los componentes   ////////////////////////////////////////////////////
+
+        function actualizarOrdenComponente() {
+            var listado = [];
+
+            var contenedor = document.getElementById("contenedorComponentes");
+            var componentes = contenedor.getElementsByTagName("li");
+
+            for (var i = 0; i < componentes.length; i++) {
+                listado.push(componentes[i].getAttribute("idpantalla_campo"));
+            }
+
+            $.ajax({
+                url: "acciones_componentes/modificarOrdenComponentes.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    ordenComponentes: listado,
+                    token: localStorage.getItem("token"),
+                    key: localStorage.getItem("key")
+                },
+                success: function(respuesta) {
+                    console.log(respuesta);
+                }
+            });
+        }
     }
 };
 
@@ -326,3 +404,134 @@ var DragUtils = {
         return null;
     }
 };
+
+$(document).ready(function() {
+    ///////////////////////////////// Inicializar dragdrop //////////////////////////////////////
+
+    var list = document.getElementById("contenedorComponentes");
+    DragDrop.makeListContainer(list);
+    list.onDragOver = function() {
+        this.style["background"] = "#EEF";
+    };
+    list.onDragOut = function() {
+        this.style["background"] = "#eee";
+    };
+
+    list = document.getElementById("itemsComponentes");
+    DragDrop.makeListContainer(list);
+    list.onDragOver = function() {
+        this.style["border"] = "1px dashed #AAA";
+    };
+    list.onDragOut = function() {
+        this.style["border"] = "1px solid white";
+    };
+
+    //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
+
+    $(".agregado").click(function() {
+        var directoryPath = window.location.href.substring(
+            0,
+            window.location.href.lastIndexOf("/") + 1
+        );
+        var enlace =
+            directoryPath +
+            "editar_componente_generico.php?idpantalla_componente=" +
+            $(this).attr("idpantalla_componente") +
+            "&idpantalla_campos=" +
+            $(this).attr("idpantalla_campo");
+
+        top.topModal({
+            url: enlace,
+            params: {
+                idformato: $("#idformato").val(),
+                idpantalla_campos: $(this).attr("idpantalla_campo")
+            },
+            size: "modal-xl",
+            title: "Configurar campo",
+
+            buttons: {
+                success: {
+                    label: "Guardar",
+                    class: "btn btn-complete"
+                },
+                cancel: {
+                    label: "Cerrar",
+                    class: "btn btn-danger"
+                }
+            },
+
+            onSuccess: function(data) {
+                successModalComponente(data);
+            }
+        });
+    });
+
+    /////////////////////////////////////////////////////////////// Al terminar de editar datos en la modal /////////////////////////////
+    function successModalComponente(data) {
+        top.closeTopModal();
+    }
+
+    //////////////////////////////////////////////////////////////////  Eliminar componente //////////////////////////////////////////////////////////
+
+    $(".agregado .eliminar").click(function(event) {
+        //event.preventDefault();
+        event.stopPropagation();
+
+        eliminarComponente(this);
+    });
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////// Eliminar componente desde boton eliminar ////////////////////////////////////////////
+    function eliminarComponente(componente) {
+        let filesInstance = componente;
+        top.confirm({
+            id: "question",
+            type: "error",
+            title: "Eliminar Componente!",
+            message: "Está seguro de realizar esta acción",
+            position: "center",
+            timeout: 0,
+            buttons: [
+                [
+                    "<button><b>Si</b></button>",
+                    function(instance, toast) {
+                        $.ajax({
+                            url: "acciones_componentes/eliminarComponente.php",
+                            type: "POST",
+                            data: {
+                                componente: $(filesInstance)
+                                    .parents(".agregado")
+                                    .attr("idpantalla_campo")
+                            },
+                            success: function(respuesta) {
+                                console.log(respuesta);
+                                if (
+                                    $(filesInstance)
+                                        .parents(".agregado")
+                                        .remove()
+                                ) {
+                                    instance.hide(
+                                        { transitionOut: "fadeOut" },
+                                        toast,
+                                        "button"
+                                    );
+                                }
+                            }
+                        });
+                    },
+                    true
+                ],
+                [
+                    "<button>NO</button>",
+                    function(instance, toast) {
+                        instance.hide(
+                            { transitionOut: "fadeOut" },
+                            toast,
+                            "button"
+                        );
+                    }
+                ]
+            ]
+        });
+    }
+});
