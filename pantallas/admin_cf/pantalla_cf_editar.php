@@ -390,7 +390,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 
 <!--a href="javascript:seleccionar_todos<?php echo $entidad; ?>(1)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconCheckAll.gif" alt="Seleccionar todos" title="Seleccionar todos"></a>
 	<a href="javascript:seleccionar_todos<?php echo $entidad; ?>(0)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconUncheckAll.gif" alt="Quitar todos" title="Quitar todos"></a><br-->
-<div id="esperando<?php echo $entidad; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+<div id="esperando<?php echo $entidad; ?>"><img src="<?php echo $ruta_db_superior; ?>assets/images/cargando.gif"></div>
 <div id="treeboxbox<?php echo $entidad; ?>"></div>
 <input type="hidden" value="<?php echo $seleccionado;?>" name="<?php echo $campo; ?>" id="<?php echo $entidad; ?>" >
 <script type="text/javascript">

@@ -243,7 +243,7 @@ abstract class Model extends StaticSql
     public function setPK($value)
     {
         $pk = $this->getPkName();
-        $this->$pk = $value;
+        return $this->$pk = $value;
     }
 
     /**

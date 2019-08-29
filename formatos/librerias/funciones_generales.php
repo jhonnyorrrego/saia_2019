@@ -2879,7 +2879,7 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc)
                 <img src="../../assets/images/anterior.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value), 0, 1)"><img src="../../assets/images/buscar.png" border="0px"></a> <a href="javascript:void(0)" onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
                 <img src="../../assets/images/siguiente.png" border="0px"></a> <br />
             <div id="esperando_fk_idexpediente">
-                <img src="../../imagenes/cargando.gif">
+                <img src="../../assets/images/cargando.gif">
             </div>
             <div id="treeboxbox_fk_idexpediente" height="90%"></div>
             <input type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo ($seleccionado); ?>"> <label style="display: none" class="error" for="fk_idexpediente">Campo obligatorio.</label>

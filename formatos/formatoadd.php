@@ -263,7 +263,7 @@ include("header.php");
 		?>
       </span-->
 				<div id="esperando_formato">
-					<img src="<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif" alt="">
+					<img src="<?php echo ($ruta_db_superior); ?>assets/images/cargando.gif" alt="">
 				</div>
 				<div id="treeboxbox_tree3" class="arbol_saia"></div> <input type="hidden" name="x_cod_padre" value="<?php echo ($x_cod_padre); ?>" id="x_cod_padre">
 				<script type="text/javascript">
@@ -868,7 +868,7 @@ Buscar:
 </a>
 <span></span>
 <div id="esperando<?php echo $entidad; ?>">
-	<img src="../imagenes/cargando.gif" alt="">
+	<img src="../assets/images/cargando.gif" alt="">
 </div>
 <div id="treeboxbox<?php echo $entidad; ?>" width="100px" height="100px"></div>
 <input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">

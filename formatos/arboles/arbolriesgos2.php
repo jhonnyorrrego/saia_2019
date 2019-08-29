@@ -23,7 +23,7 @@ $cadena="";
 <table  border="0">
   <tr>
     <td>
-    	<div id="esperando"><img src="../../imagenes/cargando.gif"></div>
+    	<div id="esperando"><img src="../../assets/images/cargando.gif"></div>
     	Buscar: <input type="text" id="stext" width="200px" size="25"><br>
           <a href="javascript:void(0)" onclick="tree_riesgos.findItem(document.getElementById('stext').value,0,1)"> Buscar</a>  |
             <a href="javascript:void(0)" onclick="tree_riesgos.findItem(document.getElementById('stext').value)"> Siguiente</a>  |

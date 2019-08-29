@@ -13,6 +13,7 @@ $(function() {
         if (params.userId) {
             find(params.userId);
         }
+        changeModalTitle();
     })();
 
     $('#btn_success').on('click', function() {
@@ -203,6 +204,10 @@ $(function() {
             return true;
         }
     }
+
+    function changeModalTitle() {
+        $('#modal_title').text('Crear usuario');
+    }
 });
 
 $('#user_form').validate({
@@ -294,7 +299,7 @@ $('#user_form').validate({
                         message: response.message,
                         type: 'success'
                     });
-                    top.successModalEvent();
+                    top.successModalEvent(response.data);
                 } else {
                     top.notification({
                         message: response.message,

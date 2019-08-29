@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0
@@ -24,7 +24,7 @@ try {
 
     if (!Funcionario::checkAdition()) {
         throw new Exception("Limite de usuario excedido", 1);
-    }else{
+    } else {
         unset($_REQUEST['token']);
     }
 
@@ -59,17 +59,6 @@ try {
     $Funcionario->perfil = implode(',', $_REQUEST['perfil']);
 
     if (!$Funcionario->save()) {
-        throw new Exception("Error al guardar", 1);
-    }
-
-    $update = Funcionario::executeUpdate([
-        'idfuncionario' => $_REQUEST['nit'],
-        'funcionario_codigo' => $_REQUEST['nit']
-    ], [
-        'idfuncionario' => $Funcionario->getPK()
-    ]);
-
-    if (!$update) {
         throw new Exception("Error al guardar", 1);
     }
 

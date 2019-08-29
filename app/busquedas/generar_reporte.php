@@ -125,7 +125,7 @@ SQL;
 foreach ($campos as $valor) {
     $as = strpos(strtolower($valor), " as ");
     if ($as !== false) {
-        $agrupacion[] = substr($valor, 0, ($as));
+        $agrupacion[] = substr($valor, 0, $as);
     } else {
         $agrupacion[] = $valor;
     }

@@ -510,7 +510,7 @@ function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
       <img src="<?php echo $ruta_db_superior; ?>assets/images/siguiente.png" border="0px" alt="Siguiente"></a><br />
 <br />
          <div id="esperando_func">
-    <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    <img src="<?php echo $ruta_db_superior; ?>assets/images/cargando.gif"></div>
 				<div id="treeboxbox_tree<?php echo $nombre; ?>"></div>
 	<script type="text/javascript">
   <!--

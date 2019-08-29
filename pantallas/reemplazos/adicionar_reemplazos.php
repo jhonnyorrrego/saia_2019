@@ -51,7 +51,7 @@ if (@$_REQUEST["adicionar"] == 1) {
                 <a href="javascript:void(0)" onclick="tree_antiguo.openAllItems(0);find_item_tree((document.getElementById('stext_antiguo').value),'antiguo');">
                     <img src="<?php echo($ruta_db_superior);?>assets/images/buscar.png"></a><br />
                 <div id="esperando_antiguo">
-                    <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+                    <img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
                 </div>
                 <div id="treeboxbox_antiguo" class="arbol_saia"> </div>
                 <input type="hidden" maxlenght="11"  class="required"  name="antiguo" id="antiguo"   value="" >
@@ -66,7 +66,7 @@ if (@$_REQUEST["adicionar"] == 1) {
                 <a href="javascript:void(0)" onclick="tree_nuevo.openAllItems(0);find_item_tree((document.getElementById('stext_nuevo').value),'nuevo');">
                     <img src="<?php echo($ruta_db_superior);?>assets/images/buscar.png"></a>
                 <div id="esperando_nuevo">
-                    <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+                    <img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
                 </div>
                 <div id="treeboxbox_nuevo" class="arbol_saia"> </div>
                 <input type="hidden" maxlenght="11"  class="required"  name="nuevo" id="nuevo"   value="" >

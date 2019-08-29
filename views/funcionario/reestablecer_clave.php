@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
-$userId = base64_decode(base64_decode($_REQUEST['token']));
+$userId = CriptoController::decrypt_blowfish($_REQUEST['token']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
