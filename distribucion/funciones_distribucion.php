@@ -408,7 +408,6 @@ function ver_documento_distribucion($iddocumento, $tipo_origen)
     $datos_documento = busca_filtro_tabla("b.etiqueta,a.numero," . $cadena_fecha_obtener, "documento a, formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddocumento, "", $conn);
 
     $numero = $datos_documento[0]['numero'];
-    $fecha = $datos_documento[0]['fecha'];
     $array_tipo_origen = array(
         1 => 'I',
         2 => 'E'
@@ -525,7 +524,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
                 $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
                 $html .= '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $datos_mensajero[0]['iddependencia_cargo'] . '-i">' . $nombre_mensajero . '</label>';
             } else {
-                $html .= '<label> No tiene mensajero asignado</label>';
+                $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
             }
         } elseif ($diligencia == 'ENTREGA') {
             if ($mensajero_destino && $tipo_destino == 2) {
@@ -536,7 +535,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
                 $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
                 $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
             } else {
-                $html .= '<label> No tiene mensajero asignado</label>';
+                $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
             }
         }
     } else { //externos
@@ -556,9 +555,9 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             } else {
                 $tipo_mensajero = "e";
             }
-            $html = '<label>' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
+            $html = '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '">' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
         } else { //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
-            $html .= '<label> No tiene mensajero asignado</label>';
+            $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
         }
     } //FIN: externos
 
@@ -581,10 +580,12 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
     $planillas = busca_filtro_tabla("b.iddocumento,b.numero", "ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c", "a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=" . $iddistribucion, "", $conn);
     $html = "No tiene planilla asociada";
     //Pendiente
+    //el componente 379 tiene busqueda de planillas
     if ($planillas['numcampos']) {
         $html = '';
         for ($i = 0; $i < $planillas['numcampos']; $i++) {
-            $html .= '<div class="kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=379&variable_busqueda=planilla|' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
+            $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Registro ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . '</button></center></div>';
+            //$html .= '<div class="kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=379&variable_busqueda=planilla|' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
         }
     }
     return $html;

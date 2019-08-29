@@ -45,6 +45,7 @@ echo bootstrapTable();
 echo bootstrapTableExport();
 echo theme();
 echo icons();
+echo accionesKaiten();
 echo lodash();
 
 $routes = $component['ruta_libreria_pantalla'];
@@ -86,7 +87,6 @@ if ($component['acciones_seleccionados']) {
                     <span class='d-none d-sm-inline'>Adicionar</span>
                 </button>
                 <?php endif; ?>
-
                 <?= $actions ?>
             </div>
             <table id="table"></table>

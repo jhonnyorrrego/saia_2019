@@ -310,6 +310,14 @@ function kaiten()
 
     return $css . $jq . $ui . $js . $jqresize;
 }
+/**
+ * Retorna acciones kaiten para permitir la gestion de las ventanas.
+ */
+function accionesKaiten()
+{
+    global $ruta_db_superior;
+    return '<script type="text/javascript" src="' . $ruta_db_superior . 'pantallas/lib/acciones_kaiten.js"></script>';
+}
 
 /**
  * retorna enlaces para el uso
