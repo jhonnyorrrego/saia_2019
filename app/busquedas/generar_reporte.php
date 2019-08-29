@@ -192,7 +192,6 @@ SQL;
 }
 
 $sql = "SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}";
-print_r($sql);
 
 if (!$_REQUEST["total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
