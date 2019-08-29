@@ -239,7 +239,7 @@ if ($("#openCloseIdentifier2").is(":hidden")) {
     <link rel="STYLESHEET" type="text/css" href="../librerias/estilo.css">
     <script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
   	<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-    <div id="esperando_"><img src="../../imagenes/cargando.gif"></div>
+    <div id="esperando_"><img src="../../assets/images/cargando.gif"></div>
      <?php echo $texto; ?>
      <span class="phpmaker">
   	  <br>

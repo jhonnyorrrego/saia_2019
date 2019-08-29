@@ -1327,7 +1327,7 @@ CODE;
                             }
 
                             $texto .= '<div id="esperando_' . $campos[$h]["nombre"] . '">
-                                    <img src="../../imagenes/cargando.gif">
+                                    <img src="../../assets/images/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_' . $campos[$h]["nombre"] . '" height="90%"></div>';
 

@@ -26,7 +26,7 @@ if(count($parametros)){
 <html>
 <body>
   <div id="esperando_formato">
-    <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+    <img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
   </div>
 	<div id="treeboxbox_tree3" class="arboles_saia"></div>
 <script type="text/javascript">

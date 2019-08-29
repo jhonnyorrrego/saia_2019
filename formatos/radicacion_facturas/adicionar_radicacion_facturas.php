@@ -119,7 +119,7 @@
                                     </a>
                                 <a href="javascript:void(0)" onclick="tree_copia_electronica.findItem((document.getElementById('stext_copia_electronica').value))">
                                     <img src="../../assets/images/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  name="copia_electronica" id="copia_electronica"   value="" ><label style="display:none" class="error" for="copia_electronica">Campo obligatorio.</label><div id="esperando_copia_electronica">
-                                    <img src="../../imagenes/cargando.gif">
+                                    <img src="../../assets/images/cargando.gif">
                                 </div>
                                 <div id="treeboxbox_copia_electronica" height="90%"></div><script type="text/javascript">
                                 var browserType;

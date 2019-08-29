@@ -271,7 +271,7 @@ return true;
         ?>
       </span-->
       <div id="esperando_formato">
-        <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+        <img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
       </div>
     	<div id="treeboxbox_tree3" class="arbol_saia"></div>
       <input type="hidden" name="x_cod_padre" value="<?php echo($x_cod_padre);?>" id="x_cod_padre">
@@ -964,7 +964,7 @@ function arbol_categorias($campo,$seleccionados){
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="../assets/images/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
-<div id="esperando<?php echo $entidad; ?>"><img src="../imagenes/cargando.gif"></div>
+<div id="esperando<?php echo $entidad; ?>"><img src="../assets/images/cargando.gif"></div>
 <div id="treeboxbox<?php echo $entidad; ?>" width="100px" height="100px"></div>
 <input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">
 <script type="text/javascript">

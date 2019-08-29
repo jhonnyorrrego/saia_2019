@@ -48,7 +48,7 @@ function crear_arbol($xml,$campo,$parametros) {
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>assets/images/siguiente.png"border="0px"></a>      
 	<?php }?>
 
-	<div id="esperando<?php echo $campo; ?>"><img src="<?php echo $parametros["ruta_db_superior"];?>imagenes/cargando.gif"></div>
+	<div id="esperando<?php echo $campo; ?>"><img src="<?php echo $parametros["ruta_db_superior"];?>assets/images/cargando.gif"></div>
 	<div id="treeboxbox<?php echo $campo; ?>" width="100px" height="100px"></div>
 	<input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">
 	<script type="text/javascript">

@@ -269,7 +269,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_copia" id="bqsaiaenlace_copia" value="y" />
 		</div>
-                   <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia" id="bksaiacondicion_copia" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(422,6990,'5',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">COPIA ELECTR&OACUTE;NICA A</td><input type="hidden" name="bksaiacondicion_copia" id="bksaiacondicion_copia" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(422,6990,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_copia" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
@@ -448,25 +448,6 @@
                      $(document).ready(function()
                       {
                       $("#estado_documento").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr id="tr_archivo_2126970305"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_archivo_2126970305',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_archivo_2126970305',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_archivo_2126970305" id="bqsaiaenlace_archivo_2126970305" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">ADJUNTOS</td><input type="hidden" name="bksaiacondicion_archivo_2126970305" id="bksaiacondicion_archivo_2126970305" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="archivo_2126970305" name="archivo_2126970305"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#archivo_2126970305").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });

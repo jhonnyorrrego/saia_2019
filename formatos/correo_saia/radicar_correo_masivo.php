@@ -44,7 +44,7 @@ if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
                             
     $html .= '<form id="formulario" name="formulario"><table class="table table-bordered" align="center" style="width:80%">';
     $html .= '<tr> <td style="width:30%;font-weight:bold;">TRANSFERIR *</td> <td><input type="text" id="transferencia_correo_busqueda" size="100">  <input type="hidden" name="transferencia_correo" id="transferencia_correo"></td> </tr>';
-    $html .= '<tr> <td style="font-weight:bold;">COPIA</td> <td><input type="hidden" maxlength="255" name="copia_correo" id="copia_correo" > <div id="esperando_copia_correo"><img src="../../imagenes/cargando.gif"></div> <div id="treeboxbox_copia_correo" height="90%" class="arbol_saia"></div></td> </tr>';
+    $html .= '<tr> <td style="font-weight:bold;">COPIA</td> <td><input type="hidden" maxlength="255" name="copia_correo" id="copia_correo" > <div id="esperando_copia_correo"><img src="../../assets/images/cargando.gif"></div> <div id="treeboxbox_copia_correo" height="90%" class="arbol_saia"></div></td> </tr>';
     $html .= '<tr> <td style="font-weight:bold;">COMENTARIO</td> <td><textarea name="comentario" style="width:300px;" rows="5"></textarea></td> </tr>';
     $html .= '<tr> <td colspan="2" style="text-align:center"><input type="hidden" name="registrar" value="1"><input type="hidden" id="idgrupo" name="idgrupo" value="'.$_REQUEST["idgrupo"].'"><button class="btn btn-mini btn-info">Guardar</button></td> </tr>';
     $html .= '</table></form>';

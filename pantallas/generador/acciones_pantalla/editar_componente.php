@@ -129,7 +129,7 @@ if($idpantalla[0]["valor"]){
     <label class="control-label" for="ayuda">Librer&iacute;a *</label>
     <div class="controls">
       <div id="esperando_acciones">
-    	<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
+    	<img src="<?php echo($ruta_db_superior);?>assets/images/cargando.gif">
       </div>    
       <div id="tree_acciones" class="arbol_saia"></div> 
     </div>
