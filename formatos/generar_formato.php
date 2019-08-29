@@ -161,7 +161,7 @@ class GenerarFormato
     {
         $retorno = ["publicarFormato" => 1, "mensaje" => '', "error" => 1];
         $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
-        
+
         $camposFormato = StaticSql::search($consultaFormato);
 
         if (!$camposFormato) {
@@ -1820,9 +1820,6 @@ span.fancytree-expander {
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
                                   rel="stylesheet" type="text/css" media="screen">
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
