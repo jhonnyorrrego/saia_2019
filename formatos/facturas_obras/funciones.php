@@ -239,7 +239,7 @@ function post_aprob_rad_obras($idformato, $iddoc){
 	global $conn;
 	
 	//distribucion
-	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+	include_once($ruta_db_superior."app/distribucion/funciones_distribucion.php");
 	pre_ingresar_distribucion($iddoc,'persona_natural',2,'destino',1);	
 	
 	$datos = busca_filtro_tabla("vence_factura,valor_factura,persona_natural,destino", "ft_facturas_obras", "documento_iddocumento=".$iddoc, "", $conn);

@@ -133,7 +133,7 @@ function distribucion_res_pqrsf($idformato, $iddoc) {
 			$estado_distribucion = 3;
 		}
 
-		include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+		include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 		pre_ingresar_distribucion($iddoc, 'dependencia', 1, 'destinos', 2, $estado_distribucion, $estado_recogida);
 		//INT -EXT
 	}

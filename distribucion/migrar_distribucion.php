@@ -12,7 +12,7 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+include_once($ruta_db_superior."app/distribucion/funciones_distribucion.php");
 
 /*
 QUE TIENE LA RADICACION VIEJA?

@@ -224,7 +224,7 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 			}
 		
 			if ($iddatos_ejecutor && $rol_destino) {
-				include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+				include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 				//EXT -INT
 				$datos_distribucion = array();
 				$datos_distribucion['origen'] = $iddatos_ejecutor;

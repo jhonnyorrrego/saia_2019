@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior . "core/autoload.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior . "pantallas/documento/librerias_tramitados.php");
-
+print_r($_REQUEST);
 echo (librerias_notificaciones());
 echo (librerias_jquery("1.7"));
 //------------------------------Adicionar------------------------------------//
@@ -116,6 +116,8 @@ function generar_pdf_entrega($idformato, $iddoc)
 	global $conn, $ruta_db_superior;
 	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie,ventanilla", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$iddestino_radicacion = explode(",", $seleccionado[0]['iddestino_radicacion']);
+	
+	print_r($seleccionado);
 	$cont = count($iddestino_radicacion);
 	for ($i = 0; $i < $cont; $i++) {
 		$insert = "INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $seleccionado[0]['idft_despacho_ingresados'] . "'," . $seleccionado[0]['serie_idserie'] . ")";
@@ -137,7 +139,7 @@ function reporte_entradas2($idformato, $iddoc)
 {
 	global $conn, $registros, $ruta_db_superior;
 
-	include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+	include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
 	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);

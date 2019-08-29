@@ -129,15 +129,23 @@ echo select2();
                 var mensajero = "";
                 var error = 0;
 
+                var mensajero = $(this).val();
+                registros_seleccionados = top.window.gridSelection();
+               console.log(registros_seleccionados);
+               console.log(",,,");
                 $("input[name=btSelectItem]").each(function() {
                     var checkbox = $(this);
+                    
                     if (checkbox.is(':checked') === true) {
+                        console.log("1-");
                         var iddistribucion = $(this).val();
+                        
                         idruta = $('#idruta_dist_' + iddistribucion).val();
                         if ($.inArray(idruta, idruta_dist) == -1) {
                             idruta_dist.push(idruta);
                         }
                         mensajero = $('#select_mensajeros_ditribucion_' + iddistribucion).attr('valor');
+                        //console.log(mensajero);
                         if (!mensajero) {
                             error = 2;
                         }
@@ -151,6 +159,7 @@ echo select2();
                         mensajero_temp = mensajero;
                     }
                 });
+                return true;
                 registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
                 if (registros_seleccionados == "") {
                     top.notification({
