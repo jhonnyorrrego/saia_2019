@@ -748,7 +748,6 @@ CODE;
             }
 
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
-            $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
             $includes .= $this->incluir("../../class_transferencia.php", "librerias");
 
@@ -1089,7 +1088,7 @@ CODE;
                             $classRadios = '';
                             if ($campos[$h]["obligatoriedad"]) {
                                 $classRadios = 'required';
-                                $labelRequired = '<label id="' . $campos[$h]["no mbre"] . '-error" class="error" f or="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
+                                $labelRequired = '<label id="' . $campos[$h]["nombre"] . '-error" class="error" for="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
                             }
                             /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
                             $texto .= '<div class="form-group  ' . $classRadios . '" id="tr_' . $campos[$h]["nombre"] . '">
@@ -1111,9 +1110,15 @@ CODE;
                             $texto .= $valor . '</textarea></div>';
                             break;
                         case "checkbox":
+                            if ($campos[$h]["obligatoriedad"]) {
+                                $labelRequired = '<label id="' . $campos[$h]["nombre"] . '[]-error" class="error" for="' . $campos[$h]["nombre"] . '[]" style="display: none;"></label>';
+                            } else {
+                                $labelRequired = "";
+                            }
+
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                         <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired . '<br></div>';
                             $checkboxes++;
                             break;
                         case "select":
@@ -1644,6 +1649,7 @@ CODE;
                 $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
+                        <?= theme() ?>
                         <?= icons() ?>
                         <?= moment() ?>';
             }
@@ -1810,10 +1816,7 @@ span.fancytree-expander {
                                   rel="stylesheet" type="text/css" media="screen" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link class="main-stylesheet"
-                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                  rel="stylesheet" type="text/css" />
+                                  rel="stylesheet" type="text/css" media="screen" />                                
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
                                   rel="stylesheet" type="text/css" />
