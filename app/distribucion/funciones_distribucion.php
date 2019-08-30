@@ -333,38 +333,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
     global $conn, $ruta_db_superior;
 
     $html = '';
-    /* if ($js) {
-        $html = '
-		<script>
-                    $(document).ready(function(){
-                        $(".finalizar_item_usuario_actual").click(function(){
-                            if(confirm("' . codifica_encabezado(html_entity_decode('Esta seguro/a de finalizar la distribuci&oacute;n?')) . '")){
-                                var iddistribucion=$(this).attr("iddistribucion");
-
-                                $.ajax({
-                                        type:"POST",
-                                    dataType: "json",
-                                    url: "' . $ruta_db_superior . 'distribucion/ejecutar_acciones_distribucion.php",
-                                    data: {
-                                        iddistribucion:iddistribucion,
-                                        ejecutar_accion:"finalizar_distribucion",
-                                        finaliza_manual:1
-                                    },
-                                    success: function(datos){
-                                        top.notification({
-                                            message: "distribuci&oacute;n finalizada satisfactoriamente!",
-                                            type: "success",
-                                            duration: "3500"
-                                        });
-                                        window.location.reload();
-                                    }
-                                });	 //fin ajax
-                            } //fin if confirm						
-                        });
-                    });	//fin if document.ready
-		</script>';
-    }*/
-
+    
     if (!$js && $iddistribucion) {
 
         //ROLES USUARIO _ACTUAL
@@ -555,7 +524,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             } else {
                 $tipo_mensajero = "e";
             }
-            $html = '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '">' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
+            $html = '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . "-" . $tipo_mensajero .'">' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
         } else { //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
             $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
         }
