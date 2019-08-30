@@ -1621,8 +1621,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                                     });
                                                     top.successModalEvent(data);
                                                     if (data.refresh) {
-                                                        // $(".modal-body").empty();
-                                                        $(".modal-body").load('../../formatos/funcionarios_ruta/adicionar_funcionarios_ruta.php');
+                                                        $("#boton_enviando").attr("disabled",false).hide();
+                                                        $("#formulario_formatos")[0].reset();
+                                                        $("#continuar").show();
                                                     } else {
                                                         top.closeTopModal();
                                                     }
