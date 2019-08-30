@@ -344,10 +344,10 @@ function validate()
 {
     global $ruta_db_superior;
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
+    $routeJs = $ruta_db_superior . 'node_modules/jquery-validation/dist/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
-    $routeLocaleJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/localization/messages_es.min.js';
+    $routeLocaleJs = $ruta_db_superior . 'node_modules/jquery-validation/dist/localization/messages_es.min.js';
     $locale = '<script type="text/javascript" src="' . $routeLocaleJs . '"></script>';
 
     return $js . $locale;

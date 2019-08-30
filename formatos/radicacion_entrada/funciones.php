@@ -67,8 +67,8 @@ function datos_editar_radicacion($idformato, $iddoc)
         </script>
     <?php
 
-    } else {
-        ?>
+        } else {
+            ?>
         <script>
             $('#tr_tipo_origen').hide();
 
@@ -91,8 +91,8 @@ function datos_editar_radicacion($idformato, $iddoc)
         </script>
     <?php
 
-    }
-    ?>
+        }
+        ?>
     <script>
         $(document).ready(function() {
 
@@ -355,16 +355,16 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 
 
             <?php
-            if (!PermisoController::moduleAccess("permiso_radicacion_externa")) {
-                ?>
+                if (!PermisoController::moduleAccess("permiso_radicacion_externa")) {
+                    ?>
                 $('#tipo_origen0').attr('disabled', true);
                 $('#tipo_origen1').attr('checked', true);
                 $('#tipo_origen1').click();
                 tipo_origen(2);
             <?php
 
-            }
-            ?>
+                }
+                ?>
             $("#treebox_area_responsable").fancytree({
 
                 select: function(event, data) {
@@ -473,8 +473,8 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 
         function refrescar_arbol_tipo_documental_funcionario_responsable(nodeId, parentId) {
             <?php
-            $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
-            ?>
+                $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
+                ?>
             var dependencia, padre;
             if ($("input:radio[name=tipo_origen]:checked").val() == 2 && $("input:radio[name=tipo_destino]:checked").val() == 1) {
                 if (nodeId) {
@@ -919,7 +919,8 @@ function actualizar_campos_documento($idformato, $iddoc)
     return;
 }
 
-function radicacion_entrada_fab_buttons(){
+function radicacion_entrada_fab_buttons()
+{
     global $conn, $datos;
 
     $entrada = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["documentId"], "", $conn);
@@ -944,12 +945,12 @@ function radicacion_entrada_fab_buttons(){
             ]
         ]);
 
-        $datos = array_merge($datos,$datos2);
+        $datos = array_merge($datos, $datos2);
     }
 
     $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "", $conn);
-    for($i=0; $i < $distribuciones["numcampos"]; $i++){
-        if(generar_enlace_finalizar_distribucion($distribuciones[$i]["iddistribucion"])){
+    for ($i = 0; $i < $distribuciones["numcampos"]; $i++) {
+        if (generar_enlace_finalizar_distribucion($distribuciones[$i]["iddistribucion"])) {
             $datos2 = array('confirmarRecibido' . $distribuciones[$i]["iddistribucion"] => [
                 'button' => [
                     'id' => $distribuciones[$i]["iddistribucion"],
@@ -967,13 +968,12 @@ function radicacion_entrada_fab_buttons(){
                 ]
             ]);
 
-            $datos = array_merge($datos,$datos2);
+            $datos = array_merge($datos, $datos2);
         }
     }
 
-    $datos = array_merge($datos,$datos2);
+    $datos = array_merge($datos, $datos2);
     return $datos;
-
 }
 
 ?>

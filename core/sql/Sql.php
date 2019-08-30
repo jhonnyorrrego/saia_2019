@@ -220,7 +220,7 @@ abstract class Sql
 			if (!is_numeric($datos_campo["nombre"]))
 				$campo .= strtolower(str_replace(" ", "_", trim($datos_campo["nombre"])));
 			else
-				return (false);
+				return false;
 		}
 		if ($datos_campo["etiqueta_html"] == "etiqueta") {
 			return false;
@@ -239,6 +239,6 @@ abstract class Sql
 				$campo .= " NOT NULL ";
 		}
 
-		return ($campo);
+		return $campo;
 	}
 }

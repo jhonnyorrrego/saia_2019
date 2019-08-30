@@ -27,6 +27,7 @@
                                     <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
+                        <?= theme() ?>
                         <?= icons() ?>
                         <?= moment() ?><?= validate() ?><style>
 ul.fancytree-container {
@@ -56,19 +57,13 @@ span.fancytree-expander {
                                   rel="stylesheet" type="text/css" media="screen" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link class="main-stylesheet"
-                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-                                  rel="stylesheet" type="text/css" />
+                                  rel="stylesheet" type="text/css" media="screen" />                                
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
                                   rel="stylesheet" type="text/css" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
                                   rel="stylesheet" type="text/css" media="screen">
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
-                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
