@@ -18,9 +18,6 @@ function defineGlobalVars()
     if (!$_SESSION) {
         session_start();
     }
-
-    $GLOBALS['sql'] = '';
-    $GLOBALS['conn'] = Sql::getInstance();
 }
 
 /*
@@ -242,8 +239,7 @@ function phpmkr_db_close($conn)
  */
 function phpmkr_query($sql)
 {
-    global $conn;
-    return $conn->query($sql);
+    return Connection::getInstance()->query($sql);
 }
 
 /*
@@ -1540,41 +1536,6 @@ function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo
         echo $cadena;
         return true;
     }
-}
-
-/*
-<Clase>
-<Nombre>fecha_db_obtener
-<Parametros> campo : Campo de la tabla con la fecha a obrener; $formato : formato de la fecha a obtener en fromato tipo PHP;
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
-de tipo select
-<Notas>
-<Excepciones>
-<Salida>cadena lista para compementar las secuecias  ejem  TO_CHAR(fecha_ini,'DD-MM-YYYY')
-<Pre-condiciones>
-<Post-condiciones>
- */
-function fecha_db_obtener($campo, $formato = null)
-{
-    return StaticSql::getDateFormat($campo, $formato);
-}
-
-/*
-<Clase>
-<Nombre>fecha_db_almacenar
-<Parametros> fecha : fecha a almacenar conxsecuente al fromato; $formato : formato de la fecha a almacenar tipo PHP;
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
-de tipo select
-<Notas>
-<Excepciones>
-<Salida>cadena lista para insertar en la BD
-<Pre-condiciones>
-<Post-condiciones>
- */
-
-function fecha_db_almacenar($fecha, $formato = null)
-{
-    return StaticSql::setDateFormat($fecha, $formato);
 }
 
 /**
