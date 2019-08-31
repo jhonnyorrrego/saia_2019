@@ -445,7 +445,8 @@ abstract class Model
         $QueryBuilder = self::callBuilderMethod(
             $this->getNotNullAttributes(),
             $QueryBuilder,
-            'setValue'
+            'setValue',
+            true
         );
         $QueryBuilder->execute();
 
@@ -499,7 +500,7 @@ abstract class Model
 
         $QueryBuilder = self::getQueryBuilder();
         $QueryBuilder->update($Instance::getTableName());
-        $QueryBuilder = $Instance::callBuilderMethod($fields, $QueryBuilder, 'set');
+        $QueryBuilder = $Instance::callBuilderMethod($fields, $QueryBuilder, 'set', true);
         $QueryBuilder = $Instance::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
         return $QueryBuilder->execute() !== false;
     }
@@ -686,7 +687,7 @@ abstract class Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-30
      */
-    public static function callBuilderMethod($collection, $QueryBuilder, $method)
+    public static function callBuilderMethod($collection, $QueryBuilder, $method, $individualValue = false)
     {
         if ($collection) {
             $class = get_called_class();
@@ -700,7 +701,11 @@ abstract class Model
                     $type = 'string';
                 }
 
-                $QueryBuilder->$method("{$attribute} = :{$attribute}");
+                if ($individualValue) {
+                    $QueryBuilder->$method($attribute, ":{$attribute}");
+                } else {
+                    $QueryBuilder->$method("{$attribute} = :{$attribute}");
+                }
                 $QueryBuilder->setParameter(":{$attribute}", $value, $type);
             }
         }

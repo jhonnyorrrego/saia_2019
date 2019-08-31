@@ -11,7 +11,6 @@ class LogAcceso extends Model
     protected $funcionario_idfuncionario;
     protected $idsesion_php;
     protected $token;
-    
 
     function __construct($id = null)
     {
@@ -23,7 +22,7 @@ class LogAcceso extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'login',
                 'iplocal',
@@ -46,22 +45,20 @@ class LogAcceso extends Model
         if ($Configuracion->getValue()) {
             $DateTime = new DateTime();
             $DateTime->sub(new DateInterval('P1D'));
-            $yesterday = $DateTime->format('Y-m-d H:i:s');
-            $initial = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
 
-            self::closeOldSessions($initial, $yesterday);
+            self::closeOldSessions($DateTime);
 
-            $sql = <<<SQL
-            SELECT count(distinct funcionario_idfuncionario) as total
-            FROM log_acceso
-            WHERE
-                fecha_cierre IS NULL AND
-                {$initial} >= '{$yesterday}' AND
-                exito = 1
-SQL;
-            $row = self::search($sql);
-            $total = $row[0]['total'];
+            $data = self::getQueryBuilder()
+                ->select('count(funcionario_idfuncionario) as total')
+                ->from(self::getTableName())
+                ->where('fecha_cierre is null')
+                ->andWhere('fecha >= :yesterday')
+                ->andWhere('exito = 1')
+                ->groupBy('funcionario_idfuncionario')
+                ->setParameter(':yesterday', $DateTime, 'datetime')
+                ->execute()->fetch();
 
+            $total = $data['total'];
             $Configuracion = Configuracion::findByAttributes(['nombre' => 'usuarios_concurrentes']);
 
             return $Configuracion->getValue() > $total;
@@ -73,22 +70,21 @@ SQL;
     /**
      * cierra las sesiones mas antiguas al dia de hoy
      *
-     * @param string $initial fecha_db_obtener
-     * @param string $yesterday fecha del dia de ayer Y-m-d H:i:s
+     * @param object $yesterday DateTime
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-04-10
+     * @date 2019-08-31
      */
-    public static function closeOldSessions($initial, $yesterday)
+    public static function closeOldSessions($yesterday)
     {
-        $closeDate = self::setDateFormat(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-        $sql = <<<SQL
-            UPDATE log_acceso
-            SET fecha_cierre = {$closeDate}
-            WHERE
-                {$initial} < '{$yesterday}'
-SQL;
-        self::query($sql);
+        self::getQueryBuilder()
+            ->update(self::getTableName())
+            ->set('fecha_cierre', ':fecha_cierre')
+            ->where('fecha < :yesterday')
+            ->andWhere('fecha_cierre is null')
+            ->setParameter(':fecha_cierre', new DateTime(), 'datetime')
+            ->setParameter(':yesterday', $yesterday, 'datetime')
+            ->execute();
     }
 
     /**

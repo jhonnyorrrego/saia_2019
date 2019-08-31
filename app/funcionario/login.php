@@ -20,36 +20,31 @@ $Response = (object) [
 ];
 
 try {
-    $session_userId = SessionController::hasActiveSession();
+    $sessionUserId = SessionController::hasActiveSession();
     if (
         isset($_REQUEST['user'], $_REQUEST['password']) &&
-        !$session_userId
+        !$sessionUserId
     ) {
         $exist = Funcionario::countRecords(['login' => $_REQUEST['user']]);
         if (!$exist) {
             throw new Exception("El usuario no pertenece al sistema", 1);
         }
 
-        $dateString = StaticSql::getDateFormat('fecha_final', 'Y-m-d');
-        $sql = <<<SQL
-                    SELECT 
-                        {$dateString} AS fecha_final,
-                        idfuncionario,
-                        funcionario_codigo,
-                        clave,
-                        estado_dc,
-                        estado
-                    FROM vfuncionario_dc
-                    WHERE login = '{$_REQUEST["user"]}'
-SQL;
-        $records = StaticSql::search($sql);
-        foreach ($records as $key => $row) {
+        $roles = VfuncionarioDc::findAllByAttributes([
+            'login' => $_REQUEST["user"]
+        ]);
+        $today = new DateTime(date('Y-m-d'));
+
+        foreach ($roles as $key => $VfuncionarioDc) {
+            $finalDate = $VfuncionarioDc->getDateAttribute('fecha_final', 'Y-m-d');
+            $finalDate = DateTime::createFromFormat('Y-m-d', $finalDate);
+
             if (
-                $row['estado'] == 1 &&
-                $row['estado_dc'] == 1 &&
-                $row['fecha_final'] >= date('Y-m-d')
+                $VfuncionarioDc->estado == 1 &&
+                $VfuncionarioDc->estado_dc == 1 &&
+                $finalDate >= new DateTime()
             ) {
-                $active = $row;
+                $active = $VfuncionarioDc;
                 break;
             }
         }
@@ -58,8 +53,8 @@ SQL;
             throw new Exception("El usuario no cuenta con roles activos", 1);
         }
 
-        if ($active['clave'] == CriptoController::encrypt_md5($_REQUEST['password'])) {
-            $Response->data = access($active['idfuncionario']);
+        if ($active->clave == CriptoController::encrypt_md5($_REQUEST['password'])) {
+            $Response->data = access($active->getPK());
             $Response->success = 1;
 
             FuncionarioController::saveAccess();
@@ -67,14 +62,18 @@ SQL;
             FuncionarioController::failedLogin($_REQUEST['user']);
             throw new Exception("Datos incorrectos", 1);
         }
-    } else if (!empty($session_userId)) {
-        $Response->data = access($session_userId);
+    } else if (!empty($sessionUserId)) {
+        $Response->data = access($sessionUserId);
         $Response->success = 1;
         FuncionarioController::saveAccess();
     } else {
         throw new Exception("Debe indicar el usuario y la contraseña", 1);
     }
 } catch (\Throwable $th) {
+    echo '<pre>';
+    var_dump($th);
+    echo '</pre>';
+    exit;
     $Response->message = $th->getMessage();
 }
 
