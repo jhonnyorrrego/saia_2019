@@ -66,6 +66,6 @@ class Configuracion extends Model
     {
         $names = implode("','", $names);
         $sql = "select nombre,valor from configuracion where nombre IN('{$names}')";
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

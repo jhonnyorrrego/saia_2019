@@ -128,7 +128,7 @@ class TRDLoadController
     protected function saveSerie()
     {
         $sql = "SELECT * FROM serie_temp ORDER BY idserie ASC";
-        $data = SerieTemp::findBySql($sql);
+        $data = SerieTemp::findByQueryBuilder($sql);
         $ids = [0 => 0];
 
         foreach ($data as $SerieTemp) {
@@ -149,7 +149,7 @@ class TRDLoadController
         }
         unset($this->fila);
         $sql = "SELECT * FROM dependencia_serie_temp ORDER BY iddependencia_serie ASC";
-        $data = DependenciaSerieTemp::findBySql($sql);
+        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 
         foreach ($data as $DependenciaSerie) {
 
@@ -241,7 +241,7 @@ class TRDLoadController
     private function validateDependencia($codDependencia)
     {
         $sql = "SELECT estado,iddependencia FROM dependencia WHERE codigo like '{$codDependencia}'";
-        $existDep = Dependencia::findBySql($sql, false);
+        $existDep = Dependencia::findByQueryBuilder($sql, false);
         if ($existDep) {
             $cant = count($existDep);
             if ($cant == 1) {

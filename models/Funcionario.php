@@ -172,7 +172,7 @@ TEXT;
     public function getProfiles()
     {
         $sql = "select * from perfil where idperfil in ({$this->perfil})";
-        return Perfil::findBySql($sql);
+        return Perfil::findByQueryBuilder($sql);
     }
 
     /**
@@ -337,7 +337,7 @@ TEXT;
                 LOWER({$concat}) LIKE '%{$term}%'
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 
     /**
@@ -363,7 +363,7 @@ SQL;
         $list = implode(',', $users);
         $sql = "select * from funcionario where funcionario_codigo in ({$list})";
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 
     /**

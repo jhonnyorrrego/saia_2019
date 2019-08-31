@@ -130,7 +130,7 @@ class Ruta extends Model
                 b.tipo = {$type}
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 
     /**
@@ -184,6 +184,6 @@ SQL;
         ORDER BY a.orden ASC
 SQL;
 
-        return self::findBySql($sql, true, 0, 1)[0];
+        return self::findByQueryBuilder($sql, true, 0, 1)[0];
     }
 }

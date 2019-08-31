@@ -15,23 +15,20 @@ include_once $ruta_db_superior . "core/autoload.php";
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
-    die("invalid access");
+    //die("invalid access");
 }
 
 $page = (int) $_REQUEST['pageNumber'] ?? 1;
 $end = (int) $_REQUEST['pageSize'] ?? 30;
 $start = ($page - 1) * $end;
 
-$sql = <<<SQL
-    SELECT * 
-    FROM 
-        busqueda A JOIN
-        busqueda_componente B
-            ON A.idbusqueda=B.busqueda_idbusqueda
-    WHERE
-        B.idbusqueda_componente={$_REQUEST["idbusqueda_componente"]}
-SQL;
-$busqueda = StaticSql::search($sql, 0, 1)[0];
+$busqueda = Model::getQueryBuilder()
+    ->select('*')
+    ->from('busqueda', 'a')
+    ->innerJoin('a', 'busqueda_componente', 'b', 'a.idbusqueda = b.busqueda_idbusqueda')
+    ->where('b.idbusqueda_componente= :component')
+    ->setParameter(':component', $_REQUEST['idbusqueda_componente'], 'integer')
+    ->execute()->fetch();
 
 if (!$busqueda) {
     throw new Exception("Componente invalido", 1);
@@ -56,14 +53,14 @@ $tablas = implode(",", array_filter($temporal));
  */
 $temporal = [];
 array_push($temporal, $busqueda["llave"], $busqueda["campos"], $busqueda["campos_adicionales"]);
-$select = implode(",", array_filter($temporal));
+$join = implode(",", array_filter($temporal));
 
-if (strpos($select, 'distinct') !== false) {
-    $select = str_replace('distinct', '', $select);
-    $select = 'distinct ' . $select;
+if (strpos($join, 'distinct') !== false) {
+    $join = str_replace('distinct', '', $join);
+    $join = 'distinct ' . $join;
 }
 
-$campos = explode(",", $select);
+$campos = explode(",", $join);
 
 if (!$busqueda["llave"]) {
     $busqueda["llave"] = $campos[0];
@@ -104,14 +101,15 @@ foreach ($funciones_condicion as $key => $valor) {
 }
 
 if (!empty($_REQUEST["idbusqueda_filtro_temp"])) {
-    $filtro_temp = busca_filtro_tabla("", "busqueda_filtro_temp", "", "", $conn);
-    $sql = <<<SQL
-        SELECT detalle
-        FROM busqueda_filtro_temp
-        WHERE
-            idbusqueda_filtro_temp IN({$_REQUEST["idbusqueda_filtro_temp"]})
-SQL;
-    $records = StaticSql::search($sql);
+    $records = Model::getQueryBuilder()
+        ->select('detalle')
+        ->from(BusquedaFiltroTemp::getTableName())
+        ->where('idbusqueda_filtro_temp in (:identificators)')
+        ->setParameter(
+            ':identificators',
+            $_REQUEST["idbusqueda_filtro_temp"],
+            \Doctrine\DBAL\Connection::PARAM_INT_ARRAY
+        )->execute()->fetchAll();
 
     $condition = [];
     foreach ($records as $key => $filtro_temp) {
@@ -120,15 +118,6 @@ SQL;
     $cadena = implode(' AND ', $condition);
     $cadena = UtilitiesController::convertTemporalFilter($cadena);
     $condicion .= " AND (" . stripslashes($cadena) . ")";
-}
-
-foreach ($campos as $valor) {
-    $as = strpos(strtolower($valor), " as ");
-    if ($as !== false) {
-        $agrupacion[] = substr($valor, 0, $as);
-    } else {
-        $agrupacion[] = $valor;
-    }
 }
 
 $funciones_tablas = parsear_datos_plantilla_visual($tablas);
@@ -148,28 +137,16 @@ foreach ($funciones_tablas as $key => $valor) {
     $tablas = str_replace("{*" . $valor . "*}", $resultado, $tablas);
 }
 
-$ordenar_consulta = "";
-$agrupar_consulta = $busqueda["agrupado_por"];
-
-if ($agrupar_consulta) {
-    $ordenar_consulta .= "group by {$agrupar_consulta} ";
-}
-
-if ($busqueda["ordenado_por"]) {
-    $sord = $busqueda["direccion"] ? $busqueda["direccion"] : ' DESC ';
-    $ordenar_consulta .= "order by {$busqueda["ordenado_por"]} {$sord}";
-}
-
-$condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
-
 if (!empty($_REQUEST["idbusqueda_temporal"])) {
-    $sql = <<<SQL
-        SELECT tabla_adicional,where_adicional
-        FROM busqueda_filtro
-        WHERE
-            idbusqueda_filtro={$_REQUEST["idbusqueda_temporal"]}
-SQL;
-    $datos = StaticSql::search($sql, 0, 1)[0];
+    $datos = Model::getQueryBuilder()
+        ->select('tabla_adicional', 'where_adicional')
+        ->from('busqueda_filtro')
+        ->where('idbusqueda_filtro = :identificator')
+        ->setParameter(
+            ':identificator',
+            $_REQUEST["idbusqueda_temporal"],
+            'integer'
+        )->execute()->fetch();
 
     if ($datos) {
         $nuevas_tablas = [];
@@ -191,17 +168,33 @@ SQL;
     }
 }
 
-$sql = "SELECT {$select} FROM {$tablas} WHERE {$condicion} {$ordenar_consulta}";
+$QueryBuilder = Model::getQueryBuilder()
+    ->select($campos)
+    ->from($tablas)
+    ->where($condicion);
+
+
+$ordenar_consulta = "";
+
+if ($busqueda["agrupado_por"]) {
+    $QueryBuilder->groupBy($busqueda["agrupado_por"]);
+}
+
+if ($busqueda["ordenado_por"]) {
+    $sord = $busqueda["direccion"] ? $busqueda["direccion"] : ' DESC ';
+    $QueryBuilder->orderBy($busqueda["ordenado_por"], $sord);
+}
 
 if (!$_REQUEST["total"]) {
-    if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-        $consulta_conteo = "WITH conteo AS ({$sql}) SELECT COUNT(*) as cant FROM conteo";
-        throw new Exception("pendiente consulta para server", 1);
-    } else {
-        $consulta_conteo = "SELECT COUNT(1) AS cant FROM ({$sql}) as temp";
-        $result = StaticSql::search($consulta_conteo);
-    }
-    $total = count($result) > 1 ? count($result) : $result[0]["cant"];
+    $sql = $QueryBuilder->getSQL();
+
+    $data = Model::getQueryBuilder()
+        ->select('COUNT(*) AS cant')
+        ->from("({$sql}) as temp")
+        ->execute()
+        ->fetchAll();
+    $rows = count($data);
+    $total = $rows > 1 ? $rows : $data[0]["cant"];
 } else {
     $total = $_REQUEST["total"];
 }
@@ -212,7 +205,10 @@ $response = (object) [
 ];
 
 if ($response->total) {
-    $result = StaticSql::search($sql, $start, $end);
+    $result = $QueryBuilder
+        ->setFirstResult($start)
+        ->setMaxResults($end)
+        ->execute()->fetchAll();
 
     if ($result) {
         $info = str_replace('"', "'", $busqueda["info"]);
@@ -236,10 +232,6 @@ if ($response->total) {
                 'id' => $row[$llave]
             ];
             foreach ($campos as $key => $campo) {
-                if (is_object($row[$campo])) { // para mssql y sqlserver
-                    $row[$campo] = $row[$campo]->date;
-                }
-
                 if ($busqueda["tipo_busqueda"] == 2) { //grilla
                     $data[$campo] = str_replace(['"', "\\"], "", $row[$campo]);
                 } else {
@@ -292,14 +284,16 @@ echo json_encode($response, JSON_PARTIAL_OUTPUT_ON_ERROR);
  */
 function crear_condicion_sql($idbusqueda, $idcomponente)
 {
-    $sql = <<<SQL
-        SELECT codigo_where
-        FROM busqueda_condicion
-        WHERE
-            fk_busqueda_componente = {$idcomponente} OR
-            busqueda_idbusqueda = {$idbusqueda}
-SQL;
-    $condicion = StaticSql::search($sql, 0, 1)[0]['codigo_where'];
+    $data = Model::getQueryBuilder()
+        ->select('codigo_where')
+        ->from('busqueda_condicion')
+        ->where('fk_busqueda_componente = :component')
+        ->orWhere('busqueda_idbusqueda = :search')
+        ->setParameter(':component', $idcomponente, 'integer')
+        ->setParameter(':search', $idbusqueda, 'integer')
+        ->execute()->fetch();
+
+    $condicion = $data['codigo_where'];
 
     if (!$condicion) {
         $condicion = (!empty($_REQUEST["condicion_adicional"])) ?

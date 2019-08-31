@@ -110,7 +110,7 @@ class DocumentoTarea extends Model
             order by 
                 a.fecha_inicial asc
 SQL;
-        return Tarea::findBySql($sql);
+        return Tarea::findByQueryBuilder($sql);
     }
 
     /**

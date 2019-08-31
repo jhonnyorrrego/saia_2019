@@ -98,14 +98,14 @@ class LogAcceso extends Model
      */
     public static function checkActiveToken($token)
     {
-        $sql = <<<SQL
-        SELECT count(*) access
-        FROM log_acceso
-        WHERE
-            fecha_cierre IS NULL AND
-            token = '{$token}'
-SQL;
-        $row = StaticSql::search($sql);
-        return $row[0]['access'] > 0;
+        $data = self::getQueryBuilder()
+            ->select('count(*) as access')
+            ->from(self::getTableName())
+            ->where('fecha_cierre is null')
+            ->andWhere('token = :token')
+            ->setParameter(':token', $token)
+            ->execute()->fetch();
+
+        return $data['access'] > 0;
     }
 }

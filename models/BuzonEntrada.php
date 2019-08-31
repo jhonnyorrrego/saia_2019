@@ -80,6 +80,6 @@ class BuzonEntrada extends Model
             ORDER BY a.idtransferencia ASC
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

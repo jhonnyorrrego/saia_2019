@@ -56,7 +56,7 @@ try {
             {$concat} LIKE '%{$s}%'
         group by iddocumento,numero,descripcion
 SQL;
-    $documents = Documento::findBySql($sql, true, 0, 10);
+    $documents = Documento::findByQueryBuilder($sql, true, 0, 10);
 
     if ($documents) {
         $data = [];

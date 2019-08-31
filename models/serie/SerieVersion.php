@@ -39,7 +39,7 @@ class SerieVersion extends Model
     {
         $subConsulta = "(SELECT MAX(version) FROM serie_version)";
         $sql = "SELECT * FROM serie_version WHERE version={$subConsulta}";
-        $data = SerieVersion::findBySql($sql);
+        $data = SerieVersion::findByQueryBuilder($sql);
         return !empty($data) ? $data[0] : false;
     }
 }

@@ -347,28 +347,18 @@ abstract class Model
     }
 
     /**
-     * ejecuta una busqueda normalmente con un sql avanzado
+     * obtiene modelos basandose en un QueryBuilder
+     * se usa en casos de que todas las condiciones
+     * no son de tipo field = value AND
      *
-     * @param string $sql sentencia a ejecutar
-     * @param boolean $getInstance retornar instancias del modelo
-     * @param integer $offset limite inferior de la consulta
-     * @param integer $limit limite superior de la consulta
+     * @param Object $QueryBuilder
      * @return void
      */
-    public static function findBySql(
-        string $sql,
-        $getInstance = true,
-        $offset = null,
-        $limit = null
-    ) {
-        throw new Exception("cambiar findBySQl por buildQuery", 1);
-
-        $data = self::search($sql, $offset, $limit);
-        if ($getInstance) {
-            $className = get_called_class();
-            $data = $className::convertToObjectCollection($data, $className);
-        }
-        return $data;
+    public static function findByQueryBuilder($QueryBuilder)
+    {
+        $data = $QueryBuilder->execute()->fetchAll();
+        $className = get_called_class();
+        return $className::convertToObjectCollection($data, $className);
     }
 
     /**

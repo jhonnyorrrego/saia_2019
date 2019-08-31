@@ -22,7 +22,7 @@ class ExpedienteController
             if ($Expediente->estado == 0) {
                 $sql = "SELECT * FROM expediente_eli 
                 WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                $instance = ExpedienteEli::findBySql($sql);
+                $instance = ExpedienteEli::findByQueryBuilder($sql);
                 if ($instance) {
                     $ExpedienteDel=$instance[0];
                     $ExpedienteDel->fecha_accion=date("Y-m-d H:i:s");
@@ -399,7 +399,7 @@ class ExpedienteController
                 WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente 
                 AND p.tipo_funcionario=ex.tipo_funcionario 
                 AND p.idpermiso_expediente={$data['idpermiso']}";
-                $instance = EntidadExpediente::findBySql($sql);
+                $instance = EntidadExpediente::findByQueryBuilder($sql);
                 if ($instance) {
                     $EntidadExpediente = $instance[0];
                     $EntidadExpediente->setAccessPermits('c', false);
@@ -670,7 +670,7 @@ class ExpedienteController
                         } else {
                             $sql = "SELECT * FROM expediente_eli 
                             WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                            $instance = ExpedienteEli::findBySql($sql);
+                            $instance = ExpedienteEli::findByQueryBuilder($sql);
                             if ($instance) {
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_accion = date('Y-m-d H:i:s');

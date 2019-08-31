@@ -118,7 +118,7 @@ class TRDVersionController
                 a.fk_serie_version={$this->idSerieVersion}
 SQL;
 
-        $this->series = Serie::findBySql($sql);
+        $this->series = Serie::findByQueryBuilder($sql);
     }
 
     /**
@@ -157,7 +157,7 @@ SQL;
                 a.fk_serie_version={$this->idSerieVersion}
 SQL;
 
-        $this->subSeries = Serie::findBySql($sql);
+        $this->subSeries = Serie::findByQueryBuilder($sql);
     }
 
     /**
@@ -184,7 +184,7 @@ SQL;
             a.cod_padre = {$serieId} AND
             a.fk_serie_version={$this->idSerieVersion}
 SQL;
-        $this->documentaryTypes = Serie::findBySql($sql);
+        $this->documentaryTypes = Serie::findByQueryBuilder($sql);
     }
 
     /**

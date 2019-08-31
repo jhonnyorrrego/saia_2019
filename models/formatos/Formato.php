@@ -164,7 +164,7 @@ class Formato extends Model
 					'firma'
 				)
 SQL;
-        $records = CamposFormato::findBySql($sql);
+        $records = CamposFormato::findByQueryBuilder($sql);
 
         $fields = [];
         foreach ($records as $row) {
@@ -262,6 +262,6 @@ SQL;
                 etiqueta like '%{$term}%' AND
                 item <> 1
 SQL;
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }
