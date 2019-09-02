@@ -308,7 +308,8 @@ echo select2();
             var elemento = e.params.data.element;
             if ($(elemento).hasClass("select_mensajeros_ditribucion")) {
                 var mensajero = $(this).val();
-                registros_seleccionados = totalSelection();
+                registros_seleccionados = top.window.gridSelection();
+                console.log(registros_seleccionados);
                 if (registros_seleccionados.length === 0) {
                     top.notification({
                         message: "No ha seleccionado ninguna distribuci&oacute;n",
@@ -327,14 +328,10 @@ echo select2();
                         url: '<?php echo ($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
                         success: function(data) {
                             if (data.exito) {
-                                var seleccionados = $("#tabla_resultados").bootstrapTable("getSelections");
+                                var seleccionados = $("#table").bootstrapTable("getSelections");
+                                console.log(seleccionados);
                                 seleccionados.forEach(function(valor, indice, array) {
-                                    var dataIndex = $('input[name="btSelectItem"][value="' + valor["llave"] + '"]').attr("data-index");
-                                    $("#tabla_resultados").bootstrapTable('updateCell', {
-                                        index: dataIndex,
-                                        field: 'select_mensajeros_ruta_distribucion',
-                                        value: $('[value="' + mensajero + '"]').html()
-                                    })
+                                    $("#select_mensajeros_ditribucion_"+valor["id"]).html($('[value="' + mensajero + '"]').html());
                                 });
                                 top.notification({
                                     message: 'Mensajero asignado exitosamente',
@@ -348,7 +345,6 @@ echo select2();
                                     duration: 4000
                                 });
                             }
-                            //window.location.reload();
                         }
                     });
                 }

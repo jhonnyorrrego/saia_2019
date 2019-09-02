@@ -173,10 +173,10 @@ function notificacion()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/iziToast/css/iziToast.min.css';
+    $routeCss = $ruta_db_superior . 'node_modules/izitoast/dist/css/iziToast.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/iziToast/js/iziToast.min.js';
+    $routeJs = $ruta_db_superior . 'node_modules/izitoast/dist/js/iziToast.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
@@ -309,6 +309,14 @@ function kaiten()
     $jqresize = '<script type="text/javascript" src="' . $resize . '"></script>';
 
     return $css . $jq . $ui . $js . $jqresize;
+}
+/**
+ * Retorna acciones kaiten para permitir la gestion de las ventanas.
+ */
+function accionesKaiten()
+{
+    global $ruta_db_superior;
+    return '<script type="text/javascript" src="' . $ruta_db_superior . 'pantallas/lib/acciones_kaiten.js"></script>';
 }
 
 /**

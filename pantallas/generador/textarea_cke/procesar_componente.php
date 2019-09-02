@@ -30,7 +30,7 @@ function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', 
     <li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]} background:white;'>
 FINTAG;
     $texto .= "clase_eliminar_pantalla_componente($idcampo)";
-    $obligatoriedad = "";"
+    $obligatoriedad = "";
     if ($campo["obligatoriedad"]) {
         $obligatoriedad = '*';
     }
@@ -46,7 +46,7 @@ FINTAG;
     };
     var editor = CKEDITOR.replace('{$campo["nombre"]}', config);
     </script></div>
-</li>
+</li> 
 FINJS;
     return $texto;
 }

@@ -429,8 +429,8 @@ abstract class Model
      */
     private function runCreate()
     {
-        $connection = Connection::getInstance();
-        $QueryBuilder = $connection->createQueryBuilder();
+        $Connection = Connection::getInstance();
+        $QueryBuilder = $Connection->createQueryBuilder();
         $QueryBuilder->insert($this->getTable());
         $QueryBuilder = self::callBuilderMethod(
             $this->getNotNullAttributes(),
@@ -440,7 +440,7 @@ abstract class Model
         );
         $QueryBuilder->execute();
 
-        $this->setPK($connection->lastInsertId());
+        $this->setPK($Connection->lastInsertId());
         return $this->getPK() ?? 0;
     }
 

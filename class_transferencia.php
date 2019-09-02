@@ -670,11 +670,11 @@ function aprobar($iddoc = 0, $opcion = 0)
                         transferir_archivo_prueba($datos, $destino_respuesta, "", "");
                     }
                 }
- 
+
                 if ($datos_formato[0]["mostrar_pdf"] == 1) {
                     $sql1 = "UPDATE documento SET pdf=null WHERE iddocumento=" . $iddoc;
-                    phpmkr_query($sql1); 
-                } 
+                    phpmkr_query($sql1);
+                }
             }
             $array_banderas = explode(",", $nombre_tabla[0]["banderas"]);
         }
@@ -762,13 +762,13 @@ function mostrar_estado_proceso($idformato, $iddoc)
             if (!$alto_firma["numcampos"]) {
                 $alto_firma[0]["valor"] = "20%";
             }
-            
-            if ($_REQUEST['tipo']==1){
+
+            if ($_REQUEST['tipo'] == 1) {
 
                 $ancho_firma[0]["valor"] = "35%";
                 $alto_firma[0]["valor"] = "50%";
             }
- 
+
             $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
             if (!$tamano_fuente["numcampos"]) {
                 $tamano_fuente[0]["valor"] = '10pt';
@@ -896,8 +896,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
         echo "</table><br/>";
     }
 
-    return $firma_actual; 
- 
+    return $firma_actual;
 }
 
 
@@ -1289,12 +1288,9 @@ function guardar_documento($iddoc, $tipo = 0)
     }
     $valores = array();
     $campos = array();
-    $lista_campos = array();
-
-    $buscar = phpmkr_query("SELECT A.* FROM " . $tabla . " A WHERE 1=0", $conn);
-
     $idformato = null;
     $form_uuid = null;
+
     if (@$_REQUEST["form_uuid"]) {
         $form_uuid = $_REQUEST["form_uuid"];
     }
@@ -1306,16 +1302,13 @@ function guardar_documento($iddoc, $tipo = 0)
             $idformato = $formato[0]["idformato"];
         }
     }
-    for ($i = 0; $i < phpmkr_num_fields($buscar); $i++) {
-        $nombre_campo = phpmkr_field_name($buscar, $i);
-        array_push($lista_campos, $nombre_campo);
-    }
 
     if ($idformato) {
         $larchivos = array();
         $where = "formato_idformato=" . $idformato . " AND (banderas NOT LIKE '%pk%' OR banderas IS NULL)";
-        if ($i) {
-            $where .= " AND nombre IN('" . implode("','", $lista_campos) . "')";
+        $columns = GenerarFormatoController::getFieldsName($tabla);
+        if ($columns) {
+            $where .= " AND nombre IN('" . implode("','", $columns) . "')";
         }
         $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
 
@@ -1375,7 +1368,7 @@ function guardar_documento($iddoc, $tipo = 0)
                         case "DATE":
                             array_push($campos, $lcampos[$j]["nombre"]);
                             if (@$_REQUEST[$lcampos[$j]["nombre"]] && $_REQUEST[$lcampos[$j]["nombre"]] != '0000-00-00') {
-                                array_push($valores, fecha_db_almacenar(@$_REQUEST[$lcampos[$j]["nombre"]], 'Y-m-d'));
+                                array_push($valores, "'" . $_REQUEST[$lcampos[$j]["nombre"]] . "'");
                             } else {
                                 array_push($valores, "NULL");
                             }
@@ -1383,7 +1376,7 @@ function guardar_documento($iddoc, $tipo = 0)
                         case "DATETIME":
                             array_push($campos, $lcampos[$j]["nombre"]);
                             if (@$_REQUEST[$lcampos[$j]["nombre"]] && $_REQUEST[$lcampos[$j]["nombre"]] != '0000-00-00 00:00') {
-                                array_push($valores, fecha_db_almacenar(@$_REQUEST[$lcampos[$j]["nombre"]], 'Y-m-d H:i:s'));
+                                array_push($valores,  "'" . $_REQUEST[$lcampos[$j]["nombre"]] . "'");
                             } else {
                                 array_push($valores, "NULL");
                             }
@@ -1429,8 +1422,9 @@ function guardar_documento($iddoc, $tipo = 0)
 
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
-        phpmkr_query($sql) or die("Error al insertar en $tabla: " . $sql);
-        $insertado = phpmkr_insert_id();
+        $Connection = Connection::getInstance(true);
+        $Connection->query($sql);
+        $insertado = $Connection->lastInsertId();
 
         if ($insertado) {
             $sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . $_SESSION["usuario_actual"] . "','" . $iddoc . "','e,m,r')";

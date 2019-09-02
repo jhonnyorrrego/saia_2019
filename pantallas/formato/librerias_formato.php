@@ -2,10 +2,6 @@
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 
-global $counter_formatos;
-
-$counter_formatos = 1;
-
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -49,19 +45,4 @@ function where_formatos_padre()
 	if (!$_REQUEST["variable_busqueda"]) {
 		return "a.cod_padre=0 or a.cod_padre is null";
 	} else return "";
-}
-
-function contador_formatos()
-{
-	global $counter_formatos;
-	$response = $counter_formatos;
-	$counter_formatos++;
-
-	return $response;
-}
-
-function boton_editar_formatos($idformato, $etiqueta)
-{
-	$response = "<div class='kenlace_saia' enlace='pantallas/generador/generador_pantalla.php?idformato=" . $idformato . "' name='nombre' conector='iframe' title='" . $etiqueta . "' > <button class='btn btn-complete'> Modificar </button></div>";
-	return $response;
 }

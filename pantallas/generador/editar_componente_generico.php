@@ -96,7 +96,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
     <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
 
-    <?= bootstrap() ?>
+
 
     <style>
         #tipo_campo {
@@ -176,6 +176,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             //console.log(opciones_form);
 
             opciones_form["view"] = {
+                "id": "jqueryui-create",
                 "locale": "es_ES",
                 "messages": {
                     "es_ES": {
@@ -230,7 +231,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                 $("#btnGuardar").trigger("click");
 
             });
-
 
             $('#editar_pantalla_campo').alpaca(opciones_form);
 

@@ -20,24 +20,27 @@ function defineGlobalVars()
     }
 }
 
-/*
-<Clase>
-<Nombre>registrar_accion_digitalizacion
-<Parametros>$iddoc:id del documento;$accion:accion ejecutada;$justificacion: descripcion que se llena cuando se borra una pagina
-<Responsabilidades>crea un registro de cierta accion sobre cierto documento en la tabla digitalizacion
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * crea un registro de cierta accion sobre cierto documento en la tabla digitalizacion
+ *
+ * @param integer $iddoc id del documento
+ * @param string $accion accion ejecutada
+ * @param string $justificacion descripcion que se llena cuando se borra una pagina
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
 function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
 {
-    global $conn;
-    $usu = SessionController::getValue('usuario_actual');
-    $fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s');
-    $sql = "insert into digitalizacion(funcionario,documento_iddocumento,accion,justificacion,fecha) values('$usu','$iddoc','$accion','$justificacion',$fecha)";
-    phpmkr_query($sql, $conn);
+    $userCode = SessionController::getValue('usuario_actual');
+
+    Digitalizacion::newRecord([
+        'funcionario' => $userCode,
+        'documento_iddocumento' => $iddoc,
+        'accion' => $accion,
+        'justificacion' => $justificacion,
+        'fecha' => date('Y-m-d H:i:s')
+    ]);
 }
 
 /**
@@ -399,19 +402,51 @@ function phpmkr_error()
  */
 function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = null)
 {
-    $sql = "SELECT ";
-    $sql .= $campos ? $campos : "*";
-    $sql .= " FROM {$tabla}";
-    $sql .= $filtro ? " WHERE {$filtro} " : ' ';
-    $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
-        $orden : "ORDER BY {$orden} ") : '';
-    $sql = htmlspecialchars_decode($sql);
+    $QueryBuilder = Model::getQueryBuilder()
+        ->select($campos ? $campos : '*')
+        ->from($tabla);
 
-    $return = StaticSql::search($sql);
-    $return['numcampos'] = count($return);
-    $return['tabla'] = $tabla;
-    $return['sql'] = $sql;
-    return $return;
+    if ($filtro) {
+        $QueryBuilder->where($filtro);
+    }
+
+    if ($orden) {
+        $QueryBuilder->add('orderBy', $orden);
+    }
+
+    $response = $QueryBuilder->execute()->fetchAll();
+    $response['numcampos'] = count($response);
+    return $response;
+}
+
+/**
+ * se debe evitar usar esta funcion
+ * ya que está obsoleta
+ *
+ * @param string $field
+ * @param string $format
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-09-02
+ */
+function fecha_db_obtener($field, $format)
+{
+    return $field;
+}
+
+/**
+ * se debe evitar usar esta funcion
+ * ya que está obsoleta
+ *
+ * @param string $date
+ * @param string $format
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-09-02
+ */
+function fecha_db_almacenar($date, $format)
+{
+    return $date;
 }
 
 /**

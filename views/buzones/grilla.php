@@ -12,23 +12,22 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
-$sql = <<<SQL
-    SELECT
-        A.cantidad_registros,
-        A.ruta_libreria_pantalla,
-        B.idbusqueda_componente,
-        B.info,
-        B.busqueda_avanzada,
-        B.enlace_adicionar,
-        B.acciones_seleccionados
-    FROM
-        busqueda A JOIN
-        busqueda_componente B
-            ON A.idbusqueda=B.busqueda_idbusqueda
-    WHERE
-        B.idbusqueda_componente={$_REQUEST["idbusqueda_componente"]}
-SQL;
-$component = StaticSql::search($sql, 0, 1)[0];
+
+$component = Model::getQueryBuilder()
+    ->select(
+        'a.cantidad_registros',
+        'a.ruta_libreria_pantalla',
+        'b.idbusqueda_componente',
+        'b.info',
+        'b.busqueda_avanzada',
+        'b.enlace_adicionar',
+        'b.acciones_seleccionados'
+    )
+    ->from('busqueda', 'a')
+    ->innerJoin('a', 'busqueda_componente', 'b', 'a.idbusqueda = b.busqueda_idbusqueda')
+    ->where('b.idbusqueda_componente= :component')
+    ->setParameter(':component', $_REQUEST['idbusqueda_componente'], 'integer')
+    ->execute()->fetch();
 
 $params = json_encode(array_merge($_REQUEST, [
     'baseUrl' => $ruta_db_superior,
@@ -45,6 +44,7 @@ echo bootstrapTable();
 echo bootstrapTableExport();
 echo theme();
 echo icons();
+echo accionesKaiten();
 echo lodash();
 
 $routes = $component['ruta_libreria_pantalla'];
@@ -71,22 +71,21 @@ if ($component['acciones_seleccionados']) {
         <div class="col-12">
             <div id="toolbar">
                 <?php if ($component['busqueda_avanzada']) : ?>
-                <button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='<?= "{$component['busqueda_avanzada']}?{$query}" ?>'>
-                    <i class='fa fa-search'></i>
-                    <span class='d-none d-sm-inline'>Buscar</span>
-                </button>
+                    <button class='btn btn-secondary' title='Buscar' id='btn_search' data-url='<?= "{$component['busqueda_avanzada']}?{$query}" ?>'>
+                        <i class='fa fa-search'></i>
+                        <span class='d-none d-sm-inline'>Buscar</span>
+                    </button>
                 <?php endif; ?>
 
                 <?php
                 if ($component['enlace_adicionar']) :
                     $component['enlace_adicionar'] .= (strpos($component['enlace_adicionar'], '?') === false ? '?' : '&') . $query;
                     ?>
-                <button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='<?= $component['enlace_adicionar'] ?>'>
-                    <i class='fa fa-plus'></i>
-                    <span class='d-none d-sm-inline'>Adicionar</span>
-                </button>
+                    <button class='btn btn-secondary' title='Adicionar' id='btn_add' data-url='<?= $component['enlace_adicionar'] ?>'>
+                        <i class='fa fa-plus'></i>
+                        <span class='d-none d-sm-inline'>Adicionar</span>
+                    </button>
                 <?php endif; ?>
-
                 <?= $actions ?>
             </div>
             <table id="table"></table>
