@@ -1,4 +1,4 @@
-<html><title>.: COMUNICACI&OACUTE;N INTERNA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("funciones.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA COMUNICACI&Oacute;N INTERNA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_expediente_serie"><div class="btn-group" data-toggle="buttons-radio" >
+<html><title>.: COMUNICACI&OACUTE;N INTERNA:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("funciones.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA COMUNICACI&Oacute;N INTERNA</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_expediente_serie"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_expediente_serie',this.id)">
 		    Y
 		  </button>
@@ -12,6 +12,25 @@
                      $(document).ready(function()
                       {
                       $("#expediente_serie").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_fecha"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha" id="bqsaiaenlace_fecha" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="hol">FECHA</td><input type="hidden" name="bksaiacondicion_fecha" id="bksaiacondicion_fecha" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="fecha" name="fecha"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#fecha").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -31,6 +50,25 @@
                      $(document).ready(function()
                       {
                       $("#firma").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_destino"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_destino',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_destino',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_destino" id="bqsaiaenlace_destino" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="-">DESTINO</td><input type="hidden" name="bksaiacondicion_destino" id="bksaiacondicion_destino" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="destino" name="destino"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#destino").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -93,6 +131,25 @@
                       });
                       });
                      </script></td>
+                    </tr><tr id="tr_asunto"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_asunto',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_asunto',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_asunto" id="bqsaiaenlace_asunto" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ASUNTO</td><input type="hidden" name="bksaiacondicion_asunto" id="bksaiacondicion_asunto" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="asunto" name="asunto"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#asunto").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
                     </tr><tr id="tr_idft_memorando"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_idft_memorando',this.id)">
 		    Y
@@ -107,273 +164,6 @@
                      $(document).ready(function()
                       {
                       $("#idft_memorando").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr id="tr_fecha_memorando"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_memorando',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_memorando',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_fecha_memorando" id="bqsaiaenlace_fecha_memorando" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">FECHA</td><input type="hidden" name="bksaiacondicion_fecha_memorando" id="bksaiacondicion_fecha_memorando" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="fecha_memorando" name="fecha_memorando"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#fecha_memorando").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_serie_idserie" id="bqsaiaenlace_serie_idserie" value="y" />
-		</div>
-                   <td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like"><td bgcolor="#F5F5F5"><div id="esperando_serie_idserie"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(2,28,'1',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_serie_idserie" height="90%"></div><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_serie_idserie=new dhtmlXTreeObject("treeboxbox_serie_idserie","100%","100%",0);
-                			tree_serie_idserie.setImagePath("../../imgs/");
-                			tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
-                    tree_serie_idserie.enableRadioButtons(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-                      tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php");
-                      tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
-                      function onNodeSelect_serie_idserie(nodeId)
-                      {valor_destino=document.getElementById("serie_idserie");
-                       destinos=tree_serie_idserie.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++) {
-                           if(vector[i].indexOf("#")!=-1) {
-                               hijos=tree_serie_idserie.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               for(h=0;h<vectorh.length;h++)
-                                  nuevo=eliminarItem(nuevo,vectorh[h]);
-								}
-						}
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie_idserie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie_idserie")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_serie_idserie"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie_idserie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie_idserie")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_serie_idserie"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_destino',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_destino',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_destino" id="bqsaiaenlace_destino" value="y" />
-		</div>
-                   <td class="encabezado" width="20%" title="">DESTINO</td><input type="hidden" name="bksaiacondicion_destino" id="bksaiacondicion_destino" value="like"><td bgcolor="#F5F5F5"><div id="esperando_destino"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(2,21,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input type="text" id="stext_destino" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_destino" height="90%"></div><input type="hidden" maxlength="2000"  name="destino" id="destino"   value="" ><label style="display:none" class="error" for="destino">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_destino=new dhtmlXTreeObject("treeboxbox_destino","100%","100%",0);
-                			tree_destino.setImagePath("../../imgs/");
-                			tree_destino.enableIEImageFix(true);tree_destino.enableCheckBoxes(1);
-                			tree_destino.enableThreeStateCheckboxes(1);tree_destino.setOnLoadingStart(cargando_destino);
-                      tree_destino.setOnLoadingEnd(fin_cargando_destino);tree_destino.enableSmartXMLParsing(true);tree_destino.loadXML("../../test.php?rol=1");
-                      tree_destino.setOnCheckHandler(onNodeSelect_destino);
-                      function onNodeSelect_destino(nodeId)
-                      {valor_destino=document.getElementById("destino");
-                       destinos=tree_destino.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++) {
-                           if(vector[i].indexOf("#")!=-1) {
-                               hijos=tree_destino.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               for(h=0;h<vectorh.length;h++)
-                                  nuevo=eliminarItem(nuevo,vectorh[h]);
-								}
-						}
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_destino() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_destino")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_destino")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_destino"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_destino() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_destino")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_destino")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_destino"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script></td></tr><tr id="tr_documento_iddocumento"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_documento_iddocumento" id="bqsaiaenlace_documento_iddocumento" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">DOCUMENTO ASOCIADO</td><input type="hidden" name="bksaiacondicion_documento_iddocumento" id="bksaiacondicion_documento_iddocumento" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="documento_iddocumento" name="documento_iddocumento"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#documento_iddocumento").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_copia',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_copia',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_copia" id="bqsaiaenlace_copia" value="y" />
-		</div>
-                   <td class="encabezado" width="20%" title="">CON COPIA A</td><input type="hidden" name="bksaiacondicion_copia" id="bksaiacondicion_copia" value="like"><td bgcolor="#F5F5F5"><div id="esperando_copia"><img src="../../assets/images/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(2,22,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input type="text" id="stext_copia" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),1)"><img src="../../assets/images/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),0,1)"><img src="../../assets/images/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value))"><img src="../../assets/images/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_copia" height="90%"></div><input type="hidden" maxlength="2000"  name="copia" id="copia"   value="" ><label style="display:none" class="error" for="copia">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_copia=new dhtmlXTreeObject("treeboxbox_copia","100%","100%",0);
-                			tree_copia.setImagePath("../../imgs/");
-                			tree_copia.enableIEImageFix(true);tree_copia.enableCheckBoxes(1);
-                			tree_copia.enableThreeStateCheckboxes(1);tree_copia.setOnLoadingStart(cargando_copia);
-                      tree_copia.setOnLoadingEnd(fin_cargando_copia);tree_copia.enableSmartXMLParsing(true);tree_copia.loadXML("../../test.php?rol=1");
-                      tree_copia.setOnCheckHandler(onNodeSelect_copia);
-                      function onNodeSelect_copia(nodeId)
-                      {valor_destino=document.getElementById("copia");
-                       destinos=tree_copia.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++) {
-                           if(vector[i].indexOf("#")!=-1) {
-                               hijos=tree_copia.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               for(h=0;h<vectorh.length;h++)
-                                  nuevo=eliminarItem(nuevo,vectorh[h]);
-								}
-						}
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_copia() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_copia")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_copia")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_copia"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_copia() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_copia")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_copia")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_copia"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script></td></tr><tr id="tr_asunto"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_asunto',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_asunto',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_asunto" id="bqsaiaenlace_asunto" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">ASUNTO</td><input type="hidden" name="bksaiacondicion_asunto" id="bksaiacondicion_asunto" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="asunto" name="asunto"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#asunto").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -398,6 +188,44 @@
                       });
                       });
                      </script></td>
+                    </tr><tr id="tr_copia"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_copia',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_copia',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_copia" id="bqsaiaenlace_copia" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">CON COPIA A</td><input type="hidden" name="bksaiacondicion_copia" id="bksaiacondicion_copia" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="copia" name="copia"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#copia").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_serie_idserie"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_serie_idserie" id="bqsaiaenlace_serie_idserie" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="serie_idserie" name="serie_idserie"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#serie_idserie").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
                     </tr><tr id="tr_despedida"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_despedida',this.id)">
 		    Y
@@ -417,20 +245,39 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_iniciales"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_iniciales',this.id)">
+                    </tr><tr id="tr_documento_iddocumento"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
 		    Y
 		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_iniciales',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
 		    O
 		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_iniciales" id="bqsaiaenlace_iniciales" value="y" />
+		  <input type="hidden" name="bqsaiaenlace_documento_iddocumento" id="bqsaiaenlace_documento_iddocumento" value="y" />
 		</div>
-                     <td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO</td><input type="hidden" name="bksaiacondicion_iniciales" id="bksaiacondicion_iniciales" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="iniciales" name="iniciales"></select><script>
+                     <td class="encabezado" width="20%" title="">DOCUMENTO ASOCIADO</td><input type="hidden" name="bksaiacondicion_documento_iddocumento" id="bksaiacondicion_documento_iddocumento" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="documento_iddocumento" name="documento_iddocumento"></select><script>
                      $(document).ready(function()
                       {
-                      $("#iniciales").fcbkcomplete({
+                      $("#documento_iddocumento").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_inici_qui_pre_el_memor"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_inici_qui_pre_el_memor',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_inici_qui_pre_el_memor',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_inici_qui_pre_el_memor" id="bqsaiaenlace_inici_qui_pre_el_memor" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO</td><input type="hidden" name="bksaiacondicion_inici_qui_pre_el_memor" id="bksaiacondicion_inici_qui_pre_el_memor" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="inici_qui_pre_el_memor" name="inici_qui_pre_el_memor"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#inici_qui_pre_el_memor").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -483,7 +330,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_email_aprobar" id="bqsaiaenlace_email_aprobar" value="y" />
 		</div>
-                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA</td><input type="hidden" name="bksaiacondicion_email_aprobar" id="bksaiacondicion_email_aprobar" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(2,5176,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="23,6921"><?php submit_formato(2);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA</td><input type="hidden" name="bksaiacondicion_email_aprobar" id="bksaiacondicion_email_aprobar" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(2,5176,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="19,23,6921"><?php submit_formato(2);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

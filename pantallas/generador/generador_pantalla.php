@@ -118,7 +118,7 @@ if ($_REQUEST["idformato"]) {
 
     ?>
 
-    <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
+        <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 
 </head>
 
@@ -152,7 +152,7 @@ if ($_REQUEST["idformato"]) {
                         <li style="width:225px" class="button_tab_formulario" id="generar_formulario_pantalla">
                             <a href="#formulario-tab" data-toggle="tab" id="nav-campos" style="text-align:center;width:100%;height:100%;">Paso 2. Campos</a>
                         </li>
- 
+
                         <li style="width:225px" class="button_tab_formulario" id="diseno_formulario_pantalla">
                             <a href="#pantalla_mostrar-tab" data-toggle="tab" id="nav-mostrar" style="text-align:center;width:100%;height:100%">Paso 3. Dise&ntilde;o</a>
                         </li>
@@ -217,19 +217,21 @@ if ($_REQUEST["idformato"]) {
                                                 $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
                                                 $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
                                                 echo ("<option value='" . $encabezados[$i]["idencabezado_formato"] . "'");
-                                                if ($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
+                                                if ($encabezados[$i]["idencabezado_formato"] == $idencabezadoFormato) {
                                                     $idencabezado = $encabezados[$i]["idencabezado_formato"];
                                                     $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
-                                                    echo (' selected="selected" ');
+                                                    echo ('selected');
                                                 }
                                                 echo (">" . $encabezados[$i]["etiqueta"] . "</option>");
                                             }
 
                                             ?>
                                         </select>
+
                                         <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_encabezado" id="crear_encabezado">
                                             <i class="fa fa-plus-circle"></i>
                                         </span>
+
                                         <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_encabezado" id="adicionar_encabezado">
                                             <i class="fa fa-edit"></i>
                                         </span>
@@ -237,8 +239,8 @@ if ($_REQUEST["idformato"]) {
                                             <i class="fa fa-trash"></i>
                                         </span>
                                         <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
-                                            <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado; ?>">
-                                            <input type="hidden" name="idformato" id="idformato" value="<?php echo $idpantalla; ?>">
+                                            <input type="hidden" name="idencabezado" id="idencabezado" value="<?= $idencabezado ?>">
+                                            <input type="hidden" name="idformato" id="idformato" value="<?= $idpantalla ?>">
                                             <input type="hidden" name="accion_encab" id="accion_encabezado" value="1">
                                             <div id="div_etiqueta_encabezado">
                                                 <label style="display:none" for="etiqueta_encabezado">Etiqueta:
@@ -264,7 +266,7 @@ if ($_REQUEST["idformato"]) {
                                         <button style="background: #48b0f7;color:fff;float:right" class="btn btn-info" id="actualizar_cuerpo_formato"><span style="color:fff; background: #48b0f7;"> Guardar
                                                 cambios</span>
                                         </button><br><br>
-                                        <h5>Pie del formato :</h5><br>
+                                        <h5 class="title">Pie del formato</h5><br>
                                         <select name="sel_pie_pagina" id="sel_pie_pagina" style="width:250px;">
                                             <option value=" 0">Por favor Seleccione</option>
                                             <?php
@@ -328,7 +330,7 @@ if ($_REQUEST["idformato"]) {
                                                     ?>
                                                 </select>
                                                 <?php if ($tipo_listado["numcampos"]) { ?>
-                                                <div width="100%" id="frame_tipo_listado"></div>
+                                                    <div width="100%" id="frame_tipo_listado"></div>
                                                 <?php
                                                 }
                                                 ?>
@@ -349,7 +351,7 @@ if ($_REQUEST["idformato"]) {
                                                     <?php
                                                     $formatosCampo = load_pantalla($idpantalla);
                                                     if ($formatosCampo) : ?>
-                                                    <?= $formatosCampo;  ?>
+                                                        <?= $formatosCampo;  ?>
                                                     <?php endif; ?>
 
                                                 </ul>
@@ -362,7 +364,7 @@ if ($_REQUEST["idformato"]) {
 
                                                     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
                                                         $etiqueta = htmlentities(html_entity_decode(utf8_encode($listadoComponentes[$i]["etiqueta"])));
-                                                        echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}' idpantalla_campo='7037' ><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i>{$etiqueta}</li>";
+                                                        echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}' idformato='{$_REQUEST['idformato']}' ><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i>{$etiqueta}</li>";
                                                     }
                                                     ?>
                                                 </ul>
@@ -930,22 +932,45 @@ for ($i = 0; $i < $cant_js; $i++) {
 
         $(document).on("click", ".guardar_encabezado", function(e) {
             var id = $("#idencabezado").val();
-            if (id != 0) {
+            if (id) {
                 var etiqueta = $("#etiqueta_encabezado").val();
-                var enlace = 'editor_encabezado.php?idencabezado=' + id + '&etiqueta=' + etiqueta;
-                hs.htmlExpand(this, {
-                    objectType: 'iframe',
-                    width: 800,
-                    height: 500,
-                    contentId: 'cuerpo_paso',
-                    preserveContent: false,
-                    src: enlace,
-                    outlineType: 'rounded-white',
-                    wrapperClassName: 'highslide-wrapper drag-header'
+                var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
+                var enlace = directoryPath + '/editor_encabezado.php';
+
+                top.topModal({
+                    url: enlace,
+                    params: {
+                        idencabezado: id,
+                        etiqueta: etiqueta,
+                        idformato: $("#idformato").val()
+                    },
+                    size: 'modal-xl',
+                    title: 'Editar encabezado del formato',
+                    buttons: {
+                        success: {
+                            label: "Guardar",
+                            class: "btn btn-complete"
+                        },
+                        cancel: {
+                            label: "Cerrar",
+                            class: "btn btn-danger"
+                        }
+                    },
+                    onSuccess: function(data) {
+                        successModalEditarEncabezado(data);
+                    }
+
                 });
+
             }
 
         });
+
+        function successModalEditarEncabezado(data) {
+
+            console.log(data);
+
+        }
 
         $(document).on("click", "#eliminar_encabezado", function(e) {
             var id = $("#idencabezado").val();
@@ -1022,33 +1047,48 @@ for ($i = 0; $i < $cant_js; $i++) {
 
         $(document).on("click", ".guardar_pie", function(e) {
             var id = $("#idpie").val();
-            if (id != 0) {
+            if (id) {
                 var etiqueta = $("#etiqueta_pie").val();
-                var enlace = 'editor_encabezado.php?idpie=' + id + '&etiqueta=' + etiqueta + '&pie=1';
-                hs.htmlExpand(this, {
-                    objectType: 'iframe',
-                    width: 800,
-                    height: 500,
-                    contentId: 'cuerpo_paso',
-                    preserveContent: false,
-                    src: enlace,
-                    outlineType: 'rounded-white',
-                    wrapperClassName: 'highslide-wrapper drag-header'
+                var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
+                var enlace = directoryPath + '/editor_encabezado.php';
+
+                top.topModal({
+                    url: enlace,
+                    params: {
+                        idencabezado: id,
+                        etiqueta: etiqueta,
+                        idformato: $("#idformato").val()
+                    },
+                    size: 'modal-xl',
+                    title: 'Editar pie del formato',
+                    buttons: {
+                        success: {
+                            label: "Guardar",
+                            class: "btn btn-complete"
+                        },
+                        cancel: {
+                            label: "Cerrar",
+                            class: "btn btn-danger"
+                        }
+                    },
+                    onSuccess: function(data) {
+                        successModalEditarEncabezado(data);
+                    }
+
                 });
+
             }
         });
 
         $(document).off("click", ".crear_encabezado").on("click", ".crear_encabezado", function(e) {
             var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
-            var enlace = directoryPath + '/crear_encabezado_pie.php?crear_encabezado=1';
+            var enlace = directoryPath + '/crear_encabezado_pie.php';
 
             top.topModal({
                 url: enlace,
                 params: {
-                    //pantalla: params.pantalla,
-                    //idpadre: params.idpadre,
-                    idformato: $("#idformato").val(),
-                    //padre: params.padre
+                    crear_encabezado: 1,
+                    idformato: $("#idformato").val()
                 },
                 size: 'modal-xl',
                 title: 'Crear encabezado del formato',
@@ -1056,6 +1096,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                     success: {
                         label: "Guardar",
                         class: "btn btn-complete"
+
                     },
                     cancel: {
                         label: "Cerrar",
@@ -1064,7 +1105,7 @@ for ($i = 0; $i < $cant_js; $i++) {
                 },
                 onSuccess: function(data) {
                     successModalEncabezado(data);
-                },
+                }
             });
         });
 
@@ -1083,28 +1124,30 @@ for ($i = 0; $i < $cant_js; $i++) {
         $(document).off("click", ".crear_pie").on("click", ".crear_pie", function(e) {
 
             var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
-            var enlace = directoryPath + '/crear_pie.php?crear_pie=1';
+            var enlace = directoryPath + '/crear_pie.php';
 
             top.topModal({
                 url: enlace,
                 params: {
-                    //pantalla: params.pantalla,
-                    //idpadre: params.idpadre,
-                    idformato: $("#idformato").val(),
-                    //padre: params.padre
+                    crear_pie: 1,
+                    idformato: $("#idformato").val()
                 },
                 size: 'modal-xl',
                 title: 'Crear pie del formato',
                 buttons: {
                     success: {
-                        label: "Guardar Cambios",
+                        label: "Guardar",
                         class: "btn btn-complete"
+                    },
+                    cancel: {
+                        label: "Cerrar",
+                        class: "btn btn-danger"
                     }
                 },
                 onSuccess: function(data) {
 
                     successModalPie(data);
-                },
+                }
             });
 
         });
@@ -1176,7 +1219,6 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 
         $(document).on("click", "#limpiar_pie", function(e) {
-            //$("#div_etiqueta_pie").show();
             $("#sel_pie_pagina option[selected]").removeAttr("selected");
             $("#idpie").val("0");
             $("#etiqueta_pie").val("");
@@ -1192,8 +1234,6 @@ for ($i = 0; $i < $cant_js; $i++) {
         });
 
         $("#frame_tipo_listado").height(alto - 125);
-        //$(".tab-pane").height(alto - 50);
-        //$(".tab-content").height(alto - 40);
         $(".tab-content").css("padding-top", 0);
 
         $.ajax({
@@ -1244,177 +1284,7 @@ for ($i = 0; $i < $cant_js; $i++) {
             return count_click;
         }
 
-        ////////////////////////////////// FUNCIONES QUE NECESITAN MODAL /////////////////////////////////////////////////
-        /*
-                    hs.Expander.prototype.onInit = function(sender) {
-                        var cantidadClicks = count_click_add(); 
-                        if(cantidadClicks>1){
-                            return false;
-                        }
-                    };
-
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
-                /*/
-
-        var form_builder = {
-            el: null,
-            method: "POST",
-            action: "",
-            delimeter: '=',
-            setElement: function(el) {
-                this.el = el;
-            },
-            getElement: function() {
-                return this.el;
-            },
-            addComponent: function(component) {
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
-                    data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros=" +
-                        $("#idformato").val() + ";" + component.attr("idpantalla_componente") +
-                        ";1&rand=" + Math.round(Math.random() * 100000),
-                    success: function(html) {
-                        if (html) {
-
-                            var objeto = jQuery.parseJSON(html);
-                            if (objeto.exito) {
-                                $("#list").append(objeto.codigo_html);
-                            }
-                        }
-                    }
-                });
-            }
-        };
-
-
         //////////////////////////////////////////////// AQUI TERMINAN ALGUNOS LLAMADOS DE MODAL /////////////////////////////////////////////////////////////////
-
-
-        $(document).on('click', '.element > .close', function(e) {
-            let idFormato = $("#idformato").val();
-            e.stopPropagation();
-            hs.htmlExpand(null, {
-                src: "eliminar_pantalla_campo.php?idformato=" + idFormato + "&idpantalla_campos=" + $(this).attr(
-                    "idpantalla_campos"),
-                objectType: 'iframe',
-                outlineType: 'rounded-white',
-                wrapperClassName: 'highslide-wrapper drag-header',
-                preserveContent: false,
-                width: 400,
-                height: 200
-            });
-        });
-        $(document).on('click', '.element', function() {
-            console.log("1---");
-            var componente = $(this).attr("nombre");
-            var ulr_hs =
-                "<?php echo ($ruta_db_superior); ?>pantallas/generador/editar_componente_generico.php?idpantalla_componente=" +
-                $(this).attr("idpantalla_componente") + "&idpantalla_campos=" + $(this).attr(
-                    "idpantalla_campo");
-            if (componente == "archivo_xxx") {
-                ulr_hs = "<?php echo ($ruta_db_superior); ?>pantallas/generador/" + componente +
-                    "/editar_componente.php?idpantalla_componente=" + $(this).attr(
-                        "idpantalla_componente") + "&idpantalla_campos=" + $(this).attr("idpantalla_campo");
-            }
-            var opciones = {
-
-                src: ulr_hs,
-                objectType: 'iframe',
-                outlineType: 'rounded-white',
-                wrapperClassName: 'highslide-wrapper drag-header',
-                preserveContent: true,
-                width: 600,
-                height: 500
-            };
-            hs.graphicsDir = '<?php echo ($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
-            hs.htmlExpand(null, opciones);
-        });
-
-
-
-        $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
-            e.preventDefault();
-        });
-        $("#list").droppable({
-                accept: '.component',
-                hoverClass: 'content-hover',
-                drop: function(e, ui) {
-                    $("#list_one").hide();
-                    form_builder.addComponent(ui.draggable);
-                }
-            })
-            .sortable({
-                placeholder: "element-placeholder",
-                update: function(e, ui) {
-                    var orden = $("#list").sortable("toArray");
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
-                        data: "librerias=pantallas/generador/librerias_pantalla.php&funcion=ordenar_pantalla_campos&parametros=" +
-                            orden + "&rand=" + Math.round(Math.random() * 100000),
-                        success: function(html) {
-                            if (html) {}
-                        }
-                    });
-                }
-            })
-            .disableSelection();
-        //$("#configurar_pantalla_libreria").height(alto-$(".nav-tabs").height()-50);
-        $(".component").draggable({
-            helper: function(e) {
-                return $(this).clone().addClass('component-drag');
-            }
-        }).click(function(e) {
-            form_builder.addComponent($(this));
-            $("#list_one").hide();
-        });
-
-
-        /////////////////////////////////////////////////////////////////// ESTO NO FUNCIONA  ( tree3 / dhtmlXTreeObject)/////////////////////////////////////////
-
-        //tree3 = new dhtmlXTreeObject("treeboxbox_tree3", "100%", (alto - 65), 0);
-        //tree3.setImagePath("<?php echo ($ruta_db_superior); ?>imgs/");
-        //tree3.enableTreeImages(false);
-        //tree3.enableTextSigns(true);
-        //tree3.setOnLoadingStart(cargando_serie);
-        //tree3.setOnLoadingEnd(fin_cargando_serie);
-        //tree3.setOnClickHandler(cargar_editor);
-        //tree3.enableThreeStateCheckboxes(true);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /*function cargar_archivo(ruta_archivo){
-        	if(ruta_archivo!=''){
-        		$.ajax({
-              type:'POST',
-              url: '<?php echo ($ruta_db_superior); ?>pantallas/lib/convertir_archivo_a_texto.php',
-              data:'ruta='+ruta_archivo+"&accion=cargar",
-              success: function(html){
-                if(html){
-                	var objeto=jQuery.parseJSON(html);
-                  if(objeto.exito){
-                    var re = /(?:\.([^.]+))?$/;
-                    var extension=re.exec(ruta_archivo)[1];
-                    if(extension=='undefined'){
-                      extension='php';
-                    }
-                    else if(extension=="js"){
-                      extension="javascript";
-                    }
-                    editor.getSession().setMode("ace/mode/"+extension);
-                  	editor.setValue(objeto.codigo_html);
-                  	$("#acciones_archivo-tab").show();
-                  	$("#ruta_archivo_actual").val(ruta_archivo);
-                  	notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
-
-                  }
-              	}
-              }
-          	});
-          }
-        } */
 
 
         function cargar_editor(nodeId) {
@@ -1841,17 +1711,5 @@ for ($i = 0; $i < $cant_js; $i++) {
             selector.css('background', '#ccc');
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    }); //Fin Document ready
-    /*
-    function generar_archivos_ignorados(){
-      $.ajax({
-        type:'POST',
-        url: '<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php',
-        data:'ejecutar_libreria_pantalla=generar_archivos_ignorados&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)
-    	});
-    }*/
+    });
 </script>

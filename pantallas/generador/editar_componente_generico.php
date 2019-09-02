@@ -22,6 +22,8 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $idpantalla_campos = $_REQUEST["idpantalla_campos"];
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
 
+
+
     $valores["fs_nombre"] = $pantalla_campos[0]["nombre"];
     $valores["fs_etiqueta"] = html_entity_decode($pantalla_campos[0]["etiqueta"]);
 
@@ -45,6 +47,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
     //V1. $opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
     //V2. $opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
     $opciones_propias = json_decode(html_entity_decode($pantalla_campos[0]["opciones_propias"]), true);
+
     if (json_last_error() === JSON_ERROR_NONE) {
         $val_default = array();
         if (isset($opciones_propias["data"]) && is_array($valores)) {
@@ -60,6 +63,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
     }
 
     $config_campo = obtener_valores_campo($idpantalla_campos, $opciones_propias);
+
     if (!empty($config_campo)) {
         $opciones_propias["data"] = $config_campo;
     }
@@ -225,12 +229,14 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             $('#btnGuardar').css('display', 'none');
             $('#btnGuardar').css('visibility', 'hidden');
 
-            $(".btn-complete").click(function() {
+            $("#btn_success").click(function() {
 
 
                 $("#btnGuardar").trigger("click");
 
             });
+
+            console.log(opciones_form);
 
             $('#editar_pantalla_campo').alpaca(opciones_form);
 
@@ -293,7 +299,10 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
     $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
 
     if ($campo_formato["numcampos"]) {
+
+
         $opciones = json_decode(html_entity_decode($campo_formato[0]["opciones"]), true);
+
         //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
         if (json_last_error() === JSON_ERROR_NONE && !empty($opciones)) {
             $resp["fs_opciones"] = $opciones;
@@ -305,6 +314,8 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
         }
 
         $resp["fs_ayuda"] = html_entity_decode($campo_formato[0]["ayuda"]);
+
+
 
         if ($campo_formato[0]["obligatoriedad"]) {
             $resp["fs_obligatoriedad"] = true;
@@ -336,6 +347,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
         $resp = array_merge_recursive_distinct($resp, $opciones_defecto["data"]);
     }
 
+
     return $resp;
 }
 
@@ -351,6 +363,4 @@ function array_merge_recursive_distinct(array &$array1, array &$array2)
     }
     return $merged;
 }
-
-
 ?>

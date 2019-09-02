@@ -21,8 +21,6 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
     $dato = busca_filtro_tabla("", "pantalla_componente", "idpantalla_componente=" . $idpantalla_componente, "", $conn);
 
     if ($dato["numcampos"]) {
-        $archivos = array();
-        $funciones = array();
         $sql_campos = array();
         $sql_valores = array();
         $default_campo = json_decode($dato[0]["opciones"], true);
@@ -30,7 +28,6 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
         if ($consultaCampos['numcampos']) {
             $default_campo['orden'] = $consultaCampos[0]['orden'] + 1;
         }
-
 
         if (isset($default_campo["valor"]) && is_array($default_campo["valor"])) {
             $default_campo["valor"] = json_encode($default_campo["valor"]);
@@ -53,7 +50,6 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
             array_push($sql_valores, $idpantalla);
         }
         if (count($sql_campos) && count($sql_valores)) {
-
 
             $sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
             $retorno["sql"] = $sql2;
