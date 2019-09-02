@@ -283,7 +283,46 @@ var DragDrop = {
                 "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
             );
             DragDrop.makeItemDragable(nuevo);
-            actual.setAttribute('class', 'agregado');
+            obtenerComponente(
+                actual,
+                actual.getAttribute('idpantalla_componente'),
+                actual.getAttribute('idFormato')
+            );
+        }
+
+        function obtenerComponente(
+            componente,
+            idpantalla_componente,
+            idFormato
+        ) {
+            $.ajax({
+                url: 'acciones_componentes/obtenerComponente.php',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    idpantalla_componente: idpantalla_componente,
+                    idFormato: idFormato,
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key')
+                },
+                success: function(respuesta) {
+                    if (respuesta.success == 1) {
+                        componente.setAttribute(
+                            'idpantalla_campo',
+                            respuesta.data
+                        );
+                        componente.setAttribute('class', 'agregado');
+                        actualizarOrdenComponente();
+                        console.log(respuesta.message);
+                    } else {
+                        componente.parentNode.removeChild(componente);
+                    }
+                }
+            });
+
+            if (componente.hasAttribute('idpantalla_campo')) {
+                retorno = 1;
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -431,7 +470,7 @@ $(document).ready(function() {
 
     //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
 
-    $('.agregado').click(function() {
+    $('#contenedorComponentes').on('click', 'li', function() {
         var directoryPath = window.location.href.substring(
             0,
             window.location.href.lastIndexOf('/') + 1
@@ -476,7 +515,9 @@ $(document).ready(function() {
 
     //////////////////////////////////////////////////////////////////  Eliminar componente //////////////////////////////////////////////////////////
 
-    $('.agregado .eliminar').click(function(event) {
+    $('#contenedorComponentes').on('click', '.agregado .eliminar', function(
+        event
+    ) {
         //event.preventDefault();
         event.stopPropagation();
 

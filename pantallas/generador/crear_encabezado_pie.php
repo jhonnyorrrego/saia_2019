@@ -20,8 +20,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 //echo librerias_notificaciones(); 
 //echo librerias_highslide();
 
-//echo bootstrap();
-//echo validate();
+
 //echo notificacion();
 ?>
 
@@ -30,6 +29,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 <head>
 	<meta charset="utf-8" />
+	<?= validate() ?>
 </head>
 
 <body>
@@ -65,10 +65,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 						<div class="" id="pantalla_mostrar-tab">
 							<br>
 							<form name="formulario_encabezado" id="formulario_encabezado" action="">
-								<div id="div_etiqueta_encabezado">
-									<label for="etiqueta_encabezado">Etiqueta encabezado:
-										<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado">
-									</label>
+								<div id="div_etiqueta_encabezado" class="form-group">
+									<label for="etiqueta_encabezado">Etiqueta encabezado<br>
+
+									</label><input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" class="form-control">
 								</div>
 								<textarea name="editor_encabezado_pie" id="editor_encabezado_pie"></textarea>
 								<script>
@@ -87,7 +87,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<script>
 		$(function() {
 			CKEDITOR.instances.editor_encabezado_pie.setData(<?php echo $contenidoDefecto ?>);
-			$(document).off("click", ".btn-complete").on("click", ".btn-complete", function(e) {
+			$(document).off("click", "#btn_success").on("click", "#btn_success", function(e) {
 				var formulario_encabezado = $("#formulario_encabezado");
 				formulario_encabezado.validate({
 					ignore: [],
