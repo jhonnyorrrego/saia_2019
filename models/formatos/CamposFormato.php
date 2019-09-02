@@ -37,7 +37,6 @@ class CamposFormato extends Model
     {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
-            'idcampos_formato',
             'formato_idformato',
             'autoguardado',
             'fila_visible',
