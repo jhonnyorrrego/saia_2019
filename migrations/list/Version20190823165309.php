@@ -34,7 +34,6 @@ final class Version20190823165309 extends AbstractMigration
                 'length' => 45,
                 'notnull' => true
             ]);
-            //$table->setPrimaryKey(['iddependencia_serie']);
         }
 
         if (!$schema->hasTable("dependencia_cargo_log")) {

@@ -28,7 +28,7 @@ $(function () {
                         $.ajax({
                             type:"POST",
                             dataType: "json",
-                            url: baseUrl + "distribucion/ejecutar_acciones_distribucion.php",
+                            url: baseUrl + "app/distribucion/ejecutar_acciones_distribucion.php",
                             data: {
                                 iddistribucion: iddistribucion,
                                 ejecutar_accion: "finalizar_distribucion",

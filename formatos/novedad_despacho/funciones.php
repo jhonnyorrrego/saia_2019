@@ -15,7 +15,7 @@ include_once($ruta_db_superior . "db.php");
 function cargar_items_radicacion($idformato, $iddoc) {
     global $conn, $ruta_db_superior;
 
-    include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+    include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
     $padre = busca_filtro_tabla("idft_despacho_ingresados", "ft_despacho_ingresados", "documento_iddocumento=" . $_REQUEST['anterior'], "", $conn);
 

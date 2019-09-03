@@ -9,11 +9,8 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once($ruta_db_superior . "core/autoload.php");
-include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior . "pantallas/documento/librerias_tramitados.php");
 
-echo (librerias_notificaciones());
-echo (librerias_jquery("1.7"));
 //------------------------------Adicionar------------------------------------//
 function campos_ocultos_entrega($idformato, $iddoc)
 {
@@ -66,15 +63,16 @@ function campos_ocultos_entrega($idformato, $iddoc)
 function mensajero_entrega_interna($idformato, $iddoc)
 {
 	global $conn;
-	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-	if ($documentos2[0]['tipo_mensajero'] == 'e') {
-		$empresa_transportadora = busca_filtro_tabla("nombre", "cf_empresa_trans", "idcf_empresa_trans=" . $documentos2[0]['mensajero'], "", $conn);
+	$mensajero = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+	
+	if ($mensajero[0]['tipo_mensajero'] == 'e') {
+		$empresa_transportadora = busca_filtro_tabla("nombre", "cf_empresa_trans", "idcf_empresa_trans=" . $mensajero[0]['mensajero'], "", $conn);
 		$cadena_nombre = $empresa_transportadora[0]['nombre'];
 	} else {
-		$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
+		$funcionario = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $mensajero[0]['mensajero'], "", $conn);
 		$cadena_nombre = $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'];
 	}
-	return (ucwords(strtolower($cadena_nombre)));
+	echo (ucwords(strtolower($cadena_nombre)));
 }
 
 function ruta_entrega_interna($idformato, $iddoc)
@@ -116,6 +114,7 @@ function generar_pdf_entrega($idformato, $iddoc)
 	global $conn, $ruta_db_superior;
 	$seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie,ventanilla", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$iddestino_radicacion = explode(",", $seleccionado[0]['iddestino_radicacion']);
+
 	$cont = count($iddestino_radicacion);
 	for ($i = 0; $i < $cont; $i++) {
 		$insert = "INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $seleccionado[0]['idft_despacho_ingresados'] . "'," . $seleccionado[0]['serie_idserie'] . ")";
@@ -137,7 +136,7 @@ function reporte_entradas2($idformato, $iddoc)
 {
 	global $conn, $registros, $ruta_db_superior;
 
-	include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+	include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
 	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
 	$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
