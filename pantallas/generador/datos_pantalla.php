@@ -13,11 +13,6 @@ while ($max_salida > 0) {
 echo select2();
 echo librerias_UI("1.12");
 
-$params = json_encode([
-    'baseUrl' => $ruta_db_superior,
-    'formatId' => $_REQUEST['idformato'] ?? 0
-]);
-
 if ($_REQUEST['idformato']) {
     $formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST['idformato'], "", $conn);
     $formato = procesar_cadena_json($formato, array("cuerpo", "ayuda", "etiqueta"));
@@ -399,9 +394,9 @@ function procesar_cadena_json($resultado, $lista_valores)
         <input type="hidden" name="pertenece_nucleo" value="0">
         <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
     </form>
-    <script type="text/javascript" data-params='<?= $params ?>' id="script_datos_pantalla">
+    <script type="text/javascript">
         $("document").ready(function() {
-            let params = $('#script_datos_pantalla').data('params');
+            let params = $('#script_generador_pantalla').data('params');
 
             $("#serie_idserie").select2();
             $("#tipo_registro").select2();
@@ -455,7 +450,10 @@ function procesar_cadena_json($resultado, $lista_valores)
                                         type: 'success',
                                         message: response.message
                                     });
-                                    window.location.href = window.location.pathname + "?idformato=" + response.data.formatId;
+
+                                    if (!params.formatId) {
+                                        window.location.href = window.location.pathname + "?idformato=" + response.data.formatId;
+                                    }
                                 } else {
                                     top.notification({
                                         type: 'error',

@@ -24,11 +24,10 @@ try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     if (!$_REQUEST["componente"]) {
-        throw new Exception('Error, No existe el componente', 1);
+        throw new Exception('Debe indicar el campo', 1);
     }
 
-    $componente = $_REQUEST["componente"];
-    $camposFormato = new CamposFormato($componente);
+    $camposFormato = new CamposFormato($_REQUEST["componente"]);
     $camposFormato->delete();
 
     $Response->success = 1;

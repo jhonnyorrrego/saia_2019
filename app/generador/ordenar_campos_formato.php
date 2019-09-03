@@ -24,7 +24,7 @@ try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     if (!$_REQUEST['ordenComponentes']) {
-        throw new Exception('Error, No existe el id del componente', 1);
+        throw new Exception('Debe indicar el orden de los componentes', 1);
     }
 
     foreach ($_REQUEST["ordenComponentes"] as $key => $idcamposFormatos) {
