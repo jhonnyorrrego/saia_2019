@@ -354,7 +354,7 @@ abstract class Model
      * @param Object $QueryBuilder
      * @return void
      */
-    public static function findByQueryBuilder($QueryBuilder)
+    public static function findByQueryBuilder(Doctrine\DBAL\Query\QueryBuilder $QueryBuilder)
     {
         $data = $QueryBuilder->execute()->fetchAll();
         $className = get_called_class();
@@ -704,13 +704,13 @@ abstract class Model
     }
 
     /**
-     * retorna una instancia de queryBuilder
+     * retorna una instancia de QueryBuilder
      *
-     * @return object
+     * @return QueryBuilder
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-30
      */
-    public static function getQueryBuilder()
+    public static function getQueryBuilder(): Doctrine\DBAL\Query\QueryBuilder
     {
         return Connection::getInstance()->createQueryBuilder();
     }

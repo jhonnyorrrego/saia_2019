@@ -33,10 +33,26 @@ class TRDLoadController
             ->saveSerie();
     }
 
+
+    public function trun($table)
+    {
+        $connection = Connection::getInstance();
+        $dbPlatform = $connection->getDatabasePlatform();
+        $q = $dbPlatform->getTruncateTableSql($table);
+        $connection->executeUpdate($q);
+    }
+
+
     protected function truncateTables()
     {
-        $trun1 = StaticSql::query("TRUNCATE TABLE serie_temp");
-        $trun2 = StaticSql::query("TRUNCATE TABLE dependencia_serie_temp");
+        $trun1 = $this->trun('serie_temp');
+        $trun2 = $this->trun('dependencia_serie_temp');
+
+        echo '<pre>';
+        var_dump($trun1, $trun2);
+        echo '</pre>';
+        die('--');
+
         if ($trun1 !== true && $trun2 !== true) {
             $this->errorException("No se pudieron limpiar las tablas temporales");
         }
