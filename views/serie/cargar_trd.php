@@ -21,7 +21,7 @@ $params = json_encode([
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, iversionial-scale=1, shrink-to-fit=no">
-    <title>Funcionario</title>
+    <title>Cargar TRD</title>
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
@@ -41,7 +41,7 @@ $params = json_encode([
                     </div>
                     <div class="form-group form-group-default required">
                         <label>Numero Versión:</label>
-                        <input name="version" type="text" class="form-control">
+                        <input name="version" id="version" type="text" class="form-control">
                     </div>
                     <div class="form-group form-group-default">
                         <label>Descripción:</label>

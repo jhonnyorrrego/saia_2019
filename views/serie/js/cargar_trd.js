@@ -1,10 +1,11 @@
-$(function() {
+$(function () {
     let params = $('#loadTrd_script').data('params');
     let baseUrl = params.baseUrl;
     $('#loadTrd_script').removeAttr('data-params');
 
     (function init() {
         createFileInput();
+        getVersion();
     })();
 
     function createFileInput() {
@@ -32,8 +33,8 @@ $(function() {
                 dir: directorio
             },
             paramName: 'file',
-            init: function() {
-                this.on('success', function(file, response) {
+            init: function () {
+                this.on('success', function (file, response) {
                     response = JSON.parse(response);
                     if (response.success) {
                         $('[name="' + selector + '"]').val(response.data[0]);
@@ -45,7 +46,7 @@ $(function() {
                     }
                 });
 
-                this.on('maxfilesexceeded', function(file, response) {
+                this.on('maxfilesexceeded', function (file, response) {
                     top.notification({
                         type: 'error',
                         message: 'Máximo ' + this.options.maxFiles + ' archivo'
@@ -53,7 +54,7 @@ $(function() {
                     this.removeAllFiles();
                 });
             },
-            removedfile: function(file) {
+            removedfile: function (file) {
                 file.previewElement.remove();
                 $('[name="' + selector + '"]').val('');
             }
@@ -62,7 +63,33 @@ $(function() {
         return myDropzone;
     }
 
-    $("[name='tipo']").change(function() {
+    function getVersion() {
+        $.ajax({
+            type: 'POST',
+            url: `${params.baseUrl}app/serie/obtener_version.php`,
+            data: {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    if (response.data.version) {
+                        $("#version").val(response.data.version).attr("readonly", true);
+                    } else {
+                        $("#version").val(1);
+                    }
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'error'
+                    });
+                }
+            }
+        });
+    }
+
+    $("[name='tipo']").change(function () {
         $("[name='file_trd']").rules('add', { required: $(this).val() == 1 });
 
         if ($(this).val() == 1) {
@@ -88,7 +115,7 @@ $('#loadTRDForm').validate({
             required: true
         }
     },
-    submitHandler: function() {
+    submitHandler: function () {
         let params = $('#loadTrd_script').data('params');
         let data = $('#loadTRDForm').serialize();
         data =
@@ -104,12 +131,12 @@ $('#loadTRDForm').validate({
             size: 'modal-lg',
             buttons: {},
             title: 'Cargando .....',
-            beforeShow: function() {
+            beforeShow: function () {
                 $('#modal_title', parent.document)
                     .next()
                     .hide();
             },
-            afterHide: function() {
+            afterHide: function () {
                 $('#modal_title', parent.document)
                     .next()
                     .show();
@@ -121,10 +148,10 @@ $('#loadTRDForm').validate({
             url: `${params.baseUrl}app/serie/nueva_trd.php`,
             data,
             dataType: 'json',
-            beforeSend: function() {
+            beforeSend: function () {
                 top.topModal(optionsDefaults);
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     top.closeTopModal();
 

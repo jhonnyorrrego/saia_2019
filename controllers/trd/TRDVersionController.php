@@ -34,6 +34,10 @@ class TRDVersionController
         $this->findDependencies();
 
         foreach ($this->dependencies as $Dependencia) {
+            echo '<pre>';
+            var_dump($Dependencia);
+            echo '</pre>';
+            die('--');
             $this->findSeries($Dependencia->getPK());
 
             foreach ($this->series as $Serie) {
@@ -94,9 +98,9 @@ class TRDVersionController
      */
     public function findSeries($dependencieId)
     {
-        $sql = <<<SQL
-            SELECT
-                a.idserie,
+        $sql = Model::getQueryBuilder()
+            ->select(
+                'a.idserie,
                 a.nombre,
                 a.codigo,
                 a.retencion_gestion,
@@ -105,18 +109,15 @@ class TRDVersionController
                 a.dis_eliminacion,
                 a.dis_conservacion,
                 a.dis_seleccion,
-                a.dis_microfilma
-            FROM 
-                serie a
-                JOIN dependencia_serie b
-                    ON b.fk_serie = a.idserie
-            WHERE
-                b.estado = 1 AND
-                b.fk_dependencia = {$dependencieId} AND
-                a.tipo = 1 AND 
-                a.estado = 1 AND
-                a.fk_serie_version={$this->idSerieVersion}
-SQL;
+                a.dis_microfilma'
+            )
+            ->from('busqueda', 'a')
+            ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
+            ->where('b.estado = 1 AND a.tipo = 1 AND a.estado = 1')
+            ->andWhere('b.fk_dependencia = :iddependencia')
+            ->andWhere('a.fk_serie_version = :idserie_version')
+            ->setParameter(':iddependencia', $dependencieId, 'integer')
+            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
 
         $this->series = Serie::findByQueryBuilder($sql);
     }
@@ -132,9 +133,10 @@ SQL;
      */
     public function findSubSeries($dependencieId, $serieId)
     {
-        $sql = <<<SQL
-            SELECT
-                a.idserie,
+
+        $sql = Model::getQueryBuilder()
+            ->select(
+                'a.idserie,
                 a.nombre,
                 a.codigo,
                 a.retencion_gestion,
@@ -143,19 +145,17 @@ SQL;
                 a.dis_eliminacion,
                 a.dis_conservacion,
                 a.dis_seleccion,
-                a.dis_microfilma
-            FROM 
-                serie a
-                JOIN dependencia_serie b
-                    ON b.fk_serie = a.idserie
-            WHERE
-                b.estado = 1 AND
-                b.fk_dependencia = {$dependencieId} AND
-                a.tipo = 2 AND 
-                a.estado = 1 AND
-                a.cod_padre = {$serieId} AND
-                a.fk_serie_version={$this->idSerieVersion}
-SQL;
+                a.dis_microfilma'
+            )
+            ->from('serie', 'a')
+            ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
+            ->where('b.estado = 1 AND a.tipo = 2 AND a.estado = 1 AND')
+            ->andWhere('b.fk_dependencia =:iddependencia')
+            ->andWhere('a.cod_padre =:idserie')
+            ->andWhere('a.fk_serie_version=:idserie_version')
+            ->setParameter(':iddependencia', $dependencieId, 'integer')
+            ->setParameter(':idserie', $serieId, 'integer')
+            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
 
         $this->subSeries = Serie::findByQueryBuilder($sql);
     }
@@ -170,20 +170,20 @@ SQL;
      */
     public function findDocumentaryTypes($serieId)
     {
-        $sql = <<<SQL
-        SELECT
-            a.idserie,
-            a.nombre,
-            a.sop_papel,
-            a.sop_electronico
-        FROM 
-            serie a
-        WHERE
-            a.tipo = 3 AND 
-            a.estado = 1 AND
-            a.cod_padre = {$serieId} AND
-            a.fk_serie_version={$this->idSerieVersion}
-SQL;
+        $sql = Model::getQueryBuilder()
+            ->select(
+                'a.idserie,
+                a.nombre,
+                a.sop_papel,
+                a.sop_electronico'
+            )
+            ->from('serie', 'a')
+            ->where('a.tipo = 3 AND a.estado = 1')
+            ->andWhere('a.cod_padre =:idserie')
+            ->andWhere('a.fk_serie_version=:idserie_version')
+            ->setParameter(':idserie', $serieId, 'integer')
+            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
+
         $this->documentaryTypes = Serie::findByQueryBuilder($sql);
     }
 
