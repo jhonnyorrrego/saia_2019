@@ -56,7 +56,6 @@ if ($_REQUEST['idformato']) {
     $extensionesCategoria = array("filter" => array());
     $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 } else {
-
     $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
     $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
     $extensiones = array("filter" => array());
@@ -69,7 +68,6 @@ if ($_REQUEST['idformato']) {
 }
 
 $tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)", $conn);
-
 
 /**
  * Esta funcion puede servir para
@@ -381,13 +379,25 @@ function procesar_cadena_json($resultado, $lista_valores)
         <div class="mx-4 my-3 pt-2">
             <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>" />
             <br>
-            <?= consultarPermisosPerfil($consulta_formato[0]['nombre']); ?>
+            <?php
+            $nombreFormato = $consulta_formato[0]['nombre'];
+            $profiles = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC", $conn);
+
+            if ($profiles['numcampos']) {
+                echo '<div>';
+                for ($i = 0; $i < $profiles['numcampos']; $i++) {
+                    echo "<label class='input-group' style='display:inline-block;width:200px;'>
+                        <input class='permisos' type='checkbox' id='{$profiles[$i]["idperfil"]}' name='permisosPerfil[]' value='{$profiles[$i]["idperfil"]}' > {$profiles[$i]["nombre"]}
+                    </label>";
+                }
+                echo '</div>';
+            }
+            ?>
         </div>
 
         <input type="hidden" name="exportar" value="mpdf">
         <input type="hidden" name="pertenece_nucleo" value="0">
         <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
-
     </form>
     <script type="text/javascript" data-params='<?= $params ?>' id="script_datos_pantalla">
         $("document").ready(function() {
@@ -406,10 +416,11 @@ function procesar_cadena_json($resultado, $lista_valores)
             $('[data-toggle="tooltip"]').tooltip();
 
             $("#etiqueta_formato").change(function() {
-                var valor = $(this).val();
-                if (valor) {
-                    var nombre = normalizar(valor);
-                    $("#nombre_formato").val(nombre);
+                if (!params.formatId) {
+                    if ($(this).val()) {
+                        var nombre = normalizar($(this).val());
+                        $("#nombre_formato").val(nombre);
+                    }
                 }
             });
             var descripcion_formato = "<?php echo $descripcionFormato; ?>";
@@ -438,22 +449,26 @@ function procesar_cadena_json($resultado, $lista_valores)
                             dataType: 'json',
                             url: `${params.baseUrl}app/generador/guardar_formato.php`,
                             data: data,
-                            success: function(objeto) {
-                                if (objeto.exito && objeto.editar != 1) {
-                                    notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
-                                    window.location.href = window.location.pathname + "?idformato=" + objeto.idformato;
-                                } else if (objeto.exito && objeto.editar == 1) {
-                                    $("#pantalla_principal").next().find("a").trigger("click");
-                                    notificacion_saia(objeto.mensaje, 'success', 'topCenter', 3000);
-
+                            success: function(response) {
+                                if (response.success) {
+                                    top.notification({
+                                        type: 'success',
+                                        message: response.message
+                                    });
+                                    window.location.href = window.location.pathname + "?idformato=" + response.data.formatId;
                                 } else {
-                                    notificacion_saia(objeto.error, 'error', 'topCenter', 3000);
-                                    $(this).removeAttr('disabled');
+                                    top.notification({
+                                        type: 'error',
+                                        message: response.message
+                                    });
                                 }
                             }
                         });
                     } else {
-                        notificacion_saia('Debe diligenciar los campos obligatorios', 'warning', 'topCenter', 3000);
+                        top.notification({
+                            type: 'warning',
+                            message: "Debe diligenciar los campos obligatorios"
+                        });
                         $(".error").first().focus();
                         return false;
                     }
@@ -578,24 +593,7 @@ function procesar_cadena_json($resultado, $lista_valores)
                 $("#mostrar_tipodoc_pdf").hide();
                 $("#texto_tipodoc").hide();
             }
-
-            /*if(datos) {
-            	$('[name="expediente_serie"]').val(datos);
-            } else {
-            	$('[name="expediente_serie"]').val("");
-            }
-            if(idexpediente_idserie.length > 1) {
-            	$('[name="expediente_serie"]').val(idexpediente_idserie[0]);
-            }
-            var seleccionados = tree_serie_idserie.getAllChecked();
-            var vector_seleccionados = seleccionados.split(',');
-            for ( i = 0; i < vector_seleccionados.length; i++) {
-            	if (vector_seleccionados[i] != nodeId) {
-            		tree_serie_idserie.setCheck(vector_seleccionados[i], 0);
-            	}
-            }*/
         }
-
 
         function parsear_items() {
             var nombre_formato = $("#nombre_formato").val();
@@ -605,8 +603,6 @@ function procesar_cadena_json($resultado, $lista_valores)
             $("#prefijo_formato").val("ft_");
         }
     </script>
-
-
     <?php
     function check_banderas($bandera, $chequear = true)
     {
