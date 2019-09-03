@@ -76,6 +76,7 @@ if ($_REQUEST["idformato"]) {
     <?= icons() ?>
     <?= fancyTree('filter') ?>
     <?= librerias_tooltips() ?>
+    <?= librerias_notificaciones() ?>
     <?= validate() ?>
     <?= notificacion() ?>
     <link href="<?php echo ($ruta_db_superior); ?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
@@ -316,28 +317,6 @@ if ($_REQUEST["idformato"]) {
                                         </script>
 
                                     </div>
-
-                                    <div class="tab-pane" id="pantalla_listar-tab">
-                                        <form name="formulario_editor_listar" id="formulario_editor_listar" action=""> <br />
-                                            <div id="tipo_listar">Por favor seleccione un tipo de visualizaci&oacute;n:
-                                                <select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
-                                                    <option value="0">Por favor seleccione</option>
-                                                    <?php
-                                                    $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
-                                                    for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
-                                                        echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
-                                                    }
-                                                    ?>
-                                                </select>
-                                                <?php if ($tipo_listado["numcampos"]) { ?>
-                                                    <div width="100%" id="frame_tipo_listado"></div>
-                                                <?php
-                                                }
-                                                ?>
-                                            </div>
-                                        </form>
-                                    </div>
-
                                     <div class="tab-pane" id="formulario-tab">
 
                                         <link href="css/lists.css" rel="stylesheet" />
@@ -540,7 +519,6 @@ for ($i = 0; $i < $cant_js; $i++) {
         $('#cambiar_nav_permiso').on('click', function() {
             $("#vista_formulario_permisos").removeClass("disabled");
             $("#vista_formulario_pantalla").next().find("a").trigger("click");
-
         });
 
         $('#cambiar_nav').on('click', function() {
