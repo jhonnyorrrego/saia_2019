@@ -10,6 +10,7 @@
         "mpdf/mpdf": "^7.1",
         "phpoffice/phpspreadsheet": "^1.6",
         "doctrine/migrations": "^2.1",
-        "doctrine/dbal": "^2.9"
+        "doctrine/dbal": "^2.9",
+        "luracast/restler": "^3.0"
     }
 }
