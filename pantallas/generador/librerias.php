@@ -358,60 +358,8 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $count, $ge
     $pantalla_campos = get_pantalla_campos($idpantalla_campos, 0);
 
     if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
-        /*$retorno["exito"] = 1;
-        $texto = $pantalla_campos[0]["componente"];
-        $regs = array();
-        preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $texto, $regs);
-        $cant_reg = count($regs[0]);
-        for ($i = 0; $i < $cant_reg; $i++) {
-            $nombre_campo = str_replace("*}", "", str_replace("{*", "", $regs[0][$i]));
-            if (isset($pantalla_campos[0][$nombre_campo])) {
-                if ($regs[0][$i] == '{*obligatoriedad*}') {
-                    if ($pantalla_campos[0][$nombre_campo]) {
-                        $texto = str_replace($regs[0][$i], " *", $texto);
-                    } else {
-                        $texto = str_replace($regs[0][$i], " ", $texto);
-                    }
-                } else {
-                    $texto = str_replace($regs[0][$i], $pantalla_campos[0][$nombre_campo], $texto);
-                }
-                unset($regs[0][$i]);
-            }
-        }
-        $ruta_componente = "pantallas/generador/" . $pantalla_campos[0]["nombre_componente"] . "/procesar_componente.php";
-        if ($accion != '' && $accion != 'retorno_campo') {
-
-            $texto = str_replace("{*clase_eliminar_pantalla_componente*}", "", $texto);
-            if (file_exists($ruta_db_superior . $ruta_componente)) {
-                foreach ($regs[0] as $key => $value) {
-                    $nombre_funcion = str_replace("*}", "", str_replace("{*", "", $value));
-                    $texto = str_replace($value, '<' . '?php  echo(' . $nombre_funcion . '(' . $idpantalla_campos . ',$' . $pantalla_campos[0]["pantalla"] . '->get_valor_' . $pantalla_campos[0]["pantalla"] . '("' . $campos_pantalla["nombre_tabla"] . '","' . $campos_pantalla["nombre"] . '"),"' . $accion . '",$' . $pantalla_campos[0]["pantalla"] . '->get_campo_' . $pantalla_campos[0]["pantalla"] . '("' . $campos_pantalla["nombre"] . '"))); ?' . '>' . "\n", $texto);
-                }
-            }
-        } else {
-            if ($accion == 'retorno_campo') {
-                $texto = str_replace("{*clase_eliminar_pantalla_componente*}", "", $texto);
-            }
-            if (file_exists($ruta_db_superior . $ruta_componente)) {
-                include_once($ruta_db_superior . $ruta_componente);
-            }
-            foreach ($regs[0] as $key => $value) {
-                $nombre_funcion = str_replace("*}", "", str_replace("{*", "", $value));
-                $proceso_componente = call_user_func_array($nombre_funcion, array(
-                    $idpantalla_campos,
-                    '',
-                    '',
-                    $pantalla_campos[0]
-                ));
-
-                $texto = str_replace($value, html_entity_decode(utf8_decode($proceso_componente)), $texto);
-            }
-        }
-        $retorno["codigo_html"] = $texto;/*/
-
-
         $pantalla_componente = busca_filtro_tabla("clase,nombre", "pantalla_componente", "idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}", "", $conn);
-        $retorno["codigo_html"] = "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> " . $pantalla_campos[0]["etiqueta"] . " <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
+        $retorno["codigo_html"] = "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i><div class='d-inline-block' id='c_" . $pantalla_campos[0]["idpantalla_campos"] . "'> " . $pantalla_campos[0]["etiqueta"] . "</div> <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
     }
     if ($tipo_retorno == 1) {
         echo json_encode($retorno);

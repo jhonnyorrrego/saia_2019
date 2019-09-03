@@ -280,7 +280,7 @@ var DragDrop = {
             nuevo.style.top = '0px';
             nuevo.style.left = '0px';
             $(actual).append(
-                "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
+                "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i><div class='d-inline-block'></div></div>"
             );
             DragDrop.makeItemDragable(nuevo);
             obtenerComponente(
@@ -312,6 +312,7 @@ var DragDrop = {
                             respuesta.data
                         );
                         componente.setAttribute('class', 'agregado');
+                        $('#c_').setAttribute('id', 'c_' + respuesta.data);
                         actualizarOrdenComponente();
                         console.log(respuesta.message);
                     } else {
@@ -451,6 +452,7 @@ $(document).ready(function() {
     ///////////////////////////////// Inicializar dragdrop //////////////////////////////////////
 
     var list = document.getElementById('contenedorComponentes');
+    var idpantalla_campo = 0;
     DragDrop.makeListContainer(list);
     list.onDragOver = function() {
         this.style['background'] = '#EEF';
@@ -482,6 +484,8 @@ $(document).ready(function() {
             '&idpantalla_campos=' +
             $(this).attr('idpantalla_campo');
 
+        idpantalla_campo = $(this).attr('idpantalla_campo');
+
         top.topModal({
             url: enlace,
             params: {
@@ -503,6 +507,7 @@ $(document).ready(function() {
             },
 
             onSuccess: function(data) {
+                top.closeTopModal();
                 successModalComponente(data);
             }
         });
@@ -510,7 +515,8 @@ $(document).ready(function() {
 
     /////////////////////////////////////////////////////////////// Al terminar de editar datos en la modal /////////////////////////////
     function successModalComponente(data) {
-        top.closeTopModal();
+        $('#c_' + idpantalla_campo).html(data.fs_etiqueta);
+        console.log(idpantalla_campo);
     }
 
     //////////////////////////////////////////////////////////////////  Eliminar componente //////////////////////////////////////////////////////////
