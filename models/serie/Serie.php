@@ -57,7 +57,6 @@ class Serie extends Model
         ];
     }
 
-
     public function beforeCreate()
     {
         if (!$this->fk_serie_version) {

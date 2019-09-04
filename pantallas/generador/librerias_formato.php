@@ -240,54 +240,6 @@ function vincular_funciones_formatos($libreria, $funcion)
     return ($retorno);
 }
 
-
-function adicionar_pantalla_campos_formato($idpantalla, $datos)
-{
-    $retorno = array();
-    $campo_serie = busca_filtro_tabla("", "campos_formato", "nombre='serie_idserie' AND formato_idformato=" . $idpantalla, "", $conn);
-    /*
-     * Se garantiza que la serie ya existe y que siempre llega un valor para serie_idserie en datos
-     */
-    if (!$campo_serie["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'serie_idserie','Tipo de documento','int','11',0,'../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1','a,e','Tipo de documento','" . $datos["serie_idserie"] . "','','hidden',0,1,'Tipo documental')";
-        phpmkr_query($sql2);
-        $retorno["serie_idserie"] = phpmkr_insert_id();
-        $retorno["serie_idserie_sql"] = $sql2;
-    }
-    $campo_documento = busca_filtro_tabla("", "campos_formato", "nombre='documento_iddocumento' AND formato_idformato=" . $idpantalla, "", $conn);
-    if (!$campo_documento["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato,  nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'documento_iddocumento','Documento asociado','int','11',0,'','a','Documento asociado','','','hidden',0,0,'Documento')";
-        phpmkr_query($sql2);
-        $retorno["documento"] = phpmkr_insert_id();
-        $retorno["documento_sql"] = $sql2;
-    }
-    $nombre_tabla = trim($datos["nombre_tabla"], "'");
-    $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre='idft_" . $nombre_tabla . "' AND formato_idformato=" . $idpantalla, "", $conn);
-    if (!$campo_formato["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'id" . $nombre_tabla . "','Identificador de formato','int','11',1,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id" . $nombre_tabla . "')";
-        phpmkr_query($sql2);
-        $retorno["idformato"] = phpmkr_insert_id();
-        $retorno["idformato_sql"] = $sql2;
-    }
-    return $retorno;
-}
-
-function eliminar_pantalla_campos_formato($idpantalla)
-{
-    $campo_serie = busca_filtro_tabla("", "pantalla_campos", "nombre='serie_idserie' AND pantalla_idpantalla=" . $idpantalla, "", $conn);
-    if ($idpantalla) {
-        if ($campo_serie["numcampos"]) {
-            $sql2 = "DELETE FROM pantalla_campos WHERE idpantalla=" . $idpantalla . " AND nombre='serie_idserie'";
-            phpmkr_query($sql2);
-        }
-        $campo_documento = busca_filtro_tabla("", "pantalla_campos", "nombre='documento_iddocumento' AND pantalla_idpantalla=" . $idpantalla, "", $conn);
-        if ($campo_documento["numcampos"]) {
-            $sql2 = "DELETE FROM pantalla_campos WHERE idpantalla=" . $idpantalla . " AND nombre='documento_iddocumento'";
-            phpmkr_query($sql2);
-        }
-    }
-}
-
 function actualizar_encabezado_pie($idformato, $tipo, $valor)
 {
     $retorno = array(

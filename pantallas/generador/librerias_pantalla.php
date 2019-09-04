@@ -2721,47 +2721,6 @@ function vincular_libreria_pantalla($datos, $tipo_retorno)
     echo (json_encode($retorno));
 }
 
-/**
- * crea el modulo de un formato
- *
- * @param integer $idformato
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019-04-29
- */
-function crear_modulo_formato($idformato)
-{
-    //formato al que se le genera el modulo
-    $Formato = new Formato($idformato);
-    //valido si el formato ya tiene un modulo
-    $exist = Modulo::countRecords([
-        'nombre' => 'crear_' . $Formato->nombre
-    ]);
-
-    if ($exist) {
-        Modulo::executeUpdate([
-            'etiqueta' => $Formato->etiqueta
-        ], [
-            'nombre' => 'crear_' . $Formato->nombre
-        ]);
-    } else {
-        $Modulo = Modulo::findByAttributes(['nombre' => 'modulo_formatos']);
-
-        $moduleId = Modulo::newRecord([
-            'nombre' => 'crear_' . $Formato->nombre,
-            'tipo' => 2,
-            'etiqueta' => $Formato->etiqueta,
-            'enlace' => 'formatos/' . $Formato->nombre . '/' . $Formato->ruta_adicionar,
-            'cod_padre' => $Modulo->getPK()
-        ]);
-
-        Permiso::newRecord([
-            'funcionario_idfuncionario' => SessionController::getValue('idfuncionario'),
-            'modulo_idmodulo' => $moduleId
-        ]);
-    }
-}
-
 function generar_archivos_ignorados($idpantalla, $tipo_retorno)
 {
     global $ruta_db_superior;
@@ -3020,28 +2979,6 @@ function validar_nombres($texto)
         $nuevo_texto = $texto;
     }
     return $nuevo_texto;
-}
-
-function consultarPermisosPerfil($nombreFormato)
-{
-    global $conn;
-    $permisos = '';
-    $consultaPermisos = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC", $conn);
-    if ($consultaPermisos['numcampos']) {
-        $permisos = '<div>';
-        for ($i = 0; $i < $consultaPermisos['numcampos']; $i++) {
-            $permisosPerfil = busca_filtro_tabla("b.perfil_idperfil", "modulo a, permiso_perfil b", "a.idmodulo=b.modulo_idmodulo and b.perfil_idperfil = " . $consultaPermisos[$i]["idperfil"] . " and a.nombre='crear_{$nombreFormato}' and a.enlace='formatos/{$nombreFormato}/adicionar_{$nombreFormato}.php'", "", $conn);
-            $checked = '';
-            if ($permisosPerfil["numcampos"]) {
-                $checked = "checked='checked'";
-            }
-            $permisos .= "<label class='input-group' style='display:inline-block;width:200px;'>
-                <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil[]' value='{$consultaPermisos[$i]["idperfil"]}' {$checked}> {$consultaPermisos[$i]["nombre"]}
-            </label>";
-        }
-        $permisos .= '</div>';
-    }
-    return $permisos;
 }
 
 function permisosFormato($idperfil, $nombreFormato)
