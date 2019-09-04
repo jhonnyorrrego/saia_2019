@@ -714,4 +714,22 @@ abstract class Model
     {
         return Connection::getInstance()->createQueryBuilder();
     }
+
+    /**
+     * Trunca la tabla
+     *
+     * @param string $table
+     * @return bool
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function truncateTable($table)
+    {
+        $connection = Connection::getInstance();
+
+        $sql = $connection->getDatabasePlatform()
+            ->getTruncateTableSql($table);
+
+        return $connection->executeUpdate($sql) !== false;
+    }
 }
