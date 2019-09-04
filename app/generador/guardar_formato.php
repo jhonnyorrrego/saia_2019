@@ -94,10 +94,6 @@ try {
     $Response->message = "EL formato se guardó con éxito";
     $Response->success = 1;
 } catch (Throwable $th) {
-    echo '<pre>';
-    var_dump($th);
-    echo '</pre>';
-    exit;
     $Response->message = $th->getMessage();
 }
 
