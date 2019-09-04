@@ -1,6 +1,6 @@
 <?php
 
-class Serie extends Model
+class Serie extends LogModel
 {
     protected $idserie;
     protected $cod_padre;
@@ -53,7 +53,8 @@ class Serie extends Model
                 'dis_microfilma',
                 'fk_serie_version',
                 'estado'
-            ]
+            ],
+            'primary' => 'idserie'
         ];
     }
 
@@ -74,15 +75,57 @@ class Serie extends Model
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    protected function afterCreate()
+    public function afterCreate()
+    {
+        return
+            parent::afterCreate() &&
+            $this->updateCodArbol();
+    }
+
+    /**
+     * Actualiza el cod_arbol despues de crear la serie
+     * Este metodo omite serie_log 
+     * 
+     * @return void
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    private function updateCodArbol()
     {
         $codArbol = $this->idserie;
-        $padre = $this->getCodPadre();
+        $padre = $this->getCodArbolPadre();
         if ($padre) {
-            $codArbol = $padre->cod_arbol . '.' . $this->idserie;
+            $codArbol = $padre . '.' . $this->idserie;
         }
         $this->cod_arbol = $codArbol;
-        return $this->update();
+
+        self::executeUpdate(['cod_arbol' => $codArbol], ['idserie' => $this->idserie]);
+    }
+
+    /**
+     * obtiene el cod_arbol de la serie padre
+     * util para no instanciar la serie padre,
+     * Si desea instancia la serie padre utilizar getCodPadre()
+     *
+     * @return mixed
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    private function getCodArbolPadre()
+    {
+        $data = $this->getQueryBuilder()
+            ->select('cod_arbol')
+            ->from('serie')
+            ->where('idserie=:idserie')
+            ->setParameter(':idserie', $this->idserie, 'integer')
+            ->execute()->fetch();
+        /*if ($this->idserie > 1) {
+            echo '<pre>';
+            var_dump($data);
+            echo '</pre>';
+            die('--');
+        }*/
+        return $data['cod_arbol'] ?? false;
     }
 
     /**
@@ -92,15 +135,16 @@ class Serie extends Model
      * @return int
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function createSerie(int $iddependencia)
+    public function createSerie(int $iddependencia = 0)
     {
         return $this->create();
-
-        // if ($iddependencia) { } else {
-        //     Es masivo desde clonar o cargar trd
-        // }
-        // return $newId;
     }
+
+
+
+
+
+
 
 
     /**
@@ -276,7 +320,7 @@ class Serie extends Model
         return $data;
     }
 
-    public function getInfoCodArbol(): array
+    /*public function getInfoCodArbol(): array
     {
         $response = [];
         $codArbol = str_replace('.', ',', $this->cod_arbol);
@@ -292,7 +336,7 @@ class Serie extends Model
             $response['etiqueta'] = implode(' - ', $etiq);
         }
         return $response;
-    }
+}*/
 
     /**
      * valida si tiene series hijas
@@ -302,7 +346,7 @@ class Serie extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function hasChild(int $estado = null, int $tipo = null): bool
+    /* public function hasChild(int $estado = null, int $tipo = null): bool
     {
         $parteWhere = '';
         if (!is_null($estado)) {
@@ -314,5 +358,5 @@ class Serie extends Model
         $sql = "SELECT count(idserie) as cant FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
         $hijos = $this->search($sql);
         return $hijos[0]['cant'] ? true : false;
-    }
+    }*/
 }

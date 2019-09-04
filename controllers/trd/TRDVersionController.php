@@ -34,10 +34,7 @@ class TRDVersionController
         $this->findDependencies();
 
         foreach ($this->dependencies as $Dependencia) {
-            echo '<pre>';
-            var_dump($Dependencia);
-            echo '</pre>';
-            die('--');
+
             $this->findSeries($Dependencia->getPK());
 
             foreach ($this->series as $Serie) {
@@ -80,11 +77,7 @@ class TRDVersionController
      */
     public function findDependencies()
     {
-        $this->dependencies = Dependencia::findAllByAttributes([], [
-            'codigo',
-            'sigla',
-            Dependencia::getPrimaryLabel()
-        ], 'codigo asc');
+        $this->dependencies = Dependencia::findAllByAttributes([], [], 'codigo asc');
     }
 
     /**
@@ -111,7 +104,7 @@ class TRDVersionController
                 a.dis_seleccion,
                 a.dis_microfilma'
             )
-            ->from('busqueda', 'a')
+            ->from('serie', 'a')
             ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
             ->where('b.estado = 1 AND a.tipo = 1 AND a.estado = 1')
             ->andWhere('b.fk_dependencia = :iddependencia')
