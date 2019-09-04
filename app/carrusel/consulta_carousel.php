@@ -1,52 +1,52 @@
 <?php
 $max_salida = 10;
-$ruta_db_superior = $ruta = "";
+$ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
+    if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
-    $ruta .= "../";
+    $ruta .= '../';
     $max_salida--;
 }
 
-require_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
-    'success' => 1,
+$Response = (object) [
+    'data' => [],
     'message' => '',
-    'data' => []
+    'success' => 0
 ];
 
-$today = date('Y-m-d');
-$firstDate = StaticSql::getDateFormat('fecha_inicio', 'Y-m-d');
-$lastDate = StaticSql::getDateFormat('fecha_fin', 'Y-m-d');
-$sql = <<<SQL
-    SELECT
-        imagen,
-        nombre,
-        contenido,
-        idcontenidos_carrusel as id
-    FROM
-        contenidos_carrusel
-    WHERE
-        '{$today}' <= {$lastDate} AND
-        '{$today}' >= $firstDate
-SQL;
-$news = StaticSql::search($sql);
+try {
+    $data = Model::getQueryBuilder()
+        ->select('imagen', 'nombre', 'contenido', 'idcontenidos_carrusel as id')
+        ->from('contenidos_carrusel')
+        ->where('fecha_inicio <= :today')
+        ->andWhere('fecha_fin >= :today')
+        ->setParameter(':today', new DateTime(), 'datetime')
+        ->execute()
+        ->fetchAll();
 
-if ($news) {
-    foreach ($news as $key => $row) {
-        $prefix = $row['id'] . '-' . 'carousel';
+    foreach ($data as $row) {
+        $image = TemporalController::createTemporalFile($row["imagen"], 'carrusel');
+
+        if (!$image->success) {
+            throw new Exception("Error al obtener la imagen", 1);
+        }
+
         $Response->data[] = [
-            'image' => TemporalController::createTemporalFile($row['imagen'], $prefix)->route,
-            'title' => $row['nombre'],
-            'content' => $row['contenido']
+            "image" => $image->route,
+            "title" => $row["nombre"],
+            "content" => $row["contenido"]
         ];
     }
-} else {
-    $Response->success = 0;
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

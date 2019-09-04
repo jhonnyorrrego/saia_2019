@@ -110,7 +110,7 @@ class DocumentoTarea extends Model
             order by 
                 a.fecha_inicial asc
 SQL;
-        return Tarea::findBySql($sql);
+        return Tarea::findByQueryBuilder($sql);
     }
 
     /**
@@ -124,23 +124,18 @@ SQL;
      */
     public static function getLastStateByTask($documentId)
     {
-        $state = TareaEstado::CANCELADA;
-        $sql = <<<SQL
-        SELECT 
-            tarea.fecha_inicial,tarea_estado.valor
-        FROM
-            documento_tarea
-            JOIN tarea ON 
-                documento_tarea.fk_tarea = tarea.idtarea
-            JOIN tarea_estado ON
-                tarea.idtarea = tarea_estado.fk_tarea
-        WHERE
-            tarea.estado = 1 AND
-            tarea_estado.estado = 1 AND
-            tarea_estado.valor <> {$state} AND
-            documento_tarea.fk_documento = {$documentId}
-SQL;
-        $data = StaticSql::search($sql);
+        $data = Model::getQueryBuilder()
+            ->select('t.fecha_inicial', 'te.valor')
+            ->from('documento_tarea', 'dt')
+            ->innerJoin('dt', 'tarea', 't', 'dt.fk_tarea = t.idtarea')
+            ->innerJoin('t', 'tarea_estado', 'te', 't.idtarea = te.fk_tarea')
+            ->where('t.estado = 1')
+            ->andWhere('te.estado = 1')
+            ->andWhere('te.valor <> :state')
+            ->andWhere('dt.fk_documento = :documentId')
+            ->setParameter(':state', TareaEstado::CANCELADA, 'integer')
+            ->setParameter(':documentId', $documentId, 'integer')
+            ->execute()->fetchAll();
 
         if ($data) {
             $response = $data[0];

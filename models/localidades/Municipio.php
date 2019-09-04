@@ -71,6 +71,6 @@ class Municipio extends Model
         ORDER BY nombre ASC
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

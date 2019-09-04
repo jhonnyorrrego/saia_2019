@@ -13,9 +13,13 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 
-$params = (!empty($_REQUEST)) ? $_REQUEST : [];
-$sql = "select a.cantidad_registros,a.ruta_libreria_pantalla,b.encabezado_componente from busqueda a,busqueda_componente b where a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente={$_REQUEST['idbusqueda_componente']}";
-$component = StaticSql::search($sql);
+$component = Model::getQueryBuilder()
+    ->select('a.cantidad_registros', 'a.ruta_libreria_pantalla', 'b.encabezado_componente')
+    ->from('busqueda', 'a')
+    ->innerJoin('a', 'busqueda_componente', 'b', 'a.idbusqueda = b.busqueda_idbusqueda')
+    ->where('b.idbusqueda_componente= :component')
+    ->setParameter(':component', $_REQUEST['idbusqueda_componente'], 'integer')
+    ->execute()->fetch();
 ?>
 <?= bootstrapTable() ?>
 <div class="container px-0">
@@ -27,8 +31,8 @@ $component = StaticSql::search($sql);
 <script>
     $(function() {
         var baseUrl = $("script[data-baseurl]").data('baseurl');
-        var params = <?= json_encode($params); ?>;
-        var encabezado = '<?= $component[0]["encabezado_componente"] ?>';
+        var params = <?= json_encode($_REQUEST); ?>;
+        var encabezado = '<?= $component["encabezado_componente"] ?>';
         var table = $('#table');
         var sessionVars = {
             key: localStorage.getItem('key'),
@@ -46,7 +50,7 @@ $component = StaticSql::search($sql);
             cardView: true,
             pagination: true,
             maintainSelected: true,
-            pageSize: '<?= $component[0]['cantidad_registros'] ?>',
+            pageSize: '<?= $component['cantidad_registros'] ?>',
             paginationSuccessivelySize: 1,
             paginationPagesBySide: 1,
             columns: [{
@@ -140,8 +144,8 @@ $component = StaticSql::search($sql);
     });
 </script>
 <?php
-if ($component[0]['ruta_libreria_pantalla']) {
-    $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
+if ($component['ruta_libreria_pantalla']) {
+    $libraries = explode(',', $component['ruta_libreria_pantalla']);
 
     foreach ($libraries as $library) {
         include_once $ruta_db_superior . $library;

@@ -87,6 +87,6 @@ class Funcion extends LogModel
             WHERE
                 nombre like '%{$term}%'
 SQL;
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

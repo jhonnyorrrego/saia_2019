@@ -37,10 +37,10 @@ $contenidoDefecto = json_encode('<div class="row">
 					<div class="" id="pantalla_mostrar-tab">
 						<br>
 						<form name="formulario_encabezado" id="formulario_encabezado" action="">
-							<div id="div_etiqueta_encabezado">
-								<label for="etiqueta_encabezado">Etiqueta del pie de p&aacute;gina:
-									<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado">
-								</label>
+							<div id="div_etiqueta_encabezado" class="form-group">
+								<label for="etiqueta_encabezado">Etiqueta
+								</label> <br><input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" class="form-control">
+
 							</div>
 							<textarea name="editor_pie" id="editor_pie"></textarea>
 							<script>
@@ -59,7 +59,7 @@ $contenidoDefecto = json_encode('<div class="row">
 <script>
 	$(function() {
 		CKEDITOR.instances.editor_pie.setData(<?php echo $contenidoDefecto ?>);
-		$(document).off("click", ".btn-complete").on("click", ".btn-complete", function(e) {
+		$(document).off("click", "#btn_success").on("click", "#btn_success", function(e) {
 			var formulario_encabezado = $("#formulario_encabezado");
 			formulario_encabezado.validate({
 				ignore: [],

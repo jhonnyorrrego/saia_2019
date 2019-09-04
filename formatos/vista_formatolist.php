@@ -10,7 +10,6 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 include("phpmkrfn.php");
-session_start();
 ob_start();
 
 // Initialize common variables
@@ -165,7 +164,7 @@ SetUpStartRec(); // Set Up Start Record Position
 <?php
 if (@$_SESSION["ewmsg"] <> "") {
 	?>
-<p><span class="phpmaker" style="color: Red;"><?php echo $_SESSION["ewmsg"]; ?></span></p>
+	<p><span class="phpmaker" style="color: Red;"><?php echo $_SESSION["ewmsg"]; ?></span></p>
 <?php
 	$_SESSION["ewmsg"] = ""; // Clear message
 }
@@ -173,35 +172,35 @@ if (@$_SESSION["ewmsg"] <> "") {
 <form method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<?php if ($nTotalRecs > 0) { ?>
-		<!-- Table header -->
-		<tr class="encabezado_list">
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("idvista_formato"); ?>" style="color: #FFFFFF;">idvista_formato<?php if (@$_SESSION["vista_formato_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_formato_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("nombre"); ?>" style="color: #FFFFFF;">Nombre&nbsp;(*)<?php if (@$_SESSION["vista_x_nombre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_nombre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("etiqueta"); ?>" style="color: #FFFFFF;">Etiqueta&nbsp;(*)<?php if (@$_SESSION["vista_x_etiqueta_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_etiqueta_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("margenes"); ?>" style="color: #FFFFFF;">M&aacute;rgenes(Izq, Der, Sup, Inf)&nbsp;(*)<?php if (@$_SESSION["vista_x_margenes_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_margenes_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("orientacion"); ?>" style="color: #FFFFFF;">Orientaci&oacute;n&nbsp;(*)<?php if (@$_SESSION["vista_x_orientacion_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_orientacion_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("papel"); ?>" style="color: #FFFFFF;">Tama&ntilde;o del Papel&nbsp;(*)<?php if (@$_SESSION["vista_x_papel_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_papel_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-					<a href="vista_formatolist.php?order=<?php echo urlencode("exportar"); ?>" style="color: #FFFFFF;">M&eacute;todo Exportar&nbsp;(*)<?php if (@$_SESSION["vista_x_exportar_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_exportar_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-				</span></td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-		</tr>
+			<!-- Table header -->
+			<tr class="encabezado_list">
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("idvista_formato"); ?>" style="color: #FFFFFF;">idvista_formato<?php if (@$_SESSION["vista_formato_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_formato_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("nombre"); ?>" style="color: #FFFFFF;">Nombre&nbsp;(*)<?php if (@$_SESSION["vista_x_nombre_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_nombre_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("etiqueta"); ?>" style="color: #FFFFFF;">Etiqueta&nbsp;(*)<?php if (@$_SESSION["vista_x_etiqueta_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_etiqueta_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("margenes"); ?>" style="color: #FFFFFF;">M&aacute;rgenes(Izq, Der, Sup, Inf)&nbsp;(*)<?php if (@$_SESSION["vista_x_margenes_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_margenes_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("orientacion"); ?>" style="color: #FFFFFF;">Orientaci&oacute;n&nbsp;(*)<?php if (@$_SESSION["vista_x_orientacion_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_orientacion_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("papel"); ?>" style="color: #FFFFFF;">Tama&ntilde;o del Papel&nbsp;(*)<?php if (@$_SESSION["vista_x_papel_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_papel_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<a href="vista_formatolist.php?order=<?php echo urlencode("exportar"); ?>" style="color: #FFFFFF;">M&eacute;todo Exportar&nbsp;(*)<?php if (@$_SESSION["vista_x_exportar_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$_SESSION["vista_x_exportar_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+					</span></td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
 		<?php } ?>
 		<?php
 
@@ -244,89 +243,89 @@ if (@$_SESSION["ewmsg"] <> "") {
 				$x_papel = $row["papel"];
 				$x_exportar = $row["exportar"];
 				?>
-		<!-- Table body -->
-		<tr<?php echo $sItemRowClass; ?>>
-			<!-- idvista_formato -->
-			<td><span class="phpmaker">
-					<?php echo $x_idvista_formato; ?>
-				</span></td>
-			<!-- nombre -->
-			<td><span class="phpmaker">
-					<?php echo $x_nombre; ?>
-				</span></td>
-			<!-- etiqueta -->
-			<td><span class="phpmaker">
-					<?php echo $x_etiqueta; ?>
-				</span></td>
-			<!-- margenes -->
-			<td><span class="phpmaker">
-					<?php echo $x_margenes; ?>
-				</span></td>
-			<!-- orientacion -->
-			<td><span class="phpmaker">
-					<?php echo $x_orientacion; ?>
-				</span></td>
-			<!-- papel -->
-			<td><span class="phpmaker">
-					<?php echo $x_papel; ?>
-				</span></td>
-			<!-- exportar -->
-			<td><span class="phpmaker">
-					<?php
-							$ar_x_exportar = explode(",", @$x_exportar);
-							$sTmp = "";
-							$rowcntwrk = 0;
-							foreach ($ar_x_exportar as $cnt_x_exportar) {
-								switch (trim($cnt_x_exportar)) {
-									case "pdf":
-										$sTmp .= "PDF";
-										$sTmp1 = ViewOptionSeparator($rowcntwrk);
-										$sTmp .= $sTmp1;
-										break;
-									case "xls":
-										$sTmp .= "Excel";
-										$sTmp1 = ViewOptionSeparator($rowcntwrk);
-										$sTmp .= $sTmp1;
-										break;
-									case "word":
-										$sTmp .= "Word (RTF)";
-										$sTmp1 = ViewOptionSeparator($rowcntwrk);
-										$sTmp .= $sTmp1;
-										break;
-								}
-								$rowcntwrk++;
-							}
-							if (strlen($sTmp) > 0) {
-								$sTmp = substr($sTmp, 0, strlen($sTmp) - strlen($sTmp1));
-							}
-							$ox_exportar = $x_exportar; // Backup Original Value
-							$x_exportar = $sTmp;
-							?>
-					<?php echo $x_exportar; ?>
-					<?php $x_exportar = $ox_exportar; // Restore Original Value 
-							?>
-				</span></td>
-			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
-															echo "vista_formatoedit.php?key=" . urlencode($sKey);
-														} else {
-															echo "javascript:alert('Invalid Record! Key is null');";
-														} ?>">Editar</a></span></td>
-			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
-															echo "vista_formatoadd.php?key=" . urlencode($sKey);
-														} else {
-															echo "javascript:alert('Invalid Record! Key is null');";
-														} ?>">Copiar</a></span></td>
-			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
-															echo "vista_formatodelete.php?key=" . urlencode($sKey);
-														} else {
-															echo "javascript:alert('Invalid Record! Key is null');";
-														}  ?>">Borrar</a></span></td>
-			<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
-															echo "generar_formato.php?genera=vista&idformato=" . urlencode($sKey);
-														} else {
-															echo "javascript:alert('Invalid Record! Key is null');";
-														}  ?>">Generar</a></span></td>
-			</tr>
+				<!-- Table body -->
+				<tr<?php echo $sItemRowClass; ?>>
+					<!-- idvista_formato -->
+					<td><span class="phpmaker">
+							<?php echo $x_idvista_formato; ?>
+						</span></td>
+					<!-- nombre -->
+					<td><span class="phpmaker">
+							<?php echo $x_nombre; ?>
+						</span></td>
+					<!-- etiqueta -->
+					<td><span class="phpmaker">
+							<?php echo $x_etiqueta; ?>
+						</span></td>
+					<!-- margenes -->
+					<td><span class="phpmaker">
+							<?php echo $x_margenes; ?>
+						</span></td>
+					<!-- orientacion -->
+					<td><span class="phpmaker">
+							<?php echo $x_orientacion; ?>
+						</span></td>
+					<!-- papel -->
+					<td><span class="phpmaker">
+							<?php echo $x_papel; ?>
+						</span></td>
+					<!-- exportar -->
+					<td><span class="phpmaker">
+							<?php
+									$ar_x_exportar = explode(",", @$x_exportar);
+									$sTmp = "";
+									$rowcntwrk = 0;
+									foreach ($ar_x_exportar as $cnt_x_exportar) {
+										switch (trim($cnt_x_exportar)) {
+											case "pdf":
+												$sTmp .= "PDF";
+												$sTmp1 = ViewOptionSeparator($rowcntwrk);
+												$sTmp .= $sTmp1;
+												break;
+											case "xls":
+												$sTmp .= "Excel";
+												$sTmp1 = ViewOptionSeparator($rowcntwrk);
+												$sTmp .= $sTmp1;
+												break;
+											case "word":
+												$sTmp .= "Word (RTF)";
+												$sTmp1 = ViewOptionSeparator($rowcntwrk);
+												$sTmp .= $sTmp1;
+												break;
+										}
+										$rowcntwrk++;
+									}
+									if (strlen($sTmp) > 0) {
+										$sTmp = substr($sTmp, 0, strlen($sTmp) - strlen($sTmp1));
+									}
+									$ox_exportar = $x_exportar; // Backup Original Value
+									$x_exportar = $sTmp;
+									?>
+								<?php echo $x_exportar; ?>
+								<?php $x_exportar = $ox_exportar; // Restore Original Value 
+										?>
+						</span></td>
+					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+																	echo "vista_formatoedit.php?key=" . urlencode($sKey);
+																} else {
+																	echo "javascript:alert('Invalid Record! Key is null');";
+																} ?>">Editar</a></span></td>
+					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+																	echo "vista_formatoadd.php?key=" . urlencode($sKey);
+																} else {
+																	echo "javascript:alert('Invalid Record! Key is null');";
+																} ?>">Copiar</a></span></td>
+					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+																	echo "vista_formatodelete.php?key=" . urlencode($sKey);
+																} else {
+																	echo "javascript:alert('Invalid Record! Key is null');";
+																}  ?>">Borrar</a></span></td>
+					<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) {
+																	echo "generar_formato.php?genera=vista&idformato=" . urlencode($sKey);
+																} else {
+																	echo "javascript:alert('Invalid Record! Key is null');";
+																}  ?>">Generar</a></span></td>
+					</tr>
 			<?php
 				}
 			}
@@ -356,52 +355,52 @@ phpmkr_free_result($rs);
 					}
 					$LastStart = intval(($nTotalRecs - 1) / $nDisplayRecs) * $nDisplayRecs + 1;
 					?>
-				<table border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td><span class="phpmaker">Page&nbsp;</span></td>
-						<!--first page button-->
-						<?php if ($nStartRec == 1) { ?>
-						<td><img src="images/firstdisab.gif" alt="First" width="16" height="16" border="0"></td>
-						<?php } else { ?>
-						<td><a href="vista_formatolist.php?start=1"><img src="images/first.gif" alt="First" width="16" height="16" border="0"></a></td>
-						<?php } ?>
-						<!--previous page button-->
-						<?php if ($PrevStart == $nStartRec) { ?>
-						<td><img src="images/prevdisab.gif" alt="Previous" width="16" height="16" border="0"></td>
-						<?php } else { ?>
-						<td><a href="vista_formatolist.php?start=<?php echo $PrevStart; ?>"><img src="images/prev.gif" alt="Previous" width="16" height="16" border="0"></a></td>
-						<?php } ?>
-						<!--current page number-->
-						<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
-						<!--next page button-->
-						<?php if ($NextStart == $nStartRec) { ?>
-						<td><img src="images/nextdisab.gif" alt="Next" width="16" height="16" border="0"></td>
-						<?php } else { ?>
-						<td><a href="vista_formatolist.php?start=<?php echo $NextStart; ?>"><img src="images/next.gif" alt="Next" width="16" height="16" border="0"></a></td>
-						<?php  } ?>
-						<!--last page button-->
-						<?php if ($LastStart == $nStartRec) { ?>
-						<td><img src="images/lastdisab.gif" alt="Last" width="16" height="16" border="0"></td>
-						<?php } else { ?>
-						<td><a href="vista_formatolist.php?start=<?php echo $LastStart; ?>"><img src="images/last.gif" alt="Last" width="16" height="16" border="0"></a></td>
-						<?php } ?>
-						<td><span class="phpmaker">&nbsp;of <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
-					</tr>
-				</table>
-				<?php if ($nStartRec > $nTotalRecs) {
-						$nStartRec = $nTotalRecs;
-					}
-					$nStopRec = $nStartRec + $nDisplayRecs - 1;
-					$nRecCount = $nTotalRecs - 1;
-					if ($rsEof) {
-						$nRecCount = $nTotalRecs;
-					}
-					if ($nStopRec > $nRecCount) {
-						$nStopRec = $nRecCount;
-					} ?>
-				<span class="phpmaker">Records <?php echo $nStartRec; ?> to <?php echo $nStopRec; ?> of <?php echo $nTotalRecs; ?></span>
+					<table border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><span class="phpmaker">Page&nbsp;</span></td>
+							<!--first page button-->
+							<?php if ($nStartRec == 1) { ?>
+								<td><img src="images/firstdisab.gif" alt="First" width="16" height="16" border="0"></td>
+							<?php } else { ?>
+								<td><a href="vista_formatolist.php?start=1"><img src="images/first.gif" alt="First" width="16" height="16" border="0"></a></td>
+							<?php } ?>
+							<!--previous page button-->
+							<?php if ($PrevStart == $nStartRec) { ?>
+								<td><img src="images/prevdisab.gif" alt="Previous" width="16" height="16" border="0"></td>
+							<?php } else { ?>
+								<td><a href="vista_formatolist.php?start=<?php echo $PrevStart; ?>"><img src="images/prev.gif" alt="Previous" width="16" height="16" border="0"></a></td>
+							<?php } ?>
+							<!--current page number-->
+							<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
+							<!--next page button-->
+							<?php if ($NextStart == $nStartRec) { ?>
+								<td><img src="images/nextdisab.gif" alt="Next" width="16" height="16" border="0"></td>
+							<?php } else { ?>
+								<td><a href="vista_formatolist.php?start=<?php echo $NextStart; ?>"><img src="images/next.gif" alt="Next" width="16" height="16" border="0"></a></td>
+							<?php  } ?>
+							<!--last page button-->
+							<?php if ($LastStart == $nStartRec) { ?>
+								<td><img src="images/lastdisab.gif" alt="Last" width="16" height="16" border="0"></td>
+							<?php } else { ?>
+								<td><a href="vista_formatolist.php?start=<?php echo $LastStart; ?>"><img src="images/last.gif" alt="Last" width="16" height="16" border="0"></a></td>
+							<?php } ?>
+							<td><span class="phpmaker">&nbsp;of <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
+						</tr>
+					</table>
+					<?php if ($nStartRec > $nTotalRecs) {
+							$nStartRec = $nTotalRecs;
+						}
+						$nStopRec = $nStartRec + $nDisplayRecs - 1;
+						$nRecCount = $nTotalRecs - 1;
+						if ($rsEof) {
+							$nRecCount = $nTotalRecs;
+						}
+						if ($nStopRec > $nRecCount) {
+							$nStopRec = $nRecCount;
+						} ?>
+					<span class="phpmaker">Records <?php echo $nStartRec; ?> to <?php echo $nStopRec; ?> of <?php echo $nTotalRecs; ?></span>
 				<?php } else { ?>
-				<span class="phpmaker">No records found</span>
+					<span class="phpmaker">No records found</span>
 				<?php } ?>
 			</td>
 		</tr>

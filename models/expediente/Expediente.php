@@ -476,7 +476,7 @@ class Expediente extends Model
         }
         $sql = "SELECT count(idexpediente) as cant FROM expediente 
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1 {$where}";
-        $cant = $this->findBySql($sql, false);
+        $cant = $this->findByQueryBuilder($sql, false);
         return ($cant[0]['cant']) ? true : false;
     }
 
@@ -491,7 +491,7 @@ class Expediente extends Model
         $sql = "SELECT count(idexpediente) as cant FROM expediente
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 
         AND estado=1 AND estado_cierre=1";
-        $cant = $this->findBySql($sql, false);
+        $cant = $this->findByQueryBuilder($sql, false);
         return (!$cant[0]['cant']) ? true : false;
     }
 

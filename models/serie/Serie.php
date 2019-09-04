@@ -57,7 +57,6 @@ class Serie extends Model
         ];
     }
 
-
     public function beforeCreate()
     {
         if (!$this->fk_serie_version) {
@@ -282,7 +281,7 @@ class Serie extends Model
         $response = [];
         $codArbol = str_replace('.', ',', $this->cod_arbol);
         $sql = "SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
-        $records = $this->findBySql($sql, false);
+        $records = $this->findByQueryBuilder($sql, false);
         if ($records) {
             $etiq = [];
             foreach ($records as $record) {

@@ -305,7 +305,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jquery() ?>
     <?= jsBootstrap() ?>
     <?= jqueryUi() ?>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <?= jsTheme() ?>
     <?= select2() ?>

@@ -9,7 +9,6 @@ class Digitalizacion extends Model
     protected $funcionario;
     protected $justificacion;
 
-
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -20,7 +19,7 @@ class Digitalizacion extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'documento_iddocumento',
                 'fecha',

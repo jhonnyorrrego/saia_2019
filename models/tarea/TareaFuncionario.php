@@ -104,7 +104,7 @@ class TareaFuncionario extends Model
                 a.fk_tarea = {$taskId} and
                 a.tipo = {$type}
 SQL;
-        return Funcionario::findBySql($sql);
+        return Funcionario::findByQueryBuilder($sql);
     }
 
     /**

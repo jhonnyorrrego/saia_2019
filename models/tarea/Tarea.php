@@ -229,7 +229,7 @@ class Tarea extends LogModel
                 {$final} <= '{$finalDate}'
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 
     /**
@@ -254,7 +254,7 @@ SQL;
                 a.estado = 1
             ORDER BY $params->order
 SQL;
-        return Anexo::findBySql($sql, true, $params->offset, $params->limit);
+        return Anexo::findByQueryBuilder($sql, true, $params->offset, $params->limit);
     }
 
     /**

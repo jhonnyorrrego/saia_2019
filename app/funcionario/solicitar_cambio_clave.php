@@ -37,7 +37,7 @@ try {
     if ($Configuracion->valor) {
         $profile = Perfil::ADMIN_INTERNO;
         $sql = "select * from funcionario where concat(',', perfil, ',') like '%,{$profile},%' and estado=1";
-        $users = Funcionario::findBySql($sql);
+        $users = Funcionario::findByQueryBuilder($sql);
 
         if (!$users) {
             throw new Exception("No se encuentra administrador", 1);

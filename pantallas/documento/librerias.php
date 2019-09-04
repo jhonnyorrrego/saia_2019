@@ -294,19 +294,34 @@ function roundedImage($route)
  * retorna la clase bold cuando el documento
  * no se ha leido, usado para los buzones
  *
- * @param int $iddocumento
- * @param string $fecha
+ * @param int $documentId
+ * @param string $date
  * @return void
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
-function unread($iddocumento, $fecha)
+function unread($documentId, $date)
 {
     $userCode = SessionController::getValue('usuario_actual');
-    $convertString = StaticSql::getDateFormat('fecha', 'Y-m-d H:i:s');
-    $sql = "select count(*) AS total FROM buzon_salida WHERE archivo_idarchivo = {$iddocumento} AND origen = {$userCode} AND (nombre='LEIDO' OR nombre='BORRADOR') AND {$convertString} >= '{$fecha}'";
-    $total = StaticSql::search($sql);
+    $date = new DateTime($date);
 
-    return !$total[0]['total'] ? 'bold' : '';
+    $QueryBuilder = Model::getQueryBuilder();
+    $data = $QueryBuilder->select('count(*) AS total')
+        ->from('buzon_salida')
+        ->where('archivo_idarchivo = :documentId')
+        ->andWhere('origen = :userCode')
+        ->andWhere('fecha >= :date')
+        ->andWhere(
+            $QueryBuilder->expr()->orX(
+                "nombre = 'LEIDO'",
+                "nombre = 'BORRADOR'",
+            )
+        )
+        ->setParameter(':documentId', $documentId, 'integer')
+        ->setParameter(':userCode', $userCode, 'integer')
+        ->setParameter(':date', $date, 'datetime')
+        ->execute()->fetch();
+
+    return !$data['total'] ? 'bold' : '';
 }
 
 /**

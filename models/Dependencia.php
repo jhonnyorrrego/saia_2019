@@ -17,7 +17,7 @@ class Dependencia extends Model
     protected $codigo_arbol;
     protected $descripcion;
     protected $sigla;
-    
+
     protected $DependenciaPadre;
 
     function __construct($id = null)
@@ -27,7 +27,7 @@ class Dependencia extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'codigo',
                 'nombre',
@@ -44,7 +44,8 @@ class Dependencia extends Model
                 'descripcion',
                 'sigla'
             ],
-            'date' => ['fecha_ingreso']
+            'date' => ['fecha_ingreso'],
+            'primary' => 'iddependencia'
         ];
     }
     /**

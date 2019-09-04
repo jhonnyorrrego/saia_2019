@@ -155,7 +155,7 @@ class VfuncionarioDc extends Funcionario
             estado_dc = 1                 
 SQL;
 
-        return  self::findBySql($sql);
+        return  self::findByQueryBuilder($sql);
     }
 
     /**
