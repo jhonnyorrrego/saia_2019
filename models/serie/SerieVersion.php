@@ -38,8 +38,13 @@ class SerieVersion extends Model
     public static function getCurrentVersion()
     {
         $subConsulta = "(SELECT MAX(version) FROM serie_version)";
-        $sql = "SELECT * FROM serie_version WHERE version={$subConsulta}";
-        $data = SerieVersion::findBySql($sql);
+        $sql = Model::getQueryBuilder()
+            ->select('*')
+            ->from('serie_version')
+            ->where("version={$subConsulta}");
+
+        $data = SerieVersion::findByQueryBuilder($sql);
+
         return !empty($data) ? $data[0] : false;
     }
 }

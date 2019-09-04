@@ -21,20 +21,17 @@ $Response = (object) [
 ];
 
 try {
+
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['ordenComponentes']) {
-        throw new Exception('Error, No existe el id del componente', 1);
+    $version = 0;
+
+    if ($SerieVersion = SerieVersion::getCurrentVersion()) {
+        $version = (int) $SerieVersion->version + 1;
     }
 
-    foreach ($_REQUEST["ordenComponentes"] as $key => $idcamposFormatos) {
-        $CamposFormato = new CamposFormato($idcamposFormatos);
-        $CamposFormato->orden = $key;
-        $CamposFormato->save();
-    }
-
+    $Response->data->version = $version;
     $Response->success = 1;
-    $Response->message = "Campos actualizados";
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
 }

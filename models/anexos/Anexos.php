@@ -172,7 +172,7 @@ SQL;
 
         if ($Anexos->fk_anexos) {
             $sql = "select * from anexos where idanexos <>{$fileId} and fk_anexos={$Anexos->fk_anexos} order by idanexos desc";
-            $response = Anexos::findBySql($sql);
+            $response = Anexos::findByQueryBuilder($sql);
         } else {
             $response = [];
         }

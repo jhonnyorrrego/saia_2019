@@ -196,7 +196,7 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findBySql($sql);
+                $instance = CajaEli::findByQueryBuilder($sql);
                 if ($instance) {
                     $Caja->estado = 1;
                     $Caja->fk_caja_eli = 'NULL';
@@ -264,7 +264,7 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findBySql($sql);
+                $instance = CajaEli::findByQueryBuilder($sql);
                 if ($instance) {
                     $CajaDel=$instance[0];
                     $CajaDel->fecha_accion=date("Y-m-d H:i:s");

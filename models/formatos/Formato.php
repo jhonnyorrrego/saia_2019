@@ -54,6 +54,9 @@ class Formato extends Model
     protected $mostrar_tipodoc_pdf;
     protected $publicar;
 
+    //relations
+    protected $Modulo;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -128,6 +131,25 @@ class Formato extends Model
     }
 
     /**
+     * obtiene la instancia del modulo que
+     * representa el formato
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-03
+     */
+    public function getModule()
+    {
+        if (!$this->Modulo) {
+            $this->Modulo = Modulo::findByAttributes([
+                'nombre' => 'crear_' . $this->nombre
+            ]);
+        }
+
+        return $this->Modulo;
+    }
+
+    /**
      * encuentra la instancia del primer formato
      * en el proceso
      *
@@ -147,7 +169,7 @@ class Formato extends Model
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-12
      */
-    public function createDefaultFields()
+    /*public function createDefaultFields()
     {
         $sql = <<<SQL
 			SELECT 
@@ -164,7 +186,7 @@ class Formato extends Model
 					'firma'
 				)
 SQL;
-        $records = CamposFormato::findBySql($sql);
+        $records = CamposFormato::findByQueryBuilder($sql);
 
         $fields = [];
         foreach ($records as $row) {
@@ -242,7 +264,7 @@ SQL;
                 'predeterminado' => 1
             ]);
         }
-    }
+    }*/
 
     /**
      * realiza la busqueda de formatos 
@@ -262,6 +284,6 @@ SQL;
                 etiqueta like '%{$term}%' AND
                 item <> 1
 SQL;
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

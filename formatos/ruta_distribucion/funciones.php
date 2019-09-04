@@ -307,11 +307,11 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
         if ($busca_dep['numcampos']) {
             $estado_dependencia = 2;
         }
-        $cadena = "INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES (" . $fecha_almacenar . "," . $dependencias[$i] . "," . $estado_dependencia . "," . $datos[0]['idft_ruta_distribucion'] . "," . ($i + 1) . ")";
+        $cadena = "INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES ('" . $fecha_almacenar . "'," . $dependencias[$i] . "," . $estado_dependencia . "," . $datos[0]['idft_ruta_distribucion'] . "," . ($i + 1) . ")";
         phpmkr_query($cadena);
     }
     for ($i = 0; $i < count($mensajeros); $i++) {
-        $cadena = "INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES (" . $fecha_almacenar . "," . $mensajeros[$i] . ",1," . $datos[0]['idft_ruta_distribucion'] . ")";
+        $cadena = "INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES ('" . $fecha_almacenar . "'," . $mensajeros[$i] . ",1," . $datos[0]['idft_ruta_distribucion'] . ")";
         phpmkr_query($cadena);
     }
 }
@@ -364,5 +364,4 @@ function ruta_distribucion_fab_buttons()
         ]
     ]);
 }
-
 ?>

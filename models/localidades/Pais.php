@@ -50,6 +50,6 @@ class Pais extends Model
             estado = 1
 SQL;
 
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

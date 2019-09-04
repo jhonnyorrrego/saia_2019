@@ -7,7 +7,7 @@ use Stringy\Stringy;
  * 
  * @author jhon sebastian valencia <jhon.valencia@cerok.com>
  */
-abstract class Model extends StaticSql
+abstract class Model
 {
     use TModelEvents;
 
@@ -113,6 +113,19 @@ abstract class Model extends StaticSql
     }
 
     /**
+     * obtiene un atributo tipo fecha 
+     * en el formato necesario
+     *
+     * @param string $attribute nombre del atributo a convertir
+     * @param string $format formato requerido
+     * @return string
+     */
+    public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
+    {
+        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
+    }
+
+    /**
      * asigna atributos masivamente
      * 
      * @param array $attributes lista de nuevos atributos 
@@ -159,19 +172,6 @@ abstract class Model extends StaticSql
     }
 
     /**
-     * obtiene un atributo tipo fecha 
-     * en el formato necesario
-     *
-     * @param string $attribute nombre del atributo a convertir
-     * @param string $format formato requerido
-     * @return string
-     */
-    public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
-    {
-        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
-    }
-
-    /**
      * retorna el nombre de la tabla
      *
      * @return string
@@ -183,6 +183,19 @@ abstract class Model extends StaticSql
             $this->dbAttributes->table = (string) $Stringy->underscored();
         }
         return $this->dbAttributes->table;
+    }
+
+    /**
+     * obtiene el nombre de la tabla
+     * en un ambito estatico
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getTable();
     }
 
     /**
@@ -208,19 +221,6 @@ abstract class Model extends StaticSql
         $caller = get_called_class();
         $instance = new $caller();
         return $instance->getPkName();
-    }
-
-    /**
-     * obtiene el nombre de la tabla
-     * en un ambito estatico
-     * 
-     * @return string
-     */
-    public static function getTableName()
-    {
-        $caller = get_called_class();
-        $instance = new $caller();
-        return $instance->getTable();
     }
 
     /**
@@ -270,12 +270,11 @@ abstract class Model extends StaticSql
      *
      * @return void
      */
-    public final function find()
+    private final function find()
     {
-        $sql = self::generateSelectSql([$this->getPkName() => $this->getPK()]);
-        $data = self::search($sql)[0];
+        $data = $this->getData([$this->getPkName() => $this->getPK()]);
 
-        if (!$this->setAttributes($data)) {
+        if (!$this->setAttributes($data[0])) {
             throw new Exception("invalid Pk", 1);
         }
     }
@@ -316,9 +315,9 @@ abstract class Model extends StaticSql
         $offset = 0,
         $limit = 0
     ) {
-        $sql = self::generateSelectSql($conditions, $fields, $order);
-        $records = self::search($sql, $offset, $limit);
-        return self::convertToObjectCollection($records);
+        $class = get_called_class();
+        $records = (new $class)->getData($conditions, $fields, $order, $offset, $limit);
+        return self::convertToObjectCollection($records, $class);
     }
 
     /**
@@ -337,37 +336,29 @@ abstract class Model extends StaticSql
         $conditions = [],
         $order = ''
     ) {
-        $sql = self::generateSelectSql($conditions, [$field], $order);
-        $records = self::search($sql);
+        $class = get_called_class();
+        $records = (new $class)->getData($conditions, [$field], $order);
 
         $data = [];
         foreach ($records as $value) {
-            $data[] = $value[0];
+            $data[] = $value[$field];
         }
         return $data;
     }
 
     /**
-     * ejecuta una busqueda normalmente con un sql avanzado
+     * obtiene modelos basandose en un QueryBuilder
+     * se usa en casos de que todas las condiciones
+     * no son de tipo field = value AND
      *
-     * @param string $sql sentencia a ejecutar
-     * @param boolean $getInstance retornar instancias del modelo
-     * @param integer $offset limite inferior de la consulta
-     * @param integer $limit limite superior de la consulta
+     * @param Object $QueryBuilder
      * @return void
      */
-    public static function findBySql(
-        string $sql,
-        $getInstance = true,
-        $offset = null,
-        $limit = null
-    ) {
-        $data = self::search($sql, $offset, $limit);
-        if ($getInstance) {
-            $className = get_called_class();
-            $data = $className::convertToObjectCollection($data);
-        }
-        return $data;
+    public static function findByQueryBuilder(Doctrine\DBAL\Query\QueryBuilder $QueryBuilder)
+    {
+        $data = $QueryBuilder->execute()->fetchAll();
+        $className = get_called_class();
+        return $className::convertToObjectCollection($data, $className);
     }
 
     /**
@@ -379,12 +370,14 @@ abstract class Model extends StaticSql
      */
     public static function countRecords(array $conditions = [])
     {
-        $condition = self::createCondition($conditions);
-        $condition = $condition ? " where "  . $condition : '';
-        $sql = "select count(*) as total from " . self::getTableName() . $condition;
-        $record = self::search($sql);
+        $QueryBuilder = self::getQueryBuilder();
+        $QueryBuilder
+            ->select('count(*) as total')
+            ->from(self::getTableName());
+        $QueryBuilder = self::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
+        $record = $QueryBuilder->execute()->fetch();
 
-        return $record[0]['total'];
+        return $record['total'];
     }
 
     /**
@@ -408,7 +401,7 @@ abstract class Model extends StaticSql
      * 
      * @return boolean
      */
-    public function save()
+    public final function save()
     {
         return $this->getPK() ? $this->update() : $this->create();
     }
@@ -436,30 +429,18 @@ abstract class Model extends StaticSql
      */
     private function runCreate()
     {
-        $table = $this->getTable();
-        $attributes = $this->getNotNullAttributes();
-        $dateAttributes = $this->getDateAttributes();
+        $Connection = Connection::getInstance();
+        $QueryBuilder = $Connection->createQueryBuilder();
+        $QueryBuilder->insert($this->getTable());
+        $QueryBuilder = self::callBuilderMethod(
+            $this->getNotNullAttributes(),
+            $QueryBuilder,
+            'setValue',
+            true
+        );
+        $QueryBuilder->execute();
 
-        $fields = $values = '';
-        foreach ($attributes as $attribute => $value) {
-            if (strlen($fields)) {
-                $fields .= ',';
-                $values .= ',';
-            }
-
-            $fields .= $attribute;
-            if ($value === "NULL") {
-                $values .= $value;
-            } else if (in_array($attribute, $dateAttributes)) {
-                $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
-            } else {
-                $values .= "'" . $value . "'";
-            }
-        }
-
-        $sql = "INSERT INTO {$table} ({$fields}) values ({$values})";
-
-        $this->setPK(self::insert($sql));
+        $this->setPK($Connection->lastInsertId());
         return $this->getPK() ?? 0;
     }
 
@@ -504,27 +485,14 @@ abstract class Model extends StaticSql
      */
     public static function executeUpdate(array $fields, array $conditions)
     {
-        $set = '';
-        $className = get_called_class();
-        $Instance = new $className();
+        $class = get_called_class();
+        $Instance = new $class;
 
-        $dateAttributes = $Instance->getDateAttributes();
-        foreach ($fields as $attribute => $value) {
-            if ($set) {
-                $set .= ',';
-            }
-
-            if ($value === "NULL") {
-                $set .= $attribute . "=NULL";
-            } else if (in_array($attribute, $dateAttributes)) {
-                $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
-            } else {
-                $set .= $attribute . "='" . $value . "'";
-            }
-        }
-
-        $sql = "UPDATE " . self::getTableName() . " SET " . $set . " WHERE " . self::createCondition($conditions);
-        return self::query($sql);
+        $QueryBuilder = self::getQueryBuilder();
+        $QueryBuilder->update($Instance::getTableName());
+        $QueryBuilder = $Instance::callBuilderMethod($fields, $QueryBuilder, 'set', true);
+        $QueryBuilder = $Instance::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
+        return $QueryBuilder->execute() !== false;
     }
 
     /**
@@ -561,82 +529,10 @@ abstract class Model extends StaticSql
      */
     public static function executeDelete(array $conditions)
     {
-        $sql = "DELETE FROM " . self::getTableName() . " WHERE " . self::createCondition($conditions);
-        return self::query($sql);
-    }
-
-    /**
-     * create select portion for sql query
-     * check date attributes
-     *
-     * @param array $fields
-     * @return void
-     */
-    public static function createSelect($fields = [])
-    {
-        $className = get_called_class();
-        $Instance = new $className();
-
-        $dateAttributes = $Instance->getDateAttributes();
-        $safeAttributes = $Instance->getSafeAttributes();
-        $safeAttributes[] = $Instance->getPkName();
-        $select = '';
-
-        if (!$fields) {
-            $fields = $safeAttributes;
-        }
-
-        foreach ($fields as $attribute) {
-            if (!in_array($attribute, $safeAttributes)) {
-                continue;
-            }
-
-            if (strlen($select)) {
-                $select .= ',';
-            }
-
-            if (in_array($attribute, $dateAttributes)) {
-                $select .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . ' AS ' . $attribute;
-            } else {
-                $select .= $attribute;
-            }
-        }
-
-        return $select;
-    }
-
-    /**
-     * create where portion for sql query
-     * check date attributes
-     *
-     * @param array $conditions
-     * @return string
-     */
-    public static function createCondition($conditions)
-    {
-        $condition = '';
-
-        if ($conditions) {
-            $className = get_called_class();
-            $Instance = new $className();
-            $dateAttributes = $Instance->getDateAttributes();
-
-            foreach ($conditions as $attribute => $value) {
-                if ($condition) {
-                    $condition .= ' AND ';
-                }
-
-                if (is_null($value)) {
-                    $condition .= "{$attribute} IS NULL";
-                } else if (in_array($attribute, $dateAttributes)) {
-                    $condition .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . "=" . $value;
-                } else {
-                    $condition .= "{$attribute}='{$value}'";
-                }
-            }
-        }
-
-        return $condition;
+        $QueryBuilder = self::getQueryBuilder();
+        $QueryBuilder->delete(self::getTableName());
+        $QueryBuilder = self::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
+        return $QueryBuilder->execute() !== false;
     }
 
     /**
@@ -646,22 +542,33 @@ abstract class Model extends StaticSql
      * @param array $conditions condiciones a cumplir atributo valor
      * @param array $fields filas a consultar
      * @param string $order string de ordenamiento id desc
-     * @return string
+     * @param integer $offset initial limit
+     * @param integer $limit final limit
+     * @return array
      */
-    public static function generateSelectSql(
+    public final function getData(
         $conditions = [],
         $fields = null,
-        $order = null
+        $order = null,
+        $offset = null,
+        $limit = null
     ) {
-        $condition = $conditions ? self::createCondition($conditions) : '';
+        $QueryBuilder = self::getQueryBuilder();
+        $QueryBuilder = $this->setSelectPart($fields, $QueryBuilder);
+        $QueryBuilder->from($this->getTableName());
+        $QueryBuilder = self::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
 
-        $sql = "SELECT ";
-        $sql .= self::createSelect($fields);
-        $sql .= " FROM " . self::getTableName();
-        $sql .= $condition ? " WHERE {$condition} " : ' ';
-        $sql .= $order ? "ORDER BY {$order} " : '';
+        if ($order) {
+            $QueryBuilder->add('orderBy', $order);
+        }
 
-        return $sql;
+        if ($limit) {
+            $QueryBuilder
+                ->setFirstResult($offset)
+                ->setMaxResults($limit);
+        }
+
+        return $QueryBuilder->execute()->fetchAll();
     }
 
     /**
@@ -673,10 +580,8 @@ abstract class Model extends StaticSql
      * @param array $records array a convertir
      * @return array
      */
-    public static function convertToObjectCollection(array $records)
+    public static function convertToObjectCollection(array $records, $class)
     {
-        $class = get_called_class();
-        $massiveAssigned = method_exists($class, 'massiveAssigned');
         $data = [];
 
         foreach ($records as $row) {
@@ -687,9 +592,6 @@ abstract class Model extends StaticSql
                 $Instance->setPK($row[$Instance->getPkName()]);
             }
 
-            if ($massiveAssigned) {
-                $Instance->massiveAssigned();
-            }
             $data[] = $Instance;
         }
 
@@ -740,5 +642,76 @@ abstract class Model extends StaticSql
         }
 
         return $this->dbAttributes->labels[$field]['values'][$value];
+    }
+
+    /**
+     * define el select para un sql
+     *
+     * @param array $fields
+     * @param object $QueryBuilder
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-30
+     */
+    private function setSelectPart($fields, $QueryBuilder)
+    {
+        if (!$fields) {
+            $fields = $this->getSafeAttributes();
+            $fields[] = $this->getPkName();
+        } else {
+            $fields = array_intersect($fields, $this->getSafeAttributes());
+        }
+
+        $QueryBuilder->select($fields);
+        return $QueryBuilder;
+    }
+
+    /**
+     * llama un metodo de seteo en el querybuilder
+     * y asigna el valor al parametro
+     *
+     * @param array $collection
+     * @param object $QueryBuilder
+     * @param string $method
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-30
+     */
+    public static function callBuilderMethod($collection, $QueryBuilder, $method, $individualValue = false)
+    {
+        if ($collection) {
+            $class = get_called_class();
+            $Instance = new $class;
+            $dateAttributes = $Instance->getDateAttributes();
+            foreach ($collection as $attribute => $value) {
+                if (in_array($attribute, $dateAttributes)) {
+                    $value = new DateTime($value);
+                    $type = 'datetime';
+                } else {
+                    $type = 'string';
+                }
+
+                if ($individualValue) {
+                    $QueryBuilder->$method($attribute, ":{$attribute}");
+                } else {
+                    $QueryBuilder->$method("{$attribute} = :{$attribute}");
+                }
+                $QueryBuilder->setParameter(":{$attribute}", $value, $type);
+            }
+        }
+
+        return $QueryBuilder;
+    }
+
+    /**
+     * retorna una instancia de QueryBuilder
+     *
+     * @return QueryBuilder
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-08-30
+     */
+    public static function getQueryBuilder(): Doctrine\DBAL\Query\QueryBuilder
+    {
+        return Connection::getInstance()->createQueryBuilder();
     }
 }

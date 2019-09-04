@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0
@@ -26,16 +26,14 @@ try {
         throw new Exception("Debe indicar el usuario", 1);
     }
 
-    $date = StaticSql::setDateFormat(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-    $sql = <<<SQL
-        UPDATE log_acceso
-        SET fecha_cierre = {$date}
-        WHERE
-            login = '{$_REQUEST["login"]}' AND
-            fecha_cierre IS NULL
-SQL;
+    $update = LogAcceso::executeUpdate([
+        'fecha_cierre' => date('Y-m-d H:i:s')
+    ], [
+        'login' => $_REQUEST["login"],
+        'fecha_cierre' => null
+    ]);
 
-    if (!StaticSql::query($sql)) {
+    if (!$update) {
         throw new Exception("Error al eliminar", 1);
     }
 

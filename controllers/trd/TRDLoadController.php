@@ -33,10 +33,26 @@ class TRDLoadController
             ->saveSerie();
     }
 
+
+    public function trun($table)
+    {
+        $connection = Connection::getInstance();
+        $dbPlatform = $connection->getDatabasePlatform();
+        $q = $dbPlatform->getTruncateTableSql($table);
+        $connection->executeUpdate($q);
+    }
+
+
     protected function truncateTables()
     {
-        $trun1 = StaticSql::query("TRUNCATE TABLE serie_temp");
-        $trun2 = StaticSql::query("TRUNCATE TABLE dependencia_serie_temp");
+        $trun1 = $this->trun('serie_temp');
+        $trun2 = $this->trun('dependencia_serie_temp');
+
+        echo '<pre>';
+        var_dump($trun1, $trun2);
+        echo '</pre>';
+        die('--');
+
         if ($trun1 !== true && $trun2 !== true) {
             $this->errorException("No se pudieron limpiar las tablas temporales");
         }
@@ -128,7 +144,7 @@ class TRDLoadController
     protected function saveSerie()
     {
         $sql = "SELECT * FROM serie_temp ORDER BY idserie ASC";
-        $data = SerieTemp::findBySql($sql);
+        $data = SerieTemp::findByQueryBuilder($sql);
         $ids = [0 => 0];
 
         foreach ($data as $SerieTemp) {
@@ -149,7 +165,7 @@ class TRDLoadController
         }
         unset($this->fila);
         $sql = "SELECT * FROM dependencia_serie_temp ORDER BY iddependencia_serie ASC";
-        $data = DependenciaSerieTemp::findBySql($sql);
+        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 
         foreach ($data as $DependenciaSerie) {
 
@@ -241,7 +257,7 @@ class TRDLoadController
     private function validateDependencia($codDependencia)
     {
         $sql = "SELECT estado,iddependencia FROM dependencia WHERE codigo like '{$codDependencia}'";
-        $existDep = Dependencia::findBySql($sql, false);
+        $existDep = Dependencia::findByQueryBuilder($sql, false);
         if ($existDep) {
             $cant = count($existDep);
             if ($cant == 1) {

@@ -58,7 +58,6 @@ $x_pertenece_nucleo= Null;
   echo(librerias_validar_formulario(11));
   echo(librerias_arboles());
 ?>
-<?php session_start(); ?>
 <?php ob_start(); ?>
 <script language=javascript>
 function ventanaSecundaria (URL){

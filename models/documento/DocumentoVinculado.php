@@ -114,6 +114,6 @@ class DocumentoVinculado extends Model
                 origen = {$documentId} or
                 destino = {$documentId}
 SQL;
-        return self::findBySql($sql);
+        return self::findByQueryBuilder($sql);
     }
 }

@@ -18,7 +18,7 @@ class TRDCloneController
         if ($this->old_fk_serie_version) {
 
             $sql = "SELECT * FROM serie WHERE estado=1 AND fk_serie_version={$this->old_fk_serie_version} ORDER BY tipo ASC, idserie ASC";
-            $data = Serie::findBySql($sql);
+            $data = Serie::findByQueryBuilder($sql);
             $ids = [0 => 0];
 
             foreach ($data as $SerieClone) {
@@ -41,7 +41,7 @@ class TRDCloneController
                     $ids[$id] = $SerieClone->getPK();
 
                     $sql = "SELECT * FROM dependencia_serie WHERE fk_serie={$SerieClone->getPK()} AND estado=1 ORDER BY iddependencia_serie ASC";
-                    $data = DependenciaSerieTemp::findBySql($sql);
+                    $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 
                     foreach ($data as $DependenciaSerie) {
                         $attributesDep = $DependenciaSerie->getAttributes();

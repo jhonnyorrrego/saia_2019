@@ -145,14 +145,14 @@ function reporte_entradas2($idformato, $iddoc)
 
 	$texto = '<table style="width:100%;border-collapse:collapse;" border="1">';
 	$texto .= '<thead><tr>';
-	$texto .= '<td style="text-align:center;width:9%"><b>FECHA DE RECIBO</b></td>';
+	$texto .= '<td style="text-align:center;width:12%"><b>FECHA DE RECIBO</b></td>';
 	$texto .= '<td style="text-align:center;width:6%"><b>N°. ITEM</b></td>';
 	$texto .= '<td style="text-align:center;width:5%"><b>TIPO</b></td>';
 	$texto .= '<td style="text-align:center;width:12%"><b>ORIGEN</b></td>';
 	$texto .= '<td style="text-align:center;width:26%;"><b>DESTINO</b></td>';
-	$texto .= '<td style="text-align:center;width:12%"><b>ASUNTO</b></td>';
-	$texto .= '<td style="text-align:center;width:12%"><b>FIRMA</b></td>';
-	$texto .= '<td style="text-align:center;width:18%"><b>OBSERVACIONES</b></td>';
+	$texto .= '<td style="text-align:center;width:14%"><b>ASUNTO</b></td>';
+	$texto .= '<td style="text-align:center;width:10%"><b>FIRMA</b></td>';
+	$texto .= '<td style="text-align:center;width:15%"><b>OBSERVACIONES</b></td>';
 	$texto .= '</tr></thead>';
 
 	for ($i = 0; $i < $registros["numcampos"]; $i++) {

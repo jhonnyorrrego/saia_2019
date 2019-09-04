@@ -74,7 +74,7 @@ class ExpedienteFuncionario
         AND v.cod_padre={$this->id} 
         AND (v.agrupador =1 OR fk_funcionario={$this->idfuncionario}))";
         $sql = "SELECT * FROM expediente WHERE idexpediente IN ({$subConsulta})";
-        $records = Expediente::findBySql($sql);
+        $records = Expediente::findByQueryBuilder($sql);
 
         $objetoJson = [];
         if ($records) {
@@ -139,7 +139,7 @@ class ExpedienteFuncionario
         $sql = "SELECT * FROM serie WHERE tipo=3 AND estado=1 
         AND cod_padre={$Expediente->fk_serie}";
         
-        $records = Serie::findBySql($sql);
+        $records = Serie::findByQueryBuilder($sql);
         $objetoJson = [];
         if ($records) {
             foreach ($records as $Serie) {

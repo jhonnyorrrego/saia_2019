@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0
@@ -37,8 +37,14 @@ try {
         ];
     }
 
-    $sql = "SELECT * FROM modulo WHERE cod_padre={$parent} AND tipo<3 ORDER by orden ASC";
-    $modules = Modulo::findBySql($sql);
+    $QueryBuilder = Model::getQueryBuilder()
+        ->select('*')
+        ->from(Modulo::getTableName())
+        ->where('cod_padre = :cod_padre')
+        ->andWhere('tipo < 3')
+        ->orderBy('orden', 'asc')
+        ->setParameter(':cod_padre', $parent);
+    $modules = Modulo::findByQueryBuilder($QueryBuilder);
 
     foreach ($modules as $key => $Modulo) {
         if (PermisoController::moduleAccess($Modulo->nombre)) {

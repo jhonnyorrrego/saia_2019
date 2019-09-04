@@ -24,16 +24,15 @@ try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     if (!$_REQUEST['idFormato']) {
-        throw new Exception('No existe el id del formato', 1);
+        throw new Exception('Debe indicar el formato', 1);
     }
 
     if (!$_REQUEST['idpantalla_componente']) {
-        throw new Exception('No existe el id del componente', 1);
+        throw new Exception('Debe indicar el componente', 1);
     }
 
     $PantallaComponente = new PantallaComponente($_REQUEST['idpantalla_componente']);
     $opciones = json_decode($PantallaComponente->opciones, true);
-
     $opciones["nombre"] = strval($opciones["nombre"]) . "_" . rand();
     $opciones["formato_idformato"] = $_REQUEST['idFormato'];
 

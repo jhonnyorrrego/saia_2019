@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <?php ob_start(); ?>
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
@@ -181,7 +180,7 @@ if ($sOrderBy != "") {
 			<?php
 			if (@$HTTP_SESSION_VARS["ewmsg"] <> "") {
 				?>
-			<p><span class="phpmaker" style="color: Red;"><?php echo $HTTP_SESSION_VARS["ewmsg"]; ?></span></p>
+				<p><span class="phpmaker" style="color: Red;"><?php echo $HTTP_SESSION_VARS["ewmsg"]; ?></span></p>
 			<?php
 				$HTTP_SESSION_VARS["ewmsg"] = ""; // Clear message
 			}
@@ -189,18 +188,18 @@ if ($sOrderBy != "") {
 			<form method="post">
 				<table border="0" class="table">
 					<?php if ($nTotalRecs > 0) { ?>
-					<!-- Table header -->
-					<tr>
-						<th valign="top">
-							<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>">Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-						</th>
-						<!--td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+						<!-- Table header -->
+						<tr>
+							<th valign="top">
+								<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>">Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+							</th>
+							<!--td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
 	<a href="pretextolist.php?order=<?php echo urlencode("imagen"); ?>" style="color: #FFFFFF;">Icono&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
 		</span></td-->
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
 
-					</tr>
+						</tr>
 					<?php } ?>
 					<?php
 
@@ -238,35 +237,35 @@ if ($sOrderBy != "") {
 							$x_ayuda = $row["ayuda"];
 							$x_imagen = $row["imagen"];
 							?>
-					<script>
-						function activa_iframe(id) {
-							plantillas_saiasrc.location.href = 'pretextoview.php?key=' + id;
-						}
-					</script>
-					<!-- Table body -->
-					<tr<?php echo $sItemRowClass; ?>>
-						<!-- asunto -->
-						<td><span class="phpmaker">
-								<?php echo $x_asunto; ?>
-							</span></td>
-						<!-- imagen -->
-						<!--td><span class="phpmaker">
+							<script>
+								function activa_iframe(id) {
+									plantillas_saiasrc.location.href = 'pretextoview.php?key=' + id;
+								}
+							</script>
+							<!-- Table body -->
+							<tr<?php echo $sItemRowClass; ?>>
+								<!-- asunto -->
+								<td><span class="phpmaker">
+										<?php echo $x_asunto; ?>
+									</span></td>
+								<!-- imagen -->
+								<!--td><span class="phpmaker">
 <?php echo $x_imagen; ?>
 </span></td-->
-						<?php
-								//AQUI va la validacion si tengo la plantilla asignada en llave_entidad=1 para mi como funcionario y no a dependecias o cargos 
-								if (1) {
-									?>
-						<td><span class="phpmaker"><a href="#" Onclick="activa_iframe('<?php echo (urlencode($sKey)); ?>');">Ver</a></span></td>
-						<?php
-								}
-								?>
-						<td><span class="phpmaker"><a href="<?php if (($sKey != NULL)) {
-																		echo "pretextodelete.php?a_delete='D'&key=" . urlencode($sKey);
-																	} else {
-																		echo "javascript:alert('Invalid Record! Key is null');";
-																	}  ?>">Eliminar</a></span></td>
-						</tr>
+								<?php
+										//AQUI va la validacion si tengo la plantilla asignada en llave_entidad=1 para mi como funcionario y no a dependecias o cargos 
+										if (1) {
+											?>
+									<td><span class="phpmaker"><a href="#" Onclick="activa_iframe('<?php echo (urlencode($sKey)); ?>');">Ver</a></span></td>
+								<?php
+										}
+										?>
+								<td><span class="phpmaker"><a href="<?php if (($sKey != NULL)) {
+																				echo "pretextodelete.php?a_delete='D'&key=" . urlencode($sKey);
+																			} else {
+																				echo "javascript:alert('Invalid Record! Key is null');";
+																			}  ?>">Eliminar</a></span></td>
+								</tr>
 						<?php
 							}
 						}
@@ -298,52 +297,52 @@ if ($sOrderBy != "") {
 								$LastStart = intval(($nTotalRecs - 1) / $nDisplayRecs) * $nDisplayRecs + 1;
 
 								?>
-							<table border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td><span class="phpmaker">P&aacute;gina&nbsp;</span></td>
-									<!--first page button-->
-									<?php if ($nStartRec == 1) { ?>
-									<td><img src="../../../../../images/firstdisab.gif" alt="Primero" width="16" height="16" border="0"></td>
-									<?php } else { ?>
-									<td><a href="pretextolist.php?start=1"><img src="../../../../../images/first.gif" alt="Primero" width="16" height="16" border="0"></a></td>
-									<?php } ?>
-									<!--previous page button-->
-									<?php if ($PrevStart == $nStartRec) { ?>
-									<td><img src="../../../../../images/prevdisab.gif" alt="Anterior" width="16" height="16" border="0"></td>
-									<?php } else { ?>
-									<td><a href="pretextolist.php?start=<?php echo $PrevStart; ?>"><img src="../../../../../images/prev.gif" alt="Anterior" width="16" height="16" border="0"></a></td>
-									<?php } ?>
-									<!--current page number-->
-									<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
-									<!--next page button-->
-									<?php if ($NextStart == $nStartRec) { ?>
-									<td><img src="../../../../../images/nextdisab.gif" alt="Siguiente" width="16" height="16" border="0"></td>
-									<?php } else { ?>
-									<td><a href="pretextolist.php?start=<?php echo $NextStart; ?>"><img src="../../../../../images/next.gif" alt="Siguiente" width="16" height="16" border="0"></a></td>
-									<?php  } ?>
-									<!--last page button-->
-									<?php if ($LastStart == $nStartRec) { ?>
-									<td><img src="../../../../../images/lastdisab.gif" alt="�ltimo" width="16" height="16" border="0"></td>
-									<?php } else { ?>
-									<td><a href="pretextolist.php?start=<?php echo $LastStart; ?>"><img src="../../../../../images/last.gif" alt="&Uacute;ltimo" width="16" height="16" border="0"></a></td>
-									<?php } ?>
-									<td><span class="phpmaker">&nbsp;de <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
-								</tr>
-							</table>
-							<?php if ($nStartRec > $nTotalRecs) {
-									$nStartRec = $nTotalRecs;
-								}
-								$nStopRec = $nStartRec + $nDisplayRecs - 1;
-								$nRecCount = $nTotalRecs - 1;
-								if ($rsEof) {
-									$nRecCount = $nTotalRecs;
-								}
-								if ($nStopRec > $nRecCount) {
-									$nStopRec = $nRecCount;
-								} ?>
-							<span class="phpmaker">Registros <?php echo $nStartRec; ?> a <?php echo $nStopRec; ?> de <?php echo $nTotalRecs; ?></span>
+								<table border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td><span class="phpmaker">P&aacute;gina&nbsp;</span></td>
+										<!--first page button-->
+										<?php if ($nStartRec == 1) { ?>
+											<td><img src="../../../../../images/firstdisab.gif" alt="Primero" width="16" height="16" border="0"></td>
+										<?php } else { ?>
+											<td><a href="pretextolist.php?start=1"><img src="../../../../../images/first.gif" alt="Primero" width="16" height="16" border="0"></a></td>
+										<?php } ?>
+										<!--previous page button-->
+										<?php if ($PrevStart == $nStartRec) { ?>
+											<td><img src="../../../../../images/prevdisab.gif" alt="Anterior" width="16" height="16" border="0"></td>
+										<?php } else { ?>
+											<td><a href="pretextolist.php?start=<?php echo $PrevStart; ?>"><img src="../../../../../images/prev.gif" alt="Anterior" width="16" height="16" border="0"></a></td>
+										<?php } ?>
+										<!--current page number-->
+										<td><input type="text" name="pageno" value="<?php echo intval(($nStartRec - 1) / $nDisplayRecs + 1); ?>" size="4"></td>
+										<!--next page button-->
+										<?php if ($NextStart == $nStartRec) { ?>
+											<td><img src="../../../../../images/nextdisab.gif" alt="Siguiente" width="16" height="16" border="0"></td>
+										<?php } else { ?>
+											<td><a href="pretextolist.php?start=<?php echo $NextStart; ?>"><img src="../../../../../images/next.gif" alt="Siguiente" width="16" height="16" border="0"></a></td>
+										<?php  } ?>
+										<!--last page button-->
+										<?php if ($LastStart == $nStartRec) { ?>
+											<td><img src="../../../../../images/lastdisab.gif" alt="�ltimo" width="16" height="16" border="0"></td>
+										<?php } else { ?>
+											<td><a href="pretextolist.php?start=<?php echo $LastStart; ?>"><img src="../../../../../images/last.gif" alt="&Uacute;ltimo" width="16" height="16" border="0"></a></td>
+										<?php } ?>
+										<td><span class="phpmaker">&nbsp;de <?php echo intval(($nTotalRecs - 1) / $nDisplayRecs + 1); ?></span></td>
+									</tr>
+								</table>
+								<?php if ($nStartRec > $nTotalRecs) {
+										$nStartRec = $nTotalRecs;
+									}
+									$nStopRec = $nStartRec + $nDisplayRecs - 1;
+									$nRecCount = $nTotalRecs - 1;
+									if ($rsEof) {
+										$nRecCount = $nTotalRecs;
+									}
+									if ($nStopRec > $nRecCount) {
+										$nStopRec = $nRecCount;
+									} ?>
+								<span class="phpmaker">Registros <?php echo $nStartRec; ?> a <?php echo $nStopRec; ?> de <?php echo $nTotalRecs; ?></span>
 							<?php } else { ?>
-							<span class="phpmaker">Registros no encontrados</span>
+								<span class="phpmaker">Registros no encontrados</span>
 							<?php } ?>
 						</td>
 					</tr>

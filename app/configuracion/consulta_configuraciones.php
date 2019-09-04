@@ -1,69 +1,60 @@
 <?php
 $max_salida = 10;
-$ruta_db_superior = $ruta = "";
+$ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
+    if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
-    $ruta .= "../";
+    $ruta .= '../';
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (Object)[
-    'success' => 1,
-    'data' => []
+$Response = (object) [
+    'data' => [],
+    'message' => '',
+    'success' => 0
 ];
 
-$configurations = implode("','", $_REQUEST['configurations']);
-$sql = "select nombre,valor from configuracion where nombre in ('{$configurations}')";
-$findConfigurations = StaticSql::search($sql);
+try {
+    if (!$_REQUEST['configurations']) {
+        throw new Exception('Debe indicar la configuracion', 1);
+    }
 
-if ($findConfigurations) {
-    foreach ($findConfigurations as $key => $configuration) {
-        $Object = json_decode($configuration['valor']);
+    foreach ($_REQUEST['configurations'] as $name) {
+        $Configuracion = Configuracion::findByAttributes([
+            'nombre' => $name
+        ]);
 
-        if ($Object->ruta) {
-            $tipo_almacenamiento = new SaiaStorage("archivos");
-            $binary = StorageUtils::get_binary_file($configuration['valor']);
-            $dir = 'temporal/saia/logo';
+        if (!$Configuracion) {
+            throw new Exception("No existe la configuración {$name}", 1);
+        }
 
-            if (!is_dir($ruta_db_superior . $dir)) {
-                if (!mkdir($ruta_db_superior . $dir, 0777, true)) {
-                    throw new Exception("cant no create dir", 1);
-                }
+        if (is_object(json_decode($Configuracion->valor))) {
+            $image = TemporalController::createTemporalFile($Configuracion->valor);
+
+            if (!$image->success) {
+                throw new Exception("Erorr al obtener archivo", 1);
             }
 
-            $route = explode('/', $Object->ruta);
-            $fileName = end($route);
-            $finalRoute = $ruta_db_superior . $dir . '/' . $fileName;
-
-            if (!is_file($finalRoute)) {
-                $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                if (file_put_contents($finalRoute, $content)) {
-                    $value = $dir . '/' . $fileName;
-                }
-            } else {
-                $value = $dir . '/' . $fileName;
-            }
-
-            if (!$value) {
-                $Response->success = 0;
-            }
+            $value = $image->route;
         } else {
-            $value = $configuration['valor'];
+            $value = $Configuracion->valor;
         }
 
         $Response->data[] = [
-            'name' => $configuration['nombre'],
+            'name' => $Configuracion->nombre,
             'value' => $value
         ];
     }
-} else {
-    $Response->success = 0;
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);

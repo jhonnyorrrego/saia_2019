@@ -1,26 +1,16 @@
 {
     "require": {
-        "luracast/restler": "^3.0",
         "firebase/php-jwt": "*",
-        "phpoffice/phpword": "*",
-        "greenlion/php-sql-parser": "*",
-        "siriusphp/upload": "*",
-        "symfony/process": "*",
-        "doctrine/orm": "*",
         "danielstjules/stringy": "*",
         "knplabs/gaufrette": "*",
         "imagine/imagine": "*",
         "doctrine/doctrine-migrations-bundle": "*",
-        "smalot/pdfparser": "*",
         "tecnickcom/tcpdf": "*",
-        "aws/aws-sdk-php": "*",
         "lasserafn/php-initial-avatar-generator": "^3.0",
-        "symfony/yaml": "^4.1",
         "mpdf/mpdf": "^7.1",
-        "setasign/fpdf": "^1.8",
-        "setasign/fpdi": "v1.6",
-        "setasign/fpdi-tcpdf": "v1.6",
         "phpoffice/phpspreadsheet": "^1.6",
-        "doctrine/migrations": "^2.1"
+        "doctrine/migrations": "^2.1",
+        "doctrine/dbal": "^2.9",
+        "luracast/restler": "^3.0"
     }
 }
