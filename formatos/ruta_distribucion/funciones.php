@@ -84,8 +84,6 @@ function add_edit_ruta_dist($idformato, $iddoc)
         <td style="width:20%;font-size:90%">' . $item['fecha_item_dependenc'] . '</td>
         <td style="width:30%;font-size:90%">' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item['dependencia_asignada'] . '"></td>';
 
-        $tabla .= '<td style="width:30%;font-size:90%">' . $item['descripcion_dependen'] . '</td>';
-
         /////////////////////////  PARA ACTIVAR EN HTML FALTA SCRIPT QUE DETECTE SI ES PDF O HTML ////////// Julian Otalvaro ////////////////////////
         /*
             $seleccionar = array(
@@ -130,7 +128,6 @@ function add_edit_ruta_dist($idformato, $iddoc)
 			<tr style="font-weight:bold"> 
 			    <td style="width:20%"><strong>Fecha</strong></td>
 			    <td style="width:30%"><strong>Dependencia</strong></td>
-			    <td style="width:30%"><strong>Observaci&oacute;n</strong></td>
 			    <td style="width:20%"><strong><center>Estado</center></strong></td>
             </tr></table><hr /> <table id="dependenciaDistribucion" style="width:100%; font-size:80%;">';
 
@@ -209,25 +206,12 @@ function add_edit_ruta_dist($idformato, $iddoc)
         $seleccionar[$item['estado_mensajero']] = 'selected';
         $tabla = '<tr id="' . $item['idft_funcionarios_ruta'] . '">
         <td style="width:20%;font-size:90%">' . $item['fecha_mensajero'] . '</td>
-        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['nombre'] . '</td>
-        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['descripcion'] . '</td>';
-
-        //////// La seleccion esta desahbilitada para pdf. falta desarrollo de script que detecte html o pdf para activarlo si es necesario  - Julian Otalvaro //////////////////////
-        /*
-        <td>
-            <select class="form-control cambio_estado" name="estado[]" data-idft="' . $item['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item['mensajero_ruta'] . '">
-                <option value="1" ' . $seleccionar[1] . '>Activo</option>
-                <option value="2" ' . $seleccionar[2] . '>Inactivo</option>
-            </select>
-        </td>///////////////////////*/
-
+        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['nombre'] . '</td>';
         $tabla .= '<td style="width:20%;font-size:90%;text-align:center;" > (En Desarrollo)</td>';
-
         $tabla .= '</tr>';
 
         return $tabla;
     }
-
 
     function mostrar_datos_funcionarios_ruta($idformato, $iddoc)
     {
@@ -247,7 +231,6 @@ function add_edit_ruta_dist($idformato, $iddoc)
 			<tr>
 		    <td style="width:20%;"><strong>Fecha</strong></td>
             <td style="width:30%;"><strong>Mensajero</strong></td>
-            <td style="width:30%;"><strong>Observaci&oacute;n</strong></td>
 		    <td style="width:20%;text-align:center;"><strong>Estado</strong></td>
 			</tr></table><hr /> <table id="funcionarioRuta" style="width:100%;font-size:80%;">';
 
@@ -324,12 +307,42 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
         if ($busca_dep['numcampos']) {
             $estado_dependencia = 2;
         }
-        $cadena = "INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES ('" . $fecha_almacenar . "'," . $dependencias[$i] . "," . $estado_dependencia . "," . $datos[0]['idft_ruta_distribucion'] . "," . ($i + 1) . ")";
-        phpmkr_query($cadena);
+
+        $cadena = Model::getQueryBuilder()
+            ->insert('ft_dependencias_ruta')
+            ->values(
+                array(
+                    'fecha_item_dependenc' => '?',
+                    'dependencia_asignada' => '?',
+                    'estado_dependencia' => '?',
+                    'ft_ruta_distribucion' => '?',
+                    'orden_dependencia' => '?'
+                )
+            )
+            ->setParameter(0, $fecha_almacenar)
+            ->setParameter(1, $dependencias[$i])
+            ->setParameter(2, $estado_dependencia)
+            ->setParameter(3, $datos[0]['idft_ruta_distribucion'])
+            ->setParameter(4, ($i + 1))
+            ->execute();
     }
     for ($i = 0; $i < count($mensajeros); $i++) {
-        $cadena = "INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES ('" . $fecha_almacenar . "'," . $mensajeros[$i] . ",1," . $datos[0]['idft_ruta_distribucion'] . ")";
-        phpmkr_query($cadena);
+
+        $cadena = Model::getQueryBuilder()
+            ->insert('ft_funcionarios_ruta')
+            ->values(
+                array(
+                    'fecha_mensajero' => '?',
+                    'mensajero_ruta' => '?',
+                    'estado_mensajero' => '?',
+                    'ft_ruta_distribucion' => '?'
+                )
+            )
+            ->setParameter(0, $fecha_almacenar)
+            ->setParameter(1, $mensajeros[$i])
+            ->setParameter(2, '1')
+            ->setParameter(3, $datos[0]['idft_ruta_distribucion'])
+            ->execute();
     }
 }
 
@@ -338,7 +351,7 @@ function vincular_dependencia_ruta_distribucion($idformato, $iddoc)
     global $conn, $ruta_db_superior;
     $datos = busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada", "ft_ruta_distribucion a, ft_dependencias_ruta b", "b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=" . $iddoc, "", $conn);
     if ($datos['numcampos']) {
-        include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
+        include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
         for ($i = 0; $i < $datos['numcampos']; $i++) {
             actualizar_dependencia_ruta_distribucion($datos[$i]['idft_ruta_distribucion'], $datos[$i]['dependencia_asignada'], 1);
         }
@@ -381,5 +394,4 @@ function ruta_distribucion_fab_buttons()
         ]
     ]);
 }
-
 ?>

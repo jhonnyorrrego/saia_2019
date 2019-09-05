@@ -34,16 +34,17 @@ try {
             ];
         }
     } else if (SessionController::isRoot()) {
-        $Response->data = StaticSql::search('select * from perfil');
+        $Response->data = Perfil::getQueryBuilder()
+            ->select('*')
+            ->from('perfil')
+            ->execute()->fetchAll();
     } else {
         $root = Perfil::ADMINISTRADOR;
-        $sql = <<<SQL
-            SELECT *
-            FROM perfil
-            WHERE
-                idperfil <> {$root}
-SQL;
-        $Response->data = StaticSql::search($sql);
+        $Response->data = Perfil::getQueryBuilder()
+            ->select('*')
+            ->from('perfil')
+            ->where("idperfil<>{$root}")
+            ->execute()->fetchAll();
     }
 
     $Response->success = 1;

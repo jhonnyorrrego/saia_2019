@@ -1,10 +1,10 @@
-$(function() {
+$(function () {
     let params = $('#trd_report_script').data('params');
 
     (function init() {
         $('#trd_table').bootstrapTable({
             url: `${params.baseUrl}app/serie/reporte_trd.php`,
-            queryParams: function(queryParams) {
+            queryParams: function (queryParams) {
                 queryParams = $.extend(queryParams, {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
@@ -23,6 +23,23 @@ $(function() {
             showExport: true,
             exportTypes: ['csv', 'txt', 'excel', 'pdf'],
             exportDataType: 'all',
+            exportOptions: {
+                fileName: 'TRD',
+                jspdf: {
+                    orientation: 'l',
+                    margins: { left: 10, right: 10, top: 30, bottom: 30 },
+                    autotable: {
+                        styles: {
+                            cellPadding: 2,
+                            rowHeight: 20,
+                            fontStyle: 'normal',
+                            overflow: 'linebreak',
+                            valign: 'middle'
+                        },
+                        tableWidth: 'wrap'
+                    }
+                }
+            },
             columns: getColumns()
         });
     })();
@@ -72,18 +89,19 @@ $(function() {
                 {
                     field: 'dependencia',
                     title: 'Dependencia',
+                    filterControl: 'select',
                     align: 'center'
                 },
                 {
                     field: 'serie',
                     title: 'Serie',
-                    filterControl: 'input',
+                    filterControl: 'select',
                     align: 'center'
                 },
                 {
                     field: 'subSerie',
                     title: 'SubSerie',
-                    filterControl: 'input',
+                    filterControl: 'select',
                     align: 'center'
                 },
                 {
@@ -131,13 +149,13 @@ $(function() {
             {
                 field: 'codigoDependencia',
                 title: 'Código Dependencia',
-                filterControl: 'input',
+                filterControl: 'select',
                 align: 'center'
             },
             {
                 field: 'CodigoSerie',
                 title: 'Código Serie',
-                filterControl: 'input',
+                filterControl: 'select',
                 align: 'center'
             },
             {
@@ -149,7 +167,7 @@ $(function() {
             {
                 field: 'subSerie',
                 title: 'Código subserie',
-                filterControl: 'input',
+                filterControl: 'select',
                 align: 'center'
             },
             {
