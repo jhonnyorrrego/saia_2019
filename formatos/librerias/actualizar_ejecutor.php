@@ -99,6 +99,8 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 
 	$campos = array();
 	$valores = array();
+	$insertcolumns = [];
+	$insertvalues = [];
 	if (!isset($_REQUEST["ciudad"]) || strtolower($_REQUEST["ciudad"]) == "undefined") {
 		$config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "", $conn);
 		if ($config["numcampos"])
@@ -111,10 +113,16 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 			if (isset($_REQUEST[$campos_todos[$i]]) && in_array($campos_todos[$i], $campos_ejecutor)) {
 				array_push($valores, $_REQUEST[$campos_todos[$i]]);
 				array_push($campos, $campos_todos[$i]);
+				$insertcolumns[$campos_todos[$i]] = ":" . $campos_todos[$i];
+				$insertvalues[$campos_todos[$i]] = $_REQUEST[$campos_todos[$i]];
+
 				$actualizado = 1;
 			} elseif ($datos_ejecutor["numcampos"] && $datos_ejecutor[0][$campos_todos[$i]] <> "") {
 				array_push($valores, $datos_ejecutor[0][$campos_todos[$i]]);
 				array_push($campos, $campos_todos[$i]);
+				$insertcolumns[$campos_todos[$i]] = ":" . $campos_todos[$i];
+				$insertvalues[$campos_todos[$i]] =  $datos_ejecutor[0][$campos_todos[$i]];
+
 			}
 		}
 	}
@@ -123,8 +131,21 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 		$valor_insertar = "'" . implode("','", $valores) . "',";
 		$campos_insertar = implode(",", $campos) . ",";
 	}
+print_r($insertvalues);
 
 	$sql = 'INSERT INTO datos_ejecutor(' . $campos_insertar . "ejecutor_idejecutor,fecha) VALUES(" . $valor_insertar . $idejecutor . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	$municipio = Model::getQueryBuilder()
+	->insert("datos_ejecutor");
+	$municipio->values(
+        $insertcolumns
+    );
+	foreach($insertvalues as $key => $value){
+		$municipio->setParameter(":" . $key, $value);
+	}
+	$municipio->execute();
+	var_dump($municipio);
+	die();
+	
 	phpmkr_query($sql, $conn);
 	$iddatos_ejecutor = phpmkr_insert_id();
 	if (isset($_REQUEST["codigo"]) && $_REQUEST["codigo"]) {

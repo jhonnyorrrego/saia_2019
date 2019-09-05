@@ -58,7 +58,8 @@ class Connection
             'password' => PASS,
             'host' => HOST,
             'driver' => $this->getDriver(),
-            'port' => PORT
+            'port' => PORT,
+            'charset' => 'utf8'
         ];
     }
 

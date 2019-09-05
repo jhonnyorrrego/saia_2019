@@ -23,23 +23,18 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['formatId']) {
-        throw new Exception('Debe indicar el formato', 1);
+    if (!$_REQUEST['identificator']) {
+        throw new Exception('Debe indicar encabezado o pie', 1);
     }
 
-    $Formato = new Formato($_REQUEST['formatId']);
+    $EncabezadoFormato = new EncabezadoFormato($_REQUEST['identificator']);
 
-    if (!$Formato) {
-        throw new Exception("Formato invalido", 1);
+    if (!$EncabezadoFormato) {
+        throw new Exception("Identificador invalido", 1);
     }
 
-    $Formato->cuerpo = $_REQUEST['content'] ?? '';
-
-    if (!$Formato->save()) {
-        throw new Exception("Error al guardar el cuerpo", 1);
-    }
-
-    $Response->message = "Cuerpo del formato actualizado";
+    $Response->data->name = $EncabezadoFormato->etiqueta;
+    $Response->data->content = $EncabezadoFormato->contenido;
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

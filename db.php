@@ -75,107 +75,78 @@ function leido($codigo, $llave)
 {
     global $conn;
     $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $llave . " and llave_entidad=" . $codigo, "fecha_inicial DESC", $conn);
+
     if ($pendiente["numcampos"] > 0) {
         $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_entrada", "archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= " . fecha_db_almacenar($pendiente[0]["fecha_inicial"], "Y-m-d H:i:s"), "", $conn);
         if (!$leido["numcampos"]) {
-            $insertar = "insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1,$codigo,1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
-            $insertar = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1," . $codigo . ",1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
+            BuzonSalida::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
+
+            BuzonEntrada::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
         }
     } else {
         $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_salida", "archivo_idarchivo=$llave and destino='$codigo'", "fecha desc", $conn);
         if (!$leido["numcampos"] || $leido[0]["nombre"] <> "LEIDO") {
-            $insertar = "insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1,$codigo,1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
+
+            BuzonSalida::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
+
             $insertar = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
             $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1," . $codigo . ",1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
+
+            BuzonEntrada::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
         }
     }
-}
-
-/*<Clase>
-<Nombre>listar_campos_tabla</Nombre>
-<Parametros>$tabla:nombre de la tabla</Parametros>
-<Responsabilidades>crea una lista con los nombres de los campos de una tabla<Responsabilidades>
-<Notas>el nombre de la tabla puede llegar por parametro o por el request</Notas>
-<Excepciones></Excepciones>
-<Salida>vector con los nombres de los campos de la tabla especificada</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function listar_campos_tabla($tabla = null, $tipo_retorno = 0)
-{
-    global $conn;
-    return $conn->listar_campos_tabla($tabla, $tipo_retorno);
-}
-
-/*
-<Clase>
-<Nombre>guardar_lob</Nombre>
-<Parametros>$campo:nombre del campo;$tabla:nombre de la tabla;$condicion:condicion de actualización;$contenido:texto a insertar o actualizar;$tipo:puede ser 'texto' o 'archivo';$conn:objeto de conexion;$log:si se debe guardar lo hecho en el log, puede ser 0 o 1</Parametros>
-<Responsabilidades>Se encarga de insertar y actualizar los campos de tipo CLOB<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>*/
-function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1)
-{
-    return $conn->guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
-}
-
-/*
-<Clase>
-<Nombre>evento_archivo</Nombre>
-<Parametros>$cadena:cadena con los datos que se insertaron en la bd</Parametros>
-<Responsabilidades>Guarda en un archivo la copia de los eventos registrados en el log, cada vez que se inserta un registro<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>*/
-function evento_archivo($cadena)
-{
-    $storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
-    $nombre = DB . "_log_" . date("Y_m_d") . ".txt";
-    $filesystem = $storage->get_filesystem();
-    $contenido = "";
-
-    if ($filesystem->has($nombre)) {
-        $mode = "ab";
-        $contenido = $cadena . "*|*";
-    } else {
-        $mode = "wb";
-        $contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
-    }
-
-    $stream = $filesystem->createStream($nombre);
-    $stream->open(new StreamMode($mode));
-    $stream->write($contenido);
-    $stream->close();
 }
 
 function normalizePath($path)
 {
     return array_reduce(explode('/', $path), create_function('$a, $b', '
-			if($a === 0)
-				$a = "/";
+        if($a === 0)
+            $a = "/";
 
-			if($b === "" || $b === ".")
-				return $a;
+        if($b === "" || $b === ".")
+            return $a;
 
-			if($b === "..")
-				return dirname($a);
+        if($b === "..")
+            return dirname($a);
 
-			return preg_replace("/\/+/", "/", "$a/$b");
-		'), 0);
+        return preg_replace("/\/+/", "/", "$a/$b");
+    '), 0);
 }
 
 /*
@@ -211,183 +182,17 @@ function formato_cargo($nombre_cargo)
     return $cargo;
 }
 
-/*
-<Clase>
-<Nombre>phpmkr_db_close
-<Parametros>$conn: objeto que contiene la conexion a la base de datos
-<Responsabilidades>Cerrar la conexión actual
-<Notas>Examina que la conexion exista y si es asi se encarga de cerrarla
-<Excepciones>Error al cerrar la base de datos. Si la conexion que se quiere cerrar no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_db_close($conn)
-{
-    $conn->disconnect();
-}
-
-/*
-<Clase>
-<Nombre>phpmkr_query
-<Parametros>sql: cadena que contiene la sentencia sql a ejecutar
-            conectar: objeto que contiene la conexion con la base de datos
-<Responsabilidades>ejecutar la sentencia sql y guardar el registro de dicha transaccion en el log, es decir, en la tabla evento
-<Notas>Examina la cadena y realiza las acciones dependiendo del tipo de evento que se quiera realizar sobre la base de datos
-       Ejecuta la cadena misma y otra que inserta el registro en la tabla que lleva el log de las acciones realizadas.
-<Excepciones>Error al ejecutar la busqueda. Si la conexion sobre la que se quiere ejecutar la cadena no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * ejecuta una sentencia a la db
+ *
+ * @param string $sql
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
 function phpmkr_query($sql)
 {
     return Connection::getInstance()->query($sql);
-}
-
-/*
-<Clase>
-<Nombre>phpmkr_num_fields
-<Parametros>$rs puntero que contiene el resultado de una consulta
-<Responsabilidades>Retornar el numero de columnas que contiene $rs
-<Notas>
-<Excepciones>Error en el numero de campos, Si la conexion con la base de datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_num_fields($rs)
-{
-    global $conn;
-    return $conn->Numero_Campos($rs);
-}
-
-/*
-<Clase>
-<Nombre>phpmkr_field_name
-<Parametros>$rs: objeto que contiene la consulta, $pos: posicion de la consulta
-<Responsabilidades>Retornar el nombre de la columna $pos en la busqueda $rs
-<Notas>
-<Excepciones>Error en nombre del campo. Si en la conexion con la base de datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_field_name($rs, $pos)
-{
-    global $conn;
-    return $conn->Nombre_Campo($rs, $pos);
-}
-/*
-<Clase>
-<Nombre>phpmkr_num_rows
-<Parametros>$rs: objeto que contiene la consulta
-<Responsabilidades>Retornar el numero de filas de la consulta
-<Notas>Esta funcion no esta disponible por el momento para Oracle
-<Excepciones>Error en numero de filas. Si la conexion con la base datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_num_rows($rs)
-{
-    throw new Exception("Se debe actualizar el modo de consulta", 1);
-}
-
-/*
-<Clase>
-<Nombre>phpmkr_fetch_array
-<Parametros>$rs: objeto que contiene la consulta
-<Responsabilidades> Retornar un arreglo que contiene la siguiente fila de $rs
-<Notas>
-<Excepciones>Error en capturar resultado en arreglo. Si la conexion con la base de datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_fetch_array($rs)
-{
-    global $conn;
-    if ($conn) {
-        if (!$rs && $conn->res)
-            $rs = $conn->res;
-        $retorno = $conn->sacar_fila($rs);
-        return $retorno;
-    } else {
-        alerta("Error en capturar resultado en arreglo." . $rs->sql);
-        return false;
-    }
-}
-/*
-<Clase>
-<Nombre>phpmkr_fetch_row
-<Parametros>$rs: objeto que contiene la consulta
-<Responsabilidades>Retonar la siguiente fila de $rs en un arreglo
-<Notas>pmpmkr_fetch_row y phpmkr_fetch_array hacen exactamente lo mismo
-<Excepciones>Error en capturar el resultado del arreglo, si la conexion con la base de datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_fetch_row($rs)
-{
-    global $conn;
-    if ($conn) {
-        if (!$rs && $conn->res)
-            $rs = $conn->res;
-        $retorno = $conn->sacar_fila($rs);
-        return $retorno;
-    } else {
-        alerta("Error en capturar resultado en arreglo." . $rs->sql);
-        return false;
-    }
-}
-/*
-<Clase>
-<Nombre>phpmkr_free_result
-<Parametros>$rs: objeto que contiene la consulta
-<Responsabilidades>libera el objeto $rs
-<Notas>
-<Excepciones>Error al liberar el resultado, si la conexion con la base de datos no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_free_result($rs)
-{
-    global $conn;
-    $conn->liberar_resultado($rs);
-}
-/*
-<Clase>
-<Nombre>phpmkr_insert_id
-<Parametros>
-<Responsabilidades>retonar la llave primaria del ultimo registro insertado
-<Notas>
-<Excepciones>Error al buscar la ultima insercion. Si no existe la conexion con la base de datos
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_insert_id()
-{
-    global $conn;
-    return $conn->lastInsertId();
-}
-/*
-<Clase>
-<Nombre>phpmkr_error
-<Parametros>
-<Responsabilidades>invoca la funcion error de la clase sql
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function phpmkr_error()
-{
-    throw new Exception("se debe eliminar la funcion phpmkr_error", 1);
 }
 
 /**
@@ -417,36 +222,6 @@ function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = 
     $response = $QueryBuilder->execute()->fetchAll();
     $response['numcampos'] = count($response);
     return $response;
-}
-
-/**
- * se debe evitar usar esta funcion
- * ya que está obsoleta
- *
- * @param string $field
- * @param string $format
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019-09-02
- */
-function fecha_db_obtener($field, $format)
-{
-    return $field;
-}
-
-/**
- * se debe evitar usar esta funcion
- * ya que está obsoleta
- *
- * @param string $date
- * @param string $format
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019-09-02
- */
-function fecha_db_almacenar($date, $format)
-{
-    return $date;
 }
 
 /**
@@ -976,35 +751,6 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     return $idanexo;
 }
 
-/*
-<Clase>
-<Nombre>error
-<Parametros>$cad: cadena de error
-<Responsabilidades>Imprimir la cadena de error
-<Notas>Esta Funcion realiza la insercion de el error generado en una rreglo que debe mostrarse en alguna instancia
-       puede ser en una marquesina en la parte inferior
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
-{
-    if (DEBUGEAR) {
-        if ($imprime_cadena) {
-            echo $cad . "<BR>";
-        }
-        if ($file == "") {
-            $file = str_replace(CARPETA_SAIA . "/saia/", "", $_SERVER["PHP_SELF"]);
-        }
-        if ($ruta == "") {
-            //TODO: Falta validar el contraslash para windows en la ruta del archivo.
-            $ruta = $_SERVER["DOCUMENT_ROOT"] . "/" . CARPETA_SAIA . "/errores/" . date("Ymd") . "_" . str_replace(".", "_", $_SERVER["REMOTE_ADDR"]) . ")-(" . str_replace("/", "-", $file) . ").txt";
-        }
-        $size = file_put_contents($ruta, "[" . date("Y-m-d H:i:s") . "][" . $file . "]" . $cad . "\n\r", FILE_APPEND);
-    }
-}
-
 /**
  * abre una url
  *
@@ -1318,10 +1064,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
  */
 function contador($iddocumento, $cad)
 {
-    global $conn;
-    $func = SessionController::getValue('usuario_actual');
-    $contador = busca_filtro_tabla("", "contador a", "a.nombre='" . $cad . "'", "", $conn);
-    $conn->invocar_radicar_documento($iddocumento, $contador[0]["idcontador"], $func);
+    throw new Exception("Pendiente por actualizar", 1);
 }
 
 /*
@@ -1337,7 +1080,7 @@ function contador($iddocumento, $cad)
  */
 function muestra_contador($cad)
 {
-    global $sql, $conn;
+    global  $conn;
     $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "", $conn);
     if ($cuenta["numcampos"]) {
         $consecutivo = $cuenta[0]["consecutivo"];
@@ -1430,7 +1173,6 @@ function codigo_rol($id, $tipo)
  */
 function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
 {
-    global $sql;
     $datorig = array();
     $datorig["numcampos"] = 0;
     $filtro = "";
@@ -1505,72 +1247,6 @@ function volver($back = "1")
     echo '<script type="text/javascript">
         window.history.go(-' . $back . ');
     </script>';
-}
-
-/*
-<Clase>
-<Nombre>agrega_boton
-<Parametros>$nombre:
-            $imagen:
-            $dir:
-            $destino:
-            $texto:
-            $acceso:
-            $modulo:
-<Responsabilidades>verificar que tenga permisos el usuario e insertar el boton correspondiente
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function agrega_boton($nombre, $imagen, $dir, $destino, $texto, $acceso, $modulo, $retorno = 0)
-{
-
-    global $conn;
-    $cadena = "";
-    if ($modulo != "") {
-        if ($modulo == "formatos") {
-            $ayuda = busca_filtro_tabla("f.ayuda", "formato f", "f.nombre='" . strtolower($nombre) . "'", "", $conn);
-        } else
-            $ayuda = busca_filtro_tabla("A.ayuda", "modulo A", "A.nombre='$modulo'", "", $conn);
-        $ok = PermisoController::moduleAccess($modulo);
-    } else if (SessionController::getLogin())
-        $ok = 1;
-    else $ok = 0;
-    if ($ok) {
-        if ($dir == "" || $dir == null)
-            $dir = "#";
-        //||!is_file($imagen)
-        if ($imagen == "" || $imagen == null) {
-            $imagen = "botones/configuracion/default.gif";
-        }
-        if ($nombre == "" || $nombre == null)
-            $nombre = "boton";
-        if ($destino == "" || $destino == null)
-            $destino = "_self";
-        if ($texto == "" || $texto == null)
-            $texto = "";
-        $alto = 65;
-        $ancho = 65;
-        $texto = str_replace("_", " ", $texto);
-        $texto = mayusculas($texto);
-        $alt = $texto;
-        $alt = str_replace("<BR>", " ", $alt);
-        $ayuda = busca_filtro_tabla("A.ayuda", "modulo A", "A.nombre='$modulo'", "", $conn);
-        if ($nombre == "texto") {
-            $cadena = '<a title="' . @$ayuda[0]["ayuda"] . '" href="' . $dir . '" target="' . $destino . '"><span class="phpmaker">' . $texto . '</span></a>&nbsp;&nbsp;';
-        } else {
-            $cadena = '<a title="' . $ayuda[0]["ayuda"] . '" href="' . $dir . '" target="' . $destino . '"><span class="phpmaker"> <img src="' . $imagen . '"></span></a>&nbsp;&nbsp;';
-        }
-    }
-
-    if ($retorno) {
-        return $cadena;
-    } else {
-        echo $cadena;
-        return true;
-    }
 }
 
 /**
@@ -1661,24 +1337,6 @@ function crear_destino($destino)
     return $destino;
 }
 
-/*<Clase>
-<Nombre>ejecuta_filtro_tabla</Nombre>
-<Parametros>$sql2:sentencia sql;$conn:objeto de conexion</Parametros>
-<Responsabilidades>Ejecuta una sentencia sql y devuelve un vector con los datos encontrados<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase> */
-function ejecuta_filtro_tabla($sql, $conn2 = null)
-{
-    $response = StaticSql::search($sql);
-    $response['numcampos'] = count($response);
-    $response['sql'] = $sql;
-    return $response;
-}
-
 function ruta_almacenamiento($tipo, $raiz = 1)
 {
     $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
@@ -1700,13 +1358,6 @@ function ruta_almacenamiento($tipo, $raiz = 1)
     return $ruta_raiz . $path;
 }
 
-/* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
-function concatenar_cadena_sql($arreglo_cadena)
-{
-    global $conn;
-    return $conn->concatenar_cadena($arreglo_cadena);
-}
-
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
 {
     global $conn;
@@ -1724,33 +1375,6 @@ function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
         $retorno['idreemplazo'] = extrae_campo($reemplazo, 1);
     }
     return $retorno;
-}
-
-/*EN ALGUNOS CLIENTES SE TIENE PROBLEMA CON LA CODIFICACION, ESTO LO SOLUCIONA DE FORMA GENERICA*/
-function codifica_encabezado($texto)
-{
-    if (CODIFICA_ENCABEZADO) {
-        return utf8_encode($texto);
-    } else {
-        return $texto;
-    }
-}
-function decodifica_encabezado($texto)
-{
-    if (CODIFICA_ENCABEZADO) {
-        return utf8_decode($texto);
-    } else {
-        return $texto;
-    }
-}
-
-function parsear_comilla_sencilla_cadena($cadena)
-{
-    if (preg_match("/'/", $cadena)) {
-        $cadena = str_replace("'", "''", $cadena);
-    }
-
-    return $cadena;
 }
 
 function return_megabytes($val)
