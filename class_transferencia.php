@@ -338,7 +338,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     }
 
     if ($destino != "" && $origen != "") {
-        $values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
         if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
             $tipo_destino = 1;
             $datos_origen = "";
@@ -379,7 +378,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         )
                         ->setParameter(0, $idarchivo)
                         ->setParameter(1, $datos["nombre"])
-                        ->setParameter(2, fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s'))
+                        ->setParameter(2, date('Y-m-d H:i:s'))
                         ->setParameter(3, $origen)
                         ->setParameter(4, '1')
                         ->setParameter(5, '1')

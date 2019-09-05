@@ -300,7 +300,7 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
     $datos = busca_filtro_tabla("", "ft_ruta_distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
     $dependencias = explode(",", $datos[0]['asignar_dependencias']);
     $mensajeros = explode(",", $datos[0]['asignar_mensajeros']);
-    $fecha_almacenar = fecha_db_almacenar(date('Y-m-d'), 'Y-m-d');
+    $fecha_almacenar = date('Y-m-d');
     for ($i = 0; $i < count($dependencias); $i++) {
         $busca_dep = busca_filtro_tabla("idft_dependencias_ruta,estado", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "lower(c.estado)='aprobado' AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND  a.estado_dependencia=1 AND a.ft_ruta_distribucion<>" . $datos[0]['idft_ruta_distribucion'] . " AND a.dependencia_asignada=" . $dependencias[$i], "", $conn);
         $estado_dependencia = 1;

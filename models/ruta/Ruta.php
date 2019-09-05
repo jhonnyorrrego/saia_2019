@@ -120,7 +120,7 @@ class Ruta extends Model
         $type = RutaDocumento::TIPO_RADICACION;
         $sql = Model::getQueryBuilder()
             ->select("a.*")
-            ->from("ruta a")
+            ->from("ruta", "a")
             ->join("a", "ruta_documento", "b", "a.fk_ruta_documento = b.idruta_documento")
             ->where("b.fk_documento = :documento")
             ->andWhere("b.estado = 1")

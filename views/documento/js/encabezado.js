@@ -531,6 +531,7 @@ $(function() {
             },
             function(response) {
                 if (response.success) {
+                    console.log(response);
                     createMenu(response.data);
                 } else {
                     console.error('error al crear el menu');
