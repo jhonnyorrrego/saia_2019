@@ -1670,7 +1670,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 {
                     global $conn, $sql, $ruta_db_superior;
                     $campos = busca_filtro_tabla("*", "campos_formato A", "A.idcampos_formato=" . $campo, "", $conn);
-                    $padre = busca_filtro_tabla("cod_padre,banderas,nombre", "formato", "idformato=" . $campos[0]["formato_idformato"], "", $conn);
+                    
+                    $padre = Model::getQueryBuilder()
+                        ->select(["cod_padre","banderas","nombre"])
+                        ->from("formato")
+                        ->where("idformato = :idformato")
+                        ->setParameter(':idformato', $campos[0]["formato_idformato"])
+                        ->execute()->fetchAll();
+
                     $acciones = explode(",", $campos[0]["acciones"]);
                     $banderas = explode(",", $padre[0]["banderas"]);
 

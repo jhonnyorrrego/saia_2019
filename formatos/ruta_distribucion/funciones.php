@@ -307,12 +307,42 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
         if ($busca_dep['numcampos']) {
             $estado_dependencia = 2;
         }
-        $cadena = "INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES ('" . $fecha_almacenar . "'," . $dependencias[$i] . "," . $estado_dependencia . "," . $datos[0]['idft_ruta_distribucion'] . "," . ($i + 1) . ")";
-        phpmkr_query($cadena);
+
+        $cadena = Model::getQueryBuilder()
+            ->insert('ft_dependencias_ruta')
+            ->values(
+                array(
+                    'fecha_item_dependenc' => '?',
+                    'dependencia_asignada' => '?',
+                    'estado_dependencia' => '?',
+                    'ft_ruta_distribucion' => '?',
+                    'orden_dependencia' => '?'
+                )
+            )
+            ->setParameter(0, $fecha_almacenar)
+            ->setParameter(1, $dependencias[$i])
+            ->setParameter(2, $estado_dependencia)
+            ->setParameter(3, $datos[0]['idft_ruta_distribucion'])
+            ->setParameter(4, ($i + 1))
+            ->execute();
     }
     for ($i = 0; $i < count($mensajeros); $i++) {
-        $cadena = "INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES ('" . $fecha_almacenar . "'," . $mensajeros[$i] . ",1," . $datos[0]['idft_ruta_distribucion'] . ")";
-        phpmkr_query($cadena);
+
+        $cadena = Model::getQueryBuilder()
+            ->insert('ft_funcionarios_ruta')
+            ->values(
+                array(
+                    'fecha_mensajero' => '?',
+                    'mensajero_ruta' => '?',
+                    'estado_mensajero' => '?',
+                    'ft_ruta_distribucion' => '?'
+                )
+            )
+            ->setParameter(0, $fecha_almacenar)
+            ->setParameter(1, $mensajeros[$i])
+            ->setParameter(2, '1')
+            ->setParameter(3, $datos[0]['idft_ruta_distribucion'])
+            ->execute();
     }
 }
 

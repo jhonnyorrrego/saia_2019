@@ -109,6 +109,12 @@ function select_mensajero_distribucion()
     return $select;
 }
 
+function adicionar_ruta($datos)
+{
+    $botonAdicionar = '<div class="kenlace_saia" enlace="formatos/ruta_distribucion/adicionar_ruta_distribucion.php" conector="iframe" titulo="Crear ruta"><center><button class="btn btn-secondary"><i class="fa fa-plus"></i><span class="d-sm-inline"> Adicionar</span></button></center></div>';
+    return $botonAdicionar;
+}
+
 echo select2();
 ?>
 
@@ -121,9 +127,9 @@ echo select2();
             var valor = e.params.data.id;
 
             if (valor == 'boton_generar_planilla') {
-                
+
                 registros_seleccionados = top.window.gridSelection();
-                if(registros_seleccionados.length == 0){
+                if (registros_seleccionados.length == 0) {
                     top.notification({
                         message: "No ha seleccionado alguna distribuci&oacute;n",
                         type: "error",
@@ -171,7 +177,7 @@ echo select2();
                     $("#ir_adicionar_documento").trigger("click");
                     $("#ir_adicionar_documento").remove();
 
-                }catch(e){}     
+                } catch (e) {}
             }
 
             if (valor == 'boton_finalizar_entrega') {
@@ -325,8 +331,8 @@ echo select2();
                             if (data.exito) {
                                 var seleccionados = $("#table").bootstrapTable("getSelections");
                                 seleccionados.forEach(function(valor, indice, array) {
-                                    $("#select_mensajeros_ditribucion_"+valor["id"]).html($('[value="' + mensajero + '"]').html());
-                                    $("#select_mensajeros_ditribucion_"+valor["id"]).attr('valor',mensajero);
+                                    $("#select_mensajeros_ditribucion_" + valor["id"]).html($('[value="' + mensajero + '"]').html());
+                                    $("#select_mensajeros_ditribucion_" + valor["id"]).attr('valor', mensajero);
                                 });
                                 top.notification({
                                     message: 'Mensajero asignado exitosamente',

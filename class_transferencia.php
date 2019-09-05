@@ -15,18 +15,6 @@ include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.p
 include_once $ruta_db_superior . "bpmn/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 
-/*
-<Clase>
-<Nombre>procesar_estados</Nombre> 
-<Parametros>$idorigen:codigo del funcionario que realiza la accion;$iddestino:codigo del funcionario a quien va dirigida la accion;$nombre_transferencia:tipo de accion;$iddocumento:identificador del documento;$fecha_final:fecha de la accion</Parametros>
-<Responsabilidades>Validar el tipo de accion y hacer el llamado para realizar el ingreso o la eilminacion en la tabla asignacion<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
- */
 function procesar_estados($idorigen, $iddestino, $nombre_transferencia, $iddocumento = null, $fecha_final = null)
 {
     switch ($nombre_transferencia) {
@@ -78,18 +66,7 @@ function procesar_estados($idorigen, $iddestino, $nombre_transferencia, $iddocum
     }
     return true;
 }
-/*
-<Clase>
-<Nombre>eliminar_asignacion</Nombre> 
-<Parametros>$funcionario:codigo del funcionario;$iddocumento:identifador del documento</Parametros>
-<Responsabilidades>Elimina los registros en la tabla asignacion que corresponde con el funcionario y el documento<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
- */
+
 function eliminar_asignacion($funcionario, $iddocumento)
 {
     global $conn;
@@ -105,18 +82,7 @@ function eliminar_asignacion($funcionario, $iddocumento)
     }
     return true;
 }
-/*
-<Clase>
-<Nombre>asignar_tarea_buzon</Nombre> 
-<Parametros>$iddocumento:identificador del documento;$idserie:identificador de la serie(No se utiliza);$idtarea:identifcador de la tarea (pendientes);$list_entidad:codigo del funcionario destino;$identidad:tipo de entidad;$fecha_inicial:Null;$fecha_final:fecha de la accion (No se utiliza);$estado:estado de la asignacion;</Parametros>
-<Responsabilidades>Adicionar en la tabla asignacion el registro para el documento y el funcionario<Responsabilidades>
-<Notas>La fecha inicial es la fecha actual</Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones>Campos obligatorios iddocumento y idtarea<Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
- */
+
 function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $list_entidad = null, $identidad = null, $fecha_inicial = null, $fecha_final = null, $estado = "PENDIENTE")
 {
     global $conn;
@@ -133,19 +99,6 @@ function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $li
     return true;
 }
 
-
-/*
- * <Clase>
- * <Nombre>buscar_funcionarios</Nombre>
- * <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
- * <Responsabilidades>Busca los funcionarios de las dependencias especificadas<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
 function buscar_funcionarios($dependencia, $arreglo = null)
 {
     global $conn;
@@ -157,18 +110,6 @@ function buscar_funcionarios($dependencia, $arreglo = null)
     return $arreglo;
 }
 
-/*
- * <Clase>
- * <Nombre>dependencias</Nombre>
- * <Parametros>$padre:id de la dependencia</Parametros>
- * <Responsabilidades>Busca las dependencias hijas de la dependencia especificada<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
 function dependencias($padre)
 {
     global $conn;
@@ -192,18 +133,6 @@ function dependencias($padre)
     return $listado4;
 }
 
-/*
- * <Clase>
- * <Nombre>radicar_documento_prueba
- * <Parametros>tipo_contador-nombre del tipo de contador a usar; arreglo-matriz con los valores del formulario
- * necesarios en la radicacion; $archivos-cadena con la lista de los anexos del documento
- * <Responsabilidades>guarda en la bd los datos del nuevo documento
- * <Notas>
- * <Excepciones>
- * <Salida>retorna el id del nuevo documento
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $idflujo = null)
 {
     global $conn, $ruta_db_superior;
@@ -315,20 +244,6 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     return $doc;
 }
 
-/*
- * <Clase>
- * <Nombre>busca_cargofuncionario
- * <Parametros>tipo-tipo de dato enviado(nit,codigo de funcionario,login...);
- * dato-valor que identifica al usuario que deseo buscar; dependencia-dependencia a la cual pertenece el usuario
- * <Responsabilidades>buscar todos los datos de cargo,dependencia y funcionario del funcionario
- * identificado con los parametros recibidos
- * <Notas>
- * <Excepciones>si el funcionario no tiene un cargo asignado devuelve un vector con el valor recibido
- * en $dato
- * <Salida>vector con los datos de las tablas cargo,funcionario,dependencia
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function busca_cargofuncionario($tipo, $dato, $dependencia)
 {
     global $conn;
@@ -367,20 +282,6 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
     return $datorig;
 }
 
-/*
- * <Clase>
- * <Nombre>transferir_archivo_prueba
- * <Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
- * $tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
- * $adicionales-otros datos referentes a la transferencia;
- * $anexos indica si la transferencia tiene anexos relacionados
- * <Responsabilidades>enviar el documento a los funcionarios destino
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = null)
 {
     global $conn;
@@ -455,16 +356,38 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
             if (!empty($datos["ver_notas"])) {
                 $ver_notas = $datos["ver_notas"];
             }
-            $values_out .= "'" . $origen . "',1,1" . $otros_valores . ",'" . $ver_notas . "'";
 
             foreach ($destino as $user) {
                 if ($user == null) {
                     continue;
                 }
                 if ($datos["nombre"] != "POR_APROBAR") {
-                    $sqls = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values ($values_out, $user)";
-                    phpmkr_query($sqls) or die("Fallo buzon_salida: $sqls");
-                    $idbuzon_s = phpmkr_insert_id();
+
+                    $cadena = Model::getQueryBuilder()
+                        ->insert('buzon_salida')
+                        ->values(
+                            array(
+                                'archivo_idarchivo' => '?',
+                                'nombre' => '?',
+                                'fecha' => '?',
+                                'origen' => '?',
+                                'tipo_origen' => '?',
+                                'tipo_destino' => '?',
+                                'ver_notas' => '?',
+                                'destino' => '?'
+                            )
+                        )
+                        ->setParameter(0, $idarchivo)
+                        ->setParameter(1, $datos["nombre"])
+                        ->setParameter(2, fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s'))
+                        ->setParameter(3, $origen)
+                        ->setParameter(4, '1')
+                        ->setParameter(5, '1')
+                        ->setParameter(6, $ver_notas)
+                        ->setParameter(7, $user)
+                        ->execute();
+
+                    $idbuzon_s = $cadena;
                     $idtransferencia[] = $idbuzon_s;
 
                     if ($texto_notas != "") {
@@ -484,24 +407,59 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         'fk_documento' => $idarchivo,
                         'tipo_flujo' => RutaDocumento::FLUJO_SERIE
                     ]);
+
+                    $Ruta = new Ruta();
+
                     if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
-                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio,fk_ruta_documento) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1,{$fk_ruta_documento})";
+                        $Ruta->setAttributes([
+                            'origen' => $_REQUEST["dependencia"],
+                            'tipo' => 'ACTIVO',
+                            'destino' => $user,
+                            'idtipo_documental' => NULL,
+                            'condicion_transferencia' => 'POR_APROBAR',
+                            'documento_iddocumento' => $idarchivo,
+                            'tipo_origen' => '5',
+                            'tipo_destino' => '1',
+                            'obligatorio' => '1',
+                            'fk_ruta_documento' => $fk_ruta_documento
+                        ]);
                     } else {
-                        $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio,fk_ruta_documento) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1, {$fk_ruta_documento})";
+                        $Ruta->setAttributes([
+                            'origen' => $origen,
+                            'tipo' => 'ACTIVO',
+                            'destino' => $user,
+                            'idtipo_documental' => NULL,
+                            'condicion_transferencia' => 'POR_APROBAR',
+                            'documento_iddocumento' => $idarchivo,
+                            'tipo_origen' => '1',
+                            'tipo_destino' => '1',
+                            'obligatorio' => '1',
+                            'fk_ruta_documento' => $fk_ruta_documento
+                        ]);
                     }
-                    phpmkr_query($sql) or die("No se puede Generar una Ruta: $sql");
-                    $idruta = phpmkr_insert_id();
+
+                    $idruta = $Ruta->save();
                     $datos["ruta_idruta"] = $idruta;
                 }
                 $ver_notas = 0;
                 if (!empty($datos["ver_notas"])) {
                     $ver_notas = $datos["ver_notas"];
                 }
-                $values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . $ver_notas . "'";
-                $sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
-                phpmkr_query($sql) or die($sql);
+
+                $idInsertadoEntrada1 = BuzonEntrada::newRecord([
+                    'archivo_idarchivo' => $idarchivo,
+                    'nombre' => $datos["nombre"],
+                    'fecha' => date('Y-m-d H:i:s'),
+                    'destino' => $origen,
+                    'tipo_origen' => '1',
+                    'ruta_idruta' => $datos["ruta_idruta"],
+                    'tipo_destino' => $tipo_destino,
+                    'ver_notas' => $$ver_notas,
+                    'origen' => $user
+                ]);
+
                 if ($texto_notas != "") {
-                    $idbuzon_e = phpmkr_insert_id();
+                    $idbuzon_e = $idInsertadoEntrada1;
                     guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
                 }
                 procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
@@ -511,11 +469,24 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
             if (!empty($datos["ver_notas"])) {
                 $ver_notas = $datos["ver_notas"];
             }
-            $values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen,$destino,$tipo_origen,$tipo_destino" . $otros_valores . ",'" . $ver_notas . "'";
-            $sql = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,destino,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas) values (" . $values . ")";
-            phpmkr_query($sql) or die($sql);
+
+            $tipo_origen = 1; // La variable no estaba definida, la he definido con uno mientras realizo las correcciones 
+
+            $idInsertadoEntrada2 = BuzonEntrada::newRecord([
+                'archivo_idarchivo' => $idarchivo,
+                'nombre' => $datos["nombre"],
+                'fecha' => date("Y-m-d H:i:s"),
+                'destino' => $origen,
+                'origen' => $destino,
+                'tipo_origen' => $tipo_origen,
+                'tipo_destino' => $tipo_destino,
+                'ver_notas' => $ver_notas
+            ]);
+
+            /////////////// En el anterior record No se incluyo $otras llaves como campos adicionales ni  sus valores $otros valores ////////////////////
+
             if ($texto_notas != "") {
-                $idbuzon_e = phpmkr_insert_id();
+                $idbuzon_e = $idInsertadoEntrada2;
                 guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
             }
         }
@@ -534,18 +505,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
     }
 }
 
-/*
- * <Clase>
- * <Nombre>aprobar
- * <Parametros>$iddoc-id del documento en proceso
- * <Responsabilidades>para el proceso de recoleccion de firmas (aprobacion de la plantilla)
- * <Notas>Dependiendo del formato que pertenece el documento se valida si al momento de aprobar el documento se deben enviar transferencia a otros destinos, por ejemplo el memorando que se envia a destinos y copias.
- * <Excepciones>si el usuario no es el siguiente por aprobar muestra un mensaje de error
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
- * cambia el estado del documento a APROBADO
- */
 function aprobar($iddoc = 0, $opcion = 0)
 {
     global $conn;
@@ -709,6 +668,7 @@ function aprobar($iddoc = 0, $opcion = 0)
 function mostrar_estado_proceso($idformato, $iddoc)
 {
     global $conn, $idfactura;
+    $campos_formato = ""; // La variable no estaba definida, la he definido provisionalmente como string vacio.
     $rol = false;
     if (!isset($_REQUEST["ocultar_firmas"]) || $_REQUEST["ocultar_firmas"] == 0) {
         $firma_actual = false;
@@ -899,22 +859,11 @@ function mostrar_estado_proceso($idformato, $iddoc)
     return $firma_actual;
 }
 
-
-/*
- * <Clase>
- * <Nombre>cargo_rol
- * <Parametros>iddoc-id del documento;
- * <Responsabilidades>busca si el documento tiene ruta y el estado de la ruta, para buscar la informacion del funcionario de dicha ruta dependiendo de la entidad
- * <Notas>Esta funcion es para las firmas es llamada por mostrar_estado_proceso
- * <Excepciones>
- * <Salida> array con nombres, apellidos, idfuncionario y codigo del funcionario de la ruta del documento
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function cargo_rol($iddoc)
 {
     global $conn;
     $resultado = array();
+    $origenes = array();
     $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta," . fecha_db_obtener('buzon_entrada.fecha', 'Y-m-d H:i') . " as fecha,ruta.firma_externa", "buzon_entrada,ruta", "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
     for ($i = 0; $i < $tipo["numcampos"]; $i++) {
         if (in_array($tipo[$i]["origen"], $origenes)) {
@@ -1170,17 +1119,6 @@ function enrutar_documento($url = "", $documentId)
     redirecciona($url);
 }
 
-/*
- * <Clase>
- * <Nombre>crear_pretexto
- * <Parametros>$asunto : asunto de la pantilla;contenido : contenido de la plantilla)
- * <Responsabilidades>guarda los datos de la plantilla en las tablas pretexto y entidad_pretexto
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function crear_pretexto($asunto, $contenido)
 {
     global $conn;
@@ -1198,18 +1136,6 @@ function crear_pretexto($asunto, $contenido)
     phpmkr_query($sql);
 }
 
-/*
- * <Clase>
- * <Nombre>ejecutoradd</Nombre>
- * <Parametros>$skey: identificador de datos ejecutor</Parametros>
- * <Responsabilidades>Revisa si existe un ejecutor y si no es asi lo almacena en ejecutor y datos_ejecutor<Responsabilidades>
- * <Notas>Esta funcion no se utiliza</Notas>
- * <Excepciones></Excpciones>
- * <Salida>Ejecutor actualizado</Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
 function ejecutoradd($sKey)
 {
     global $conn;
@@ -1262,17 +1188,6 @@ function ejecutoradd($sKey)
     return true;
 }
 
-/*
- * <Clase>
- * <Nombre>guardar_documento
- * <Parametros>iddoc-id del documento actual;tipo:indica si se está adicionando(0) o editando(1)
- * <Responsabilidades>guarda los datos de la plantilla en la tabla correspondiente (carta,certificado,memorando)
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function guardar_documento($iddoc, $tipo = 0)
 {
     global $conn, $ruta_db_superior;
@@ -1421,10 +1336,13 @@ function guardar_documento($iddoc, $tipo = 0)
         }
 
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
+
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
+
         $Connection = Connection::getInstance(true);
         $Connection->query($sql);
         $insertado = $Connection->lastInsertId();
+
 
         if ($insertado) {
             $sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . $_SESSION["usuario_actual"] . "','" . $iddoc . "','e,m,r')";
