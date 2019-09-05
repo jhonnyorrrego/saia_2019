@@ -218,7 +218,7 @@ function check_banderas($bandera, $chequear = true)
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-12" id="encabezado_formato"></div>
+                                                        <div class="col-12" id="header_content"></div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
@@ -244,7 +244,7 @@ function check_banderas($bandera, $chequear = true)
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-12" id="pie_formato"></div>
+                                                        <div class="col-12" id="footer_content"></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-3" id="funciones_desplegables"></div>
@@ -765,6 +765,12 @@ function check_banderas($bandera, $chequear = true)
                                 type: 'success',
                                 message: response.message
                             });
+
+                            if (type == 'header') {
+                                showHeader();
+                            } else {
+                                showFooter();
+                            }
                         } else {
                             top.notification({
                                 type: 'error',
@@ -955,6 +961,51 @@ function check_banderas($bandera, $chequear = true)
                             $('#select_header').val(response.data.header);
                             $('#select_footer').val(response.data.footer);
                             $('#select_header,#select_footer').select2();
+
+                            showHeader();
+                            showFooter();
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message
+                            });
+                        }
+                    },
+                    'json'
+                );
+            }
+
+            function showHeader() {
+                $.post(
+                    `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`, {
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
+                        identificator: $('#select_header').val()
+                    },
+                    function(response) {
+                        if (response.success) {
+                            $('#header_content').html(response.data.content);
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message
+                            });
+                        }
+                    },
+                    'json'
+                );
+            }
+
+            function showFooter() {
+                $.post(
+                    `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`, {
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
+                        identificator: $('#select_footer').val()
+                    },
+                    function(response) {
+                        if (response.success) {
+                            $('#footer_content').html(response.data.content);
                         } else {
                             top.notification({
                                 type: 'error',
