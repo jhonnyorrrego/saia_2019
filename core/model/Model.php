@@ -274,7 +274,7 @@ abstract class Model
     {
         $data = $this->getData([$this->getPkName() => $this->getPK()]);
 
-        if (!$this->setAttributes($data[0])) {
+        if (!$data[0] || !$this->setAttributes($data[0])) {
             throw new Exception("invalid Pk", 1);
         }
     }

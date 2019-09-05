@@ -209,10 +209,10 @@ function check_banderas($bandera, $chequear = true)
                                                                 <i class="fa fa-plus-circle"></i>
                                                             </span>
 
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_encabezado" id="adicionar_encabezado">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="edit_header_footer" data-type="header">
                                                                 <i class="fa fa-edit"></i>
                                                             </span>
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" id="eliminar_encabezado" data-type="header" class="delete_header_footer">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="delete_header_footer" data-type="header">
                                                                 <i class="fa fa-trash"></i>
                                                             </span>
                                                         </div>
@@ -235,10 +235,10 @@ function check_banderas($bandera, $chequear = true)
                                                             <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_pie" id="crear_pie">
                                                                 <i class="fa fa-plus-circle"></i>
                                                             </span>
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="guardar_pie" id="adicionar_pie">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="edit_header_footer" data-type="footer">
                                                                 <i class="fa fa-edit"></i>
                                                             </span>
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" id="eliminar_pie" data-type="footer" class="delete_header_footer">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="delete_header_footer" data-type="footer">
                                                                 <i class="fa fa-trash"></i>
                                                             </span>
                                                         </div>
@@ -807,28 +807,18 @@ function check_banderas($bandera, $chequear = true)
                 );
             });
 
-
-
-
-
-
-            $(document).on("click", ".guardar_encabezado", function(e) {
+            $(document).on("click", ".edit_header_footer", function(e) {
                 let type = $(this).data('type');
                 let identificator = type == 'header' ? $("#select_header").val() : $("#select_footer").val();
 
                 if (identificator) {
-                    alert('definir la etiqueta');
-                    var etiqueta = $("#etiqueta_encabezado").val();
-
                     top.topModal({
                         url: `${params.baseUrl}views/generador/editor_encabezado.php`,
                         params: {
-                            idencabezado: id,
-                            etiqueta: etiqueta,
-                            idformato: $("#idformato").val()
+                            identificator: identificator
                         },
                         size: 'modal-xl',
-                        title: 'Editar encabezado del formato',
+                        title: 'Editar contenido',
                         buttons: {
                             success: {
                                 label: "Guardar",
@@ -838,6 +828,10 @@ function check_banderas($bandera, $chequear = true)
                                 label: "Cerrar",
                                 class: "btn btn-danger"
                             }
+                        },
+                        onSuccess: function(data) {
+                            createHeaderFooterSelect();
+                            top.closeTopModal();
                         }
                     });
                 } else {
@@ -847,6 +841,10 @@ function check_banderas($bandera, $chequear = true)
                     });
                 }
             });
+
+
+
+
 
             $(document).on("click", ".guardar_pie", function(e) {
                 alert('guardar pie');
@@ -944,6 +942,7 @@ function check_banderas($bandera, $chequear = true)
                     },
                     function(response) {
                         if (response.success) {
+                            $('#select_header,#select_footer').empty();
                             response.data.headers.forEach(item => {
                                 $('#select_header,#select_footer').append(
                                     $('<option>', {

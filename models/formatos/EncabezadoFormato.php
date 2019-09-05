@@ -2,7 +2,7 @@
 
 class EncabezadoFormato extends Model
 {
-    protected $idencabezadoFormato;
+    protected $idencabezado_formato;
     protected $contenido;
     protected $etiqueta;
 
