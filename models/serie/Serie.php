@@ -113,24 +113,21 @@ class Serie extends LogModel
      */
     private function getCodArbolPadre()
     {
-        $data = $this->getQueryBuilder()
-            ->select('cod_arbol')
-            ->from('serie')
-            ->where('idserie=:idserie')
+        $data = self::getQueryBuilder()
+            ->select('sp.cod_arbol')
+            ->from('serie', 's')
+            ->innerJoin('s', 'serie', 'sp', 's.cod_padre=sp.idserie')
+            ->where('s.idserie=:idserie')
             ->setParameter(':idserie', $this->idserie, 'integer')
             ->execute()->fetch();
-        /*if ($this->idserie > 1) {
-            echo '<pre>';
-            var_dump($data);
-            echo '</pre>';
-            die('--');
-        }*/
+
         return $data['cod_arbol'] ?? false;
     }
 
     /**
-     * NO utilizar create() para crear una serie
-     *
+     * Metodo para crear una serie
+     * NOTA: No utilizar create o newRecord
+     * 
      * @param string $dependenciasVinculadas : Dependencias a vinculadas a la serie
      * @return int
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
