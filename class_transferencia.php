@@ -883,7 +883,7 @@ function cargo_rol($iddoc)
         $query->expr()->in("obligatorio",['1','2','5']),
         $query->expr()->eq('tipo', 'ACTIVO'),
         $query->expr()->eq('archivo_idarchivo', $iddoc),
-    ))->getSQL();
+    ))->getSQL(); 
 
     var_dump($tipo);
     die();

@@ -960,7 +960,40 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             }
 
             $hoy = date('Y-m-d');
-            $dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
+            /*$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", 
+            "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND 
+            cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND 
+            funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' 
+            AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
+            */
+            $query = Model::getQueryBuilder();
+
+            $dep = $query
+            ->select("dependencia, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', new \DateTime("now")),
+                $query->expr()->gte('fecha_final', new \DateTime("now")),
+            )->setParameter(":login", SessionController::getLogin())->getSQL();
+
+            var_dump($dep);
+            die();
+
+            $dep = $query
+            ->select("d.nombre, dc.iddependencia_cargo, c.nombre as cargo")
+            ->from("funcionario","f")->innerJoin("f","dependencia_cargo","dc","dc.funcionario_idfuncionario = f.idfuncionario")
+            ->innerJoin("dc","cargo","c","c.idcargo = dc.cargo_idcargo")
+            ->innerJoin("c","dependencia","d","d.iddependencia = dc.dependencia_iddependencia")
+            ->where("dc.estado = 1 and c.tipo_cargo = 1 and f.login = :login")
+            ->andWhere(
+                $query->expr()->lte('dc.fecha_inicial', $hoy),
+                $query->expr()->lte('dc.fecha_final', $hoy),
+            )->setParameter(":login", SessionController::getLogin())->execute()->fetchAll();
+
+            var_dump($dep);
+            die();
+            
             $numfilas = $dep["numcampos"];
 
             $html = '';
