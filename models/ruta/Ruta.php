@@ -20,7 +20,7 @@ class Ruta extends Model
     protected $condicion_transferencia;
     protected $clase;
     protected $fk_ruta_documento;
-    
+
 
     //relations
     protected $DocumentRoute;
@@ -35,7 +35,7 @@ class Ruta extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'transferencia_idtransferencia',
                 'tipo_origen',
@@ -118,17 +118,15 @@ class Ruta extends Model
     public static function findActiveRoute($documentId)
     {
         $type = RutaDocumento::TIPO_RADICACION;
-        $sql = <<<SQL
-            SELECT a.*
-            FROM
-                ruta a JOIN
-                ruta_documento b ON
-                    a.fk_ruta_documento = b.idruta_documento
-            WHERE
-                b.fk_documento = {$documentId} AND
-                b.estado = 1 AND
-                b.tipo = {$type}
-SQL;
+        $sql = Model::getQueryBuilder()
+            ->select("a.*")
+            ->from("ruta a")
+            ->join("a", "ruta_documento", "b", "a.fk_ruta_documento = b.idruta_documento")
+            ->where("b.fk_documento = :documento")
+            ->andWhere("b.estado = 1")
+            ->andWhere("b.tipo = :tipo")
+            ->setParameter(':documento', $documentId)
+            ->setParameter(':tipo', $type);
 
         return self::findByQueryBuilder($sql);
     }
