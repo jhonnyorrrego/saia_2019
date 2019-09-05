@@ -537,3 +537,20 @@ function lodash()
 
     return $js;
 }
+
+/**
+ * obtiene la libreria del ckeditor
+ *
+ * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-09-04
+ */
+function ckeditor()
+{
+    global $ruta_db_superior;
+
+    $route = $ruta_db_superior . "assets/theme/assets/plugins/ckeditor/4.11/ckeditor_cust/ckeditor.js";
+    $js = '<script src="' . $route . '" type="text/javascript"></script>';
+
+    return $js;
+}

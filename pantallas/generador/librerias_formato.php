@@ -240,57 +240,6 @@ function vincular_funciones_formatos($libreria, $funcion)
     return ($retorno);
 }
 
-function actualizar_encabezado_pie($idformato, $tipo, $valor)
-{
-    $retorno = array(
-        "exito" => 0
-    );
-
-    print_r($idformato);
-
-    $buscar_formato = busca_filtro_tabla("encabezado, pie_pagina", "formato", "idformato=" . $idformato, "", $conn);
-    if ($buscar_formato["numcampos"]) {
-        $encabezado_anterior = $buscar_formato[0]["encabezado"];
-        $pie_pagina_anterior = $buscar_formato[0]["pie_pagina"];
-    }
-    if ($tipo == "encabezado") {
-        $sql = "UPDATE formato set encabezado=" . $valor . " WHERE idformato=" . $idformato;
-        phpmkr_query($sql);
-        $retorno["exito"] = 1;
-        //se ingresan las funciones del encabezado en la tabla funciones_formato y funciones_formato_enlace
-        $retorno["funciones"] = registrar_funciones_encabezado_formato($valor, $idformato, $encabezado_anterior);
-    } else if ($tipo == "pie") {
-        $sql = "UPDATE formato set pie_pagina=" . $valor . " WHERE idformato=" . $idformato;
-        phpmkr_query($sql);
-        $retorno["exito"] = 1;
-        $retorno["funciones"] = registrar_funciones_pie_formato($valor, $idformato, $pie_pagina_anterior);
-    }
-    $retorno["sql"] = $sql;
-    return ($retorno);
-}
-
-function actualizar_cuerpo_formato($idformato, $tipo_retorno)
-{
-
-    $retorno = array(
-        "exito" => 0
-    );
-
-    $retorno["mensaje"] = "Existe un error al actualizar el cuerpo del formato";
-    if (@$_REQUEST["contenido"]) {
-        $sql = "UPDATE formato set cuerpo='" . $_REQUEST["contenido"] . "' WHERE idformato=" . $idformato;
-        phpmkr_query($sql);
-        $retorno["exito"] = 1;
-        $retorno["sql"] = $sql;
-        $retorno["mensaje"] = "El contenido para generar el dise&ntilde;o del formato se almacena de forma correcta";
-    }
-    if ($tipo_retorno == 1)
-        echo (json_encode($retorno));
-    else {
-        return ($retorno);
-    }
-}
-
 function consultar_campos_formato($idformato, $tipo_retorno)
 {
     global $conn, $ruta_db_superior;
@@ -378,48 +327,6 @@ function verificar_nombre_formato($nombre, $tipo_retorno)
     }
 }
 
-function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $tipo_retorno = 1)
-{
-    global $conn;
-    $retorno = ["exito" => 0, "mensaje" => ''];
-    $sql = "";
-    if ($idencabezado) {
-        $consultaEncabezado = busca_filtro_tabla("", "encabezado_formato", "etiqueta='{$etiqueta}' and idencabezado_formato not in ({$idencabezado})", "", $conn);
-    } else {
-        $consultaEncabezado = busca_filtro_tabla("", "encabezado_formato", "etiqueta='{$etiqueta}'", "", $conn);
-    }
-
-
-    if ($consultaEncabezado['numcampos']) {
-        $retorno["exito"] = 0;
-        $retorno["mensaje"] = 'Ya existe un encabezado creado con ese nombre';
-    } else {
-        $encabezado = [];
-        $contenido = addslashes(stripslashes($contenido));
-        if (empty($idencabezado)) {
-            $sql = "INSERT INTO encabezado_formato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
-            phpmkr_query($sql);
-            $retorno["idInsertado"] = phpmkr_insert_id();
-            $retorno["exito"] = 1;
-        } else {
-            $sql = "UPDATE encabezado_formato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
-            phpmkr_query($sql);
-            $retorno["exito"] = 1;
-            $encabezado["accion"] = "update";
-        }
-
-        $encabezado["idencabezado"] = $retorno["idInsertado"];
-        $encabezado["etiqueta"] = $etiqueta;
-        $encabezado["contenido"] = $contenido;
-        $retorno["datos"] = $encabezado;
-    }
-    if ($tipo_retorno == 1) {
-        echo (json_encode($retorno));
-    } else {
-        return ($retorno);
-    }
-}
-
 function consultar_contenido_encabezado()
 {
 
@@ -451,59 +358,6 @@ function consultar_contenido_encabezado()
         return ($retorno);
     }
 }
-function eliminar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $tipo_retorno = 1)
-{
-    global $conn;
-    $retorno = array(
-        "exito" => 0
-    );
-    $sql = "";
-    if (!empty($idencabezado)) {
-        $consulta_plantilla = busca_filtro_tabla("f.nombre", "formato f,documento d", "d.estado not in ('ELIMINADO') and  lower(d.plantilla) = f.nombre and f.idformato=" . $_REQUEST['idFormato'], "", "");
-        if ($consulta_plantilla['numcampos']) {
-            if (isset($_REQUEST['tipo']) && $_REQUEST['tipo'] == "encabezado") {
-                $retorno["mensaje"] = "No es posible elimiar el encabezado, ya existen documentos asociados";
-            } else if (isset($_REQUEST['tipo']) && $_REQUEST['tipo'] == "piePagina") {
-                $retorno["mensaje"] = "No es posible elimiar el pie de pagina, ya existen documentos asociados";
-            }
-            $retorno["exito"] = 0;
-        } else {
-            $sql = "DELETE FROM encabezado_formato WHERE idencabezado_formato=" . $idencabezado;
-            phpmkr_query($sql);
-
-            if (isset($_REQUEST['tipo']) && $_REQUEST['tipo'] == "encabezado") {
-                $updateFormato = "UPDATE formato set encabezado = 0 where idformato=" . $_REQUEST['idFormato'];
-            } else if (isset($_REQUEST['tipo']) && $_REQUEST['tipo'] == "piePagina") {
-                $updateFormato = "UPDATE formato set piePagina = 0 where idformato=" . $_REQUEST['idFormato'];
-            }
-            phpmkr_query($updateFormato);
-            $retorno["exito"] = 1;
-            $retorno["sql"] = $sql;
-        }
-    }
-
-    $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
-    $datos = array();
-    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
-        $fila = array(
-            "idencabezado" => $encabezados[$i]["idencabezado_formato"],
-            "etiqueta" => $encabezados[$i]["etiqueta"],
-            "contenido" => $encabezados[$i]["contenido"]
-        );
-        $datos[] = $fila;
-    }
-
-    if (!empty($datos)) {
-        $retorno["datos"] = $datos;
-    }
-
-    if ($tipo_retorno == 1) {
-        echo (json_encode($retorno));
-    } else {
-        return ($retorno);
-    }
-}
-
 
 if (@$_REQUEST["ejecutar_libreria_formato"]) {
     if (!@$_REQUEST["tipo_retorno"]) {
