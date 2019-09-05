@@ -555,8 +555,22 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
 
-    $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
-    $documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
+    $datos = Model::getQueryBuilder()
+    ->select("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,fecha_oficio_entrada,fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria")
+    ->from("ft_radicacion_entrada")
+    ->where("documento_iddocumento=:iddoc")
+    ->setParameter(":iddoc",$iddoc)->execute()->fetchAll();
+
+    //$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", 
+    //"ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+    $documento = Model::getQueryBuilder()
+    ->select("numero,tipo_radicado,fecha")
+    ->from("documento")
+    ->where("iddocumento=:iddoc")
+    ->setParameter(":iddoc",$iddoc)
+    ->execute()
+    ->fetchAll();
+
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
     } else {

@@ -131,7 +131,6 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 		$valor_insertar = "'" . implode("','", $valores) . "',";
 		$campos_insertar = implode(",", $campos) . ",";
 	}
-print_r($insertvalues);
 
 	$sql = 'INSERT INTO datos_ejecutor(' . $campos_insertar . "ejecutor_idejecutor,fecha) VALUES(" . $valor_insertar . $idejecutor . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 	$municipio = Model::getQueryBuilder()
@@ -143,9 +142,7 @@ print_r($insertvalues);
 		$municipio->setParameter(":" . $key, $value);
 	}
 	$municipio->execute();
-	var_dump($municipio);
-	die();
-	
+
 	phpmkr_query($sql, $conn);
 	$iddatos_ejecutor = phpmkr_insert_id();
 	if (isset($_REQUEST["codigo"]) && $_REQUEST["codigo"]) {

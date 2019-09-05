@@ -60,7 +60,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1)
             include_once($ruta_db_superior . "/" . $formato[0]["nombre"] . "/" . $formato[0]["librerias"]);
         }
     }
-    return (codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
+    return $texto;
 }
 
 function arma_funcion($nombre, $parametros, $accion)
