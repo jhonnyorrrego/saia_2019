@@ -55,7 +55,10 @@ class Formato extends Model
     protected $publicar;
 
     //relations
+    protected $Formato;
     protected $Modulo;
+    protected $EncabezadoFormatoHeader;
+    protected $EncabezadoFormatoFooter;
 
     function __construct($id = null)
     {
@@ -131,6 +134,23 @@ class Formato extends Model
     }
 
     /**
+     * obtiene la instancia del formato padre
+     *
+     *
+     * @return object
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-03
+     */
+    public function getParent()
+    {
+        if (!$this->Formato) {
+            $this->Formato = $this->getRelationFk('Formato', 'cod_padre');
+        }
+
+        return $this->Formato;
+    }
+
+    /**
      * obtiene la instancia del modulo que
      * representa el formato
      *
@@ -147,6 +167,76 @@ class Formato extends Model
         }
 
         return $this->Modulo;
+    }
+
+    /**
+     * obtiene la instancia del encabezado formato
+     * de la columna encabezado
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-05
+     */
+    public function getHeader()
+    {
+        if (!$this->EncabezadoFormatoHeader) {
+            $this->EncabezadoFormatoHeader = $this->getRelationFk('EncabezadoFormato', 'encabezado');
+        }
+
+        return $this->EncabezadoFormatoHeader;
+    }
+
+    /**
+     * obtiene la instancia del encabezado formato
+     * de la columna pie_pagina
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-05
+     */
+    public function getFooter()
+    {
+        if (!$this->EncabezadoFormatoFooter) {
+            $this->EncabezadoFormatoFooter = $this->getRelationFk('EncabezadoFormato', 'pie_pagina');
+        }
+
+        return $this->EncabezadoFormatoFooter;
+    }
+
+    /**
+     * obtiene las instancias de los campos formato que pertenecen
+     * al proceso y no son de nucleo
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-05
+     */
+    public function getProcessFields()
+    {
+        $systemFields = [
+            "id{$this->nombre_tabla}",
+            "documento_iddocumento",
+            "dependencia",
+            "encabezado",
+            "firma"
+        ];
+
+        if ($this->getParent()) {
+            $systemFields[] = $this->getParent()->nombre_tabla;
+        }
+
+        $fields = CamposFormato::findAllByAttributes([
+            'formato_idformato' => $this->getPK()
+        ]);
+
+        $data = [];
+        foreach ($fields as $CamposFormato) {
+            if (!in_array($CamposFormato->nombre, $systemFields)) {
+                $data[] = $CamposFormato;
+            }
+        }
+
+        return $data;
     }
 
     /**
