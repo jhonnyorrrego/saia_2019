@@ -27,19 +27,26 @@ try {
         throw new Exception('Debe indicar el formato', 1);
     }
 
+    $functions = Model::getQueryBuilder()
+        ->select('*')
+        ->from('funciones_nucleo')
+        ->orderBy('etiqueta', 'asc')
+        ->execute()->fetchAll();
+
     $Formato = new Formato($_REQUEST['formatId']);
+    $processFields = $Formato->getProcessFields();
 
-    if (!$Formato) {
-        throw new Exception("Formato invalido", 1);
+    $fields = [];
+    foreach ($processFields as $CamposFormato) {
+        $fields[] = [
+            'id' => $CamposFormato->getPK(),
+            'name' => $CamposFormato->nombre,
+            'label' => $CamposFormato->etiqueta
+        ];
     }
 
-    $Formato->cuerpo = $_REQUEST['content'] ?? '';
-
-    if (!$Formato->save()) {
-        throw new Exception("Error al guardar el cuerpo", 1);
-    }
-
-    $Response->message = "Cuerpo del formato actualizado";
+    $Response->data->fields = $fields;
+    $Response->data->functions = $functions;
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

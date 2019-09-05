@@ -106,43 +106,6 @@ function check_banderas($bandera, $chequear = true)
             vertical-align: middle !important;
         }
     </style>
-    <?php
-
-    $campos = busca_filtro_tabla("nombre", "pantalla_componente B", "nombre not in ('textarea_tiny')", "", $conn);
-    $librerias_js = array();
-    $librerias_jsh = array();
-    for ($i = 0; $i < $campos["numcampos"]; $i++) {
-        $librerias = array_filter(array_map('trim', explode(",", $campos[$i]["librerias"])));
-        foreach ($librerias as $libreria) {
-            $extension = explode(".", $libreria);
-            $cant = count($extension);
-            if ($extension[$cant - 1] !== '') {
-                switch ($extension[($cant - 1)]) {
-                    case "php":
-                        include_once($ruta_db_superior . $libreria);
-                        break;
-                    case "js":
-                        array_push($librerias_js, $libreria);
-                        break;
-                    case "js@h":
-                        $header = array_filter(explode("@", $libreria));
-                        if (!empty($header) && !in_array($header[0], $librerias_jsh)) {
-                            array_push($librerias_jsh, $header[0]);
-                            echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
-                        }
-                        break;
-                    case "css":
-                        $texto = '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . $libreria . '"/>';
-                        break;
-                    default:
-                        $texto = ""; // retorna un vacio si no existe el tipo
-                        break;
-                }
-                echo $texto;
-            }
-        }
-    }
-    ?>
 </head>
 
 <body>
@@ -189,7 +152,7 @@ function check_banderas($bandera, $chequear = true)
                                     <div class="tab-content" style="text-align:left;">
                                         <!-- vista previa -->
                                         <div class="tab-pane" id="pantalla_previa-tab" style="background:#eee;padding-top:30px;padding-bottom:30px">
-                                            <div id="pantalla_vista_previa" style="background:#fff;margin:30px;"></div>
+                                            <div id="preview_container" style="background:#fff;margin:30px;"></div>
 
                                         </div>
                                         <!-- fin vista previa -->
@@ -205,7 +168,7 @@ function check_banderas($bandera, $chequear = true)
                                                                 <option value="0">Por favor Seleccione</option>
                                                             </select>
 
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_encabezado" id="crear_encabezado">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="add_header_footer" data-type="header">
                                                                 <i class="fa fa-plus-circle"></i>
                                                             </span>
 
@@ -232,7 +195,7 @@ function check_banderas($bandera, $chequear = true)
                                                             <select name="pie_pagina" id="select_footer" style="width:250px;" class="select_header_footer" data-type="footer">
                                                                 <option value=" 0">Por favor Seleccione</option>
                                                             </select>
-                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_pie" id="crear_pie">
+                                                            <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="add_header_footer" data-type="footer">
                                                                 <i class="fa fa-plus-circle"></i>
                                                             </span>
                                                             <span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="edit_header_footer" data-type="footer">
@@ -247,7 +210,7 @@ function check_banderas($bandera, $chequear = true)
                                                         <div class="col-12" id="footer_content"></div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-3" id="funciones_desplegables"></div>
+                                                <div class="col-12 col-md-3 listContainer" id="funcion_list"></div>
                                             </div>
                                         </div>
                                         <!-- fin creacion del mostrar -->
@@ -302,7 +265,7 @@ function check_banderas($bandera, $chequear = true)
                                                     </ul>
                                                 </div>
                                                 <div class="col-3" style="position:relative;display:inline-block;vertical-align:top">
-                                                    <ul id="itemsComponentes" class="sortable boxier" style="margin-right: 1em;">
+                                                    <ul id="itemsComponentes" class="sortable boxier listContainer" style="margin-right: 1em;">
                                                         <?php
                                                         $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1', '', $conn);
 
@@ -414,9 +377,7 @@ function check_banderas($bandera, $chequear = true)
                                                             </div>
                                                             <div class="my-3">
                                                                 <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong><span class="require-input">*</span></label>
-
-                                                                <textarea class="col-12" name="descripcion_formato" id="descripcion_formato" placeholder="Descripci&oacute;n" rows="3" required></textarea>
-
+                                                                <textarea class="col-12" name="descripcion_formato" id="descripcion_formato" placeholder="Descripción" rows="3" required></textarea>
                                                             </div>
 
                                                             <div class="my-3">
@@ -669,24 +630,18 @@ function check_banderas($bandera, $chequear = true)
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
-    <?php
-    $cant_js = count($librerias_js);
-    $incluidas = array();
-    for ($i = 0; $i < $cant_js; $i++) {
-        if (!in_array($librerias_js[$i], $librerias_jsh) && !in_array($librerias_js[$i], $incluidas) && !empty($librerias_js[$i])) {
-            array_push($incluidas, $librerias_js[$i]);
-            echo ('<script type="text/javascript" src="' . $ruta_db_superior . $librerias_js[$i] . '"></script>');
-        }
-    }
-    ?>
     <script type="text/javascript" data-params='<?= $params ?>' id="script_generador_pantalla">
         $(document).ready(function() {
             let params = $('#script_generador_pantalla').data('params');
             let step = 1;
 
             (function init() {
-                var editor_mostrar = CKEDITOR.replace("editor_mostrar");
-                createHeaderFooterSelect()
+                $("#serie_idserie,#tipo_registro,#contador_idcontador").select2();
+
+                if (params.formatId) {
+                    createHeaderFooterSelect();
+                    findFunctions();
+                }
             })()
 
             $(".nav li").click(function() {
@@ -708,6 +663,7 @@ function check_banderas($bandera, $chequear = true)
                 switch ($(e.target).attr('id')) {
                     case 'nav-vista_previa':
                         step = 4;
+                        getPreview();
                         break;
                     case 'nav-mostrar':
                         step = 3;
@@ -745,18 +701,61 @@ function check_banderas($bandera, $chequear = true)
                 }
             })
 
-            $(document).on("click", ".funcionesPropias", function() {
-                var funcion = $(this).attr("name");
-                CKEDITOR.instances['editor_mostrar'].insertText(funcion);
+            $("#etiqueta_formato").change(function() {
+                if (!params.formatId) {
+                    if ($(this).val()) {
+                        var nombre = normalizar($(this).val());
+                        $("#nombre_formato").val(nombre);
+                    }
+                }
             });
 
-            $(document).on("change", ".select_header_footer", function() {
+            $("#tipo_registro").change(function() {
+                switch ($(this).val()) {
+                    case "1":
+                        $("#item").val("0");
+                        $("#mostrar_pdf").val("1");
+                        $(".tipo_edicion").show();
+                        $("input[name='paginar']").attr("checked", "checked");
+                        $("input[name='mostrar_pdf']").attr("checked", true);
+                        break;
+                    case "2":
+                        $("#item").val("0");
+                        $("#mostrar_pdf").val("0");
+                        $(".tipo_edicion").hide();
+                        $("input[name='paginar']").attr("checked", false);
+                        $("input[name='mostrar_pdf']").attr("checked", false);
+                        break;
+                    case "3":
+                        $("#item").val("1");
+                        $("#mostrar_pdf").val("0");
+                        $(".tipo_edicion").hide();
+                        $("input[name='mostrar_pdf']").attr("checked", false);
+                        break;
+                    default:
+                        $("#item").val("0");
+                        $("#mostrar_pdf").val("0");
+                        $("input[name='paginar']").attr("checked", false);
+                        $("input[name='mostrar_pdf']").attr("checked", false);
+                        break;
+                }
+            });
+
+            $(document)
+                .off("click", ".funcionesPropias")
+                .on("click", ".funcionesPropias", function() {
+                    var funcion = $(this).data("name");
+                    CKEDITOR.instances['editor_mostrar'].insertText(`{*${funcion}*}`);
+                });
+
+            $(".select_header_footer").on("change", function() {
+                let type = $(this).data('type');
                 $.post(
                     `${params.baseUrl}app/generador/actualizar_encabezado_pie.php`, {
                         key: localStorage.getItem('key'),
                         token: localStorage.getItem('token'),
                         formatId: params.formatId,
-                        type: $(this).data('type'),
+                        type: type,
                         identificator: $(this).val()
                     },
                     function(response) {
@@ -765,7 +764,6 @@ function check_banderas($bandera, $chequear = true)
                                 type: 'success',
                                 message: response.message
                             });
-
                             if (type == 'header') {
                                 showHeader();
                             } else {
@@ -782,7 +780,7 @@ function check_banderas($bandera, $chequear = true)
                 );
             });
 
-            $(document).on("click", ".delete_header_footer", function(e) {
+            $(".delete_header_footer").on("click", function(e) {
                 let type = $(this).data('type');
                 let identificator = type == 'header' ? $("#select_header").val() : $("#select_footer").val();
 
@@ -813,7 +811,7 @@ function check_banderas($bandera, $chequear = true)
                 );
             });
 
-            $(document).on("click", ".edit_header_footer", function(e) {
+            $(".edit_header_footer").on("click", function(e) {
                 let type = $(this).data('type');
                 let identificator = type == 'header' ? $("#select_header").val() : $("#select_footer").val();
 
@@ -848,80 +846,13 @@ function check_banderas($bandera, $chequear = true)
                 }
             });
 
-
-
-
-
-            $(document).on("click", ".guardar_pie", function(e) {
-                alert('guardar pie');
-                return;
-                var id = $("#idpie").val();
-                if (id) {
-                    var etiqueta = $("#etiqueta_pie").val();
-                    var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
-                    var enlace = directoryPath + '/editor_encabezado.php';
-
-                    top.topModal({
-                        url: enlace,
-                        params: {
-                            idencabezado: id,
-                            etiqueta: etiqueta,
-                            idformato: $("#idformato").val()
-                        },
-                        size: 'modal-xl',
-                        title: 'Editar pie del formato',
-                        buttons: {
-                            success: {
-                                label: "Guardar",
-                                class: "btn btn-complete"
-                            },
-                            cancel: {
-                                label: "Cerrar",
-                                class: "btn btn-danger"
-                            }
-                        }
-                    });
-                }
-            });
-
-            $(document).off("click", ".crear_encabezado").on("click", ".crear_encabezado", function(e) {
-                top.topModal({
-                    url: `${params.baseUrl}views/generador/crear_encabezado_pie.php`,
-                    params: {
-                        crear_encabezado: 1,
-                        idformato: $("#idformato").val()
-                    },
-                    size: 'modal-xl',
-                    title: 'Crear encabezado del formato',
-                    buttons: {
-                        success: {
-                            label: "Guardar",
-                            class: "btn btn-complete"
-
-                        },
-                        cancel: {
-                            label: "Cerrar",
-                            class: "btn btn-danger"
-                        }
-                    },
-                    onSuccess: function(data) {
-                        successModalEncabezado(data);
-                    }
-                });
-            });
-
-            $(document).off("click", ".crear_pie").on("click", ".crear_pie", function(e) {
-                var directoryPath = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
-                var enlace = directoryPath + '/crear_pie.php';
+            $(".add_header_footer").on("click", function(e) {
+                let type = $(this).data('type');
 
                 top.topModal({
-                    url: enlace,
-                    params: {
-                        crear_pie: 1,
-                        idformato: $("#idformato").val()
-                    },
+                    url: `${params.baseUrl}views/generador/editor_encabezado.php`,
                     size: 'modal-xl',
-                    title: 'Crear pie del formato',
+                    title: 'Crear contenido',
                     buttons: {
                         success: {
                             label: "Guardar",
@@ -933,10 +864,10 @@ function check_banderas($bandera, $chequear = true)
                         }
                     },
                     onSuccess: function(data) {
-                        successModalPie(data);
+                        createHeaderFooterSelect();
+                        top.closeTopModal();
                     }
                 });
-
             });
 
             function createHeaderFooterSelect() {
@@ -1017,32 +948,110 @@ function check_banderas($bandera, $chequear = true)
                 );
             }
 
-            function successModalEncabezado(data) {
-                alert('actualizar select');
-                return;
-                if (data.accion != "update") {
-                    $("#select_header").append("<option value=" + data.idencabezado + " selected>" + data.etiqueta + "</option>");
-                } else {
-                    $('option[value="' + data.idencabezado + '"]').html(data.etiqueta);
-                }
-                $("#encabezado_formato").html(data.contenido);
-                encabezados[data.idencabezado] = data.contenido;
-                top.closeTopModal();
+            function saveBody() {
+                var content = CKEDITOR.instances['editor_mostrar'].getData();
+
+                $.post(
+                    `${params.baseUrl}app/generador/actualizar_cuerpo_formato.php`, {
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
+                        content: content,
+                        formatId: params.formatId
+                    },
+                    function(response) {
+                        if (response.success) {
+                            top.notification({
+                                type: 'success',
+                                message: response.message
+                            });
+                            $('#tabs_formulario a[href="#pantalla_previa-tab"]').tab('show');
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message
+                            });
+                        }
+                    },
+                    'json'
+                );
             }
 
-            function successModalPie(data) {
-                alert('actualizar select footer');
-                return;
-                if (data.accion != "update") {
-                    $("#select_footer").append("<option value=" + data.idencabezado + " selected>" + data.etiqueta + "</option>");
-                } else {
-                    $('option[value="' + data.idencabezado + '"]').html(data.etiqueta);
-                }
-
-                $("#pie_formato").html(data.contenido);
-                encabezados[data.idencabezado] = data.contenido;
-                top.closeTopModal();
+            function getPreview() {
+                $.post(
+                    `${params.baseUrl}app/generador/obtener_vista_previa.php`, {
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
+                        formatId: params.formatId
+                    },
+                    function(response) {
+                        if (response.success) {
+                            $("#preview_container").html(response.data);
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message
+                            });
+                        }
+                    },
+                    'json'
+                );
             }
+
+            function findFunctions() {
+                $.post(
+                    `${params.baseUrl}app/generador/listado_funciones_nucleo.php`, {
+                        key: localStorage.getItem('key'),
+                        token: localStorage.getItem('token'),
+                        formatId: params.formatId
+                    },
+                    function(response) {
+                        if (response.success) {
+                            createFunctionList(response.data);
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message
+                            });
+                        }
+                    },
+                    'json'
+                );
+
+            }
+
+            function createFunctionList(data) {
+                data.functions.forEach(f => {
+                    $('#funcion_list').append(
+                        $('<li>', {
+                            id: 'function-' + f.idfunciones_nucleo,
+                            'data-name': f.nombre_funcion,
+                            text: f.etiqueta,
+                            class: 'bg-master-lightest funcionesPropias',
+                        })
+                    )
+                });
+
+                $('#funcion_list').append(
+                    $('<li>', {
+                        class: 'bg-master-light',
+                        text: 'Listado de campos'
+                    })
+                )
+
+                data.fields.forEach(f => {
+                    $('#funcion_list').append(
+                        $('<li>', {
+                            id: 'field-' + f.id,
+                            'data-name': f.name,
+                            text: f.label,
+                            class: 'bg-master-lightest funcionesPropias',
+                        })
+                    )
+                });
+            }
+
+
+
 
             function saveFormat() {
                 if ($("#datos_formato").valid()) {
@@ -1083,172 +1092,39 @@ function check_banderas($bandera, $chequear = true)
                 }
             }
 
-            function saveBody() {
-                var content = CKEDITOR.instances['editor_mostrar'].getData();
-
-                $.post(
-                    `${params.baseUrl}app/generador/actualizar_cuerpo_formato.php`, {
-                        key: localStorage.getItem('key'),
-                        token: localStorage.getItem('token'),
-                        content: content,
-                        formatId: params.formatId
-                    },
-                    function(response) {
-                        if (response.success) {
-                            top.notification({
-                                type: 'success',
-                                message: response.message
-                            });
-                            $('#tabs_formulario a[href="#pantalla_previa-tab"]').tab('show');
-                        } else {
-                            top.notification({
-                                type: 'error',
-                                message: response.message
-                            });
-                        }
-                    },
-                    'json'
-                );
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: `${params.baseUrl}pantallas/lib/llamado_ajax.php`,
-                async: false,
-                data: "librerias=pantallas/generador/librerias_pantalla.php&funcion=load_componentes&parametros=1&idpantalla=" +
-                    $("#idformato").val() + "&rand=" + Math.round(Math.random() * 100000),
-                success: function(html) {
-                    if (html) {
-                        var objeto = jQuery.parseJSON(html);
-                        if (objeto.exito) {
-                            $("#componentes-tab").append(objeto.codigo_html);
-                        }
-                    }
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                data: {
-                    idpantalla: $("#idformato").val(),
-                    key: localStorage.getItem("key")
-                },
-                url: `${params.baseUrl}app/generador_pantalla/cargar_vista_previa.php`,
-                success: function(response) {
-                    if (response.success) {
-                        $("#pantalla_vista_previa").html(response.data);
-                    } else {
-                        top.notification({
-                            type: "error",
-                            message: response.message
-                        })
-                    }
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                url: `${params.baseUrl}pantallas/generador/funciones_desplegables.php?pantalla_idpantalla=` +
-                    $("#idformato").val() +
-                    "&extensiones_permitidas=php&funciones_nucleo=1",
-                success: function(html) {
-                    if (html) {
-                        $("#funciones_desplegables").html(html.codigo_html);
-                    }
-                }
-            });
-
             /////////////////////////////ACA INICIA EL ARCHIVO DE LA PESTANA 1 ////////////////////////////////////////////////////////////////////////
-            $("#serie_idserie").select2();
-            $("#tipo_registro").select2();
-            $("#contador_idcontador").select2();
 
-            $($("#select2-serie_idserie-container").siblings()[0]).hide();
-            $("input[name='when_is_escrow_set_to_close']").hide();
-            if ($("#codigo_serie").val() == '') {
-                $("#mostrar_tipodoc_pdf").hide();
-                $("#texto_tipodoc").hide();
-            }
-            $('[data-toggle="tooltip"]').tooltip();
+            var formato = <?= json_encode($formato[0]) ?>;
 
-            $("#etiqueta_formato").change(function() {
-                if (!params.formatId) {
-                    if ($(this).val()) {
-                        var nombre = normalizar($(this).val());
-                        $("#nombre_formato").val(nombre);
-                    }
-                }
-            });
-            var descripcion_formato = "<?php echo $descripcionFormato; ?>";
-            var formato = <?php echo (json_encode($formato)); ?>;
-
-            var nombre_formato = "";
-            if ($("#nombre_formato").val() != "") {
-                var nombre_formato = $("#nombre_formato").val();
-            }
-
-            $("#tipo_registro").change(function() {
-                var valor = $(this).val();
-                switch (valor) {
-                    case "1":
-                        $("#item").val("0");
-                        $("#mostrar_pdf").val("1");
-                        $(".tipo_edicion").show();
-                        $("input[name='paginar']").attr("checked", "checked");
-                        $("input[name='mostrar_pdf']").attr("checked", true);
-                        break;
-                    case "2":
-                        $("#item").val("0");
-                        $("#mostrar_pdf").val("0");
-                        $(".tipo_edicion").hide();
-                        $("input[name='paginar']").attr("checked", false);
-                        $("input[name='mostrar_pdf']").attr("checked", false);
-                        break;
-                    case "3":
-                        $("#item").val("1");
-                        $("#mostrar_pdf").val("0");
-                        $(".tipo_edicion").hide();
-                        $("input[name='mostrar_pdf']").attr("checked", false);
-                        break;
-                    default:
-                        $("#item").val("0");
-                        $("#mostrar_pdf").val("0");
-                        $("input[name='paginar']").attr("checked", false);
-                        $("input[name='mostrar_pdf']").attr("checked", false);
-                        break;
-                }
-            });
-
-            if (formato !== null && formato.numcampos) {
-                $('#nombre_formato').val(formato[0].nombre);
-                $('#etiqueta_formato').val(formato[0].etiqueta);
-                //$('#tabla_formato').val(formato[0].tabla);
-                $('#descripcion_formato').val(descripcion_formato);
-                $('#proceso_pertenece').val(formato[0].proceso_pertenece);
-                $('#serie_id_serie').val(formato[0].serie_idserie);
-                $('#version').val(formato[0].version);
-                $('#librerias_formato').val(formato[0].librerias);
-                $('#etiqueta_formato').val(formato[0].etiqueta);
-                $('#ruta_formato').val(formato[0].ruta_formato);
-                $('#ayuda_formato').val(formato[0].ayuda);
-                //$('#prefijo_formato').val(formato[0].prefijo);
-                $('#ruta_almacenamiento_formato').val(formato[0].ruta_almacenamiento);
-                $('#idformato').val(formato[0].idformato);
-                $('#tipo_formato_' + formato[0].tipo_formato).attr('checked', "checked");
-                $('#versionar_' + formato[0].versionar).attr('checked', "checked");
-                $('#accion_eliminar_' + formato[0].accion_eliminar).attr('checked', "checked");
-                if (formato[0].tipo_formato == 2) {
+            if (formato && params.formatId) {
+                CKEDITOR.replace("editor_mostrar");
+                CKEDITOR.instances['editor_mostrar'].setData(
+                    formato.cuerpo
+                );
+                $('#etiqueta_formato').val(formato.etiqueta);
+                $('#descripcion_formato').val(formato.descripcion_formato);
+                $('#proceso_pertenece').val(formato.proceso_pertenece);
+                $('#serie_id_serie').val(formato.serie_idserie);
+                $('#version').val(formato.version);
+                $('#librerias_formato').val(formato.librerias);
+                $('#etiqueta_formato').val(formato.etiqueta);
+                $('#ruta_formato').val(formato.ruta_formato);
+                $('#ayuda_formato').val(formato.ayuda);
+                $('#ruta_almacenamiento_formato').val(formato.ruta_almacenamiento);
+                $('#idformato').val(formato.idformato);
+                $('#tipo_formato_' + formato.tipo_formato).attr('checked', "checked");
+                $('#versionar_' + formato.versionar).attr('checked', "checked");
+                $('#accion_eliminar_' + formato.accion_eliminar).attr('checked', "checked");
+                if (formato.tipo_formato == 2) {
                     $("#campos_formato").show();
                 }
-                $('#aprobacion_automatica_' + formato[0].aprobacion_automatica).attr('checked', "checked");
+                $('#aprobacion_automatica_' + formato.aprobacion_automatica).attr('checked', "checked");
                 $('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
                 $('#componentes_acciones').hide();
                 $('.nav li').removeClass('disabled');
 
-                var item = formato[0].item;
-                var mostrar_pdf = formato[0].mostrar_pdf;
+                var item = formato.item;
+                var mostrar_pdf = formato.mostrar_pdf;
                 if (item == 0 && mostrar_pdf == 0) {
                     $("#tipo_registro").val(2);
                     $(".tipo_edicion").hide();
@@ -1266,52 +1142,19 @@ function check_banderas($bandera, $chequear = true)
                 $('.nav li').addClass('disabled');
                 $('#generar_pantalla').addClass('disabled');
 
-                $("#contenidos_componentes").hide();
                 $('#tabs_formulario li:first').removeClass('disabled');
-                $('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
             }
-
-            //tree_arbol_serie_formato.setOnCheckHandler(parsear_serie_formato);
 
             $("#serie_idserie").change(function() {
+                $(".codigoSerie").each(function() {
+                    if ($(this).val() == $("#serie_idserie").val()) {
+                        $("#codigoSerieInput").val($(this).attr("codigo"));
+                    }
+                });
+            }).trigger('change');
 
-                obtenerCodigoSerie();
-
-            });
-
+            $('[data-toggle="tooltip"]').tooltip();
         });
-
-        function obtenerCodigoSerie() {
-            $(".codigoSerie").each(function() {
-                if ($(this).val() == $("#serie_idserie").val()) {
-                    $("#codigoSerieInput").val($(this).attr("codigo"));
-                }
-            });
-        }
-
-        obtenerCodigoSerie();
-
-        function parsear_serie_formato(nodeId) {
-            //console.log(nodeId);
-            var datos = tree_arbol_serie_formato.getUserData(nodeId, "serie_codigo");
-            //console.log(datos);
-            $("#codigo_serie").val(datos);
-            if (datos) {
-                $("#mostrar_tipodoc_pdf").show();
-                $("#texto_tipodoc").show();
-            } else {
-                $("#mostrar_tipodoc_pdf").hide();
-                $("#texto_tipodoc").hide();
-            }
-        }
-
-        function parsear_items() {
-            var nombre_formato = $("#nombre_formato").val();
-            if (nombre_formato.indexOf("ft_") == "-1") {
-                $("#nombre_formato").val("ft_" + nombre_formato);
-            }
-            $("#prefijo_formato").val("ft_");
-        }
     </script>
 </body>
 
