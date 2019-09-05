@@ -370,27 +370,23 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 //REPORTE DE DISTRIBUCION
 
 function ver_documento_distribucion($iddocumento, $tipo_origen)
-{ //Radicado
-    global $conn;
-
-    $cadena_fecha_obtener = fecha_db_obtener('a.fecha', 'Y-m-d') . " AS fecha";
-    $datos_documento = busca_filtro_tabla("b.etiqueta,a.numero," . $cadena_fecha_obtener, "documento a, formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddocumento, "", $conn);
-
-    $numero = $datos_documento[0]['numero'];
+{ 
+    $Documento = new Documento($iddocumento);
+    
+    $numero = $Documento->numero;
     $array_tipo_origen = array(
         1 => 'I',
         2 => 'E'
     );
 
     $cadena_mostrar = $numero . '-' . $array_tipo_origen[$tipo_origen];
-
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $cadena_mostrar . '</button></center></div>';
 
     return $enlace_documento;
 }
 
 function ver_documento_planilla($iddocumento, $numero)
-{ //Radicado
+{
     return '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $numero . '</button></center></div>';
 }
 function ver_estado_distribucion($estado_distribucion)

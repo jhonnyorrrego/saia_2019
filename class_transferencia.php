@@ -863,7 +863,31 @@ function cargo_rol($iddoc)
     global $conn;
     $resultado = array();
     $origenes = array();
-    $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta," . fecha_db_obtener('buzon_entrada.fecha', 'Y-m-d H:i') . " as fecha,ruta.firma_externa", "buzon_entrada,ruta", "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
+    $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa", "buzon_entrada,ruta", 
+    "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
+    $query =Model::getQueryBuilder();
+
+    $tipo = $query
+    ->select("activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,fecha,ruta.firma_externa")
+    ->from("buzon_entrada",'a')
+    ->join('a','ruta','b','a.ruta_idruta=b.idruta')
+    ->where(
+        $query->expr()->andX(
+        $query->expr()->orX(
+            $query->expr()->in("nombre",['APROBADO','REVISADO']),
+            $query->expr()->andX(
+                $query->expr()->eq("nombre",'POR_APROBAR'),
+                $query->expr()->eq("activo",'1'),
+            )
+        ),      
+        $query->expr()->in("obligatorio",['1','2','5']),
+        $query->expr()->eq('tipo', 'ACTIVO'),
+        $query->expr()->eq('archivo_idarchivo', $iddoc),
+    ))->getSQL();
+
+    var_dump($tipo);
+    die();
+    
     for ($i = 0; $i < $tipo["numcampos"]; $i++) {
         if (in_array($tipo[$i]["origen"], $origenes)) {
             unset($tipo[$i]);
