@@ -72,6 +72,7 @@ try {
         if ($SerieVersion = SerieVersion::getCurrentVersion()) {
 
             $TRDVersionController = new TRDVersionController($SerieVersion->getPK());
+            $TRDVersionController->removeTemporalFile();
             $folder = "TRD/version_{$SerieVersion->version}";
 
             $SerieVersion->setAttributes([

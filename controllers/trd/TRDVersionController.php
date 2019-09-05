@@ -299,4 +299,20 @@ class TRDVersionController
         }
         return $dir . $fileName;
     }
+    /**
+     * Elimina los archivos temporales 
+     * 
+     *
+     * @return void
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function removeTemporalFile()
+    {
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion');
+        unlink($rutaClasi);
+
+        $rutaTrd = self::getRouteFileTemporal('json_trd');
+        unlink($rutaTrd);
+    }
 }

@@ -33,7 +33,6 @@ try {
     $field = $_REQUEST['type'];
 
     if ($_REQUEST['currentVersion']) {
-
         $relativeRoute = TRDVersionController::getRouteFileTemporal($field);
 
         if (!is_file($relativeRoute)) {
