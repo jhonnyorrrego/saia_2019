@@ -24,11 +24,18 @@ function view_clasification($id)
 
 function link_report($idserie_version, $type)
 {
-    global $ruta_db_superior;
+    global $ruta_db_superior, $versionActual;
+
+    if (!$versionActual) {
+        $versionActual = (int) SerieVersion::getCurrentVersion()->getPK();
+        $GLOBALS['versionActual'] =  $versionActual;
+    }
+
     $route = "{$ruta_db_superior}views/serie/grilla_trd.php?";
     $route .= http_build_query([
         'id' => $idserie_version,
-        'type' => $type
+        'type' => $type,
+        'currentVersion' => (int) ($versionActual == $idserie_version) ?? false
     ]);
 
     return <<<HTML

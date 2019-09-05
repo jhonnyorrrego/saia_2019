@@ -31,14 +31,25 @@ try {
     }
 
     $field = $_REQUEST['type'];
-    $SerieVersion = new SerieVersion($_REQUEST['id']);
-    $route = TemporalController::createTemporalFile($SerieVersion->$field, '', true);
 
-    if (!$route->success) {
-        throw new Exception("Error Processing Request", 1);
+    if ($_REQUEST['currentVersion']) {
+
+        $relativeRoute = TRDVersionController::getRouteFileTemporal($field);
+
+        if (!is_file($relativeRoute)) {
+            $TRDVersionController = new TRDVersionController($_REQUEST['id']);
+            $TRDVersionController->saveCache();
+        }
+    } else {
+        $SerieVersion = new SerieVersion($_REQUEST['id']);
+        $route = TemporalController::createTemporalFile($SerieVersion->$field, '', true);
+
+        if (!$route->success) {
+            throw new Exception("Error Processing Request", 1);
+        }
+
+        $relativeRoute = $ruta_db_superior . $route->route;
     }
-
-    $relativeRoute = $ruta_db_superior . $route->route;
 
     if (!is_file($relativeRoute)) {
         throw new Exception("Error Processing Request", 1);

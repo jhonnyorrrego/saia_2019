@@ -17,7 +17,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
     'id' => $_REQUEST['id'],
-    'type' => $_REQUEST['type']
+    'type' => $_REQUEST['type'],
+    'currentVersion' => $_REQUEST['currentVersion']
 ]);
 ?>
 

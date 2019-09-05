@@ -15,7 +15,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'core/autoload.php';
-require_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
+require_once ($ruta_db_superior . "app/arbol/crear_arbol_ft.php");
 
 //$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
 $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
