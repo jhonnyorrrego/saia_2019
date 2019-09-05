@@ -512,13 +512,14 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
             $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
         } elseif ($mensajero_destino) {
-            $array_concat = array(
-                "nombres",
-                "' '",
-                "apellidos"
-            );
-            $cadena_concat = concatenar_cadena_sql($array_concat);
-            $mensajeros_externos = busca_filtro_tabla("iddependencia_cargo as id," . $cadena_concat . " AS nombre,cargo", "vfuncionario_dc", "iddependencia_cargo=" . $mensajero_destino, "", $conn);
+
+            $mensajeros_externos = Model::getQueryBuilder()
+            ->select(["iddependencia_cargo as id", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "cargo"])
+            ->from("vfuncionario_dc")
+            ->where("iddependencia_cargo = :iddep")  
+            ->setParameter(':iddep', $mensajero_destino)
+            ->execute()->fetchAll();
+            
             if ($mensajeros_externos[0]['cargo'] == "Mensajero") {
                 $tipo_mensajero = "i";
             } else {
@@ -554,7 +555,6 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
         $html = '';
         for ($i = 0; $i < $planillas['numcampos']; $i++) {
             $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Registro ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . '</button></center></div>';
-            //$html .= '<div class="kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=379&variable_busqueda=planilla|' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
         }
     }
     return $html;

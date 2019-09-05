@@ -59,15 +59,20 @@ function select_mensajero_distribucion()
         "' '",
         "apellidos"
     );
-    $cadena_concat = concatenar_cadena_sql($array_concat);
-    $datos = busca_filtro_tabla("iddependencia_cargo, " . $cadena_concat . " AS nombre", "vfuncionario_dc", "lower(cargo)='mensajero' AND estado_dc=1", "", $conn);
+    
+    $datos = Model::getQueryBuilder()
+        ->select(["iddependencia_cargo", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre"])
+        ->from("vfuncionario_dc")
+        ->where("lower(cargo)='mensajero'")
+        ->andWhere("estado_dc=1")
+        ->execute()->fetchAll();
 
     //if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
     $vector_variable_busqueda = explode('|', @$_REQUEST['variable_busqueda']);
     $vector_mensajero_tipo = explode('-', $vector_variable_busqueda[1]);
     $filtrar_mensajero = @$vector_variable_busqueda[1];
 
-    for ($i = 0; $i < $datos['numcampos']; $i++) {
+    for ($i = 0, $total = count($datos); $i < $total; $i++) {
         $selected = '';
         if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'i') {
             if ($filtrar_mensajero) {
@@ -79,9 +84,15 @@ function select_mensajero_distribucion()
         $select .= "<option class='select_mensajeros_ditribucion' value='" . $datos[$i]['iddependencia_cargo'] . "-i' " . $selected . ">" . $datos[$i]['nombre'] . "&nbsp;-&nbsp;Mensajero</option>";
     }
 
-    $mensajeros_externos = busca_filtro_tabla("iddependencia_cargo, " . $cadena_concat . " AS nombre", "vfuncionario_dc", "lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1", "", $conn);
+    $mensajeros_externos = Model::getQueryBuilder()
+        ->select(["iddependencia_cargo", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre"])
+        ->from("vfuncionario_dc")
+        ->where("lower(cargo) like :cargo")
+        ->andWhere("estado_dc=1")
+        ->setParameter(':cargo', 'mensajer%extern%')
+        ->execute()->fetchAll();
 
-    for ($i = 0; $i < $mensajeros_externos['numcampos']; $i++) {
+    for ($i = 0, $total = count($mensajeros_externos); $i < $total; $i++) {
         $selected = '';
         if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'i') {
             if ($filtrar_mensajero) {
