@@ -75,25 +75,60 @@ function leido($codigo, $llave)
 {
     global $conn;
     $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $llave . " and llave_entidad=" . $codigo, "fecha_inicial DESC", $conn);
+
     if ($pendiente["numcampos"] > 0) {
         $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_entrada", "archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= " . fecha_db_almacenar($pendiente[0]["fecha_inicial"], "Y-m-d H:i:s"), "", $conn);
         if (!$leido["numcampos"]) {
-            $insertar = "insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1,$codigo,1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
-            $insertar = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1," . $codigo . ",1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
+            BuzonSalida::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
+
+            BuzonEntrada::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
         }
     } else {
         $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_salida", "archivo_idarchivo=$llave and destino='$codigo'", "fecha desc", $conn);
         if (!$leido["numcampos"] || $leido[0]["nombre"] <> "LEIDO") {
-            $insertar = "insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1,$codigo,1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
+
+            BuzonSalida::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
+
             $insertar = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
             $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1," . $codigo . ",1,'DOCUMENTO')";
-            phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
+
+            BuzonEntrada::newRecord([
+                'archivo_idarchivo' => $llave,
+                'nombre' => 'LEIDO',
+                'fecha' => date('Y-m-d H:i:s'),
+                'origen' => $codigo,
+                'tipo_origen' => '1',
+                'destino' => $codigo,
+                'tipo_destino' => '1',
+                'tipo' => 'DOCUMENTO'
+            ]);
         }
     }
 }

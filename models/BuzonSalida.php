@@ -30,7 +30,7 @@ class BuzonSalida extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'archivo_idarchivo',
                 'nombre',

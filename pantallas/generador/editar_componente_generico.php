@@ -100,8 +100,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
     <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
 
-
-
     <style>
         #tipo_campo {
             font-size: 30px;
@@ -192,7 +190,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             opciones_form["postRender"] = function() {
                 $(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
                 $(".alpaca-field-radio").find("label").css("display", "block");
-                //console.log("Componente " + nombre_componente);
                 if (con_numeros.includes(nombre_componente)) {
                     $("input[type='number'][data-min]").each(function() {
                         var valor = $(this).data("min");
@@ -207,7 +204,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
             opciones_form["options"]['form'] = {
                 buttons: {
-
                     submit: {
                         "title": "Guardar",
                         "styles": "btn btn-complete d-none",
@@ -216,7 +212,6 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                             this.refreshValidationState(true);
                             if (this.isValid(true)) {
                                 var value = this.getValue();
-                                //console.log(JSON.stringify(value, null, "  "));
                                 funcion_enviar(value, idpantalla_campo);
                                 top.successModalEvent(value);
                             }
@@ -326,7 +321,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
         $resp["fs_acciones"] = false;
 
         if (preg_match("/p/", $campo_formato[0]["acciones"])) {
-            $resp["fs_acciones"] = true;
+            $resp["fs_acciones"] = false;
         }
         if ($campo_formato[0]['etiqueta_html'] == 'arbol') {
             $resp["fs_arbol"] = "arbol_seleccionV2";

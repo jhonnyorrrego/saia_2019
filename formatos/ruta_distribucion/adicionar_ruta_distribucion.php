@@ -24,7 +24,15 @@
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><?php include_once('../../formatos/librerias/header_formato.php'); ?><?= pace() ?>
+                                    <meta content="" name="Cero K" /> 
+                                    <?php include_once($ruta_db_superior . "assets/librerias.php"); ?>
+                                    <script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script>
+                                    <?php include_once('../carta/funciones.php'); ?>
+                                    <?php include_once('funciones.php'); ?>
+                                    <?php include_once('../../formatos/librerias/funciones_generales.php'); ?>
+                                    <?php include_once('../../formatos/librerias/funciones_acciones.php'); ?>
+                                    <?php include_once('../../formatos/librerias/header_formato.php'); ?>
+                                    <?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= theme() ?>
@@ -79,7 +87,7 @@ span.fancytree-expander {
                       <!-- START card -->
                       <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">RUTAS DE DISTRIBUCIÓN</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],404,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(404,4991);?></div><div class="form-group" id="tr_fecha_ruta_distribuc"><label title="">FECHA*</label><?php fecha_formato(404,4986);?></div><div class="form-group "  id="tr_nombre_ruta">
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php" enctype="multipart/form-data"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(404,4991);?></div><div class="form-group" id="tr_fecha_ruta_distribuc"><label title="">FECHA*</label><?php fecha_formato(404,4986);?></div><div class="form-group "  id="tr_nombre_ruta">
                                         <label title="">NOMBRE DE LA RUTA*</label>
                                         <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="nombre_ruta" name="nombre_ruta" required value="<?php echo(validar_valor_campo(4987)); ?>">
                                        </div><div class="form-group" id="tr_descripcion_ruta">

@@ -298,7 +298,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
             $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
 
             $tabla .= '
-                <tr> 
+                <tr>
                 <td style="width:15%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
                 <td style="width:20%;"> ' . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . '</td>
 				<td style="width:20%" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>	
@@ -333,7 +333,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
     global $conn, $ruta_db_superior;
 
     $html = '';
-    
+
     if (!$js && $iddistribucion) {
 
         //ROLES USUARIO _ACTUAL
@@ -525,7 +525,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             } else {
                 $tipo_mensajero = "e";
             }
-            $html = '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . "-" . $tipo_mensajero .'">' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
+            $html = '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . "-" . $tipo_mensajero . '">' . $mensajeros_externos[0]['nombre'] . '-' . $tipo_mensajero . '</label>';
         } else { //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
             $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
         }
@@ -850,4 +850,13 @@ function condicion_por_ingresar_ventanilla_distribucion()
         }
     }
     return $condicion_adicional;
+}
+
+function obtener_radicado($idDocumento)
+{
+
+    $Documento = new Documento($idDocumento);
+    $radicado = $Documento->numero;
+    $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $idDocumento . '" conector="iframe" titulo="No Registro ' . $radicado . '"><center><button class="btn btn-complete">' . $radicado . '</button></center></div>';
+    return $enlace_documento;
 }
