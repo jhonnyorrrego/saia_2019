@@ -820,10 +820,12 @@ CODE;
         if ($formato["numcampos"]) {
             if ($formato[0]["item"]) {
                 $action = '<?= $ruta_db_superior ?>' . FORMATOS_SAIA . 'librerias/funciones_item.php';
+                $estiloItem = '';
             } else {
                 $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
+                $estiloItem = '-8';
             }
-            $texto .= '<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
+            $texto .= '<div class="container-fluid container-fixed-lg col-lg' . $estiloItem . '" style="overflow: auto;" id="content_container">
                       <!-- START card -->
                       <div class="card card-default">
                             <div class="card-body">';

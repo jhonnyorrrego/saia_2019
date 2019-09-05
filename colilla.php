@@ -260,7 +260,7 @@ if ($doc <> FALSE) {
 
     $distribuciones = busca_filtro_tabla("tipo_origen,origen,tipo_destino,destino", "distribucion", "documento_iddocumento=" . $doc, "", $conn);
     if ($distribuciones['numcampos']) {
-        include_once($ruta_db_superior . 'distribucion/funciones_distribucion.php');
+        include_once($ruta_db_superior . 'app/distribucion/funciones_distribucion.php');
 
         $origen = retornar_origen_destino_distribucion($distribuciones[0]['tipo_origen'], $distribuciones[0]['origen']);
         $destino = retornar_origen_destino_distribucion($distribuciones[0]['tipo_destino'], $distribuciones[0]['destino']);

@@ -10,7 +10,7 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior.'distribucion/funciones_distribucion.php');
+include_once($ruta_db_superior.'app/distribucion/funciones_distribucion.php');
 
 
 function mostrar_tipo_origen_reporte($tipo_origen){

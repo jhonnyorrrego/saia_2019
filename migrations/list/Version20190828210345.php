@@ -17,6 +17,15 @@ final class Version20190828210345 extends AbstractMigration
         return '';
     }
 
+    public function preUp(Schema $schema): void
+    {
+        date_default_timezone_set("America/Bogota");
+
+        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
+            $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+    }
+    
     public function up(Schema $schema): void
     {
         $table = $schema->getTable('funcionario');

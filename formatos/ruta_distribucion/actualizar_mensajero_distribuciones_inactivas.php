@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
 $idft_ruta_distribucion = $_REQUEST['idft_ruta_distribucion'];
 $mensajero_ruta = $_REQUEST['mensajero_ruta'];

@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias_funciones_generales.php";
 include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "distribucion/funciones_distribucion.php";
+include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 
 /* ADICIONAR - EDITAR */
 
@@ -338,7 +338,7 @@ function vincular_dependencia_ruta_distribucion($idformato, $iddoc)
     global $conn, $ruta_db_superior;
     $datos = busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada", "ft_ruta_distribucion a, ft_dependencias_ruta b", "b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=" . $iddoc, "", $conn);
     if ($datos['numcampos']) {
-        include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
+        include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
         for ($i = 0; $i < $datos['numcampos']; $i++) {
             actualizar_dependencia_ruta_distribucion($datos[$i]['idft_ruta_distribucion'], $datos[$i]['dependencia_asignada'], 1);
         }
