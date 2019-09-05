@@ -245,11 +245,7 @@ if ($response->total) {
                 $variables = explode(",", $funcion[1]);
 
                 foreach ($variables as $variable) {
-                    if (isset($row[$variable])) {
-                        array_push($valor_variables, $row[$variable]);
-                    } else {
-                        array_push($valor_variables, null);
-                    }
+                    array_push($valor_variables, $row[$variable] ?? $variable);
                 }
 
                 if (function_exists($funcion[0])) {
@@ -317,7 +313,7 @@ function crear_condicion_sql($idbusqueda, $idcomponente)
  */
 function parsear_datos_plantilla_visual($cadena, $campos = array())
 {
-    if (preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cadena, $resultado)) {
+    if (preg_match_all('({\*([a-zA-Z_0-9.@,])+\*})', $cadena, $resultado)) {
         $patrones = str_replace(["{*", "*}"], "", $resultado[0]);
         if ($campos) {
             $listado_campos = array_unique(explode(",", $campos));

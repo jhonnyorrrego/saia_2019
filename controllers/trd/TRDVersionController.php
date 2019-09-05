@@ -142,7 +142,7 @@ class TRDVersionController
             )
             ->from('serie', 'a')
             ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
-            ->where('b.estado = 1 AND a.tipo = 2 AND a.estado = 1 AND')
+            ->where('b.estado = 1 AND a.tipo = 2 AND a.estado = 1')
             ->andWhere('b.fk_dependencia =:iddependencia')
             ->andWhere('a.cod_padre =:idserie')
             ->andWhere('a.fk_serie_version=:idserie_version')
