@@ -40,48 +40,6 @@ if ($_REQUEST['eliminarPermisoFormato']) {
     eliminarPermisoFormato($_REQUEST['nombreFormato']);
 }
 
-function load_pantalla($idpantalla, $generar_archivo = "", $accion = '')
-{
-    global $conn, $ruta_db_superior;
-    $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-    $campos_excluir = array(
-        "dependencia",
-        "documento_iddocumento",
-        "estado_documento",
-        "firma",
-        "serie_idserie",
-        "encabezado"
-    );
-    if ($consulta_campos_lectura['numcampos']) {
-        $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-        $campos_lectura = implode(",", $campos_lectura);
-        $campos_lectura = str_replace(",", "','", $campos_lectura);
-        $busca_idft = strpos($campos_lectura, "idft_");
-        if ($busca_idft !== false) {
-            $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idpantalla, "", $conn);
-            $campos_lectura = str_replace("idft_", "id" . $consulta_ft[0]['nombre_tabla'], $campos_lectura);
-            $campos_excluir[] =  $campos_lectura;
-        }
-    }
-    $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
-    $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla . $condicion_adicional, "B.orden", $conn);
-
-    $texto = '';
-    if ($pantalla['numcampos']) {
-        $count = 1;
-        for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
-            $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $count, $generar_archivo, $accion, $pantalla[$i]);
-            $texto .= $cadena["codigo_html"];
-            $count++;
-        }
-
-        $texto = str_replace("? >", "?" . ">", $texto);
-        $texto = str_replace("< ?php ", "<" . "?php", $texto);
-    }
-
-    return $texto;
-}
-
 function carga_vista_previa($idFormato)
 {
     global $conn, $ruta_db_superior;

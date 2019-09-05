@@ -27,35 +27,19 @@ class TRDLoadController
 
     protected function init()
     {
-        $this->truncateTables()
+        $this->truncate()
             ->getDataExcel()
             ->loadTRD()
             ->saveSerie();
     }
 
 
-    public function trun($table)
+
+    protected function truncate()
     {
-        $connection = Connection::getInstance();
-        $dbPlatform = $connection->getDatabasePlatform();
-        $q = $dbPlatform->getTruncateTableSql($table);
-        $connection->executeUpdate($q);
-    }
+        SerieTemp::truncateTable('serie_temp');
+        DependenciaSerieTemp::truncateTable('dependencia_serie_temp');
 
-
-    protected function truncateTables()
-    {
-        $trun1 = $this->trun('serie_temp');
-        $trun2 = $this->trun('dependencia_serie_temp');
-
-        echo '<pre>';
-        var_dump($trun1, $trun2);
-        echo '</pre>';
-        die('--');
-
-        if ($trun1 !== true && $trun2 !== true) {
-            $this->errorException("No se pudieron limpiar las tablas temporales");
-        }
         return $this;
     }
 
@@ -78,10 +62,10 @@ class TRDLoadController
             'dis_microfilma',
             'procedimiento'
         ];
+
         $dataExcel = UtilitiesController::readFileExcel($this->urlEXcel, [4], $fields);
         $cantCabecera = count($fields);
         $cantCabeceraExcel = count($dataExcel[1]);
-
         if ($cantCabecera != $cantCabeceraExcel) {
             $this->errorException("La cantidad de columnas del excel ({$cantCabeceraExcel}) no coincide con la cantidad de cabeceras enviadas ({$cantCabecera})");
         } else {
@@ -143,10 +127,14 @@ class TRDLoadController
 
     protected function saveSerie()
     {
-        $sql = "SELECT * FROM serie_temp ORDER BY idserie ASC";
-        $data = SerieTemp::findByQueryBuilder($sql);
-        $ids = [0 => 0];
+        $sql = SerieTemp::getQueryBuilder()
+            ->select('*')
+            ->from('serie_temp')
+            ->orderBy('idserie', 'ASC');
 
+        $data = SerieTemp::findByQueryBuilder($sql);
+
+        $ids = [0 => 0];
         foreach ($data as $SerieTemp) {
             $attributesSerie = $SerieTemp->getAttributes();
             $attributesSerie['estado'] = 1;
@@ -157,14 +145,18 @@ class TRDLoadController
             $Serie = new Serie();
             $Serie->setAttributes($attributesSerie);
 
-            if ($id = $Serie->createSerie(0)) {
+            if ($id = $Serie->createSerie()) {
                 $ids[$id] = $SerieTemp->getPK();
             } else {
                 $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
             }
         }
         unset($this->fila);
-        $sql = "SELECT * FROM dependencia_serie_temp ORDER BY iddependencia_serie ASC";
+
+        $sql = DependenciaSerieTemp::getQueryBuilder()
+            ->select('*')
+            ->from('dependencia_serie_temp')
+            ->orderBy('iddependencia_serie', 'ASC');
         $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 
         foreach ($data as $DependenciaSerie) {
@@ -256,8 +248,14 @@ class TRDLoadController
 
     private function validateDependencia($codDependencia)
     {
-        $sql = "SELECT estado,iddependencia FROM dependencia WHERE codigo like '{$codDependencia}'";
-        $existDep = Dependencia::findByQueryBuilder($sql, false);
+
+        $existDep = Dependencia::getQueryBuilder()
+            ->select('estado,iddependencia')
+            ->from('dependencia')
+            ->where('codigo like :codigo_dep')
+            ->setParameter(':codigo_dep', $codDependencia)
+            ->execute()->fetchAll();
+
         if ($existDep) {
             $cant = count($existDep);
             if ($cant == 1) {
@@ -356,16 +354,31 @@ class TRDLoadController
     private function insertDependenciaSerie($idserie, $tipo, $sinSubserie = false)
     {
         if ($tipo == 1 && $sinSubserie) { //Serie
-            $sql = "SELECT count(idserie) as cant FROM serie_temp WHERE cod_padre={$idserie} and tipo=2";
-            $existSubserie = SerieTemp::search($sql);
-            if ($existSubserie[0]['cant']) {
+
+            $existSubserie = SerieTemp::getQueryBuilder()
+                ->select('count(idserie) as cant')
+                ->from('serie_temp')
+                ->where('tipo=2 and cod_padre=:idserie')
+                ->setParameter(':idserie', $idserie)
+                ->execute()->fetch();
+
+            if ($existSubserie['cant']) {
                 $this->errorException("La serie de la Fila: {$this->fila} NO tiene codigo de subserie, esta debe tener debido a que ya ha sido vinculado a otras subseries");
             }
         }
 
-        $sql = "SELECT count(iddependencia_serie) as cant FROM dependencia_serie_temp WHERE fk_serie={$idserie} and fk_dependencia={$this->row['iddependencia']}";
-        $existDepSerie = DependenciaSerieTemp::search($sql);
-        if (!$existDepSerie[0]['cant']) {
+        $existDepSerie = DependenciaSerieTemp::getQueryBuilder()
+            ->select('count(iddependencia_serie) as cant')
+            ->from('dependencia_serie_temp')
+            ->where('fk_serie=:idserie')
+            ->andWhere('fk_dependencia=:iddependencia')
+            ->setParameters([
+                ':idserie' => $idserie,
+                ':iddependencia' => $this->row['iddependencia']
+            ], ['integer', 'integer'])
+            ->execute()->fetch();
+
+        if (!$existDepSerie['cant']) {
             $attributes = [
                 'fk_serie' => $idserie,
                 'fk_dependencia' => $this->row['iddependencia']
@@ -403,21 +416,33 @@ class TRDLoadController
     private function validateSerieSubserie($data = array(), $tipo = 1)
     {
         $nameSerie = htmlentities(trim($data['serie']));
-        $parteWhere = '';
+
+        $query = Model::getQueryBuilder()
+            ->select('idserie,nombre')
+            ->from('serie_temp', 's')
+            ->innerJoin('s', 'dependencia_serie_temp', 'd', 's.idserie=d.fk_serie')
+            ->where('d.fk_dependencia=:iddependencia')
+            ->andWhere('s.codigo like :cod_serie')
+            ->andWhere('s.tipo=:tipo')
+            ->setParameters([
+                ':iddependencia' => $this->row['iddependencia'],
+                ':cod_serie' => $data['cod_serie'],
+                ':tipo' => $tipo
+            ], ['integer', 'integer']);
+
         if ($tipo == 2) {
-            $parteWhere = "and s.cod_padre={$data['idseriePadre']}";
+            $query->andWhere('s.cod_padre=:cod_padre')
+                ->setParameter(':cod_padre', $data['idseriePadre'], 'integer');
         }
-        $sqlSerie = "SELECT idserie,nombre FROM serie_temp s,dependencia_serie_temp d 
-        WHERE s.idserie=d.fk_serie and d.fk_dependencia={$this->row['iddependencia']}
-        and s.codigo like '{$data['cod_serie']}' and s.tipo={$tipo} {$parteWhere}";
-        $existSerie = StaticSql::search($sqlSerie);
+
+        $existSerie = $query->execute()->fetch();
 
         if ($existSerie) {
-            if ($existSerie[0]['nombre'] != $nameSerie) {
+            if ($existSerie['nombre'] != $nameSerie) {
                 $this->errorException("La serie/subserie con codigo {$data['cod_serie']} ya se encuentra asignado con otro nombre a esta dependencia");
             } else {
                 if ($tipo == 1) {
-                    return $existSerie[0]['idserie'];
+                    return $existSerie['idserie'];
                 } else {
                     $this->errorException("La subserie ya se encuentra vinculada a esta dependencia");
                 }

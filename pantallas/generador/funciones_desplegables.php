@@ -105,7 +105,7 @@ function lista_funciones_vincular($ruta_libreria, $idlibreria, $nombre_funcion, 
             $texto .= '
             <div id="categoria_' . $nombre . '" class="accordion-body">
             	<div class="accordion funciones" style="margin-bottom: 5px;">
-            		<div style="cursor:pointer;"  id="funcionesPropias"  name="{*' . $nombre . '*}" idfuncionFormato="' . $idlibreria . '_func">
+            		<div style="cursor:pointer;"  class="funcionesPropias"  name="{*' . $nombre . '*}">
             			<span class="fa ' . $imagen . ' ' . $nombre . ' fa-fw"></span>&nbsp;' . $etiqueta . '</div>
             		</div>
             	</div>';

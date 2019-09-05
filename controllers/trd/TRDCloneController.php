@@ -17,7 +17,14 @@ class TRDCloneController
     {
         if ($this->old_fk_serie_version) {
 
-            $sql = "SELECT * FROM serie WHERE estado=1 AND fk_serie_version={$this->old_fk_serie_version} ORDER BY tipo ASC, idserie ASC";
+            $sql = Serie::getQueryBuilder()
+                ->select('*')
+                ->from('serie')
+                ->where('estado=1 AND fk_serie_version=:old')
+                ->orderBy('tipo', 'ASC')
+                ->addOrderBy('idserie', 'ASC')
+                ->setParameter(':old', $this->old_fk_serie_version, 'integer');
+
             $data = Serie::findByQueryBuilder($sql);
             $ids = [0 => 0];
 
@@ -40,7 +47,14 @@ class TRDCloneController
                 if ($id = $Serie->createSerie(0)) {
                     $ids[$id] = $SerieClone->getPK();
 
-                    $sql = "SELECT * FROM dependencia_serie WHERE fk_serie={$SerieClone->getPK()} AND estado=1 ORDER BY iddependencia_serie ASC";
+
+                    $sql = DependenciaSerieTemp::getQueryBuilder()
+                        ->select('*')
+                        ->from('dependencia_serie')
+                        ->where('estado=1 AND fk_serie=:idserie')
+                        ->orderBy('iddependencia_serie', 'ASC')
+                        ->setParameter(':idserie', $SerieClone->getPK(), 'integer');
+
                     $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 
                     foreach ($data as $DependenciaSerie) {
