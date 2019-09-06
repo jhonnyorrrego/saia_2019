@@ -39,7 +39,21 @@ final class Version20190906215653 extends AbstractMigration
             'busqueda_avanzada' => '',
             'acciones_seleccionados' => '',
             'enlace_adicionar' => '',
+            'llave' => 'a.idformato'
+        ], [
+            'nombre' => 'generador_formatos'
+        ]);
+
+        $this->connection->update('busqueda', [
+            'etiqueta' => 'Administración de formatos',
+            'estado' => '1',
+            'campos' => 'a.etiqueta,a.descripcion_formato,a.version',
             'llave' => 'a.idformato',
+            'tablas' => 'formato a',
+            'ruta_libreria' => 'app/generador/librerias_reporte.php',
+            'ruta_libreria_pantalla' => '',
+            'cantidad_registros' => 20,
+            'tipo_busqueda' => 2
         ], [
             'nombre' => 'generador_formatos'
         ]);
