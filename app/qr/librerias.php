@@ -95,9 +95,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 				"servidor" => $almacenamiento->get_ruta_servidor(),
 				"ruta" => $filename
 			);
-			/*$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) 
-			VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . json_encode($ruta_qr) . "','vacio')";
-			*/
+
 			$sql_documento_qr = Model::getQueryBuilder()->insert("documento_verificacion")
 			->values(
 				['documento_iddocumento' => $iddoc,
