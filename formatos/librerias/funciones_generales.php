@@ -996,7 +996,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             ->setParameter(':fechaF', new \DateTime("now"), "datetime")
             ->execute()->fetchAll();
             
-            $numfilas = $dep["numcampos"];
+            $numfilas = count($dep);
 
             $html = '';
             if ($numfilas > 1) {
