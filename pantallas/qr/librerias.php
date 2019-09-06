@@ -106,14 +106,8 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 				 'ruta_qr' => ':ruta']
 
 			)->setParameter(':fecha',DateTime::createFromFormat('Y-m-d', date("Y-m-d")),'datetime')
-			->setParameter(':ruta', json_encode($ruta_qr))->getSQL();
+			->setParameter(':ruta', json_encode($ruta_qr))->execute();
 
-			var_dump($sql_documento_qr);
-			die();
-
-
-
-			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR ");
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "QR generado con exito";
 			$retorno["ruta_qr"] = json_encode($ruta_qr);
