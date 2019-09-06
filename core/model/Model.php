@@ -259,8 +259,11 @@ abstract class Model
     {
         if ($instance) {
             $fieldName = $fieldName ?? 'fk_' . $instance::getTableName();
-            $response = new $instance($this->$fieldName);
+            $response = $instance::findByAttributes([
+                $instance::getPrimaryLabel() => (int) $this->$fieldName
+            ]);
         }
+
         return $response ?? null;
     }
 
@@ -686,9 +689,9 @@ abstract class Model
             foreach ($collection as $attribute => $value) {
                 if (in_array($attribute, $dateAttributes)) {
                     $value = new DateTime($value);
-                    $type = 'datetime';
+                    $type = \Doctrine\DBAL\Types\Type::DATETIME;
                 } else {
-                    $type = 'string';
+                    $type = \Doctrine\DBAL\Types\Type::STRING;
                 }
 
                 if ($individualValue) {
