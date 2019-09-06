@@ -863,32 +863,37 @@ function cargo_rol($iddoc)
     global $conn;
     $resultado = array();
     $origenes = array();
-    $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa", "buzon_entrada,ruta", 
-    "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
-    
-    $query =Model::getQueryBuilder();
+    $tipo = busca_filtro_tabla(
+        "distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa",
+        "buzon_entrada,ruta",
+        "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc,
+        "ruta.idruta asc,buzon_entrada.nombre asc",
+        $conn
+    );
+
+    $query = Model::getQueryBuilder();
 
     $tipo = $query
-    ->select("a.activo,a.nombre,b.obligatorio,b.origen,b.tipo_origen,b.orden,b.idruta,a.fecha,b.firma_externa")
-    ->from("buzon_entrada",'a')
-    ->join('a','ruta','b','a.ruta_idruta=b.idruta')
-    ->where(
-        $query->expr()->andX(
-        $query->expr()->orX(
-            $query->expr()->in("a.nombre",":estado"),
+        ->select("a.activo,a.nombre,b.obligatorio,b.origen,b.tipo_origen,b.orden,b.idruta,a.fecha,b.firma_externa")
+        ->from("buzon_entrada", 'a')
+        ->join('a', 'ruta', 'b', 'a.ruta_idruta=b.idruta')
+        ->where(
             $query->expr()->andX(
-                "a.nombre='POR_APROBAR'",
-                "a.activo = 1",
+                $query->expr()->orX(
+                    $query->expr()->in("a.nombre", ":estado"),
+                    $query->expr()->andX(
+                        "a.nombre='POR_APROBAR'",
+                        "a.activo = 1",
+                    )
+                ),
+                $query->expr()->in("b.obligatorio", [1, 2, 5]),
+                "b.tipo = 'ACTIVO'",
+                "a.archivo_idarchivo = :iddoc",
             )
-        ),      
-        $query->expr()->in("b.obligatorio",[1, 2, 5]),
-        "b.tipo = 'ACTIVO'",
-        "a.archivo_idarchivo = :iddoc",
-        )
-    )->setParameter(":estado",['APROBADO','REVISADO'],\Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
-    ->setParameter(":iddoc", $iddoc)
-    ->execute()->fetchAll();
-    
+        )->setParameter(":estado", ['APROBADO', 'REVISADO'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+        ->setParameter(":iddoc", $iddoc)
+        ->execute()->fetchAll();
+
     for ($i = 0; $i < $tipo["numcampos"]; $i++) {
         if (in_array($tipo[$i]["origen"], $origenes)) {
             unset($tipo[$i]);
@@ -1246,10 +1251,12 @@ function guardar_documento($iddoc, $tipo = 0)
         $larchivos = array();
         $where = "formato_idformato=" . $idformato . " AND (banderas NOT LIKE '%pk%' OR banderas IS NULL)";
         $columns = GenerarFormatoController::getFieldsName($tabla);
+
         if ($columns) {
             $where .= " AND nombre IN('" . implode("','", $columns) . "')";
         }
-        $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
+        //$lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
+        $sql = ("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud" . "campos_formato" . $where . "" . $conn);
 
         for ($j = 0; $j < $lcampos["numcampos"]; $j++) { // si el valor es un array
             if (is_array($_REQUEST[$lcampos[$j]["nombre"]]) && $lcampos[$j]["etiqueta_html"] != "archivo") {
@@ -1337,6 +1344,7 @@ function guardar_documento($iddoc, $tipo = 0)
         }
     }
 
+
     if (count($campos) && count($valores) && $tipo == 0) {
         if (!in_array('documento_iddocumento', $campos)) {
             array_push($campos, "documento_iddocumento");
@@ -1362,7 +1370,6 @@ function guardar_documento($iddoc, $tipo = 0)
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
-
         $Connection = Connection::getInstance(true);
         $Connection->query($sql);
         $insertado = $Connection->lastInsertId();
