@@ -982,17 +982,20 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 $dep_sel = "";
             }
             
-            $hoy = date('Y-m-d');
-            $dep = busca_filtro_tabla( "distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo","funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
-            /*
-            $resultado = Model::getQueryBuilder()
-            ->select('dependencia.nombre','iddependencia_cargo','cargo.nombre as cargo')
-            ->from("funcionario","dependencia_cargo")
-            ->where('iddocumento = :documento')
-            ->setParameter(':documento', $iddoc)
-            ->distinct('dependencia.nombre')
+            $query = Model::getQueryBuilder();
+
+            $dep = $query
+            ->select("dependencia, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', ':fechaI'),
+                $query->expr()->gte('fecha_final', ':fechaF'),
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':fechaI', new \DateTime("now"), "datetime")
+            ->setParameter(':fechaF', new \DateTime("now"), "datetime")
             ->execute()->fetchAll();
-            */
+            
             $numfilas = $dep["numcampos"];
 
             $html = '';

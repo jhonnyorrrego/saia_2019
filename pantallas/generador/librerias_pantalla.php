@@ -40,42 +40,6 @@ if ($_REQUEST['eliminarPermisoFormato']) {
     eliminarPermisoFormato($_REQUEST['nombreFormato']);
 }
 
-function carga_vista_previa($idFormato)
-{
-    global $conn, $ruta_db_superior;
-
-    include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
-
-    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo", "formato", "idformato=" . $idFormato, "", $conn);
-    $encabezado = '';
-    $contenidoformato = '';
-    $piePagina = '';
-
-    if ($consultaDatos['numcampos']) {
-        if ($consultaDatos[0]['encabezado']) {
-            $consultaEncabezados = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $consultaDatos[0]["encabezado"], "", $conn);
-            if ($consultaEncabezados['numcampos']) {
-                $encabezado = $consultaEncabezados[0]['contenido'];
-                $contenidoEncabezado = buscar_funciones_generador($encabezado, $idFormato);
-            }
-        }
-        if ($consultaDatos[0]['cuerpo']) {
-            $excluirFunciones = 1;
-            $contenidoFormato = buscar_funciones_generador($consultaDatos[0]['cuerpo'], $idFormato, $excluirFunciones);
-        }
-        if ($consultaDatos[0]['pie_pagina']) {
-            $consultaPie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $consultaDatos[0]["pie_pagina"], "", $conn);
-            if ($consultaPie['numcampos']) {
-                $piePagina = $consultaPie[0]['contenido'];
-                $contenidoPie = buscar_funciones_generador($piePagina, $idFormato);
-            }
-        }
-
-        $tableCuerpo = "<div style='padding:20px;'>" . $contenidoEncabezado . "</div><div style='padding:20px;'>" . $contenidoFormato . "</div><div style='padding:20px;'>" . $contenidoPie . "</div>";
-        return $tableCuerpo;
-    }
-}
-
 function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0)
 {
     global $conn, $ruta_db_superior;

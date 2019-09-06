@@ -23,10 +23,6 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['identificator']) {
-        throw new Exception('Debe indicar el encabezado', 1);
-    }
-
     $identificator = $_REQUEST['identificator'];
     $content = addslashes(stripslashes($_REQUEST['content']));
 

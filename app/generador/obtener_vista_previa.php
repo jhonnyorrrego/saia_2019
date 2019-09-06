@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 $Response = (object) [
     'data' => new stdClass(),
@@ -33,13 +34,23 @@ try {
         throw new Exception("Formato invalido", 1);
     }
 
-    $Formato->cuerpo = $_REQUEST['content'] ?? '';
+    $header = $Formato->getHeader()->contenido ?? '';
+    $body = $Formato->cuerpo ?? '';
+    $footer = $Formato->getFooter()->contenido ?? '';
 
-    if (!$Formato->save()) {
-        throw new Exception("Error al guardar el cuerpo", 1);
-    }
+    $content = <<<HTML
+        <div style='padding:20px;'>
+            {$header}
+        </div>
+        <div style='padding:20px;'>
+            {$body}
+        </div>
+        <div style='padding:20px;'>
+            {$footer}
+        </div>
+HTML;
 
-    $Response->message = "Cuerpo del formato actualizado";
+    $Response->data = $content;
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
