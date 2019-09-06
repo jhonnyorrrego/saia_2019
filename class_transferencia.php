@@ -326,19 +326,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         }
     }
 
-    if (!empty($adicionales) && is_array($adicionales)) {
-        $otras_llaves = "," . implode(",", array_keys($adicionales));
-        $otros_valores = "," . implode(",", array_values($adicionales));
-        if ($otros_valores == ",") {
-            $otros_valores = ",";
-        }
-    } else {
-        $otras_llaves = "";
-        $otros_valores = "";
-    }
-
     if ($destino != "" && $origen != "") {
-        $values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
         if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
             $tipo_destino = 1;
             $datos_origen = "";
@@ -361,31 +349,23 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if ($user == null) {
                     continue;
                 }
-                if ($datos["nombre"] != "POR_APROBAR") {
+                if ($datos["nombre"] != "POR_APROBAR") {                  
+                    $buzonSalida = [
+                        'archivo_idarchivo' => $idarchivo,
+                        'nombre' => $datos["nombre"],
+                        'fecha' => date('Y-m-d H:i:s'),
+                        'origen' => $origen,
+                        'tipo_origen' => '1',
+                        'tipo_destino' => '1',
+                        'ver_notas' => $ver_notas,
+                        'destino' => $user
+                    ];
 
-                    $cadena = Model::getQueryBuilder()
-                        ->insert('buzon_salida')
-                        ->values(
-                            array(
-                                'archivo_idarchivo' => '?',
-                                'nombre' => '?',
-                                'fecha' => '?',
-                                'origen' => '?',
-                                'tipo_origen' => '?',
-                                'tipo_destino' => '?',
-                                'ver_notas' => '?',
-                                'destino' => '?'
-                            )
-                        )
-                        ->setParameter(0, $idarchivo)
-                        ->setParameter(1, $datos["nombre"])
-                        ->setParameter(2, fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s'))
-                        ->setParameter(3, $origen)
-                        ->setParameter(4, '1')
-                        ->setParameter(5, '1')
-                        ->setParameter(6, $ver_notas)
-                        ->setParameter(7, $user)
-                        ->execute();
+                    if($adicionales){
+                        $buzonSalida = array_merge($buzonSalida, $adicionales);
+                    }
+
+                    $cadena = BuzonSalida::newRecord($buzonSalida);
 
                     $idbuzon_s = $cadena;
                     $idtransferencia[] = $idbuzon_s;
@@ -445,8 +425,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if (!empty($datos["ver_notas"])) {
                     $ver_notas = $datos["ver_notas"];
                 }
-
-                $idInsertadoEntrada1 = BuzonEntrada::newRecord([
+                
+                $buzonEntrada = [
                     'archivo_idarchivo' => $idarchivo,
                     'nombre' => $datos["nombre"],
                     'fecha' => date('Y-m-d H:i:s'),
@@ -456,7 +436,13 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     'tipo_destino' => $tipo_destino,
                     'ver_notas' => $$ver_notas,
                     'origen' => $user
-                ]);
+                ];
+
+                if($adicionales){
+                    $buzonEntrada = array_merge($buzonEntrada, $adicionales);
+                }               
+
+                $idInsertadoEntrada1 = BuzonEntrada::newRecord($buzonEntrada);
 
                 if ($texto_notas != "") {
                     $idbuzon_e = $idInsertadoEntrada1;
@@ -469,21 +455,22 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
             if (!empty($datos["ver_notas"])) {
                 $ver_notas = $datos["ver_notas"];
             }
-
-            $tipo_origen = 1; // La variable no estaba definida, la he definido con uno mientras realizo las correcciones 
-
-            $idInsertadoEntrada2 = BuzonEntrada::newRecord([
+            $buzonEntrada = [
                 'archivo_idarchivo' => $idarchivo,
                 'nombre' => $datos["nombre"],
                 'fecha' => date("Y-m-d H:i:s"),
                 'destino' => $origen,
                 'origen' => $destino,
-                'tipo_origen' => $tipo_origen,
+                'tipo_origen' => '1',
                 'tipo_destino' => $tipo_destino,
                 'ver_notas' => $ver_notas
-            ]);
+            ];
 
-            /////////////// En el anterior record No se incluyo $otras llaves como campos adicionales ni  sus valores $otros valores ////////////////////
+            if($adicionales){
+                $buzonEntrada = array_merge($buzonEntrada, $adicionales);
+            }
+
+            $idInsertadoEntrada2 = BuzonEntrada::newRecord($buzonEntrada);
 
             if ($texto_notas != "") {
                 $idbuzon_e = $idInsertadoEntrada2;
@@ -542,17 +529,31 @@ function aprobar($iddoc = 0, $opcion = 0)
                 if ($registro_intermedio["numcampos"]) {
                     break;
                 }
-                $valores = $iddoc . ",'$estado'," . $registro_actual[$i]["destino"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["origen"] . ",'DOCUMENTO',1,1";
+
                 if ($registro_actual[$i]["ruta_idruta"] != "") {
-                    $valores .= "," . $registro_actual[$i]["ruta_idruta"];
+                    $rutaIddoc = $registro_actual[$i]["ruta_idruta"];
                 } else {
-                    $valores .= ",''";
+                    $rutaIddoc = "";
                 }
-                phpmkr_query("INSERT INTO buzon_salida (" . $campos . ") VALUES (" . $valores . ")", $conn);
 
-                phpmkr_query("UPDATE buzon_entrada SET activo=0 WHERE idtransferencia=" . $registro_actual[$i]["idtransferencia"], $conn);
-                $valores = $iddoc . ",'$estado',$origen," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$destino,'DOCUMENTO',1,1,";
+                BuzonSalida::newRecord([
+                    "archivo_idarchivo" => $iddoc,
+                    "nombre" => $estado,
+                    "origen" => $registro_actual[$i]["destino"],
+                    "fecha" => date('Y-m-d H:i:s'),
+                    "destino" => $registro_actual[$i]["origen"],
+                    "tipo" => 'DOCUMENTO',
+                    "tipo_origen" => 1,
+                    "tipo_destino" => 1,
+                    "ruta_idruta" => $rutaIddoc
+                ]);
 
+                $BuzonEntrada = new BuzonEntrada($registro_actual[$i]["idtransferencia"]);
+                $BuzonEntrada->setAttributes([
+                    "activo" => 0,
+                ]);
+                $BuzonEntrada->save();
+ 
                 DocumentoRastro::newRecord([
                     'fk_documento' => $iddoc,
                     'accion' => DocumentoRastro::ACCION_CONFIRMACION,
@@ -560,33 +561,52 @@ function aprobar($iddoc = 0, $opcion = 0)
                 ]);
             }
             if ($registro_actual[0]["ruta_idruta"] != "") {
-                $valores .= $registro_actual[0]["ruta_idruta"];
+                $rutaIddoc = $registro_actual[0]["ruta_idruta"];
             } else {
-                $valores .= "''";
+                $rutaIddoc = "";
             }
 
             for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
                 $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
                 if ($registro_intermedio["numcampos"])
                     break;
-                $valores = $iddoc . ",'$estado'," . $registro_actual[$i]["origen"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["destino"] . ",'DOCUMENTO',1,1,";
                 if ($registro_actual[$i]["ruta_idruta"] != "") {
-                    $valores .= $registro_actual[$i]["ruta_idruta"];
+                    $rutaIddoc = $registro_actual[$i]["ruta_idruta"];
                 } else {
-                    $valores .= "''";
+                    $rutaIddoc = "''";
                 }
-                phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
+
+                BuzonEntrada::newRecord([
+                    "archivo_idarchivo" => $iddoc,
+                    "nombre" => $estado,
+                    "origen" => $registro_actual[$i]["origen"],
+                    "fecha" => date('Y-m-d H:i:s'),
+                    "destino" => $registro_actual[$i]["destino"],
+                    "tipo" => 'DOCUMENTO',
+                    "tipo_origen" => 1,
+                    "tipo_destino" => 1,
+                    "ruta_idruta" => $rutaIddoc
+                ]);
                 procesar_estados($registro_actual[$i]["destino"], $registro_actual[$i]["origen"], $estado, $iddoc);
             }
 
             if ($aprobar_posterior == 1) {
+                $Documento = new Documento($iddoc);
                 $dias_entrega = busca_filtro_tabla("dias_entrega", "serie", "idserie=" . $tipo_radicado[0]["serie"], "", $conn);
                 if ($tipo_radicado[0]["numero"] == 0) {
                     $numero = contador($iddoc, $tipo_radicado[0]["nombre"]);
-                    $update = "UPDATE documento SET estado='APROBADO', fecha=" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", dias='" . $dias_entrega[0]["dias_entrega"] . "' WHERE iddocumento=" . $iddoc;
-                    phpmkr_query($update, $conn);
+                    $Documento->setAttributes([
+                        "estado" => 'APROBADO',
+                        "fecha" => date('Y-m-d H:i:s'),
+                        "dias" =>  $dias_entrega[0]["dias_entrega"]
+                    ]);
                 } else {
-                    phpmkr_query("UPDATE documento SET estado='APROBADO',activa_admin=0, fecha=" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", dias='" . $dias_entrega[0]["dias_entrega"] . "' WHERE iddocumento=" . $iddoc, $conn);
+                    $Documento->setAttributes([
+                        "estado" => 'APROBADO',
+                        "activa_admin" => 0,
+                        "fecha" => date('Y-m-d H:i:s'),
+                        "dias" =>  $dias_entrega[0]["dias_entrega"]
+                    ]);
                 }
 
                 RutaDocumento::executeUpdate([
@@ -864,7 +884,32 @@ function cargo_rol($iddoc)
     global $conn;
     $resultado = array();
     $origenes = array();
-    $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta," . fecha_db_obtener('buzon_entrada.fecha', 'Y-m-d H:i') . " as fecha,ruta.firma_externa", "buzon_entrada,ruta", "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
+    $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa", "buzon_entrada,ruta", 
+    "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
+    
+    $query =Model::getQueryBuilder();
+
+    $tipo = $query
+    ->select("a.activo,a.nombre,b.obligatorio,b.origen,b.tipo_origen,b.orden,b.idruta,a.fecha,b.firma_externa")
+    ->from("buzon_entrada",'a')
+    ->join('a','ruta','b','a.ruta_idruta=b.idruta')
+    ->where(
+        $query->expr()->andX(
+        $query->expr()->orX(
+            $query->expr()->in("a.nombre",":estado"),
+            $query->expr()->andX(
+                "a.nombre='POR_APROBAR'",
+                "a.activo = 1",
+            )
+        ),      
+        $query->expr()->in("b.obligatorio",[1, 2, 5]),
+        "b.tipo = 'ACTIVO'",
+        "a.archivo_idarchivo = :iddoc",
+        )
+    )->setParameter(":estado",['APROBADO','REVISADO'],\Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+    ->setParameter(":iddoc", $iddoc)
+    ->execute()->fetchAll();
+    
     for ($i = 0; $i < $tipo["numcampos"]; $i++) {
         if (in_array($tipo[$i]["origen"], $origenes)) {
             unset($tipo[$i]);
@@ -1389,7 +1434,6 @@ function guardar_documento($iddoc, $tipo = 0)
                 phpmkr_query($del);
             }
             alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el formato..", 'error', 5000);
-            //die($sql);
             redirecciona($ruta_db_superior . "vacio.php");
         }
     } elseif ($tipo == 1) { // cuando voy a editar

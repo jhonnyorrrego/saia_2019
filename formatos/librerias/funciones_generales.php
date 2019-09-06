@@ -575,11 +575,22 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
     function mostrar_fecha($idformato, $iddoc, $tipo = null)
     {
         global $conn;
-        $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
+        $datos=Formato::findAllByAttributes(['idformato' => $idformato],['nombre','nombre_tabla']);
 
-        $resultado = busca_filtro_tabla(fecha_db_obtener("fecha_" . $datos[0]["nombre"], "Y-m-d") . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
-        if (!$resultado["numcampos"])
-            $resultado = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddoc", "", $conn);
+        $resultado = Model::getQueryBuilder()
+        ->select('fecha_' . $datos[0]["nombre"] . 'AS fecha')
+        ->from($datos[0]["nombre_tabla"])
+        ->where('documento_iddocumento = :documento')
+        ->setParameter(':documento', $iddoc)
+        ->execute()->fetchAll();
+        
+        if (!$resultado)
+            $resultado = Model::getQueryBuilder()
+            ->select('fecha_' . $datos[0]["nombre"] . 'AS fecha')
+            ->from("documento")
+            ->where('iddocumento = :documento')
+            ->setParameter(':documento', $iddoc)
+            ->execute()->fetchAll();
         if ($tipo != null)
             return (fecha($resultado[0]["fecha"]));
         else
@@ -602,9 +613,15 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
     function mostrar_anexos_memo($idformato, $iddoc = null)
     {
         global $conn, $ruta_db_superior;
-        $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
-        $inf_memorando = busca_filtro_tabla("anexos_fisicos", $datos[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
-        if ($inf_memorando["numcampos"]) {
+        $datos=Formato::findAllByAttributes(['idformato' => $idformato],['nombre','nombre_tabla']);
+        $inf_memorando = Model::getQueryBuilder()
+        ->select('anexos_fisicos')
+        ->from($datos[0]["nombre_tabla"])
+        ->where('documento_iddocumento = :documento')
+        ->setParameter(':documento', $iddoc)
+        ->execute()->fetchAll();
+        
+        if ($inf_memorando) {
             $anexos = array();
             if ($inf_memorando[0]["anexos_fisicos"] != "") {
                 $anexos[] = $inf_memorando[0]["anexos_fisicos"];
@@ -644,8 +661,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
           </label>
           </td>';
         } else {
-            $tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-            $valor = busca_filtro_tabla("despedida", $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+            $tabla = Formato::findAllByAttributes(['idformato' => $idformato],['nombre_tabla']);
+            $valor = Model::getQueryBuilder()
+                ->select('despedida')
+                ->from($tabla[0]["nombre_tabla"])
+                ->where('documento_iddocumento = :documento')
+                ->setParameter(':documento', $iddoc)
+                ->execute()->fetchAll();
+
             echo '<td width="79%" bgcolor="#F5F5F5" id="despedida">
           <select name="despedida" id="obligatorio">';
             if ($valor[0]["despedida"] == "Atentamente,")
@@ -837,7 +860,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         if (in_array(($llenado[$j]['item']), $lista_default)) {
                             $texto .= ' checked ';
                         }
-                        $texto .= '><label for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($llenado[$j]['item'])) . "</label><br>";
+                        $texto .= '><label for="' . $nombre . $j . '">' . strip_tags($llenado[$j]['item']) . "</label><br>";
                     }
                     $texto .= "</div>";
 
@@ -858,7 +881,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         if (($llenado[$j]['llave']) == $default) {
                             $texto .= ' selected ';
                         }
-                        $texto .= '>' . codifica_encabezado($llenado[$j]['item']) . '</option>';
+                        $texto .= '>' . $llenado[$j]['item'] . '</option>';
                     }
                     $texto .= '</select>';
                     $texto .= '
@@ -958,10 +981,22 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             } else {
                 $dep_sel = "";
             }
+            
+            $query = Model::getQueryBuilder();
 
-            $hoy = date('Y-m-d');
-            $dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
-            $numfilas = $dep["numcampos"];
+            $dep = $query
+            ->select("dependencia as nombre, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', ':fechaI'),
+                $query->expr()->gte('fecha_final', ':fechaF'),
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':fechaI', new \DateTime("now"), "datetime")
+            ->setParameter(':fechaF', new \DateTime("now"), "datetime")
+            ->execute()->fetchAll();
+            
+            $numfilas = count($dep);
 
             $html = '';
             if ($numfilas > 1) {
@@ -1047,7 +1082,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             if ($iddoc == null) {
                 $valor = date($formato);
             } else {
-                $resultado = busca_filtro_tabla(fecha_db_obtener($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+                $resultado = busca_filtro_tabla(fecha($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
                 $valor = $resultado[0]["fecha"];
             }
             echo "<input type='text' class='form-control' name='" . $campo[0]["nombre"] . "' id='" . $campo[0]["nombre"] . "' value='$valor' readonly='true'>";
@@ -1223,7 +1258,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     if ($datos[0]["tipo_dato"] == "TIME") {
                         $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
                     } else {
-                        $campos = busca_filtro_tabla(fecha_db_obtener($campo, $formato_fecha) . " as $campo", $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
+                        $campos = busca_filtro_tabla(fecha($campo, $formato_fecha) . " as $campo", $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
                     }
                 } else {
                     $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
@@ -1244,7 +1279,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     } elseif ($datos[0]["etiqueta_html"] == "autocompletar") {
                         $retorno = $campos[0][0];
                     } elseif (preg_match("/textarea/", $datos[0]["etiqueta_html"])) {
-                        $retorno = codifica_encabezado(html_entity_decode($campos[0][0]));
+                        $retorno = $campos[0][0];
                     } elseif ($datos[0]["etiqueta_html"] == "link" && basename($_SERVER["PHP_SELF"]) == basename($datos[0]["ruta_mostrar"])) {
                         $retorno = "<a target='_blank' href='" . $campos[0][0] . "'>" . $campos[0][0] . "</a>";
                     } elseif ($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
@@ -1356,7 +1391,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         {
             global $conn;
             $resultado = array();
-            $valores = explode(",", codifica_encabezado(html_entity_decode($valor)));
+            $valores = explode(",", $valor);
             $select = array();
             if ($llenado != "" && strpos($llenado, "*}") === false) {
                 if (strpos(strtoupper($llenado), "SELECT") !== false) {
@@ -1364,7 +1399,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $valor2 = ejecuta_filtro_tabla($llenado, $conn);
                         for ($i = 0; $i < $valor2["numcampos"]; $i++) {
                             foreach ($valores as $fila) {
-                                if (codifica_encabezado(html_entity_decode($valor2[$i]["id"])) == $fila) {
+                                if ($valor2[$i]["id"] == $fila) {
                                     $resultado[] = $valor2[$i]["nombre"];
                                 }
                             }
@@ -1379,7 +1414,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $datos = ejecuta_filtro_tabla($sql_datos, $conn);
                         $valores = array();
                         for ($j = 0; $j < $datos["numcampos"]; $j++) {
-                            $valores[] = codifica_encabezado($datos[$j]["nombre"]);
+                            $valores[] = $datos[$j]["nombre"];
                         }
 
                         if ($datos["numcampos"]) {
@@ -1452,7 +1487,6 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
             $responsable = html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"]);
             $responsable = strtoupper($responsable);
-            $responsable = codifica_encabezado($responsable);
             $campo .= '<div class="form-group" id="tr_firma">
                 <label title="">' . $responsable . ' FIRMA:</label>
                     <div class="radio radio-success">
@@ -2035,7 +2069,15 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
                 {
                     global $conn;
-                    $campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+                    //$campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+                    $campo = Model::getQueryBuilder()
+                    ->select("nombre,valor")
+                    ->from("campos_formato")
+                    ->where("idcampos_formato= :idcampo")
+                    ->setParameter(":idcampo",$idcampo)
+                    ->execute()
+                    ->fetchAll();
+
                     if ($iddoc != null) {
                         $opciones = array();
                         if (json_last_error() === JSON_ERROR_NONE) {
@@ -2805,7 +2847,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     global $conn;
 
                     $fecha = busca_filtro_tabla("", "configuracion", "nombre='fecha_dependencia'", "", $conn);
-                    $tabla = busca_filtro_tabla(fecha_db_obtener('fecha', 'Y-m-d') . " as fech,a.*,b.*", "documento a, funcionario b", "a.iddocumento=" . $iddoc . " and ejecutor=funcionario_codigo and a.fecha<=" . fecha_db_almacenar($fecha[0]["valor"], 'Y-m-d'), "", $conn);
+                    $tabla = busca_filtro_tabla(fecha('fecha', 'Y-m-d') . " as fech,a.*,b.*", "documento a, funcionario b", "a.iddocumento=" . $iddoc . " and ejecutor=funcionario_codigo and a.fecha<=" . fecha_db_almacenar($fecha[0]["valor"], 'Y-m-d'), "", $conn);
                     if ($tabla["numcampos"]) {
                         $nombre_tabla = "ft_" . strtolower($tabla[0]["plantilla"]);
                         $formato = busca_filtro_tabla("dependencia", $nombre_tabla . " a", "a.documento_iddocumento=" . $iddoc, "", $conn);
@@ -2992,7 +3034,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             function obtener_datos_documento($iddocumento)
                             {
                                 global $conn;
-                                $documento = busca_filtro_tabla(fecha_db_obtener("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
+                                $documento = busca_filtro_tabla(fecha("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
                                 if ($_REQUEST["funcionario_codigo"]) {
                                     $funcionario_codigo = $_REQUEST["funcionario_codigo"];
                                 } else {
@@ -3411,7 +3453,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             {
                                 global $conn, $ruta_db_superior;
                                 $fecha_creacion = '';
-                                $consulta_datos = busca_filtro_tabla(fecha_db_obtener("fecha_creacion", "Y-m-d") . " as fecha_creacion", "documento", "iddocumento=" . $iddoc, "", $conn);
+                                $consulta_datos = busca_filtro_tabla(fecha("fecha_creacion", "Y-m-d") . " as fecha_creacion", "documento", "iddocumento=" . $iddoc, "", $conn);
                                 if ($consulta_datos['numcampos']) {
                                     $fecha_creacion = $consulta_datos[0]['fecha_creacion'];
                                 }

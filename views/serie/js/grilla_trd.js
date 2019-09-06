@@ -9,7 +9,8 @@ $(function () {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
                     id: params.id,
-                    type: params.type
+                    type: params.type,
+                    currentVersion: params.currentVersion
                 });
                 return queryParams;
             },

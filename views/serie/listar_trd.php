@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
+//POR EL MOMENTO NO SE USA ESTE SCRIPT=> BORRAR
 
 $params = json_encode([
     'baseUrl' => $ruta_db_superior
@@ -21,19 +22,25 @@ $params = json_encode([
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, iversionial-scale=1, shrink-to-fit=no">
-    <title>TRD</title>
+    <title>SGDA</title>
     <?= jquery() ?>
+    <?= jqueryUi() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
+    <style type="text/css">
+        .style-dep {
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container-fluid pt-2 h-100" style="overflow-y: auto">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div id="trd_tree">TRD</div>
             </div>
-            <div class="col-md-4">col-4</div>
+            <div class="col-md-8"></div>
         </div>
     </div>
     <?= fancyTree() ?>

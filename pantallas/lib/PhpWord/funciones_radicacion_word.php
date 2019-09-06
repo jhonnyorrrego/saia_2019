@@ -447,7 +447,7 @@ class RadicadoWord {
 	}
 
 	private function obtener_codigo_qr() {
-		include_once ($this -> ruta_db_superior . "pantallas/qr/librerias.php");
+		include_once ($this -> ruta_db_superior . "app/qr/librerias.php");
 		$ruta = generar_codigo_qr($this -> idformato, $this -> iddocumento);
 		if ($ruta["exito"]) {
 			return ($ruta["ruta_qr"]);

@@ -17,7 +17,7 @@ class BuzonEntrada extends Model
     protected $activo;
     protected $ruta_idruta;
     protected $ver_notas;
-    
+
 
     function __construct($id = null)
     {
@@ -29,7 +29,7 @@ class BuzonEntrada extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'archivo_idarchivo',
                 'nombre',
@@ -65,20 +65,17 @@ class BuzonEntrada extends Model
     public static function findActiveRoute($documentId)
     {
         $type = RutaDocumento::TIPO_RADICACION;
-        $sql = <<<SQL
-            SELECT a.*
-            FROM
-                buzon_entrada a 
-                JOIN ruta b ON 
-                    a.ruta_idruta = b.idruta
-                JOIN ruta_documento c ON
-                    b.fk_ruta_documento = c.idruta_documento
-            WHERE
-                c.fk_documento = {$documentId} AND
-                c.estado = 1 AND
-                c.tipo = {$type}
-            ORDER BY a.idtransferencia ASC
-SQL;
+
+        $sql = Model::getQueryBuilder()
+            ->select("a.*")
+            ->from("buzon_entrada", "a")
+            ->join("a", "ruta", "b", "a.ruta_idruta = b.idruta")
+            ->join("b", "ruta_documento", "c", "b.fk_ruta_documento = c.idruta_documento")
+            ->where("c.fk_documento = :documento")
+            ->andWhere("c.estado = 1")
+            ->andWhere("c.tipo = :tipo")
+            ->setParameter(':documento', $documentId)
+            ->setParameter(':tipo', $type);
 
         return self::findByQueryBuilder($sql);
     }

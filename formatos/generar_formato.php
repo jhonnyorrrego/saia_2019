@@ -13,7 +13,7 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php";
 include_once $ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php";
 include_once $ruta_db_superior . "pantallas/documento/class_documento_elastic.php";
-include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+include_once $ruta_db_superior . "app/arbol/crear_arbol_ft.php";
 
 if (isset($_REQUEST["archivo"]) && !empty($_REQUEST["archivo"])) {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
@@ -1678,7 +1678,7 @@ span.fancytree-expander {
     vertical-align: middle !important;
 }
 </style>';
-                $includes .= $this->incluir('$ruta_db_superior . "arboles/crear_arbol_ft.php"', "librerias");
+                $includes .= $this->incluir('$ruta_db_superior . "app/arbol/crear_arbol_ft.php"', "librerias");
                 $includes .= '<?= jqueryUi() ?>';
                 $includes .= '<?= fancyTree(true) ?>';
             }

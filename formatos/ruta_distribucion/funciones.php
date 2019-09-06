@@ -115,10 +115,27 @@ function add_edit_ruta_dist($idformato, $iddoc)
     {
         global $conn, $ruta_db_superior;
         $tabla = '';
-        $dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado not in ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
-        if ($dato['numcampos']) {
-            $item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia,ft_ruta_distribucion", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
-            if ($item["numcampos"]) {
+        $query = Model::getQueryBuilder();
+        $dato = $query
+            ->select("a.idft_ruta_distribucion")
+            ->from("ft_ruta_distribucion", "a")
+            ->join("a", "documento", "b", "a.documento_iddocumento=b.iddocumento")
+            ->where($query->expr()->notIn("b.estado", ":estado"))
+            ->andWhere("b.iddocumento = :documento")
+            ->setParameter(':documento', $iddoc)
+            ->setParameter(":estado", ['ELIMINADO', 'ANULADO'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->execute()->fetchAll();
+
+        if ($dato) {
+            $query = Model::getQueryBuilder();
+            $item = $query
+                ->select("a.fecha_item_dependenc as fecha_item_dependenc", "a.dependencia_asignada", "a.estado_dependencia", "a.ft_ruta_distribucion")
+                ->from("ft_dependencias_ruta", "a")
+                ->join("a", "ft_ruta_distribucion", "b", "b.idft_ruta_distribucion=a.ft_ruta_distribucion")
+                ->where("a.ft_ruta_distribucion = :dato")
+                ->setParameter(':dato', $dato[0]['idft_ruta_distribucion'])
+                ->execute()->fetchAll();
+            if ($item) {
                 $estado = array(
                     1 => "Activo",
                     2 => "Inactivo"
@@ -131,7 +148,8 @@ function add_edit_ruta_dist($idformato, $iddoc)
 			    <td style="width:20%"><strong><center>Estado</center></strong></td>
             </tr></table><hr /> <table id="dependenciaDistribucion" style="width:100%; font-size:80%;">';
 
-                for ($j = 0; $j < $item["numcampos"]; $j++) {
+                $lengthItem = count($item);
+                for ($j = 0; $j < $lengthItem; $j++) {
                     $tabla .= crearItemDependencia($item[$j], $dato);
                 }
             } else {
@@ -217,11 +235,27 @@ function add_edit_ruta_dist($idformato, $iddoc)
     {
         global $conn, $ruta_db_superior;
         $tabla = '';
-        $dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado NOT IN ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
-        if ($dato['numcampos']) {
-            $item = busca_filtro_tabla(fecha_db_obtener("fecha_mensajero", "Y-m-d") . " AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta", "ft_funcionarios_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+        $query = Model::getQueryBuilder();
+        $dato = $query
+            ->select("a.idft_ruta_distribucion")
+            ->from("ft_ruta_distribucion", "a")
+            ->join("a", "documento", "b", "a.documento_iddocumento=b.iddocumento")
+            ->where($query->expr()->notIn("b.estado", ":estado"))
+            ->andWhere("b.iddocumento = :documento")
+            ->setParameter(':documento', $iddoc)
+            ->setParameter(":estado", ['ELIMINADO', 'ANULADO'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->execute()->fetchAll();
 
-            if ($item['numcampos']) {
+        if ($dato) {
+            $query = Model::getQueryBuilder();
+            $item = $query
+                ->select("a.fecha_mensajero as fecha_mensajero", "a.mensajero_ruta", "a.estado_mensajero", "a.idft_funcionarios_ruta")
+                ->from("ft_funcionarios_ruta", "a")
+                ->join("a", "ft_ruta_distribucion", "c", "c.idft_ruta_distribucion=a.ft_ruta_distribucion")
+                ->where("a.ft_ruta_distribucion = :dato")
+                ->setParameter(':dato', $dato[0]['idft_ruta_distribucion'])
+                ->execute()->fetchAll();
+            if ($item) {
                 $estado = array(
                     1 => "Activo",
                     2 => "Inactivo"
@@ -234,7 +268,8 @@ function add_edit_ruta_dist($idformato, $iddoc)
 		    <td style="width:20%;text-align:center;"><strong>Estado</strong></td>
 			</tr></table><hr /> <table id="funcionarioRuta" style="width:100%;font-size:80%;">';
 
-                for ($j = 0; $j < $item['numcampos']; $j++) {
+                $countItem = count($item);
+                for ($j = 0; $j < $countItem; $j++) {
                     $tabla .= crearItemFuncionario($item[$j]);
                 }
                 $tabla .= '</table><br/>';
@@ -300,7 +335,7 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
     $datos = busca_filtro_tabla("", "ft_ruta_distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
     $dependencias = explode(",", $datos[0]['asignar_dependencias']);
     $mensajeros = explode(",", $datos[0]['asignar_mensajeros']);
-    $fecha_almacenar = fecha_db_almacenar(date('Y-m-d'), 'Y-m-d');
+    $fecha_almacenar = date('Y-m-d');
     for ($i = 0; $i < count($dependencias); $i++) {
         $busca_dep = busca_filtro_tabla("idft_dependencias_ruta,estado", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "lower(c.estado)='aprobado' AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND  a.estado_dependencia=1 AND a.ft_ruta_distribucion<>" . $datos[0]['idft_ruta_distribucion'] . " AND a.dependencia_asignada=" . $dependencias[$i], "", $conn);
         $estado_dependencia = 1;
