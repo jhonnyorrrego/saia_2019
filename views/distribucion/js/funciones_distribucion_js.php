@@ -59,7 +59,7 @@ function select_mensajero_distribucion()
         "' '",
         "apellidos"
     );
-    
+
     $datos = Model::getQueryBuilder()
         ->select(["iddependencia_cargo", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre"])
         ->from("vfuncionario_dc")
@@ -120,7 +120,7 @@ function select_mensajero_distribucion()
     return $select;
 }
 
-function adicionar_ruta($datos)
+function opciones_acciones_ruta_distribucion($datos)
 {
     $botonAdicionar = '<div class="kenlace_saia" enlace="formatos/ruta_distribucion/adicionar_ruta_distribucion.php" conector="iframe" titulo="Crear ruta"><center><button class="btn btn-secondary"><i class="fa fa-plus"></i><span class="d-sm-inline"> Adicionar</span></button></center></div>';
     return $botonAdicionar;
