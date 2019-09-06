@@ -97,7 +97,6 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 <?php endif; ?>
 <?php
 $userCode = SessionController::getValue('usuario_actual');
-leido($userCode, $iddocumento);
 
 if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
     if (!empty($_REQUEST["vista"])) {

@@ -1,6 +1,7 @@
 <?php
 
-function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo = 1, $reemplazar = 0, $palabra_reemplazar = '') {
+function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo = 1, $reemplazar = 0, $palabra_reemplazar = '')
+{
 	global $contador_archivos, $a, $resultado_buscar_archivo;
 	if (!isset($resultado_buscar_archivo)) {
 		$resultado_buscar_archivo = array();
@@ -60,7 +61,8 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
  * Consulta en configuracion una plantilla para almacenar un archivo (anexo, pdf, version)
  * @param unknown $iddoc
  */
-function aplicar_plantilla_ruta_documento($iddoc) {
+function aplicar_plantilla_ruta_documento($iddoc)
+{
 	global $conn;
 	$formato_ruta = "{estado}/{fecha}/{iddocumento}";
 	$datos_formato_ruta = busca_filtro_tabla("valor", "configuracion", "nombre='formato_ruta_documentos'", "", $conn);
@@ -68,26 +70,20 @@ function aplicar_plantilla_ruta_documento($iddoc) {
 		$formato_ruta = $datos_formato_ruta[0]["valor"];
 	}
 	if (!preg_match_all("/(?:\{)([a-zA-Z_0-9]+)(?:\})/", $formato_ruta, $salida)) {
-		die("Error en el formato de la ruta de almacenamiento. Parametro configuracion->formato_ruta_documentos");
+		throw new Exception("Error en el formato de la ruta de almacenamiento. Parametro configuracion->formato_ruta_documentos");
 	}
 	if (empty($salida) || empty($salida[1])) {
-		die("Error en el formato de la ruta de almacenamiento. Parametro configuracion->formato_ruta_documentos");
+		throw new Exception("Error en el formato de la ruta de almacenamiento. Parametro configuracion->formato_ruta_documentos");
 	}
-	$campos = $salida[1];
 
-	$datos_doc = busca_filtro_tabla("estado,iddocumento," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha,plantilla", "documento", "iddocumento=$iddoc", "", $conn);
-
-	foreach ($campos as $campo) {
-		if (!array_key_exists($campo, $datos_doc[0])) {
-			die("El campo $campo no se encuentra en la tabla documento");
-		}
-		$placehoder = "{" . $campo . "}";
-		$formato_ruta = str_replace($placehoder, $datos_doc[0][$campo], $formato_ruta);
-	}
+	$Documento = new Documento($iddoc);
+	$fecha = $Documento->getDateAttribute("fecha","Y-m-d");
+	$formato_ruta = sprintf('%s/%s/%s',$Documento->estado,$fecha,$iddoc);
 	return $formato_ruta;
 }
 
-function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo) {
+function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo)
+{
 	global $ruta_db_superior;
 	$extensiones_permitidas_permitidas = array(
 		"php",
@@ -131,4 +127,3 @@ if (@$_REQUEST["ejecutar_accion_saia"]) {
 		echo json_encode($retorno);
 	}
 }
-?>

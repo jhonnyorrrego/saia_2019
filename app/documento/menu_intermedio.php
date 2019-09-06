@@ -13,15 +13,20 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => [],
     'message' => "",
     'success' => 0
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $sql = "select a.nombre,a.enlace,a.imagen,a.etiqueta from modulo a, modulo b where a.cod_padre = b.idmodulo and b.nombre = 'menu_documento' order by a.orden";
-    $modules = StaticSql::search($sql);
+
+    $modules = Model::getQueryBuilder()
+        ->select("a.nombre,a.enlace,a.imagen,a.etiqueta")
+        ->from("modulo", "a")
+        ->join("a", "modulo", "b", "a.cod_padre = b.idmodulo")
+        ->where("b.nombre = 'menu_documento'")
+        ->execute()->fetchAll();
 
     foreach ($modules as $key => $module) {
         if (PermisoController::moduleAccess($module['nombre'])) {

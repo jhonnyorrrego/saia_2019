@@ -51,7 +51,7 @@ if (count($request)) {
 			$proceso = '';
 
 			if (PermisoController::moduleAccess("crear_" . $cuantos_formatos[$i]['nombre'])) {
-				$etiqueta_formato = ucfirst(codifica_encabezado(html_entity_decode(strtolower($cuantos_formatos[$i]["etiqueta"]))));
+				$etiqueta_formato = ucfirst(strtolower($cuantos_formatos[$i]["etiqueta"]));
 
 				$texto .= '<div title="' . $etiqueta_formato . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . $adicional . '", "kTitle":"' . $proceso . ' ' . $etiqueta_formato . '"}\' class="items navigable">';
 				$texto .= '<div class="head"></div>';

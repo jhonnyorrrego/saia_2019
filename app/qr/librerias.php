@@ -62,7 +62,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 	include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 	include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 	include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-
+	
 	$retorno = array(
 		"exito" => 0,
 		"msn" => ""
@@ -95,8 +95,17 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 				"servidor" => $almacenamiento->get_ruta_servidor(),
 				"ruta" => $filename
 			);
-			$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . json_encode($ruta_qr) . "','vacio')";
-			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR ");
+
+			$sql_documento_qr = Model::getQueryBuilder()->insert("documento_verificacion")
+			->values(
+				['documento_iddocumento' => $iddoc,
+				 'funcionario_idfuncionario' => $idfunc,
+				 'fecha' => ':fecha',
+				 'ruta_qr' => ':ruta']
+
+			)->setParameter(':fecha',DateTime::createFromFormat('Y-m-d', date("Y-m-d")),'datetime')
+			->setParameter(':ruta', json_encode($ruta_qr))->execute();
+
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "QR generado con exito";
 			$retorno["ruta_qr"] = json_encode($ruta_qr);

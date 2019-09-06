@@ -8,7 +8,7 @@ try {
 }
 
 include_once $ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php';
-include_once $ruta_db_superior . 'pantallas/qr/librerias.php';
+include_once $ruta_db_superior . 'app/qr/librerias.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_archivo.php';
 

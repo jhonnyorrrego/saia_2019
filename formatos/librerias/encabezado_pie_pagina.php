@@ -60,7 +60,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1)
             include_once($ruta_db_superior . "/" . $formato[0]["nombre"] . "/" . $formato[0]["librerias"]);
         }
     }
-    return (codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
+    return $texto;
 }
 
 function arma_funcion($nombre, $parametros, $accion)
@@ -374,7 +374,7 @@ function pie_pagina_carta($idformato, $iddoc)
 function qr_entrega_interna($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
-    include_once($ruta_db_superior . "pantallas/qr/librerias.php");
+    include_once($ruta_db_superior . "app/qr/librerias.php");
 
     $qr = mostrar_codigo_qr($idformato, $iddoc, true);
     return ($qr . "<br/>Planilla No. " . formato_numero($idformato, $iddoc, 1));

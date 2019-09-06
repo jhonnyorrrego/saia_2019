@@ -119,7 +119,7 @@ function mostrar_informacion_qr($idformato,$iddoc){
 
 	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
 	if($estado_doc[0]['estado']=='APROBADO'){
-		include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+		include_once ($ruta_db_superior . "app/qr/librerias.php");
 		$img=mostrar_codigo_qr($idformato, $iddoc, 1);
 	}
 
