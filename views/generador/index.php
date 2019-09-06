@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'arboles/crear_arbol_ft.php';
+include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 
 $formatId = $_REQUEST['idformato'] ?? 0;
 $params = json_encode([

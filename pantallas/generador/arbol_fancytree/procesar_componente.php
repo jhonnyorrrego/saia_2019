@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+include_once $ruta_db_superior . "app/arbol/crear_arbol_ft.php";
 
 function procesar_fancytree($idcampo = '', $seleccionado = '', $accion = '', $campo = '')
 {

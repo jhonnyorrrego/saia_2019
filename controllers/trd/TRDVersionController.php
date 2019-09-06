@@ -253,4 +253,66 @@ class TRDVersionController
     {
         return json_encode($this->clasificationData);
     }
+
+    /**
+     * Guarda en un archivo temporal los datos
+     * utilizado para el cache
+     *
+     * @return void
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public function saveCache()
+    {
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion');
+        file_put_contents($rutaClasi, $this->getClasificationData());
+
+        $rutaTrd = self::getRouteFileTemporal('json_trd');
+        file_put_contents($rutaTrd, $this->getTrdData());
+    }
+
+    /**
+     * obtiene la ubicacion fisica de los archivos 
+     * temporales generados
+     *
+     * @param string $field : json_trd, json_clasificacion
+     * @return string
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function getRouteFileTemporal($field)
+    {
+        global $ruta_db_superior;
+
+        $dir = $ruta_db_superior . TemporalController::$saiaDir;
+
+        if (!file_exists($dir)) {
+            if (!mkdir($dir, PERMISOS_CARPETAS, TRUE)) {
+                return false;
+            }
+        }
+
+        if ($field == 'json_clasificacion') {
+            $fileName = "/currentVersionClasificacion.txt";
+        } else {
+            $fileName = "/currentVersionTRD.txt";
+        }
+        return $dir . $fileName;
+    }
+    /**
+     * Elimina los archivos temporales 
+     * 
+     *
+     * @return void
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function removeTemporalFile()
+    {
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion');
+        unlink($rutaClasi);
+
+        $rutaTrd = self::getRouteFileTemporal('json_trd');
+        unlink($rutaTrd);
+    }
 }
