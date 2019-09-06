@@ -985,7 +985,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             $query = Model::getQueryBuilder();
 
             $dep = $query
-            ->select("dependencia, iddependencia_cargo, cargo")
+            ->select("dependencia as nombre, iddependencia_cargo, cargo")
             ->from("vfuncionario_dc")
             ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
             ->andWhere(
@@ -995,8 +995,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             ->setParameter(':fechaI', new \DateTime("now"), "datetime")
             ->setParameter(':fechaF', new \DateTime("now"), "datetime")
             ->execute()->fetchAll();
-            
-            $numfilas = $dep["numcampos"];
+ 
+            $numfilas = count($dep);
 
             $html = '';
             if ($numfilas > 1) {
