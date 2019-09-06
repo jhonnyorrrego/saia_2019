@@ -15,10 +15,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 
 $formatId = $_REQUEST['idformato'] ?? 0;
-$params = json_encode([
+$params = [
     'baseUrl' => $ruta_db_superior,
     'formatId' => $formatId
-]);
+];
 
 if ($formatId) {
     $origen = [
@@ -201,7 +201,7 @@ function check_banderas($bandera, $chequear = true)
                         </ul>
 
                         <div style="position:fixed;right:8px;top:0px;">
-                            <label id="guardar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">Guardar</label>
+                            <label id="guardar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">GUARDAR</label>
                             <label id="generar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">PUBLICAR</label>
                         </div>
                     </div>
@@ -220,7 +220,7 @@ function check_banderas($bandera, $chequear = true)
                                                 </div>
                                                 <hr />
                                                 <input type="hidden" name="nombre" id="nombre_formato" value="" required />
-                                                <input type="hidden" name="idformato" id="idformato" value="<?= $_REQUEST["idformato"] ?>" />
+                                                <input type="hidden" name="idformato" id="idformato" value="<?= $_REQUEST["idformato"] ?? 0 ?>" />
                                                 <div class="row-fluid">
 
                                                     <div class="my-3">
@@ -611,7 +611,7 @@ function check_banderas($bandera, $chequear = true)
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= $params ?>' id="script_generador_pantalla"></script>
+    <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>
 </body>
 
 </html>

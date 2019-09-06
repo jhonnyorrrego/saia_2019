@@ -39,6 +39,15 @@ class GenerarFormatoController
     protected $newData;
 
     /**
+     * instancia de la tabla del formato
+     *
+     * @var object Doctrine\DBAL\Schema\Table
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-06
+     */
+    protected $Table;
+
+    /**
      * inicia el proceso de generacion
      *
      * @param integer $formatId identificador del formato
@@ -82,6 +91,15 @@ class GenerarFormatoController
         return $this->Formato->getModule();
     }
 
+    public function generate()
+    {
+        //genero la carpeta y .gitignore
+        $this->generateDirectory();
+
+        //genero la tabla
+        $this->generateTable();
+    }
+
     /**
      * actualiza los datos del formato
      *
@@ -98,9 +116,13 @@ class GenerarFormatoController
             throw new Exception("Error al guardar el formato", 1);
         }
 
+        if (!$this->formatId) {
+            $this->formatId = $this->Formato->getPK();
+        }
+
+
         $this->createModule();
-        self::createDirectory($this->Formato);
-        return $this->Formato->getPK();
+        return $this->formatId;
     }
 
     /**
@@ -138,35 +160,149 @@ class GenerarFormatoController
      * crea el directorio del formato con su respectivo
      * archivo .gitignore
      *
-     * @param object $Formato instancia del formato
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-03
      */
-    public static function createDirectory($Formato)
+    public function generateDirectory()
     {
         global $ruta_db_superior;
 
-        $directory = "{$ruta_db_superior}formatos/{$Formato->nombre}";
+        $directory = "{$ruta_db_superior}formatos/{$this->Formato->nombre}";
 
         if (!is_dir($directory)) {
             if (!mkdir($directory, PERMISOS_CARPETAS, true)) {
                 throw new Exception("No es posible crear la carpeta {$directory}", 1);
             }
+        } else {
+            chmod($directory, PERMISOS_CARPETAS);
         }
 
-        if (!(int) $Formato->pertenece_nucleo) {
+        if (!(int) $this->Formato->pertenece_nucleo) {
             $content = '*';
         } else {
-            $content = "{$Formato->ruta_adicionar}
-                {$Formato->ruta_editar}
-                {$Formato->ruta_buscar}
-                {$Formato->ruta_mostrar}";
+            $content = "{$this->Formato->ruta_adicionar}
+                {$this->Formato->ruta_editar}
+                {$this->Formato->ruta_buscar}
+                {$this->Formato->ruta_mostrar}";
         }
 
         $ignoreFile = "{$directory}/.gitignore";
         file_put_contents($ignoreFile, $content);
         chmod($ignoreFile, PERMISOS_ARCHIVOS);
+    }
+
+    public function generateTable()
+    {
+        $schema = self::getSchema();
+
+        if (!$schema->tablesExist([$this->Formato->nombre_tabla])) {
+            $Table = new \Doctrine\DBAL\Schema\Table(
+                $this->Formato->nombre_tabla
+            );
+            $Table->addColumn('_id', 'integer');
+            $schema->createTable($Table);
+        }
+
+        $this->Table = $schema->listTableDetails($this->Formato->nombre_tabla);
+        $this->generateColumns();
+    }
+
+    /**
+     * genera las columas de la tabla
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-06
+     */
+    public function generateColumns()
+    {
+        //configuro los campos de nucleo
+        $this->configDefaultFields();
+        $fields = $this->Formato->getFields();
+
+        if ($fields) {
+            if ($this->Table->hasColumn('_id')) {
+                $this->Table->dropColumn('_id');
+            }
+
+            foreach ($fields as $CamposFormato) {
+                $flags = explode(',', $CamposFormato->banderas);
+                $options = [
+                    'length' => $CamposFormato->logitud,
+                    'notnull' => $CamposFormato->obligatoriedad,
+                    'default' => $CamposFormato->predeterminado,
+                    'autoincrement' => in_array('ai', $flags)
+                ];
+
+                if ($this->Table->hasColumn($CamposFormato->nombre)) {
+                    $this->Table->changeColumn($CamposFormato->nombre, $options);
+                } else {
+                    $this->Table->addColumn(
+                        $CamposFormato->nombre,
+                        $CamposFormato->tipo_dato,
+                        $options
+                    );
+                }
+
+                $indexName = 'i' . $this->Formato->nombre_tabla . $CamposFormato->nombre;
+                if (in_array('i', $flags)) {
+                    if (!$this->Table->hasIndex($indexName)) {
+                        $this->Table->addIndex([$CamposFormato->nombre], $indexName);
+                    }
+                } else {
+                    if ($this->Table->hasIndex($indexName)) {
+                        $this->Table->dropIndex($indexName);
+                    }
+                }
+
+                if (in_array('pk', $flags) && !$this->Table->hasPrimaryKey()) {
+                    $this->Table->setPrimaryKey([$CamposFormato->nombre]);
+                }
+            }
+
+            $schema = self::getSchema();
+            $InitialTable = $schema->listTableDetails($this->Formato->nombre_tabla);
+            $TableDiff = (new Doctrine\DBAL\Schema\Comparator())->diffTable($InitialTable, $this->Table);
+            if ($TableDiff) {
+                $schema->alterTable($TableDiff);
+            }
+        }
+    }
+
+    /**
+     * crea los campos predeterminados para el formato
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-06
+     */
+    public function configDefaultFields()
+    {
+        $systemFields = $this->Formato->getSystemFields();
+        $fields = Model::getQueryBuilder()
+            ->select('nombre')
+            ->from('campos_formato')
+            ->where('formato_idformato = :formatId')
+            ->andWhere('nombre in (:fields)')
+            ->setParameter(':formatId', $this->Formato->getPK(), 'integer')
+            ->setParameter(
+                ':fields',
+                $systemFields,
+                \Doctrine\DBAL\Connection::PARAM_STR_ARRAY
+            )
+            ->execute()->fetchAll();
+
+        $created = [];
+        foreach ($fields as $row) {
+            $created[] = $row['nombre'];
+        }
+
+        $miss = array_diff($systemFields, $created);
+
+        foreach ($miss as $field) {
+            CamposFormato::createDefaultField($field, $this->Formato);
+        }
     }
 
     /**
@@ -176,7 +312,7 @@ class GenerarFormatoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-02
      */
-    public static function getSchema()
+    public static function getSchema(): Doctrine\DBAL\Schema\AbstractSchemaManager
     {
         return Connection::getInstance()->getSchemaManager();
     }
