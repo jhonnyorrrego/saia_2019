@@ -10,6 +10,8 @@
  * 3. el -1 en la retencion central/gestion de las series/subserie equivale a que siempre se conservara en gestion (Permanentemente)
  */
 
+use \Doctrine\DBAL\Types\Type;
+
 class TRDLoadController
 {
     protected $urlEXcel;
@@ -372,10 +374,16 @@ class TRDLoadController
             ->from('dependencia_serie_temp')
             ->where('fk_serie=:idserie')
             ->andWhere('fk_dependencia=:iddependencia')
-            ->setParameters([
-                ':idserie' => $idserie,
-                ':iddependencia' => $this->row['iddependencia']
-            ], ['integer', 'integer'])
+            ->setParameters(
+                [
+                    ':idserie' => $idserie,
+                    ':iddependencia' => $this->row['iddependencia']
+                ],
+                [
+                    ':idserie' => Type::INTEGER,
+                    ':iddependencia' => Type::INTEGER,
+                ]
+            )
             ->execute()->fetch();
 
         if (!$existDepSerie['cant']) {
