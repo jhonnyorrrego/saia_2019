@@ -865,28 +865,29 @@ function cargo_rol($iddoc)
     $origenes = array();
     $tipo = busca_filtro_tabla("distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa", "buzon_entrada,ruta", 
     "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc, "ruta.idruta asc,buzon_entrada.nombre asc", $conn);
+    
     $query =Model::getQueryBuilder();
 
     $tipo = $query
-    ->select("activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,fecha,ruta.firma_externa")
+    ->select("a.activo,a.nombre,b.obligatorio,b.origen,b.tipo_origen,b.orden,b.idruta,a.fecha,b.firma_externa")
     ->from("buzon_entrada",'a')
     ->join('a','ruta','b','a.ruta_idruta=b.idruta')
     ->where(
         $query->expr()->andX(
         $query->expr()->orX(
-            $query->expr()->in("nombre",['APROBADO','REVISADO']),
+            $query->expr()->in("a.nombre",":estado"),
             $query->expr()->andX(
-                $query->expr()->eq("nombre",'POR_APROBAR'),
-                $query->expr()->eq("activo",'1'),
+                "a.nombre='POR_APROBAR'",
+                "a.activo = 1",
             )
         ),      
-        $query->expr()->in("obligatorio",['1','2','5']),
-        $query->expr()->eq('tipo', 'ACTIVO'),
-        $query->expr()->eq('archivo_idarchivo', $iddoc),
-    ))->getSQL(); 
-
-    var_dump($tipo);
-    die();
+        $query->expr()->in("b.obligatorio",[1, 2, 5]),
+        "b.tipo = 'ACTIVO'",
+        "a.archivo_idarchivo = :iddoc",
+        )
+    )->setParameter(":estado",['APROBADO','REVISADO'],\Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+    ->setParameter(":iddoc", $iddoc)
+    ->execute()->fetchAll();
     
     for ($i = 0; $i < $tipo["numcampos"]; $i++) {
         if (in_array($tipo[$i]["origen"], $origenes)) {

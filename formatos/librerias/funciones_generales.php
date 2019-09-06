@@ -973,26 +973,12 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             ->from("vfuncionario_dc")
             ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
             ->andWhere(
-                $query->expr()->lte('fecha_inicial', new \DateTime("now")),
-                $query->expr()->gte('fecha_final', new \DateTime("now")),
-            )->setParameter(":login", SessionController::getLogin())->getSQL();
-
-            var_dump($dep);
-            die();
-
-            $dep = $query
-            ->select("d.nombre, dc.iddependencia_cargo, c.nombre as cargo")
-            ->from("funcionario","f")->innerJoin("f","dependencia_cargo","dc","dc.funcionario_idfuncionario = f.idfuncionario")
-            ->innerJoin("dc","cargo","c","c.idcargo = dc.cargo_idcargo")
-            ->innerJoin("c","dependencia","d","d.iddependencia = dc.dependencia_iddependencia")
-            ->where("dc.estado = 1 and c.tipo_cargo = 1 and f.login = :login")
-            ->andWhere(
-                $query->expr()->lte('dc.fecha_inicial', $hoy),
-                $query->expr()->lte('dc.fecha_final', $hoy),
-            )->setParameter(":login", SessionController::getLogin())->execute()->fetchAll();
-
-            var_dump($dep);
-            die();
+                $query->expr()->lte('fecha_inicial', ':fechaI'),
+                $query->expr()->gte('fecha_final', ':fechaF'),
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':fechaI', new \DateTime("now"), "datetime")
+            ->setParameter(':fechaF', new \DateTime("now"), "datetime")
+            ->execute()->fetchAll();
             
             $numfilas = $dep["numcampos"];
 
