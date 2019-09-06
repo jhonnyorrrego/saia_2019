@@ -17,6 +17,20 @@ $(document).ready(function() {
         }
     })();
 
+    $('#guardar').on('click', function() {
+        if (step == 1) {
+            saveFormat();
+        } else if (step == 3) {
+            saveBody();
+        } else {
+            return false;
+        }
+    });
+
+    $('#generar').on('click', function() {
+        alert('generar');
+    });
+
     $('.nav li').click(function() {
         return !$(this).hasClass('disabled');
     });
@@ -61,16 +75,6 @@ $(document).ready(function() {
                 background: '#eee',
                 'font-weight': 'normal'
             });
-        }
-    });
-
-    $('#guardar').on('click', function() {
-        if (step == 1) {
-            saveFormat();
-        } else if (step == 3) {
-            saveBody();
-        } else {
-            return false;
         }
     });
 
@@ -154,7 +158,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.delete_header_footer').on('click', function(e) {
+    $('.delete_header_footer').on('click', function() {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -189,7 +193,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.edit_header_footer').on('click', function(e) {
+    $('.edit_header_footer').on('click', function() {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -227,7 +231,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.add_header_footer').on('click', function(e) {
+    $('.add_header_footer').on('click', function() {
         let type = $(this).data('type');
 
         top.topModal({
@@ -250,6 +254,18 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#serie_idserie')
+        .change(function() {
+            $('.codigoSerie').each(function() {
+                if ($(this).val() == $('#serie_idserie').val()) {
+                    $('#codigoSerieInput').val($(this).attr('codigo'));
+                }
+            });
+        })
+        .trigger('change');
+
+    $('[data-toggle="tooltip"]').tooltip();
 
     function createHeaderFooterSelect() {
         $.post(
@@ -538,17 +554,4 @@ $(document).ready(function() {
             }
         }
     }
-    // ACA INICIA EL ARCHIVO DE LA PESTANA 1
-
-    $('#serie_idserie')
-        .change(function() {
-            $('.codigoSerie').each(function() {
-                if ($(this).val() == $('#serie_idserie').val()) {
-                    $('#codigoSerieInput').val($(this).attr('codigo'));
-                }
-            });
-        })
-        .trigger('change');
-
-    $('[data-toggle="tooltip"]').tooltip();
 });

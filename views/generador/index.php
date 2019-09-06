@@ -51,22 +51,13 @@ if ($formatId) {
     if ($funcionPredeterminada !== false) {
         $checkResponsables = "checked";
     }
-    //$formato = json_encode($formato);
-    if ($cod_proceso_pertenece) {
-        $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
-    }
+
     if ($cod_padre) {
         $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "", $conn);
-        $adicional_cod_padre = "&seleccionado=" . $cod_padre;
-    }
-    if ($categoria) {
-        $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato IN($categoria)", "", $conn);
-        $adicional_categoria = "&seleccionado=" . $categoria;
     }
 
     $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $formatId, "seleccionados" => $cod_padre, "seleccionable" => "radio"));
     $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
-    $extensiones = array("filter" => array());
     $arbolFormato = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
 
     $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
