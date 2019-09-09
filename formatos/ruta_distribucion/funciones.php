@@ -205,7 +205,7 @@ function add_edit_ruta_dist($idformato, $iddoc)
 
     function crearItemFuncionario($item)
     {
-        $VfuncionarioDc = new VfuncionarioDc();
+        $VfuncionarioDc = new VfuncionarioDc($item['mensajero_ruta']);
 
         $seleccionar = array(
             1 => "",

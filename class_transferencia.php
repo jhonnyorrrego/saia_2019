@@ -1387,7 +1387,6 @@ function guardar_documento($iddoc, $tipo = 0)
             }
         }
 
-
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
@@ -1396,7 +1395,6 @@ function guardar_documento($iddoc, $tipo = 0)
         $Connection = Connection::getInstance(true);
         $Connection->query($sql);
         $insertado = $Connection->lastInsertId();
-
 
         if ($insertado) {
             $sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . $_SESSION["usuario_actual"] . "','" . $iddoc . "','e,m,r')";
