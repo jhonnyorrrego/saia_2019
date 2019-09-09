@@ -363,7 +363,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if ($user == null) {
                     continue;
                 }
-                if ($datos["nombre"] != "POR_APROBAR") {                  
+                if ($datos["nombre"] != "POR_APROBAR") {
                     $buzonSalida = [
                         'archivo_idarchivo' => $idarchivo,
                         'nombre' => $datos["nombre"],
@@ -375,7 +375,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         'destino' => $user
                     ];
 
-                    if($adicionales){
+                    if ($adicionales) {
                         $buzonSalida = array_merge($buzonSalida, $adicionales);
                     }
 
@@ -439,7 +439,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if (!empty($datos["ver_notas"])) {
                     $ver_notas = $datos["ver_notas"];
                 }
-                
+
                 $buzonEntrada = [
                     'archivo_idarchivo' => $idarchivo,
                     'nombre' => $datos["nombre"],
@@ -452,9 +452,9 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     'origen' => $user
                 ];
 
-                if($adicionales){
+                if ($adicionales) {
                     $buzonEntrada = array_merge($buzonEntrada, $adicionales);
-                }               
+                }
 
                 $idInsertadoEntrada1 = BuzonEntrada::newRecord($buzonEntrada);
 
@@ -480,7 +480,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 'ver_notas' => $ver_notas
             ];
 
-            if($adicionales){
+            if ($adicionales) {
                 $buzonEntrada = array_merge($buzonEntrada, $adicionales);
             }
 
@@ -567,7 +567,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                     "activo" => 0,
                 ]);
                 $BuzonEntrada->save();
- 
+
                 DocumentoRastro::newRecord([
                     'fk_documento' => $iddoc,
                     'accion' => DocumentoRastro::ACCION_CONFIRMACION,
@@ -798,7 +798,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         } else
                             echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/assets/images/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
 
-                        echo "<p class='my-0'><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br /></p>";
+                        echo "<p class='my-0'><strong>" . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br /></p>";
                         if ($cargos["numcampos"]) {
                             for ($h = 0; $h < $cargos["numcampos"]; $h++) {
                                 echo "<p><b>" . formato_cargo($cargos[$h]["nombre"]) . "</b></p><br/>";
@@ -811,7 +811,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo "</td>";
                     } else {
                         echo "<td style='border:none;' align='left'><img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/assets/images/firmas/blanco.jpg' width='" . $ancho_firma[0]["valor"] . "' height='" . $alto_firma[0]["valor"] . "'>
-							<br /><p class='my-0'><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b></p><br />";
+							<br /><p class='my-0'><b>" . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "</b></p><br />";
                         if ($cargos["numcampos"]) {
                             for ($h = 0; $h < $cargos["numcampos"]; $h++)
                                 echo "<p><b>" . formato_cargo($cargos[$h]["nombre"]) . "</b></p></br>";
@@ -825,9 +825,9 @@ function mostrar_estado_proceso($idformato, $iddoc)
                     $firmas++;
                 } elseif ($fila["obligatorio"] == 2) { // Revisado
                     if ($fila["nombre"] == "POR_APROBAR")
-                        $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
+                        $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
                     elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
-                        $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
+                        $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
                 } elseif ($fila["obligatorio"] == 5) { // Firma externa
                     if ($firmas == 0) {
                         echo "<tr>";
@@ -849,7 +849,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         require_once($ruta_db_superior . FORMATOS_SAIA . "librerias/mostrar_foto_manual.php");
                         $parte = '<td style="border:none;"><img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
 
-                        $parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
+                        $parte .= "<br /><strong>" . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
                         if ($cargos["numcampos"]) {
                             for ($h = 0; $h < $cargos["numcampos"]; $h++)
                                 $parte .= formato_cargo($cargos[$h]["nombre"]) . "<br/>";

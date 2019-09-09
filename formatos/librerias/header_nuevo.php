@@ -145,18 +145,8 @@ if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
             height: <?= $tam_pagina["margen_inferior"] . 'mm' ?>;
         }
     </style>
-<?php endif; ?>
+<?php endif;
 
-</head>
-
-<body>
-    <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
-        <div id="documento" class="row p-0 m-0">
-            <div id="pag-0" class="col-12 page_border bg-white">
-                <div class="page_margin_top mb-0" id="doc_header">
-                    <?php if ($encabezado["numcampos"]) {
-                        echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], 0);
-                    } ?>
-                </div>
-                <div id="pag_content-0" class="page_content">
-                    <div id="page_overflow">
+if ($encabezado["numcampos"]) {
+    echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], 0);
+}
