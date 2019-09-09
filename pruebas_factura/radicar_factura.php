@@ -168,7 +168,7 @@ function registar_factura($info_factura) {
 
 function radicar_correo($idgrupo) {
     global $ruta_db_superior, $conn;
-    include_once ($ruta_db_superior . "class_transferencia.php");
+    include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
     $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $idgrupo . "' and iddoc_rad=0", "", $conn);
     if ($datos["numcampos"]) {
         $tabla = "ft_correo_saia";
@@ -228,7 +228,7 @@ function radicar_correo($idgrupo) {
 
 function radicar_factura($datos) {
     global $ruta_db_superior, $conn;
-    include_once ($ruta_db_superior . "class_transferencia.php");
+    include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
     if (!empty($datos)) {
         $tabla = "ft_factura_electronica";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);

@@ -10,7 +10,7 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior."class_transferencia.php");
+include_once($ruta_db_superior."app/documento/class_transferencia.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_archivo.php");
 require_once($ruta_db_superior . 'StorageUtils.php');

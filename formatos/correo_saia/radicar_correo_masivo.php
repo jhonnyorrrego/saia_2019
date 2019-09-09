@@ -197,7 +197,7 @@ if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
         phpmkr_query($update) or die("Error al actualizar los datos de la DT");
         notificaciones_saia("Por favor espere mientras se radican los Emails", "warning", 10000);
     }
-    include_once ($ruta_db_superior . "class_transferencia.php");
+    include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
     $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad=0", "", $conn);
     if ($datos["numcampos"]) {
         $tabla = "ft_correo_saia";
