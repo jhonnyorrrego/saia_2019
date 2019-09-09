@@ -223,15 +223,11 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
             $("#btn_success").click(function() {
 
-
                 $("#btnGuardar").trigger("click");
 
             });
 
-            console.log(opciones_form);
-
             $('#editar_pantalla_campo').alpaca(opciones_form);
-
 
         });
 
