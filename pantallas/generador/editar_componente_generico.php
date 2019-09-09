@@ -22,8 +22,6 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $idpantalla_campos = $_REQUEST["idpantalla_campos"];
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
 
-
-
     $valores["fs_nombre"] = $pantalla_campos[0]["nombre"];
     $valores["fs_etiqueta"] = html_entity_decode($pantalla_campos[0]["etiqueta"]);
 
@@ -96,7 +94,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
     <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules\alpaca\dist\alpaca\bootstrap\alpaca.min.js"></script>
 
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
+    <!-- <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script> -->
 
     <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
 

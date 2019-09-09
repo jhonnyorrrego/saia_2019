@@ -102,8 +102,8 @@ function transferencia_automatica(
     } elseif ($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
         $vector = explode("@", $destinos);
     } elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
-        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-        $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=$iddoc", "", $conn);
+        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato = " .$idformato, "", $conn);
+        $dato = busca_filtro_tabla($destinos, $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
 
         if ($dato['numcampos']) {
             $vector = explode(",", $dato[0][0]);
