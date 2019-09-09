@@ -92,9 +92,9 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
     <!-- alpaca -->
     <!-- <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script> -->
 
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules\alpaca\dist\alpaca\bootstrap\alpaca.min.js"></script>
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.js"></script>
 
-    <!-- <script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script> -->
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
 
     <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
 
