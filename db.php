@@ -44,24 +44,6 @@ function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
     ]);
 }
 
-/**
- * convierte una cadena a mayusculas
- *
- * @param string $string
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019
- */
-function mayusculas($string)
-{
-    $string = strtoupper($string);
-    return str_replace(
-        ["ACUTE;", "TILDE;", "&IQUEST;", "UML;"],
-        ["acute;", "tilde;", "&iquest;", "uml;"],
-        $string
-    );
-}
-
 /*<Clase>
 <Nombre>leido</Nombre>
 <Parametros>$codigo:codigo del funcionario;$llave:id del documento</Parametros>
@@ -1315,27 +1297,23 @@ function crear_archivo($nombre, $texto = null, $modo = 'wb')
     return $resp;
 }
 
-/*
- * <Clase>
- * <Nombre>crear_destino</Nombre>
- * <Parametros>$destino:estructura de carpetas a crear</Parametros>
- * <Responsabilidades>Crea un conjunto de carpetas con cierta jerarquia<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
+/**
+ * crea una carpeta con los permisos
+ * indicados en el define
+ *
+ * @param string $directory
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
  */
-function crear_destino($destino)
+function crear_destino($directory)
 {
-    if (!is_dir($destino)) {
-        if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
-            alerta("no es posible crear la carpeta " . $destino);
-            return '';
+    if (!is_dir($directory)) {
+        if (!mkdir($directory, PERMISOS_CARPETAS, true)) {
+            throw new Exception("no es posible crear la carpeta {$directory}", 1);
         }
     }
-    return $destino;
+    return $directory;
 }
 
 function ruta_almacenamiento($tipo, $raiz = 1)

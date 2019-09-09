@@ -9,17 +9,9 @@ if (!$_REQUEST['tipo'] || ($_REQUEST['tipo'] && $_REQUEST['tipo'] != 5)) {
         $pie = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento='" . $_REQUEST["iddoc"] . "'", "", $conn);
     }
 }
-?>
-</div>
-</div>
-<?php if ($pie[0][0] && $contenido_pie["numcampos"]) : ?>
+
+if ($pie[0]['encabezado'] && $contenido_pie["numcampos"]) : ?>
     <div class="page_margin_bottom" id="doc_footer">
-        <?= crear_encabezado_pie_pagina(stripslashes($contenido_pie[0][0]), $_REQUEST["iddoc"], $formato[0]["idformato"]) ?>
+        <?= crear_encabezado_pie_pagina(stripslashes($contenido_pie[0]['contenido']), $_REQUEST["iddoc"], $formato[0]["idformato"]) ?>
     </div>
 <?php endif; ?>
-</div> <!-- end page-n -->
-</div> <!-- end #documento-->
-</div> <!-- end .container -->
-</body>
-
-</html>
