@@ -179,7 +179,8 @@ if (@$_REQUEST["doc"] || @$_REQUEST["key"]) {
     }
 }
 $plantilla = busca_filtro_tabla("", "documento a, formato b", "lower(plantilla)=b.nombre AND iddocumento=" . $doc, "", $conn);
-$datos = busca_filtro_tabla("dependencia,numero,tipo_radicado," . fecha_db_obtener("A.fecha", 'Y-m-d H:i') . " AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado", "documento A, " . $plantilla[0]["nombre_tabla"] . " B", "A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento", "", $conn);
+$datos = busca_filtro_tabla("dependencia,numero,tipo_radicado,fecha as fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado", "documento A, " . $plantilla[0]["nombre_tabla"] . " B", "A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento", "", $conn);
+$datos[0]["fecha_oracle"] = DateController::convertDate($datos[0]["fecha_oracle"], 'Y-m-d H:i:s', 'Y-m-d H:i');
 $dependencia_creador = busca_filtro_tabla("b.codigo,a.nombres,a.apellidos", "vfuncionario_dc a, dependencia b", "b.iddependencia=a.iddependencia AND a.iddependencia_cargo=" . $datos[0]['dependencia'], "", $conn);
 
 $ejecutor["numcampos"] = '';
@@ -226,7 +227,7 @@ if ($doc <> FALSE) {
             if($destino_radicacion["numcampos"]){
                 $fun_destino = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $destino_radicacion[0]['funcionario_codigo'], "", $conn);
                 if ($fun_destino['numcampos']) {
-                    $usu = $nombre_fun_destino = ucwords(strtolower(codifica_encabezado(html_entity_decode($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]))));
+                    $usu = $nombre_fun_destino = ucwords(strtolower($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]));
                 } else {
                     $usu = "RADICACION";
                 }
@@ -426,14 +427,14 @@ if ($doc <> FALSE) {
                                     <b><?php
                                         if (@$_REQUEST['descripcion_general']) {
                                             $suspensivos = '';
-                                            $cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+                                            $cadena = @$_REQUEST["descripcion_general"];
                                             if (strlen($cadena) > 30) {
                                                 $suspensivos = '...';
                                             }
                                             echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
                                         } else {
                                             $suspensivos = '';
-                                            $cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+                                            $cadena = $datos[0]["descripcion"];
                                             if (strlen($cadena) > 30) {
                                                 $suspensivos = '...';
                                             }
@@ -454,7 +455,7 @@ if ($doc <> FALSE) {
                                 <?php
                                 if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
                                     ?>
-                                    <b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
+                                    <b>Destino: <?php echo substr($destino, 0, 22) . "..."; ?></b>
                                 <?php
                                 }
                                 ?>
@@ -486,14 +487,14 @@ if ($doc <> FALSE) {
                                 <b><?php
                                     if (@$_REQUEST['descripcion_general']) {
                                         $suspensivos = '';
-                                        $cadena = codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+                                        $cadena = $_REQUEST["descripcion_general"];
                                         if (strlen($cadena) > 30) {
                                             $suspensivos = '...';
                                         }
                                         echo "Asunto: " . substr($cadena, 0, 30) . $suspensivos;
                                     } else {
                                         $suspensivos = '';
-                                        $cadena = codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+                                        $cadena = $datos[0]["descripcion"];
                                         if (strlen($cadena) > 30) {
                                             $suspensivos = '...';
                                         }
@@ -534,7 +535,7 @@ if ($doc <> FALSE) {
                             }
                             if (@$datos[0]['estado'] != 'INICIADO' && strtolower($datos[0]["plantilla"]) != 'radicacion_entrada') {
                                 ?>
-                                <b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)), 0, 22) . "..."; ?></b>
+                                <b>Destino: <?php echo substr($destino, 0, 22) . "..."; ?></b>
                             <?php
                             }
                             ?>
