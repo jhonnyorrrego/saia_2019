@@ -908,7 +908,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
 function actualizar_campos_documento($idformato, $iddoc)
 {
     global $conn;
-    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
     if ($datos["numcampos"]) {
         $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "", $conn);
         $valores = array();
@@ -923,12 +923,16 @@ function actualizar_campos_documento($idformato, $iddoc)
         if ($datos[0]["persona_natural"]) {
             $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
         }
-        $fecha = '';
-        if (!empty($datos[0]["fecha_oficio_entrada"])) {
-            $fecha = ", fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s');
-        }
-        $sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["descripcion_anexos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "'" . $fecha . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
-        phpmkr_query($sql1);
+
+        $Documento = new Documento($iddoc);
+        $Documento->executeUpdate([
+            'oficio' => $datos[0]["numero_oficio"],
+            'anexo' => $valores[$datos[0]["descripcion_anexos"]],
+            'descripcion_anexo' => $datos[0]["descripcion_anexos"],
+            'municipio_idmunicipio' => $ejecutor[0]["ciudad"]
+        ],[
+            'iddocumento' => $iddoc
+        ]);
     }
     return;
 }

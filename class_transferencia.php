@@ -85,13 +85,27 @@ function eliminar_asignacion($funcionario, $iddocumento)
 
 function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $list_entidad = null, $identidad = null, $fecha_inicial = null, $fecha_final = null, $estado = "PENDIENTE")
 {
-    global $conn;
-    $formato = "Y-m-d H:i:s";
     if (!$fecha_inicial)
-        $fecha_inicial = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+        $fecha_inicial = date('Y-m-d H:i:s');
+
     if (($idserie || $iddocumento) && isset($idtarea)) {
-        $sql = "INSERT INTO asignacion (documento_iddocumento,tarea_idtarea,fecha_inicial,estado,entidad_identidad,llave_entidad) VALUES ($iddocumento,$idtarea,$fecha_inicial,'$estado',1,$list_entidad)";
-        phpmkr_query($sql);
+        Model::getQueryBuilder()
+        ->insert("asignacion")
+        ->values([
+            "documento_iddocumento" => "?",
+            "tarea_idtarea" => "?",
+            "fecha_inicial" => "?",
+            "estado" => "?",
+            "entidad_identidad" => "1",
+            "llave_entidad" => "?"
+
+        ])
+        ->setParameter(1, $iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->setParameter(2, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->setParameter(3, DateTime::createFromFormat("Y-m-d H:i:s", date($fecha_inicial)), \Doctrine\DBAL\Types\Type::DATETIME)
+        ->setParameter(4, $estado)
+        ->setParameter(5, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)->execute();
+
     } else {
         alerta("Diligencie correctamente los datos e intente nuevamente");
         return false;
@@ -592,20 +606,23 @@ function aprobar($iddoc = 0, $opcion = 0)
 
             if ($aprobar_posterior == 1) {
                 $Documento = new Documento($iddoc);
-                $dias_entrega = busca_filtro_tabla("dias_entrega", "serie", "idserie=" . $tipo_radicado[0]["serie"], "", $conn);
+                $Serie = new Serie($tipo_radicado[0]["serie"]);
+                $Serie->dias_respuesta;
+
                 if ($tipo_radicado[0]["numero"] == 0) {
-                    $numero = contador($iddoc, $tipo_radicado[0]["nombre"]);
-                    $Documento->setAttributes([
+                    $numero = 1;
+                    //$numero = contador($iddoc, $tipo_radicado[0]["nombre"]);
+                    $Documento->setAttributes([  
                         "estado" => 'APROBADO',
                         "fecha" => date('Y-m-d H:i:s'),
-                        "dias" =>  $dias_entrega[0]["dias_entrega"]
+                        "dias" =>  $Serie->dias_respuesta
                     ]);
                 } else {
                     $Documento->setAttributes([
                         "estado" => 'APROBADO',
                         "activa_admin" => 0,
                         "fecha" => date('Y-m-d H:i:s'),
-                        "dias" =>  $dias_entrega[0]["dias_entrega"]
+                        "dias" =>  $Serie->dias_respuesta
                     ]);
                 }
 
@@ -622,14 +639,6 @@ function aprobar($iddoc = 0, $opcion = 0)
                     'titulo' => 'Radicación del documento'
                 ]);
 
-                $nombre_tabla = busca_filtro_tabla("nombre_tabla,banderas", "formato", "nombre like '$formato'", "", $conn);
-                $tabla = $nombre_tabla[0]["nombre_tabla"];
-                $campos_formato = listar_campos_tabla($tabla);
-
-                if (in_array('fecha_' . $formato, $campos_formato)) {
-                    $sql = "update " . $tabla . " set fecha_" . $formato . "=" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . " where documento_iddocumento=" . $iddoc;
-                    phpmkr_query($sql, $conn);
-                }
                 $respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "", $conn);
                 if ($respuestas["numcampos"] > 0) {
                     $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
@@ -655,7 +664,6 @@ function aprobar($iddoc = 0, $opcion = 0)
                     phpmkr_query($sql1);
                 }
             }
-            $array_banderas = explode(",", $nombre_tabla[0]["banderas"]);
         }
     }
 
@@ -1276,7 +1284,7 @@ function guardar_documento($iddoc, $tipo = 0)
         if ($columns) {
             $where .= " AND nombre IN('" . implode("','", $columns) . "')";
         }
-        //$lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
+        $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
         $sql = ("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud" . "campos_formato" . $where . "" . $conn);
 
         for ($j = 0; $j < $lcampos["numcampos"]; $j++) { // si el valor es un array
