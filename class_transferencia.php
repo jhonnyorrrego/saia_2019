@@ -349,7 +349,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if ($user == null) {
                     continue;
                 }
-                if ($datos["nombre"] != "POR_APROBAR") {                  
+                if ($datos["nombre"] != "POR_APROBAR") {
                     $buzonSalida = [
                         'archivo_idarchivo' => $idarchivo,
                         'nombre' => $datos["nombre"],
@@ -361,7 +361,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         'destino' => $user
                     ];
 
-                    if($adicionales){
+                    if ($adicionales) {
                         $buzonSalida = array_merge($buzonSalida, $adicionales);
                     }
 
@@ -425,7 +425,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 if (!empty($datos["ver_notas"])) {
                     $ver_notas = $datos["ver_notas"];
                 }
-                
+
                 $buzonEntrada = [
                     'archivo_idarchivo' => $idarchivo,
                     'nombre' => $datos["nombre"],
@@ -438,9 +438,9 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     'origen' => $user
                 ];
 
-                if($adicionales){
+                if ($adicionales) {
                     $buzonEntrada = array_merge($buzonEntrada, $adicionales);
-                }               
+                }
 
                 $idInsertadoEntrada1 = BuzonEntrada::newRecord($buzonEntrada);
 
@@ -466,7 +466,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 'ver_notas' => $ver_notas
             ];
 
-            if($adicionales){
+            if ($adicionales) {
                 $buzonEntrada = array_merge($buzonEntrada, $adicionales);
             }
 
@@ -553,7 +553,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                     "activo" => 0,
                 ]);
                 $BuzonEntrada->save();
- 
+
                 DocumentoRastro::newRecord([
                     'fk_documento' => $iddoc,
                     'accion' => DocumentoRastro::ACCION_CONFIRMACION,
@@ -1276,10 +1276,9 @@ function guardar_documento($iddoc, $tipo = 0)
         if ($columns) {
             $where .= " AND nombre IN('" . implode("','", $columns) . "')";
         }
-        //$lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
-        $sql = ("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud" . "campos_formato" . $where . "" . $conn);
-
-        for ($j = 0; $j < $lcampos["numcampos"]; $j++) { // si el valor es un array
+        $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
+        for ($j = 0; $j < $lcampos["numcampos"]; $j++) {
+            // si el valor es un array
             if (is_array($_REQUEST[$lcampos[$j]["nombre"]]) && $lcampos[$j]["etiqueta_html"] != "archivo") {
                 array_push($valores, "'" . implode(',', @$_REQUEST[$lcampos[$j]["nombre"]]) . "'");
                 array_push($campos, $lcampos[$j]["nombre"]);
@@ -1388,9 +1387,12 @@ function guardar_documento($iddoc, $tipo = 0)
             }
         }
 
+
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
+
+
         $Connection = Connection::getInstance(true);
         $Connection->query($sql);
         $insertado = $Connection->lastInsertId();
