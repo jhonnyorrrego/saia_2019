@@ -1034,20 +1034,36 @@ function enviar_mensaje($correo = "", $tipo_usuario = [], $usuarios = [], $asunt
     }
 }
 
-/*
-<Clase>
-<Nombre>contador
-<Parametros>$cad: tipo de contador
-<Responsabilidades>Buscar el contador correpondiente y hacer la debida actualizacion
-<Notas>
-<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Cuando el contador que llega como parámetro no existe
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * ejecuta el procedimiento para asignar el numero
+ *
+ * @param string $counter nombre del contador
+ * @param integer $documentId 
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-09-09
  */
-function contador($iddocumento, $cad)
+function contador($counter, $documentId)
 {
-    throw new Exception("Pendiente por actualizar", 1);
+    $userCode = SessionController::getValue('usuario_actual');
+    $Contador = Contador::findByAttributes([
+        'nombre' => $counter
+    ]);
+
+    switch (MOTOR) {
+        case 'MySql':
+        case 'Oracle':
+            $sql = "CALL sp_asignar_radicado({$documentId}, {$Contador->getPK()}, {$userCode})";
+            break;
+        case 'SqlServer':
+            $sql = "EXEC sp_asignar_radicado @iddoc={$documentId}, @tipo={{$Contador->getPK()}}, @funcionario={$userCode}";
+            break;
+        default:
+            throw new Exception("Motor indefinido", 1);
+            break;
+    }
+
+    Connection::getInstance()->query($sql);
 }
 
 /*
@@ -1072,72 +1088,6 @@ function muestra_contador($cad)
         error("NO EXISTE UN CONSECUTIVO LLAMADO " . $cad);
         return 0;
     }
-}
-
-/*
-<Clase>
-<Nombre>genera_ruta
-<Parametros>$destino: identificador del funcionario que recibe el documento
-            $tipo: tipo documental del documento asociado
-            $doc: identificador del documento
-<Responsabilidades>insertar en la ruta y en el buzon_salida los registros de la ruta correspondiente
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function genera_ruta($destino, $tipo, $doc)
-{
-    global $conn;
-    $valores = array();
-    $idruta = 0;
-    for ($i = 0; $i < count($destino) - 1; $i++) {
-        if (isset($destino[$i + 1])) {
-            $sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $destino[$i]['codigo'] . ",'ACTIVO'," . $destino[$i + 1]['codigo'] . "," . $tipo . ",'" . $destino[$i]["condicion"] . "'," . $doc . "," . $destino[$i]['tipo'] . "," . $destino[$i + 1]['tipo'] . "," . $destino[$i]['obligatorio'] . ")";
-
-            phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta entre los funcionarios " . $destino[$i]['codigo'] . " y " . $destino[$i + 1]['codigo']);
-            $idruta = phpmkr_insert_id();
-            if ($idruta) {
-                $valores["archivo_idarchivo"] = $doc;
-                $valores["nombre"] = "'POR_APROBAR'";
-                $valores["destino"] = "'" . codigo_rol($destino[$i]["codigo"], $destino[$i]["tipo"]) . "'";
-                $valores["tipo_destino"] = "'" . $destino[$i]["tipo"] . "'";
-                $valores["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-                $valores["origen"] = "'" . codigo_rol($destino[$i + 1]["codigo"], $destino[$i + 1]["tipo"]) . "'";
-                $valores["tipo_origen"] = "'" . $destino[$i + 1]["tipo"] . "'";
-                $valores["tipo"] = "'DOCUMENTO'";
-                $valores["activo"] = 1;
-                $valores["ruta_idruta"] = $idruta;
-                $campos = implode(",", array_keys($valores));
-                $values = implode(",", array_values($valores));
-                $sql = "INSERT INTO buzon_entrada($campos) VALUES($values)";
-                phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta entre los funcionarios " . $destino[$i]['codigo'] . " y " . $destino[$i + 1]['codigo']);
-            }
-        }
-    }
-    return true;
-}
-/*
-<Clase>
-<Nombre>codigo_rol</Nombre>
-<Parametros>$id:identificador de funcionario;$tipo:entidad</Parametros>
-<Responsabilidades>busca el codigo del funcionario<Responsabilidades>
-<Notas>Esta funcion se creo por la actualizacion de roles en SAIA</Notas>
-<Excepciones></Excpciones>
-<Salida>codigo del funcionario</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
- */
-function codigo_rol($id, $tipo)
-{
-    global $conn;
-    if ($tipo == 5)
-        $cod = busca_filtro_tabla("funcionario_codigo as cod", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$id", "", $conn);
-    else
-        return $id;
-    return $cod[0]["cod"];
 }
 
 /*
