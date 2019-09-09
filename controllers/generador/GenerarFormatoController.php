@@ -1042,7 +1042,7 @@ CODE;
                         $includes .= $this->incluir("'../" . $funciones[$i]["ruta"] . "'", "librerias");
                     } else { // si no existe en ninguna de las dos
                         // trato de crearlo dentro de la carpeta del formato actual
-                        if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                        if (crear_archivo($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                             $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                         } else {
                             throw new Exception("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"], 1);
@@ -1057,7 +1057,7 @@ CODE;
                     $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                 } else { // si no existe en ninguna de las dos
                     // trato de crearlo dentro de la carpeta del formato actual
-                    $ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
+                    $ruta_libreria = $ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
                     $ruta_real = realpath($ruta_libreria);
                     if ($ruta_real === false) {
                         $ruta_real = normalizePath($ruta_libreria);
