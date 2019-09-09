@@ -90,22 +90,21 @@ function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $li
 
     if (($idserie || $iddocumento) && isset($idtarea)) {
         Model::getQueryBuilder()
-        ->insert("asignacion")
-        ->values([
-            "documento_iddocumento" => "?",
-            "tarea_idtarea" => "?",
-            "fecha_inicial" => "?",
-            "estado" => "?",
-            "entidad_identidad" => "1",
-            "llave_entidad" => "?"
+            ->insert("asignacion")
+            ->values([
+                "documento_iddocumento" => "?",
+                "tarea_idtarea" => "?",
+                "fecha_inicial" => "?",
+                "estado" => "?",
+                "entidad_identidad" => "1",
+                "llave_entidad" => "?"
 
-        ])
-        ->setParameter(1, $iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
-        ->setParameter(2, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)
-        ->setParameter(3, DateTime::createFromFormat("Y-m-d H:i:s", date($fecha_inicial)), \Doctrine\DBAL\Types\Type::DATETIME)
-        ->setParameter(4, $estado)
-        ->setParameter(5, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)->execute();
-
+            ])
+            ->setParameter(1, $iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(2, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(3, DateTime::createFromFormat("Y-m-d H:i:s", date($fecha_inicial)), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(4, $estado)
+            ->setParameter(5, $idtarea, \Doctrine\DBAL\Types\Type::INTEGER)->execute();
     } else {
         alerta("Diligencie correctamente los datos e intente nuevamente");
         return false;
@@ -612,7 +611,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                 if ($tipo_radicado[0]["numero"] == 0) {
                     $numero = 1;
                     //$numero = contador($iddoc, $tipo_radicado[0]["nombre"]);
-                    $Documento->setAttributes([  
+                    $Documento->setAttributes([
                         "estado" => 'APROBADO',
                         "fecha" => date('Y-m-d H:i:s'),
                         "dias" =>  $Serie->dias_respuesta
@@ -1285,9 +1284,8 @@ function guardar_documento($iddoc, $tipo = 0)
             $where .= " AND nombre IN('" . implode("','", $columns) . "')";
         }
         $lcampos = busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud", "campos_formato", $where, "", $conn);
-        $sql = ("idcampos_formato,tipo_dato,nombre,etiqueta_html,valor,longitud" . "campos_formato" . $where . "" . $conn);
-
-        for ($j = 0; $j < $lcampos["numcampos"]; $j++) { // si el valor es un array
+        for ($j = 0; $j < $lcampos["numcampos"]; $j++) {
+            // si el valor es un array
             if (is_array($_REQUEST[$lcampos[$j]["nombre"]]) && $lcampos[$j]["etiqueta_html"] != "archivo") {
                 array_push($valores, "'" . implode(',', @$_REQUEST[$lcampos[$j]["nombre"]]) . "'");
                 array_push($campos, $lcampos[$j]["nombre"]);
@@ -1399,10 +1397,11 @@ function guardar_documento($iddoc, $tipo = 0)
         llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 
         $sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
+
+
         $Connection = Connection::getInstance(true);
         $Connection->query($sql);
         $insertado = $Connection->lastInsertId();
-
 
         if ($insertado) {
             $sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . $_SESSION["usuario_actual"] . "','" . $iddoc . "','e,m,r')";

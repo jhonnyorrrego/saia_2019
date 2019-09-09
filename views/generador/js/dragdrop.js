@@ -492,7 +492,7 @@ $(document).ready(function() {
     //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
     $('#contenedorComponentes').on('click', 'li', function() {
         top.topModal({
-            url: `${params.baseUrl}pantallas/generador/editar_componente_generico.php`,
+            url: `${params.baseUrl}views/generador/editar_componente_generico.php`,
             params: {
                 idformato: $('#idformato').val(),
                 idpantalla_campos: $(this).attr('idpantalla_campo'),
@@ -515,6 +515,10 @@ $(document).ready(function() {
             }
         });
     });
+
+    function successEditarComponente() {
+        console.log('Edicion');
+    }
 
     //Eliminar componente
     $('#contenedorComponentes').on('click', '.agregado .eliminar', function(

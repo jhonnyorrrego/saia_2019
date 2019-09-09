@@ -70,7 +70,6 @@ function add_edit_ruta_dist($idformato, $iddoc)
     <?php
     }
 
-
     function crearItemDependencia($item)
     {
         global $conn;
@@ -206,8 +205,8 @@ function add_edit_ruta_dist($idformato, $iddoc)
 
     function crearItemFuncionario($item)
     {
-        //$mensajero = busca_filtro_tabla($cadena_concat . ' AS nombre', 'vfuncionario_dc', 'iddependencia_cargo=' . $item['mensajero_ruta'], '', $conn);
-        $mensajero = VfuncionarioDc::findAllByAttributes(['iddependencia_cargo' => $item['mensajero_ruta']], ['nombres', 'apellidos']);
+        $VfuncionarioDc = new VfuncionarioDc($item['mensajero_ruta']);
+
         $seleccionar = array(
             1 => "",
             2 => ""
@@ -215,9 +214,9 @@ function add_edit_ruta_dist($idformato, $iddoc)
 
         $seleccionar[$item['estado_mensajero']] = 'selected';
         $tabla = '<tr id="' . $item['idft_funcionarios_ruta'] . '">
-        <td style="width:20%;font-size:90%">' . $item['fecha_mensajero'] . '</td>
-        <td style="width:30%;font-size:90%;text-align:left;">' . $mensajero[0]['nombres'] . " " . $mensajero[0]['apellidos'] . '</td>';
-        $tabla .= '<td style="width:20%;font-size:90%;text-align:center;" > (En Desarrollo)</td>';
+            <td style="width:20%;font-size:90%">' . $item['fecha_mensajero'] . '</td>
+            <td style="width:30%;font-size:90%;text-align:left;">' . $VfuncionarioDc->nombres . " " . $VfuncionarioDc->apellidos . '</td>';
+        $tabla .= '<td style="width:20%;font-size:90%;text-align:center;" > ' . $VfuncionarioDc->estado      . '</td>';
         $tabla .= '</tr>';
 
         return $tabla;
