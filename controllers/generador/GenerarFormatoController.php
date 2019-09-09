@@ -197,14 +197,10 @@ class GenerarFormatoController
             chmod($this->directory, PERMISOS_CARPETAS);
         }
 
-        if (!(int) $this->Formato->pertenece_nucleo) {
-            $content = '*';
-        } else {
-            $content = "{$this->Formato->ruta_adicionar}
+        $content = "{$this->Formato->ruta_adicionar}
                 {$this->Formato->ruta_editar}
                 {$this->Formato->ruta_buscar}
                 {$this->Formato->ruta_mostrar}";
-        }
 
         $ignoreFile = "{$this->directory}/.gitignore";
         file_put_contents($ignoreFile, $content);
