@@ -141,7 +141,7 @@ function check_banderas($bandera, $chequear = true)
     <?= validate() ?>
     <?= ckeditor() ?>
     <?= select2() ?>
-    <link href="<?= $ruta_db_superior ?>views/generador/css/index.css" rel="stylesheet">
+    <link href="<?= $ruta_db_superior ?>views/generador/css/index.css" rel="stylesheet" />
     <link href="<?= $ruta_db_superior ?>views/generador/css/lists.css" rel="stylesheet" />
     <style type="text/css">
         .arbol_saia>.containerTableStyle {
@@ -506,7 +506,7 @@ function check_banderas($bandera, $chequear = true)
                                                         $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $pantalla[$i]['idcampos_formato'] . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
                                                         if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
                                                             $pantalla_componente = busca_filtro_tabla("clase,nombre", "pantalla_componente", "idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}", "", $conn);
-                                                            $texto .= "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> " . $pantalla_campos[0]["etiqueta"] . " <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
+                                                            $texto .= "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> <div id='c_{$pantalla_campos[0]["idpantalla_campos"]}' class='d-inline' >" . $pantalla_campos[0]["etiqueta"] . "</div> <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
                                                         }
                                                         $count++;
                                                     }
@@ -514,7 +514,6 @@ function check_banderas($bandera, $chequear = true)
                                                     $texto = str_replace("? >", "?" . ">", $texto);
                                                     $texto = str_replace("< ?php ", "<" . "?php", $texto);
                                                 }
-
                                                 echo $texto;
                                                 ?>
                                             </ul>
@@ -525,7 +524,7 @@ function check_banderas($bandera, $chequear = true)
                                                 $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1', '', $conn);
 
                                                 for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
-                                                    $etiqueta = htmlentities(html_entity_decode(utf8_encode($listadoComponentes[$i]["etiqueta"])));
+                                                    $etiqueta = $listadoComponentes[$i]["etiqueta"];
                                                     echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}' idformato='{$formatId}' ><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i>{$etiqueta}</li>";
                                                 }
                                                 ?>
@@ -606,7 +605,6 @@ function check_banderas($bandera, $chequear = true)
         </div>
     </div>
     <script src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/generador_pantalla.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/coordinates.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>

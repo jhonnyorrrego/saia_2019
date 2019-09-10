@@ -1,5 +1,6 @@
 $(document).ready(function() {
     let params = $('#script_generador_pantalla').data('params');
+    var idpantalla_campo = 0;
 
     (function initDrag() {
         var posicionInicial;
@@ -491,6 +492,7 @@ $(document).ready(function() {
 
     //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
     $('#contenedorComponentes').on('click', 'li', function() {
+        idpantalla_campo = $(this).attr('idpantalla_campo');
         top.topModal({
             url: `${params.baseUrl}views/generador/editar_componente_generico.php`,
             params: {
@@ -512,14 +514,10 @@ $(document).ready(function() {
             },
             onSuccess: function(data) {
                 top.closeTopModal();
+                $('#c_' + idpantalla_campo).html(data.fs_etiqueta);
             }
         });
     });
-
-    function successEditarComponente() {
-        console.log('Edicion');
-    }
-
     //Eliminar componente
     $('#contenedorComponentes').on('click', '.agregado .eliminar', function(
         event

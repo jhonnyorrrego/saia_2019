@@ -19,7 +19,6 @@
   "author": "cerok",
   "license": "ISC",
   "dependencies": {
-    "alpaca": "^1.5.27",
     "bootstrap": "^4.3.1",
     "handlebars": "^4.1.2",
     "izitoast": "^1.4.0",
