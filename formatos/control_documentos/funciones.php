@@ -497,7 +497,7 @@ function generar_documentos_version($idformato, $iddoc){
 
 function aprobar_control_documentos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "class_transferencia.php");
+	include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
 	$control_documento = busca_filtro_tabla("a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.version,a.secretaria,a.iddocumento_calidad,a.idformato_calidad,idft_control_documentos", "ft_control_documentos a, documento b ", "a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=" . $iddoc, "", $conn);

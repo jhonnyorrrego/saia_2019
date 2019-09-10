@@ -16,7 +16,7 @@ while ($max_salida > 0) {
 }
 
 require_once $ruta_db_superior . 'vendor/autoload.php';
-require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 
@@ -51,14 +51,14 @@ if (isset($_SESSION['idfuncionario']) && $_REQUEST) {
         'extention' => $extention
     );
 
-    if($Funcionario->updateImage($image, 'foto_recorte')){
+    if ($Funcionario->updateImage($image, 'foto_recorte')) {
         $Response->data = array(
             'foto_original' => $Funcionario->getImage('foto_original', true),
             'foto_recorte' => $Funcionario->getImage('foto_recorte', true)
         );
         $Response->success = 1;
         $Response->message = "Imagen Recortada";
-    }else{
+    } else {
         $Response->success = 0;
         $Response->message = "Error";
     }

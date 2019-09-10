@@ -1,6 +1,6 @@
 <?php
-require_once 'filesystem/SaiaLocalAdapter.php';
-require_once 'filesystem/SaiaStorage.php';
+require_once 'SaiaLocalAdapter.php';
+require_once 'SaiaStorage.php';
 
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 use Gaufrette\Filesystem;
@@ -122,7 +122,7 @@ class StorageUtils
 					}
 				} else {
 					$wtf = "data:$type;base64,";
-				} 
+				}
 				$contenido_binario = base64_encode($contenido_binario);
 				$contenido_binario = $wtf . $contenido_binario;
 				break;
@@ -220,7 +220,7 @@ class StorageUtils
 			 }*/
 			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
 			$resp["servidor"] = $rutaj->servidor;
-			$resp["ruta"] = (string)$rutaj->ruta;
+			$resp["ruta"] = (string) $rutaj->ruta;
 			$resp["error"] = false;
 			//print_r($resp);die("<==== Resuelta");
 		} else {
@@ -259,7 +259,7 @@ class StorageUtils
 				$mejor_opcion = $posibles[$index];
 				$ruta_resuelta = static::parsear_ruta_servidor($mejor_opcion);
 
-				$ruta_compuesta = (string)$str_path->removeLeft($mejor_opcion);
+				$ruta_compuesta = (string) $str_path->removeLeft($mejor_opcion);
 				if (!empty($ruta_resuelta["ruta"])) {
 					$ruta_compuesta = Stringy::create($ruta_resuelta["ruta"]);
 				}
@@ -317,8 +317,8 @@ class StorageUtils
 			}
 		}
 		$resp = array(
-			"servidor" => (string)$ruta_srv,
-			"ruta" => (string)$resto
+			"servidor" => (string) $ruta_srv,
+			"ruta" => (string) $resto
 		);
 		return $resp;
 	}

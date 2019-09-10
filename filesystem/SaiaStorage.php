@@ -1,7 +1,7 @@
 <?php
-require_once (__DIR__ . "/../define.php");
-require_once (__DIR__ . "/../StorageUtils.php");
-require (__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . "/../define.php");
+require_once(__DIR__ . "/StorageUtils.php");
+require(__DIR__ . '/../vendor/autoload.php');
 require_once 'SaiaLocalAdapter.php';
 
 use Gaufrette\Filesystem;
@@ -14,7 +14,8 @@ use Stringy\Stringy;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 
-class SaiaStorage {
+class SaiaStorage
+{
 
     private $tipo;
 
@@ -26,7 +27,8 @@ class SaiaStorage {
 
     private $opciones_ftp;
 
-    public function __construct($tipo = null) {
+    public function __construct($tipo = null)
+    {
         $this->tipo = $tipo;
         if ($tipo) {
             $this->__init();
@@ -39,7 +41,8 @@ class SaiaStorage {
      * @param unknown $tipo
      * @return string
      */
-    public function __init() {
+    public function __init()
+    {
         $path = "";
         switch ($this->tipo) {
             case 'archivos':
@@ -88,7 +91,8 @@ class SaiaStorage {
         $this->resolver_adaptador($server_path);
     }
 
-    public function resolver_adaptador($server_path) {
+    public function resolver_adaptador($server_path)
+    {
         $str_path = Stringy::create($server_path);
         $storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
 
@@ -131,7 +135,7 @@ class SaiaStorage {
                 );
                 if (count($rutas)) {
                     $balde = $rutas[0]->__toString();
-                    if (count($rutas ) > 1) {
+                    if (count($rutas) > 1) {
                         $rutas = explode('/', $path->__toString());
                         unset($rutas[0]);
                         $opciones['directory'] = implode("/", $rutas);
@@ -177,7 +181,8 @@ class SaiaStorage {
      * @param unknown $server_path
      * @return SaiaStorage
      */
-    public static function con_ruta_servidor($server_path) {
+    public static function con_ruta_servidor($server_path)
+    {
         // debug_print_backtrace();
         $instance = new self();
         $instance->resolver_adaptador($server_path);
@@ -192,7 +197,8 @@ class SaiaStorage {
      * @param string $md5
      * @return string|number
      */
-    public function almacenar_recurso($ruta_recurso, $temp, $md5 = false) {
+    public function almacenar_recurso($ruta_recurso, $temp, $md5 = false)
+    {
         // print_r($filesystem);die();
         $adapter = new Local(dirname($temp));
         $content = $adapter->read(basename($temp));
@@ -212,7 +218,8 @@ class SaiaStorage {
      * @param unknown $contenido
      * @return integer Numero de bytes que fueron escriton en el archvio $ruta_recurso
      */
-    public function almacenar_contenido($ruta_recurso, $contenido) {
+    public function almacenar_contenido($ruta_recurso, $contenido)
+    {
         // print_r($filesystem);die();
         return $this->filesystem->write($ruta_recurso, $contenido, true);
     }
@@ -225,7 +232,8 @@ class SaiaStorage {
      *            ruta relativa al recurso dentro del almacenamiento
      * @return number. Cantidad de bytes escritos
      */
-    public function copiar_contenido_externo($ruta_origen, $ruta_recurso) {
+    public function copiar_contenido_externo($ruta_origen, $ruta_recurso)
+    {
         $contenido = file_get_contents($ruta_origen);
         $num_bytes = $this->filesystem->write($ruta_recurso, $contenido, true);
         return $num_bytes;
@@ -238,7 +246,8 @@ class SaiaStorage {
      * @param unknown $ruta_origen
      * @param unknown $ruta_destino
      */
-    public function copiar_contenido($alm_destino, $ruta_origen, $ruta_destino) {
+    public function copiar_contenido($alm_destino, $ruta_origen, $ruta_destino)
+    {
         if ($this->filesystem->has($ruta_origen)) {
             $content = $this->filesystem->read($ruta_origen);
             $numbytes = $alm_destino->filesystem->write($ruta_destino, $content, true);
@@ -248,21 +257,24 @@ class SaiaStorage {
         }
     }
 
-    private function completar_ruta($filesystem1, $ruta_origen) {
+    private function completar_ruta($filesystem1, $ruta_origen)
+    {
         $ruta1 = Stringy::create($filesystem1->getAdapter()->getDirectory())->ensureRight(StorageUtils::SEPARADOR);
         $ruta2 = Stringy::create(dirname($ruta_origen))->removeLeft(StorageUtils::SEPARADOR);
         $adapter = new Local($ruta1->append($ruta2));
         return $adapter;
     }
 
-    public function eliminar($ruta_origen) {
+    public function eliminar($ruta_origen)
+    {
         if ($this->filesystem->has($ruta_origen)) {
             return $content = $this->filesystem->delete($ruta_origen);
         }
         return false;
     }
 
-    public function renombrar($sourceKey, $targetKey) {
+    public function renombrar($sourceKey, $targetKey)
+    {
         if ($this->filesystem->has($sourceKey)) {
             $this->filesystem->rename($sourceKey, $targetKey);
         }
@@ -274,7 +286,8 @@ class SaiaStorage {
      * @param string $sourceKey
      * @return boolean
      */
-    public function existe_archivo($sourceKey) {
+    public function existe_archivo($sourceKey)
+    {
         return $this->filesystem->has($sourceKey);
     }
 
@@ -283,7 +296,8 @@ class SaiaStorage {
      *
      * @return \Gaufrette\Filesystem
      */
-    public function get_filesystem() {
+    public function get_filesystem()
+    {
         return $this->filesystem;
     }
 
@@ -292,7 +306,8 @@ class SaiaStorage {
      *
      * @return string
      */
-    public function get_ruta() {
+    public function get_ruta()
+    {
         return $this->adapter->getDirectory();
     }
 
@@ -301,12 +316,14 @@ class SaiaStorage {
      *
      * @return string
      */
-    public function get_ruta_servidor() {
+    public function get_ruta_servidor()
+    {
         $cad = Stringy::create($this->ruta_servidor)->ensureRight(StorageUtils::SEPARADOR);
         return (string) $cad;
     }
 
-    private function obtener_google_adapter() {
+    private function obtener_google_adapter()
+    {
         $client = new \Google_Client();
         $client->setClientId('xxxxxxxxxxxxxxx.apps.googleusercontent.com');
         $client->setApplicationName('Gaufrette');
@@ -326,7 +343,8 @@ class SaiaStorage {
         return $adapter;
     }
 
-    public function set_opciones_ftp($opciones_ftp) {
+    public function set_opciones_ftp($opciones_ftp)
+    {
         $this->opciones_ftp = $opciones_ftp;
     }
 }

@@ -11,7 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class.funcionarios.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-//include_once($ruta_db_superior."class_transferencia.php");
+//include_once($ruta_db_superior."app/documento/class_transferencia.php");
 $pasos_anteriores=array();
 $nivel=0;
 /*
@@ -386,7 +386,7 @@ function verificar_terminacion_paso($idpaso,$iddocumento){
  * $iddocumento=Iddocumento
  * $idflujo=iddiagram
  * 
- * Funcion llamada de class_transferencia.php y db.php, Se encarga de iniciar un flujo del documento.
+ * Funcion llamada de app/documento/class_transferencia.php y db.php, Se encarga de iniciar un flujo del documento.
  */
 function iniciar_flujo($iddocumento,$idflujo){
 global $conn;
@@ -1112,7 +1112,7 @@ function cancelar_paso($idpaso_documento,$idpaso){
 /*
  * $iddoc=iddocumento
  * 
- * Funcion llamda desde class_transferencia.php, primero se valida que si el documento pertenece a un flujo, entonces se llama a esta funcion. Muestra formulario para realizar devolucion de actividades. (Todo lo que tiene que ver con devolucion aun no funciona como deberia funcionar.)
+ * Funcion llamda desde app/documento/class_transferencia.php, primero se valida que si el documento pertenece a un flujo, entonces se llama a esta funcion. Muestra formulario para realizar devolucion de actividades. (Todo lo que tiene que ver con devolucion aun no funciona como deberia funcionar.)
  */
 function formulario_devolver($iddoc){
   global $conn,$ruta_db_superior;

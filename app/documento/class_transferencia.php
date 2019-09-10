@@ -606,24 +606,14 @@ function aprobar($iddoc = 0, $opcion = 0)
             if ($aprobar_posterior == 1) {
                 $Documento = new Documento($iddoc);
                 $Serie = new Serie($tipo_radicado[0]["serie"]);
-                $Serie->dias_respuesta;
 
-                if ($tipo_radicado[0]["numero"] == 0) {
-                    $numero = 1;
-                    //$numero = contador($iddoc, $tipo_radicado[0]["nombre"]);
-                    $Documento->setAttributes([
-                        "estado" => 'APROBADO',
-                        "fecha" => date('Y-m-d H:i:s'),
-                        "dias" =>  $Serie->dias_respuesta
-                    ]);
-                } else {
-                    $Documento->setAttributes([
-                        "estado" => 'APROBADO',
-                        "activa_admin" => 0,
-                        "fecha" => date('Y-m-d H:i:s'),
-                        "dias" =>  $Serie->dias_respuesta
-                    ]);
-                }
+                contador($tipo_radicado[0]["nombre"], $Documento->getPK());
+                $Documento->setAttributes([
+                    "estado" => 'APROBADO',
+                    "fecha" => date('Y-m-d H:i:s'),
+                    "dias" =>  $Serie->dias_respuesta
+                ]);
+                $Documento->save();
 
                 RutaDocumento::executeUpdate([
                     'finalizado' => 1

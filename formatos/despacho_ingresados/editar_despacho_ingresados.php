@@ -60,7 +60,7 @@
                       <!-- START card -->
                       <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">PLANILLA DE DISTRIBUCI&OACUTE;N</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],353,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="tipo_mensajero" value="<?php echo(mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_anexo">
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="tipo_mensajero" value="<?php echo(mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_anexo">
                                         <label title="">ANEXO</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>

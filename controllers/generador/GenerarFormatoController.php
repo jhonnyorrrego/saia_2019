@@ -500,7 +500,7 @@ CODE;
             $action = '<?= $ruta_db_superior ?>' . FORMATOS_SAIA . 'librerias/funciones_item.php';
             $estiloItem = '';
         } else {
-            $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
+            $action = '<?= $ruta_db_superior ?>app/documento/class_transferencia.php"';
             $estiloItem = '-8';
         }
         $texto .= '<div class="container-fluid container-fixed-lg col-lg' . $estiloItem . '" style="overflow: auto;" id="content_container">
@@ -1505,7 +1505,7 @@ CODE;
             $obliga = "";
         }
         $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label for="' . $campo["nombre"] . '">' . $this->codifica($campo["etiqueta"]) . '</label>';
+        $texto[] = '<label for="' . $campo["nombre"] . '">' . strtoupper($campo["etiqueta"]) . '</label>';
         $texto[] = $labelRequired;
         $texto[] = '<div class="input-group date">';
         $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';

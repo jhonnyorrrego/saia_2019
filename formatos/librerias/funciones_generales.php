@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_cliente.php";
-include_once $ruta_db_superior . "class_transferencia.php";
+include_once $ruta_db_superior . "app/documento/class_transferencia.php";
 
 function retornar_seleccionados($valor)
 {
@@ -39,7 +39,7 @@ function buscar_funcionarios2($dependencia, $arreglo = null)
 {
     global $conn, $ruta_db_superior;
 
-    include_once($ruta_db_superior . "class_transferencia.php");
+    include_once($ruta_db_superior . "app/documento/class_transferencia.php");
     $dependencias = dependencias($dependencia);
     array_push($dependencias, $dependencia);
 
