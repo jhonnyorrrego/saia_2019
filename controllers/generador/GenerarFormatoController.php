@@ -197,10 +197,11 @@ class GenerarFormatoController
             chmod($this->directory, PERMISOS_CARPETAS);
         }
 
-        $content = "{$this->Formato->ruta_adicionar}
-                {$this->Formato->ruta_editar}
-                {$this->Formato->ruta_buscar}
-                {$this->Formato->ruta_mostrar}";
+        $content = <<<CODE
+{$this->Formato->ruta_adicionar}
+{$this->Formato->ruta_editar}
+{$this->Formato->ruta_mostrar}
+CODE;
 
         $ignoreFile = "{$this->directory}/.gitignore";
         file_put_contents($ignoreFile, $content);
@@ -1021,7 +1022,7 @@ CODE;
         }
 
         $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
-        
+
         for ($i = 0; $i < $funciones["numcampos"]; $i++) {
             $form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
             if ($form_origen["numcampos"]) {
@@ -1032,7 +1033,7 @@ CODE;
                 $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
                 if ($dato_formato_orig["numcampos"]) {
                     // si el archivo existe dentro de la carpeta del archivo inicial
-                    
+
                     if (is_file($ruta_db_superior . 'formatos/' . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                         $includes .= $this->incluir("'../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . "'", "librerias");
                     } elseif (is_file($ruta_db_superior . $funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
