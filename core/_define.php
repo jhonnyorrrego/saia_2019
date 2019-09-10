@@ -49,20 +49,13 @@ define("RUTA_PDFS", TIPO_ALM . "almacenamiento/");
 define("RUTA_IMAGENES", TIPO_ALM . "almacenamiento/");
 define("RUTA_QR", TIPO_ALM . "almacenamiento/");
 define("RUTA_VERSIONES", TIPO_ALM . "almacenamiento/VERSIONES/");
-define("RUTA_HISTORIAL_IMPRESION", TIPO_ALM . "almacenamiento/HISTORIAL_IMPRESION/");
 
 define("RUTA_BACKUP", TIPO_ALM . "almacenamiento/backup/");
 define("RUTA_BACKUP_ELIMINADOS", RUTA_BACKUP . "eliminados/");
-define("RUTA_BACKUP_EVENTO", RUTA_BACKUP . "evento/");
-define("RUTA_BACKUP_SESION", RUTA_BACKUP . "sesiones/");
 
 define("RUTA_CONFIGURACION", TIPO_ALM . "almacenamiento/configuracion/");
-define("RUTA_PLANOS", RUTA_CONFIGURACION . "planos/");
-define("RUTA_EVENTO_FORMATO", RUTA_CONFIGURACION . "evento_formato/");
 define("RUTA_ARCHIVOS_BPMN", RUTA_CONFIGURACION . "archivos_bpmn/");
 define("RUTA_ANEXOS_TAREAS", RUTA_ARCHIVOS . "tareas/");
-define("RUTA_MANUAL", RUTA_CONFIGURACION . "manual/");
-define("RUTA_PLANTILLA_WORD", RUTA_CONFIGURACION . "plantilla_word/");
 define("RUTA_NOTICIA_IMAGENES", RUTA_CONFIGURACION . "noticia_imagenes/");
 //Imagenes cargadas en las noticias que se visualizan en el login
 define("RUTA_LOGO_SAIA", RUTA_CONFIGURACION . "logo_saia/");
