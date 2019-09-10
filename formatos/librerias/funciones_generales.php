@@ -3100,7 +3100,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                 global $conn, $ruta_db_superior;
                                 $retorno = array("exito" => 0, "msn" => "");
                                 include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-                                $formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+                                $formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
                                 $tipo_almacenamiento = new SaiaStorage("archivos");
                                 $funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
                                 $cant = 0;

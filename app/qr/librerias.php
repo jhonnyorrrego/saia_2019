@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . 'core/autoload.php';
 
 function mostrar_codigo_qr_encabezado($idformato, $iddoc)
 {
@@ -80,7 +80,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 		$cadena = "id=" . $iddoc;
 		$codificada = CriptoController::encrypt_blowfish($cadena);
 		$datos_qr = RUTA_INFO_QR . "info_qr.php?key_cripto=" . $codificada;
-		$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+		$formato_ruta = DocumentoController::getDocumentRoute($iddoc);
 		$almacenamiento = new SaiaStorage(RUTA_QR);
 
 		$ruta = $formato_ruta . '/qr/';

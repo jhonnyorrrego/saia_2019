@@ -565,7 +565,7 @@ function aprobar_control_documentos($idformato, $iddoc) {
 											$update_documento_creado = "UPDATE ft_item_control_versio SET iddocumento_calidad_i=" . $iddocumento . " WHERE documento_iddocumento=" . $item[$i]["documento_iddocumento"];
 											phpmkr_query($update_documento_creado);
 
-											$formato_ruta = aplicar_plantilla_ruta_documento($iddocumento);
+											$formato_ruta = DocumentoController::getDocumentRoute($iddocumento);
 											$ruta_anexos = $formato_ruta . "/anexos/";
 											$anexos = busca_filtro_tabla("ruta,tipo,etiqueta,idanexos", "anexos", "documento_iddocumento=" . $item[$i]["documento_iddocumento"], "", $conn);
 											if ($anexos["numcampos"]) {

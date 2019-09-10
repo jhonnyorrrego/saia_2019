@@ -179,8 +179,7 @@ if (@$_REQUEST["doc"] || @$_REQUEST["key"]) {
     }
 }
 $plantilla = busca_filtro_tabla("", "documento a, formato b", "lower(plantilla)=b.nombre AND iddocumento=" . $doc, "", $conn);
-$datos = busca_filtro_tabla("dependencia,numero,tipo_radicado,fecha as fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado", "documento A, " . $plantilla[0]["nombre_tabla"] . " B", "A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento", "", $conn);
-$datos[0]["fecha_oracle"] = DateController::convertDate($datos[0]["fecha_oracle"], 'Y-m-d H:i:s', 'Y-m-d H:i');
+$datos = busca_filtro_tabla("dependencia,numero,tipo_radicado,A.fecha as fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado", "documento A, " . $plantilla[0]["nombre_tabla"] . " B", "A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento", "", $conn);
 $dependencia_creador = busca_filtro_tabla("b.codigo,a.nombres,a.apellidos", "vfuncionario_dc a, dependencia b", "b.iddependencia=a.iddependencia AND a.iddependencia_cargo=" . $datos[0]['dependencia'], "", $conn);
 
 $ejecutor["numcampos"] = '';
@@ -227,7 +226,7 @@ if ($doc <> FALSE) {
             if($destino_radicacion["numcampos"]){
                 $fun_destino = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $destino_radicacion[0]['funcionario_codigo'], "", $conn);
                 if ($fun_destino['numcampos']) {
-                    $usu = $nombre_fun_destino = ucwords(strtolower($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]));
+                    $usu = $nombre_fun_destino = ucwords($fun_destino[0]["nombres"] . " " . $fun_destino[0]["apellidos"]);
                 } else {
                     $usu = "RADICACION";
                 }
@@ -279,7 +278,7 @@ if ($doc <> FALSE) {
     $web_empresa = "";
     $nombre_empresa = "EMPRESA";
     $logo_empresa = "";
-    $datos_fecha = $datos[0]['fecha_oracle'];
+    $datos_fecha = DateController::convertDate($datos[0]['fecha_oracle'],"Y-m-d H:i:s","Y-m-d H:i");
     $info_fec = explode(" ", $datos_fecha);
     $fecha = date_parse($info_fec[0]);
     $datos_numero = $datos[0]['numero'];
@@ -321,9 +320,9 @@ if ($doc <> FALSE) {
         if ($_REQUEST['colilla_vertical'] == 1) {
             $tamano_qr = 30;
         }
-        if ($datos[0]["numero"]) {
+       // if ($datos[0]["numero"]) {
             $qr = mostrar_codigo_qr(0, $doc, 1, 40, 40);
-        }
+       // }
 
         $validar_impresion = busca_filtro_tabla("valor", "configuracion", "lower(nombre) LIKE'imprimir_colilla_automatico'", "", $conn);
         if ($validar_impresion[0]['valor'] == 1) {
@@ -427,7 +426,7 @@ if ($doc <> FALSE) {
                                     <b><?php
                                         if (@$_REQUEST['descripcion_general']) {
                                             $suspensivos = '';
-                                            $cadena = @$_REQUEST["descripcion_general"];
+                                            $cadena = $_REQUEST["descripcion_general"];
                                             if (strlen($cadena) > 30) {
                                                 $suspensivos = '...';
                                             }

@@ -8,7 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-require_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . 'core/autoload.php';
 require_once ($ruta_db_superior . "class.funcionarios.php");
 
 $extensiones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "", $conn);
@@ -812,7 +812,7 @@ function selecciona_ruta_anexos($formato, $iddoc, $almacenamiento, $ruta = "") {
 	global $ruta_db_superior;
 	$ruta_anexos = ruta_almacenamiento("archivos");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+	$formato_ruta = DocumentoController::getDocumentRoute($iddoc);
 	$dir = $ruta_anexos . $formato_ruta . "/anexos";
 
 	if ($almacenamiento == "archivo") {
@@ -832,7 +832,7 @@ function selecciona_ruta_anexos($formato, $iddoc, $almacenamiento, $ruta = "") {
 function selecciona_ruta_anexos2($iddoc, $almacenamiento, $ruta = "") {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+	$formato_ruta = DocumentoController::getDocumentRoute($iddoc);
 	$dir = $formato_ruta . "/anexos";
 
 	if ($almacenamiento == "archivos") {
