@@ -43,6 +43,12 @@ $params = json_encode([
     <div class="container-fluid h-100" style="overflow-y:auto">
         <div class="row">
             <div class="col-12">
+                <div id="toolbar">
+                    <button class="btn btn-secondary" title="Adicionar" style="display:none" id="btn_add">
+                        <i class="fa fa-plus"></i>
+                        <span class="d-none d-sm-inline">Adicionar</span>
+                    </button>
+                </div>
                 <table id="trd_table"></table>
             </div>
         </div>

@@ -988,4 +988,3 @@ function listar_anexos_ver_descargar($idformato, $iddoc, $idcampo = '', $tipo_mo
 		echo($tabla);
 	}
 }
-?>

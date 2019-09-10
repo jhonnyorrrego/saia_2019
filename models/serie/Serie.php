@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\DBAL\Types\Type;
+
 class Serie extends LogModel
 {
     protected $idserie;
@@ -125,101 +127,86 @@ class Serie extends LogModel
     }
 
     /**
-     * Metodo para crear una serie
-     * NOTA: No utilizar create o newRecord
-     * 
-     * @param string $dependenciasVinculadas : Dependencias a vinculadas a la serie
-     * @return int
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * obtiene la retencion y el procedimiento de la serie
+     * si esta la tiene
+     *     
+     * @return array
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
      */
-    public function createSerie(int $iddependencia = 0)
+    public function getDataRetencion()
     {
-        return $this->create();
+        $data = [];
+        switch ($this->tipo) {
+            case 1:
+                if (!$this->hasChild(2)) {
+                    $data['gestion'] = $this->retencion_gestion;
+                    $data['central'] = $this->retencion_central;
+                    $data['procedimiento'] = $this->procedimiento;
+                }
+                break;
+            case 2:
+                $data['gestion'] = $this->retencion_gestion;
+                $data['central'] = $this->retencion_central;
+                $data['procedimiento'] = $this->procedimiento;
+                break;
+        }
+        return $data;
     }
 
-
-
-
-
-
-
-
     /**
-     * Actualiza la serie y sus correspondientes vinculados (expedientes)
-     * NO utilizar update() para actualizar una serie
-     * 
+     * valida si tiene series hijas
+     *
+     * @param integer $tipo : utlizado en el where, tipo de la consulta
+     * @param integer $estado : utlizado en el where, estado de la consulta
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateSerie()
+    public function hasChild(int $tipo = null, int $estado = null): bool
     {
+        $QueryBuilder = $this->getQueryBuilder();
+        if (!is_null($estado)) {
+            $QueryBuilder->andWhere('estado=:estado')
+                ->setParameter(':estado', $estado, Type::INTEGER);
+        }
+        if (!is_null($tipo)) {
+            $QueryBuilder->andWhere('tipo=:tipo')
+                ->setParameter(':tipo', $tipo, Type::INTEGER);
+        }
+        $data = $QueryBuilder
+            ->select('count(idserie) as cant')
+            ->from('serie')
+            ->where("cod_arbol like :cod_arbol")
+            ->setParameter(':cod_arbol', '%' . $this->cod_arbol . '.%')
+            ->execute()->fetch();
 
-        // $response = [
-        //     'exito' => 0,
-        //     'message' => ''
-        // ];
-        // if ($this->categoria == 3) {
-        //     if ($this->update()) {
-        //         $response['exito'] = 1;
-        //         $response['message'] = 'Datos actualizados';
-        //     } else {
-        //         $response['message'] = 'Error al actualizar la serie';
-        //     }
-        // } else {
-        //     $updateArbol = false;
-        //     $instance = new self($this->idserie);
-        //     if ($instance->cod_padre != $this->cod_padre) {
-        //         $updateArbol = true;
-        //         $codArbolAnt = $instance->cod_arbol;
-        //         $codArbol = $this->idserie;
-        //         if ($this->cod_padre) {
-        //             $instancePadre = new self($this->cod_padre);
-        //             $codArbol = $instancePadre->cod_arbol . '.' . $this->idserie;
-        //         }
-        //         $this->cod_arbol = $codArbol;
-        //     }
-
-        //     if ($this->update()) {
-        //         $response['exito'] = 1;
-        //         $response['message'] = 'Datos actualizados';
-
-        //         if ($updateArbol) {
-        //             $update = "UPDATE serie SET cod_arbol=replace(cod_arbol,'{$codArbolAnt}','{$this->cod_arbol}') WHERE cod_arbol LIKE '{$codArbolAnt}.%'";
-        //             if (!$this->query($update)) {
-        //                 $response['message2'] = 'Error al actualizar el cod arbol';
-        //             }
-        //         }
-
-        //         $idsExpediente = $this->getExpedienteFk();
-        //         if ($idsExpediente) {
-        //             foreach ($idsExpediente as $Expediente) {
-        //                 $attributes = [
-        //                     'nombre' => $this->nombre,
-        //                     'fondo' => $this->nombre,
-        //                     'descripcion' => $this->nombre,
-        //                     'codigo' => $this->codigo,
-        //                     'codigo_numero' => $this->codigo
-        //                 ];
-        //                 $Expediente->SetAttributes($attributes);
-        //                 if (!$Expediente->update()) {
-        //                     $response['message2'] .= 'Error al actualizar el expediente';
-        //                 }
-        //             }
-        //         }
-
-        //         if (!$this->estado) {
-        //             $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
-        //             if ($EntidadSerie) {
-        //                 foreach ($EntidadSerie as $instance) {
-        //                     $instance->inactiveEntidadSerie();
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // return $response;
+        return $data['cant'] ? true : false;
     }
+
+
+    /**
+     * retorna la instancia de la serie padre
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getCodPadre()
+    {
+        if ($this->cod_padre) {
+            if (!$this->seriePadre) {
+                $this->seriePadre = new self($this->cod_padre);
+            }
+        } else {
+            $this->seriePadre = null;
+        }
+        return $this->seriePadre;
+    }
+
+
+
+
+
+
 
     /**
      * retornar la etiqueta del tipo de la serie
@@ -265,23 +252,6 @@ class Serie extends LogModel
             1 => 'ACTIVO'
         );
         return $estado[$this->estado];
-    }
-    /**
-     * retorna la instancia de la serie padre
-     *
-     * @return void
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getCodPadre()
-    {
-        if ($this->cod_padre) {
-            if (!$this->seriePadre) {
-                $this->seriePadre = new self($this->cod_padre);
-            }
-        } else {
-            $this->seriePadre = null;
-        }
-        return $this->seriePadre;
     }
 
     /**
@@ -334,26 +304,4 @@ class Serie extends LogModel
         }
         return $response;
 }*/
-
-    /**
-     * valida si tiene series hijas
-     *
-     * @param integer $estado : utlizado en el where, estado de la consulta
-     * @param integer $tipo : utlizado en el where, tipo de la consulta
-     * @return array
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    /* public function hasChild(int $estado = null, int $tipo = null): bool
-    {
-        $parteWhere = '';
-        if (!is_null($estado)) {
-            $parteWhere .= " and estado={$estado}";
-        }
-        if (!is_null($tipo)) {
-            $parteWhere .= " and tipo={$tipo}";
-        }
-        $sql = "SELECT count(idserie) as cant FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
-        $hijos = $this->search($sql);
-        return $hijos[0]['cant'] ? true : false;
-    }*/
 }
