@@ -48,16 +48,16 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <p><span>{*llenar_datos_funcion*}</span></p>
-          
-          <p>{*mostrar_informacion_general_radicacion*}</p>
-          
-          <div>{*mostrar_item_destino_radicacion*}</div>
-          
-          <p>{*mostrar_copia_electronica*}</p>
-          
-          <p>{*mostrar_estado_proceso*}</p>
-          
+                                <p>{*llenar_datos_funcion*}</p>
+
+<p>{*mostrar_informacion_general_radicacion*}</p>
+
+<div>{*mostrar_item_destino_radicacion*}</div>
+
+<p>{*mostrar_copia_electronica*}</p>
+
+<p>{*mostrar_estado_proceso*}</p>
+
                             </div>
                         </div>
                         <?php include_once $ruta_db_superior . "formatos/librerias/footer_nuevo.php" ?>
