@@ -7,10 +7,9 @@ try {
 	die("invalid access");
 }
 
+include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'app/qr/librerias.php';
-include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
-include_once $ruta_db_superior . 'pantallas/lib/librerias_archivo.php';
 
 class Imprime_Pdf
 {
@@ -303,7 +302,7 @@ class Imprime_Pdf
 
 		if (!$_REQUEST['url']) {
 			if ($this->documento[0]["iddocumento"]) {
-				$formato_ruta = aplicar_plantilla_ruta_documento($this->documento[0]["iddocumento"]);
+				$formato_ruta = DocumentoController::getDocumentRoute($this->documento[0]["iddocumento"]);
 			}
 		} else {
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;
@@ -435,8 +434,7 @@ class Imprime_Pdf
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
-		$idfunc_crypto = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
-		
+
 		if ($_REQUEST["url"]) {
 			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']); 
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
