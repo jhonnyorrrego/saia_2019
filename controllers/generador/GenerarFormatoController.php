@@ -1021,8 +1021,8 @@ CODE;
         }
 
         $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
+        
         for ($i = 0; $i < $funciones["numcampos"]; $i++) {
-            $ruta_orig = "";
             $form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
             if ($form_origen["numcampos"]) {
                 $formato_orig = $form_origen[0]["formato_idformato"];
@@ -1032,9 +1032,10 @@ CODE;
                 $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
                 if ($dato_formato_orig["numcampos"]) {
                     // si el archivo existe dentro de la carpeta del archivo inicial
-                    if (is_file('formatos/' . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                    
+                    if (is_file($ruta_db_superior . 'formatos/' . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                         $includes .= $this->incluir("'../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . "'", "librerias");
-                    } elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+                    } elseif (is_file($ruta_db_superior . $funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
                         $includes .= $this->incluir("'../" . $funciones[$i]["ruta"] . "'", "librerias");
                     } else { // si no existe en ninguna de las dos
                         // trato de crearlo dentro de la carpeta del formato actual
@@ -1046,9 +1047,9 @@ CODE;
                     }
                 }
             } else {
-                if (is_file('formatos/' . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                if (is_file($ruta_db_superior . 'formatos/' . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                     $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
-                } elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+                } elseif (is_file($ruta_db_superior . $funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
                     // Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
                     $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                 } else { // si no existe en ninguna de las dos
@@ -1353,7 +1354,7 @@ CODE;
                         </script>
                   </html>';
         if ($accion == "editar") {
-            $contenido .= '<?php include_once($ruta_db_superior . 'formatos/' . "librerias/footer_plantilla.php");?' . '>';
+            $contenido .= "<?php include_once(\$ruta_db_superior . 'formatos/librerias/footer_plantilla.php');?>";
         }
 
         if ($accion == 'adicionar') {
