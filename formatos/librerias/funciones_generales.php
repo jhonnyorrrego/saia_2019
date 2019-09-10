@@ -2217,7 +2217,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     if ($foto["numcampos"]) {
                         echo ("<a href='../../comentario_mostrar.php?key=" . $iddoc . "&pag=" . $foto[0]["consecutivo"] . "' border='0' target='centro'><img src='../../" . $foto[0]["imagen"] . "'></a>");
                     } else
-                        echo ("<a href='" . $ruta_db_superior . "paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . $ruta_db_superior . "imagenes/sin_foto.jpg'></a>");
+                        echo ("<a href='" . $ruta_db_superior . "views/documento/paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . $ruta_db_superior . "imagenes/sin_foto.jpg'></a>");
                 }
 
                 /*

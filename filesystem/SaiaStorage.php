@@ -1,7 +1,5 @@
 <?php
-require_once(__DIR__ . "/../define.php");
-require_once(__DIR__ . "/StorageUtils.php");
-require(__DIR__ . '/../vendor/autoload.php');
+require_once "StorageUtils.php";
 require_once 'SaiaLocalAdapter.php';
 
 use Gaufrette\Filesystem;
@@ -103,7 +101,7 @@ class SaiaStorage
         switch ($storage_type) {
             case StorageUtils::LOCAL:
             case StorageUtils::NETWORK:
-                $root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . RUTA_SCRIPT;
+                $root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . CONTENEDOR_SAIA;
                 if (StringUtils::startsWith($path, "..")) {
                     $path = $path->trimLeft(".." . StorageUtils::SEPARADOR)
                         ->removeRight(StorageUtils::SEPARADOR)

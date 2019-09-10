@@ -252,8 +252,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     if (!$idflujo && @$_REQUEST["idflujo"]) {
         $idflujo = $_REQUEST["idflujo"];
     }
-    include_once($ruta_db_superior . "workflow/libreria_paso.php");
-    iniciar_flujo($doc, $idflujo);
+    
     return $doc;
 }
 

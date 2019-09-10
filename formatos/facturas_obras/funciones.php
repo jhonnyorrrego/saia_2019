@@ -260,12 +260,12 @@ function post_aprob_rad_obras($idformato, $iddoc){
 			}
 		}
 		if ($_REQUEST["digitalizacion"] == 1) {
-			$enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=formatos/facturas_obras/detalles_mostrar_facturas_obras.php?iddoc=" . $iddoc."&idformato=".$idformato;
-			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, "_self");
+			$enlace = "views/documento/paginaadd.php?key=" . $iddoc . "&enlace2=formatos/facturas_obras/detalles_mostrar_facturas_obras.php?iddoc=" . $iddoc."&idformato=".$idformato;
+			abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, "_self");
 			die();
 		}else if ($_REQUEST["digitalizacion"] == 0) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&mostrar_formato=1";
-			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
+			abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 			die();
 		}
 	}

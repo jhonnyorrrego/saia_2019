@@ -235,7 +235,7 @@ function validar_digitalizacion_formato($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
     if ($_REQUEST["digitalizacion"] == 1) {
-        redirecciona($ruta_db_superior . "paginaadd.php?&key=" . $iddoc . "&x_enlace=mostrar");
+        redirecciona($ruta_db_superior . "views/documento/paginaadd.php?&key=" . $iddoc . "&x_enlace=mostrar");
     }
 }
 

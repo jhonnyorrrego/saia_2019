@@ -834,12 +834,12 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
         }
 
         if ($_REQUEST["digitalizacion"] == 1) {
-            $enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=views/documento/index_acordeon.php?documentId=" . $iddoc;
-            abrir_url($ruta_db_superior . "colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
+            $enlace = "views/documento/paginaadd.php?key=" . $iddoc . "&enlace2=views/documento/index_acordeon.php?documentId=" . $iddoc;
+            abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
             die();
         } else if ($_REQUEST["digitalizacion"] == 0) {
             $enlace = "views/documento/index_acordeon.php?documentId=" . $iddoc;
-            abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&colilla_vertical=" . $_REQUEST['colilla'] . "&enlace=" . $enlace, '_self');
+            abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&colilla_vertical=" . $_REQUEST['colilla'] . "&enlace=" . $enlace, '_self');
             die();
         }
     }

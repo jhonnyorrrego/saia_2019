@@ -224,13 +224,6 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
  <Post-condiciones><Post-condiciones>
  </Clase>  */
 function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL) {
-	global $conn;
-	if ($momento == "ANTERIOR" && $accion != 'adicionar' && $accion != 'responder' && $accion != 'transferir') {
-		terminar_actividad_paso($iddoc, $accion);
-	}
-	if ($momento == 'POSTERIOR' && ($accion == 'adicionar' || $accion == 'responder' || $accion == 'transferir')) {
-		terminar_actividad_paso($iddoc, $accion);
-	}
 	$listado_acciones = listar_acciones_formato($idformato, $accion, $momento);
 
 	if ($listado_acciones != "") {

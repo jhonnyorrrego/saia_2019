@@ -116,7 +116,7 @@ function validar_confirmacion_salida($consecutivo, $enlace, $enlace2)
     $enlace = str_replace("|", "&", $enlace);
     ?>
     <script>
-        window.open("colilla.php?consecutivo=<?php echo $consecutivo; ?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion; ?>&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>&colilla_vertical=<?php echo $_REQUEST['colilla_vertical']; ?>", "_self");
+        window.open("app/documento/colilla.php?consecutivo=<?php echo $consecutivo; ?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion; ?>&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>&colilla_vertical=<?php echo $_REQUEST['colilla_vertical']; ?>", "_self");
     </script>
     <?php
     die();
@@ -139,7 +139,7 @@ function validar_confirmacion()
         <script>
             var ingreso = confirm("Esta seguro de generar un nuevo radicado?");
             if (ingreso) {
-                window.open("colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>", "_self");
+                window.open("app/documento/colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>", "_self");
             } else {
                 window.open("<?php echo $enlace; ?>", "_self");
             }

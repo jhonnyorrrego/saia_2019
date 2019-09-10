@@ -18,8 +18,6 @@ include_once $ruta_db_superior . 'core/autoload.php';
 require_once $ruta_db_superior . 'calendario/activecalendar/source/activecalendar.php';
 require_once $ruta_db_superior . "calendario/activecalendar/source/activecalendarweek.php";
 echo "<script type='text/javascript' src='" . $ruta_db_superior . "calendario/activecalendar/source/functions.js'></script>\n";
-include_once $ruta_db_superior . "class.funcionarios.php";
-include_once $ruta_db_superior . "phpmkrfn.php";
 
 
 /*
@@ -34,8 +32,8 @@ function calendario_asignaciones_mes($id_documento,$anio=NULL,$mes=NULL,$script,
     //TODO Implementar filtro por responsable func,cargo,dependencia, .....if(isset($id_responsable)&&isset($tipo_responsable))	
 
 	//Se incia el calendario
-	$flecha_atras="<img src=\"".compara_ruta_archivos("/".RUTA_SCRIPT."/calendario/activecalendar/data/img/back.png")."\" border=\"0\" alt=\"&lt;&lt;\" />"; // use png arrow back
-   $flecha_adelante="<img src=\"".compara_ruta_archivos("/".RUTA_SCRIPT."/calendario/activecalendar/data/img/forward.png")."\" border=\"0\" alt=\"&gt;&gt;\" />"; // use png arrow forward
+	$flecha_atras="<img src=\"".compara_ruta_archivos("/".RUTA_SAIA."/calendario/activecalendar/data/img/back.png")."\" border=\"0\" alt=\"&lt;&lt;\" />"; // use png arrow back
+   $flecha_adelante="<img src=\"".compara_ruta_archivos("/".RUTA_SAIA."/calendario/activecalendar/data/img/forward.png")."\" border=\"0\" alt=\"&gt;&gt;\" />"; // use png arrow forward
 	
    $calendario= new ActiveCalendarWeek($anio,$mes);
    $calendario->setMonthNames(array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'));
@@ -206,7 +204,7 @@ function calendario_reservas($anio=NULL,$script=NULL)
    }    // Fin if hay asignaciones
 
   echo '<link rel="stylesheet" type="text/css" href="';
-  echo compara_ruta_archivos("/".RUTA_SCRIPT.'/calendario/activecalendar/data/css/default2.css');
+  echo compara_ruta_archivos("/".RUTA_SAIA.'/calendario/activecalendar/data/css/default2.css');
   echo '" />';
   print $calendario->showYear(3); // tres meses por fila
 } // Fin funcion calendario_reservas
@@ -355,8 +353,8 @@ if(!isset($anio)||!isset($mes)) //Obtiene la fecha actual por defecto si no se e
     
  elseif($tipo=="POPUP") // Tipo  popup .. calendario anterior modificado
   { 
-     $texto.= "<script src=\"".compara_ruta_archivos("/".RUTA_SCRIPT."/popcalendar.js")."\" type=\"text/javascript\" language=\"javascript\"></script>";
-  	 $texto.=  "<input type=\"text\" id=\"".$nombre_campo."\" name=\"".$nombre_campo."\" />&nbsp;&nbsp;&nbsp;<a href=\"javascript:popUpCalendar(this, this.form.fecha_inicial,'dd/mm/yyyy');\" ><img src=\"".compara_ruta_archivos("/".RUTA_SCRIPT."/calendario/activecalendar/data/img/calendar.gif")."\" border=\"0\" alt=\"Elija Fecha\" /></a>";
+     $texto.= "<script src=\"".compara_ruta_archivos("/".RUTA_SAIA."/popcalendar.js")."\" type=\"text/javascript\" language=\"javascript\"></script>";
+  	 $texto.=  "<input type=\"text\" id=\"".$nombre_campo."\" name=\"".$nombre_campo."\" />&nbsp;&nbsp;&nbsp;<a href=\"javascript:popUpCalendar(this, this.form.fecha_inicial,'dd/mm/yyyy');\" ><img src=\"".compara_ruta_archivos("/".RUTA_SAIA."/calendario/activecalendar/data/img/calendar.gif")."\" border=\"0\" alt=\"Elija Fecha\" /></a>";
   }
  if($retornar)
    return($texto);
