@@ -65,7 +65,7 @@
                       <!-- START card -->
                       <div class="card card-default">
                             <div class="card-body"><center><h5 class="text-black">DOCUMENTOS EN FORMATO (WORD)</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],400,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(400,4802);?></div><div class="form-group" id="tr_tipo_radicado">
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(400,4802);?></div><div class="form-group" id="tr_tipo_radicado">
                                         <label title="">SELECCIONAR TIPO DE RADICADO*</label><?php genera_campo_listados_editar(400,6696,$_REQUEST['iddoc']);?></div><div class="form-group "  id="tr_asunto_word">
                                         <label title="">ASUNTO*</label>
                                         <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="asunto_word" name="asunto_word" required value="<?php echo(validar_valor_campo(6698)); ?>">

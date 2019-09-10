@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias_tramitados.php");
 include_once($ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php");
-include_once($ruta_db_superior."class_transferencia.php");
+include_once($ruta_db_superior."app/documento/class_transferencia.php");
 echo(librerias_validar_formulario());
 echo(librerias_notificaciones());
 echo (librerias_jquery("1.7"));

@@ -17,19 +17,18 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:EDITAR PLANILLA DE DISTRIBUCI&OACUTE;N:.</title>
+                                    <title>.:EDITAR COMUNICACI&Oacute;N INTERNA:.</title>
                                     <meta name="viewport"
                                       content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?= pace() ?>
+                                    <meta content="" name="Cero K" /> <?php include_once($ruta_db_superior . "assets/librerias.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once('../carta/funciones.php'); ?><?php include_once('../librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../formatos/librerias/funciones_acciones.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script><?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
-                        <?= theme() ?>
                         <?= icons() ?>
-                        <?= moment() ?><?= validate() ?><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
+                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js"></script><?php include_once('<?= ../ ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
                   <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
                                   rel="stylesheet" type="text/css" media="screen" />
@@ -38,13 +37,19 @@
                                   rel="stylesheet" type="text/css" media="screen" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />                                
+                                  rel="stylesheet" type="text/css" media="screen" />
+                                <link class="main-stylesheet"
+                                  href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                  rel="stylesheet" type="text/css" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
                                   rel="stylesheet" type="text/css" />
                                 <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
                                   rel="stylesheet" type="text/css" media="screen">
+                                <script
+                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                  type="text/javascript"></script>
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
@@ -59,9 +64,29 @@
                   <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                       <!-- START card -->
                       <div class="card card-default">
-                            <div class="card-body"><center><h5 class="text-black">PLANILLA DE DISTRIBUCI&OACUTE;N</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],353,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="tipo_mensajero" value="<?php echo(mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_anexo">
-                                        <label title="">ANEXO</label>
+                            <div class="card-body"><center><h5 class="text-black">COMUNICACIÓN INTERNA</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],2,"ingresar","ANTERIOR"); ?>
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_memorando" value="<?php echo(mostrar_valor_campo('idft_memorando',2,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_fecha_memorando"><label title="">FECHA*</label><?php fecha_formato(2,19,$_REQUEST['iddoc']);?></div><div class="form-group "  id="tr_serie_idserie">
+                                        <label title="">CLASIFICAR EN EXPEDIENTE</label>
+                                        <input class="form-control"  maxlength="11"   tabindex='1'  type="text"  size="100" id="serie_idserie" name="serie_idserie"  value="<?php echo(mostrar_valor_campo('serie_idserie',2,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group "  id="tr_destino">
+                                        <label title="">DESTINO</label>
+                                        <input class="form-control"  maxlength="2000"   tabindex='2'  type="text"  size="100" id="destino" name="destino"  value="<?php echo(mostrar_valor_campo('destino',2,$_REQUEST['iddoc'])); ?>">
+                                       </div><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',2,$_REQUEST['iddoc'])); ?>"><div class="form-group "  id="tr_copia">
+                                        <label title="">CON COPIA A</label>
+                                        <input class="form-control"  maxlength="2000"   tabindex='3'  type="text"  size="100" id="copia" name="copia"  value="<?php echo(mostrar_valor_campo('copia',2,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group "  id="tr_asunto">
+                                        <label title="">ASUNTO*</label>
+                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='4'  type="text"  size="100" id="asunto" name="asunto" required value="<?php echo(mostrar_valor_campo('asunto',2,$_REQUEST['iddoc'])); ?>">
+                                       </div><div class="form-group" id="tr_contenido">
+                                        <label title="">CONTENIDO*</label>
+                                        <div class="celda_transparente"><textarea  tabindex='5'  name="contenido" id="contenido" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('contenido',2,$_REQUEST['iddoc'])); ?></textarea><script>
+                            var config = {
+                                removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
+                            };
+                            var editor = CKEDITOR.replace("contenido", config);
+                            </script>
+                            </div></div><div class="form-group" id="tr_despedida"><label title="">DESPEDIDA*</label><?php despedida(2,25,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_iniciales"><label title="">INICIALES DE QUIEN PREPARO EL MEMORANDO*</label><?php iniciales(2,26,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_anexos">
+                                        <label title="Anexos digitales">ANEXOS DIGITALES</label>
                                         <div class="tools">
                                              <a class="collapse" href="javascript:;"></a>
                                              <a class="config" data-toggle="modal" href="#grid-config"></a>
@@ -69,12 +94,11 @@
                                              <a class="remove" href="javascript:;"></a>
                                        </div>
                                        <div class="card-body no-scroll no-padding"><?php echo '<div class="textwrapper">
-                                            <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=353&idcampo=5018" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+                                            <a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=2&idcampo=32" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
                                             objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
                                             outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-                                            </div>'; ?></div></div><input type="hidden" name="iddestino_radicacion" value="<?php echo(mostrar_valor_campo('iddestino_radicacion',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',353,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(353,4077,$_REQUEST['iddoc']);?></div><div class="form-group  " id="tr_tipo_recorrido">
-                            <label title="">RECORRIDO DEL DIA</label><?php genera_campo_listados_editar(353,5087,$_REQUEST['iddoc']);?><br></div><input type="hidden" name="docs_seleccionados" value="<?php echo(mostrar_valor_campo('docs_seleccionados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="mensajero" value="<?php echo(mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_despacho_ingresados" value="<?php echo(mostrar_valor_campo('idft_despacho_ingresados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_entrega" value="<?php echo(mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_ventanilla">
-                                        <label title="">VENTANILLA*</label><?php genera_campo_listados_editar(353,8319,$_REQUEST['iddoc']);?></div><input type="hidden" name="campo_descripcion" value="<?php echo('4080'); ?>"><input type="hidden" name="formato" value="353"><tr><td colspan='2'><?php submit_formato(353,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("353-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                                            </div>'; ?></div></div><div class="form-group" id="tr_anexos_fisicos"><label title="">ANEXOS FISICOS</label><?php anexos_fisicos(2,27,$_REQUEST['iddoc']);?></div><div class="form-group  required" id="tr_email_aprobar">
+                            <label title="">APROBAR FUERA DE SAIA*</label><?php genera_campo_listados_editar(2,5176,$_REQUEST['iddoc']);?><label id="-error" class="error" f or="email_aprobar" style="display: none;"></label><br></div><?php mostrar_imagenes(2,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('23,6921'); ?>"><input type="hidden" name="formato" value="2"><tr><td colspan='2'><?php submit_formato(2,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("2-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../app/temporal/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;

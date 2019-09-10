@@ -500,7 +500,7 @@ CODE;
             $action = '<?= $ruta_db_superior ?>' . FORMATOS_SAIA . 'librerias/funciones_item.php';
             $estiloItem = '';
         } else {
-            $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
+            $action = '<?= $ruta_db_superior ?>app/documento/class_transferencia.php"';
             $estiloItem = '-8';
         }
         $texto .= '<div class="container-fluid container-fixed-lg col-lg' . $estiloItem . '" style="overflow: auto;" id="content_container">

@@ -77,7 +77,7 @@ try {
                     $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $BuzonEntrada->destino);
 
                     if ($VfuncionarioDc->getPK() == $_REQUEST['key']) {
-                        include_once $ruta_db_superior . 'class_transferencia.php';
+                        include_once $ruta_db_superior . 'app/documento/class_transferencia.php';
                         aprobar($Documento->getPK());
                     }
 

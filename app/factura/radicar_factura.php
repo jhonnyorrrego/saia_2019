@@ -283,7 +283,7 @@ function mover_correo_buzon($info_correo) {
 
 function radicar_factura($datos, $nombre_formato) {
     global $ruta_db_superior, $conn;
-    include_once ($ruta_db_superior . "class_transferencia.php");
+    include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
     if (!empty($datos)) {
         $tabla = "ft_{$nombre_formato}";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
