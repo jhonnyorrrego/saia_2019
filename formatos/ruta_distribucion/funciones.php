@@ -176,7 +176,7 @@ function add_edit_ruta_dist($idformato, $iddoc)
                     $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>/ruta_distribucion/actualizar_estado_dependencias.php",
+                        url: "<?php echo $ruta_db_superior . 'formatos/'; ?>/ruta_distribucion/actualizar_estado_dependencias.php",
                         data: {
                             idft: idft,
                             estado: estado,
@@ -276,7 +276,7 @@ function add_edit_ruta_dist($idformato, $iddoc)
                 var mensajero_ruta = $(this).attr("mensajero_ruta");
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>/ruta_distribucion/actualizar_mensajero_distribuciones_inactivas.php",
+                    url: "<?php echo $ruta_db_superior . 'formatos/'; ?>/ruta_distribucion/actualizar_mensajero_distribuciones_inactivas.php",
                     data: {
                         idft_ruta_distribucion: idft_ruta_distribucion,
                         mensajero_ruta: mensajero_ruta
@@ -299,7 +299,7 @@ function add_edit_ruta_dist($idformato, $iddoc)
                 var mensajero_ruta = $(this).attr("mensajero_ruta");
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>/ruta_distribucion/actualizar_estado_mensajeros.php",
+                    url: "<?php echo $ruta_db_superior . 'formatos/'; ?>/ruta_distribucion/actualizar_estado_mensajeros.php",
                     data: {
                         idft: idft,
                         estado: estado,

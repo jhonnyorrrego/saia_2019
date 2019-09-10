@@ -9,7 +9,6 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once $ruta_db_superior . 'core/autoload.php';
-require_once ($ruta_db_superior . "class.funcionarios.php");
 
 $extensiones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "", $conn);
 if ($extensiones["numcampos"] > 0) {

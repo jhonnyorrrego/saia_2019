@@ -134,10 +134,10 @@ function validar_digitalizacion_formato_pqr($idformato, $iddoc) {
 	if(!isset($_REQUEST["no_redirecciona"])){
 		if ($_REQUEST["digitalizacion"] == 1) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
-			abrir_url($ruta_db_superior . "paginaadd.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
+			abrir_url($ruta_db_superior . "views/documento/paginaadd.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 		}else if ($_REQUEST["digitalizacion"] == 0) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
-			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
+			abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 		}
 	}
 }

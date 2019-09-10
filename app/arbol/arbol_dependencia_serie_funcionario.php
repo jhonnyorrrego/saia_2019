@@ -9,7 +9,6 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "class.funcionarios.php");
 
 $objetoJson = array(
 		"key" => 0

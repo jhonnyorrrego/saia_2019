@@ -39,7 +39,7 @@ try {
     $Formato = $Documento->getFormat();
 
     if ($editButton) {
-        $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . '/' . $Formato->ruta_editar;
+        $editRoute = $ruta_db_superior . 'formatos/' . $Formato->nombre . '/' . $Formato->ruta_editar;
         $editRoute .= '?' . http_build_query([
             'iddoc' => $documentId,
             'idformato' => $Formato->getPK()
@@ -126,7 +126,7 @@ try {
         ]
     ];
 
-    $functionsFile = $ruta_db_superior . FORMATOS_CLIENTE . $Formato->nombre . "/funciones.php";
+    $functionsFile = $ruta_db_superior . 'formatos/' . $Formato->nombre . "/funciones.php";
     if (is_file($functionsFile)) {
         include_once $functionsFile;
 
