@@ -277,6 +277,8 @@
                 ]
             ];
 
+            TRDVersionController::removeTemporalFile();
+
             return $response;
         }
 
