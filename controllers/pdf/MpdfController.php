@@ -7,7 +7,7 @@ try {
 	die("invalid access");
 }
 
-include_once $ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php';
+include_once $ruta_db_superior . 'formatos/' . 'librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'app/qr/librerias.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_archivo.php';
@@ -446,7 +446,7 @@ class Imprime_Pdf
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 			if ($vista > 0) {
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
-				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?";
+				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . 'formatos/' . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?";
 				$queryParams = http_build_query([
 					'tipo' => 5,
 					'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
@@ -457,7 +457,7 @@ class Imprime_Pdf
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 				foreach ($destinos as $fila) {
-					$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
+					$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . 'formatos/' . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
 					$queryParams = http_build_query([
 						'tipo' => 5,
 						'iddoc' => $datos_plantilla[0]["documento_iddocumento"],
@@ -467,7 +467,7 @@ class Imprime_Pdf
 					$direccion[] = $url . $queryParams;
 				} 
 			} else {
-				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
+				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . 'formatos/' . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
 				$queryParams = http_build_query([
 					'tipo' => 5,
 					'iddoc' => $datos_plantilla[0]["documento_iddocumento"],

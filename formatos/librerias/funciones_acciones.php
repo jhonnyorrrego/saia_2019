@@ -187,7 +187,7 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 				include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
 				$datos_formato = busca_filtro_tabla("f.nombre", "formato f,funciones_formato_enlace e", "f.idformato=e.formato_idformato and e.funciones_formato_fk=" . $ar_func[$i], "", $conn);
 				for ($j = 0; $j < $datos_formato["numcampos"]; $j++) {
-					$ruta = $ruta_db_superior . FORMATOS_CLIENTE . $datos_formato[$j]["nombre"] . "/" . $datos_funcion[0]["ruta"];
+					$ruta = $ruta_db_superior . 'formatos/' . $datos_formato[$j]["nombre"] . "/" . $datos_funcion[0]["ruta"];
 					if (is_file($ruta)) {
 						include_once ($ruta);
 						if (function_exists($datos_funcion[0]["nombre_funcion"])) {

@@ -40,10 +40,10 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1)
                 $formato_orig = $form_origen[0]["formato_idformato"];
             }
             $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
-            if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-                include_once($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
-            } else if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $funciones[$i]["ruta"])) {
-                include_once($ruta_db_superior . FORMATOS_CLIENTE . $funciones[$i]["ruta"]);
+            if (is_file($ruta_db_superior . 'formatos/' . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                include_once($ruta_db_superior . 'formatos/' . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+            } else if (is_file($ruta_db_superior . 'formatos/' . $funciones[$i]["ruta"])) {
+                include_once($ruta_db_superior . 'formatos/' . $funciones[$i]["ruta"]);
             } else if (is_file($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $dato_formato_orig["numcampos"]) {
                 include_once($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
             }

@@ -17,7 +17,7 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:EDITAR AAAAAAAAAAA:.</title>
+                                    <title>.:EDITAR A1111111111111:.</title>
                                     <meta name="viewport"
                                       content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,11 +59,11 @@
                   <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                       <!-- START card -->
                       <div class="card card-default">
-                            <div class="card-body"><center><h5 class="text-black">AAAAAAAAAAA</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],462,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="idft_aaaaaaaaaaa" value="<?php echo(mostrar_valor_campo('idft_aaaaaaaaaaa',462,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',462,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',462,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',462,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(462,20053,$_REQUEST['iddoc']);?></div><div class="form-group "  id="tr_campo_texto_2026339748">
+                            <div class="card-body"><center><h5 class="text-black">A1111111111111</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],455,"ingresar","ANTERIOR"); ?>
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><div class="form-group "  id="tr_campo_texto_7124825">
                                         <label title="">TEXTO EN UNA L&Iacute;NEA*</label>
-                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="campo_texto_2026339748" name="campo_texto_2026339748" required value="<?php echo(mostrar_valor_campo('campo_texto_2026339748',462,$_REQUEST['iddoc'])); ?>">
-                                       </div><input type="hidden" name="campo_descripcion" value="<?php echo('20078'); ?>"><input type="hidden" name="formato" value="462"><tr><td colspan='2'><?php submit_formato(462,$_REQUEST['iddoc']);?></td></tr></table></form></body>
+                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="campo_texto_7124825" name="campo_texto_7124825" required value="<?php echo(mostrar_valor_campo('campo_texto_7124825',455,$_REQUEST['iddoc'])); ?>">
+                                       </div><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_a1111111111111" value="<?php echo(mostrar_valor_campo('idft_a1111111111111',455,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(455,8359,$_REQUEST['iddoc']);?></div><input type="hidden" name="campo_descripcion" value="<?php echo('8363'); ?>"><input type="hidden" name="formato" value="455"><tr><td colspan='2'><?php submit_formato(455,$_REQUEST['iddoc']);?></td></tr></table></form></body>
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 $(".form-group.form-group-default").click(function() {
@@ -97,4 +97,4 @@
                                 
                             });
                         </script>
-                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
+                  </html><?php include_once($ruta_db_superior . 'formatos/' . "librerias/footer_plantilla.php");?>

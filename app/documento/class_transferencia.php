@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.php";
+include_once $ruta_db_superior . 'formatos/' . "librerias/funciones_acciones.php";
 include_once $ruta_db_superior . "bpmn/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 
@@ -781,7 +781,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo '<td style="border:none;" align="left">';
                         if ($firma[0]["firma"] != "") {
                             $pagina_actual = $_SERVER["PHP_SELF"];
-                            echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+                            echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . 'formatos/' . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
                             echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
                         } else
                             echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/assets/images/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
@@ -834,7 +834,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         $_REQUEST["llave_seleccion"] = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "", 1);
                         $_REQUEST["tabla"] = "ruta";
                         $_REQUEST["firma"] = "1";
-                        require_once($ruta_db_superior . FORMATOS_SAIA . "librerias/mostrar_foto_manual.php");
+                        require_once($ruta_db_superior . 'formatos/' . "librerias/mostrar_foto_manual.php");
                         $parte = '<td style="border:none;"><img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
 
                         $parte .= "<br /><strong>" . strtoupper($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
@@ -1107,7 +1107,7 @@ function radicar_plantilla()
         }
 
         $adicionales["activo"] = "1";
-        include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_generales.php");
+        include_once($ruta_db_superior . 'formatos/' . "librerias/funciones_generales.php");
 
         if ((!isset($_POST["firmado"]) || (isset($_POST["firmado"]) && $_POST["firmado"] == "una"))) {
             $exist_ruta = busca_filtro_tabla("documento_iddocumento", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $_POST["iddoc"], "", $conn);
@@ -1123,7 +1123,7 @@ function radicar_plantilla()
         } else if (isset($_POST["firmado"]) && $_POST["firmado"] == "varias") {
             $usuario_origen = busca_filtro_tabla("dependencia", $_POST["tabla"], "id" . $_POST["tabla"] . "=" . $idplantilla, "", $conn);
             if (!isset($_REQUEST["no_redirecciona"])) {
-                redirecciona(FORMATOS_SAIA . "librerias/rutaadd.php?x_plantilla='$plantilla'&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
+                redirecciona('formatos/' . "librerias/rutaadd.php?x_plantilla='$plantilla'&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
                 return;
             } else {
                 $retorno["mensaje"] = "Error al generar la ruta de aprobacion";
@@ -1480,7 +1480,7 @@ function guardar_documento($iddoc, $tipo = 0)
 
 function actualizar_datos_documento($idformato, $iddoc)
 {
-    include_once FORMATOS_SAIA . "librerias/funciones_generales.php";
+    include_once 'formatos/' . "librerias/funciones_generales.php";
 
     if (isset($_REQUEST["campo_descripcion"])) {
         $campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
