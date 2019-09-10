@@ -103,13 +103,13 @@ switch ($sAction) {
 			}
 		}
 		if ($x_escaneo == "1") {
-			$x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
+			$x_enlace = "views/documento/paginaadd.php?key=" . $key . "&" . $x_enlace;
 		} else if ($x_enlace == '') {
 			$x_enlace = 'documentoadd.php';
 		} else {
 			$arreglo_enlace = explode(",", $x_enlace);
 			if ($arreglo_enlace[0] == 'colilla') {
-				$x_enlace = 'colilla.php?key=' . $key;
+				$x_enlace = 'app/documento/colilla.php?key=' . $key;
 				if ($arreglo_enlace[1] == 'documentoadd') {
 					$x_enlace .= '&enlace=documentoadd.php';
 				}
@@ -191,7 +191,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 <br />
 <br />
 <span class="internos" style="display: none; font-family: verdana; font-size: 10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
-<form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo ("?key=" . $key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
+<form name="paginaadd" id="paginaadd" action="views/documento/paginaadd.php<?php echo ("?key=" . $key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
 	$dir = "";

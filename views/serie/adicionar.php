@@ -13,6 +13,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
+    'request' => $_REQUEST,
 ]);
 ?>
 <!doctype html>
@@ -31,7 +32,7 @@ $params = json_encode([
             <div class="card-body py-2">
                 <form id="trd_form" autocomplete='off'>
 
-                    <p>Los campos con <span class="bold" style="font-size:15px">*</span> son obligatorios</p>
+                    <p>Los campos con <span class="bold" style="font-size:15px;color:red">*</span> son obligatorios</p>
                     <div class="form-group form-group-default form-group-default-select2 required">
                         <label>Dependencia</label>
                         <select class="full-width" id="dependencia" name="dependencia">
@@ -46,6 +47,16 @@ $params = json_encode([
                         </select>
                     </div>
 
+                    <div class="form-group form-group-default required" style="display:none">
+                        <label>Código de la serie:</label>
+                        <input name="codigo_serie" id="codigo_serie" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group form-group-default required" style="display:none">
+                        <label>Nombre de la serie:</label>
+                        <input name="nombre_serie" id="nombre_serie" type="text" class="form-control">
+                    </div>
+
                     <div class="form-group form-group-default form-group-default-select2">
                         <label>Subserie</label>
                         <select class="full-width" id="subserie" name="subserie">
@@ -53,31 +64,46 @@ $params = json_encode([
                         </select>
                     </div>
 
+                    <div class="form-group form-group-default" style="display:none">
+                        <label>Código de la subserie:</label>
+                        <input name="codigo_subserie" id="codigo_subserie" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group form-group-default" style="display:none">
+                        <label>Nombre de la subserie:</label>
+                        <input name="nombre_subserie" id="nombre_subserie" type="text" class="form-control">
+                    </div>
+
                     <div class="form-group form-group-default required">
                         <label>Retención gestión:</label>
-                        <input name="retencion_gestion" type="text" class="form-control">
+                        <input name="ret_gestion" id="ret_gestion" type="text" class="form-control">
                     </div>
 
                     <div class="form-group form-group-default required">
                         <label>Retención central:</label>
-                        <input name="retencion_central" type="text" class="form-control">
+                        <input name="ret_central" id="ret_central" type="text" class="form-control">
                     </div>
 
                     <div class="form-group form-group-default">
                         <label>Procedimiento:</label>
-                        <textarea name="procedimiento" class="form-control"></textarea>
+                        <textarea name="procedimiento" id="procedimiento" class="form-control"></textarea>
                     </div>
-                    <hr>
+
                     <div class="form-group form-group-default required">
                         <label>Tipo documental:</label>
                         <input name="tipo_documental" type="text" class="form-control">
                     </div>
 
                     <div class="form-group form-group-default required">
-                        <label class="pl-1 mb-0 mt-1">Soporte</label>
-                        <div class="checkbox check-success my-0">
+                        <label>Dias para responder:</label>
+                        <input name="dias_respuesta" type="text" class="form-control">
+                    </div>
 
-                            <input type="checkbox" value="P" name="soporte[]" id="P" checked>
+                    <div class="form-group form-group-default required">
+                        <label class="pl-1 mb-0 mt-1">Soporte</label>
+                        <div class="checkbox check-success input-group my-0" id="divSoporte">
+
+                            <input type="checkbox" value="P" name="soporte[]" id="P">
                             <label for="P">P</label>
 
                             <input type="checkbox" value="EL" name="soporte[]" id="EL">
@@ -87,19 +113,33 @@ $params = json_encode([
 
                     <div class="form-group form-group-default required">
                         <label class="pl-1 mb-0 mt-1">Disposición</label>
-                        <div class="checkbox check-success my-0">
 
-                            <input type="checkbox" value="E" name="disposicion[]" id="E">
+                        <div class="radio radio-success input-group my-0">
+                            <input type="radio" value="E" name="disposicion" id="E">
                             <label for="E">E</label>
 
-                            <input type="checkbox" value="S" name="disposicion[]" id="S">
+                            <input type="radio" value="S" name="disposicion" id="S">
                             <label for="S">S</label>
 
-                            <input type="checkbox" value="CT" name="disposicion[]" id="CT">
+                            <input type="radio" value="CT" name="disposicion" id="CT">
                             <label for="CT">CT</label>
+                        </div>
 
-                            <input type="checkbox" value="M/D" name="disposicion[]" id="M/D">
-                            <label for="M/D">M/D</label>
+                        <div style="display:none" class="checkbox check-success input-group my-0" id="divMicrofilma">
+                            <input type="checkbox" value="M/D" name="disposicion2" id="microfilma">
+                            <label for="microfilma">M/D</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-default required">
+                        <label class="pl-1 mb-0 mt-1">¿ Adicionar otro ?</label>
+                        <div class="radio radio-success input-group my-0">
+
+                            <input type="radio" value="1" name="addother" id="other1" checked>
+                            <label for="other1">SI</label>
+
+                            <input type="radio" value="2" name="addother" id="other0">
+                            <label for="other0">NO</label>
                         </div>
                     </div>
 

@@ -31,22 +31,9 @@ try {
     $GenerarFormatoController = new GenerarFormatoController($formatId);
     $GenerarFormatoController->generate();
 
-    //validar campo descripcion obligatorio
-    //crear tabla e indices id , ft, documento 
-    //crear archivo adicionar
-    //crear archivo editar
-    //crear archivo mostrar
-    //crear cuerpo del formato en caso de no existir
-
-
-
     $Response->message = "Formato generado";
     $Response->success = 1;
 } catch (Throwable $th) {
-    echo '<pre>';
-    var_dump($th);
-    echo '</pre>';
-    exit;
     $Response->message = $th->getMessage();
 }
 

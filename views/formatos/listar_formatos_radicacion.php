@@ -47,7 +47,7 @@ if (count($request)) {
 		->execute()->fetchAll();
 		
 		for ($i = 0; $i < count($cuantos_formatos); $i++) {
-			$url = $ruta_db_superior . FORMATOS_CLIENTE . $cuantos_formatos[$i]['nombre'] . '/' . $cuantos_formatos[$i]['ruta_adicionar'] . "?1=1";
+			$url = $ruta_db_superior . 'formatos/' . $cuantos_formatos[$i]['nombre'] . '/' . $cuantos_formatos[$i]['ruta_adicionar'] . "?1=1";
 			$proceso = '';
 
 			if (PermisoController::moduleAccess("crear_" . $cuantos_formatos[$i]['nombre'])) {

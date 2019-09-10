@@ -27,7 +27,7 @@ try {
         throw new Exception('Documento invalido', 1);
     }
 
-    $route = PROTOCOLO_CONEXION . RUTA_PDF . "/colilla.php?";
+    $route = PROTOCOLO_CONEXION . RUTA_PDF . "/app/documento/colilla.php?";
     $route .= http_build_query([
         "key" => $_REQUEST['documentId'],
         "ajaxCalled" => 1

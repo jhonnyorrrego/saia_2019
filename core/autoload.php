@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../define.php';
+require_once __DIR__ . '/define.php';
 require_once RUTA_ABS_SAIA . 'vendor/autoload.php';
 
 spl_autoload_register(function ($className) {

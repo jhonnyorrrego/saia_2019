@@ -1,5 +1,7 @@
 <?php
 
+use \Doctrine\DBAL\Types\Type;
+
 class TRDVersionController
 {
     protected $dependencies;
@@ -106,11 +108,11 @@ class TRDVersionController
             )
             ->from('serie', 'a')
             ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
-            ->where('b.estado = 1 AND a.tipo = 1 AND a.estado = 1')
+            ->where('a.tipo = 1')
             ->andWhere('b.fk_dependencia = :iddependencia')
             ->andWhere('a.fk_serie_version = :idserie_version')
-            ->setParameter(':iddependencia', $dependencieId, 'integer')
-            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
+            ->setParameter(':iddependencia', $dependencieId, Type::INTEGER)
+            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
         $this->series = Serie::findByQueryBuilder($sql);
     }
@@ -142,13 +144,13 @@ class TRDVersionController
             )
             ->from('serie', 'a')
             ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
-            ->where('b.estado = 1 AND a.tipo = 2 AND a.estado = 1')
+            ->where('a.tipo = 2')
             ->andWhere('b.fk_dependencia =:iddependencia')
             ->andWhere('a.cod_padre =:idserie')
             ->andWhere('a.fk_serie_version=:idserie_version')
-            ->setParameter(':iddependencia', $dependencieId, 'integer')
-            ->setParameter(':idserie', $serieId, 'integer')
-            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
+            ->setParameter(':iddependencia', $dependencieId, Type::INTEGER)
+            ->setParameter(':idserie', $serieId, Type::INTEGER)
+            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
         $this->subSeries = Serie::findByQueryBuilder($sql);
     }
@@ -171,11 +173,11 @@ class TRDVersionController
                 a.sop_electronico'
             )
             ->from('serie', 'a')
-            ->where('a.tipo = 3 AND a.estado = 1')
+            ->where('a.tipo = 3')
             ->andWhere('a.cod_padre =:idserie')
             ->andWhere('a.fk_serie_version=:idserie_version')
-            ->setParameter(':idserie', $serieId, 'integer')
-            ->setParameter(':idserie_version', $this->idSerieVersion, 'integer');
+            ->setParameter(':idserie', $serieId, Type::INTEGER)
+            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
         $this->documentaryTypes = Serie::findByQueryBuilder($sql);
     }

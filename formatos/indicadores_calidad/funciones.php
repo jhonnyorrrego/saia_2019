@@ -111,7 +111,7 @@ function formula_calculo($idformato, $iddoc) {
 			<td>' . mostrar_valor_campo('periocidad', $idfor_indicador[0]['idformato'], $formula[$i]["iddocumento"], 1) . '</td>
 			<td>' . $formula[$i]["observacion"] . '</td>';
 			if($ok_seg){
-				$html .= '<td><a class="kenlace_saia" conector="iframe" title="Registrar seguimiento indicador" titulo="Registrar seguimiento indicador" style="cursor:pointer" enlace="' .FORMATOS_CLIENTE . 'seguimiento_indicador/adicionar_seguimiento_indicador.php?anterior=' . $formula[$i]["iddocumento"] . '&padre=' . $formula[$i]["idft_formula_indicador"] . '&idformato=' . $idfor_segui[0]["idformato"] . '&regresar=' . $iddoc . '">Registrar seguimiento indicador</a></td>';
+				$html .= '<td><a class="kenlace_saia" conector="iframe" title="Registrar seguimiento indicador" titulo="Registrar seguimiento indicador" style="cursor:pointer" enlace="' .'formatos/' . 'seguimiento_indicador/adicionar_seguimiento_indicador.php?anterior=' . $formula[$i]["iddocumento"] . '&padre=' . $formula[$i]["idft_formula_indicador"] . '&idformato=' . $idfor_segui[0]["idformato"] . '&regresar=' . $iddoc . '">Registrar seguimiento indicador</a></td>';
 			}
 			$html .= '</tr>';
 		}
@@ -211,9 +211,9 @@ function resultados_indicador($idformato, $iddoc) {
 					<td>' . $seg[$j]["observaciones"] . '</td>';
 
 					if ($_REQUEST["tipo"] != 5) {
-						$html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 875, height:400,preserveContent:false } )"  href="' . $ruta_db_superior .FORMATOS_CLIENTE. 'seguimiento_indicador/mostrar_seguimiento_indicador.php?menu_principal_inactivo=1&iddoc=' . $seg[$j]["documento_iddocumento"] . '">Ver</a></td>';
+						$html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 875, height:400,preserveContent:false } )"  href="' . $ruta_db_superior .'formatos/'. 'seguimiento_indicador/mostrar_seguimiento_indicador.php?menu_principal_inactivo=1&iddoc=' . $seg[$j]["documento_iddocumento"] . '">Ver</a></td>';
 						if($ok_plan){
-							$html .= '<td style="text-align:center;"><a class="kenlace_saia" conector="iframe" title="Adicionar Plan" titulo="Adicionar Plan" style="cursor:pointer" enlace="'.FORMATOS_CLIENTE.'plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>';
+							$html .= '<td style="text-align:center;"><a class="kenlace_saia" conector="iframe" title="Adicionar Plan" titulo="Adicionar Plan" style="cursor:pointer" enlace="'.'formatos/'.'plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>';
 						}
             $html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
 					}

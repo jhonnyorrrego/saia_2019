@@ -44,7 +44,7 @@ $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . 
                             $etiqueta = $lista_formatos[$i]['etiqueta'];
                             $etiqueta = ucwords(strtolower($etiqueta));
 
-                            $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';
+                            $enlace_adicionar = 'formatos/' . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';
                             $enlace_adicionar .= http_build_query($_REQUEST + ['idformato' => $lista_formatos[$i]['idformato']]);
                             ?>
                             <tr>

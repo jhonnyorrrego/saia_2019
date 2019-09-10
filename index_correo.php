@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "librerias_saia.php";
-usuario_actual("login");
+
 echo(estilo_bootstrap());
 
 if (is_dir("roundcubemail")) {

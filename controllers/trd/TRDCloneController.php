@@ -23,7 +23,7 @@ class TRDCloneController
                 ->where('estado=1 AND fk_serie_version=:old')
                 ->orderBy('tipo', 'ASC')
                 ->addOrderBy('idserie', 'ASC')
-                ->setParameter(':old', $this->old_fk_serie_version, 'integer');
+                ->setParameter(':old', $this->old_fk_serie_version, Type::INTEGER);
 
             $data = Serie::findByQueryBuilder($sql);
             $ids = [0 => 0];
@@ -41,10 +41,7 @@ class TRDCloneController
                     $this->errorException("La serie ID: {$SerieClone->getPK()}, es una serie huerfana no se puede seguir con la clonacion");
                 }
 
-                $Serie = new Serie();
-                $Serie->setAttributes($attributesSerie);
-
-                if ($id = $Serie->createSerie(0)) {
+                if ($id = Serie::newRecord($attributesSerie)) {
                     $ids[$id] = $SerieClone->getPK();
 
 
@@ -53,7 +50,7 @@ class TRDCloneController
                         ->from('dependencia_serie')
                         ->where('estado=1 AND fk_serie=:idserie')
                         ->orderBy('iddependencia_serie', 'ASC')
-                        ->setParameter(':idserie', $SerieClone->getPK(), 'integer');
+                        ->setParameter(':idserie', $SerieClone->getPK(), Type::INTEGER);
 
                     $data = DependenciaSerieTemp::findByQueryBuilder($sql);
 

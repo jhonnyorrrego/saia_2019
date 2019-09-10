@@ -155,7 +155,7 @@ class StorageUtils
 		$mi_ruta = Stringy::create(__DIR__);
 		$root = $_SERVER["DOCUMENT_ROOT"];
 		// $resto = $mi_ruta->removeLeft($root)->removeRight(self::SEPARADOR . "saia");
-		$resto = self::SEPARADOR . RUTA_SCRIPT;
+		$resto = self::SEPARADOR . CONTENEDOR_SAIA;
 
 		$root .= $resto;
 

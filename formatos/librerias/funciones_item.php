@@ -51,7 +51,7 @@ function editar() {
 	}
 
 	if ($_REQUEST["anterior_editar"]) {
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_editar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["item"]);
@@ -62,7 +62,7 @@ function editar() {
 	phpmkr_query($sql);
 
 	if ($_REQUEST["posterior_editar"]) {
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["posterior_editar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["item"]);
@@ -72,14 +72,14 @@ function editar() {
 	$padre = busca_filtro_tabla("", "formato", "idformato='" . $formato[0]["cod_padre"] . "'", "", $conn);
 	$doc_padre = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"] . "," . $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $padre[0]["nombre_tabla"] . " and id" . $formato[0]["nombre_tabla"] . "=" . $_REQUEST["item"], "", $conn);
 
-	redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
+	redirecciona($ruta_db_superior . 'formatos/' . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
 
 function eliminar_item() {
 	global $conn, $ruta_db_superior;
 	$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre_tabla like '" . $_REQUEST["tabla"] . "'", "", $conn);
 	if ($_REQUEST["anterior_eliminar"]) {
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_eliminar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["id"]);
@@ -87,7 +87,7 @@ function eliminar_item() {
 	}
 	phpmkr_query("delete from " . $_REQUEST["tabla"] . " where id" . $_REQUEST["tabla"] . "=" . $_REQUEST["id"]);
 	if ($_REQUEST["posterior_eliminar"]) {
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["posterior_eliminar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], 0);
@@ -150,7 +150,7 @@ function guardar_item() {
 	}
 
 	if ($_REQUEST["anterior_adicionar"]) {
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_adicionar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], 0);
@@ -167,7 +167,7 @@ function guardar_item() {
 			}
 		}
 		if ($_REQUEST["posterior_adicionar"]) {
-			include_once ($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]['nombre'] . "/funciones.php");
+			include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 			$funciones = explode(",", $_REQUEST["posterior_adicionar"]);
 			foreach ($funciones as $funcion) {
 				$funcion($formato[0]['idformato'], $insertado);
@@ -192,7 +192,7 @@ function guardar_item() {
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1]+'&seleccionar=" . $padre[0]["idformato"] . "-" . $superior[0][0] . "-" . $padre[0]["nombre_tabla"] . "-" . $doc_padre[0][0] . "';
              //window.parent.frames[0].location=direccion;
-             window.location='../../" . FORMATOS_CLIENTE . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0]["documento_iddocumento"] . "';  //correccion para que los items no recargen el arbol
+             window.location='../../" . 'formatos/' . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0]["documento_iddocumento"] . "';  //correccion para que los items no recargen el arbol
              </script>";
 			else
 				echo "<script>
@@ -210,7 +210,7 @@ function guardar_item() {
 					"refresh" => 1
 				]));
 			//die();
-			//redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
+			//redirecciona($ruta_db_superior . 'formatos/' . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 		}
 	}else{
 		echo(json_encode([

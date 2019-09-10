@@ -20,6 +20,8 @@ class TRDLoadController
     public $fila;
     private $row;
 
+    use TRDTrait;
+
     public function __construct(string $url, int $fk_serie_version)
     {
         $this->urlEXcel = $url;
@@ -34,8 +36,6 @@ class TRDLoadController
             ->loadTRD()
             ->saveSerie();
     }
-
-
 
     protected function truncate()
     {
@@ -144,10 +144,7 @@ class TRDLoadController
             $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
             $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
 
-            $Serie = new Serie();
-            $Serie->setAttributes($attributesSerie);
-
-            if ($id = $Serie->createSerie()) {
+            if ($id = Serie::newRecord($attributesSerie)) {
                 $ids[$id] = $SerieTemp->getPK();
             } else {
                 $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
@@ -299,8 +296,8 @@ class TRDLoadController
                     'retencion_gestion' => $this->row['ret_gestion'],
                     'retencion_central' => $this->row['ret_central'],
                     'procedimiento' => $this->row['procedimiento'],
-                    'sop_papel' => $this->row['sop_papel'],
-                    'sop_electronico' => $this->row['sop_electronico'],
+                    'sop_papel' => 0,
+                    'sop_electronico' => 0,
                     'dis_eliminacion' => $this->row['dis_eliminacion'],
                     'dis_conservacion' => $this->row['dis_conservacion'],
                     'dis_seleccion' => $this->row['dis_seleccion'],
@@ -337,8 +334,8 @@ class TRDLoadController
                 'retencion_gestion' => $this->row['ret_gestion'],
                 'retencion_central' => $this->row['ret_central'],
                 'procedimiento' => $this->row['procedimiento'],
-                'sop_papel' => $this->row['sop_papel'],
-                'sop_electronico' => $this->row['sop_electronico'],
+                'sop_papel' => 0,
+                'sop_electronico' => 0,
                 'dis_eliminacion' => $this->row['dis_eliminacion'],
                 'dis_conservacion' => $this->row['dis_conservacion'],
                 'dis_seleccion' => $this->row['dis_seleccion'],
@@ -361,7 +358,7 @@ class TRDLoadController
                 ->select('count(idserie) as cant')
                 ->from('serie_temp')
                 ->where('tipo=2 and cod_padre=:idserie')
-                ->setParameter(':idserie', $idserie)
+                ->setParameter(':idserie', $idserie, Type::INTEGER)
                 ->execute()->fetch();
 
             if ($existSubserie['cant']) {
@@ -423,30 +420,15 @@ class TRDLoadController
 
     private function validateSerieSubserie($data = array(), $tipo = 1)
     {
-        $nameSerie = htmlentities(trim($data['serie']));
-
-        $query = Model::getQueryBuilder()
-            ->select('idserie,nombre')
-            ->from('serie_temp', 's')
-            ->innerJoin('s', 'dependencia_serie_temp', 'd', 's.idserie=d.fk_serie')
-            ->where('d.fk_dependencia=:iddependencia')
-            ->andWhere('s.codigo like :cod_serie')
-            ->andWhere('s.tipo=:tipo')
-            ->setParameters([
-                ':iddependencia' => $this->row['iddependencia'],
-                ':cod_serie' => $data['cod_serie'],
-                ':tipo' => $tipo
-            ], ['integer', 'integer']);
-
-        if ($tipo == 2) {
-            $query->andWhere('s.cod_padre=:cod_padre')
-                ->setParameter(':cod_padre', $data['idseriePadre'], 'integer');
-        }
-
-        $existSerie = $query->execute()->fetch();
+        $existSerie = $this->validateDependenciaSerie(
+            $tipo,
+            $data['cod_serie'],
+            $this->row['iddependencia'],
+            $data['idseriePadre']
+        );
 
         if ($existSerie) {
-            if ($existSerie['nombre'] != $nameSerie) {
+            if ($existSerie['nombre'] != trim($data['serie'])) {
                 $this->errorException("La serie/subserie con codigo {$data['cod_serie']} ya se encuentra asignado con otro nombre a esta dependencia");
             } else {
                 if ($tipo == 1) {
