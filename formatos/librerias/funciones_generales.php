@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_cliente.php";
-include_once $ruta_db_superior . "class_transferencia.php";
+include_once $ruta_db_superior . "app/documento/class_transferencia.php";
 
 function retornar_seleccionados($valor)
 {
@@ -39,7 +39,7 @@ function buscar_funcionarios2($dependencia, $arreglo = null)
 {
     global $conn, $ruta_db_superior;
 
-    include_once($ruta_db_superior . "class_transferencia.php");
+    include_once($ruta_db_superior . "app/documento/class_transferencia.php");
     $dependencias = dependencias($dependencia);
     array_push($dependencias, $dependencia);
 
@@ -102,8 +102,8 @@ function transferencia_automatica(
     } elseif ($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
         $vector = explode("@", $destinos);
     } elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
-        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-        $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=$iddoc", "", $conn);
+        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato = " .$idformato, "", $conn);
+        $dato = busca_filtro_tabla($destinos, $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
 
         if ($dato['numcampos']) {
             $vector = explode(",", $dato[0][0]);
@@ -778,7 +778,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 $obligatorio = implode(" ", $obligatorio);
             }
             // *************************************************
-
+         
             $listado0 = array();
             if ($accion == "SELECT") {
                 $datos = ejecuta_filtro_tabla($campo[0]["valor"], $conn);
@@ -787,6 +787,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         array_push($listado0, html_entity_decode($datos[$i][0] . "," . $datos[$i][1]));
                     }
                     $llenado = implode(";", $listado0);
+                      
                 }
                 // else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo[0]["etiqueta"]);
             } else {
@@ -1229,10 +1230,13 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 $llave = "id" . $datos[0]["nombre_tabla"];
                 if (@$_REQUEST["item"]) {
                     $iddoc = $_REQUEST["item"];
-                }
+                } 
             } else {
                 $llave = "documento_iddocumento";
             }
+
+            
+
             $retorno = "";
             if ($datos["numcampos"]) {
                 if ($datos[0]["etiqueta_html"] == "item") {
@@ -1263,9 +1267,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 } else {
                     $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
                 }
+                
                 if ($campos["numcampos"]) {
-
+                   
                     if ($datos[0]["etiqueta_html"] == "arbol") {
+                       
                         $tipo_arbol = explode(";", $datos[0]["valor"]);
                         $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
                         $retorno = mostrar_seleccionados($idformato, $idcampo[0][0], $tipo_arbol[6], $iddoc, 1);
@@ -1277,9 +1283,10 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
                         $retorno = listar_anexos_ver_descargar($idformato, $iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
                     } elseif ($datos[0]["etiqueta_html"] == "autocompletar") {
+                        
                         $retorno = $campos[0][0];
                     } elseif (preg_match("/textarea/", $datos[0]["etiqueta_html"])) {
-                        $retorno = $campos[0][0];
+                        $retorno = $campos[0][$campo];
                     } elseif ($datos[0]["etiqueta_html"] == "link" && basename($_SERVER["PHP_SELF"]) == basename($datos[0]["ruta_mostrar"])) {
                         $retorno = "<a target='_blank' href='" . $campos[0][0] . "'>" . $campos[0][0] . "</a>";
                     } elseif ($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
@@ -1287,7 +1294,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     } elseif ($datos[0]["etiqueta_html"] == "moneda") {
                         $retorno = "$" . $campos[0][$campo];
                     } elseif ($datos[0]["etiqueta_html"] == "ejecutor") {
-
+                        
                         if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_adicionar"]) && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
                             if ($datos[0]["valor"] == "") {
                                 $parametros = array("multiple", "nombre,identificacion", "");
@@ -1343,20 +1350,27 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             }
                         } else {
                             $retorno = $campos[0][$campo];
+                            
                         }
                     } else {
+                        
                         $retorno = formatea_campo($campos[0][$campo], $datos[0]["etiqueta_html"], $datos[0]["valor"], $datos[0]["opciones"]);
                     }
                 }
                 if (preg_match("/textarea/", $datos[0]["etiqueta_html"])) {
                     $retorno = stripslashes($retorno);
+                    
                 } else {
                     $retorno = str_replace('"', "", stripslashes($retorno));
+                    
                 }
                 if ($_REQUEST["tipo"] != 5 && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
+                   
                     $retorno = str_replace("<p><!-- pagebreak --></p>", "<!-- pagebreak -->", $retorno);
                     $retorno = str_replace("<!-- pagebreak -->", "<div class='page_break'></div>", $retorno);
+                   
                 } else if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
+                    
                     $conf = busca_filtro_tabla("", "configuracion a", "a.nombre='exportar_pdf'", "", $conn);
                     if ($conf[0]["valor"] == "html2ps") {
                         $retorno = str_replace("<!-- pagebreak -->", '<pagebreak/>', $retorno);
@@ -1403,6 +1417,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     $resultado[] = $valor2[$i]["nombre"];
                                 }
                             }
+                            
                         }
                     } else {
                         $llenado = html_entity_decode($llenado);
@@ -1416,7 +1431,6 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         for ($j = 0; $j < $datos["numcampos"]; $j++) {
                             $valores[] = $datos[$j]["nombre"];
                         }
-
                         if ($datos["numcampos"]) {
                             return (implode(", ", $valores));
                         } else {
@@ -1437,12 +1451,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                 $valoresMarcados[] = recursiveFind($llenado, $valoresCheck[$i]);
                             }
                             $valoresMarcados = implode(",", $valoresMarcados);
+                            
                             return $valoresMarcados;
                         } else {
                             $resultado[0] = $valor;
                         }
                     }
                 }
+                
                 return implode(", ", $resultado);
             }
             return $valor;

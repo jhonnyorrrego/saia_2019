@@ -15,14 +15,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 
 $formatId = $_REQUEST['idformato'] ?? 0;
-$params = json_encode([
+$params = [
     'baseUrl' => $ruta_db_superior,
     'formatId' => $formatId
-]);
+];
 
 if ($formatId) {
     $origen = [
-        "url" => "arboles/arbol_formatos.php",
+        "url" => "app/arbol/arbol_formatos.php",
         "ruta_db_superior" => $ruta_db_superior,
         "params" => [
             "id" => $formatId,
@@ -51,36 +51,27 @@ if ($formatId) {
     if ($funcionPredeterminada !== false) {
         $checkResponsables = "checked";
     }
-    //$formato = json_encode($formato);
-    if ($cod_proceso_pertenece) {
-        $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
-    }
+
     if ($cod_padre) {
         $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "", $conn);
-        $adicional_cod_padre = "&seleccionado=" . $cod_padre;
-    }
-    if ($categoria) {
-        $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato IN($categoria)", "", $conn);
-        $adicional_categoria = "&seleccionado=" . $categoria;
     }
 
-    $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $formatId, "seleccionados" => $cod_padre, "seleccionable" => "radio"));
+    $origen = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $formatId, "seleccionados" => $cod_padre, "seleccionable" => "radio"));
     $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
-    $extensiones = array("filter" => array());
     $arbolFormato = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
 
-    $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+    $origenCategoria = array("url" => "app/arbol/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
     $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
     $extensionesCategoria = array("filter" => array());
     $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
     $params['formato'] = $formato[0];
 } else {
-    $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
+    $origen = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
     $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
     $extensiones = array("filter" => array());
     $arbolFormato = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
 
-    $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionado" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+    $origenCategoria = array("url" => "app/arbol/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionado" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
     $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
     $extensionesCategoria = array("filter" => array());
     $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
@@ -210,7 +201,7 @@ function check_banderas($bandera, $chequear = true)
                         </ul>
 
                         <div style="position:fixed;right:8px;top:0px;">
-                            <label id="guardar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">Guardar</label>
+                            <label id="guardar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">GUARDAR</label>
                             <label id="generar" style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;color:white;cursor:pointer;height:44px;width:140px;padding-left:32px;padding-top:10px;">PUBLICAR</label>
                         </div>
                     </div>
@@ -229,7 +220,7 @@ function check_banderas($bandera, $chequear = true)
                                                 </div>
                                                 <hr />
                                                 <input type="hidden" name="nombre" id="nombre_formato" value="" required />
-                                                <input type="hidden" name="idformato" id="idformato" value="<?= $_REQUEST["idformato"] ?>" />
+                                                <input type="hidden" name="idformato" id="idformato" value="<?= $_REQUEST["idformato"] ?? 0 ?>" />
                                                 <div class="row-fluid">
 
                                                     <div class="my-3">
@@ -620,7 +611,7 @@ function check_banderas($bandera, $chequear = true)
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= $params ?>' id="script_generador_pantalla"></script>
+    <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>
 </body>
 
 </html>

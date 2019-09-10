@@ -101,9 +101,6 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
         $estado_distribucion = $datos['estado_distribucion'];
     }
 
-    //FECHA DE CREACION
-    $fecha_creacion = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-
     //--------------------------------------------------------
     //ORGANIZAR DESTINOS DEPENDENCIA - ROLES
     $array_destinos = array();
@@ -134,59 +131,31 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             $iddependencia_cargo_mensajero_destino = obtener_mensajero_ruta_distribucion($idft_ruta_distribucion_destino);
         }
 
-        //---------------------------------------------------------
-        $campo_iddistribucion = "";
-        $valor_iddistribucion = "";
+        $nuevaDistribucion = $Distribucion = new Distribucion();
+        $camposDistribucion = [
+            'origen' => $datos['origen'],
+            'tipo_origen' => $datos['tipo_origen'],
+            'ruta_origen' => $idft_ruta_distribucion_origen,
+            'mensajero_origen' => $iddependencia_cargo_mensajero_origen,  
+            'destino' => $array_destinos[$j],
+            'tipo_destino' => $datos['tipo_destino'],
+            'ruta_destino' => $idft_ruta_distribucion_destino,
+            'mensajero_destino' => $iddependencia_cargo_mensajero_destino,
+            'numero_distribucion' => $numero_distribucion,
+            'estado_distribucion' => $estado_distribucion,
+            'estado_recogida' => $estado_recogida,
+            'documento_iddocumento' => $iddoc,
+            'fecha_creacion' => date('Y-m-d H:i:s')
+            
+        ];
+
         if ($iddistribucion) {
-            $campo_iddistribucion = "iddistribucion,";
-            $valor_iddistribucion = $iddistribucion . ",";
+            $camposDistribucion = array_merge($camposDistribucion, ["iddistribucion" => $iddistribucion]);
         }
 
-        //INSERTAR DISTRIBUCION
-        $sqli = "INSERT INTO distribucion
-			(
-				" . $campo_iddistribucion . "
-				origen,
-				tipo_origen,
-				ruta_origen,
-				mensajero_origen,
-				
-				destino,
-				tipo_destino,
-				ruta_destino,
-				mensajero_destino,
-				
-				numero_distribucion,
-				estado_distribucion,
-				estado_recogida,
-				
-				documento_iddocumento,
-				fecha_creacion
-			) 
-				VALUES 
-			(
-				" . $valor_iddistribucion . "
-				" . $datos['origen'] . ",
-				" . $datos['tipo_origen'] . ",
-				" . $idft_ruta_distribucion_origen . ",
-				" . $iddependencia_cargo_mensajero_origen . ",
-				
-				" . $array_destinos[$j] . ",
-				" . $datos['tipo_destino'] . ",
-				" . $idft_ruta_distribucion_destino . ",
-				" . $iddependencia_cargo_mensajero_destino . ",
-				
-				" . $numero_distribucion . ",
-				" . $estado_distribucion . ",
-				" . $estado_recogida . ",
-				
-				" . $iddoc . ",
-				" . $fecha_creacion . "
-			)
-				
-		";
-        phpmkr_query($sqli);
-        $array_iddistribucion[] = phpmkr_insert_id();
+        $Distribucion->newRecord($camposDistribucion);
+        
+        $array_iddistribucion[] = $nuevaDistribucion;
     }
     return $array_iddistribucion;
 }

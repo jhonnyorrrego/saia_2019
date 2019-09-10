@@ -9,7 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once $ruta_db_superior . "core/autoload.php";
-include_once($ruta_db_superior."class_transferencia.php");
+include_once($ruta_db_superior."app/documento/class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."assets/librerias.php");
 

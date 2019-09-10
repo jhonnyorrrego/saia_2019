@@ -59,6 +59,7 @@ class Formato extends Model
     protected $Modulo;
     protected $EncabezadoFormatoHeader;
     protected $EncabezadoFormatoFooter;
+    protected $camposFormato;
 
     function __construct($id = null)
     {
@@ -137,7 +138,7 @@ class Formato extends Model
      * obtiene la instancia del formato padre
      *
      *
-     * @return object
+     * @return null|Formato
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-03
      */
@@ -154,7 +155,7 @@ class Formato extends Model
      * obtiene la instancia del modulo que
      * representa el formato
      *
-     * @return object
+     * @return null|Modulo
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-03
      */
@@ -173,7 +174,7 @@ class Formato extends Model
      * obtiene la instancia del encabezado formato
      * de la columna encabezado
      *
-     * @return void
+     * @return null|EncabezadoFormato
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-05
      */
@@ -190,7 +191,7 @@ class Formato extends Model
      * obtiene la instancia del encabezado formato
      * de la columna pie_pagina
      *
-     * @return void
+     * @return null|EncabezadoFormato
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-05
      */
@@ -204,14 +205,31 @@ class Formato extends Model
     }
 
     /**
-     * obtiene las instancias de los campos formato que pertenecen
-     * al proceso y no son de nucleo
+     * obtiene instancias de campos formato
+     *
+     * @return null|CamposFormato[]
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
+    public function getFields()
+    {
+        if (!$this->camposFormato) {
+            $this->camposFormato = CamposFormato::findAllByAttributes([
+                'formato_idformato' => $this->getPK()
+            ]);
+        }
+
+        return $this->camposFormato;
+    }
+
+    /**
+     * obtiene los nombres de las columnas de nucleo
      *
      * @return array
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-05
+     * @date 2019-09-06
      */
-    public function getProcessFields()
+    public function getSystemFields()
     {
         $systemFields = [
             "id{$this->nombre_tabla}",
@@ -224,6 +242,21 @@ class Formato extends Model
         if ($this->getParent()) {
             $systemFields[] = $this->getParent()->nombre_tabla;
         }
+
+        return $systemFields;
+    }
+
+    /**
+     * obtiene las instancias de los campos formato que pertenecen
+     * al proceso y no son de nucleo
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-05
+     */
+    public function getProcessFields()
+    {
+        $systemFields = $this->getSystemFields();
 
         $fields = CamposFormato::findAllByAttributes([
             'formato_idformato' => $this->getPK()
@@ -243,7 +276,7 @@ class Formato extends Model
      * encuentra la instancia del primer formato
      * en el proceso
      *
-     * @return void
+     * @return Formato
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-16
      */
@@ -253,127 +286,23 @@ class Formato extends Model
     }
 
     /**
-     * crea los campos predeterminados para el formato
-     *
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-08-12
-     */
-    /*public function createDefaultFields()
-    {
-        $sql = <<<SQL
-			SELECT 
-				nombre 
-			FROM
-				campos_formato
-			WHERE 
-				formato_idformato= {$this->getPK()} AND
-				nombre IN (
-					'id{$this->nombre_tabla}',
-					'documento_iddocumento',
-					'dependencia',
-					'encabezado',
-					'firma'
-				)
-SQL;
-        $records = CamposFormato::findByQueryBuilder($sql);
-
-        $fields = [];
-        foreach ($records as $row) {
-            $fields[] = $row->nombre;
-        }
-
-        if (!in_array("id{$this->nombre_tabla}", $fields)) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => "id{$this->nombre_tabla}",
-                'etiqueta' => strtoupper($this->nombre),
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'banderas' => 'ai,pk',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden'
-            ]);
-        }
-
-        if (!in_array('documento_iddocumento', $fields) && !$this->item) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => 'documento_iddocumento',
-                'etiqueta' => 'DOCUMENTO ASOCIADO',
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'banderas' => 'i',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden'
-            ]);
-        }
-
-        if (!in_array('dependencia', $fields) && !$this->item) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => 'dependencia',
-                'etiqueta' => 'DEPENDENCIA DEL CREADOR DEL DOCUMENTO',
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'banderas' => 'i,fdc',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden',
-                'valor' => '{*buscar_dependencia*}',
-                'orden' => 1
-            ]);
-        }
-
-        if (!in_array('encabezado', $fields) && !$this->item) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => 'encabezado',
-                'etiqueta' => 'ENCABEZADO',
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden',
-                'predeterminado' => 1
-            ]);
-        }
-
-        if (!in_array('firma', $fields) && !$this->item) {
-            CamposFormato::newRecord([
-                'formato_idformato' => $this->getPK(),
-                'nombre' => 'firma',
-                'etiqueta' => 'FIRMAS DIGITALES',
-                'tipo_dato' => 'INT',
-                'longitud' => '11',
-                'obligatoriedad' => '1',
-                'acciones' => 'a,e',
-                'etiqueta_html' => 'hidden',
-                'predeterminado' => 1
-            ]);
-        }
-    }*/
-
-    /**
      * realiza la busqueda de formatos 
      * por un termino indicado
      *
      * @param string $term
-     * @return void
+     * @return array|Formato[]
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-07-16
      */
     public static function findAllByTerm($term)
     {
-        $sql = <<<SQL
-            SELECT *
-            FROM formato
-            WHERE
-                etiqueta like '%{$term}%' AND
-                item <> 1
-SQL;
-        return self::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('*')
+            ->from('formato')
+            ->where('etiqueta like :like')
+            ->andWhere('item <> 1')
+            ->setParameter(':like', "%{$term}%");
+
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

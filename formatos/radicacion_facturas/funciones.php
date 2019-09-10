@@ -99,7 +99,7 @@ function item_factura($idformato,$iddoc){
 
 	$item=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos,' - ',b.cargo) as nombre,a.*","ft_item_facturas a,vfuncionario_dc b","a.dependencia=b.iddependencia_cargo and ft_radicacion_facturas=".$dato[0]['idft_radicacion_facturas'],"",$conn);
 	if($item['numcampos']){
-		include_once($ruta_db_superior."class_transferencia.php");
+		include_once($ruta_db_superior."app/documento/class_transferencia.php");
 		$tabla='<table class="table table-bordered" style="width: 100%;" border="1">
 		<tr>
 			<td style="font-weight:bold; text-align:center;">Clasificacion</td><td style="font-weight:bold; text-align:center;">Valor de la factura</td><td style="font-weight:bold; text-align:center;">Fecha programada de pago</td><td style="font-weight:bold; text-align:center;">Prioridad</td><td style="font-weight:bold; text-align:center;">Numero orden compra/contrato</td><td style="font-weight:bold; text-align:center;">Responsable</td><td style="font-weight:bold; text-align:center;">Realizado por</td>

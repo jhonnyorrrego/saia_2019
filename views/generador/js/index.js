@@ -17,6 +17,60 @@ $(document).ready(function() {
         }
     })();
 
+    $('#guardar').on('click', function() {
+        if (step == 1) {
+            saveFormat();
+        } else if (step == 3) {
+            saveBody();
+        } else {
+            return false;
+        }
+    });
+
+    $('#generar').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: `${params.baseUrl}app/generador/generar.php`,
+            data: {
+                token: localStorage.getItem('token'),
+                key: localStorage.getItem('key'),
+                formatId: params.formatId
+            },
+            beforeSend: xhr => {
+                if (!params.formatId) {
+                    top.notification({
+                        type: 'error',
+                        message: 'Debe diligenciar los datos del formato'
+                    });
+                    xhr.abort();
+                } else {
+                    top.notification({
+                        type: 'info',
+                        title: 'Generando formato',
+                        message: 'Esto puede tardar un poco, por favor espere'
+                    });
+                }
+            },
+            success: function(response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr);
+            }
+        });
+    });
+
     $('.nav li').click(function() {
         return !$(this).hasClass('disabled');
     });
@@ -61,16 +115,6 @@ $(document).ready(function() {
                 background: '#eee',
                 'font-weight': 'normal'
             });
-        }
-    });
-
-    $('#guardar').on('click', function() {
-        if (step == 1) {
-            saveFormat();
-        } else if (step == 3) {
-            saveBody();
-        } else {
-            return false;
         }
     });
 
@@ -123,38 +167,41 @@ $(document).ready(function() {
 
     $('.select_header_footer').on('change', function() {
         let type = $(this).data('type');
-        $.post(
-            `${params.baseUrl}app/generador/actualizar_encabezado_pie.php`,
-            {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                formatId: params.formatId,
-                type: type,
-                identificator: $(this).val()
-            },
-            function(response) {
-                if (response.success) {
-                    top.notification({
-                        type: 'success',
-                        message: response.message
-                    });
-                    if (type == 'header') {
-                        showHeader();
+
+        if (type) {
+            $.post(
+                `${params.baseUrl}app/generador/actualizar_encabezado_pie.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    formatId: params.formatId,
+                    type: type,
+                    identificator: $(this).val()
+                },
+                function(response) {
+                    if (response.success) {
+                        top.notification({
+                            type: 'success',
+                            message: response.message
+                        });
+                        if (type == 'header') {
+                            showHeader();
+                        } else {
+                            showFooter();
+                        }
                     } else {
-                        showFooter();
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
                     }
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
-                }
-            },
-            'json'
-        );
+                },
+                'json'
+            );
+        }
     });
 
-    $('.delete_header_footer').on('click', function(e) {
+    $('.delete_header_footer').on('click', function() {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -189,7 +236,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.edit_header_footer').on('click', function(e) {
+    $('.edit_header_footer').on('click', function() {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -227,7 +274,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.add_header_footer').on('click', function(e) {
+    $('.add_header_footer').on('click', function() {
         let type = $(this).data('type');
 
         top.topModal({
@@ -250,6 +297,18 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#serie_idserie')
+        .change(function() {
+            $('.codigoSerie').each(function() {
+                if ($(this).val() == $('#serie_idserie').val()) {
+                    $('#codigoSerieInput').val($(this).attr('codigo'));
+                }
+            });
+        })
+        .trigger('change');
+
+    $('[data-toggle="tooltip"]').tooltip();
 
     function createHeaderFooterSelect() {
         $.post(
@@ -289,47 +348,51 @@ $(document).ready(function() {
     }
 
     function showHeader() {
-        $.post(
-            `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
-            {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                identificator: $('#select_header').val()
-            },
-            function(response) {
-                if (response.success) {
-                    $('#header_content').html(response.data.content);
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
-                }
-            },
-            'json'
-        );
+        if ($('#select_header').val()) {
+            $.post(
+                `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    identificator: $('#select_header').val()
+                },
+                function(response) {
+                    if (response.success) {
+                        $('#header_content').html(response.data.content);
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        }
     }
 
     function showFooter() {
-        $.post(
-            `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
-            {
-                key: localStorage.getItem('key'),
-                token: localStorage.getItem('token'),
-                identificator: $('#select_footer').val()
-            },
-            function(response) {
-                if (response.success) {
-                    $('#footer_content').html(response.data.content);
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    });
-                }
-            },
-            'json'
-        );
+        if ($('#footer_content').val()) {
+            $.post(
+                `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
+                {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    identificator: $('#select_footer').val()
+                },
+                function(response) {
+                    if (response.success) {
+                        $('#footer_content').html(response.data.content);
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: response.message
+                        });
+                    }
+                },
+                'json'
+            );
+        }
     }
 
     function saveFormat() {
@@ -538,17 +601,4 @@ $(document).ready(function() {
             }
         }
     }
-    // ACA INICIA EL ARCHIVO DE LA PESTANA 1
-
-    $('#serie_idserie')
-        .change(function() {
-            $('.codigoSerie').each(function() {
-                if ($(this).val() == $('#serie_idserie').val()) {
-                    $('#codigoSerieInput').val($(this).attr('codigo'));
-                }
-            });
-        })
-        .trigger('change');
-
-    $('[data-toggle="tooltip"]').tooltip();
 });

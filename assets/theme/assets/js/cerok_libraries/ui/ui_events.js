@@ -261,12 +261,12 @@ $(function() {
         var data = JSON.stringify([
             {
                 kConnector: 'html.page',
-                url: 'pantallas/formato/listar_proceso_formatos.php',
+                url: 'views/formatos/listar_proceso_formatos.php',
                 kTitle: 'Procesos'
             },
             {
                 kConnector: 'html.page',
-                url: `pantallas/formato/listar_formatos.php?idcategoria_formato=${category}`,
+                url: `views/formatos/listado_categoria.php?idcategoria_formato=${category}`,
                 kTitle: title
             }
         ]);

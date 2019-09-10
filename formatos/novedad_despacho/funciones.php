@@ -130,7 +130,7 @@ function mostrar_numero_item_novedad($idformato, $iddoc) {
 function mostrar_novedad_despacho_anexo_soporte($idformato, $iddoc) {
     global $ruta_db_superior, $conn;
 
-    require_once ($ruta_db_superior . 'StorageUtils.php');
+    require_once ($ruta_db_superior . 'filesystem/StorageUtils.php');
     require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
     $tipo_almacenamiento = new SaiaStorage("archivos");
 
@@ -189,5 +189,3 @@ function generar_select_novedad($idformato, $iddoc) {
                 </script>";
     echo($select);
 }
-
-?>

@@ -316,7 +316,7 @@ function kaiten()
 function accionesKaiten()
 {
     global $ruta_db_superior;
-    return '<script type="text/javascript" src="' . $ruta_db_superior . 'pantallas/lib/acciones_kaiten.js"></script>';
+    return '<script type="text/javascript" src="' . $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/acciones_kaiten.js"></script>';
 }
 
 /**
