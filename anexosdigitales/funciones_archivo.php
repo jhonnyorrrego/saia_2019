@@ -8,12 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-<<<<<<< HEAD
 include_once $ruta_db_superior . 'core/autoload.php';
-require_once ($ruta_db_superior . "class.funcionarios.php");
-=======
-require_once ($ruta_db_superior . "db.php");
->>>>>>> d56faca250c99fe1f47da6bfdb18ef032d748036
 
 $extensiones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "", $conn);
 if ($extensiones["numcampos"] > 0) {
@@ -993,4 +988,3 @@ function listar_anexos_ver_descargar($idformato, $iddoc, $idcampo = '', $tipo_mo
 		echo($tabla);
 	}
 }
-?>

@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
@@ -298,4 +296,3 @@ function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 
         $resultado = round($resultado);
     return $resultado;
 }
->>>>>>> d56faca250c99fe1f47da6bfdb18ef032d748036

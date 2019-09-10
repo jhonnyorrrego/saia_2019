@@ -7,12 +7,8 @@ try {
 	die("invalid access");
 }
 
-<<<<<<< HEAD
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php';
-=======
-include_once $ruta_db_superior . 'formatos/' . 'librerias/encabezado_pie_pagina.php';
->>>>>>> d56faca250c99fe1f47da6bfdb18ef032d748036
+include_once $ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'app/qr/librerias.php';
 
 class Imprime_Pdf
@@ -429,7 +425,7 @@ class Imprime_Pdf
 					$this->pdf->Image($paginas[$i]["ruta"], $this->margenes["izquierda"], $this->margenes["superior"], 0, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, true);
 				}
 			}
-		} 
+		}
 	}
 
 	public function extraer_contenido($iddocumento, $vista = 0)
@@ -440,9 +436,8 @@ class Imprime_Pdf
 		$direccion = array();
 
 		if ($_REQUEST["url"]) {
-			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']); 
+			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']);
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
-			
 		} else {
 			$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato,exportar", "formato,documento", "lower(plantilla)=nombre and iddocumento=" . $iddocumento, "", $conn);
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
@@ -467,7 +462,7 @@ class Imprime_Pdf
 						'destino' => $fila
 					]);
 					$direccion[] = $url . $queryParams;
-				} 
+				}
 			} else {
 				$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . 'formatos/' . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?";
 				$queryParams = http_build_query([
@@ -510,7 +505,6 @@ class Imprime_Pdf
 			$this->pdf->writeHTML(stripslashes($contenido), 0);
 		}
 		curl_close($ch);
-	    
 	}
 
 	public function vincular_anexos()
