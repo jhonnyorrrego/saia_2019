@@ -128,7 +128,7 @@ class Imprime_Pdf
 			$this->imprimir_plantilla = 0;
 			$this->imprimir_vistas = 1;
 			$this->idvistas = $datos["vista"] . "-" . $datos["iddoc"];
-			$vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $datos["vista"], "", $conn);
+			$vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $datos["vista"], "");
 			$this->formato[0]["encabezado"] = $vista[0]["encabezado"];
 			$this->formato[0]["pie_pagina"] = $vista[0]["pie_pagina"];
 			$vmargen = explode(",", $vista[0]["margenes"]);
@@ -195,14 +195,14 @@ class Imprime_Pdf
 						$paginas[] = $campos[1];
 					}
 				} elseif ($campos[0] == "vista") {
-					$formato = busca_filtro_tabla("nombre_tabla", "formato,vista_formato", "idformato=formato_padre and idvista_formato=" . $campos[1], "", $conn);
-					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "", $conn);
+					$formato = busca_filtro_tabla("nombre_tabla", "formato,vista_formato", "idformato=formato_padre and idvista_formato=" . $campos[1], "");
+					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "");
 					if ($iddoc["numcampos"]) {
 						$vistas[] = $campos[1] . "-" . $iddoc[0][0];
 					}
 				} else {
-					$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $campos[0], "", $conn);
-					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "", $conn);
+					$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $campos[0], "");
+					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "");
 					if ($iddoc["numcampos"] && $iddoc[0][0] != $this->documento[0]["iddocumento"]) {
 						$documentos[] = $iddoc[0][0];
 					}
@@ -223,7 +223,7 @@ class Imprime_Pdf
 
 	public function imprimir()
 	{
-		global $conn;
+		global $ruta_db_superior;
 		$this->pdf = new \Mpdf\Mpdf([
 			'mode' => 'utf-8',
 			'format' => $this->papel,
@@ -247,13 +247,13 @@ class Imprime_Pdf
 		$this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
 
 		if (!$this->documento && $_REQUEST["iddoc_pag"]) {
-			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "", $conn);
+			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "");
 		}
 
 		//
 		$this->pdf->SetCreator('SAIA');
 		$this->pdf->SetTitle($this->documento[0]["plantilla"] . "_" . $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha1"]);
-		$autor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $this->documento[0]["ejecutor"], "", $conn);
+		$autor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $this->documento[0]["ejecutor"], "");
 		if ($autor["numcampos"]) {
 			$this->pdf->SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
@@ -310,7 +310,7 @@ class Imprime_Pdf
 
 		$prefijo_nombre = "";
 		if ($this->documento[0]["serie_idserie"] && $this->formato[0]["mostrar_tipodoc_pdf"]) {
-			$datos_serie = busca_filtro_tabla("nombre, codigo", "serie", "idserie=" . $this->documento[0]["serie_idserie"], "", $conn);
+			$datos_serie = busca_filtro_tabla("nombre, codigo", "serie", "idserie=" . $this->documento[0]["serie_idserie"], "");
 			if ($datos_serie["numcampos"] && !empty($datos_serie[0]["codigo"])) {
 				$prefijo_nombre = str_replace("-", "_", $datos_serie[0]["codigo"]);
 				$prefijo_nombre .= "_";
@@ -332,7 +332,7 @@ class Imprime_Pdf
 				$carpeta = $formato_ruta . "/pdf";
 
 				$adicional = "";
-				$versiones = busca_filtro_tabla("", "documento_version", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "numero_version ASC", $conn);
+				$versiones = busca_filtro_tabla("", "documento_version", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "numero_version ASC");
 				if ($versiones["numcampos"]) {
 					$adicional = "_V" . $versiones[0]["numero"];
 				}

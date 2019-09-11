@@ -131,7 +131,7 @@ class Imprime_Pdf
 			$this->imprimir_plantilla = 0;
 			$this->imprimir_vistas = 1;
 			$this->idvistas = $datos["vista"] . "-" . $datos["iddoc"];
-			$vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $datos["vista"], "", $conn);
+			$vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $datos["vista"], "");
 			$this->formato[0]["encabezado"] = $vista[0]["encabezado"];
 			$this->formato[0]["pie_pagina"] = $vista[0]["pie_pagina"];
 			$vmargen = explode(",", $vista[0]["margenes"]);
@@ -198,14 +198,14 @@ class Imprime_Pdf
 						$paginas[] = $campos[1];
 					}
 				} elseif ($campos[0] == "vista") {
-					$formato = busca_filtro_tabla("nombre_tabla", "formato,vista_formato", "idformato=formato_padre and idvista_formato=" . $campos[1], "", $conn);
-					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "", $conn);
+					$formato = busca_filtro_tabla("nombre_tabla", "formato,vista_formato", "idformato=formato_padre and idvista_formato=" . $campos[1], "");
+					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "");
 					if ($iddoc["numcampos"]) {
 						$vistas[] = $campos[1] . "-" . $iddoc[0][0];
 					}
 				} else {
-					$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $campos[0], "", $conn);
-					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "", $conn);
+					$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $campos[0], "");
+					$iddoc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $campos[2], "");
 					if ($iddoc["numcampos"] && $iddoc[0][0] != $this->documento[0]["iddocumento"]) {
 						$documentos[] = $iddoc[0][0];
 					}
@@ -226,6 +226,8 @@ class Imprime_Pdf
 
 	public function imprimir()
 	{
+		global $ruta_db_superior;
+		
 		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
 
 		$this->pdf->margenes = $this->margenes;
@@ -239,13 +241,13 @@ class Imprime_Pdf
 		$this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
 
 		if (!$this->documento && $_REQUEST["iddoc_pag"]) {
-			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "", $conn);
+			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "");
 		}
 
 		//
 		$this->pdf->SetCreator('SAIA');
 		$this->pdf->SetTitle($this->documento[0]["plantilla"] . "_" . $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha1"]);
-		$autor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $this->documento[0]["ejecutor"], "", $conn);
+		$autor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $this->documento[0]["ejecutor"], "");
 		if ($autor["numcampos"]) {
 			$this->pdf->SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
@@ -253,7 +255,7 @@ class Imprime_Pdf
 		$this->pdf->SetKeywords("SAIA" . $cad_etiquetas);
 		$this->pdf->SetSubject(codifica_encabezado(strip_tags($this->documento[0]["descripcion"])));
 
-		$campos_pdfa = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "", $conn);
+		$campos_pdfa = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "");
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
 				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this->formato[0]['idformato'], $this->documento[0]["iddocumento"], 1));
