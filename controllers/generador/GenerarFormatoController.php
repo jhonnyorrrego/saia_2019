@@ -567,14 +567,14 @@ CODE;
         $archivo = 0;
 
         $texto = "<?php llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR'); ?>";
-        $texto .= '<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
+        $texto .= "<div class='container-fluid container-fixed-lg col-lg-8' style='overflow: auto;' id='content_container'>
                     <!-- START card -->
-                        <div class="card card-default">
-                            <div class="card-body">
-                                <h5 class="text-black w-100 text-center">
+                        <div class='card card-default'>
+                            <div class='card-body'>
+                                <h5 class='text-black w-100 text-center'>
                                     {strtoupper($this->Formato->etiqueta)}
                                 </h5>
-                                <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php" enctype="multipart/form-data">';
+                                <form name='formulario_formatos' id='formulario_formatos' role='form' autocomplete='off' method='post' action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' enctype='multipart/form-data'>";
 
         $fields = $this->Formato->getFields();
         foreach ($fields as $CamposFormato) {
@@ -982,8 +982,8 @@ CODE;
 
         $libraries = "
         <?php include_once \$ruta_db_superior . 'assets/librerias.php' ?>
-        <?php include_once \$ruta_db_superior . 'formatos/libreriras/funciones_generales.php' ?>
-        <?php include_once \$ruta_db_superior . 'formatos/libreriras/funciones_acciones.php' ?>\n";
+        <?php include_once \$ruta_db_superior . 'formatos/librerias/funciones_generales.php' ?>
+        <?php include_once \$ruta_db_superior . 'formatos/librerias/funciones_acciones.php' ?>\n";
 
         if ($this->Formato->getFunctions()) {
             $functionsRoute = "formatos/{$this->Formato->nombre}/funciones.php";
