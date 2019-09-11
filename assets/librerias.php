@@ -356,9 +356,7 @@ function validate()
 /**
  * Incluir libreria para arboles jquery.fancytree
  * v2.30.0
- * @param string $version
- * @param string $opciones
- * @param string $tema
+ * @param string $filtro
  * @return string
  */
 function fancyTree($filtro = false)
@@ -405,7 +403,15 @@ function bpmnModeler()
 
     return $modeler;
 }
-//TODO: VALIDAR ESTA LIBRERIA NO UTILIZAN EL JS Y EL CSS
+
+/**
+ * retorna la libreria bpmn
+ * v3.0.4
+ *
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
 function bpmnViewer()
 {
     global $ruta_db_superior;
@@ -413,14 +419,9 @@ function bpmnViewer()
     $rutaViewer = $ruta_db_superior . $ruta_lib . "bpmn-viewer.development.js";
     $viewer = '<script src="' . $rutaViewer . '" type="text/javascript"></script>';
 
-    $rutaCss = $ruta_db_superior . $ruta_lib . 'bootstrap.min.css';
-    $css = '<link href="' . $rutaCss . '" rel="stylesheet" type="text/css" />';
-
-    $rutaJs = $ruta_db_superior . $ruta_lib . 'bootstrap.min.js';
-    $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
-
     return $viewer;
 }
+
 /**
  * retorna enlaces para el uso
  * de la libreria select2 v4.0 .4
