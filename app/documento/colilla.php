@@ -140,8 +140,6 @@ function validar_confirmacion()
             var ingreso = confirm("Esta seguro de generar un nuevo radicado?");
             if (ingreso) {
                 window.open("app/documento/colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general']; ?>", "_self");
-            } else {
-                window.open("<?php echo $enlace; ?>", "_self");
             }
         </script>
         <?php

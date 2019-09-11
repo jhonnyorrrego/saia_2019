@@ -349,6 +349,7 @@ CODE;
      */
     public function generateShow()
     {
+        $code = $this->processContent();
         $content = <<<CODE
 <?php
 \$max_salida = 10;
@@ -400,7 +401,7 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                {$this->Formato->cuerpo}
+                                {$code}
                             </div>
                         </div>
                         <?php include_once \$ruta_db_superior . "formatos/librerias/footer_nuevo.php" ?>
@@ -441,6 +442,39 @@ CODE;
         if (!file_put_contents($fileName, $content)) {
             throw new Exception("Imposible crear el archivo mostrar", 1);
         }
+    }
+
+    /**
+     * convierte el cuerpo del formato con el
+     * valor de las funciones
+     *
+     * @return string
+     * 
+     */
+    public function processContent()
+    {
+        $baseContent = $this->Formato->cuerpo;
+        $fields = $this->Formato->getFields();
+        $functions = $this->Formato->getFunctions();
+
+        foreach ($fields as $CamposFormato) {
+            $search = "{*{$CamposFormato->nombre}*}";
+            $baseContent = str_replace(
+                $search,
+                "<?= mostrar_valor_campo('{$CamposFormato->nombre}', {$this->formatId}, \$_REQUEST['iddoc']) ?>",
+                $baseContent
+            );
+        }
+
+        foreach ($functions as $FuncionesFormato) {
+            $baseContent = str_replace(
+                $FuncionesFormato->nombre,
+                "<?= {$FuncionesFormato->nombre_funcion}({$this->formatId}, \$_REQUEST['iddoc']) ?>",
+                $baseContent
+            );
+        }
+
+        return $baseContent;
     }
 
     /**
@@ -493,7 +527,6 @@ CODE;
     {
         global $conn, $ruta_db_superior;
         $texto = '';
-        $includes = "";
         $obligatorio = "";
         $autoguardado = array();
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->formatId, "", $conn);
@@ -515,31 +548,35 @@ CODE;
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
 
 
-        $librerias = array();
+        $includes = $this->incluir('$ruta_db_superior . "assets/librerias.php"', "librerias");
+        $includes .= '
+            <?= pace() ?>
+            <?= jquery() ?>
+            <?= bootstrap() ?>
+            <?= theme() ?>
+            <?= icons() ?>
+            <?= moment() ?>
+            <?= select2() ?>
+            <?= validate() ?>
+            <?= dateTimePicker() ?>';
         if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
             $includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
         }
-        $includes .= $this->incluir('$ruta_db_superior . "assets/librerias.php"', "librerias");
 
-        $includes .= $this->incluir_libreria("funciones_formatos.js", "javascript");
-        // $includes .= $this->incluir("../../js/cmxforms.js", "javascript");
         if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
             $includes .= $this->incluir($formato[0]["estilos"], "estilos", 1);
         }
         if ($formato[0]["javascript"] && $formato[0]["javascript"] != "") {
             $includes .= $this->incluir($formato[0]["javascript"], "javascript", 1);
         }
-        $arboles = 0;
-        $spinner = 0;
+
         $dependientes = 0;
         $mascaras = 0;
-        $textareas = 0;
         $textareacke = 0;
         $arboles_fancy = 0;
         $autocompletar = 0;
         $checkboxes = 0;
         $fecha = 0;
-        $hora = 0;
         $archivo = 0;
         $lista_enmascarados = "";
         $indice_tabindex = 1;
@@ -549,11 +586,7 @@ CODE;
 
         $fun_campos = array();
         for ($h = 0; $h < $campos["numcampos"]; $h++) {
-            if ($campos[$h]["etiqueta_html"] == "arbol") {
-                $arboles = 1;
-            } else if ($campos[$h]["etiqueta_html"] == "textarea") {
-                $textareas = 1;
-            } else if ($campos[$h]["etiqueta_html"] == "textarea_cke") {
+            if ($campos[$h]["etiqueta_html"] == "textarea_cke") {
                 $textareacke = 1;
             }
             if ($campos[$h]["obligatoriedad"]) {
@@ -721,42 +754,6 @@ CODE;
                             $arboles_fancy++;
                         }
 
-                        break;
-                    case "textarea":
-                        $valor = $campos[$h]["valor"];
-                        $valor2 = explode("|", $campos[$h]["valor"]);
-                        $nivel_barra = "";
-                        if (count($valor2)) {
-                            $nivel_barra = $valor2[0];
-                            if (@$valor2[1] != "") {
-                                if ($accion == "adicionar" && strpos($valor2[1], "*}")) {
-                                    $includes .= $this->incluir("funciones.php", "librerias");
-                                    $valor = $this->arma_funcion($valor2[1], $this->formatId . ",$" . "_REQUEST['iddoc']", $accion);
-                                } else if ($accion == "adicionar" && strpos($valor2[1], "*}") === false) {
-                                    $valor = $valor2[1];
-                                }
-                            } else {
-                                $valor = "";
-                            }
-                        }
-                        if ($accion == "editar") {
-                            $valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->formatId,$" . "_REQUEST['iddoc'])); ?>";
-                        } else if ($valor == "") {
-                            $valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ?>';
-                        }
-                        if ($nivel_barra == "") {
-                            $nivel_barra = "basico";
-                        }
-                        $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <label title="' . $campos[$h]["ayuda"] . '">' . strtoupper($campos[$h]["etiqueta"]) . $obliga . '</label>
-                                        <div class="celda_transparente">
-                                        <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control';
-                        if ($campos[$h]["obligatoriedad"]) {
-                            $texto .= ' required';
-                        }
-                        $texto .= '">' . $valor . '</textarea></div></div>';
-                        $textareas++;
-                        $indice_tabindex++;
                         break;
                     case "fecha":
                         // si la fecha es obligatoria, que valide que no se vaya con solo ceros
@@ -1117,246 +1114,96 @@ CODE;
 
         $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
         $includes .= $this->incluir_libreria("funciones_acciones.php", "librerias");
-        //$includes .= $this->incluir_libreria("estilo_formulario.php", "librerias");
+
         if ($archivo) {
             $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
             $id_unico = '<?php echo (uniqid("' . $this->formatId . '-") . "-" . uniqid());?>';
             $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
         }
-        $texto .= '</form></body>';
-        if ($textareas) {
-            $includes .= $this->incluir_libreria("header_formato.php", "librerias");
-        }
+        $texto .= '</form>';
+
         if ($textareacke) {
             $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
         }
-        if ($formato[0]["item"] <> 1) {
-            $includes .= '<?= pace() ?>
-                        <?= jquery() ?>
-                        <?= bootstrap() ?>
-                        <?= theme() ?>
-                        <?= icons() ?>
-                        <?= moment() ?>';
-        }
-        $includes .= "<?= validate() ?>";
 
         if ($arboles_fancy) {
-            $includes .= '<style>
-                    ul.fancytree-container {
-                    width: 80%;
-                    height: 80%;
-                    overflow: auto;
-                    position: relative;
-                    border: none !important;
-                        outline:none !important;
-                    }
-                    span.fancytree-title {
-                        font-family: verdana;
-                    font-size: 7pt;
-                    }
-                    span.fancytree-checkbox.fancytree-radio {
-                        vertical-align: middle;
-                    }
-                    span.fancytree-expander {
-                        vertical-align: middle !important;
-                    }
-                    </style>';
             $includes .= $this->incluir('$ruta_db_superior . "app/arbol/crear_arbol_ft.php"', "librerias");
             $includes .= '<?= jqueryUi() ?>';
             $includes .= '<?= fancyTree(true) ?>';
         }
 
-        $includes .= $this->incluir('<?= $ruta_db_superior ?>js/title2note.js', "javascript");
-        if ($arboles) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/dhtmlXCommon.js', "javascript");
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/dhtmlXTree.js', "javascript");
-            $includes .= $this->incluir_libreria("header_formato.php", "librerias");
-            $includes .= '<link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css">';
-        }
-        if ($autocompletar) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>css/selectize.css', "estilos");
-            // $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/selectize.js', "javascript");
-            // $includes .= incluir("../librerias/autocompletar.js", "javascript");
-        }
-        if ($dependientes > 0) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>librerias/dependientes.js', "javascript");
-        }
-
-        if ($hora) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/jquery.clock.js', "javascript");
-        }
-        $numero_unicos = count($unico);
-        $enmascarar = '';
-        if ($numero_unicos) {
-            $listado = array();
-            $enmascarar .= '<script type="text/javascript">
-                $(document).ready(function() {';
-            for ($k = 0; $k < $numero_unicos; $k++) {
-                $enmascarar .= "$('#" . $unico[0][0] . "').blur(function(){
-                $.ajax({url: '../librerias/validar_unico.php',
-                type:'POST',
-                data:'nombre=unico&valor='+$('#" . $unico[0][0] . "').val()+'&tabla=" . $formato[0]["nombre_tabla"] . "&iddoc=<" . "?php echo $" . "_REQUEST[\"iddoc\"]; ?" . ">',
-                success: function(datos){
-                if(datos==0){
-                alert('El campo " . $unico[0][0] . " debe Ser unico');
-                $('#" . $unico[0][0] . "').val('');
-                $('#" . $unico[0][0] . "').focus();
-                }
-                }
-                });
-                });";
-            }
-            $enmascarar .= '});
-                </script>';
-        }
-
-        if ($spinner)
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/jquery.spin.js', "javascript");
-        if ($mascaras) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>js/jquery.maskedinput.js', "javascript");
-            $enmascarar .= '
-      <script type="text/javascript">
-      jQuery.noConflict();(function($) {
-        $(function() {' . $lista_enmascarados . '});
-       })(jQuery);
-      </script>';
-        }
-        if ($formato[0]["enter2tab"]) {
-            $codigo_enter2tab = "<script>$(document).ready(function()
-      {/* Para que el enter se comporte como tabulador    */
-        tb = $('input');
-        if ($.browser.mozilla)
-           $(tb).keypress(enter2tab);
-        else
-           $(tb).keydown(enter2tab);
-      });
-
-      function enter2tab(e)
-      {
-        if (e.keyCode == 13)
-        {
-          cb = parseInt($(this).attr('tabindex'));
-          if ($(':input[tabindex=\'' + (cb + 1) + '\']') != null)
-            {
-              $(':input[tabindex=\'' + (cb + 1) + '\']').focus();
-              $(':input[tabindex=\'' + (cb + 1) + '\']').select();
-              e.preventDefault();
-              return false;
-            }
-        }
-      }</script>";
-        }
-        if (count($autoguardado) > 0 && $accion == "adicionar") {
-            $texto .= '
-      <script type="text/javascript">
-      setInterval("auto_save(' . "'" . implode(",", $autoguardado) . "'" . ',' . "'" . $formato[0]["nombre"] . "'" . ')",' . $formato[0]["tiempo_autoguardado"] . ');
-      </script>';
-        }
-
-        $js_archivos = "";
         if ($archivo) {
-            $includes .= $this->incluir('<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/min/dropzone.min.js', "javascript");
+            $includes .= '<?= dropzone() ?>';
             $includes .= $this->incluir("'<?= $ruta_db_superior ?>anexosdigitales/funciones_archivo.php'", "librerias");
             $includes .= $this->incluir('<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js', "javascript");
             $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style>';
-            $includes .= '<link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/custom.css" /></style>';
             $includes .= '<script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>';
             $js_archivos = $this->crear_campo_dropzone(null, null);
+        } else {
+            $js_archivos = "";
         }
-        //$includes .= "<style>label.error{color:red}</style>";
 
         $contenido = '<?php
-                    $max_salida = 10;
-                    $ruta_db_superior = $ruta = "";
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
 
-                    while ($max_salida > 0) {
-                        if (is_file($ruta . "db.php")) {
-                            $ruta_db_superior = $ruta;
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= "../";
+    $max_salida --;
+}
+
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta charset="utf-8" />
+        <title>SGDA</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        ' . $includes . '
+    </head>
+    <body>
+        ' . $texto . $js_archivos . '
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $(".form-group.form-group-default").click(function() {
+                    $(this).find("input").focus();
+                });
+    
+                if (!this.initFormGroupDefaultRun) {
+                    $("body").on("focus", ".form-group.form-group-default :input", function() {
+                        $(".form-group.form-group-default").removeClass("focused");
+                        $(this).parents(".form-group").addClass("focused");
+                    });
+    
+                    $("body").on("blur", ".form-group.form-group-default :input", function() {
+                        $(this).parents(".form-group").removeClass("focused");
+                        if ($(this).val()) {
+                            $(this).closest(".form-group").find("label").addClass("fade");
+                        } else {
+                            $(this).closest(".form-group").find("label").removeClass("fade");
                         }
-
-                        $ruta .= "../";
-                        $max_salida --;
-                    }
-
-                    ?>
-                        <!DOCTYPE html>
-                            <html>
-                                <head>
-                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-                                    <meta charset="utf-8" />
-                                    <title>.:' . strtoupper($accion . ' ' . $formato[0]["etiqueta"]) . ':.</title>
-                                    <meta name="viewport"
-                                      content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-                                    <meta name="apple-mobile-web-app-capable" content="yes">
-                                    <meta name="apple-touch-fullscreen" content="yes">
-                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-                                    <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> ' . $includes . '
-                  <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />                                
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-                                  rel="stylesheet" type="text/css" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
-                                  rel="stylesheet" type="text/css" media="screen">
-                                <script
-                                    src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
-                                    type="text/javascript"></script>
-
-                                <link rel="stylesheet"
-                                    href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
-                  </head>
-                  ' . $texto . $js_archivos . '
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $(".form-group.form-group-default").click(function() {
-                                    $(this).find("input").focus();
-                                });
-
-                                if (!this.initFormGroupDefaultRun) {
-                                    $("body").on("focus", ".form-group.form-group-default :input", function() {
-                                        $(".form-group.form-group-default").removeClass("focused");
-                                        $(this).parents(".form-group").addClass("focused");
-                                    });
-
-                                    $("body").on("blur", ".form-group.form-group-default :input", function() {
-                                        $(this).parents(".form-group").removeClass("focused");
-                                        if ($(this).val()) {
-                                            $(this).closest(".form-group").find("label").addClass("fade");
-                                        } else {
-                                            $(this).closest(".form-group").find("label").removeClass("fade");
-                                        }
-                                    });
-
-                                    // Only run the above code once.
-                                    this.initFormGroupDefaultRun = true;
-                                }
-
-                                $(".form-group.form-group-default .checkbox, .form-group.form-group-default .radio").hover(function() {
-                                    $(this).parents(".form-group").addClass("focused");
-                                }, function() {
-                                    $(this).parents(".form-group").removeClass("focused");
-                                });
-                                
-                            });
-                        </script>
-                  </html>';
-        if ($accion == "editar") {
-            $contenido .= "<?php include_once(\$ruta_db_superior . 'formatos/librerias/footer_plantilla.php');?>";
-        }
+                    });
+    
+                    // Only run the above code once.
+                    this.initFormGroupDefaultRun = true;
+                }
+    
+                $(".form-group.form-group-default .checkbox, .form-group.form-group-default .radio").hover(function() {
+                    $(this).parents(".form-group").addClass("focused");
+                }, function() {
+                    $(this).parents(".form-group").removeClass("focused");
+                });
+                
+            });
+        </script>
+    </body>
+</html>';
 
         if ($accion == 'adicionar') {
             $fileName = "{$this->directory}/{$this->Formato->ruta_adicionar}";
@@ -1407,22 +1254,17 @@ CODE;
         }
 
         for ($j = 0; $j < count($lib); $j++) {
-            $pos = array_search($texto1 . $lib[$j] . $texto2, $this->incluidos);
-            if ($pos === false) {
-                if (!is_file($lib[$j]) & $eval) {
-                    if (crear_archivo($lib[$j])) {
-                        $includes .= $texto1 . $lib[$j] . $texto2;
-                    } else {
-                        throw new Exception("Problemas al generar el Formato en " . $lib[$j], 1);
-                        return ("");
-                    }
-                } else {
+            if (!is_file($lib[$j]) & $eval) {
+                if (crear_archivo($lib[$j])) {
                     $includes .= $texto1 . $lib[$j] . $texto2;
+                } else {
+                    throw new Exception("Problemas al generar el Formato en " . $lib[$j], 1);
                 }
-                array_push($this->incluidos, $texto1 . $lib[$j] . $texto2);
+            } else {
+                $includes .= $texto1 . $lib[$j] . $texto2;
             }
         }
-        return ($includes);
+        return $includes;
     }
 
     /*

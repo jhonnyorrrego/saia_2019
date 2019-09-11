@@ -30,7 +30,7 @@ class Connection
     /**
      * obtiene una instancia de la coneccion
      *
-     * @return void
+     * @return Doctrine\DBAL\Connection
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-08-30
      */
