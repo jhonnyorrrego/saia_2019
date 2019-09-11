@@ -9,9 +9,8 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "workflow/libreria_paso.php");
-include_once ($ruta_db_superior . "bpmn/librerias_formato.php");
+include_once $ruta_db_superior . "core/autoload.php";
+include_once $ruta_db_superior . "bpmn/librerias_formato.php";
 
 /*<Clase>
  <Nombre>listar_acciones_formato</Nombre>
@@ -23,9 +22,10 @@ include_once ($ruta_db_superior . "bpmn/librerias_formato.php");
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL) {
+function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
+{
 	global $conn;
-	if ($accion) {// Se buscan las acciones particulares
+	if ($accion) { // Se buscan las acciones particulares
 		$acciones = busca_filtro_tabla("", "accion", "nombre='" . $accion . "'", "", $conn);
 	} else {
 		$acciones = busca_filtro_tabla("", "accion", "", "", $conn);
@@ -35,7 +35,7 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL) {
 		// Hay acciones por ejemplo para el  ADICIONAR  idaccion=1
 		//Se determina la accion pertenece a alguna relacion con el formato
 		$condicion = "formato_idformato=" . $idformato . " AND accion_idaccion=" . $acciones[0]["idaccion"];
-		if ($momento) {// Se buscan funciones para ejecutar antes o despues
+		if ($momento) { // Se buscan funciones para ejecutar antes o despues
 			$condicion .= " AND momento='" . $momento . "'";
 		}
 		// Funciones relacionadas con la accion y el formato
@@ -62,7 +62,8 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL) {
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = "ANTERIOR", $estado = 1) {
+function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = "ANTERIOR", $estado = 1)
+{
 	global $conn;
 	if ($idaccion == NULL || $idformato == NULL || $idfunciones_formato == NULL)
 		return (FALSE);
@@ -95,7 +96,8 @@ function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  <Pre-condiciones>llenar el formato de edici�n<Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0) {
+function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
+{
 	global $conn;
 	if ($accion_funcion) {
 		$campos = array();
@@ -128,7 +130,8 @@ function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function eliminar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0) {
+function eliminar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
+{
 	global $conn;
 	if ($accion_funcion) {
 		$sql = "DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=" . $accion_funcion;
@@ -150,7 +153,8 @@ function eliminar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunci
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function ejecutar_funcion($nombre_funcion, $ubicacion = NULL, $parametros = NULL) {
+function ejecutar_funcion($nombre_funcion, $ubicacion = NULL, $parametros = NULL)
+{
 
 	if (function_exists($nombre_funcion)) {
 
@@ -171,7 +175,8 @@ function ejecutar_funcion($nombre_funcion, $ubicacion = NULL, $parametros = NULL
  <Post-condiciones><Post-condiciones>
  </Clase>  */
 
-function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_func = NULL, $lista_parametros = NULL) {
+function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_func = NULL, $lista_parametros = NULL)
+{
 	global $conn, $ruta_db_superior;
 	if (!$listado_func) {
 		return FALSE;
@@ -184,12 +189,12 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 		$ruta = null;
 		if ($datos_funcion["numcampos"]) {
 			if (!function_exists($datos_funcion[0]["nombre_funcion"])) {
-				include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
+				include_once($ruta_db_superior . "app/documento/class_transferencia.php");
 				$datos_formato = busca_filtro_tabla("f.nombre", "formato f,funciones_formato_enlace e", "f.idformato=e.formato_idformato and e.funciones_formato_fk=" . $ar_func[$i], "", $conn);
 				for ($j = 0; $j < $datos_formato["numcampos"]; $j++) {
 					$ruta = $ruta_db_superior . 'formatos/' . $datos_formato[$j]["nombre"] . "/" . $datos_funcion[0]["ruta"];
 					if (is_file($ruta)) {
-						include_once ($ruta);
+						include_once($ruta);
 						if (function_exists($datos_funcion[0]["nombre_funcion"])) {
 							$encontrado = 1;
 							break;
@@ -223,11 +228,11 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL) {
+function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL)
+{
 	$listado_acciones = listar_acciones_formato($idformato, $accion, $momento);
 
 	if ($listado_acciones != "") {
 		ejecutar_acciones_formato($iddoc, $idformato, $listado_acciones);
 	}
 }
-?>

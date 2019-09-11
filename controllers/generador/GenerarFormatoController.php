@@ -586,6 +586,13 @@ while (\$max_salida > 0) {
     \$max_salida --;
 }
 
+include_once \$ruta_db_superior . 'assets/librerias.php';
+include_once \$ruta_db_superior . 'formatos/librerias/funciones_generales.php';
+include_once \$ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
+include_once \$ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
+include_once \$ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
+include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php';
+
 llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
 ?>
 <!DOCTYPE html>
@@ -597,13 +604,6 @@ llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
     <title>SGDA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
     <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <?php include_once \$ruta_db_superior . 'assets/librerias.php' ?>
-    <?php include_once \$ruta_db_superior . 'formatos/librerias/funciones_generales.php' ?>
-    <?php include_once \$ruta_db_superior . 'formatos/librerias/funciones_acciones.php' ?>
-    <?php include_once \$ruta_db_superior . 'app/arbol/crear_arbol_ft.php' ?>
-    <?php include_once \$ruta_db_superior . 'anexosdigitales/funciones_archivo.php' ?>
-    <?php include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php' ?>
 
     <?= pace() ?>
     <?= jquery() ?>
