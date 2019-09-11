@@ -217,7 +217,7 @@ class Formato extends Model
         if (!$this->camposFormato) {
             $this->camposFormato = CamposFormato::findAllByAttributes([
                 'formato_idformato' => $this->getPK()
-            ]);
+            ], null, 'orden asc');
         }
 
         return $this->camposFormato;
