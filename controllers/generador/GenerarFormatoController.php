@@ -572,7 +572,7 @@ CODE;
                         <div class='card card-default'>
                             <div class='card-body'>
                                 <h5 class='text-black w-100 text-center'>
-                                    {strtoupper($this->Formato->etiqueta)}
+                                    <?= {$this->Formato->etiqueta} ?>
                                 </h5>
                                 <form name='formulario_formatos' id='formulario_formatos' role='form' autocomplete='off' method='post' action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' enctype='multipart/form-data'>";
 
