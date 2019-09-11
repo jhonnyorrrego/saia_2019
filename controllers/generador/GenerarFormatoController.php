@@ -572,6 +572,16 @@ CODE;
         $texto .= '</td></tr></table>';
         $texto .= '</form>';
 
+        $callScopeFunctions = '';
+        $functions = $this->Formato->getFunctions();
+        foreach ($functions as $FuncionesFormato) {
+            $actions = explode(',', $FuncionesFormato->acciones);
+
+            if (in_array($flagAction, $actions)) {
+                $callScopeFunctions .= "<?php {$FuncionesFormato->nombre_funcion}({$this->formatId},\$_REQUEST['iddoc']) ?>\n";
+            }
+        }
+
         $content = <<<CONTENT
 <?php
 \$max_salida = 10;
@@ -627,8 +637,16 @@ llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
                 <h5 class='text-black w-100 text-center'>
                     {$this->Formato->etiqueta}
                 </h5>
-                <form name='formulario_formatos' id='formulario_formatos' role='form' autocomplete='off' method='post' action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' enctype='multipart/form-data'>
+                <form 
+                    name='formulario_formatos' 
+                    id='formulario_formatos' 
+                    role='form' 
+                    autocomplete='off' 
+                    method='post' 
+                    action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' 
+                    enctype='multipart/form-data'>
     {$texto}
+    {$callScopeFunctions}
 </body>
 </html>
 CONTENT;
