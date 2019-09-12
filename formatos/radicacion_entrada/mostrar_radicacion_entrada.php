@@ -48,9 +48,7 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <p><?= mostrar_valor_campo('descripcion', 3, $_REQUEST['iddoc']) ?></p>
-
-<p><?= llenar_datos_funcion(3, $_REQUEST['iddoc']) ?></p>
+                                <p><?= llenar_datos_funcion(3, $_REQUEST['iddoc']) ?></p>
 
 <p><?= mostrar_informacion_general_radicacion(3, $_REQUEST['iddoc']) ?></p>
 
