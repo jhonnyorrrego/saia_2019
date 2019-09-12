@@ -418,6 +418,7 @@ while (\$max_salida > 0) {
 }
 
 include_once \$ruta_db_superior . 'core/autoload.php';
+include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php';
 
 try {
     JwtController::check(\$_REQUEST["token"], \$_REQUEST["key"]);    
