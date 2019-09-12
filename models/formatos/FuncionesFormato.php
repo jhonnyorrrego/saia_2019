@@ -2,6 +2,10 @@
 
 class FuncionesFormato extends Model
 {
+    const ACTION_ADD = 'a';
+    const ACTION_EDIT = 'e';
+    const ACTION_SHOW = 'm';
+
     protected $idfunciones_formato;
     protected $nombre;
     protected $nombre_funcion;
