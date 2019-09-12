@@ -79,14 +79,14 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             vertical-align: middle;
         }
     </style>
-    <?= librerias_jquery("2.2") ?>
+    <?= jquery() ?>
     <?= bootstrap() ?>
     <?= moment() ?>
     <?= jqueryUi() ?>
     <?= jsPanel() ?>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/handlebars.js"></script>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
+
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/handlebars/dist/handlebars.js"></script>
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/bootstrap/alpaca.js"></script>
     <style>
         #tipo_campo {
             font-size: 30px;

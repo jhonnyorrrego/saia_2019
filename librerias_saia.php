@@ -11,41 +11,12 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-function librerias_jquery($version = "1.7.2")
+function librerias_jquery($version = null)
 {
     global $raiz_saia;
-    $texto = '';
-    switch ($version) {
-        case "1.4":
-            $version = "1.4.2";
-            break;
-        case "1.7":
-            $version = "1.7.2";
-            break;
-        case "1.8":
-            $version = "1.8.3";
-            break;
-        case "1.2.3":
-            $texto = '<script src="' . $raiz_saia . 'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
-            return $texto;
-        case "1.12":
-            $version = "1.12.4";
-            break;
-        case "2.2":
-            $version = "2.2.4";
-            break;
-        case "3.3":
-            $version = "3.3.1";
-            break;
-        case "sapi":
-            $texto = '<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-                <script type="text/javascript">
-                        google.load("jquery", "1.7.2");
-                </script>';
-            return $texto;
-    }
-    $texto = '<script src="' . $raiz_saia . 'js/jquery/' . $version . '/jquery.js" type="text/javascript"></script>';
-    return $texto;
+    include_once $raiz_saia . "assets/librerias.php";
+
+    return jquery();
 }
 
 function librerias_UI($version = "1.8.17")
@@ -196,28 +167,6 @@ function librerias_arboles($opciones = '')
     }
     return $texto;
 }
-/*
-function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion")
-{
-    global $raiz_saia;
-    $modulos = "";
-    switch ($version) {
-        case "2.24":
-            $version = "2.24.0";
-            $modulos = "src";
-            break;
-        case "2.30":
-            $version = "2.30.0";
-            $modulos = "modules";
-            break;
-    }
-    $texto = '<link href="' . $raiz_saia . "js/jquery.fancytree/$version/skin-$tema/ui.fancytree.css" . '" rel="stylesheet">';
-    $texto .= '<script src="' . $raiz_saia . "js/jquery.fancytree/$version/jquery.fancytree.min.js" . '"></script>';
-    if ($opciones == 'filtro') {
-        $texto .= '<script src="' . $raiz_saia . 'js/jquery.fancytree/' . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
-    }
-    return $texto;
-}*/
 
 function librerias_tooltips()
 {
