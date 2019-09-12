@@ -88,6 +88,33 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
     <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/handlebars/dist/handlebars.js"></script>
     <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/bootstrap/alpaca.js"></script>
     <style>
+        /*@font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.eot');
+            src: url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+        }*/
+
+
+        @font-face {
+            font-family: 'Glyphicons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(<?= $ruta_db_superior ?>'node_modules/glyphicons-only-bootstrap/fonts/glyphicons-halflings-regular.ttf') format('ttf');
+            font-size: 232px;
+        }
+
+        #editar_pantalla_campo {
+
+            font-family: 'Glyphicons';
+
+        }
+
+        #prueba {
+
+            font-family: 'Glyphicons';
+
+        }
+
         #tipo_campo {
             font-size: 30px;
         }
@@ -155,6 +182,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             <h6><?= $texto_titulo ?></h6>
         </div>
         <hr />
+        <div id="prueba"><i class="glyphicon glyphicon-plus-sign"></i>fdlafldjl</div>
         <form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
         <div class="my-5"></div>
         <div id="res" class="alert"></div>
