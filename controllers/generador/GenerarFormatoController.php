@@ -9,7 +9,7 @@ class GenerarFormatoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-11
      */
-    const BANDERA_DESCRIPCION = 'p';
+    const FLAG_DESCRIPTION = 'p';
 
     /**
      * nombre de la bandera para un campo
@@ -18,7 +18,7 @@ class GenerarFormatoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-11
      */
-    const BANDERA_ADICIONAR = 'a';
+    const FLAG_ADD = 'a';
 
     /**
      * nombre de la bandera para un campo
@@ -27,7 +27,22 @@ class GenerarFormatoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-11
      */
-    const BANDERA_EDITAR = 'e';
+    const FLAG_EDIT = 'e';
+
+    /**
+     * ambito para generar el archivo adicionar
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @data 2019-09-12
+     */
+    const SCOPE_ADD = 1;
+
+    /**
+     * ambito para generar el archivo editar
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @data 2019-09-12
+     */
+    const SCOPE_EDIT = 2;
+
     /**
      * almacena la instancia del schemaManager
      *
@@ -371,10 +386,10 @@ CODE;
         $this->generateShow();
 
         //genera el adicionar
-        $this->generateForm(self::BANDERA_ADICIONAR);
+        $this->generateForm(self::SCOPE_ADD);
 
         //genera el editar
-        $this->generateForm(self::BANDERA_EDITAR);
+        $this->generateForm(self::SCOPE_EDIT);
     }
 
     /**
@@ -484,15 +499,16 @@ CODE;
     /**
      * genera los formularios para edicionar y editar
      *
-     * @param string $accion adicionar|editar
+     * @param string $scope (SCOPE_ADD - SCOPE_EDIT)
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-09
      */
-    public function generateForm($flagAction)
+    public function generateForm($scope)
     {
-        $texto = "";
+        $form = [];
         $descriptions = [];
+        $fieldScope = $scope == self::SCOPE_ADD ? self::FLAG_ADD : self::FLAG_EDIT;
         $fields = $this->Formato->getFields();
         $this->ComponentFormGeneratorController = new ComponentFormGeneratorController(
             $this->Formato
@@ -501,21 +517,28 @@ CODE;
         foreach ($fields as $CamposFormato) {
             $actions = explode(',', $CamposFormato->acciones);
 
-            if (in_array(self::BANDERA_DESCRIPCION, $actions)) {
+            if (in_array(self::FLAG_DESCRIPTION, $actions)) {
                 $descriptions[] = $CamposFormato->getPK();
             }
 
-            if (!in_array($flagAction, $actions)) {
+            if (!in_array($fieldScope, $actions)) {
                 continue;
             }
 
-            $scope = $flagAction == self::BANDERA_ADICIONAR ?
+            $componentScope = $scope == self::SCOPE_ADD ?
                 ComponentFormGeneratorController::SCOPE_ADD : ComponentFormGeneratorController::SCOPE_EDIT;
-            $texto .= $this->ComponentFormGeneratorController->generate($CamposFormato, $scope);
+            $form[] = $this->ComponentFormGeneratorController->generate($CamposFormato, $componentScope);
         }
 
-        if ($this->Formato->item && $flagAction == self::BANDERA_ADICIONAR) {
-            $texto .= '
+        if (!$descriptions) {
+            throw new Exception("Recuerde asignar el campo que sera almacenado como descripcion del documento", 1);
+        }
+
+        $value = ($scope == self::SCOPE_EDIT && $this->Formato->detalle) ? implode(',', $descriptions) : '';
+        $form[] = "<input type='hidden' name='campo_descripcion' value='{$value}'>";
+
+        if ($this->Formato->item && $scope == self::SCOPE_ADD) {
+            $form[] = '
             <div "form-group">
                 <label>ACCION A SEGUIR LUEGO DE GUARDAR</label>
                 <div class="radio radio-success">
@@ -527,51 +550,43 @@ CODE;
             </div>';
         }
 
-        if (!$descriptions) {
-            throw new Exception("Recuerde asignar el campo que sera almacenado como descripcion del documento", 1);
+        if ($scope == self::SCOPE_EDIT) {
+            $form[] = '<input type="hidden" name="formato" value="' . $this->formatId . '">';
         }
 
-        $value = ($flagAction == self::BANDERA_EDITAR && $this->Formato->detalle) ? implode(',', $descriptions) : '';
-        $texto .= "<input type='hidden' name='campo_descripcion' value='{$value}'>";
-
-        if ($flagAction == self::BANDERA_EDITAR) {
-            $texto .= '<input type="hidden" name="formato" value="' . $this->formatId . '">';
-        }
         if ($this->Formato->detalle) {
-            $texto .= '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
-            $texto .= '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';
-            if ($flagAction == self::BANDERA_ADICIONAR) {
-                $texto .= '<input type="hidden" name="accion" value="guardar_detalle" >';
-            } elseif ($flagAction == self::BANDERA_EDITAR) {
-                $texto .= '<input type="hidden" name="accion" value="editar" >';
-                $texto .= '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
-                $texto .= '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
+            $form[] = '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
+            $form[] = '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';
+
+            if ($scope == self::SCOPE_ADD) {
+                $form[] = '<input type="hidden" name="accion" value="guardar_detalle" >';
+            } else if ($scope == self::SCOPE_EDIT) {
+                $form[] = '<input type="hidden" name="accion" value="editar" >';
+                $form[] = '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
+                $form[] = '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
             }
         }
 
         if ($this->Formato->item) {
-            $texto .= '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>"><input type="hidden" name="formato" value="' . $this->Formato->nombre . '">';
+            $form[] = '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>"><input type="hidden" name="formato" value="' . $this->Formato->nombre . '">';
 
-            if ($flagAction == self::BANDERA_ADICIONAR) {
-                $texto .= '<input type="hidden" name="accion" value="guardar_item" >';
-            } elseif ($flagAction == self::BANDERA_EDITAR) {
-                $texto .= '<input type="hidden" name="accion" value="editar" >';
-                $texto .= '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
-                $texto .= '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
+            if ($scope == self::SCOPE_ADD) {
+                $form[] = '<input type="hidden" name="accion" value="guardar_item" >';
+            } else if ($scope == self::SCOPE_EDIT) {
+                $form[] = '<input type="hidden" name="accion" value="editar" >';
+                $form[] = '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
+                $form[] = '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
             }
         }
 
-        $texto .= "<tr><td colspan='2'>";
-
-        if ($flagAction == self::BANDERA_ADICIONAR) {
-            $texto .= "<?php submit_formato({$this->formatId})?>";
-        } else {
-            $texto .= "<?php submit_formato({$this->formatId},\$_REQUEST['iddoc']) ?>";
+        if ($scope == self::SCOPE_ADD) {
+            $form[] = "<?php submit_formato({$this->formatId})?>";
+        } else if ($scope == self::SCOPE_EDIT) {
+            $form[] = "<?php submit_formato({$this->formatId},\$_REQUEST['iddoc']) ?>";
         }
 
-        $texto .= '</td></tr></table>';
-        $texto .= '</form>';
-
+        $form[] = '</form>';
+        $text = implode("\n", $form);
         $content = <<<CONTENT
 <?php
 \$max_salida = 10;
@@ -627,21 +642,55 @@ llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
                 <h5 class='text-black w-100 text-center'>
                     {$this->Formato->etiqueta}
                 </h5>
-                <form name='formulario_formatos' id='formulario_formatos' role='form' autocomplete='off' method='post' action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' enctype='multipart/form-data'>
-    {$texto}
+                <form 
+                    name='formulario_formatos' 
+                    id='formulario_formatos' 
+                    role='form' 
+                    autocomplete='off' 
+                    method='post' 
+                    action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' 
+                    enctype='multipart/form-data'>
+    {$text}
+    {$this->callScopeFunctions($scope)}
 </body>
 </html>
 CONTENT;
 
-        if ($flagAction == self::BANDERA_ADICIONAR) {
+        if ($scope == self::SCOPE_ADD) {
             $fileName = "{$this->directory}/{$this->Formato->ruta_adicionar}";
         } else {
             $fileName = "{$this->directory}/{$this->Formato->ruta_editar}";
         }
 
         if (!file_put_contents($fileName, $content)) {
-            throw new Exception("Imposible crear el archivo {$flagAction}", 1);
+            throw new Exception("Imposible crear el archivo {$fieldScope}", 1);
         }
+    }
+
+    /**
+     * genera un string con la llamada a las funciones
+     * pertenicientes a un scope
+     *
+     * @param string $scope
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    protected function callScopeFunctions($scope)
+    {
+        $callScopeFunctions = '';
+        $scopeFunction = $scope == self::SCOPE_ADD ?
+            FuncionesFormato::ACTION_ADD : FuncionesFormato::ACTION_EDIT;
+        $functions = $this->Formato->getFunctions();
+
+        foreach ($functions as $FuncionesFormato) {
+            $actions = explode(',', $FuncionesFormato->acciones);
+
+            if (in_array($scopeFunction, $actions)) {
+                $callScopeFunctions .= "<?php {$FuncionesFormato->nombre_funcion}({$this->formatId},\$_REQUEST['iddoc'] ?? null) ?>\n";
+            }
+        }
+        return $callScopeFunctions;
     }
 
     /**
@@ -667,11 +716,15 @@ CONTENT;
         }
 
         foreach ($functions as $FuncionesFormato) {
-            $baseContent = str_replace(
-                $FuncionesFormato->nombre,
-                "<?= {$FuncionesFormato->nombre_funcion}({$this->formatId}, \$_REQUEST['iddoc']) ?>",
-                $baseContent
-            );
+            $actions = explode(',', $FuncionesFormato->acciones);
+
+            if (in_array(FuncionesFormato::ACTION_SHOW, $actions)) {
+                $baseContent = str_replace(
+                    $FuncionesFormato->nombre,
+                    "<?php {$FuncionesFormato->nombre_funcion}({$this->formatId}, \$_REQUEST['iddoc']) ?>",
+                    $baseContent
+                );
+            }
         }
 
         return $baseContent;
