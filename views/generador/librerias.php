@@ -215,6 +215,7 @@ function obtenerCamposVacios($sql_update, $idpantalla_campos)
 {
     $CamposFormato = new CamposFormato($idpantalla_campos);
     $pantallaComponente = $CamposFormato->etiqueta_html;
+    print_r($opciones_propias);
 }
 
 function asginarValor($x, $a)
