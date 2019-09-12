@@ -148,7 +148,7 @@ class CamposFormato extends Model
             'obligatoriedad' => '1',
             'banderas' => 'i',
             'acciones' => 'a,e',
-            'etiqueta_html' => 'hidden',
+            'etiqueta_html' => 'funcion',
             'valor' => '{*buscar_dependencia*}',
             'orden' => 1
         ]);
