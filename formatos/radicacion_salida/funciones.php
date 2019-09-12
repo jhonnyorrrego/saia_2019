@@ -29,13 +29,13 @@ function enviar_adicionar_salida($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_salida A","documento_iddocumento=".$iddoc,"",$conn);
 	if($datos[0]["estado_radicado"]==1){
 		if(@$_REQUEST["iddoc"]){
-			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_salida/mostrar_radicacion_salida.php?iddoc=".$_REQUEST["iddoc"];
+			$enlace="views/documento/paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_salida/mostrar_radicacion_salida.php?iddoc=".$_REQUEST["iddoc"];
 
 		}
 		else{
 			$enlace="busqueda_categoria.php?idcategoria_formato=3&defecto=radicacion_salida";
 		}
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
+		abrir_url($ruta_db_superior."app/documento/colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
 	}
 	else{
 		$sql1="UPDATE documento SET estado='INICIADO' WHERE iddocumento=".$iddoc;
@@ -66,15 +66,15 @@ function validar_digitalizacion_formato_salida($idformato,$iddoc){
 if($_REQUEST["digitalizacion"]==1){
   	if(@$_REQUEST["iddoc"]){
   		$enlace="pantallas/buscador_principal.php?idbusqueda=13";
-  		abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'centro');
+  		abrir_url($ruta_db_superior."app/documento/colilla.php?key=".$_REQUEST["iddoc"]."&enlace=views/documento/paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'centro');
   		die();
   	}
 	else{
 		$enlace="busqueda_categoria.php?idcategoria_formato=3&defecto=radicacion_salida";
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
+		abrir_url($ruta_db_superior."app/documento/colilla.php?key=".$iddoc."&enlace=views/documento/paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
 		die();
 	}
-    //redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
+    //redirecciona($ruta_db_superior."views/documento/paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
   }
   else if($_REQUEST["digitalizacion"]==2){
   	if(@$_REQUEST["iddoc"]){
@@ -84,7 +84,7 @@ if($_REQUEST["digitalizacion"]==1){
 	else{
 		$enlace="busqueda_categoria.php?idcategoria_formato=3&defecto=radicacion_salida";
 	}
-  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
+  		abrir_url($ruta_db_superior."app/documento/colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
 			die();
   }
 }
@@ -107,7 +107,6 @@ function llenar_datos_funcion_salida($idformato,$iddoc){
 }
 function mostrar_mensajeros($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	include_once($ruta_db_superior."class.funcionarios.php");
 	$mensajero=busca_funcionarios("cargo","mensajero");
     $nmensajeros=count($mensajero);
     if($nmensajeros){

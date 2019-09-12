@@ -1,6 +1,5 @@
 $(function () {
     let params = $('#loadTrd_script').data('params');
-    let baseUrl = params.baseUrl;
     $('#loadTrd_script').removeAttr('data-params');
 
     (function init() {
@@ -16,7 +15,7 @@ $(function () {
 
     function createDropZone(selector, directorio, typeFiles = null) {
         myDropzone = new Dropzone('#' + selector, {
-            url: `${baseUrl}app/temporal/cargar_anexos.php`,
+            url: `${params.baseUrl}app/temporal/cargar_anexos.php`,
             dictDefaultMessage:
                 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
             addRemoveLinks: true,

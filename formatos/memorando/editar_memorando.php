@@ -233,4 +233,4 @@
                                 
                             });
                         </script>
-                  </html><?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
+                  </html><?php include_once($ruta_db_superior . 'formatos/' . "librerias/footer_plantilla.php");?>

@@ -60,6 +60,7 @@ class Formato extends Model
     protected $EncabezadoFormatoHeader;
     protected $EncabezadoFormatoFooter;
     protected $camposFormato;
+    protected $funcionesFormato;
 
     function __construct($id = null)
     {
@@ -216,10 +217,35 @@ class Formato extends Model
         if (!$this->camposFormato) {
             $this->camposFormato = CamposFormato::findAllByAttributes([
                 'formato_idformato' => $this->getPK()
-            ]);
+            ], null, 'orden asc');
         }
 
         return $this->camposFormato;
+    }
+
+    /**
+     * obtiene las funciones vinculadas al formato
+     * en instancias de FuncionesFormato
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-11
+     */
+    public function getFunctions()
+    {
+        if (!$this->funcionesFormato) {
+            $QueryBuilder = self::getQueryBuilder()
+                ->select('a.*')
+                ->from('funciones_formato', 'a')
+                ->join('a', 'funciones_formato_enlace', 'b', 'a.idfunciones_formato = b.funciones_formato_fk')
+                ->join('b', 'formato', 'c', 'b.formato_idformato = c.idformato')
+                ->where('c.idformato = :formatId')
+                ->setParameter(':formatId', $this->getPK());
+
+            $this->funcionesFormato = FuncionesFormato::findByQueryBuilder($QueryBuilder);
+        }
+
+        return $this->funcionesFormato;
     }
 
     /**

@@ -35,7 +35,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			<div class="col-12 col-md-4">
 				<div class="card card-default mb-0">
 					<div class="card-body py-2">
-						<form method="POST" id="form_radicacion_rapida" action="<?= $ruta_db_superior ?>colilla.php">
+						<form method="POST" id="form_radicacion_rapida" action="<?= $ruta_db_superior ?>app/documento/colilla.php">
 							<input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
 							<input type="hidden" name="enlace2" id="enlace2" value="formatos/radicacion_entrada/radicacion_rapida.php">
 

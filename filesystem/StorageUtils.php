@@ -54,18 +54,6 @@ class StorageUtils
 			case 'bpmn':
 				$server_path = RUTA_ARCHIVOS_BPMN;
 				break;
-			case 'manual':
-				$server_path = RUTA_MANUAL;
-				break;
-			case 'plantilla_word':
-				$server_path = RUTA_PLANTILLA_WORD;
-				break;
-			case 'planos':
-				$server_path = RUTA_PLANOS;
-				break;
-			case 'historial_impresion':
-				$server_path = RUTA_HISTORIAL_IMPRESION;
-				break;
 			default:
 				//Usar el tipo. Ej. BACKUP
 				$server_path = $tipo;
@@ -155,7 +143,7 @@ class StorageUtils
 		$mi_ruta = Stringy::create(__DIR__);
 		$root = $_SERVER["DOCUMENT_ROOT"];
 		// $resto = $mi_ruta->removeLeft($root)->removeRight(self::SEPARADOR . "saia");
-		$resto = self::SEPARADOR . RUTA_SCRIPT;
+		$resto = self::SEPARADOR . CONTENEDOR_SAIA;
 
 		$root .= $resto;
 

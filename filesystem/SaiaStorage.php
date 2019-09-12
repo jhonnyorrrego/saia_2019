@@ -1,7 +1,5 @@
 <?php
-require_once(__DIR__ . "/../define.php");
-require_once(__DIR__ . "/StorageUtils.php");
-require(__DIR__ . '/../vendor/autoload.php');
+require_once "StorageUtils.php";
 require_once 'SaiaLocalAdapter.php';
 
 use Gaufrette\Filesystem;
@@ -66,18 +64,6 @@ class SaiaStorage
             case 'bpmn':
                 $server_path = RUTA_ARCHIVOS_BPMN;
                 break;
-            case 'manual':
-                $server_path = RUTA_MANUAL;
-                break;
-            case 'plantilla_word':
-                $server_path = RUTA_PLANTILLA_WORD;
-                break;
-            case 'planos':
-                $server_path = RUTA_PLANOS;
-                break;
-            case 'historial_impresion':
-                $server_path = RUTA_HISTORIAL_IMPRESION;
-                break;
             case 'anexos_tareas':
                 $server_path = RUTA_ANEXOS_TAREAS;
                 break;
@@ -103,7 +89,7 @@ class SaiaStorage
         switch ($storage_type) {
             case StorageUtils::LOCAL:
             case StorageUtils::NETWORK:
-                $root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . RUTA_SCRIPT;
+                $root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . CONTENEDOR_SAIA;
                 if (StringUtils::startsWith($path, "..")) {
                     $path = $path->trimLeft(".." . StorageUtils::SEPARADOR)
                         ->removeRight(StorageUtils::SEPARADOR)

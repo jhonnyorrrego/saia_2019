@@ -21,7 +21,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 {
 	global $conn, $ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
-	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+	$formato_ruta =$formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
 	$tipo_almacenamiento = new SaiaStorage("archivos");
 	$ruta = $formato_ruta . "/anexos";
 	foreach ($anexos as $key => $value) {

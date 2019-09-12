@@ -1,7 +1,18 @@
 ul.fancytree-container {
-    width: 100%;
+    width: 80%;
     height: 80%;
     overflow: auto;
     position: relative;
-    border: none;
+    border: none !important;
+    outline: none !important;
+}
+span.fancytree-title {
+    font-family: verdana;
+    font-size: 7pt;
+}
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+span.fancytree-expander {
+    vertical-align: middle !important;
 }
