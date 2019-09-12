@@ -489,10 +489,10 @@ function jsPanel()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;

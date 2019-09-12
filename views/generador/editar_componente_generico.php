@@ -9,10 +9,17 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'views/generador/librerias.php';
 
-$componente = busca_filtro_tabla("nombre, etiqueta, clase, opciones_propias", "pantalla_componente", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
+$componente = Model::getQueryBuilder()
+    ->select("nombre", "etiqueta", "clase", "opciones_propias")
+    ->from("pantalla_componente")
+    ->where("idpantalla_componente = :idpantalla")
+    ->setParameter("idpantalla", $_REQUEST["idpantalla_componente"], \Doctrine\DBAL\Types\Type::INTEGER)
+    ->execute()->fetchAll();
+
 $texto_titulo = $componente[0]["etiqueta"];
 $nombre_componente = $componente[0]["nombre"];
 $valores = array();
@@ -21,7 +28,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $idpantalla_campos = $_REQUEST["idpantalla_campos"];
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
 
-    $valores["fs_etiqueta"] = html_entity_decode($pantalla_campos[0]["etiqueta"]);
+    $valores["fs_etiqueta"] = $pantalla_campos[0]["etiqueta"];
 
     $valores["fs_obligatoriedad"] = false;
     if ($pantalla_campos[0]["obligatoriedad"]) {
@@ -40,7 +47,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
         $valores["fs_valor"] = $pantalla_campos[0]["valor"];
     }
 
-    $opciones_propias = json_decode(html_entity_decode($pantalla_campos[0]["opciones_propias"]), true);
+    $opciones_propias = json_decode($pantalla_campos[0]["opciones_propias"], true);
 
     if (json_last_error() === JSON_ERROR_NONE) {
         $val_default = array();
@@ -72,10 +79,14 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             vertical-align: middle;
         }
     </style>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/handlebars/dist/handlebars.js"></script>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/bootstrap/alpaca.min.js"></script>
-    <script type="text/javascript" src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
-    <link href="<?= $ruta_db_superior ?>node_modules/alpaca/dist/alpaca/web/alpaca.min.css" rel="stylesheet" type="text/css" />
+    <?= librerias_jquery("2.2") ?>
+    <?= bootstrap() ?>
+    <?= moment() ?>
+    <?= jqueryUi() ?>
+    <?= jsPanel() ?>
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/handlebars.js"></script>
+    <script type="text/javascript" src="<?= $ruta_db_superior ?>assets/theme/assets/js/alpaca.min.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
     <style>
         #tipo_campo {
             font-size: 30px;
@@ -84,6 +95,24 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
         .btn-complete {
             background: #48b0f7;
             color: #fff;
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+
+        }
+
+        .btn-complete:hover {
+            background: #2690d5;
+            color: #fff;
+        }
+
+        .btn-danger {
+            color: #fff;
+            position: absolute;
+            right: 130px;
+            bottom: 30px;
+            cursor: pointer;
+            z-index: 1;
         }
 
         .form-group label:not(.error) {
@@ -97,14 +126,37 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             font-size: 12px;
             color: #626262;
         }
+
+        #btn-cerrar {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            color: #666;
+            font-size: 150%;
+            width: 20px;
+            height: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #btn-cerrar:hover {
+
+            color: #444;
+
+        }
     </style>
 </head>
 
 <body>
-    <h5 id="tipo_formato"><?= $texto_titulo ?></h5>
-    <hr />
+    <div id="btn-cerrar">&times;</div>
     <div class="container">
+        <div class="mb-4 mt-4 text-center">
+            <h5>Configurar Campo</h5>
+            <h6><?= $texto_titulo ?></h6>
+        </div>
+        <hr />
         <form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
+        <div class="my-5"></div>
         <div id="res" class="alert"></div>
     </div>
     <script type="text/javascript">
@@ -150,6 +202,16 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
             };
             opciones_form["options"]['form'] = {
                 buttons: {
+                    cancel: {
+                        "styles": "btn btn-danger d-none",
+                        "id": "btnCancelar",
+                        "type": "button",
+                        "value": "Cancelar",
+                        "click": function(evt) {
+                            var panel = $('.jsPanel-standard', parent.document).get(0);
+                            jsPanel.close(panel);
+                        }
+                    },
                     submit: {
                         "title": "Guardar",
                         "styles": "btn btn-complete d-none",
@@ -159,24 +221,40 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
                             if (this.isValid(true)) {
                                 var value = this.getValue();
                                 funcion_enviar(value, idpantalla_campo);
-                                top.successModalEvent(value);
+                                var panel = $('.jsPanel-standard', parent.document).get(0);
+                                panel.setAttribute('respuesta', value.fs_etiqueta);
+                                jsPanel.close(panel);
                             }
                         }
                     }
                 }
             };
-            $('#btnGuardar').hide();
-            $('#btnGuardar').css('display', 'none');
-            $('#btnGuardar').css('visibility', 'hidden');
-
-            $("#btn_success").click(function() {
-
-                $("#btnGuardar").trigger("click");
-
-            });
-            console.log(opciones_form);
             $('#editar_pantalla_campo').alpaca(opciones_form);
         });
+
+        $('#btn-cerrar').on('click', function() {
+
+            var panel = $('.jsPanel-standard', parent.document).get(0);
+            jsPanel.close(panel);
+
+        });
+
+        function configurarPanel() {
+            var panel = $('.jsPanel-standard', parent.document).get(0);
+            ////////////////////////// Cambiar el tamaño de jspanel de acuerdo al tamaño del formulario
+            $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 260);
+            /////////////////////// Rectificar redimension de altura de la pantalla en caso de no hacerlo anteriormente////////////////////
+            setTimeout(function() {
+                $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 260);
+            }, 200);
+            ///////////////////// Configurando el estilo del header ///////////////////////////////
+            $('#btnCancelar', '#editar_pantalla_campo').removeClass('d-none');
+            $('#btnCancelar', '#editar_pantalla_campo').addClass('d-inline');
+            $('#btnGuardar', '#editar_pantalla_campo').removeClass('d-none');
+            $('#btnGuardar', '#editar_pantalla_campo').addClass('d-inline');
+
+        }
+        setTimeout('configurarPanel()', 300);
 
         function funcion_enviar(datos, idpantalla_campo) {
 
@@ -229,7 +307,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
     if ($campo_formato["numcampos"]) {
 
 
-        $opciones = json_decode(html_entity_decode($campo_formato[0]["opciones"]), true);
+        $opciones = json_decode($campo_formato[0]["opciones"], true);
 
         //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
         if (json_last_error() === JSON_ERROR_NONE && !empty($opciones)) {
@@ -241,7 +319,7 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto)
             $resp["fs_estilo"] = $estilo;
         }
 
-        $resp["fs_ayuda"] = html_entity_decode($campo_formato[0]["ayuda"]);
+        $resp["fs_ayuda"] = $campo_formato[0]["ayuda"];
 
 
 

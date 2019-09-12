@@ -186,7 +186,7 @@ function topJsPanel(options) {
                 top.jQuery.getScript(
                     `${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.js`,
                     function() {
-                        showJsPanel(options);
+                        return showJsPanel(options);
                     }
                 );
             }

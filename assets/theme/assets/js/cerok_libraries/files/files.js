@@ -127,9 +127,7 @@ class Files {
         $(document).on('click', '.show_options', function() {
             let parentNode = $(this).parent();
             $.post(
-                `${
-                    instance.options.baseUrl
-                }app/permisos/permiso_funcionario.php`,
+                `${instance.options.baseUrl}app/permisos/permiso_funcionario.php`,
                 {
                     key: localStorage.getItem('key'),
                     sourceReference:
@@ -252,9 +250,7 @@ class Files {
                             break;
                     }
 
-                    let url = `${
-                        instance.options.baseUrl
-                    }views/visor/${viewer}?`;
+                    let url = `${instance.options.baseUrl}views/visor/${viewer}?`;
                     url += $.param({
                         viewer: viewer,
                         type: type,
@@ -397,21 +393,11 @@ class Files {
 
     static OptionButttons(value, row, index) {
         return [
-            `<span data-id="${
-                row.id
-            }" class="file_option show_options fa fa-chevron-circle-down cursor f-20"><br></span>`,
-            `<span data-type="edit" data-id="${
-                row.id
-            }" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
-            `<span data-type="upload" data-id="${
-                row.id
-            }" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
-            `<span data-type="delete" data-id="${
-                row.id
-            }" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
-            `<span data-type="access" data-id="${
-                row.id
-            }" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`
+            `<span data-id="${row.id}" class="file_option show_options fa fa-chevron-circle-down cursor f-20"><br></span>`,
+            `<span data-type="edit" data-id="${row.id}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
+            `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
+            `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
+            `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`
         ].join('');
     }
 
