@@ -16,19 +16,19 @@ var topModalDefaults = {
             class: 'btn btn-danger'
         }
     },
-    beforeShow: function (event) {
+    beforeShow: function(event) {
         return true;
     }, //evento ejecutado antes de mostrar
-    afterShow: function (event) {
+    afterShow: function(event) {
         return true;
     }, //evento ejecutado despues de mostrar
-    beforeHide: function (event) {
+    beforeHide: function(event) {
         return true;
     }, //evento ejecutado antes de cerrar
-    afterHide: function (event) {
+    afterHide: function(event) {
         return true;
     }, //evento ejecutado despues de cerrar
-    onSuccess: function () {
+    onSuccess: function() {
         return true;
     }
 };
@@ -94,7 +94,7 @@ function topModal(options) {
                 .text(options.buttons.cancel.label)
                 .addClass(options.buttons.cancel.class)
                 .off('click')
-                .on('click', function () {
+                .on('click', function() {
                     top.closeTopModal();
                 });
         } else {
@@ -105,7 +105,7 @@ function topModal(options) {
     }
 
     if (options.url) {
-        modalBody.load(options.url, options.params, function (
+        modalBody.load(options.url, options.params, function(
             response,
             status,
             xhr
@@ -129,19 +129,19 @@ function topModal(options) {
 }
 
 function setEvents(options, modal) {
-    modal.off('show.bs.modal').on('show.bs.modal', function (e) {
+    modal.off('show.bs.modal').on('show.bs.modal', function(e) {
         options.beforeShow(e);
     });
 
-    modal.off('shown.bs.modal').on('shown.bs.modal', function (e) {
+    modal.off('shown.bs.modal').on('shown.bs.modal', function(e) {
         options.afterShow(e);
     });
 
-    modal.off('hide.bs.modal').on('hide.bs.modal', function (e) {
+    modal.off('hide.bs.modal').on('hide.bs.modal', function(e) {
         options.beforeHide(e);
     });
 
-    modal.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+    modal.off('hidden.bs.modal').on('hidden.bs.modal', function(e) {
         options.afterHide(e);
     });
 }
@@ -181,11 +181,11 @@ function topJsPanel(options) {
             .data('baseurl');
         top.jQuery.get(
             `${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.css`,
-            function (r) {
+            function(r) {
                 $('head').append($('<style>').html(r));
                 top.jQuery.getScript(
                     `${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.js`,
-                    function () {
+                    function() {
                         showJsPanel(options);
                     }
                 );

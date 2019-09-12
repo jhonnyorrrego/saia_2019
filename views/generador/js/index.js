@@ -167,7 +167,6 @@ $(document).ready(function() {
 
     $('.select_header_footer').on('change', function() {
         let type = $(this).data('type');
-
         if (type) {
             $.post(
                 `${params.baseUrl}app/generador/actualizar_encabezado_pie.php`,

@@ -1,5 +1,6 @@
 $(document).ready(function() {
     let params = $('#script_generador_pantalla').data('params');
+    var idpantalla_campo = 0;
 
     (function initDrag() {
         var posicionInicial;
@@ -491,34 +492,31 @@ $(document).ready(function() {
 
     //////////////////////////////// Clic para llamar modal y editar componente ////////////////////////////////////////////
     $('#contenedorComponentes').on('click', 'li', function() {
-        top.topModal({
-            url: `${params.baseUrl}views/generador/editar_componente_generico.php`,
-            params: {
-                idformato: $('#idformato').val(),
-                idpantalla_campos: $(this).attr('idpantalla_campo'),
-                idpantalla_componente: $(this).attr('idpantalla_componente')
+        idpantalla_campo = $(this).attr('idpantalla_campo');
+        var idpantalla_componente = $(this).attr('idpantalla_componente');
+        top.topJsPanel({
+            header: false,
+            contentSize: {
+                width: 900,
+                height: 700
             },
-            size: 'modal-xl',
-            title: 'Configurar campo',
-            buttons: {
-                success: {
-                    label: 'Guardar',
-                    class: 'btn btn-complete'
-                },
-                cancel: {
-                    label: 'Cerrar',
-                    class: 'btn btn-danger'
+            content:
+                '<iframe src="' +
+                `${params.baseUrl}views/generador/editar_componente_generico.php?idpantalla_campos=${idpantalla_campo}&idpantalla_componente=${idpantalla_componente}` +
+                '" style="width: 100%; height: 100%; border:none;"></iframe>',
+            callback: function() {
+                idPanel = this.getAttribute('id');
+            },
+            onbeforeclose: function() {
+                if (this.getAttribute('respuesta') != null) {
+                    $('#c_' + idpantalla_campo).html(
+                        this.getAttribute('respuesta')
+                    );
                 }
-            },
-            onSuccess: function(data) {
-                top.closeTopModal();
+                return 'close';
             }
         });
     });
-
-    function successEditarComponente() {
-        console.log('Edicion');
-    }
 
     //Eliminar componente
     $('#contenedorComponentes').on('click', '.agregado .eliminar', function(

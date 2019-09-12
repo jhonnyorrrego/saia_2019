@@ -57,7 +57,8 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
             $idcampo = phpmkr_insert_id();
             $retorno["sql"] = $sql2;
             if ($idcampo) {
-                $cadena = load_pantalla_campos($idcampo, 0);
+                //$cadena = load_pantalla_campos($idcampo, 0);
+                $cadena = "";
                 $retorno["exito"] = 1;
                 $retorno["idpantalla_campos"] = $idcampo;
                 $retorno["codigo_html"] = $cadena["codigo_html"];
@@ -79,9 +80,6 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         "exito" => 0,
         "idpantalla_campos" => $idpantalla_campos
     ];
-
-    print_r($_REQUEST);
-
     $pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html,formato_idformato", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
     $acciones = array("a", "e", "b");
     if ($pantalla_campos["numcampos"]) {
@@ -90,12 +88,12 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         $consultarNombre = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}", "", $conn);
         if (!$consultarNombre['numcampos']) {
             $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
-            $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
+            // $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 
             $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
-
             $sql_update = array();
             $valorArbol = '';
+
             foreach ($datos as $key => $value) {
                 if (preg_match("/^fs_/", $key)) {
 
@@ -186,6 +184,8 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                 }
             }
 
+            $camposVacios = obtenerCamposVacios($sql_update, $idpantalla_campos);
+
             if (count($sql_update)) {
                 $sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
 
@@ -196,7 +196,8 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                 //$retorno["sql"] = $sql2; // Solo para depurar3
                 phpmkr_query($sql2) or die($sql2);
                 $retorno["exito"] = 1;
-                $cadena = load_pantalla_campos($idpantalla_campos, 0);
+                //$cadena = load_pantalla_campos($idpantalla_campos, 0);
+                $cadena = "";
                 $retorno["codigo_html"] = $cadena["codigo_html"];
             }
         } else {
@@ -204,10 +205,16 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         }
     }
     if ($tipo_retorno == 1) {
-        echo (json_encode($retorno));
+        //echo (json_encode($retorno));
     } else {
         return ($retorno);
     }
+}
+
+function obtenerCamposVacios($sql_update, $idpantalla_campos)
+{
+    $CamposFormato = new CamposFormato($idpantalla_campos);
+    $pantallaComponente = $CamposFormato->etiqueta_html;
 }
 
 function asginarValor($x, $a)

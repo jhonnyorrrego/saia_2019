@@ -99,7 +99,6 @@ if (!jsPanel.tooltip) {
                     }
 
                     jsPanel.create(opts, function (panel) {
-
                         var tipToClose = panel,
                             closeTip = function closeTip() {
                             tipToClose.close();
@@ -148,6 +147,7 @@ if (!jsPanel.tooltip) {
                         if (callback) {
                             callback.call(panel, panel);
                         }
+                        return "test";
                     });
                 }, opts.delay);
             }, false);

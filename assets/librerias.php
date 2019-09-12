@@ -2,7 +2,8 @@
 
 /**
  * retorna script para cargar
- * jquery v3.2.1 minificado
+ * jquery v3.3.1 minificado
+ * No se debe usar la version 3.4.1 porque tiene un bug
  */
 function jquery()
 {
@@ -257,16 +258,16 @@ function pace()
 
 /**
  * retorna el enlace de moment js
- * v2.22.2
+ * v2.24.0
  */
 function moment()
 {
     global $ruta_db_superior;
 
-    $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment-with-locales.min.js';
+    $route = $ruta_db_superior . 'node_modules/moment/min/moment-with-locales.min.js';
     $locale = '<script type="text/javascript" src="' . $route . '"></script>';
 
-    $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment.min.js';
+    $route = $ruta_db_superior . 'node_modules/moment/min/moment.min.js';
     $js = '<script type="text/javascript" src="' . $route . '"></script>';
 
     return $locale . $js;
@@ -490,10 +491,10 @@ function jsPanel()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jspanel4/jspanel.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
