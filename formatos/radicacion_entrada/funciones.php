@@ -556,20 +556,20 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
     global $conn, $ruta_db_superior;
 
     $datos = Model::getQueryBuilder()
-    ->select("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,fecha_oficio_entrada,fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria")
-    ->from("ft_radicacion_entrada")
-    ->where("documento_iddocumento=:iddoc")
-    ->setParameter(":iddoc",$iddoc)->execute()->fetchAll();
+        ->select("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,fecha_oficio_entrada,fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria")
+        ->from("ft_radicacion_entrada")
+        ->where("documento_iddocumento=:iddoc")
+        ->setParameter(":iddoc", $iddoc)->execute()->fetchAll();
 
     //$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", 
     //"ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
     $documento = Model::getQueryBuilder()
-    ->select("numero,tipo_radicado,fecha")
-    ->from("documento")
-    ->where("iddocumento=:iddoc")
-    ->setParameter(":iddoc",$iddoc)
-    ->execute()
-    ->fetchAll();
+        ->select("numero,tipo_radicado,fecha")
+        ->from("documento")
+        ->where("iddocumento=:iddoc")
+        ->setParameter(":iddoc", $iddoc)
+        ->execute()
+        ->fetchAll();
 
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
@@ -835,11 +835,11 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
 
         if ($_REQUEST["digitalizacion"] == 1) {
             $enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=views/documento/index_acordeon.php?documentId=" . $iddoc;
-            abrir_url($ruta_db_superior . "colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
+            abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
             die();
         } else if ($_REQUEST["digitalizacion"] == 0) {
-            $enlace = "views/documento/index_acordeon.php?documentId=" . $iddoc;
-            abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&colilla_vertical=" . $_REQUEST['colilla'] . "&enlace=" . $enlace, '_self');
+            $enlace = $ruta_db_superior . "views/documento/index_acordeon.php?documentId=" . $iddoc;
+            abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&colilla_vertical=" . $_REQUEST['colilla'] . "&enlace=" . $enlace, '_self');
             die();
         }
     }
@@ -930,7 +930,7 @@ function actualizar_campos_documento($idformato, $iddoc)
             'anexo' => $valores[$datos[0]["descripcion_anexos"]],
             'descripcion_anexo' => $datos[0]["descripcion_anexos"],
             'municipio_idmunicipio' => $ejecutor[0]["ciudad"]
-        ],[
+        ], [
             'iddocumento' => $iddoc
         ]);
     }

@@ -11,7 +11,8 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . 'formatos/' . "librerias/funciones_acciones.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_acciones.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 include_once $ruta_db_superior . "bpmn/librerias_formato.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 
@@ -252,7 +253,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = null, $i
     if (!$idflujo && @$_REQUEST["idflujo"]) {
         $idflujo = $_REQUEST["idflujo"];
     }
-    
+
     return $doc;
 }
 
@@ -1397,7 +1398,7 @@ function guardar_documento($iddoc, $tipo = 0)
             phpmkr_query($sql1, $conn);
 
             if (count($larchivos)) {
-                include_once("anexosdigitales/funciones_archivo.php");
+                include_once($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
                 cargar_archivo_formato($larchivos, $idformato, $iddoc, $form_uuid);
             }
 
@@ -1480,10 +1481,14 @@ function guardar_documento($iddoc, $tipo = 0)
 
 function actualizar_datos_documento($idformato, $iddoc)
 {
-    include_once 'formatos/' . "librerias/funciones_generales.php";
+    global $ruta_db_superior;
+    include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
-    if (isset($_REQUEST["campo_descripcion"])) {
-        $campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
+    if (!empty($_REQUEST["campo_descripcion"])) {
+        $campo = Model::getQueryBuilder()
+            ->select('nombre,etiqueta')
+            ->from('campos_formato')
+            ->where("idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")")->execute()->fetchAll();
     } else if ($idformato) {
         $campo = busca_filtro_tabla("idcampos_formato,nombre,etiqueta,formato_idformato", "campos_formato cf", "cf.formato_idformato='" . $idformato . "' AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "orden", $conn);
     }

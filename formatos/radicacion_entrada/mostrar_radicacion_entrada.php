@@ -48,15 +48,15 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <p><?= llenar_datos_funcion(3, $_REQUEST['iddoc']) ?></p>
+                                <p><?php llenar_datos_funcion(3, $_REQUEST['iddoc']) ?></p>
 
-<p><?= mostrar_informacion_general_radicacion(3, $_REQUEST['iddoc']) ?></p>
+<p><?php mostrar_informacion_general_radicacion(3, $_REQUEST['iddoc']) ?></p>
 
-<div><?= mostrar_item_destino_radicacion(3, $_REQUEST['iddoc']) ?></div>
+<div><?php mostrar_item_destino_radicacion(3, $_REQUEST['iddoc']) ?></div>
 
-<p><?= mostrar_copia_electronica(3, $_REQUEST['iddoc']) ?></p>
+<p><?php mostrar_copia_electronica(3, $_REQUEST['iddoc']) ?></p>
 
-<p><?= mostrar_estado_proceso(3, $_REQUEST['iddoc']) ?></p>
+<p><?php mostrar_estado_proceso(3, $_REQUEST['iddoc']) ?></p>
 
                             </div>
                         </div>

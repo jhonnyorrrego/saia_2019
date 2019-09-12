@@ -2,15 +2,15 @@
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-  if (is_file($ruta . "db.php")) {
-    $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-foreach ($_REQUEST AS $key => $valor) {
+foreach ($_REQUEST as $key => $valor) {
 	if ($valor == 'undefined') {
 		unset($_REQUEST[$key]);
 	}
@@ -36,7 +36,6 @@ if (trim(@$_REQUEST["identificacion"]) <> "") {
 	if (!$ejecutor["numcampos"]) {
 		$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "') and (identificacion is null or identificacion='')", "", $conn);
 	}
-
 } elseif (trim(@$_REQUEST["nombre"]) <> "") {
 	$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "')", "", $conn);
 }
@@ -61,7 +60,7 @@ if ($ejecutor["numcampos"]) {
 	$idejecutor = phpmkr_insert_id();
 	if (isset($_REQUEST["tipo_ejecutor"]) && $_REQUEST["tipo_ejecutor"])
 		phpmkr_query("update ejecutor set tipo_ejecutor='" . $_REQUEST["tipo_ejecutor"] . "' where idejecutor=$idejecutor", $conn);
-		
+
 	if (isset($_REQUEST["lugar_expedicion"]) && $_REQUEST["lugar_expedicion"])
 		phpmkr_query("update ejecutor set lugar_expedicion='" . $_REQUEST["lugar_expedicion"] . "' where idejecutor=$idejecutor", $conn);
 
@@ -122,7 +121,6 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 				array_push($campos, $campos_todos[$i]);
 				$insertcolumns[$campos_todos[$i]] = ":" . $campos_todos[$i];
 				$insertvalues[$campos_todos[$i]] =  $datos_ejecutor[0][$campos_todos[$i]];
-
 			}
 		}
 	}
@@ -132,13 +130,17 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 		$campos_insertar = implode(",", $campos) . ",";
 	}
 
-	$sql = 'INSERT INTO datos_ejecutor(' . $campos_insertar . "ejecutor_idejecutor,fecha) VALUES(" . $valor_insertar . $idejecutor . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	throw new Exception('se debe cambiar remitente', 1);
+
+
+
+	$sql = 'INSERT INTO datos_ejecutor(' . $campos_insertar . "ejecutor_idejecutor,fecha) VALUES(" . $valor_insertar . $idejecutor . "," . date("Y-m-d H:i:s") . ")";
 	$municipio = Model::getQueryBuilder()
-	->insert("datos_ejecutor");
+		->insert("datos_ejecutor");
 	$municipio->values(
-        $insertcolumns
-    );
-	foreach($insertvalues as $key => $value){
+		$insertcolumns
+	);
+	foreach ($insertvalues as $key => $value) {
 		$municipio->setParameter(":" . $key, $value);
 	}
 	$municipio->execute();
@@ -154,5 +156,4 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 	$iddatos_ejecutor = $datos_ejecutor[0]["iddatos_ejecutor"];
 }
 /*Pilas Validad que si se haga la accion*/
-echo($iddatos_ejecutor . '|' . delimita($nombre, 50));
-?>
+echo ($iddatos_ejecutor . '|' . delimita($nombre, 50));
