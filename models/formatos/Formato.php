@@ -57,6 +57,7 @@ class Formato extends Model
     //relations
     protected $Formato;
     protected $Modulo;
+    protected $Contador;
     protected $EncabezadoFormatoHeader;
     protected $EncabezadoFormatoFooter;
     protected $camposFormato;
@@ -169,6 +170,22 @@ class Formato extends Model
         }
 
         return $this->Modulo;
+    }
+
+    /**
+     * obtiene la instancia del Contador asignado
+     *
+     * @return null|Contador
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-012
+     */
+    public function getCounter()
+    {
+        if (!$this->Contador) {
+            $this->Contador = $this->getRelationFk('Contador', 'contador_idcontador');
+        }
+
+        return $this->Contador;
     }
 
     /**
