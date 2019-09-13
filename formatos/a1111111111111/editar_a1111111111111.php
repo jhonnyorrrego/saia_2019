@@ -60,15 +60,63 @@ llama_funcion_accion(null,455 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                    <div class="form-group col-12"  id="tr_campo_texto_7124825">
-                                    <label title="">TEXTO EN UNA L&Iacute;NEA<span>*</span></label>
-                                    <input class="form-control" required type="text"  size="100" id="campo_texto_7124825" name="campo_texto_7124825" required value="<?= mostrar_valor_campo('campo_texto_7124825',455,$_REQUEST['iddoc']) ?>">
-                                    </div>
-<input type="hidden" name="documento_iddocumento" value="<?= mostrar_valor_campo('documento_iddocumento',455,$_REQUEST['iddoc']) ?>">
+                    <input type="hidden" name="documento_iddocumento" value="<?= mostrar_valor_campo('documento_iddocumento',455,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="encabezado" value="<?= mostrar_valor_campo('encabezado',455,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="firma" value="<?= mostrar_valor_campo('firma',455,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="idft_a1111111111111" value="<?= mostrar_valor_campo('idft_a1111111111111',455,$_REQUEST['iddoc']) ?>">
+<div class="form-group col-12"  id="tr_campo_texto_7124825">
+                                    <label title="">TEXTO EN UNA L&Iacute;NEA<span>*</span></label>
+                                    <input class="form-control" required type="text"  size="100" id="campo_texto_7124825" name="campo_texto_7124825" required value="<?= mostrar_valor_campo('campo_texto_7124825',455,$_REQUEST['iddoc']) ?>">
+                                    </div>
 <input type="hidden" name="dependencia" value="<?= mostrar_valor_campo('dependencia',455,$_REQUEST['iddoc']) ?>">
+        <div class='form-group form-group-default ' id='group_archivo_1869306737'>
+            <label title=''>ADJUNTOS</label>
+            <div class="" id="dropzone_archivo_1869306737"></div>
+            <input type="hidden" class="" name="archivo_1869306737">
+        </div>
+        <script>
+            $(function(){
+                let loadeddropzone_archivo_1869306737 = [];
+                let dropzone_archivo_1869306737 = new Dropzone('#dropzone_archivo_1869306737', {
+                    url: '<?= $ruta_db_superior ?>app/temporal/cargar_anexos.php',
+                    dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+                    maxFilesize: 3,
+                    maxFiles: 3,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Eliminar',
+                    dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+                    dictMaxFilesExceeded: 'Máximo 3 archivos',
+                    params: {
+                        token: localStorage.getItem('token'),
+                        key: localStorage.getItem('key'),
+                        dir: 'a1111111111111'
+                    },
+                    paramName: 'file',
+                    init : function() {
+                        $("#dropzone_archivo_1869306737").addClass('dropzone');
+                        this.on('success', function(file, response) {
+                            response = JSON.parse(response);
+
+                            if (response.success) {
+                                response.data.forEach(e => {
+                                    loadeddropzone_archivo_1869306737.push(e);
+                                });
+                                $("[name='archivo_1869306737']").val(loadeddropzone_archivo_1869306737.join(','))
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+<div class="form-group col-12"  id="tr_campo_texto_1434206007">
+                                    <label title="">TEXTO EN UNA L&Iacute;NEA<span>*</span></label>
+                                    <input class="form-control" required type="text"  size="100" id="campo_texto_1434206007" name="campo_texto_1434206007" required value="<?= mostrar_valor_campo('campo_texto_1434206007',455,$_REQUEST['iddoc']) ?>">
+                                    </div>
 
 <input type='hidden' name='campo_descripcion' value='8363'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
