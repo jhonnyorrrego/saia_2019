@@ -13,20 +13,12 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
-global $conn;
 
-$iddocumento = $_REQUEST['iddoc'];
-$idformato = $_REQUEST['idformato'];
+$documentId = $_REQUEST['iddoc'];
+$Documento = new Documento($documentId);
+$Formato = $Documento->getFormat();
 
-if ($iddocumento) {
-    $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=" . $iddocumento, "", $conn);
-} else if ($idformato) {
-    $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and a.idformato=" . $idformato, "", $conn);
-} else {
-    throw new Exception("Error Processing Request", 1);
-}
-
-$margenes = explode(",", $formato[0]["margenes"]);
+$margenes = explode(",", $Formato->margenes);
 $tam_pagina = [
     'A4' => [
         'ancho' => 595,
@@ -50,21 +42,26 @@ $tam_pagina = [
     'margen_inferior' => $margenes[3]
 ];
 
-if ($formato[0]["orientacion"]) {
-    $alto_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
-    $ancho_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
+if ($Formato->orientacion) {
+    $alto_paginador = $tam_pagina[$Formato->papel]["ancho"];
+    $ancho_paginador = $tam_pagina[$Formato->papel]["alto"];
 } else {
-    $alto_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
-    $ancho_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
+    $alto_paginador = $tam_pagina[$Formato->papel]["alto"];
+    $ancho_paginador = $tam_pagina[$Formato->papel]["ancho"];
 }
 
 $porcentajePaginador = ($alto_paginador * 100) / $ancho_paginador;
 $porcentajePx = $porcentajePaginador * $ancho_paginador / 100;
 
-$color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
-$fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
+$ConfiguracionColor = Configuracion::findByAttributes([
+    'nombre' => 'color_encabezado'
+]);
+
+$ConfiguracionLetra = Configuracion::findByAttributes([
+    'nombre' => 'tipo_letra'
+]);
 ?>
-<?php if ($color["numcampos"]) : ?>
+<?php if ($ConfiguracionColor) : ?>
     <style type="text/css">
         .phpmaker {
             font-family: Verdana, Tahoma, arial;
@@ -72,14 +69,14 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         }
 
         .encabezado {
-            background-color: <?= $color[0]["valor"] ?>;
+            background-color: <?= $ConfiguracionColor->valor ?>;
             color: white;
             padding: 10px;
             text-align: left;
         }
 
         .encabezado_list {
-            background-color: <?= $color[0]["valor"] ?>;
+            background-color: <?= $ConfiguracionColor->valor ?>;
             color: white;
             vertical-align: middle;
             text-align: center;
@@ -87,26 +84,14 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         }
     </style>
 <?php endif; ?>
-<?php if ($fuente["numcampos"]) : ?>
+<?php if ($ConfiguracionLetra) : ?>
     <style>
         #documento {
-            font-size: <?= $formato[0]["font_size"] . 'px' ?>;
-            font-family: <?= $fuente[0]["valor"] ?>
+            font-size: <?= $Formato->font_size . 'px' ?>;
+            font-family: <?= $ConfiguracionLetra->valor ?>
         }
     </style>
 <?php endif; ?>
-<?php
-$userCode = SessionController::getValue('usuario_actual');
-
-if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
-    if (!empty($_REQUEST["vista"])) {
-        $vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
-        $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
-    } else {
-        $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
-    }
-}
-?>
 <?php if (!$_REQUEST['tipo'] || ($_REQUEST['tipo'] && $_REQUEST['tipo'] != 5)) : ?>
     <style type="text/css">
         .page_border {
@@ -147,6 +132,7 @@ if (!$formato[0]["item"] && $_REQUEST['tipo'] != 5) {
     </style>
 <?php endif;
 
-if ($encabezado["numcampos"]) {
-    echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], 0);
+if ($_REQUEST['tipo'] != 5) {
+    $EncabezadoFormato = $Formato->getHeader();
+    echo crear_encabezado_pie_pagina($EncabezadoFormato->contenido, $documentId, $Formato->getPK(), 0);
 }

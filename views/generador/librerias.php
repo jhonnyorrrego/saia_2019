@@ -320,11 +320,11 @@ function kma_valor_campo($datos, $tiqueta_html)
             //Viene en fs_opciones
             //{"url":"","checkbox":"radio","buscador":"0","funcion_select":"","funcion_click":"","funcion_dobleclick":""}
             $texto_opc = [];
-            $texto_opc["funcionario"] = "arboles/arbol_funcionario.php?idcampofun=1";
-            $texto_opc["dependencia"] = "arboles/arbol_dependencia.php";
-            $texto_opc["cargo"] = "arboles/arbol_cargo.php";
-            $texto_opc["rol"] = "arboles/arbol_funcionario.php";
-            $texto_opc["serie"] = "arboles/arbol_serie.php";
+            $texto_opc["funcionario"] = "app/arbol/arbol_funcionario.php?idcampofun=1";
+            $texto_opc["dependencia"] = "app/arbol/arbol_dependencia.php";
+            $texto_opc["cargo"] = "app/arbol/arbol_cargo.php";
+            $texto_opc["rol"] = "app/arbol/arbol_funcionario.php";
+            $texto_opc["serie"] = "app/arbol/arbol_serie.php";
 
             if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
                 $datos_ft = $datos["fs_opciones"];

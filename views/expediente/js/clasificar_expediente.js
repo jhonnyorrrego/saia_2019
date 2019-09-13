@@ -40,7 +40,7 @@ $(document).ready(function (){
         },
         selectMode : 2,
         source : {
-            url : `${baseUrl}arboles/arbol_expediente_funcionario.php`
+            url : `${baseUrl}app/arbol/arbol_expediente_funcionario.php`
         }
     };
     $("#treebox").fancytree(configuracion);

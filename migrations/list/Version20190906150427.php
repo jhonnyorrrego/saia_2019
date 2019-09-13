@@ -19,7 +19,7 @@ final class Version20190906150427 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        $this->addSql('update campos_formato set valor = REPLACE(valor,"arboles/", "app/arbol/")');
+        $this->addSql('update campos_formato set valor = REPLACE(valor,"app/arbol/", "app/arbol/")');
 
     }
 

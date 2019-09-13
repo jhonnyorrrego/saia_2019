@@ -65,7 +65,7 @@ $(function() {
             checkbox: true,
             selectMode: 1,
             source: {
-                url: `${params.baseUrl}arboles/arbol_dependencia.php`,
+                url: `${params.baseUrl}app/arbol/arbol_dependencia.php`,
                 data: {
                     expandir: 1
                 }
@@ -90,7 +90,7 @@ $(function() {
             checkbox: true,
             selectMode: 1,
             source: {
-                url: `${params.baseUrl}arboles/arbol_cargo.php`,
+                url: `${params.baseUrl}app/arbol/arbol_cargo.php`,
                 data: {
                     expandir: 1
                 }

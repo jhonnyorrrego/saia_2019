@@ -47,7 +47,7 @@ span.fancytree-checkbox.fancytree-radio {
 span.fancytree-expander {
     vertical-align: middle !important;
 }
-</style><?php include_once($ruta_db_superior . "arboles/crear_arbol_ft.php"); ?><?= jqueryUi() ?><?= fancyTree(true) ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script>
+</style><?php include_once($ruta_db_superior . "app/arbol/crear_arbol_ft.php"); ?><?= jqueryUi() ?><?= fancyTree(true) ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script>
                   <link
                                   href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
                                   rel="stylesheet" type="text/css" media="screen" />
@@ -86,7 +86,7 @@ span.fancytree-expander {
                             <div class="card-body"><center><h5 class="text-black">12</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],441,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',441,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',441,$_REQUEST['iddoc'])); ?>"><div class="form-group  " id="tr_arbol_fancytree_18416097">
                                         <label title="">&Aacute;RBOL DE SELECCI&Oacute;N*</label><?php $origen_7236 = array(
-                                    "url" => "arboles/arbol_funcionario.php?idcampofun=1",
+                                    "url" => "app/arbol/arbol_funcionario.php?idcampofun=1",
                                     "ruta_db_superior" => $ruta_db_superior,"params" => array("idcampofun" => "1",),);$origen_7236["params"]["checkbox"]="radio";$opciones_arbol_7236 = array(
                                     "keyboard" => true,"selectMode" => 1,"seleccionarClick" => 1,"obligatorio" => 1,
                                 );

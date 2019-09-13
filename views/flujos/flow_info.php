@@ -27,7 +27,7 @@ $consulta = array(
 
 $consulta64 = base64_encode(json_encode($consulta));
 
-$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
+$origen = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
     "params" => array(
         "seleccionable" => "checkbox",
         "obligatorio" => 1

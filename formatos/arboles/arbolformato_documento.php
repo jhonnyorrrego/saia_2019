@@ -284,7 +284,7 @@ if ($("#openCloseIdentifier2").is(":hidden")) {
         tree2.openItem(tree2.getParentId(nodeId)); */
        
         genera_menu(nodeId);
-        conexion="../arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
+        conexion="../app/arbol/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
         window.parent.frames["detalles"].location=conexion;
       }
 			function seleccion_accion(accion,id)
@@ -307,7 +307,7 @@ if ($("#openCloseIdentifier2").is(":hidden")) {
       function genera_menu(nodeId){
         $.ajax({
           type:'POST',
-          url:'../arboles/genera_menu_documento.php',
+          url:'../app/arbol/genera_menu_documento.php',
           data:'nodo='+nodeId,
           success: function(datos,exito){
             $("#sliderContent").empty();

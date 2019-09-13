@@ -15,7 +15,7 @@ $(function() {
             indentation: 20 // indent 20px per node level
         },
         source: {
-            url: `${baseUrl}arboles/arbol_modulos.php`
+            url: `${baseUrl}app/arbol/arbol_modulos.php`
         },
         filter: {
             autoApply: true, // Re-apply last filter if lazy data is loaded
@@ -54,7 +54,7 @@ $(function() {
 
     $('#profile').on('select2:select', function() {
         $('#treegrid').fancytree('option', 'source', {
-            url: `${baseUrl}arboles/arbol_modulos.php`,
+            url: `${baseUrl}app/arbol/arbol_modulos.php`,
             data: {
                 profile: $(this).val()
             }
