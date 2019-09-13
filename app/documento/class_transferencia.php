@@ -824,31 +824,6 @@ function cargo_rol($iddoc)
     return $tipo;
 }
 
-/**
- * redirect document to a new window
- * default: views/documento/index_acordeon.php
- * @param string $url
- * @return void
- */
-function enrutar_documento($url = "", $documentId)
-{
-    global $ruta_db_superior;
-
-    // webservice utilitie
-    if (isset($_REQUEST["no_redirecciona"])) {
-        return $_REQUEST['iddoc'] ? $_REQUEST['iddoc'] : $documentId;
-    }
-
-    if (!$url && $documentId) {
-        $params = http_build_query([
-            'documentId' => $documentId
-        ]);
-        $url = $ruta_db_superior . "views/documento/index_acordeon.php?" . $params;
-    }
-
-    redirecciona($url);
-}
-
 function crear_pretexto($asunto, $contenido)
 {
     global $conn;
@@ -916,45 +891,6 @@ function ejecutoradd($sKey)
     }
 
     return true;
-}
-
-function actualizar_datos_documento($idformato, $iddoc)
-{
-    global $ruta_db_superior;
-    include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
-
-    if (!empty($_REQUEST["campo_descripcion"])) {
-        $campo = Model::getQueryBuilder()
-            ->select('nombre,etiqueta')
-            ->from('campos_formato')
-            ->where("idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")")->execute()->fetchAll();
-    } else if ($idformato) {
-        $campo = busca_filtro_tabla("idcampos_formato,nombre,etiqueta,formato_idformato", "campos_formato cf", "cf.formato_idformato='" . $idformato . "' AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "orden", $conn);
-    }
-    if ($campo["numcampos"]) {
-        $descripcion = '';
-        for ($i = 0; $i < $campo["numcampos"]; $i++) {
-            $descripcion .= $campo[$i]["etiqueta"] . ": " . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1) . '<br>';
-        }
-    }
-    $idserie = 0;
-    if ($idformato) {
-        $info_formato = busca_filtro_tabla("nombre_tabla,serie_idserie", "formato", "idformato=" . $idformato, "", $conn);
-        if ($info_formato["numcampos"]) {
-            if ($info_formato[0]["serie_idserie"]) {
-                $idserie = $info_formato[0]["serie_idserie"];
-            }
-            $doc_serie = busca_filtro_tabla("serie_idserie", $info_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
-            if ($doc_serie["numcampos"] && $doc_serie[0]["serie_idserie"]) {
-                $idserie = $doc_serie[0]["serie_idserie"];
-            }
-        }
-    }
-
-    $descripcion = str_replace("'", "", $descripcion);
-    $sql = "UPDATE documento SET descripcion='" . $descripcion . "',serie=" . $idserie . " WHERE iddocumento=" . $iddoc;
-    phpmkr_query($sql);
-    return;
 }
 
 if (!empty($_REQUEST["funcion"])) {

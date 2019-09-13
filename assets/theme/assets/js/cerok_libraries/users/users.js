@@ -173,7 +173,7 @@ class Users {
         return {
             selectMode: 3,
             source: {
-                url: `${baseUrl}arboles/arbol_funcionario.php?${params}`
+                url: `${baseUrl}app/arbol/arbol_funcionario.php?${params}`
             }
         };
     }

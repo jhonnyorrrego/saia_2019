@@ -30,7 +30,7 @@ $extensiones = array("filter" => array());
 if(!empty($_REQUEST["idactividad"])) {
 
     $lista_seleccionados = obtenerListaFormatos($idactividad);
-    $origenFormatos = array("url" => "arboles/wf_arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
+    $origenFormatos = array("url" => "app/arbol/wf_arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
         "params" => array(
             "seleccionable" => "checkbox",
             "obligatorio" => 1,

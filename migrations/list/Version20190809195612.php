@@ -44,13 +44,13 @@ final class Version20190809195612 extends AbstractMigration
         ]);
 
         $this->connection->update('campos_formato', [
-            'valor' => '{"url":"arboles/arbol_dependencia.php","checkbox":"checkbox"}'
+            'valor' => '{"url":"app/arbol/arbol_dependencia.php","checkbox":"checkbox"}'
         ], [
             'nombre' => 'asignar_dependencias'
         ]);
 
         $this->connection->update('campos_formato', [
-            'valor' => '{"url":"arboles/arbol_dependencia.php","checkbox":"checkbox"}'
+            'valor' => '{"url":"app/arbol/arbol_dependencia.php","checkbox":"checkbox"}'
         ], [
             'nombre' => 'asignar_mensajeros'
         ]);
@@ -104,7 +104,7 @@ final class Version20190809195612 extends AbstractMigration
         ]);
 
         $this->connection->update('campos_formato', [
-            'valor' => '{\"url\":\"arboles/arbol_dependencia.php\",\"checkbox\":\"radio\"}',
+            'valor' => '{\"url\":\"app/arbol/arbol_dependencia.php\",\"checkbox\":\"radio\"}',
             'etiqueta_html' => 'arbol_fancytree',
             'placeholder' => 'arbol_fancytree',
             'opciones' => '{\"url\":\"dependencia\",\"checkbox\":\"radio\"}'
