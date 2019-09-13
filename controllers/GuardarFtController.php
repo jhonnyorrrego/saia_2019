@@ -65,10 +65,6 @@ class GuardarFtController
             throw new Exception("Se debe indicar el rol", 1);
         }
 
-        if (empty($data["tipo_radicado"])) {
-            throw new Exception("Se debe indicar el contador", 1);
-        }
-
         $plantilla = strtoupper($this->Formato->nombre);
         $Contador = Contador::findByAttributes([
             'nombre' => $data["tipo_radicado"]

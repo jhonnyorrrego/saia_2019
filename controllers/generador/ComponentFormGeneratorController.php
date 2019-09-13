@@ -431,7 +431,7 @@ HTML;
         return <<<HTML
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
-            <div class="dropzone" id="dropzone_{$this->CamposFormato->nombre}"></div>
+            <div class="" id="dropzone_{$this->CamposFormato->nombre}"></div>
             <input type="hidden" class="{$requiredClass}" name="{$this->CamposFormato->nombre}">
         </div>
         <script>
@@ -453,6 +453,7 @@ HTML;
                     },
                     paramName: 'file',
                     init : function() {
+                        $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
                         this.on('success', function(file, response) {
                             response = JSON.parse(response);
 
