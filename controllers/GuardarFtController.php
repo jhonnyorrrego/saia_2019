@@ -178,13 +178,8 @@ class GuardarFtController
         $tabla = strtolower($data["tabla"]);
         $valores = [];
         $campos = [];
-        $larchivos = [];
+        $fieldFiles = [];
         $idformato = $this->formatId;
-        $form_uuid = null;
-
-        if ($data["form_uuid"]) {
-            $form_uuid = $data["form_uuid"];
-        }
 
         $fields = $this->Formato->getFields();
         foreach ($fields as $CamposFormato) {
@@ -211,13 +206,15 @@ class GuardarFtController
                         }
                         break;
                     case "archivo":
-                        array_push($larchivos, $CamposFormato->getPK());
-                        if (@$data["form_uuid"]) {
-                            array_push($campos, $CamposFormato->nombre);
-                            array_push($valores, "'$form_uuid'");
-                            unset($data[$CamposFormato->nombre]);
+                        $routes = explode(',', $data[$CamposFormato->nombre]);
+
+                        foreach ($routes as $route) {
+                            $fieldFiles[] = [
+                                'fieldId' => $CamposFormato->getPK(),
+                                'route' => $route
+                            ];
                         }
-                        // $data[$CamposFormato->nombre] = 0;
+
                         break;
                 }
                 if (isset($data[$CamposFormato->nombre])) {
@@ -300,20 +297,16 @@ class GuardarFtController
             $Connection->query($sql);
             $insertado = $Connection->lastInsertId();
 
-            if ($insertado) {
-                if (count($larchivos)) {
-                    include_once("anexosdigitales/funciones_archivo.php");
-                    cargar_archivo_formato($larchivos, $idformato, $iddoc, $form_uuid);
-                }
-
-                llama_funcion_accion($iddoc, $idformato, "adicionar", "POSTERIOR");
-                generar_ruta_documento($idformato, $iddoc);
-            } else {
-                if (isset($iddoc)) {
-                    $del = "DELETE FROM documento WHERE iddocumento=" . $iddoc;
-                    phpmkr_query($del);
-                }
+            if (!$insertado) {
+                throw new Exception("Error al guardar el formato", 1);
             }
+
+            if ($fieldFiles) {
+                $this->saveFiles($fieldFiles);
+            }
+
+            llama_funcion_accion($iddoc, $idformato, "adicionar", "POSTERIOR");
+            generar_ruta_documento($idformato, $iddoc);
         } elseif ($tipo == 1) { // cuando voy a editar
             $update = [];
             for ($i = 0; $i < count($campos); $i++) {
@@ -363,5 +356,45 @@ class GuardarFtController
         $this->Documento->save();
 
         return $insertado;
+    }
+
+    /**
+     * almacena los archivos de los campos tipo dropzone
+     */
+    public function saveFiles($data)
+    {
+        global $ruta_db_superior;
+
+        foreach ($data as $field) {
+            Anexos::executeUpdate([
+                'estado' => 0
+            ], [
+                'documento_iddocumento' => $this->Documento->getPK(),
+                'campos_formato' => $field['fieldId'],
+                'estado' => 1
+            ]);
+        }
+
+        foreach ($data as $field) {
+            $content = file_get_contents($ruta_db_superior . $field['route']);
+            $fileName = basename($field['route']);
+            $extensionParts = explode('.', $fileName);
+            $route = "{$this->Documento->getStorageRoute()}/anexos/{$fileName}";
+            $dbRoute = TemporalController::createFileDbRoute($route, 'archivos', $content);
+
+            Anexos::newRecord([
+                'documento_iddocumento' => $this->Documento->getPK(),
+                'campos_formato' => $field['fieldId'],
+                'estado' => 1,
+                'ruta' => $dbRoute,
+                'etiqueta' => $extensionParts[0],
+                'tipo' => end($extensionParts),
+                'formato' => $this->formatId,
+                'fecha_anexo' => date('Y-m-d H:i:s'),
+                'fecha' => date('Y-m-d H:i:s'),
+                'estado' => 1,
+                'fk_funcionario' => SessionController::getValue('idfuncionario')
+            ]);
+        }
     }
 }

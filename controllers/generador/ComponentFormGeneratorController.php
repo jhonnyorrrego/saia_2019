@@ -428,6 +428,37 @@ HTML;
         $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
         $identificator = "dropzone_{$this->CamposFormato->nombre}";
 
+        if ($this->scope == self::SCOPE_EDIT) {
+            $editFunction = <<<JS
+                $.post('<?= \$ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key'),
+                    fieldId: {$this->CamposFormato->getPK()},
+                    documentId: <?= \$_REQUEST['iddoc'] ?>
+                }, function(response){
+                    if(response.success){
+                        response.data.forEach(mockFile => {
+                            {$identificator}.removeAllFiles();
+                            {$identificator}.emit('addedfile', mockFile);
+                            {$identificator}.emit('thumbnail', mockFile, '<?= \$ruta_db_superior ?>' + mockFile.route);
+                            {$identificator}.emit('complete', mockFile);
+
+                            let value = $("[name='{$this->CamposFormato->nombre}']").val();
+
+                            if(value){
+                                var values = value.split(',');
+                            }else{
+                                var values = [];
+                            }
+
+                            values.push(mockFile.route);
+                            $("[name='{$this->CamposFormato->nombre}']").val(values.join(','));
+                        });                        
+                    }
+                }, 'json');
+JS;
+        }
+
         return <<<HTML
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
@@ -454,6 +485,9 @@ HTML;
                     paramName: 'file',
                     init : function() {
                         $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
+
+                        {$editFunction}
+
                         this.on('success', function(file, response) {
                             response = JSON.parse(response);
 

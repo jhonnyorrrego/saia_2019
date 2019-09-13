@@ -207,6 +207,27 @@ class Documento extends Model
     }
 
     /**
+     * obtiene la ruta de almacenamiento del documento
+     * 
+     * ej : 2019/09/13/iddocumento/estado/
+     * 
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     */
+    public function getStorageRoute()
+    {
+        $DateTime = new DateTime($this->fecha_creacion);
+
+        return sprintf(
+            "%s/%s/%s/%s/%s",
+            $DateTime->format('Y'),
+            $DateTime->format('m'),
+            $DateTime->format('d'),
+            $this->getPK(),
+            $this->estado
+        );
+    }
+
+    /**
      * crea los registros para el rastro
      * sobre los cambios del documento
      *

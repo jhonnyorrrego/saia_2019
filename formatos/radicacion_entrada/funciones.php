@@ -13,8 +13,8 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 include_once $ruta_db_superior . "app/qr/librerias.php";
 include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
-/* ADICIONAR */
 
+//Adicionar
 function mostrar_radicado_entrada($idformato, $iddoc)
 {
     global $conn;
@@ -31,8 +31,7 @@ function mostrar_radicado_entrada($idformato, $iddoc)
     echo $campo;
 }
 
-/* EDITAR */
-
+//Editar
 function datos_editar_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
@@ -54,8 +53,6 @@ function datos_editar_radicacion($idformato, $iddoc)
                 $('#persona_natural_dest').removeClass('required');
                 $('#tr_tipo_mensajeria').hide();
                 $('[name="tipo_mensajeria"]').removeClass('required');
-
-                //$('#fecha_oficio_entrada').addClass('required');
                 $('#fecha_oficio_entrada').removeClass('required');
                 $('#tr_fecha_oficio_entrada').show();
                 $('#tr_numero_oficio').show();
