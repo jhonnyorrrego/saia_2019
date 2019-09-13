@@ -105,8 +105,6 @@ class GuardarFtController
         $data["tipo_radicado"] = $Contador->nombre;
         $data["iddoc"] = $this->Documento->getPK();
 
-        //////////////CARGAR LOS ANEXOS ACA ////////////////////////////////////////////
-
         llama_funcion_accion($this->Documento->getPK(), $this->formatId, "radicar", "POSTERIOR");
 
         if (array_key_exists("anterior", $data)) {
@@ -138,56 +136,38 @@ class GuardarFtController
             throw new Exception("Error al guardar el formato", 1);
         }
 
-        $formato = busca_filtro_tabla("", "formato", "nombre_tabla LIKE '" . @$data["tabla"] . "'", "");
-        $banderas = [];
-        if ($formato["numcampos"]) {
-            $banderas = explode(",", $formato[0]["banderas"]);
-        }
-
         $datos["archivo_idarchivo"] = $data["iddoc"];
         $datos["nombre"] = "BORRADOR";
         $datos["tipo_destino"] = 1;
         $datos["tipo"] = "";
 
-        if (!isset($adicionales)) {
-            $adicionales = "";
-        }
-        transferir_archivo_prueba($datos, [SessionController::getValue('usuario_actual')], $adicionales, "");
+        transferir_archivo_prueba($datos, [SessionController::getValue('usuario_actual')], "", "");
 
         $datos["archivo_idarchivo"] = $data["iddoc"];
         $datos["nombre"] = "POR_APROBAR";
         $datos["tipo"] = "";
 
-        if (!is_array($adicionales)) {
-            $adicionales = [];
-        }
-
-        $adicionales["activo"] = "1";
         include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 
-        if ((!isset($data["firmado"]) || (isset($data["firmado"]) && $data["firmado"] == "una"))) {
+        if (isset($data["firmado"]) && $data["firmado"] == "una") {
             $exist_ruta = busca_filtro_tabla("documento_iddocumento", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $data["iddoc"], "", $conn);
             if (!$exist_ruta["numcampos"]) {
                 $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "", $conn);
                 if ($radicador["numcampos"]) {
                     $aux_destino[0] = $radicador[0]["funcionario_codigo"];
                     $datos["ruta_creador_documento"] = 1;
-                    // TODO: Utilizado para las firmas tipo SVG (Para el funcionario creador)
-                    transferir_archivo_prueba($datos, $aux_destino, $adicionales);
+
+                    transferir_archivo_prueba($datos, $aux_destino, ["activo" => 1]);
                 }
             }
         } else if (isset($data["firmado"]) && $data["firmado"] == "varias") {
-            $usuario_origen = busca_filtro_tabla("dependencia", $data["tabla"], "id" . $data["tabla"] . "=" . $idplantilla, "", $conn);
-            if (!isset($data["no_redirecciona"])) {
-                redirecciona('formatos/' . "librerias/rutaadd.php?x_plantilla='$plantilla'&doc=" . $data["iddoc"] . "&obligatorio=" . $data["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
-                return;
-            } else {
-                $retorno["mensaje"] = "Error al generar la ruta de aprobacion";
-                return json_encode($retorno);
-            }
+            redirecciona("formatos/librerias/rutaadd.php?x_plantilla='$plantilla'&doc=" . $data["iddoc"] . "&obligatorio=" . $data["obligatorio"] . "&origen=" . $data['dependencia']);
+            return;
         }
 
-        if (in_array("e", $banderas) || $data["webservie_aprob_doc"] == 1) {
+        $banderas = explode(",", $this->Formato->banderas);
+
+        if (in_array("e", $banderas)) {
             aprobar($data["iddoc"], 1);
         }
 
