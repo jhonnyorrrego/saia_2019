@@ -21,6 +21,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <head>
 	<meta charset="utf-8" />
 	<?= validate() ?>
+	<?= ckeditor() ?>
 </head>
 
 <body>
@@ -46,8 +47,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </div>');
 
 	?>
-
-	<script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="">
@@ -111,7 +110,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 						async: false,
 						type: 'POST',
 						dataType: "json",
-						url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
+						url: "<?php echo ($ruta_db_superior); ?>app/generador/actualizar_contenido_encabezado.php",
 						data: datos,
 						success: function(data) {
 							if (data.exito == 1) {

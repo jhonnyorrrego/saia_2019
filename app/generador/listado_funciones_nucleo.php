@@ -35,13 +35,15 @@ try {
 
     $Formato = new Formato($_REQUEST['formatId']);
     $processFields = $Formato->getProcessFields();
+    $imagen = "fa-user";
 
     $fields = [];
     foreach ($processFields as $CamposFormato) {
         $fields[] = [
             'id' => $CamposFormato->getPK(),
             'name' => $CamposFormato->nombre,
-            'label' => $CamposFormato->etiqueta
+            'label' => $CamposFormato->etiqueta,
+            'imagen' => 'fa-tasks'
         ];
     }
 
