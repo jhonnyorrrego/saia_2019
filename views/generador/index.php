@@ -233,7 +233,6 @@ function cargarCampos($categoria)
                                                                         }
                                                                         ?>
                                                                     </select>
-
                                                                     <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
                                                                 </div>
                                                             </div>

@@ -218,6 +218,12 @@ $(document).ready(function() {
             },
             function(response) {
                 if (response.success) {
+                    if (type == 'header') {
+                        $('#header_content').empty();
+                    } else {
+                        $('#footer_content').empty();
+                    }
+
                     createHeaderFooterSelect();
 
                     top.notification({
@@ -279,6 +285,7 @@ $(document).ready(function() {
             url: `${params.baseUrl}views/generador/crear_encabezado_pie.php`,
             size: 'modal-xl',
             title: 'Crear contenido',
+            params: { idformato: params.formatId, type: type },
             buttons: {
                 success: {
                     label: 'Guardar',
@@ -370,7 +377,7 @@ $(document).ready(function() {
     }
 
     function showFooter() {
-        if ($('#footer_content').val()) {
+        if ($('#select_footer').val()) {
             $.post(
                 `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
                 {
