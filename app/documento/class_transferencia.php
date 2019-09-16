@@ -71,11 +71,11 @@ function procesar_estados($idorigen, $iddestino, $nombre_transferencia, $iddocum
 function eliminar_asignacion($funcionario, $iddocumento)
 {
     global $conn;
-    $datos_asignacion = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento=$iddocumento AND entidad_identidad=1 AND llave_entidad=$funcionario and tarea_idtarea=2", "", $conn);
+    $datos_asignacion = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento=$iddocumento AND entidad_identidad=1 AND llave_entidad=$funcionario and tarea_idtarea=2", "");
     if ($datos_asignacion["numcampos"]) {
         for ($i = 0; $i < $datos_asignacion["numcampos"]; $i++) {
             //echo "delete from asignacion where idasignacion=".$datos_asignacion[$i]["idasignacion"];
-            phpmkr_query("delete from asignacion where idasignacion=" . $datos_asignacion[$i]["idasignacion"], $conn);
+            phpmkr_query("delete from asignacion where idasignacion=" . $datos_asignacion[$i]["idasignacion"]);
         }
     } else {
         //alerta("Problemas al Eliminar la tarea Error # 003");     
@@ -119,7 +119,7 @@ function buscar_funcionarios($dependencia, $arreglo = null)
     $dependencias = dependencias($dependencia);
     array_push($dependencias, $dependencia);
     $dependencias = array_unique($dependencias);
-    $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1 AND C.tipo_cargo=1", "", $conn);
+    $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1 AND C.tipo_cargo=1", "");
     $arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
     return $arreglo;
 }
@@ -130,7 +130,7 @@ function dependencias($padre)
     $listado1 = array();
     $listado2 = array();
     $listado3 = array();
-    $ldependencias = busca_filtro_tabla("iddependencia", "dependencia A", "A.cod_padre IN(" . $padre . ")", "", $conn);
+    $ldependencias = busca_filtro_tabla("iddependencia", "dependencia A", "A.cod_padre IN(" . $padre . ")", "");
     $listado1 = extrae_campo($ldependencias, "iddependencia", "U");
     $padres = explode(",", $padre);
 
@@ -161,23 +161,23 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
         $filtro = "A.login='" . $dato . "'";
     }
     if ($tipo == 'nit' || $tipo == 'id' || $tipo == 'login' || $tipo == 1 || $tipo == 2 || $tipo == 3) {
-        $temp = busca_filtro_tabla("", "funcionario A", $filtro, "", $conn);
+        $temp = busca_filtro_tabla("", "funcionario A", $filtro, "");
         if ($temp == "")
             error_("Datos del Funcionario Origen de Dependencia no Existe");
         else {
             $dorig = $temp[0]['idfuncionario'];
-            $datorig = busca_filtro_tabla("f.*,c.*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC", $conn);
+            $datorig = busca_filtro_tabla("f.*,c.*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC");
         }
     } else if ($tipo == "cargo" || $tipo == 4) {
-        $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=$dependencia", "", $conn);
+        $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=$dependencia", "");
         if ($datorig["numcampos"] > 0)
             $datorig = busca_cargofuncionario(5, $datorig[0]["iddependencia_cargo"], "");
         else {
-            $cargo = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $dato, "", $conn);
+            $cargo = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $dato, "");
             error_(codifica_encabezado("No existe nadie en esta dependencia con el cargo " . $cargo[0]["nombre"]));
         }
     } else if ($tipo == 'iddependencia_cargo' || $tipo == 5) {
-        $datorig = busca_filtro_tabla("f.*,c.*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "", $conn);
+        $datorig = busca_filtro_tabla("f.*,c.*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "");
     } else
         $datorig[0]['iddependencia_cargo'] = $dato;
     if ($temp != "" && $temp["numcampos"] > 0)
@@ -211,7 +211,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         $origen = $_SESSION["usuario_actual"];
     }
 
-    $doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
+    $doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "");
     $idformato = $doc[0]["idformato"];
     if (empty($idformato)) {
         print_r($doc);
@@ -274,7 +274,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     $idtransferencia[] = $idbuzon_s;
 
                     if ($texto_notas != "") {
-                        guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', $conn, 0);
+                        guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', 0);
                     }
 
                     $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $user);
@@ -349,7 +349,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
 
                 if ($texto_notas != "") {
                     $idbuzon_e = $idInsertadoEntrada1;
-                    guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
+                    guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', 0);
                 }
                 procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
             }
@@ -377,7 +377,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
 
             if ($texto_notas != "") {
                 $idbuzon_e = $idInsertadoEntrada2;
-                guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
+                guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', 0);
             }
         }
     }
@@ -403,17 +403,17 @@ function aprobar($iddoc = 0, $opcion = 0)
         $iddoc = $_REQUEST["iddoc"];
     }
 
-    $tipo_radicado = busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato", "documento,contador,formato C", "idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)", "", $conn);
-    $datos_formato = busca_filtro_tabla("banderas,mostrar_pdf,nombre,nombre_tabla,cod_padre,idformato", "formato", "idformato='" . $tipo_radicado[0]["idformato"] . "'", "", $conn);
+    $tipo_radicado = busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato", "documento,contador,formato C", "idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)", "");
+    $datos_formato = busca_filtro_tabla("banderas,mostrar_pdf,nombre,nombre_tabla,cod_padre,idformato", "formato", "idformato='" . $tipo_radicado[0]["idformato"] . "'", "");
     $formato = strtolower($tipo_radicado[0]["plantilla"]);
 
     llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "confirmar", "ANTERIOR");
 
-    $registro_actual = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=" . $_SESSION["usuario_actual"], "A.idtransferencia", $conn);
+    $registro_actual = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=" . $_SESSION["usuario_actual"], "A.idtransferencia");
 
     if ($registro_actual["numcampos"] > 0) {
-        $registro_anterior = busca_filtro_tabla("A.*", "buzon_entrada A", "A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<" . $registro_actual[0]["idtransferencia"] . " and A.archivo_idarchivo=" . $iddoc . " and origen=" . $_SESSION["usuario_actual"], "A.idtransferencia desc", $conn);
-        $terminado = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.nombre='POR_APROBAR' and A.activo=1", "A.idtransferencia", $conn);
+        $registro_anterior = busca_filtro_tabla("A.*", "buzon_entrada A", "A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<" . $registro_actual[0]["idtransferencia"] . " and A.archivo_idarchivo=" . $iddoc . " and origen=" . $_SESSION["usuario_actual"], "A.idtransferencia desc");
+        $terminado = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.nombre='POR_APROBAR' and A.activo=1", "A.idtransferencia");
         if ($registro_actual["numcampos"] > 0 && $registro_anterior["numcampos"] == 0) {
             $destino = $registro_actual[0]["destino"];
             $origen = $registro_actual[0]["origen"];
@@ -428,7 +428,7 @@ function aprobar($iddoc = 0, $opcion = 0)
             $campos = "archivo_idarchivo,nombre,origen,fecha,destino,tipo,tipo_origen,tipo_destino,ruta_idruta";
 
             for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
-                $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
+                $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia");
                 if ($registro_intermedio["numcampos"]) {
                     break;
                 }
@@ -470,7 +470,7 @@ function aprobar($iddoc = 0, $opcion = 0)
             }
 
             for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
-                $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
+                $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia");
                 if ($registro_intermedio["numcampos"])
                     break;
                 if ($registro_actual[$i]["ruta_idruta"] != "") {
@@ -518,9 +518,9 @@ function aprobar($iddoc = 0, $opcion = 0)
                     'titulo' => 'Radicación del documento'
                 ]);
 
-                $respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "", $conn);
+                $respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "");
                 if ($respuestas["numcampos"] > 0) {
-                    $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
+                    $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "");
                     $datos["origen"] = $origen_respuesta[0]["origen"];
                     $datos["nombre"] = "RESPONDIDO";
                     $datos["tipo"] = "";
@@ -529,7 +529,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                     for ($i = 0; $i < $respuestas["numcampos"]; $i++) {
                         if ($respuestas[$i]["estado"] == "TRAMITE" || $respuestas[$i]["estado"] == "ACTIVO") {
                             $sql = "UPDATE documento set estado='APROBADO' where iddocumento='" . $respuestas[$i]["origen"] . "'";
-                            phpmkr_query($sql, $conn);
+                            phpmkr_query($sql);
                         }
                         $datos["archivo_idarchivo"] = $respuestas[$i]["origen"];
                         $destino_respuesta[0] = $origen_respuesta[0]["origen"];
@@ -555,12 +555,15 @@ function aprobar($iddoc = 0, $opcion = 0)
     if ($aprobar_posterior == 1) {
         llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
     }
-    actualizar_datos_documento($tipo_radicado[0]["idformato"], $iddoc);
+
+    $Documento = new Documento($iddoc);
+    $Documento->refreshDescription();
+
     if ($opcion == 0) {
         if ($_REQUEST["anterior"] == $iddoc) {
             return $iddoc;
         } else {
-            $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "", $conn);
+            $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "");
             if ($formato_ant["numcampos"]) {
                 $iddoc_anterior = busca_filtro_tabla("a.documento_iddocumento", $formato_ant[0]["nombre_tabla"] . " a," . $datos_formato[0]["nombre_tabla"] . " b", "a.id" . $formato_ant[0]["nombre_tabla"] . "=b." . $formato_ant[0]["nombre_tabla"] . " and b.documento_iddocumento=" . $iddoc, "", $con);
                 if ($iddoc_anterior["numcampos"]) {
@@ -574,17 +577,16 @@ function aprobar($iddoc = 0, $opcion = 0)
 
 function mostrar_estado_proceso($idformato, $iddoc)
 {
-    global $conn, $idfactura;
     $campos_formato = ""; // La variable no estaba definida, la he definido provisionalmente como string vacio.
-    $rol = false;
+
     if (!isset($_REQUEST["ocultar_firmas"]) || $_REQUEST["ocultar_firmas"] == 0) {
         $firma_actual = false;
-        $estado_doc = busca_filtro_tabla("A.estado,A.serie,A.ejecutor,A.documento_antiguo", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
+        $estado_doc = busca_filtro_tabla("A.estado,A.serie,A.ejecutor,A.documento_antiguo", "documento A", "A.iddocumento=" . $iddoc, "");
         $iniciales = $estado_doc[0]["ejecutor"];
-        $ultimo_ruta = busca_filtro_tabla("max(A.idtransferencia) as idbuzon", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc, "", $conn);
+        $ultimo_ruta = busca_filtro_tabla("max(A.idtransferencia) as idbuzon", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc, "");
         if ($pagina != "mostrar_calidad") {
-            $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
-            $mostrar_firmas_doc = busca_filtro_tabla("A.firma,dependencia" . $campos_formato, "" . $tabla[0]["nombre_tabla"] . " A,documento B", "A.documento_iddocumento=B.iddocumento and B.iddocumento=" . $iddoc, "", $conn);
+            $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "");
+            $mostrar_firmas_doc = busca_filtro_tabla("A.firma,dependencia" . $campos_formato, "" . $tabla[0]["nombre_tabla"] . " A,documento B", "A.documento_iddocumento=B.iddocumento and B.iddocumento=" . $iddoc, "");
             if ($mostrar_firmas_doc["numcampos"] > 0) {
                 $mostrar_firmas = $mostrar_firmas_doc[0]["firma"];
             }
@@ -598,12 +600,12 @@ function mostrar_estado_proceso($idformato, $iddoc)
         $resultado = cargo_rol($_REQUEST["iddoc"]);
         if (!$resultado["numcampos"]) {
             if (!$estado_doc[0]["documento_antiguo"]) {
-                $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
+                $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $mostrar_firmas_doc[0]["dependencia"], "");
                 $resultado[0]["tipo_origen"] = 5;
             } else {
-                $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and dependencia_iddependencia=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
+                $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and dependencia_iddependencia=" . $mostrar_firmas_doc[0]["dependencia"], "");
                 if (!$resultado["numcampos"])
-                    $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario", "", $conn);
+                    $resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario", "");
                 $resultado[0]["tipo_origen"] = 5;
             }
             if (!$resultado["numcampos"]) {
@@ -620,12 +622,12 @@ function mostrar_estado_proceso($idformato, $iddoc)
 
         if ($resultado["numcampos"]) {
             array_unique($resultado);
-            $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
+            $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "");
             if (!$ancho_firma["numcampos"]) {
                 $ancho_firma[0]["valor"] = "20%";
             }
 
-            $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
+            $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "");
             if (!$alto_firma["numcampos"]) {
                 $alto_firma[0]["valor"] = "20%";
             }
@@ -636,7 +638,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                 $alto_firma[0]["valor"] = "50%";
             }
 
-            $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
+            $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "");
             if (!$tamano_fuente["numcampos"]) {
                 $tamano_fuente[0]["valor"] = '10pt';
             }
@@ -648,11 +650,11 @@ function mostrar_estado_proceso($idformato, $iddoc)
                     continue;
                 $fila = $resultado[$k];
                 if ($fila["tipo_origen"] == 5) { // rol
-                    $cargos = busca_filtro_tabla("distinct cargo.nombre", "cargo,dependencia_cargo", "cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=" . $fila["origen"], "", $conn);
+                    $cargos = busca_filtro_tabla("distinct cargo.nombre", "cargo,dependencia_cargo", "cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=" . $fila["origen"], "");
                 } elseif ($fila["tipo_origen"] == 1) { // funcionario_codigo
-                    $cargos = busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='" . $fila["fecha"] . "' and fecha_final>='" . $fila["fecha"] . "' and funcionario_codigo='" . $fila["origen"] . "' AND dependencia_cargo.estado=1", "", $conn);
+                    $cargos = busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='" . $fila["fecha"] . "' and fecha_final>='" . $fila["fecha"] . "' and funcionario_codigo='" . $fila["origen"] . "' AND dependencia_cargo.estado=1", "");
                     if (!$cargos["numcampos"])
-                        $cargos = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='" . $fila["origen"] . "'", "fecha desc", $conn);
+                        $cargos = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='" . $fila["origen"] . "'", "fecha desc");
                 }
                 if (!isset($fila["obligatorio"]))
                     $fila["obligatorio"] = 1;
@@ -668,7 +670,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         if ($iniciales == ($fila["funcionario_codigo"]))
                             $firma_actual = true;
                     } else if ($mostrar_firmas == 1) {
-                        $firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "", $conn);
+                        $firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "");
                         echo '<td style="border:none;" align="left">';
                         if ($firma[0]["firma"] != "") {
                             $pagina_actual = $_SERVER["PHP_SELF"];
@@ -810,10 +812,10 @@ function cargo_rol($iddoc)
         $origenes[] = $tipo[$i]["origen"];
         switch ($tipo[$i]["tipo_origen"]) {
             case 1:
-                $fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario", "funcionario_codigo=" . $tipo[$i]["origen"], "", $conn);
+                $fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario", "funcionario_codigo=" . $tipo[$i]["origen"], "");
                 break;
             case 5:
-                $fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $tipo[$i]["origen"], "", $conn);
+                $fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $tipo[$i]["origen"], "");
                 break;
         }
         $tipo[$i]["nombres"] = $fun[0]["nombres"];
@@ -832,7 +834,7 @@ function crear_pretexto($asunto, $contenido)
     $sql = "INSERT INTO pretexto(" . $campos . ") VALUES (" . $valores . ")";
     phpmkr_query($sql);
     $idpretexto = phpmkr_insert_id();
-    guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto", $conn);
+    guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
     // Guardo la relacion de la plantilla con el suaurio
     $idfuncionario = $_SESSION["idfuncionario"];
     $campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
@@ -856,36 +858,36 @@ function ejecutoradd($sKey)
 
     $condicion = ($x_identificacion != "") ? "identificacion='" . $x_identificacion . "'" : 'identificacion is NULL';
 
-    $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='" . (($x_nombre)) . "' and $condicion", "iddatos_ejecutor desc", $conn);
+    $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='" . (($x_nombre)) . "' and $condicion", "iddatos_ejecutor desc");
 
     if ($campo["numcampos"] > 0) {
-        $repetido = busca_filtro_tabla("iddatos_ejecutor", "ejecutor,datos_ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $campo[0]["iddatos_ejecutor"] . " and direccion='" . (($x_direccion)) . "' and telefono='" . (($x_telefono)) . "' and pais_idpais='$x_nacionalidad'   and email='" . (($x_email)) . "' and celular='" . (($x_celular)) . "'", "", $conn);
+        $repetido = busca_filtro_tabla("iddatos_ejecutor", "ejecutor,datos_ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $campo[0]["iddatos_ejecutor"] . " and direccion='" . (($x_direccion)) . "' and telefono='" . (($x_telefono)) . "' and pais_idpais='$x_nacionalidad'   and email='" . (($x_email)) . "' and celular='" . (($x_celular)) . "'", "");
 
         if ($repetido["numcampos"] > 0)
             return $sKey;
         else { // comprobar si existe la nacionalidad -----
-            $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
+            $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "");
 
             if (!$pais["numcampos"]) {
-                phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')", $conn);
+                phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')");
                 $x_nacionalidad = phpmkr_insert_id();
             }
             // --------------------------------------------
-            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')", $conn) or error("NO SE INSERTO REMITENTE");
+            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
             return phpmkr_insert_id();
         }
     } else { // comprobar si existe la nacionalidad -----
-        $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "", $conn);
+        $pais = busca_filtro_tabla("idpais", "pais", "idpais='" . $x_nacionalidad . "'", "");
         if (!$pais["numcampos"]) {
-            phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')", $conn);
+            phpmkr_query("insert into pais(nombre) values('" . (($x_nacionalidad)) . "')");
             $x_nacionalidad = phpmkr_insert_id();
         }
         // --------------------------------------------
-        phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('" . (($x_nombre)) . "','" . $x_identificacion . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ")", $conn) or error("NO SE INSERTO REMITENTE");
+        phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('" . (($x_nombre)) . "','" . $x_identificacion . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ")") or error("NO SE INSERTO REMITENTE");
         $idejecutor = phpmkr_insert_id();
 
         if ($idejecutor) {
-            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $idejecutor . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')", $conn) or error("NO SE INSERTO REMITENTE");
+            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $idejecutor . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
             return phpmkr_insert_id();
         }
     }

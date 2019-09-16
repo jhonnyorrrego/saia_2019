@@ -8,11 +8,11 @@ $(function () {
     })();
 
     function showBtnAdd() {
-        params.type == 'json_clasificacion'
-            ? $("#btn_add").remove() : modalAdd()
+        (params.currentVersion == 1 && params.type == 'json_trd')
+            ? modalAddEdit() : $("#btn_add").remove()
     }
 
-    function modalAdd() {
+    function modalAddEdit() {
         $("#btn_add").show();
 
         $('#btn_add').on('click', function () {
@@ -23,7 +23,39 @@ $(function () {
                 onSuccess: function (data) {
                     top.closeTopModal();
                     $table.bootstrapTable('refresh');
+                },
+                buttons: {
+                    success: {
+                        label: 'Guardar',
+                        class: 'btn btn-complete'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        class: 'btn btn-danger'
+                    }
+                }
+            });
+        });
 
+        $(document).on('click', '.dropdown-item', function () {
+
+            let type = $(this).data('type');
+            let id = $(this).data('id');
+            let name = [];
+            name[1] = 'Serie';
+            name[2] = 'Subserie';
+            name[3] = 'Tipo documental';
+
+            top.topModal({
+                url: `${params.baseUrl}views/serie/editar.php`,
+                size: 'modal-xl',
+                title: 'Editar ' + name[type],
+                params: {
+                    idserie: id
+                },
+                onSuccess: function (data) {
+                    top.closeTopModal();
+                    $table.bootstrapTable('refresh');
                 },
                 buttons: {
                     success: {
@@ -52,6 +84,20 @@ $(function () {
                     generateTRD: 1
                 });
                 return queryParams;
+            },
+            responseHandler: function (response) {
+                if (params.currentVersion == 1 && params.type == 'json_trd') {
+                    console.log(response.rows[0]);
+                    for (let index = 0; index < response.rows.length; index++) {
+                        let dataParams = {
+                            'idserie': response.rows[index].idserie,
+                            'idsubserie': response.rows[index].idsubserie,
+                            'idtipo': response.rows[index].idtipo
+                        };
+                        response.rows[index].opciones = templateOptions(dataParams);
+                    }
+                }
+                return response;
             },
             toolbar: '#toolbar',
             search: true,
@@ -95,6 +141,31 @@ $(function () {
         });
     }
 
+    function templateOptions(data) {
+        let template = `<div class="dropdown">
+            <button class="btn mx-1" 
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+            >
+                <i class="fa fa-ellipsis-v fa-2x"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" class="dropdown-item">
+                    <i class="fa fa-edit"></i> Editar Serie
+                </a>
+                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" class="dropdown-item">
+                <i class="fa fa-edit"></i> Editar Subserie
+            </a>
+            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" class="dropdown-item">
+            <i class="fa fa-edit"></i> Editar Tipo documental
+        </a>
+            </div>
+        </div>`;
+        return template;
+    }
+
     function getColumns() {
         return params.type == 'json_clasificacion'
             ? clasificationColumns()
@@ -102,6 +173,12 @@ $(function () {
     }
 
     function trdColumns() {
+        return params.currentVersion == 1
+            ? trdCurrentVersionColumns()
+            : trdPreviousVersionColumns();
+    }
+
+    function trdPreviousVersionColumns() {
         return [
             [
                 {
@@ -132,6 +209,96 @@ $(function () {
                 {
                     field: 'procedimiento',
                     title: 'Procedimiento',
+                    rowspan: 2,
+                    align: 'center'
+                }
+            ],
+            [
+                {
+                    field: 'dependencia',
+                    title: 'Dependencia',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serie',
+                    title: 'Serie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerie',
+                    title: 'SubSerie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serieDocumental',
+                    title: 'Serie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerieDocumental',
+                    title: 'SubSerie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'tipoDocumental',
+                    title: 'Tipo Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                { field: 'gestion', title: 'Gestion', align: 'center' },
+                { field: 'central', title: 'Central', align: 'center' },
+                { field: 'p', title: 'P', align: 'center' },
+                { field: 'el', title: 'El', align: 'center' },
+                { field: 'e', title: 'E', align: 'center' },
+                { field: 's', title: 'S', align: 'center' },
+                { field: 'ct', title: 'Ct', align: 'center' },
+                { field: 'md', title: 'Md', align: 'center' }
+            ]
+        ];
+    }
+
+    function trdCurrentVersionColumns() {
+        return [
+            [
+                {
+                    title: 'Códigos',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Descripción documental',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Retención',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Soporte',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Disposición',
+                    colspan: 4,
+                    align: 'center'
+                },
+                {
+                    field: 'procedimiento',
+                    title: 'Procedimiento',
+                    rowspan: 2,
+                    align: 'center'
+                },
+                {
+                    field: 'opciones',
+                    title: 'Opciones',
                     rowspan: 2,
                     align: 'center'
                 }

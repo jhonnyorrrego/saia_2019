@@ -21,7 +21,7 @@ $params = json_encode([
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Serie</title>
+    <title>TRD</title>
     <link href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages-icons.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -40,11 +40,12 @@ $params = json_encode([
                         </select>
                     </div>
 
-                    <p>
-                        <button type="button" style="display:none" class="btn btn-complete btn-xs" title="Adicionar Serie" id="addSerie">
+                    <p id="pAddSerie" style="display:none">
+                        <button type="button" class="btn btn-complete btn-xs" title="Adicionar Serie" id="addSerie">
                             <i class="fa fa-plus"></i>
                             <span class="d-none d-sm-inline">Serie</span>
                         </button>
+                        <input type="hidden" id="hiddenSerie" class="required">
                     </p>
 
                     <div id="divSerie"></div>

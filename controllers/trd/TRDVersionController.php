@@ -203,6 +203,10 @@ class TRDVersionController
         $reference = $subSerie ? $subSerie : $Serie;
 
         $this->trdData[] = [
+            'iddependencia' => $Dependencia->getPK(),
+            'idserie' => $Serie->getPK(),
+            'idsubserie' => $subSerie ? $subSerie->getPK() : '',
+            'idtipo' => $documentaryType->getPK(),
             'dependencia' => $Dependencia->codigo,
             'serie' => $Serie->codigo,
             'subSerie' => $subSerie ? $subSerie->codigo : '',
@@ -220,6 +224,9 @@ class TRDVersionController
             'procedimiento' => $reference->procedimiento
         ];
         $this->clasificationData[] = [
+            'iddependencia' => $Dependencia->getPK(),
+            'idserie' => $Serie->getPK(),
+            'idsubserie' => $subSerie ? $subSerie->getPK() : '',
             'No' => count($this->clasificationData),
             'SiglaDependencia' => $Dependencia->sigla,
             'codigoDependencia' => $Dependencia->codigo,

@@ -14,6 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
+
 $Response = (object) [
     'data' => new stdClass(),
     'message' => '',
@@ -27,9 +28,21 @@ try {
         throw new Exception('Dependencia invalida', 1);
     }
 
-    $SerieController = new SerieController($_REQUEST);
-    $Response = $SerieController->validateFields()
-        ->save();
+    $conn = Connection::getInstance();
+    $conn->beginTransaction();
+
+    try {
+        $SerieAddController = new SerieAddController($_REQUEST);
+        if ($SerieAddController->createSerie()) {
+            $Response->success = 1;
+            $conn->commit();
+        } else {
+            $conn->rollBack();
+        }
+    } catch (\Throwable $th) {
+        $conn->rollBack();
+        throw new Exception($th->getMessage(), 1);
+    }
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
 }
