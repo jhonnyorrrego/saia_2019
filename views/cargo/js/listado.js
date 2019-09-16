@@ -13,7 +13,7 @@ $(function() {
             checkboxColumnIdx: 0 // render the checkboxes into the 1st column
         },
         source: {
-            url: `${baseUrl}arboles/arbol_cargo.php`,
+            url: `${baseUrl}app/arbol/arbol_cargo.php`,
             data: {
                 expandir: 1,
                 checkbox: null,

@@ -136,7 +136,7 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             'origen' => $datos['origen'],
             'tipo_origen' => $datos['tipo_origen'],
             'ruta_origen' => $idft_ruta_distribucion_origen,
-            'mensajero_origen' => $iddependencia_cargo_mensajero_origen,  
+            'mensajero_origen' => $iddependencia_cargo_mensajero_origen,
             'destino' => $array_destinos[$j],
             'tipo_destino' => $datos['tipo_destino'],
             'ruta_destino' => $idft_ruta_distribucion_destino,
@@ -146,7 +146,7 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             'estado_recogida' => $estado_recogida,
             'documento_iddocumento' => $iddoc,
             'fecha_creacion' => date('Y-m-d H:i:s')
-            
+
         ];
 
         if ($iddistribucion) {
@@ -154,7 +154,7 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
         }
 
         $Distribucion->newRecord($camposDistribucion);
-        
+
         $array_iddistribucion[] = $nuevaDistribucion;
     }
     return $array_iddistribucion;
@@ -170,14 +170,14 @@ function obtener_ruta_distribucion($iddependencia_cargo)
     $rutaDistribucion = Model::getQueryBuilder()
         ->select('a.idft_ruta_distribucion')
         ->from('ft_ruta_distribucion', 'a')
-        ->innerJoin('a','documento','b','a.documento_iddocumento=b.iddocumento')
-        ->innerjoin('a','ft_dependencias_ruta','c','a.idft_ruta_distribucion=c.ft_ruta_distribucion')
+        ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+        ->innerjoin('a', 'ft_dependencias_ruta', 'c', 'a.idft_ruta_distribucion=c.ft_ruta_distribucion')
         ->where("b.estado='APROBADO' and c.estado_dependencia=1")
         ->andWhere('c.dependencia_asignada = :dependencia')
         ->setParameter(':dependencia', $DependenciaCargo->iddependencia, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()
         ->fetchAll();
-    
+
     if ($rutaDistribucion) {
         $retorno = $rutaDistribucion[0]['idft_ruta_distribucion'];
     }
@@ -185,19 +185,19 @@ function obtener_ruta_distribucion($iddependencia_cargo)
 }
 
 function obtener_mensajero_ruta_distribucion($idft_ruta_distribucion)
-{   
+{
     $retorno = 0;
     $mensajeroDistribucion = Model::getQueryBuilder()
         ->select('c.mensajero_ruta')
         ->from('ft_ruta_distribucion', 'a')
-        ->innerJoin('a','documento','b','a.documento_iddocumento=b.iddocumento')
-        ->innerjoin('a','ft_funcionarios_ruta','c','a.idft_ruta_distribucion=c.ft_ruta_distribucion')
+        ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+        ->innerjoin('a', 'ft_funcionarios_ruta', 'c', 'a.idft_ruta_distribucion=c.ft_ruta_distribucion')
         ->where("b.estado='APROBADO' and c.estado_mensajero=1")
         ->andWhere('a.idft_ruta_distribucion = :idruta')
         ->setParameter(':idruta', $idft_ruta_distribucion, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()
         ->fetchAll();
-    
+
     if ($mensajeroDistribucion) {
         $retorno = $mensajeroDistribucion[0]['mensajero_ruta'];
     }
@@ -356,9 +356,9 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 //REPORTE DE DISTRIBUCION
 
 function ver_documento_distribucion($iddocumento, $tipo_origen)
-{ 
+{
     $Documento = new Documento($iddocumento);
-    
+
     $numero = $Documento->numero;
     $array_tipo_origen = array(
         1 => 'I',
@@ -410,7 +410,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
     return $array_tipo_radicado[$tipo_origen];
 }
 
-function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
+function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion, $origen)
 { //Ruta
     global $conn;
     if ($estado_recogida == 'estado_recogida') {
@@ -440,7 +440,21 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
     if ($tipo_destino == 2 && $estado_recogida) { //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
         $nombre_ruta_distribucion = 'Distribuci&oacute;n Externa';
     }
-    return $nombre_ruta_distribucion ."<select id='opciones_acciones_distribucion2'><option>123</option></select>";
+
+    if ($tipo_destino == 1 && $origen) {
+        $rutaDistribucion = Model::getQueryBuilder()
+            ->select('a.idft_ruta_distribucion')
+            ->from('ft_ruta_distribucion', 'a')
+            ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+            ->innerjoin('a', 'ft_dependencias_ruta', 'c', 'a.idft_ruta_distribucion=c.ft_ruta_distribucion')
+            ->where("b.estado='APROBADO' and c.estado_dependencia=1")
+            ->andWhere('c.dependencia_asignada = :dependencia')
+            ->setParameter(':dependencia', $DependenciaCargo->iddependencia, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()
+            ->fetchAll();
+    }
+
+    return $nombre_ruta_distribucion . "<select id='opciones_acciones_distribucion2' class='[data-init-plugin='select2'] pull-left btn btn-xs'><option>123</option></select>";
 }
 
 function select_mensajeros_ruta_distribucion($iddistribucion)
@@ -495,12 +509,12 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
         } elseif ($mensajero_destino) {
 
             $mensajeros_externos = Model::getQueryBuilder()
-            ->select(["iddependencia_cargo as id", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "cargo"])
-            ->from("vfuncionario_dc")
-            ->where("iddependencia_cargo = :iddep")  
-            ->setParameter(':iddep', $mensajero_destino)
-            ->execute()->fetchAll();
-            
+                ->select(["iddependencia_cargo as id", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "cargo"])
+                ->from("vfuncionario_dc")
+                ->where("iddependencia_cargo = :iddep")
+                ->setParameter(':iddep', $mensajero_destino)
+                ->execute()->fetchAll();
+
             if ($mensajeros_externos[0]['cargo'] == "Mensajero") {
                 $tipo_mensajero = "i";
             } else {

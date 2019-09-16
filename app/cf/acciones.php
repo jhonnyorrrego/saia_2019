@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -22,22 +22,27 @@ $Response = (object)[
 if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
     if (isset($_REQUEST['key']) && $_REQUEST['key'] != $_SESSION['idfuncionario']) {
         $Response->message = "Debe iniciar sesion";
-    }else{
+    } else {
         switch ($_REQUEST['type']) {
             case 'edit':
-            $consulta = StaticSql::search("select * from " . $_REQUEST['table'] . " where id" . $_REQUEST['table'] . "=" . $_REQUEST['id']);
-            foreach($consulta[0] as $key => $value){
-                if(!is_numeric($key)){
-                    $data[$key] = $value;
+                $consulta = Model::getQueryBuilder()
+                    ->select("*")
+                    ->from($_REQUEST['table'])
+                    ->where("id" . $_REQUEST['table'] . " = :id")
+                    ->setParameter(":id", $_REQUEST['id'], \Doctrine\DBAL\Types\Type::INTEGER)
+                    ->execute()
+                    ->fetchAll();
+
+                foreach ($consulta[0] as $key => $value) {
+                    if (!is_numeric($key)) {
+                        $data[$key] = $value;
+                    }
                 }
-            }
                 $Response->data = $data;
                 $Response->success = 1;
-            break;
+                break;
         }
     }
 
     echo json_encode($Response);
 }
-
-?>

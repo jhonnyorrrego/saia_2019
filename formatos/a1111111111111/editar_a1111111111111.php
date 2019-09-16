@@ -1,100 +1,164 @@
 <?php
-                    $max_salida = 10;
-                    $ruta_db_superior = $ruta = "";
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
 
-                    while ($max_salida > 0) {
-                        if (is_file($ruta . "db.php")) {
-                            $ruta_db_superior = $ruta;
-                        }
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
 
-                        $ruta .= "../";
-                        $max_salida --;
+    $ruta .= "../";
+    $max_salida --;
+}
+
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
+include_once $ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
+include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
+include_once $ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
+include_once $ruta_db_superior . 'formatos/a1111111111111/funciones.php';
+
+llama_funcion_accion(null,455 ,'ingresar','ANTERIOR');
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="utf-8" />
+    <title>SGDA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <?= pace() ?>
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= theme() ?>
+    <?= icons() ?>
+    <?= moment() ?>
+    <?= select2() ?>
+    <?= validate() ?>
+    <?= ckeditor() ?>
+    <?= jqueryUi() ?>
+    <?= fancyTree(true) ?>
+    <?= dateTimePicker() ?>
+    <?= dropzone() ?>
+</head>
+
+<body>
+    <div class='container-fluid container-fixed-lg col-lg-8' style='overflow: auto;' id='content_container'>
+        <div class='card card-default'>
+            <div class='card-body'>
+                <h5 class='text-black w-100 text-center'>
+                    a1111111111111
+                </h5>
+                <form 
+                    name='formulario_formatos' 
+                    id='formulario_formatos' 
+                    role='form' 
+                    autocomplete='off' 
+                    method='post' 
+                    action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
+                    enctype='multipart/form-data'>
+                    <input type="hidden" name="documento_iddocumento" value="<?= mostrar_valor_campo('documento_iddocumento',455,$_REQUEST['iddoc']) ?>">
+<input type="hidden" name="encabezado" value="<?= mostrar_valor_campo('encabezado',455,$_REQUEST['iddoc']) ?>">
+<input type="hidden" name="firma" value="<?= mostrar_valor_campo('firma',455,$_REQUEST['iddoc']) ?>">
+<input type="hidden" name="idft_a1111111111111" value="<?= mostrar_valor_campo('idft_a1111111111111',455,$_REQUEST['iddoc']) ?>">
+<div class="form-group col-12"  id="tr_campo_texto_7124825">
+                                    <label title="">TEXTO EN UNA L&Iacute;NEA<span>*</span></label>
+                                    <input class="form-control" required type="text"  size="100" id="campo_texto_7124825" name="campo_texto_7124825" required value="<?= mostrar_valor_campo('campo_texto_7124825',455,$_REQUEST['iddoc']) ?>">
+                                    </div>
+<input type="hidden" name="dependencia" value="<?= mostrar_valor_campo('dependencia',455,$_REQUEST['iddoc']) ?>">
+        <div class='form-group form-group-default ' id='group_archivo_1869306737'>
+            <label title=''>ADJUNTOS</label>
+            <div class="" id="dropzone_archivo_1869306737"></div>
+            <input type="hidden" class="" name="archivo_1869306737">
+        </div>
+        <script>
+            $(function(){
+                let loadeddropzone_archivo_1869306737 = [];
+                let dropzone_archivo_1869306737 = new Dropzone('#dropzone_archivo_1869306737', {
+                    url: '<?= $ruta_db_superior ?>app/temporal/cargar_anexos.php',
+                    dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+                    maxFilesize: 3,
+                    maxFiles: 3,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Eliminar',
+                    dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+                    dictMaxFilesExceeded: 'Máximo 3 archivos',
+                    params: {
+                        token: localStorage.getItem('token'),
+                        key: localStorage.getItem('key'),
+                        dir: 'a1111111111111'
+                    },
+                    paramName: 'file',
+                    init : function() {
+                        $("#dropzone_archivo_1869306737").addClass('dropzone');
+                        this.on('success', function(file, response) {
+                            response = JSON.parse(response);
+
+                            if (response.success) {
+                                response.data.forEach(e => {
+                                    loadeddropzone_archivo_1869306737.push(e);
+                                });
+                                $("[name='archivo_1869306737']").val(loadeddropzone_archivo_1869306737.join(','))
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        });
                     }
+                });
+            });
+        </script>
+<div class="form-group col-12"  id="tr_campo_texto_1434206007">
+                                    <label title="">TEXTO EN UNA L&Iacute;NEA<span>*</span></label>
+                                    <input class="form-control" required type="text"  size="100" id="campo_texto_1434206007" name="campo_texto_1434206007" required value="<?= mostrar_valor_campo('campo_texto_1434206007',455,$_REQUEST['iddoc']) ?>">
+                                    </div>
 
-                    ?>
-                        <!DOCTYPE html>
-                            <html>
-                                <head>
-                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-                                    <meta charset="utf-8" />
-                                    <title>.:EDITAR A1111111111111:.</title>
-                                    <meta name="viewport"
-                                      content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-                                    <meta name="apple-mobile-web-app-capable" content="yes">
-                                    <meta name="apple-touch-fullscreen" content="yes">
-                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-                                    <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> <?= pace() ?>
-                        <?= jquery() ?>
-                        <?= bootstrap() ?>
-                        <?= theme() ?>
-                        <?= icons() ?>
-                        <?= moment() ?><?= validate() ?>
-                  <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css"
-                                  rel="stylesheet" type="text/css" media="screen" />                                
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-                                  rel="stylesheet" type="text/css" />
-                                <link
-                                  href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"
-                                  rel="stylesheet" type="text/css" media="screen">
-                                <script
-                                    src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
-                                    type="text/javascript"></script>
+<input type='hidden' name='campo_descripcion' value='8363'>
+<input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
+<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
+<input type='hidden' name='formatId' value='455'>
+<input type='hidden' name='tabla' value='ft_a1111111111111'>
+<input type='hidden' name='formato' value='a1111111111111'>
+<input type='hidden' name='token'>
+<input type='hidden' name='key'>
+<div class='form-group px-0 pt-3'><button class='btn btn-complete' id='continuar' >Continuar</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(function() {
+            $("[name='token']").val(localStorage.getItem('token'));
+            $("[name='key']").val(localStorage.getItem('key'));
 
-                                <link rel="stylesheet"
-                                    href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script> 
-                                <script
-                                  src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script> 
-                  </head>
-                  <div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
-                      <!-- START card -->
-                      <div class="card card-default">
-                            <div class="card-body"><center><h5 class="text-black">A1111111111111</h5></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],455,"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>app/documento/class_transferencia.php"" enctype="multipart/form-data"><div class="form-group "  id="tr_campo_texto_7124825">
-                                        <label title="">TEXTO EN UNA L&Iacute;NEA*</label>
-                                        <input class="form-control" required maxlength="255"  class="required"   tabindex='1'  type="text"  size="100" id="campo_texto_7124825" name="campo_texto_7124825" required value="<?php echo(mostrar_valor_campo('campo_texto_7124825',455,$_REQUEST['iddoc'])); ?>">
-                                       </div><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',455,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_a1111111111111" value="<?php echo(mostrar_valor_campo('idft_a1111111111111',455,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(455,8359,$_REQUEST['iddoc']);?></div><input type="hidden" name="campo_descripcion" value="<?php echo('8363'); ?>"><input type="hidden" name="formato" value="455"><tr><td colspan='2'><?php submit_formato(455,$_REQUEST['iddoc']);?></td></tr></table></form></body>
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $(".form-group.form-group-default").click(function() {
-                                    $(this).find("input").focus();
-                                });
-
-                                if (!this.initFormGroupDefaultRun) {
-                                    $("body").on("focus", ".form-group.form-group-default :input", function() {
-                                        $(".form-group.form-group-default").removeClass("focused");
-                                        $(this).parents(".form-group").addClass("focused");
-                                    });
-
-                                    $("body").on("blur", ".form-group.form-group-default :input", function() {
-                                        $(this).parents(".form-group").removeClass("focused");
-                                        if ($(this).val()) {
-                                            $(this).closest(".form-group").find("label").addClass("fade");
-                                        } else {
-                                            $(this).closest(".form-group").find("label").removeClass("fade");
-                                        }
-                                    });
-
-                                    // Only run the above code once.
-                                    this.initFormGroupDefaultRun = true;
-                                }
-
-                                $(".form-group.form-group-default .checkbox, .form-group.form-group-default .radio").hover(function() {
-                                    $(this).parents(".form-group").addClass("focused");
-                                }, function() {
-                                    $(this).parents(".form-group").removeClass("focused");
-                                });
-                                
-                            });
-                        </script>
-                  </html><?php include_once($ruta_db_superior . 'formatos/librerias/footer_plantilla.php');?>
+            $("#continuar").click(function() {
+                $("#formulario_formatos").validate({
+                    ignore: [],
+                    submitHandler: function(form) {
+                        $("#continuar").hide();
+                        $("#continuar").after(
+                            $('<button>', {
+                                class: 'btn btn-success',
+                                disabled: true,
+                                id: 'boton_enviando',
+                                text: 'Enviando...'
+                            })
+                        );
+                        form.submit();
+                    },
+                    invalidHandler: function() {
+                        $("#continuar").show();
+                        $("#boton_enviando").remove();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

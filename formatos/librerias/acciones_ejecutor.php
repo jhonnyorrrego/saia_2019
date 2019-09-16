@@ -9,7 +9,6 @@ while ($max_salida > 0) {
   $max_salida--;
 }
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
 $campos_auto = explode(",", $_REQUEST["campos_auto"]);
@@ -35,7 +34,7 @@ foreach ($campos as $key => $valor) {
   <?= jquery() ?>
   <?= bootstrap() ?>
   <?= theme() ?>
-  <?= librerias_notificaciones() ?>
+  <?= notificacion() ?>
   <?= select2() ?>
 </head>
 
@@ -168,7 +167,12 @@ foreach ($campos as $key => $valor) {
           $("#nombre_ejecutor").parent().append("<input class='form-control elementos_remitente' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
           $("#buscar_nombre").keyup(function() {
             if ($(this).val() == 0 || $(this).val() == "") {
-              notificacion_saia('Debe Ingresar el Nombre', 'error', '', 3000);
+              console.log("1");
+              top.notification({
+                message: "Debe Ingresar el Nombre",
+                type: "error",
+                timeout: 3000
+              });
             } else {
               $("#ul_completar").load("<?php echo $ruta_db_superior; ?>formatos/librerias/seleccionar_ejecutor.php?tipo=nombre", {
                 nombre: $(this).val()
@@ -246,7 +250,12 @@ foreach ($campos as $key => $valor) {
               }
               $("#destinos_seleccionados").val(vector[0]);
               llenar_llamado();
-              notificacion_saia('<b>ATENCI&Oacute;N</b><br>Contacto actualizado satisfactoriamente', 'success', '', 4000);
+              console.log("2");
+              top.notification({
+                message: "ATENCI&Oacute;N</b><br>Contacto actualizado satisfactoriamente",
+                type: "success",
+                timeout: 4000
+              });
               //limpiarRemitente();
               $("#buscar_nombre").focus();
               var cantidad = "<?php echo $_REQUEST['tipo'] ?>";
@@ -261,7 +270,12 @@ foreach ($campos as $key => $valor) {
             }
           });
         } else {
-          notificacion_saia('Debe Ingresar un nombre', 'error', '', 3000);
+          console.log("3");
+          top.notification({
+            message: "Debe Ingresar un nombre",
+            type: "error",
+            timeout: 3000
+          });
         }
       });
 
@@ -300,7 +314,11 @@ foreach ($campos as $key => $valor) {
             $("#nombre_ejecutor").parent().append("<input class='form-control elementos_remitente' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
             $("#buscar_nombre").keyup(function() {
               if ($(this).val() == 0 || $(this).val() == "") {
-                notificacion_saia('Debe Ingresar el Nombre', 'error', '', 3000);
+                top.notification({
+                  message: "Debe Ingresar el Nombre",
+                  type: "error",
+                  timeout: 3000
+                });
               } else {
                 $("#ul_completar").load("<?php echo $ruta_db_superior; ?>formatos/librerias/seleccionar_ejecutor.php?tipo=nombre", {
                   nombre: $(this).val()
@@ -515,12 +533,12 @@ function campoCiudad($ciudad = null, $campo)
     $ciudad_valor = $ciudad;
 
   $municipio = Model::getQueryBuilder()
-  ->select(["idmunicipio","iddepartamento","idpais"])
-  ->from("municipio","A")
-  ->join("A","departamento","B","A.departamento_iddepartamento=B.iddepartamento")
-  ->join("B","pais","C","C.idpais=B.pais_idpais")
-  ->where("A.idmunicipio=:idmunicipio")
-  ->setParameter(":idmunicipio", $ciudad_valor)->execute()->fetchAll();
+    ->select(["idmunicipio", "iddepartamento", "idpais"])
+    ->from("municipio", "A")
+    ->join("A", "departamento", "B", "A.departamento_iddepartamento=B.iddepartamento")
+    ->join("B", "pais", "C", "C.idpais=B.pais_idpais")
+    ->where("A.idmunicipio=:idmunicipio")
+    ->setParameter(":idmunicipio", $ciudad_valor)->execute()->fetchAll();
 
   if (count($municipio)) {
     $paises = busca_filtro_tabla("", "pais", "", "lower(nombre)", $conn);
@@ -613,14 +631,22 @@ function campoCiudad($ciudad = null, $campo)
               $("#departamento_ejecutor_ciudad").empty();
               $("#ciudad").empty();
               $("#pais_ejecutor_ciudad").append(datos);
-              notificacion_saia('Nuevos datos almacenados', 'success', '', 3000);
+              top.notification({
+                message: "Nuevos datos almacenados",
+                type: "success",
+                timeout: 3000
+              });
               boton_cancelar_ciudad();
             }
           });
         }
       });
     } else {
-      notificacion_saia('Los campos Pais, Departamento y Municipio son obligatorios', 'warning', '', 3000);
+      top.notification({
+        message: "Los campos Pais, Departamento y Municipio son obligatorios",
+        type: "error",
+        timeout: 3000
+      });
     }
   }
 

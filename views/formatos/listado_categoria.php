@@ -14,7 +14,9 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
 $idcategoria_formato = $_REQUEST['idcategoria_formato'] ?? 2;
-$lista_formatos = busca_filtro_tabla("", "formato", "mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'" . $idcategoria_formato . "' OR   fk_categoria_formato like'%," . $idcategoria_formato . "'  OR   fk_categoria_formato like'" . $idcategoria_formato . ",%' OR   fk_categoria_formato like'%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%')", "etiqueta ASC", $conn);
+$formats = Formato::findAllByAttributes([
+    'cod_padre' => 0,
+]);
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 ?>
 <!DOCTYPE html>
@@ -36,26 +38,30 @@ $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . 
             <div class="col-12">
                 <table class="table table-hover table-bordered">
                     <tr>
-                        <td class="text-center"><b>
-                                <?= strtoupper($proceso[0]['nombre']) ?></b></td>
+                        <td class="text-center">
+                            <b><?= strtoupper($proceso[0]['nombre']) ?></b>
+                        </td>
                     </tr>
-                    <?php for ($i = 0; $i < $lista_formatos['numcampos']; $i++) :
-                        if (PermisoController::moduleAccess($lista_formatos[$i]['nombre'])) :
-                            $etiqueta = $lista_formatos[$i]['etiqueta'];
-                            $etiqueta = ucwords(strtolower($etiqueta));
+                    <?php foreach ($formats as $Formato) :
+                        $categories = explode(',', $Formato->fk_categoria_formato);
 
-                            $enlace_adicionar = 'formatos/' . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';
-                            $enlace_adicionar .= http_build_query($_REQUEST + ['idformato' => $lista_formatos[$i]['idformato']]);
+                        if (!in_array($idcategoria_formato, $categories)) {
+                            continue;
+                        }
+
+                        if (PermisoController::moduleAccess($Formato->nombre)) :
+                            $enlace_adicionar = "formatos/{$Formato->nombre}/{$Formato->ruta_adicionar}?";
+                            $enlace_adicionar .= http_build_query($_REQUEST + ['idformato' => $Formato->getPK()]);
                             ?>
                             <tr>
                                 <td>
-                                    <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe">
-                                        <?= $etiqueta ?>
+                                    <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $Formato->etiqueta ?>" title="<?= $Formato->etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe">
+                                        <?= $Formato->etiqueta ?>
                                     </div>
                                 </td>
                             </tr>
                         <?php endif; ?>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                 </table>
             </div>
         </div>

@@ -44,13 +44,13 @@ if (isset($_REQUEST["idflujo"])) {
         $listaIdsFmt[] = $fila["idformato"];
     }
 
-    $origenFormatos = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
+    $origenFormatos = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
         "params" => array(
             "seleccionable" => "checkbox",
             "obligatorio" => 1,
             "filtrar" => implode(",", $listaIdsFmt)
     ));
-    $origenCampos = array("url" => "arboles/arbol_formatos_campos.php", "ruta_db_superior" => $ruta_db_superior,
+    $origenCampos = array("url" => "app/arbol/arbol_formatos_campos.php", "ruta_db_superior" => $ruta_db_superior,
         "params" => array(
             "obligatorio" => 1,
             "filtrar" => implode(",", $listaIdsFmt)

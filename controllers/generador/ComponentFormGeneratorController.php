@@ -67,96 +67,27 @@ class ComponentFormGeneratorController
         $valor = $this->getComponentValue();
 
         switch ($this->CamposFormato->etiqueta_html) {
+            case "funcion":
+                $texto = $this->generateFunction();
+                break;
             case "etiqueta":
             case "etiqueta_titulo":
                 $texto = $this->generateLabel();
                 break;
             case "etiqueta_parrafo":
-                $texto .= '<p id="' . $this->CamposFormato->nombre . '">' . $this->CamposFormato->valor . '</p>';
+                $texto = $this->generateParagraph();
                 break;
             case "etiqueta_linea":
-                $texto .= '<hr class="border" id="' . $this->CamposFormato->nombre . '">';
+                $texto = $this->generateHr();
                 break;
             case "password":
-                $texto .= '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $this->CamposFormato->nombre . '">
-                        <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>
-                        <input class="form-control" type="password" name="' . $this->CamposFormato->nombre . '" ' . $obligatorio . ' value="' . $valor . '">
-                    </div>';
+                $texto = $this->generatePassword();
                 break;
             case "textarea_cke":
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>
-                                    <div class="celda_transparente">';
-                $idcampo_cke = $this->CamposFormato->nombre;
-                $texto .= '<textarea name="' . $this->CamposFormato->nombre . '" id="' . $idcampo_cke . '" cols="53" rows="3" class="form-control';
-                if ($this->CamposFormato->obligatoriedad) {
-                    $texto .= ' required';
-                }
-                $texto .= '">' . $valor . '</textarea>';
-                $texto .= '<script>
-                        var config = {
-                            removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
-                        };
-                        var editor = CKEDITOR.replace("' . $idcampo_cke . '", config);
-                        </script>
-                        </div></div>';
+                $texto = $this->generateTextArea();
                 break;
             case "arbol_fancytree":
-                $idcampo_ft = $this->CamposFormato->getPK();
-                $params_ft = json_decode($this->CamposFormato->valor, true);
-                $opc_ft = "";
-                $param_url = "";
-                $parts = parse_url($params_ft["url"]);
-                parse_str($parts['query'], $query_ft);
-                foreach ($query_ft as $key => $value) {
-                    $param_url .= '"' . $key . '" => "' . $value . '",';
-                }
-
-                $texto .= '<div class="form-group  ' . $obligatorio . '" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label><?php $origen_' . $idcampo_ft . ' = array(
-                                "url" => "' . $params_ft["url"] . '",
-                                "ruta_db_superior" => $ruta_db_superior,';
-                if (!empty($param_url)) {
-                    $texto .= '"params" => array(' . $param_url . '),';
-                }
-                $texto .= ');';
-                if (isset($params_ft["checkbox"])) {
-                    $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' . $params_ft["checkbox"] . '";';
-                    if ($params_ft["checkbox"] == "checkbox") {
-                        $opc_ft .= '"selectMode" => 2,';
-                    } else {
-                        $opc_ft .= '"selectMode" => 1,';
-                    }
-                } else {
-                    $opc_ft .= '"selectMode" => 1,';
-                }
-
-                if (isset($params_ft["funcion_click"]) && !empty($params_ft["funcion_click"])) {
-                    $opc_ft .= '"onNodeClick" => "' . $params_ft["funcion_click"] . '", ';
-                } else {
-                    $opc_ft .= '"seleccionarClick" => 1,';
-                }
-                if (isset($params_ft["funcion_select"]) && !empty($params_ft["funcion_select"])) {
-                    $opc_ft .= '"onNodeSelect" => "' . $params_ft["funcion_select"] . '", ';
-                }
-                if (isset($params_ft["funcion_dobleclick"]) && !empty($params_ft["funcion_dobleclick"])) {
-                    $opc_ft .= '"onNodeDblClick" => "' . $params_ft["funcion_dobleclick"] . '", ';
-                }
-                if (isset($params_ft["buscador"]) && !empty($params_ft["buscador"])) {
-                    $opc_ft .= '"busqueda_item" => "' . $params_ft["buscador"] . '", ';
-                }
-                if ($this->CamposFormato->obligatoriedad) {
-                    $opc_ft .= '"obligatorio" => 1,';
-                }
-
-                $texto .= '$opciones_arbol_' . $idcampo_ft . ' = array(
-                                "keyboard" => true,' . $opc_ft . '
-                            );
-                            $extensiones_' . $idcampo_ft . ' = array(
-                                "filter" => array()
-                            );
-                            $arbol_' . $idcampo_ft . ' = new ArbolFt("' . $this->CamposFormato->nombre . '", $origen_' . $idcampo_ft . ', $opciones_arbol_' . $idcampo_ft . ', $extensiones_' . $idcampo_ft . ');
-                            echo $arbol_' . $idcampo_ft . '->generar_html();?></div>';
+                $texto = $this->generateFancy();
                 break;
             case "fecha":
                 $texto .= $this->generateDate();
@@ -209,8 +140,7 @@ class ComponentFormGeneratorController
                 }
                 break;
             case "archivo":
-                $texto .= 'pendiete desarrollar anexos';
-
+                $texto = $this->generateFile();
                 break;
             case "hidden":
                 $texto .= '<input type="hidden" name="' . $this->CamposFormato->nombre . '" value="' . $valor . '">';
@@ -308,12 +238,26 @@ class ComponentFormGeneratorController
     public function getComponentValue()
     {
         if ($this->scope == self::SCOPE_ADD) {
-            $valor = "<?= validar_valor_campo({$this->CamposFormato->getPK()}) ?>";
+            $valor = $this->CamposFormato->predeterminado;
         } else {
             $valor = "<?= mostrar_valor_campo('{$this->CamposFormato->nombre}',{$this->Formato->getPK()},\$_REQUEST['iddoc']) ?>";
         }
 
         return $valor;
+    }
+
+    /**
+     * genera un string llamando la funcion
+     * del campo valor pasandole idformato e iddocumento
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateFunction()
+    {
+        $function = str_replace(['{*', '*}'], '', $this->CamposFormato->valor);
+        return "<?php {$function}({$this->Formato->getPK()}, \$_REQUEST['iddoc']) ?>";
     }
 
     /**
@@ -328,6 +272,242 @@ class ComponentFormGeneratorController
         return '<div id="tr_' . $this->CamposFormato->nombre . '">
         <h5 title="' . $this->CamposFormato->ayuda . '" id="' . $this->CamposFormato->nombre . '"><label >' . strtoupper($this->CamposFormato->valor) . '</label></h5>
         </div>';
+    }
+
+    /**
+     * genera un componente tipo parrafo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateParagraph()
+    {
+        return "<p id='{$this->CamposFormato->nombre}'>
+            {$this->CamposFormato->valor}
+        </p>";
+    }
+
+    /**
+     * genera un componente tipo hr
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateHr()
+    {
+        return "<hr class='border' id='{$this->CamposFormato->nombre}'>";
+    }
+
+    /**
+     * genera un componente tipo contrasena
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generatePassword()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $value = $this->getComponentValue();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+
+        return  "<div class='form-group form-group-default {$requiredClass}' id='tr_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <input class='form-control {$requiredClass}' type='password' name='{$this->CamposFormato->nombre}' value='{$value}'>
+        </div>";
+    }
+
+    /**
+     * genera un componente tipo ckeditor
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateTextArea()
+    {
+        $valor = $this->getComponentValue();
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $idcampo_cke = $this->CamposFormato->nombre;
+
+        return <<<HTML
+            <div class="form-group" id="tr_{$this->CamposFormato->nombre}">
+                <label title="{$this->CamposFormato->ayuda}">
+                    {$label}
+                </label>
+                <div class="celda_transparente">
+                    <textarea name="{$this->CamposFormato->nombre}" id="{$idcampo_cke}" rows="3" class="form-control {$requiredClass}">
+                        {$valor}
+                    </textarea>
+                    <script>
+                        CKEDITOR.replace("{$idcampo_cke}", {
+                            removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
+                        });
+                    </script>
+                </div>
+            </div>';
+HTML;
+    }
+
+    /**
+     * genera un componente tipo arbol
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateFancy()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+
+        $idcampo_ft = $this->CamposFormato->getPK();
+        $params_ft = json_decode($this->CamposFormato->valor, true);
+        $opc_ft = "";
+        $param_url = "";
+        $parts = parse_url($params_ft["url"]);
+        parse_str($parts['query'], $query_ft);
+        foreach ($query_ft as $key => $value) {
+            $param_url .= '"' . $key . '" => "' . $value . '",';
+        }
+
+        $texto = '<div class="form-group ' . $requiredClass . '" id="tr_' . $this->CamposFormato->nombre . '">
+                                    <label title="' . $this->CamposFormato->ayuda . '">' . $label . '</label><?php $origen_' . $idcampo_ft . ' = array(
+                                "url" => "' . $params_ft["url"] . '",
+                                "ruta_db_superior" => $ruta_db_superior,';
+        if (!empty($param_url)) {
+            $texto .= '"params" => array(' . $param_url . '),';
+        }
+        $texto .= ');';
+        if (isset($params_ft["checkbox"])) {
+            $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' . $params_ft["checkbox"] . '";';
+            if ($params_ft["checkbox"] == "checkbox") {
+                $opc_ft .= '"selectMode" => 2,';
+            } else {
+                $opc_ft .= '"selectMode" => 1,';
+            }
+        } else {
+            $opc_ft .= '"selectMode" => 1,';
+        }
+
+        if (isset($params_ft["funcion_click"]) && !empty($params_ft["funcion_click"])) {
+            $opc_ft .= '"onNodeClick" => "' . $params_ft["funcion_click"] . '", ';
+        } else {
+            $opc_ft .= '"seleccionarClick" => 1,';
+        }
+        if (isset($params_ft["funcion_select"]) && !empty($params_ft["funcion_select"])) {
+            $opc_ft .= '"onNodeSelect" => "' . $params_ft["funcion_select"] . '", ';
+        }
+        if (isset($params_ft["funcion_dobleclick"]) && !empty($params_ft["funcion_dobleclick"])) {
+            $opc_ft .= '"onNodeDblClick" => "' . $params_ft["funcion_dobleclick"] . '", ';
+        }
+        if (isset($params_ft["buscador"]) && !empty($params_ft["buscador"])) {
+            $opc_ft .= '"busqueda_item" => "' . $params_ft["buscador"] . '", ';
+        }
+        if ($this->CamposFormato->obligatoriedad) {
+            $opc_ft .= '"obligatorio" => 1,';
+        }
+
+        $texto .= '$opciones_arbol_' . $idcampo_ft . ' = array(
+                                "keyboard" => true,' . $opc_ft . '
+                            );
+                            $extensiones_' . $idcampo_ft . ' = array(
+                                "filter" => array()
+                            );
+                            $arbol_' . $idcampo_ft . ' = new ArbolFt("' . $this->CamposFormato->nombre . '", $origen_' . $idcampo_ft . ', $opciones_arbol_' . $idcampo_ft . ', $extensiones_' . $idcampo_ft . ');
+                            echo $arbol_' . $idcampo_ft . '->generar_html();?></div>';
+        return $texto;
+    }
+
+    public function generateFile()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $identificator = "dropzone_{$this->CamposFormato->nombre}";
+
+        if ($this->scope == self::SCOPE_EDIT) {
+            $editFunction = <<<JS
+                $.post('<?= \$ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key'),
+                    fieldId: {$this->CamposFormato->getPK()},
+                    documentId: <?= \$_REQUEST['iddoc'] ?>
+                }, function(response){
+                    if(response.success){
+                        response.data.forEach(mockFile => {
+                            {$identificator}.removeAllFiles();
+                            {$identificator}.emit('addedfile', mockFile);
+                            {$identificator}.emit('thumbnail', mockFile, '<?= \$ruta_db_superior ?>' + mockFile.route);
+                            {$identificator}.emit('complete', mockFile);
+
+                            let value = $("[name='{$this->CamposFormato->nombre}']").val();
+
+                            if(value){
+                                var values = value.split(',');
+                            }else{
+                                var values = [];
+                            }
+
+                            values.push(mockFile.route);
+                            $("[name='{$this->CamposFormato->nombre}']").val(values.join(','));
+                        });                        
+                    }
+                }, 'json');
+JS;
+        }
+
+        return <<<HTML
+        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <div class="" id="dropzone_{$this->CamposFormato->nombre}"></div>
+            <input type="hidden" class="{$requiredClass}" name="{$this->CamposFormato->nombre}">
+        </div>
+        <script>
+            $(function(){
+                let loaded{$identificator} = [];
+                let {$identificator} = new Dropzone('#{$identificator}', {
+                    url: '<?= \$ruta_db_superior ?>app/temporal/cargar_anexos.php',
+                    dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+                    maxFilesize: 3,
+                    maxFiles: 3,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Eliminar',
+                    dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+                    dictMaxFilesExceeded: 'Máximo 3 archivos',
+                    params: {
+                        token: localStorage.getItem('token'),
+                        key: localStorage.getItem('key'),
+                        dir: '{$this->Formato->nombre}'
+                    },
+                    paramName: 'file',
+                    init : function() {
+                        $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
+
+                        {$editFunction}
+
+                        this.on('success', function(file, response) {
+                            response = JSON.parse(response);
+
+                            if (response.success) {
+                                response.data.forEach(e => {
+                                    loaded{$identificator}.push(e);
+                                });
+                                $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','))
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+HTML;
     }
 
     /**
@@ -668,5 +848,64 @@ class ComponentFormGeneratorController
         $campo .= '</script>';
 
         return ($campo);
+    }
+
+    /**
+     * genera los campos obligatorios de nucleo
+     *
+     * @param array $descriptions lista de idcampos_formato para la descripcion
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateSystemFields($descriptions)
+    {
+        $response = [];
+        $value = implode(',', $descriptions);
+
+        if ($this->Formato->detalle) {
+            $response[] = "<input type='hidden' name='padre' value='<?= \$_REQUEST['padre'] ?>'>";
+            $response[] = "<input type='hidden' name='anterior' value='<?= \$_REQUEST['anterior'] ?>'>";
+        }
+
+        $response[] = "<input type='hidden' name='campo_descripcion' value='{$value}'>";
+        $response[] = "<input type='hidden' name='iddoc' value='<?= \$_REQUEST['iddoc'] ?? null ?>'>";
+        $response[] = "<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='{$this->Formato->getCounter()->nombre}'>";
+        $response[] = "<input type='hidden' name='formatId' value='{$this->Formato->getPK()}'>";
+        $response[] = "<input type='hidden' name='tabla' value='{$this->Formato->nombre_tabla}'>";
+        $response[] = "<input type='hidden' name='formato' value='{$this->Formato->nombre}'>";
+        $response[] = "<input type='hidden' name='token'>";
+        $response[] = "<input type='hidden' name='key'>";
+        $response[] = "<div class='form-group px-0 pt-3'><button class='btn btn-complete' id='continuar' >Continuar</button></div>";
+
+        return implode("\n", $response);
+    }
+
+    /**
+     * en caso de ser un formato tipo item
+     * y el ambito es adicionar genera el campo accion
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public function generateItemAction()
+    {
+        if ($this->Formato->item && $this->scope == self::SCOPE_ADD) {
+            $response = '
+            <div "form-group">
+                <label>ACCION A SEGUIR LUEGO DE GUARDAR</label>
+                <div class="radio radio-success">
+                    <input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">
+                    <label for="opcion_item1">Adicionar otro</label>
+                    <input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>
+                    <label for="opcion_item">Terminar</label>
+                </div>
+            </div>';
+        } else {
+            $response = '';
+        }
+
+        return $response;
     }
 }

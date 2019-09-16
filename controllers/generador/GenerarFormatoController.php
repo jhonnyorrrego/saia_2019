@@ -418,6 +418,7 @@ while (\$max_salida > 0) {
 }
 
 include_once \$ruta_db_superior . 'core/autoload.php';
+include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php';
 
 try {
     JwtController::check(\$_REQUEST["token"], \$_REQUEST["key"]);    
@@ -509,6 +510,8 @@ CODE;
         $form = [];
         $descriptions = [];
         $fieldScope = $scope == self::SCOPE_ADD ? self::FLAG_ADD : self::FLAG_EDIT;
+        $componentScope = $scope == self::SCOPE_ADD ?
+            ComponentFormGeneratorController::SCOPE_ADD : ComponentFormGeneratorController::SCOPE_EDIT;
         $fields = $this->Formato->getFields();
         $this->ComponentFormGeneratorController = new ComponentFormGeneratorController(
             $this->Formato
@@ -525,8 +528,6 @@ CODE;
                 continue;
             }
 
-            $componentScope = $scope == self::SCOPE_ADD ?
-                ComponentFormGeneratorController::SCOPE_ADD : ComponentFormGeneratorController::SCOPE_EDIT;
             $form[] = $this->ComponentFormGeneratorController->generate($CamposFormato, $componentScope);
         }
 
@@ -534,58 +535,9 @@ CODE;
             throw new Exception("Recuerde asignar el campo que sera almacenado como descripcion del documento", 1);
         }
 
-        $value = ($scope == self::SCOPE_EDIT && $this->Formato->detalle) ? implode(',', $descriptions) : '';
-        $form[] = "<input type='hidden' name='campo_descripcion' value='{$value}'>";
+        $form[] = $this->ComponentFormGeneratorController->generateItemAction();
+        $form[] = $this->ComponentFormGeneratorController->generateSystemFields($descriptions);
 
-        if ($this->Formato->item && $scope == self::SCOPE_ADD) {
-            $form[] = '
-            <div "form-group">
-                <label>ACCION A SEGUIR LUEGO DE GUARDAR</label>
-                <div class="radio radio-success">
-                    <input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">
-                    <label for="opcion_item1">Adicionar otro</label>
-                    <input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>
-                    <label for="opcion_item">Terminar</label>
-                </div>
-            </div>';
-        }
-
-        if ($scope == self::SCOPE_EDIT) {
-            $form[] = '<input type="hidden" name="formato" value="' . $this->formatId . '">';
-        }
-
-        if ($this->Formato->detalle) {
-            $form[] = '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
-            $form[] = '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';
-
-            if ($scope == self::SCOPE_ADD) {
-                $form[] = '<input type="hidden" name="accion" value="guardar_detalle" >';
-            } else if ($scope == self::SCOPE_EDIT) {
-                $form[] = '<input type="hidden" name="accion" value="editar" >';
-                $form[] = '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
-                $form[] = '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
-            }
-        }
-
-        if ($this->Formato->item) {
-            $form[] = '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>"><input type="hidden" name="formato" value="' . $this->Formato->nombre . '">';
-
-            if ($scope == self::SCOPE_ADD) {
-                $form[] = '<input type="hidden" name="accion" value="guardar_item" >';
-            } else if ($scope == self::SCOPE_EDIT) {
-                $form[] = '<input type="hidden" name="accion" value="editar" >';
-                $form[] = '<input type="hidden" name="item" value="<?php echo $_' . 'REQUEST["item"]; ?' . '>" >';
-                $form[] = '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
-            }
-        }
-
-        if ($scope == self::SCOPE_ADD) {
-            $form[] = "<?php submit_formato({$this->formatId})?>";
-        } else if ($scope == self::SCOPE_EDIT) {
-            $form[] = "<?php submit_formato({$this->formatId},\$_REQUEST['iddoc']) ?>";
-        }
-
-        $form[] = '</form>';
         $text = implode("\n", $form);
         $content = <<<CONTENT
 <?php
@@ -648,10 +600,42 @@ llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
                     role='form' 
                     autocomplete='off' 
                     method='post' 
-                    action='<?= \$ruta_db_superior ?>app/documento/class_transferencia.php' 
+                    action='<?= \$ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-    {$text}
+                    {$text}
+                </form>
+            </div>
+        </div>
+    </div>
     {$this->callScopeFunctions($scope)}
+    <script>
+        $(function() {
+            $("[name='token']").val(localStorage.getItem('token'));
+            $("[name='key']").val(localStorage.getItem('key'));
+
+            $("#continuar").click(function() {
+                $("#formulario_formatos").validate({
+                    ignore: [],
+                    submitHandler: function(form) {
+                        $("#continuar").hide();
+                        $("#continuar").after(
+                            $('<button>', {
+                                class: 'btn btn-success',
+                                disabled: true,
+                                id: 'boton_enviando',
+                                text: 'Enviando...'
+                            })
+                        );
+                        form.submit();
+                    },
+                    invalidHandler: function() {
+                        $("#continuar").show();
+                        $("#boton_enviando").remove();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 CONTENT;

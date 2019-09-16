@@ -14,7 +14,6 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 
 $validar_enteros = array("idbusqueda_componente");
-desencriptar_sqli('form_info');
 $filtro = '';
 $idbusqueda_temp = '';
 $retorno = array();
@@ -76,14 +75,22 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 				$consulta_adicional = " and " . $consulta_adicional;
 			}
 			if (MOTOR == "Oracle") {
-				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn->query($sql2);
-				$idbusqueda_temp = $conn->lastInsertId();
+				$FiltroTemp = new BusquedaFiltroTemp();
+				$idbusqueda_temp = $FiltroTemp::newRecord([
+					'fk_busqueda_componente' => $_REQUEST["idbusqueda_componente"],
+					'funcionario_idfuncionario' => $_SESSION["idfuncionario"],
+					'fecha' => date("Y-m-d H:i:s")
+
+				]);
 				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
-				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn->query($sql2);
-				$idbusqueda_temp = $conn->lastInsertId();
+				$FiltroTemp = new BusquedaFiltroTemp();
+				$idbusqueda_temp = $FiltroTemp::newRecord([
+					'fk_busqueda_componente' => $_REQUEST["idbusqueda_componente"],
+					'funcionario_idfuncionario' => $_SESSION["idfuncionario"],
+					'detalle' => $cadena . $consulta_adicional . $cadena_adicional,
+					'fecha' => date("Y-m-d H:i:s")
+				]);
 			}
 
 			$idbusqueda_fil = filtros_adicionales();

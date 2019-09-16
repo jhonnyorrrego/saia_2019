@@ -66,7 +66,7 @@ $(function() {
             checkbox: true,
             selectMode: 1,
             source: {
-                url: `${baseUrl}arboles/arbol_dependencia.php`,
+                url: `${baseUrl}app/arbol/arbol_dependencia.php`,
                 data: {
                     expandir: 1,
                     unSelectables: unSelectables

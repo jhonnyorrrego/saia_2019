@@ -6,7 +6,7 @@ $(function () {
         $('#transportadora_form').trigger('submit');
     });
 
-    if(id != ''){
+    if (id != '') {
         $.post(
             `${params.baseUrl}app/cf/acciones.php`,
             {
@@ -17,7 +17,7 @@ $(function () {
                 table: table
             },
             function (response) {
-                if (response.success) { 
+                if (response.success) {
                     fillForm(response.data);
                 } else {
                     top.notification({
@@ -32,10 +32,10 @@ $(function () {
 
     function fillForm(data) {
         for (let attribute in data) {
-            let e = $(`[name='${attribute}']`);        
+            let e = $(`[name='${attribute}']`);
             if (e.length && attribute != 'estado') {
                 e.val(data[attribute]).trigger('change');
-                $(`[name='${attribute}']`).attr("disabled",true);
+                $(`[name='${attribute}']`).attr("disabled", true);
             } else if (attribute == 'estado') {
                 $(`[name='estado'][value=${data.estado}]`).prop('checked', true);
             }

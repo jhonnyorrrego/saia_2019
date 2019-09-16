@@ -12,7 +12,7 @@ $(document).ready(function () {
         },
         selectMode: 1,
         source: {
-            url: `${params.baseUrl}arboles/arbol_expediente_funcionario.php`,
+            url: `${params.baseUrl}app/arbol/arbol_expediente_funcionario.php`,
             data:{
                 'onlyExp': 1
             }

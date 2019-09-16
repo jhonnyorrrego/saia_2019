@@ -36,7 +36,8 @@ try {
     $opciones["nombre"] = strval($opciones["nombre"]) . "_" . rand();
     $opciones["formato_idformato"] = $_REQUEST['idFormato'];
 
-    $pk = CamposFormato::newRecord($opciones);
+    $total = CamposFormato::countRecords(['formato_idformato' => $_REQUEST['idFormato']]);
+    $pk = CamposFormato::newRecord($opciones + ['orden' => $total]);
 
     $Response->data = $pk;
     $Response->success = 1;

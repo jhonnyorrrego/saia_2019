@@ -36,7 +36,7 @@ if(!empty($_REQUEST["idnotificacion"])) {
         $listaIdsFmt[] = $fila["idformato"];
     }
 
-    $origenCampos = array("url" => "arboles/arbol_formatos_campos_flujo.php", "ruta_db_superior" => $ruta_db_superior,
+    $origenCampos = array("url" => "app/arbol/arbol_formatos_campos_flujo.php", "ruta_db_superior" => $ruta_db_superior,
         "params" => array(
             "seleccionable" => "checkbox",
             "obligatorio" => 1,

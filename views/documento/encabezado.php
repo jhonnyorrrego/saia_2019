@@ -185,7 +185,9 @@ function plantilla($documentId, $transferId = 0)
         </div>
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
         <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-headerparams='<?= $params ?>'></script>
-        <script src='<?= $ruta_db_superior . "formatos/{$Formato->nombre}/funciones.js" ?>' data-format-params='<?= $params ?>'></script>
+        <?php if (is_file($ruta_db_superior . "formatos/{$Formato->nombre}/funciones.js")) : ?>
+            <script src='<?= $ruta_db_superior . "formatos/{$Formato->nombre}/funciones.js" ?>' data-format-params='<?= $params ?>'></script>
+        <?php endif; ?>
     <?php
 
     }
