@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <html><title>.: RUTAS DE DISTRIBUCI&OACUTE;N:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA RUTAS DE DISTRIBUCI&Oacute;N</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_dependencia"><div class="btn-group" data-toggle="buttons-radio" >
+=======
+<html><title>.: RUTAS DE DISTRIBUCI&OACUTE;N:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/encabezado_pie_pagina.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/funciones_cliente.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA RUTAS DE DISTRIBUCI&Oacute;N</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_dependencia"><div class="btn-group" data-toggle="buttons-radio" >
+>>>>>>> 07cd62bee0c1e75a278891fee0a173005e5a700a
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_dependencia',this.id)">
 		    Y
 		  </button>
@@ -93,7 +97,20 @@
                       });
                       });
                      </script></td>
+<<<<<<< HEAD
                     </tr><tr id="tr_firma"><div class="btn-group" data-toggle="buttons-radio" >
+=======
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_asignar_mensajeros',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_asignar_mensajeros',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_asignar_mensajeros" id="bqsaiaenlace_asignar_mensajeros" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">MENSAJEROS DE LA RUTA</td><input type="hidden" name="bksaiacondicion_asignar_mensajeros" id="bksaiacondicion_asignar_mensajeros" value="like_total"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(404,4999,'',1,'buscar');?></td></tr><tr id="tr_firma"><div class="btn-group" data-toggle="buttons-radio" >
+>>>>>>> 07cd62bee0c1e75a278891fee0a173005e5a700a
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_firma',this.id)">
 		    Y
 		  </button>
@@ -207,6 +224,7 @@
                       });
                       });
                      </script></td>
+<<<<<<< HEAD
                     </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_asignar_mensajeros',this.id)">
 		    Y
@@ -217,6 +235,9 @@
 		  <input type="hidden" name="bqsaiaenlace_asignar_mensajeros" id="bqsaiaenlace_asignar_mensajeros" value="y" />
 		</div>
                      <td class="encabezado" width="20%" title="">MENSAJEROS DE LA RUTA</td><input type="hidden" name="bksaiacondicion_asignar_mensajeros" id="bksaiacondicion_asignar_mensajeros" value="like_total"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(404,8336,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="4987"><?php submit_formato(404);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+=======
+                    </tr><input type="hidden" name="campo_descripcion" value="4987"><?php submit_formato(404);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+>>>>>>> 07cd62bee0c1e75a278891fee0a173005e5a700a
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

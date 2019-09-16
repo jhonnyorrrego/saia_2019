@@ -43,7 +43,6 @@ $params = json_encode([
 			</div>
 		</div>
 	</div>
-
 	<script src="<?= $ruta_db_superior ?>views/generador/js/editor_encabezado.js" id="script_edit_header" data-params='<?= $params ?>'></script>
 </body>
 

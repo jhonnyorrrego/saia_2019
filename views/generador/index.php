@@ -124,6 +124,17 @@ function check_banderas($bandera, $chequear = true)
         echo $texto;
     }
 }
+
+function cargarCampos($categoria)
+{
+    global $conn;
+    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '', $conn);
+    echo "<h5>" . $categoria . "</h5>";
+    for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
+        $etiqueta = $listadoComponentes[$i]["etiqueta"];
+        echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}'><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i><div id='c_' class='d-inline'>{$etiqueta}</div></li>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -142,36 +153,10 @@ function check_banderas($bandera, $chequear = true)
     <?= ckeditor() ?>
     <?= select2() ?>
     <link href="<?= $ruta_db_superior ?>views/generador/css/index.css" rel="stylesheet" />
-    <link href="<?= $ruta_db_superior ?>views/generador/css/lists.css" rel="stylesheet" />
-    <style type="text/css">
-        .arbol_saia>.containerTableStyle {
-            overflow: hidden;
-        }
-
-        ul.fancytree-container {
-            overflow: auto;
-            position: relative;
-            border: none !important;
-            outline: none !important;
-        }
-
-        span.fancytree-title {
-            font-family: Ubuntu, sans-serif;
-            font-size: 12px;
-        }
-
-        span.fancytree-checkbox.fancytree-radio {
-            vertical-align: middle;
-        }
-
-        span.fancytree-expander {
-            vertical-align: middle !important;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="container-fluid mx-0 px-2 pb-5" style="min-width:1400px;">
+    <div class="container-fluid mx-0 pb-5" style="min-width:1400px;">
         <div class="row my-2 mx-0">
             <div class="col-12 col-sm-12 col-md-3 col-lg-2 mx-0"></div>
             <div class="col-12 col-sm-12 col-md-3 col-lg-2 mx-0 fixed-top">
@@ -248,7 +233,6 @@ function check_banderas($bandera, $chequear = true)
                                                                         }
                                                                         ?>
                                                                     </select>
-
                                                                     <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
                                                                 </div>
                                                             </div>
@@ -519,15 +503,10 @@ function check_banderas($bandera, $chequear = true)
                                             </ul>
                                         </div>
                                         <div class="col-3" style="position:relative;display:inline-block;vertical-align:top">
-                                            <ul id="itemsComponentes" class="sortable boxier listContainer" style="margin-right: 1em;">
-                                                <?php
-                                                $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1', '', $conn);
-
-                                                for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
-                                                    $etiqueta = $listadoComponentes[$i]["etiqueta"];
-                                                    echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}' idformato='{$formatId}' ><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i>{$etiqueta}</li>";
-                                                }
-                                                ?>
+                                            <ul id="itemsComponentes" class="sortable boxier listContainer pl-2">
+                                                <?= cargarCampos('Elementos de diseño') ?>
+                                                <?= cargarCampos('Campos del formato') ?>
+                                                <?= cargarCampos('Campos avanzados') ?>
                                             </ul>
                                         </div>
                                     </div>
@@ -587,7 +566,9 @@ function check_banderas($bandera, $chequear = true)
                                                 <div class="col-12" id="footer_content"></div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3 listContainer" id="funcion_list"></div>
+                                        <div class="col-12 col-md-3 listContainer">
+                                            <ul id="funcion_list" class="py-2 px-2"></ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- fin creacion del mostrar -->
@@ -607,9 +588,9 @@ function check_banderas($bandera, $chequear = true)
     <script src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/coordinates.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>
+    <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
 </body>
 
 </html>

@@ -291,3 +291,222 @@ select {
     border: 2px solid #ddd;
     background: #eee;
 }
+
+.arbol_saia > .containerTableStyle {
+    overflow: hidden;
+}
+
+ul.fancytree-container {
+    overflow: auto;
+    position: relative;
+    border: none !important;
+    outline: none !important;
+}
+
+span.fancytree-title {
+    font-family: Ubuntu, sans-serif;
+    font-size: 12px;
+}
+
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+
+span.fancytree-expander {
+    vertical-align: middle !important;
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////
+/*  Estilos del dragdrop para campos del formato y elementos de diseño.  ///////////  */
+/*///////////////////////////////////////////////////////////////////////////////////////*/
+
+#contenedorComponentes {
+    position: relative;
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    min-height: 770px;
+    background: #f7f7f7;
+    margin-right: 0px;
+}
+
+#itemsComponentes {
+    position: relative;
+    border: 1px solid white;
+    width: 100%;
+    background: #f8f8f8;
+}
+
+#itemsComponentes h5 {
+    position: relative;
+    padding-left: 14px;
+    color: #666;
+}
+
+#contenedorComponentes li {
+    height: 64px;
+    padding: 12px;
+    padding-left: 20px;
+    background: white;
+    font-size: 100%;
+    padding-top: 20px;
+    color: #333;
+}
+
+#contenedorComponentes li:hover {
+    background: #fafafa;
+}
+
+#itemsComponentes li {
+    margin-right: 4px;
+    height: 36px;
+    padding: 6px;
+    padding-left: 20px;
+}
+
+#itemsComponentes li:hover {
+    font-size: 16px;
+    background: #dfdfdf;
+}
+
+ul.sortable li {
+    position: relative;
+}
+
+ul.boxy {
+    list-style-type: none;
+    padding: 4px 4px 0 4px;
+    margin: 0px;
+    width: 10em;
+    font-size: 13px;
+}
+ul.boxy li {
+    cursor: move;
+    margin-bottom: 4px;
+    padding: 2px 2px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+}
+
+ul.boxier {
+    list-style-type: none;
+    padding: 4px 4px 0 4px;
+    margin: 0px;
+    width: 10em;
+    font-size: 15px;
+}
+ul.boxier li {
+    cursor: move;
+    margin-bottom: 4px;
+    padding: 2px 2px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+}
+
+/*////////////////////////////////// Estilos de Editar_componente_generico ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+label {
+    vertical-align: middle;
+}
+
+#tipo_campo {
+    font-size: 30px;
+}
+
+#btnGuardar {
+    background: #48b0f7;
+    color: #fff;
+    position: relative;
+    left: 600px;
+    margin-top: 100px;
+    height: 40px;
+}
+
+#btnGuadar:hover {
+    background: #2690d5;
+    color: #fff;
+}
+
+#btnCancelar {
+    color: #fff;
+    position: relative;
+    left: 598px;
+    margin-top: 100px;
+    cursor: pointer;
+    z-index: 1;
+    height: 40px;
+}
+
+.form-group label:not(.error) {
+    text-transform: none;
+    font-weight: bold;
+    color: #626262;
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 12px;
+    color: #626262;
+}
+
+#btn-cerrar {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    color: #666;
+    font-size: 150%;
+    width: 20px;
+    height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#btn-cerrar:hover {
+    color: #444;
+}
+
+.glyphicon {
+    font-size: 16px;
+    color: #555;
+}
+
+.alpaca-message {
+    color: red;
+}
+
+.glyphicon-exclamation-sign {
+    color: red;
+}
+
+#funcion_list {
+    width: 96%;
+    background: #f8f8f8;
+}
+
+#funcion_list li {
+    position: relative;
+    list-style-type: none;
+    height: 44px;
+    font-size: 15px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+}
+
+#funcion_list li:hover {
+    font-size: 16px;
+    background-color: #dfdfdf;
+}
+
+#tituloListado {
+    position: relative;
+    left: -10px;
+    padding-left: 0px;
+    cursor: default;
+    font-weight: normal;
+    color: #555;
+    background: transparent;
+}

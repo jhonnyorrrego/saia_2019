@@ -1,5 +1,5 @@
 <?php
-require_once  '../define.php';
+require_once  '../core/define.php';
 
 $drivers = [
     "MySql" => "pdo_mysql",

@@ -61,7 +61,7 @@
 
                     $otherData = [
                         'retencion_gestion' => (int) $this->row['gestion'],
-                        'this->row_central' => (int) $this->row['central'],
+                        'retencion_central' => (int) $this->row['central'],
                         'procedimiento' => $this->row['procedimiento'],
                         'dis_eliminacion' => ($this->row['disposicion'] == 'E') ? 1 : 0,
                         'dis_conservacion' => ($this->row['disposicion'] == 'CT') ? 1 : 0,
@@ -146,7 +146,7 @@
                         'codigo' => $subserie['codigo'],
                         'tipo' => 2,
                         'retencion_gestion' => (int) $subserie['gestion'],
-                        'subserie_central' => (int) $subserie['central'],
+                        'retencion_central' => (int) $subserie['central'],
                         'procedimiento' => $subserie['procedimiento'],
                         'dis_eliminacion' => ($subserie['disposicion'] == 'E') ? 1 : 0,
                         'dis_conservacion' => ($subserie['disposicion'] == 'CT') ? 1 : 0,

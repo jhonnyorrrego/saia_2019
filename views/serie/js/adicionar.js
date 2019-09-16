@@ -687,7 +687,7 @@ $('#trd_form').validate({
 
         $.ajax({
             type: 'POST',
-            url: `${params.baseUrl}app/serie/guardar_serie.php`,
+            url: `${params.baseUrl}app/serie/guardar.php`,
             data,
             dataType: 'json',
             success: function (response) {

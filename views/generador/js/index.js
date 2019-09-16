@@ -218,6 +218,12 @@ $(document).ready(function() {
             },
             function(response) {
                 if (response.success) {
+                    if (type == 'header') {
+                        $('#header_content').empty();
+                    } else {
+                        $('#footer_content').empty();
+                    }
+
                     createHeaderFooterSelect();
 
                     top.notification({
@@ -275,11 +281,11 @@ $(document).ready(function() {
 
     $('.add_header_footer').on('click', function() {
         let type = $(this).data('type');
-
         top.topModal({
-            url: `${params.baseUrl}views/generador/editor_encabezado.php`,
+            url: `${params.baseUrl}views/generador/crear_encabezado_pie.php`,
             size: 'modal-xl',
             title: 'Crear contenido',
+            params: { idformato: params.formatId, type: type },
             buttons: {
                 success: {
                     label: 'Guardar',
@@ -371,7 +377,7 @@ $(document).ready(function() {
     }
 
     function showFooter() {
-        if ($('#footer_content').val()) {
+        if ($('#select_footer').val()) {
             $.post(
                 `${params.baseUrl}app/generador/obtener_contenido_encabezado.php`,
                 {
@@ -517,20 +523,33 @@ $(document).ready(function() {
     }
 
     function createFunctionList(data) {
+        $('#funcion_list').append(
+            $('<h5>', {
+                class: 'bg-master-light pl-4',
+                id: 'tituloListado',
+                text: 'Funciones de núcleo'
+            })
+        );
         data.functions.forEach(f => {
             $('#funcion_list').append(
                 $('<li>', {
                     id: 'function-' + f.idfunciones_nucleo,
                     'data-name': f.nombre_funcion,
-                    text: f.etiqueta,
-                    class: 'bg-master-lightest funcionesPropias'
+                    html:
+                        '<i class="fa ' +
+                        f.imagen +
+                        ' mr-3"></i><div class="d-inline">' +
+                        f.etiqueta +
+                        '</div>',
+                    class: 'bg-master-lightest funcionesPropias pl-3'
                 })
             );
         });
 
         $('#funcion_list').append(
-            $('<li>', {
-                class: 'bg-master-light',
+            $('<h5>', {
+                class: 'bg-master-light pl-4',
+                id: 'tituloListado',
                 text: 'Listado de campos'
             })
         );
@@ -540,8 +559,13 @@ $(document).ready(function() {
                 $('<li>', {
                     id: 'field-' + f.id,
                     'data-name': f.name,
-                    text: f.label,
-                    class: 'bg-master-lightest funcionesPropias'
+                    html:
+                        '<i class="fa ' +
+                        f.imagen +
+                        ' mr-3" ></i><div class="d-inline">' +
+                        f.label +
+                        '</div>',
+                    class: 'bg-master-lightest funcionesPropias pl-3'
                 })
             );
         });

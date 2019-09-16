@@ -49,6 +49,14 @@ try {
             'etiqueta' => $_REQUEST['name'],
             'contenido' => $content
         ]);
+
+        $Formato = new Formato($_REQUEST['idformato']);
+        if ($_REQUEST['type'] == 'header') {
+            $Formato->encabezado = $save;
+        } else {
+            $Formato->pie_pagina = $save;
+        }
+        $Formato->save();
     }
 
     if (!$save) {

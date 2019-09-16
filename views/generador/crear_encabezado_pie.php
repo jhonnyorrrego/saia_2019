@@ -21,6 +21,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <head>
 	<meta charset="utf-8" />
 	<?= validate() ?>
+	<?= ckeditor() ?>
 </head>
 
 <body>
@@ -46,8 +47,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 </div>');
 
 	?>
-
-	<script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="">
@@ -59,22 +58,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 								<div id="div_etiqueta_encabezado" class="form-group">
 									<label for="etiqueta_encabezado">Etiqueta encabezado<br>
 
-									</label><input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" class="form-control">
+									</label><input type="text" id="name" name="etiqueta_encabezado" class="form-control" />
 								</div>
 								<textarea name="editor_encabezado_pie" id="editor_encabezado_pie"></textarea>
 								<script>
 									var editor_encabezado_pie = CKEDITOR.replace("editor_encabezado_pie");
 								</script>
+								<input type="hidden" id="idformato" value="<?= $_REQUEST['idformato'] ?>" />
+								<input type="hidden" id="type" value="<?= $_REQUEST['type'] ?>" />
 							</form>
 							</select>
-							<br>
+
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<script>
 		$(function() {
 			CKEDITOR.instances.editor_encabezado_pie.setData(<?php echo $contenidoDefecto ?>);
@@ -97,40 +97,33 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 					}
 				});
 				if (formulario_encabezado.valid()) {
-					var etiqueta = $("#etiqueta_encabezado").val();
 					var contenido = CKEDITOR.instances['editor_encabezado_pie'].getData();
-					var id = $("#idencabezado").val();
-					var datos = {
-						ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
-						rand: Math.round(Math.random() * 100000),
-						etiqueta: etiqueta,
-						contenido: contenido,
-						tipo_retorno: 1
-					};
-					$.ajax({
-						async: false,
-						type: 'POST',
-						dataType: "json",
-						url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
-						data: datos,
-						success: function(data) {
-							if (data.exito == 1) {
-								//$("#sel_encabezado", window.parent.document).attr("idencabezado", data.idInsertado);
+					$.post(
+						`<?php echo ($ruta_db_superior); ?>app/generador/actualizar_contenido_encabezado.php`, {
+							key: localStorage.getItem('key'),
+							token: localStorage.getItem('token'),
+							identificator: 0,
+							idformato: $('#idformato').val(),
+							type: $('#type').val(),
+							name: $('#name').val(),
+							content: contenido
+						},
+						function(response) {
+							if (response.success) {
 								top.notification({
 									type: 'success',
 									message: 'Encabezado creado'
 								});
-								top.successModalEvent(data.datos);
-								top.closeTopModal();
-
+								top.successModalEvent();
 							} else {
 								top.notification({
 									type: 'error',
-									message: 'Error'
+									message: response.message
 								});
 							}
-						}
-					});
+						},
+						'json'
+					);
 				}
 			});
 		});

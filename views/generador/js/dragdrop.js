@@ -172,8 +172,6 @@ $(document).ready(function() {
                 // everything the original dragsort script did to swap us into the
                 // correct position
 
-                var parent = this.parentNode;
-
                 var item = this;
                 var next = DragUtils.nextItem(item);
                 while (next != null && this.offsetTop >= next.offsetTop - 2) {
@@ -217,6 +215,7 @@ $(document).ready(function() {
                         nuevo.style.top = '0px';
                         nuevo.style.left = '0px';
                         DragDrop.makeItemDragable(nuevo);
+                        cargarComponentes();
                     }
                     if (this.classList.contains('agregado')) {
                         eliminarComponente(this);
@@ -230,6 +229,7 @@ $(document).ready(function() {
                 if (next == null && previous == null) {
                     if (this.classList.contains('panel')) {
                         var nuevo = this.cloneNode(true);
+                        cargarComponentes();
                         clonarComponente(this, nuevo);
                     }
                 }
@@ -241,6 +241,7 @@ $(document).ready(function() {
                     ) {
                         if (this.classList.contains('panel')) {
                             var nuevo = this.cloneNode(true);
+                            cargarComponentes();
                             clonarComponente(this, nuevo);
                         }
                     }
@@ -252,6 +253,8 @@ $(document).ready(function() {
                         if (this.classList.contains('agregado')) {
                             this.parentNode.removeChild(this);
                             return;
+                        } else {
+                            cargarComponentes();
                         }
                     }
                 }
@@ -262,6 +265,8 @@ $(document).ready(function() {
                             var nuevo = this.cloneNode(true);
                             clonarComponente(this, nuevo);
                         }
+                    } else {
+                        cargarComponentes();
                     }
                 }
 
@@ -271,10 +276,10 @@ $(document).ready(function() {
                             var nuevo = this.cloneNode(true);
                             clonarComponente(this, nuevo);
                         }
+                    } else {
+                        cargarComponentes();
                     }
                 }
-
-                //  $(next).position().top
 
                 this.parentNode.onDragOut();
                 this.style['top'] = '0px';
@@ -310,6 +315,7 @@ $(document).ready(function() {
                         "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
                     );
                     DragDrop.makeItemDragable(nuevo);
+                    cargarComponentes();
                     obtenerComponente(actual);
                 }
 
@@ -333,6 +339,7 @@ $(document).ready(function() {
                                     respuesta.data
                                 );
                                 componente.setAttribute('class', 'agregado');
+                                $('#c_').attr('id', 'c_' + respuesta.data);
                                 actualizarOrdenComponente();
                             } else {
                                 componente.parentNode.removeChild(componente);
@@ -439,6 +446,48 @@ $(document).ready(function() {
                         'json'
                     );
                 }
+                ////////////////////////////////////////////// Cargar Componentes //////////////////////////////////////////
+                function cargarComponentes() {
+                    var listado = [];
+
+                    var contenedor = document.getElementById(
+                        'itemsComponentes'
+                    );
+                    var componentes = contenedor.getElementsByTagName('li');
+
+                    for (var i = 0; i < componentes.length; i++) {
+                        listado.push(
+                            componentes[i].getAttribute('idpantalla_componente')
+                        );
+                    }
+                    $.post(
+                        `${params.baseUrl}app/generador/cargar_campos_formato.php`,
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            ordenComponentes: listado
+                        },
+                        function(response) {
+                            if (!response.success) {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            } else {
+                                $('#itemsComponentes').empty();
+                                $('#itemsComponentes').html(response.data);
+                                list = document.getElementById(
+                                    'itemsComponentes'
+                                );
+                                var items = list.getElementsByTagName('li');
+                                for (var i = 0; i < items.length; i++) {
+                                    DragDrop.makeItemDragable(items[i]);
+                                }
+                            }
+                        },
+                        'json'
+                    );
+                }
             }
         };
 
@@ -509,9 +558,15 @@ $(document).ready(function() {
             },
             onbeforeclose: function() {
                 if (this.getAttribute('respuesta') != null) {
-                    $('#c_' + idpantalla_campo).html(
-                        this.getAttribute('respuesta')
-                    );
+                    if (
+                        idpantalla_componente != 13 &&
+                        idpantalla_componente != 14 &&
+                        idpantalla_componente != 15
+                    ) {
+                        $('#c_' + idpantalla_campo).html(
+                            this.getAttribute('respuesta')
+                        );
+                    }
                 }
                 return 'close';
             }
@@ -525,7 +580,6 @@ $(document).ready(function() {
         event.stopPropagation();
         eliminarComponente(this);
     });
-
     //////////////////////////////////////////////////////// Eliminar componente desde boton eliminar ////////////////////////////////////////////
     function eliminarComponente(componente) {
         let filesInstance = componente;
