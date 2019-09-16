@@ -1258,11 +1258,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     } else {
                         $formato_fecha = "Y-m-d H:i";
                     }
-                    if ($datos[0]["tipo_dato"] == "TIME") {
-                        $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
-                    } else {
-                        $campos = busca_filtro_tabla(fecha($campo, $formato_fecha) . " as $campo", $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
-                    }
+
+                    $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
                 } else {
                     $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
                 }

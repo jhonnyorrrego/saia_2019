@@ -170,7 +170,7 @@ class ComponentFormGeneratorController
                 break;
             case "ejecutor":
                 if ($this->scope == self::SCOPE_EDIT) {
-                    $valor = "<?php echo(mostrar_valor_campo('" . $this->CamposFormato->nombre . "',$->Formato->getPK()formatId,$" . "_REQUEST['iddoc'])); ?>";
+                    $valor = "<?php echo(mostrar_valor_campo('" . $this->CamposFormato->nombre . "',{$this->Formato->getPK()},\$_REQUEST['iddoc'])); ?>";
                 } else
                     $valor = $this->CamposFormato->predeterminado;
 
@@ -646,7 +646,7 @@ HTML;
                 }
             }
             if ($this->scope == self::SCOPE_EDIT) {
-                $fecha_por_defecto = "<?= mostrar_valor_campo('{$campo["nombre"]}',{$this->idformato},\$_REQUEST['iddoc']) ?>";
+                $fecha_por_defecto = "<?= mostrar_valor_campo('{$campo["nombre"]}',{$this->Formato->getPK()},\$_REQUEST['iddoc'], 1) ?>";
             }
         }
 
