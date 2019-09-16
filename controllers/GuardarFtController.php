@@ -203,6 +203,10 @@ class GuardarFtController
                     $QueryBuilder->setValue($field, ":{$field}");
                 }
 
+                if ($CamposFormato->tipo_dato == \Doctrine\DBAL\Types\Type::DATETIME) {
+                    $data[$field] = new DateTime($data[$field]);
+                }
+
                 $QueryBuilder->setParameter(":{$field}", $data[$field], $CamposFormato->tipo_dato);
             }
         }
@@ -262,7 +266,8 @@ class GuardarFtController
             if ($campo["numcampos"]) {
                 $descripcion = '';
                 for ($i = 0; $i < $campo["numcampos"]; $i++) {
-                    $descripcion .= $campo[$i]["etiqueta"] . ": " . mostrar_valor_campo($campo[$i]["nombre"], $this->formatId, $this->Documento->getPK(), 1) . '<br>';
+                    $value = mostrar_valor_campo($campo[$i]["nombre"], $this->formatId, $this->Documento->getPK(), 1);
+                    $descripcion .= "{$campo[$i]["etiqueta"]}: {$value}<br>";
                 }
             }
         }
