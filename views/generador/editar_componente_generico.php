@@ -213,7 +213,7 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         }
         setTimeout('configurarPanel()', 300);
 
-        $(document).on('click', '.alpaca-array-actionbar-action', function() {
+        $(document).on('click', '.alpaca-array-actionbar-action,.alpaca-array-toolbar-action', function() {
             var margen = 0.9;
             if ($(this).attr('data-alpaca-array-actionbar-action') == 'remove') {
                 margen = 0.98;
