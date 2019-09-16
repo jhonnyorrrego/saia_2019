@@ -127,34 +127,6 @@ class Serie extends LogModel
     }
 
     /**
-     * obtiene la retencion y el procedimiento de la serie
-     * si esta la tiene
-     *     
-     * @return array
-     * @author Andres Agudelo <andres.agudelo@cerok.com>
-     * @date 2019
-     */
-    public function getDataRetencion()
-    {
-        $data = [];
-        switch ($this->tipo) {
-            case 1:
-                if (!$this->hasChild(2)) {
-                    $data['gestion'] = $this->retencion_gestion;
-                    $data['central'] = $this->retencion_central;
-                    $data['procedimiento'] = $this->procedimiento;
-                }
-                break;
-            case 2:
-                $data['gestion'] = $this->retencion_gestion;
-                $data['central'] = $this->retencion_central;
-                $data['procedimiento'] = $this->procedimiento;
-                break;
-        }
-        return $data;
-    }
-
-    /**
      * valida si tiene series hijas
      *
      * @param integer $tipo : utlizado en el where, tipo de la consulta
@@ -165,6 +137,13 @@ class Serie extends LogModel
     public function hasChild(int $tipo = null, int $estado = null): bool
     {
         $QueryBuilder = $this->getQueryBuilder();
+
+        $data = $QueryBuilder
+            ->select('count(idserie) as cant')
+            ->from('serie')
+            ->where("cod_arbol like :cod_arbol")
+            ->setParameter(':cod_arbol', '%' . $this->cod_arbol . '.%');
+
         if (!is_null($estado)) {
             $QueryBuilder->andWhere('estado=:estado')
                 ->setParameter(':estado', $estado, Type::INTEGER);
@@ -173,12 +152,7 @@ class Serie extends LogModel
             $QueryBuilder->andWhere('tipo=:tipo')
                 ->setParameter(':tipo', $tipo, Type::INTEGER);
         }
-        $data = $QueryBuilder
-            ->select('count(idserie) as cant')
-            ->from('serie')
-            ->where("cod_arbol like :cod_arbol")
-            ->setParameter(':cod_arbol', '%' . $this->cod_arbol . '.%')
-            ->execute()->fetch();
+        $data = $QueryBuilder->execute()->fetch();;
 
         return $data['cant'] ? true : false;
     }

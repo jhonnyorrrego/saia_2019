@@ -15,9 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) [
-    'data' => [],
-    'message' => '',
-    'success' => 0
+    'onlyType' => 0,
 ];
 
 try {
@@ -26,13 +24,9 @@ try {
     if (!$_REQUEST['idserie']) {
         throw new Exception('Serie invalida', 1);
     }
-
     $Serie = new Serie($_REQUEST['idserie']);
-    $data = $Serie->getDataRetencion();
-
-    if (!empty($data)) {
-        $Response->data = $data;
-        $Response->success = 1;
+    if (!$Serie->hasChild(2)) {
+        $Response->onlyType = 1;
     }
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

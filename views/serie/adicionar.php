@@ -40,11 +40,12 @@ $params = json_encode([
                         </select>
                     </div>
 
-                    <p>
-                        <button type="button" style="display:none" class="btn btn-complete btn-xs" title="Adicionar Serie" id="addSerie">
+                    <p id="pAddSerie" style="display:none">
+                        <button type="button" class="btn btn-complete btn-xs" title="Adicionar Serie" id="addSerie">
                             <i class="fa fa-plus"></i>
                             <span class="d-none d-sm-inline">Serie</span>
                         </button>
+                        <input type="hidden" id="hiddenSerie" class="required">
                     </p>
 
                     <div id="divSerie"></div>
