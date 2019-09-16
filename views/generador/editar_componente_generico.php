@@ -199,10 +199,10 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
         function configurarPanel() {
             var panel = $('.jsPanel-standard', parent.document).get(0);
             ////////////////////////// Cambiar el tamaño de jspanel de acuerdo al tamaño del formulario
-            $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 160);
+            $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 184);
             /////////////////////// Rectificar redimension de altura de la pantalla en caso de no hacerlo anteriormente////////////////////
             setTimeout(function() {
-                $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 160);
+                $('.jsPanel-standard', parent.document).height($('#editar_pantalla_campo').height() + 184);
             }, 200);
             ///////////////////// Configurando el estilo del header ///////////////////////////////
             $('#btnCancelar', '#editar_pantalla_campo').removeClass('d-none');

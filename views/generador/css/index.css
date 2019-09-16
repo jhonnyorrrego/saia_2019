@@ -357,6 +357,7 @@ span.fancytree-expander {
 }
 
 #itemsComponentes li {
+    margin-right: 4px;
     height: 36px;
     padding: 6px;
     padding-left: 20px;
@@ -416,8 +417,8 @@ label {
     background: #48b0f7;
     color: #fff;
     position: relative;
-    left: 580px;
-    margin-top: 20px;
+    left: 600px;
+    margin-top: 100px;
     height: 40px;
 }
 
@@ -429,8 +430,8 @@ label {
 #btnCancelar {
     color: #fff;
     position: relative;
-    left: 560px;
-    margin-top: 20px;
+    left: 598px;
+    margin-top: 100px;
     cursor: pointer;
     z-index: 1;
     height: 40px;

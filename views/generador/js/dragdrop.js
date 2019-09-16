@@ -215,6 +215,7 @@ $(document).ready(function() {
                         nuevo.style.top = '0px';
                         nuevo.style.left = '0px';
                         DragDrop.makeItemDragable(nuevo);
+                        cargarComponentes();
                     }
                     if (this.classList.contains('agregado')) {
                         eliminarComponente(this);
@@ -228,6 +229,7 @@ $(document).ready(function() {
                 if (next == null && previous == null) {
                     if (this.classList.contains('panel')) {
                         var nuevo = this.cloneNode(true);
+                        cargarComponentes();
                         clonarComponente(this, nuevo);
                     }
                 }
@@ -239,6 +241,7 @@ $(document).ready(function() {
                     ) {
                         if (this.classList.contains('panel')) {
                             var nuevo = this.cloneNode(true);
+                            cargarComponentes();
                             clonarComponente(this, nuevo);
                         }
                     }
@@ -250,6 +253,8 @@ $(document).ready(function() {
                         if (this.classList.contains('agregado')) {
                             this.parentNode.removeChild(this);
                             return;
+                        } else {
+                            cargarComponentes();
                         }
                     }
                 }
@@ -260,6 +265,8 @@ $(document).ready(function() {
                             var nuevo = this.cloneNode(true);
                             clonarComponente(this, nuevo);
                         }
+                    } else {
+                        cargarComponentes();
                     }
                 }
 
@@ -269,11 +276,12 @@ $(document).ready(function() {
                             var nuevo = this.cloneNode(true);
                             clonarComponente(this, nuevo);
                         }
+                    } else {
+                        cargarComponentes();
                     }
                 }
 
                 this.parentNode.onDragOut();
-                cargarComponentes();
                 this.style['top'] = '0px';
                 this.style['left'] = '0px';
 
@@ -307,6 +315,7 @@ $(document).ready(function() {
                         "<div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash'></i></div>"
                     );
                     DragDrop.makeItemDragable(nuevo);
+                    cargarComponentes();
                     obtenerComponente(actual);
                 }
 

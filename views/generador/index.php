@@ -127,6 +127,7 @@ function check_banderas($bandera, $chequear = true)
 
 function cargarCampos($categoria)
 {
+    global $conn;
     $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '', $conn);
     echo "<h5>" . $categoria . "</h5>";
     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
@@ -503,7 +504,7 @@ function cargarCampos($categoria)
                                             </ul>
                                         </div>
                                         <div class="col-3" style="position:relative;display:inline-block;vertical-align:top">
-                                            <ul id="itemsComponentes" class="sortable boxier listContainer">
+                                            <ul id="itemsComponentes" class="sortable boxier listContainer pl-2">
                                                 <?= cargarCampos('Elementos de diseño') ?>
                                                 <?= cargarCampos('Campos del formato') ?>
                                                 <?= cargarCampos('Campos avanzados') ?>
