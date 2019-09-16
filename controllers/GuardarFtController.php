@@ -205,7 +205,7 @@ class GuardarFtController
 
                 if (in_array($CamposFormato->tipo_dato, [
                     \Doctrine\DBAL\Types\Type::DATETIME,
-                    \Doctrine\DBAL\Types\Type::TIME
+                    \Doctrine\DBAL\Types\Type::DATE
                 ])) {
                     $data[$field] = new DateTime($data[$field]);
                 }
@@ -264,19 +264,7 @@ class GuardarFtController
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "editar", "POSTERIOR");
         }
 
-        if (isset($data["campo_descripcion"])) {
-            $campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $data["campo_descripcion"] . ")", "orden");
-            if ($campo["numcampos"]) {
-                $descripcion = '';
-                for ($i = 0; $i < $campo["numcampos"]; $i++) {
-                    $value = mostrar_valor_campo($campo[$i]["nombre"], $this->formatId, $this->Documento->getPK(), 1);
-                    $descripcion .= "{$campo[$i]["etiqueta"]}: {$value}<br>";
-                }
-            }
-        }
-
-        $this->Documento->descripcion = $descripcion;
-        $this->Documento->save();
+        $this->Documento->refreshDescription();
     }
 
     /**

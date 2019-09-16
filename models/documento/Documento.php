@@ -203,7 +203,37 @@ class Documento extends Model
      */
     public function getDescription()
     {
-        return strip_tags(html_entity_decode($this->descripcion));
+        return strip_tags($this->descripcion);
+    }
+
+    /**
+     * actualiza el campo descripcion basado en los
+     * campos formato con accion p
+     *
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-16
+     */
+    public function refreshDescription()
+    {
+        //campos formato
+        $fields = $this->getFormat()->getFields();
+
+        if ($fields) {
+            $description = '';
+
+            foreach ($fields as $key => $CamposFormato) {
+                $actions = explode(',', $CamposFormato->acciones);
+
+                if (in_array('p', $actions)) {
+                    $value = mostrar_valor_campo($CamposFormato->nombre, $this->getFormat()->getPK(), $this->getPK(), 1);
+                    $description .= "{$CamposFormato->etiqueta}: {$value}<br>";
+                }
+            }
+
+            $this->descripcion = $description;
+            $this->save();
+        }
     }
 
     /**
