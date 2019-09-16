@@ -203,7 +203,10 @@ class GuardarFtController
                     $QueryBuilder->setValue($field, ":{$field}");
                 }
 
-                if ($CamposFormato->tipo_dato == \Doctrine\DBAL\Types\Type::DATETIME) {
+                if (in_array($CamposFormato->tipo_dato, [
+                    \Doctrine\DBAL\Types\Type::DATETIME,
+                    \Doctrine\DBAL\Types\Type::TIME
+                ])) {
                     $data[$field] = new DateTime($data[$field]);
                 }
 
