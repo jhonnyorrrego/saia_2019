@@ -22,9 +22,6 @@ if (empty($_REQUEST['formatId'])) {
     throw new Exception("Se debe indicar el formato", 1);
 }
 
-var_dump($_REQUEST);
-exit;
-
 $formatId = $_REQUEST['formatId'];
 $GuardarFtController = new GuardarFtController($formatId);
 $documentId = $GuardarFtController->create($_REQUEST);
