@@ -1072,7 +1072,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         {
             global $conn;
             $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-            $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
+            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
 
             if ($campo[0]["tipo_dato"] == 'DATE')
                 $formato = "Y-m-d";

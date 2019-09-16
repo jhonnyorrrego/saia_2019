@@ -107,7 +107,7 @@ if (!empty($_REQUEST["idbusqueda_filtro_temp"])) {
         ->where('idbusqueda_filtro_temp in (:identificators)')
         ->setParameter(
             ':identificators',
-            $_REQUEST["idbusqueda_filtro_temp"],
+            [$_REQUEST["idbusqueda_filtro_temp"]],
             \Doctrine\DBAL\Connection::PARAM_INT_ARRAY
         )->execute()->fetchAll();
 

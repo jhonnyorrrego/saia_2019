@@ -14,10 +14,12 @@ include_once $ruta_db_superior . "assets/librerias.php";
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
+
 <body>
     <div class=" container-fluid px-0">
         <!-- START card -->
@@ -29,7 +31,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
                         <input name="bqsaia_nombre" type="text" class="form-control">
                         <input type="hidden" name="bksaiacondicion_nombre" value="like">
                     </div>
-                    
                     <div class="form-group">
                         <label class="pl-1 mb-0 mt-1">Estado</label>
                         <div class="radio radio-success my-0">
@@ -43,32 +44,32 @@ include_once $ruta_db_superior . "assets/librerias.php";
                     <div class="form-actions">
                         <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?= $_REQUEST["idbusqueda_componente"]; ?>">
                         <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
-                        <input type="hidden" name="bqtipodato" value="date|b@fecha_x,b@fecha_y">  
+                        <input type="hidden" name="bqtipodato" value="date|b@fecha_x,b@fecha_y">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-<script>
-    $(function() {
-        let baseUrl = '<?= $ruta_db_superior ?>';       
-        $('#btn_success').on('click', function() {
-            $.post(`${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
-                $("#kformulario_saia").serialize(),
-                function(data) {
-                    if (data.exito) {
-                        top.successModalEvent(data);
-                    } else {
-                        top.notification({
-                            message: data.mensaje,
-                            type: 'error'
-                        });
-                    }
-                },
-                'json');
+    <script>
+        $(function() {
+            let baseUrl = '<?= $ruta_db_superior ?>';
+            $('#btn_success').on('click', function() {
+                $.post(`${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
+                    $("#kformulario_saia").serialize(),
+                    function(data) {
+                        if (data.exito) {
+                            top.successModalEvent(data);
+                        } else {
+                            top.notification({
+                                message: data.mensaje,
+                                type: 'error'
+                            });
+                        }
+                    },
+                    'json');
+            });
         });
-    });
-</script>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
+    </script>
 </body>
+
 </html>

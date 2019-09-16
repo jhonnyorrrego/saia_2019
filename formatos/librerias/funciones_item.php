@@ -9,9 +9,6 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once $ruta_db_superior . "core/autoload.php";
-//include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-
-//desencriptar_sqli('form_info');
 
 if (isset($_REQUEST["accion"])) {
 	$_REQUEST["accion"]();
@@ -236,4 +233,3 @@ function crear_pretexto_item($asunto, $contenido) {
 	phpmkr_query($sql);
 	return;
 }
-?>
