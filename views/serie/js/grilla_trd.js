@@ -3,8 +3,8 @@ $(function () {
     $('#trd_report_script').removeAttr('data-params');
 
     (function init() {
-        showBtnAdd();
         createTable();
+        showBtnAdd();
     })();
 
     function showBtnAdd() {
@@ -22,7 +22,7 @@ $(function () {
                 title: 'Crear',
                 onSuccess: function (data) {
                     top.closeTopModal();
-                    $table.bootstrapTable('refresh');
+                    $('#trd_table').bootstrapTable('refresh');
                 },
                 buttons: {
                     success: {
@@ -37,10 +37,11 @@ $(function () {
             });
         });
 
-        $(document).on('click', '.dropdown-item', function () {
+        $(document).on('click', '.edit-serie', function () {
 
             let type = $(this).data('type');
             let id = $(this).data('id');
+            let iddep = $(this).data('iddep');
             let name = [];
             name[1] = 'Serie';
             name[2] = 'Subserie';
@@ -51,11 +52,12 @@ $(function () {
                 size: 'modal-xl',
                 title: 'Editar ' + name[type],
                 params: {
-                    idserie: id
+                    idserie: id,
+                    iddependencia: iddep,
                 },
-                onSuccess: function (data) {
+                onSuccess: function () {
                     top.closeTopModal();
-                    $table.bootstrapTable('refresh');
+                    $('#trd_table').bootstrapTable('refresh');
                 },
                 buttons: {
                     success: {
@@ -87,12 +89,13 @@ $(function () {
             },
             responseHandler: function (response) {
                 if (params.currentVersion == 1 && params.type == 'json_trd') {
-                    console.log(response.rows[0]);
+
                     for (let index = 0; index < response.rows.length; index++) {
                         let dataParams = {
                             'idserie': response.rows[index].idserie,
                             'idsubserie': response.rows[index].idsubserie,
-                            'idtipo': response.rows[index].idtipo
+                            'idtipo': response.rows[index].idtipo,
+                            'iddependencia': response.rows[index].iddependencia
                         };
                         response.rows[index].opciones = templateOptions(dataParams);
                     }
@@ -142,23 +145,23 @@ $(function () {
     }
 
     function templateOptions(data) {
-        let template = `<div class="dropdown">
+        let template = `<div class="dropdown f-20">
             <button class="btn mx-1" 
                 type="button" 
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
                 aria-expanded="false"
             >
-                <i class="fa fa-ellipsis-v fa-2x"></i>
+                <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" class="dropdown-item">
+                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
                     <i class="fa fa-edit"></i> Editar Serie
                 </a>
-                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" class="dropdown-item">
+                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
                 <i class="fa fa-edit"></i> Editar Subserie
             </a>
-            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" class="dropdown-item">
+            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
             <i class="fa fa-edit"></i> Editar Tipo documental
         </a>
             </div>

@@ -30,14 +30,15 @@ class SerieVersion extends Model
                 'archivo_trd',
                 'anexos',
                 'json_clasificacion',
-                'json_trd'
+                'json_trd',
+                'estado'
             ]
         ];
     }
 
     public static function getCurrentVersion()
     {
-        $subConsulta = "(SELECT MAX(version) FROM serie_version)";
+        $subConsulta = "(SELECT MAX(version) FROM serie_version WHERE estado=1)";
         $sql = self::getQueryBuilder()
             ->select('*')
             ->from('serie_version')

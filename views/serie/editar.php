@@ -13,7 +13,8 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
-    'idserie' => $_REQUEST['idserie']
+    'idserie' => $_REQUEST['idserie'],
+    'iddependencia' => $_REQUEST['iddependencia']
 ]);
 ?>
 <!doctype html>
@@ -36,6 +37,8 @@ $params = json_encode([
 
                     <div id="viewContentForm"></div>
 
+                    <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
+                    <input name="iddependencia" id="iddependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
                 </form>
             </div>
         </div>

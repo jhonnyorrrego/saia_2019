@@ -12,7 +12,24 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-function opciones($idserie_version, $anexo)
+function ver_estado(int $estado)
+{
+
+    switch ($estado) {
+        case 0:
+            $nombreEStado = 'INACTIVO';
+            break;
+        case 1:
+            $nombreEStado = 'ACTIVO';
+            break;
+        case 2:
+            $nombreEStado = 'BORRADOR';
+            break;
+    }
+    return $nombreEStado;
+}
+
+function opciones($idserie_version, $estado, $anexo)
 {
     global $ruta_db_superior, $versionActual;
 
@@ -29,42 +46,61 @@ function opciones($idserie_version, $anexo)
         $GLOBALS['versionActual'] =  $versionActual;
     }
 
-    $route = "{$ruta_db_superior}views/serie/grilla_trd.php?";
-    $actual = (int) ($versionActual == $idserie_version) ?? false;
+    $li = '';
+    if ($estado != 2) {
 
-    $routeTrd = $route . http_build_query([
-        'id' => $idserie_version,
-        'type' => 'json_trd',
-        'currentVersion' => $actual
-    ]);
+        $actual = (int) ($versionActual == $idserie_version) ?? false;
 
-    $routeClasi = $route . http_build_query([
-        'id' => $idserie_version,
-        'type' => 'json_clasificacion',
-        'currentVersion' => $actual
-    ]);
+        $route = "{$ruta_db_superior}views/serie/grilla_trd.php?";
 
+        $routeTrd = $route . http_build_query([
+            'id' => $idserie_version,
+            'type' => 'json_trd',
+            'currentVersion' => $actual
+        ]);
+
+        $routeClasi = $route . http_build_query([
+            'id' => $idserie_version,
+            'type' => 'json_clasificacion',
+            'currentVersion' => $actual
+        ]);
+
+        $nameEstado = $estado ? 'Inactivar' : 'Activar';
+        $li = <<<HTML
+        <a href="{$routeClasi}" target="_self" class="dropdown-item">
+            <i class="fa fa-eye"></i> Clasificación
+        </a>
+        <a href="{$routeClasi}" target="_self" class="dropdown-item">
+            <i class="fa fa-exchange"></i> {$nameEstado}
+        </a>
+HTML;
+    } else {
+
+        $route = "{$ruta_db_superior}views/serie_temp/grilla_trd.php?";
+
+        $routeTrd = $route . http_build_query([
+            'id' => $idserie_version
+        ]);
+    }
 
     return <<<HTML
         <div class="dropdown">
-            <button class="btn mx-1" 
+            <button class="btn mx-1 f-20" 
                 type="button" 
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
                 aria-expanded="false"
             >
-                <i class="fa fa-ellipsis-v fa-2x"></i>
+                <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                <a href="{$routeTrd}" target="_self" class="dropdown-item">
-                    <i class="fa fa-eye"></i> TRD
-                </a>
-                <a href="{$routeClasi}" target="_self" class="dropdown-item">
-                    <i class="fa fa-eye"></i> Clasificación
-                </a>
                 <a href="{$routeAnexo}" target="_blank" class="dropdown-item">
                     <i class="fa fa-download"></i> Anexo
                 </a>
+                <a href="{$routeTrd}" target="_self" class="dropdown-item">
+                    <i class="fa fa-eye"></i> TRD
+                </a>
+                {$li}
             </div>
         </div>
 HTML;

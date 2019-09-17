@@ -29,6 +29,8 @@ class Serie extends LogModel
     protected $dbAttributes;
     protected $seriePadre;
 
+    use TRDTrait;
+
     function __construct($id = null)
     {
         parent::__construct($id);

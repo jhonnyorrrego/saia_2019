@@ -65,7 +65,7 @@ $params = json_encode([
                     </div>
 
                     <div class="form-group form-group-default">
-                        <label>Anexos:</label>
+                        <label>Anexo:</label>
                         <div id="file_anexos"></div>
                         <input type="hidden" name="file_anexos">
                     </div>

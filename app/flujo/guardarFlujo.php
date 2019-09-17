@@ -1,5 +1,7 @@
 <?php
+
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -76,22 +78,25 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
 
 echo json_encode($response);
 
-function procesarAnexosFlujo($anexos_tmp, $flujo, $funcionario) {
+function procesarAnexosFlujo($anexos_tmp, $flujo, $funcionario)
+{
     $conteoAnexos = 0;
     if (!empty($anexos_tmp)) {
         $anexos = array_map("trim", explode(",", $anexos_tmp));
         foreach ($anexos as $idTemp) {
             $rutaBase = $flujo;
+            //TODO: CAMBIAR LA FORMA DE ALMACENAR
             $dbRoute = TemporalController::moverAnexoTemporal($rutaBase, 'anexos_flujos', $idTemp, true);
             if (!empty($dbRoute)) {
                 $pkAnexo = AnexoFlujo::newRecord(
-                [
-                    "fk_flujo" => $flujo,
-                    "ruta" => json_encode($dbRoute),
-                    "fecha" => date('Y-m-d'),
-                    "fk_funcionario" => $funcionario
-                ]);
-                if($pkAnexo) {
+                    [
+                        "fk_flujo" => $flujo,
+                        "ruta" => json_encode($dbRoute),
+                        "fecha" => date('Y-m-d'),
+                        "fk_funcionario" => $funcionario
+                    ]
+                );
+                if ($pkAnexo) {
                     $conteoAnexos++;
                 }
             }
@@ -100,7 +105,8 @@ function procesarAnexosFlujo($anexos_tmp, $flujo, $funcionario) {
     return $conteoAnexos;
 }
 
-function procesarFormatosFlujo($formato_flujo, $flujo) {
+function procesarFormatosFlujo($formato_flujo, $flujo)
+{
     //formato_flujo, 348,352,272
     $conteoFormatos = 0;
     if (!empty($formato_flujo)) {
@@ -111,8 +117,9 @@ function procesarFormatosFlujo($formato_flujo, $flujo) {
                 [
                     "fk_flujo" => $flujo,
                     "fk_formato" => $idFmt
-                ]);
-            if($pkFormato) {
+                ]
+            );
+            if ($pkFormato) {
                 $conteoFormatos++;
             }
         }
