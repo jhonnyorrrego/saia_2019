@@ -2,8 +2,8 @@
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
-while($max_salida > 0) {
-    if(is_file($ruta . 'db.php')) {
+while ($max_salida > 0) {
+    if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
     }
 
@@ -18,14 +18,14 @@ $response = (object) [
     'success' => 0
 ];
 
-if(empty($_REQUEST['idflujo'])) {
+if (empty($_REQUEST['idflujo'])) {
     $response['message'] = "No se especificó el flujo";
     echo json_encode($response);
     die();
 }
 
-if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if($_REQUEST['idnotificacion']) {
+if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    if ($_REQUEST['idnotificacion']) {
         // TODO: Validar si ya existe con el mismo # de version
         $flujo = new Notificacion($_REQUEST['idnotificacion']);
 
@@ -48,17 +48,17 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         ]);
     }
 
-    if(!empty($pk) && !empty($_REQUEST["idevento_notificacion"])) {
+    if (!empty($pk) && !empty($_REQUEST["idevento_notificacion"])) {
         $pk = ActividadNotificacion::newRecord([
             "fk_actividad" => $_REQUEST['idevento_notificacion'],
             "fk_notificacion" => $pk
         ]);
     }
-    if(!empty($pk) && !empty($_REQUEST["anexos_notificacion"])) {
+    if (!empty($pk) && !empty($_REQUEST["anexos_notificacion"])) {
         $total = procesarAnexosNotificacion($_REQUEST["anexos_notificacion"], $pk, $_REQUEST["key"]);
         $response->data["totalAnexos"] = $total;
     }
-    if(!empty($pk) && !empty($_REQUEST["formato_notificacion"])) {
+    if (!empty($pk) && !empty($_REQUEST["formato_notificacion"])) {
         $total = procesarFormatosNotificacion($_REQUEST["formato_notificacion"], $pk);
         $response->data["totalFormatos"] = $total;
     }
@@ -76,21 +76,23 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
 echo json_encode($response);
 
 
-function procesarAnexosNotificacion($anexos_tmp, $notificacion, $funcionario) {
+function procesarAnexosNotificacion($anexos_tmp, $notificacion, $funcionario)
+{
     $conteoAnexos = 0;
-    if(!empty($anexos_tmp)) {
+    if (!empty($anexos_tmp)) {
         $anexos = array_map("trim", explode(",", $anexos_tmp));
-        foreach($anexos as $idTemp) {
+        foreach ($anexos as $idTemp) {
             $rutaBase = $notificacion;
+            //TODO: CAMBIAR LA FORMA DE ALMACENAR
             $dbRoute = TemporalController::moverAnexoTemporal($rutaBase, 'anexos_notificacion', $idTemp, true);
-            if(!empty($dbRoute)) {
+            if (!empty($dbRoute)) {
                 $pkAnexo = AnexoNotificacion::newRecord([
                     "fk_notificacion" => $notificacion,
                     "ruta" => json_encode($dbRoute),
                     "fecha" => date('Y-m-d'),
                     "fk_funcionario" => $funcionario
                 ]);
-                if($pkAnexo) {
+                if ($pkAnexo) {
                     $conteoAnexos++;
                 }
             }
@@ -99,20 +101,21 @@ function procesarAnexosNotificacion($anexos_tmp, $notificacion, $funcionario) {
     return $conteoAnexos;
 }
 
-function procesarFormatosNotificacion($formato_flujo, $notificacion) {
+function procesarFormatosNotificacion($formato_flujo, $notificacion)
+{
     // formato_flujo, 348,352,272
     $conteoFormatos = 0;
-    if(!empty($formato_flujo)) {
+    if (!empty($formato_flujo)) {
         $formatos = array_map("trim", explode(",", $formato_flujo));
         AdjuntoNotificacion::executeDelete([
             "fk_notificacion" => $notificacion
         ]);
-        foreach($formatos as $idFmt) {
+        foreach ($formatos as $idFmt) {
             $pkFormato = AdjuntoNotificacion::newRecord([
                 "fk_notificacion" => $notificacion,
                 "fk_formato_flujo" => $idFmt
             ]);
-            if($pkFormato) {
+            if ($pkFormato) {
                 $conteoFormatos++;
             }
         }

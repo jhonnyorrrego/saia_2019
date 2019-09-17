@@ -422,6 +422,13 @@ HTML;
         return $texto;
     }
 
+    /**
+     * genera el html del componente tipo anexo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-11
+     */
     public function generateFile()
     {
         $requiredClass = $this->getRequiredClass();
@@ -443,17 +450,9 @@ HTML;
                             {$identificator}.emit('thumbnail', mockFile, '<?= \$ruta_db_superior ?>' + mockFile.route);
                             {$identificator}.emit('complete', mockFile);
 
-                            let value = $("[name='{$this->CamposFormato->nombre}']").val();
-
-                            if(value){
-                                var values = value.split(',');
-                            }else{
-                                var values = [];
-                            }
-
-                            values.push(mockFile.route);
-                            $("[name='{$this->CamposFormato->nombre}']").val(values.join(','));
+                            loaded{$identificator}.push(mockFile.route);
                         });                        
+                        $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
                     }
                 }, 'json');
 JS;
@@ -468,6 +467,7 @@ JS;
         <script>
             $(function(){
                 let loaded{$identificator} = [];
+                $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
                 let {$identificator} = new Dropzone('#{$identificator}', {
                     url: '<?= \$ruta_db_superior ?>app/temporal/cargar_anexos.php',
                     dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
@@ -484,8 +484,6 @@ JS;
                     },
                     paramName: 'file',
                     init : function() {
-                        $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
-
                         {$editFunction}
 
                         this.on('success', function(file, response) {
@@ -502,6 +500,11 @@ JS;
                                     message: response.message
                                 });
                             }
+                        });
+
+                        this.on('removedfile', function(file) {
+                            loaded{$identificator} = loaded{$identificator}.filter(route => route !== file.route);
+                            $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','))
                         });
                     }
                 });

@@ -122,7 +122,8 @@ abstract class Model
      */
     public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
     {
-        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
+        return $this->$attribute ?
+            DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format) : null;
     }
 
     /**

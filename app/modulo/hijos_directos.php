@@ -30,7 +30,8 @@ try {
         $Response->data[] = [
             'idmodule' => $Modulo->getPK(),
             'isParent' => 0,
-            'name' => html_entity_decode($Modulo->etiqueta),
+            'name' => $Modulo->etiqueta,
+            'identificator' => $Modulo->nombre,
             'icon' => $Modulo->imagen,
             'type' => $Modulo->tipo,
             'url' => $Modulo->enlace
@@ -56,10 +57,11 @@ try {
             $Response->data[] = [
                 'idmodule' => $Modulo->getPK(),
                 'isParent' => $isParent,
-                'name' => html_entity_decode($Modulo->etiqueta),
+                'name' => $Modulo->etiqueta,
                 'icon' => $Modulo->imagen,
                 'type' => $Modulo->tipo,
-                'url' => $Modulo->enlace
+                'url' => $Modulo->enlace,
+                'identificator' => $Modulo->nombre,
             ];
         }
     }
