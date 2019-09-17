@@ -453,6 +453,7 @@ HTML;
                             loaded{$identificator}.push(mockFile.route);
                         });                        
                         $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
+                        {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;                        
                     }
                 }, 'json');
 JS;
@@ -466,17 +467,19 @@ JS;
         </div>
         <script>
             $(function(){
+                let options = {$this->CamposFormato->opciones}
                 let loaded{$identificator} = [];
                 $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
                 let {$identificator} = new Dropzone('#{$identificator}', {
                     url: '<?= \$ruta_db_superior ?>app/temporal/cargar_anexos.php',
                     dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
-                    maxFilesize: 3,
-                    maxFiles: 3,
+                    maxFilesize: options.longitud,
+                    maxFiles: options.cantidad,
+                    acceptedFiles: options.tipos,
                     addRemoveLinks: true,
                     dictRemoveFile: 'Eliminar',
                     dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
-                    dictMaxFilesExceeded: 'Máximo 3 archivos',
+                    dictMaxFilesExceeded: `Máximo \${options.cantidad} archivos`,
                     params: {
                         token: localStorage.getItem('token'),
                         key: localStorage.getItem('key'),
@@ -503,8 +506,15 @@ JS;
                         });
 
                         this.on('removedfile', function(file) {
-                            loaded{$identificator} = loaded{$identificator}.filter(route => route !== file.route);
-                            $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','))
+                            if(file.route){ //si elimina un anexo cargado antes
+                                var index = loaded{$identificator}.findIndex(route => route == file.route);
+                            }else{//si elimina un anexo recien cargado
+                                var index = loaded{$identificator}.findIndex(route => file.status == 'success' && route.indexOf(file.upload.filename) != -1);                                
+                            }
+                           
+                            loaded{$identificator} = loaded{$identificator}.filter((e,i) => i != index);
+                            $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
+                            {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;
                         });
                     }
                 });
