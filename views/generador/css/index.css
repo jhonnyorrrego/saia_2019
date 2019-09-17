@@ -510,3 +510,46 @@ label {
     color: #555;
     background: transparent;
 }
+
+.select2-container {
+    height: 46px;
+}
+.select2-container .select2-selection.select2-selection--single {
+    height: 46px;
+    padding-top: 8px;
+}
+.select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+    height: 34px;
+}
+
+.select2-selection__rendered {
+    padding-top: 10px;
+}
+
+#codigoSerieInput {
+    background: #fff;
+    height: 46px;
+    width: 100%;
+    position: relative;
+    top: -2px;
+}
+
+#version {
+    height: 44px;
+    width: 100%;
+}
+
+#tipo_registro {
+    width: 100%;
+}
+
+#descripcion_formato {
+    padding-top: 10px;
+}
+
+.inputMargen {
+    width: 50%;
+    height: 44px;
+}
