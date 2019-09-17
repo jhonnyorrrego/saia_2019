@@ -12,6 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . 'app/generador/funcionesGenerador.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 
 $formatId = $_REQUEST['idformato'] ?? 0;
@@ -38,6 +39,9 @@ if ($formatId) {
     $arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones);
 
     $formato = busca_filtro_tabla("", "formato", "idformato=" . $formatId, "", $conn);
+    $Formato = new Formato($formatId);
+    $Modulo = $Formato->getModule();
+    $idModulo = $Modulo->getPK();
     $formato = procesar_cadena_json($formato, array("cuerpo", "ayuda", "etiqueta"));
     $cod_padre = $formato[0]["cod_padre"];
 
@@ -210,12 +214,12 @@ function cargarCampos($categoria)
 
                                                     <div class="my-3">
                                                         <label class="control-label" for="etiqueta"><strong>Nombre del formato<span class="require-input">*</span></strong></label>
-                                                        <input type="text" class="col-12" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required />
+                                                        <input type="text" class="col-12 pl-3" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required />
 
                                                     </div>
                                                     <div class="my-3">
                                                         <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong><span class="require-input">*</span></label>
-                                                        <textarea class="col-12" name="descripcion_formato" id="descripcion_formato" placeholder="Descripción" rows="3" required></textarea>
+                                                        <textarea class="col-12 pl-3" name="descripcion_formato" id="descripcion_formato" placeholder="Descripción" rows="3" required></textarea>
                                                     </div>
 
                                                     <div class="my-3">
@@ -229,19 +233,19 @@ function cargarCampos($categoria)
                                                                         <?php
                                                                         $tipo = '';
                                                                         for ($i = 0; $i < $tipoDocumental["numcampos"]; $i++) {
-                                                                            echo '<option value="' . $tipoDocumental[$i]["idserie"] . '" class="codigoSerie" codigo="' . $tipoDocumental[$i]["codigo"] . '" >' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
+                                                                            echo '<option value="' . $tipoDocumental[$i]["idserie"] . '" class="codigoSerie" codigo="' . $tipoDocumental[$i]["codigo"] . '" ' . checkSerie($formatId, $tipoDocumental[$i]["idserie"]) . ' >' . ucwords(strtolower($tipoDocumental[$i]["nombre"])) . '</option>';
                                                                         }
                                                                         ?>
                                                                     </select>
                                                                     <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
                                                                 </div>
                                                             </div>
-                                                            <div class="my-1 col-3">
+                                                            <div class="py-1 col-3">
                                                                 <div>
                                                                     <strong>C&oacute;digo</strong>
                                                                 </div>
                                                                 <div class="my-2">
-                                                                    <input type="text" disabled id="codigoSerieInput" style="background:#fff;height:36px;width:100%" />
+                                                                    <input type="text" disabled id="codigoSerieInput" class="pl-3" />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -258,9 +262,6 @@ function cargarCampos($categoria)
                                                             <div class="text-left" style="width:220px;display:inline-block"><input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span></div>
                                                             <input type="checkbox" name="banderas[]" style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked>
                                                         </div>
-
-                                                        <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false); ?>>
-                                                        <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false); ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -268,17 +269,17 @@ function cargarCampos($categoria)
                                                 <div class="my-3 pt-5">
                                                     <label class="control-label" for="version"><strong>Versi&oacute;n<span class="require-input">*</span></strong></label>
                                                     <div class="my-0">
-                                                        <input type="text" name="version" id="version" placeholder="Versi&oacute;n" value="" style="height:44px;width:100%;" required>
+                                                        <input type="text" name="version" id="version" placeholder="Versi&oacute;n" value="" class="pl-3" required>
                                                     </div>
                                                 </div>
-                                                <div class="my-0">
-                                                    <label class="control-label" for="tipos"><strong>Tipo de registro<span class="require-input">*</span></strong></label>
+                                                <div class="my-0 py-0">
+                                                    <label id="titulo_tipo_registro" class="control-label" for="tipos"><strong>Tipo de registro<span class="require-input">*</span></strong></label>
                                                     <div class="my-0">
-                                                        <select style="height:44px;width:100%;" name="tipo_registro" id="tipo_registro" data-toggle="tooltip">
+                                                        <select name="tipo_registro" id="tipo_registro" data-toggle="tooltip">
                                                             <option value="">Por favor seleccione</option>
-                                                            <option value="1">Documento oficial (PDF)</option>
-                                                            <option value="2">Registro de apoyo</option>
-                                                            <option value="3">Registro del tipo Item</option>
+                                                            <option value="1" id="tipo_registro_1">Documento oficial (PDF)</option>
+                                                            <option value="2" id="tipo_registro_2">Registro de apoyo</option>
+                                                            <option value="3" id="tipo_registro_3">Registro del tipo Item</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -329,18 +330,16 @@ function cargarCampos($categoria)
                                                 </div>
                                                 <div class="row my-4">
                                                     <div class="col-6">
-
                                                         <label class="control-label" for="orientacion"><strong>Orientaci&oacute;n</strong></label>
-                                                        <div class="py-2">
+                                                        <div class="py-4">
                                                             <input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if (!@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Vertical &nbsp;&nbsp;
                                                             <input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if (@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Horizontal
                                                         </div>
-
                                                     </div>
                                                     <div class="col-6 mx-0">
                                                         <label class=" control-label" for="font_size"><strong>Tama&ntilde;o de letra</strong></label>
                                                         <div class="my-2 mx-4">
-                                                            <select name="font_size" id="font_size" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos" style="height:44px;">
+                                                            <select name="font_size" id="font_size" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos" style="height:44px;width:90px">
                                                                 <?php
                                                                 $tam_letras = [8, 10, 11, 12, 14, 16, 18, 22, 24, 30, 36];
                                                                 $default_font_size = 11;
@@ -371,7 +370,7 @@ function cargarCampos($categoria)
                                                         <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
                                                     </div>
                                                     <div class="my-1">
-                                                        Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" <?php echo $checkResponsables; ?> data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
+                                                        Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" <?= $checkResponsables ?> data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
                                                     </div>
                                                 </div>
                                             </div>
@@ -390,24 +389,24 @@ function cargarCampos($categoria)
                                                     <div class="row-fluid text-right col-9">
                                                         <div class="my-3">
                                                             <label for="msup">Superior </label>
-                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 input-mini" name="msup" id="msup" value="<?= $margen_defecto[2] ?>" style="width:50%;height:44px">
+                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 pl-3 input-mini inputMargen" name="msup" id="msup" value="<?= $margen_defecto[2] ?>">
 
                                                         </div>
 
                                                         <div class="my-3">
                                                             <label for="minf">Inferior </label>
-                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 pl-1 input-mini" name="minf" id="minf" value="<?= $margen_defecto[3] ?>" style="width:50%;height:44px">
+                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 pl-3 input-mini inputMargen" name="minf" id="minf" value="<?= $margen_defecto[3] ?>">
 
                                                         </div>
 
                                                         <div class="my-3">
                                                             <label for="mizq">Izquierda</label>
-                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 input-mini" name="mizq" id="mizq" value="<?= $margen_defecto[0] ?>" style="width:50%;height:44px">
+                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 pl-3 input-mini inputMargen" name="mizq" id="mizq" value="<?= $margen_defecto[0] ?>">
 
                                                         </div>
                                                         <div class="mt-3">
                                                             <label for="mder">Derecha</label>
-                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 input-mini" name="mder" id="mder" value="<?= $margen_defecto[1] ?>" style="width:50%;height:44px">
+                                                            <input type="number" min="0" max="10" step="0.1" class="ml-4 pl-3 input-mini inputMargen" name="mder" id="mder" value="<?= $margen_defecto[1] ?>">
 
                                                         </div>
                                                     </div>
@@ -439,14 +438,13 @@ function cargarCampos($categoria)
                                                 echo '<div>';
                                                 for ($i = 0; $i < $profiles['numcampos']; $i++) {
                                                     echo "<label class='input-group' style='display:inline-block;width:200px;'>
-                                                                <input class='permisos' type='checkbox' id='{$profiles[$i]["idperfil"]}' name='permisosPerfil[]' value='{$profiles[$i]["idperfil"]}' > {$profiles[$i]["nombre"]}
+                                                                <input class='permisos' type='checkbox' id='{$profiles[$i]["idperfil"]}' name='permisosPerfil[]' value='{$profiles[$i]["idperfil"]}' " . checkPermisos($profiles[$i]["idperfil"], $idModulo) . " > {$profiles[$i]["nombre"]}
                                                             </label>";
                                                 }
                                                 echo '</div>';
                                             }
                                             ?>
                                         </div>
-
                                         <input type="hidden" name="exportar" value="mpdf">
                                         <input type="hidden" name="pertenece_nucleo" value="0">
                                         <input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
