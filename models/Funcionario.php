@@ -171,7 +171,10 @@ TEXT;
      */
     public function getProfiles()
     {
-        $sql = "select * from perfil where idperfil in ({$this->perfil})";
+        $sql = Perfil::getQueryBuilder()
+            ->select("*")
+            ->from("perfil")
+            ->where("idperfil in ({$this->perfil})");
         return Perfil::findByQueryBuilder($sql);
     }
 

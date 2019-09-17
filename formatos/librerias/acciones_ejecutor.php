@@ -167,7 +167,6 @@ foreach ($campos as $key => $valor) {
           $("#nombre_ejecutor").parent().append("<input class='form-control elementos_remitente' type='text' id='buscar_nombre'  name='buscar_nombre' autocomplete='off'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
           $("#buscar_nombre").keyup(function() {
             if ($(this).val() == 0 || $(this).val() == "") {
-              console.log("1");
               top.notification({
                 message: "Debe Ingresar el Nombre",
                 type: "error",

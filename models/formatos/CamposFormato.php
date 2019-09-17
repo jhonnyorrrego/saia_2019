@@ -90,6 +90,9 @@ class CamposFormato extends Model
             case 'firma':
                 self::createFirmField($Formato->getPK());
                 break;
+            case 'ventanilla':
+                self::createWindowField($Formato->getPK());
+                break;
             default:
                 $id = strpos($field, 'idft_') === 0;
                 $parentId = strpos($field, 'ft_') === 0;
@@ -197,6 +200,24 @@ class CamposFormato extends Model
             'acciones' => 'a,e',
             'etiqueta_html' => 'hidden',
             'predeterminado' => 1
+        ]);
+    }
+
+
+    public static function createWindowField($formatId)
+    {
+        CamposFormato::newRecord([
+            'formato_idformato' => $formatId,
+            'nombre' => 'ventanilla',
+            'etiqueta' => 'Ventanilla',
+            'tipo_dato' => \Doctrine\DBAL\Types\Type::INTEGER,
+            'longitud' => '11',
+            'obligatoriedad' => '1',
+            'banderas' => 'i',
+            'acciones' => 'a,e',
+            'etiqueta_html' => 'funcion',
+            'valor' => '{*ventanillaUsuario*}',
+            'orden' => 1
         ]);
     }
 
