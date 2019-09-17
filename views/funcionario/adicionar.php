@@ -95,12 +95,12 @@ $params = json_encode([
                             <option value="">Seleccione...</option>
                         </select>
                     </div>
-                    <div class="form-group form-group-default form-group-default-select2 required">
+                    <div class="form-group form-group-default form-group-default-select2">
                         <label class="">Ventanilla radicación</label>
-                        <select class="full-width" id="window_radication" name="ventanilla_radicacion">
-                            <option value="">Seleccione...</option>
+                        <select class=" full-width" data-init-plugin="select2" id="window_radication" name="ventanilla_radicacion" multiple>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label class="pl-1 mb-0 mt-1">Estado</label>
                         <div class="radio radio-success my-0">
@@ -114,6 +114,7 @@ $params = json_encode([
             </div>
         </div>
     </div>
+    <?= theme() ?>
     <?= select2() ?>
     <?= dropzone() ?>
     <?= validate() ?>

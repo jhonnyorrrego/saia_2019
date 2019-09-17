@@ -57,6 +57,7 @@ try {
     $Funcionario->clave = CriptoController::encrypt_md5($Funcionario->clave);
     $Funcionario->firma = $dbRoute;
     $Funcionario->perfil = implode(',', $_REQUEST['perfil']);
+    $Funcionario->ventanilla_radicacion = implode(',', $_REQUEST['ventanilla_radicacion']);
 
     if (!$Funcionario->save()) {
         throw new Exception("Error al guardar", 1);
