@@ -145,14 +145,14 @@ $(function () {
     }
 
     function templateOptions(data) {
-        let template = `<div class="dropdown">
+        let template = `<div class="dropdown f-20">
             <button class="btn mx-1" 
                 type="button" 
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
                 aria-expanded="false"
             >
-                <i class="fa fa-ellipsis-v fa-2x"></i>
+                <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
                 <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">

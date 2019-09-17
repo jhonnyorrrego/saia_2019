@@ -103,7 +103,7 @@ class Modules {
                                 parentModule
                             );
 
-                            if(idmodule === 0){
+                            if (idmodule === 0) {
                                 let module = response.data.find(m => m.type == 1);
                                 localStorage.setItem('dashboard', btoa(module.url));
                                 instance.showDashboard(module.url);
@@ -168,7 +168,7 @@ class Modules {
 
         this.groupers.forEach((g, i) => {
             row.append(`
-                <div class="col-12 col-md-auto grouper cursor text-center p-1" id="${
+                <div data-name="${g.identificator}" class="col-12 col-md-auto grouper cursor text-center p-1" id="${
                 g.idmodule
                 }">
                     <table class="mx-auto">
@@ -209,7 +209,7 @@ class Modules {
         return { list: list };
     }
 
-    showDashboard(route){
+    showDashboard(route) {
         route = this.baseUrl + route;
         document.getElementById('iframe_workspace').src = route;
     }
@@ -270,7 +270,8 @@ class Modules {
                     class: "sub-menu child_list"
                 })
             )
-            .attr("data-url", module.url);
+            .attr("data-url", module.url)
+            .attr("data-name", module.identificator)
     }
 
     static createChild(module) {
@@ -278,6 +279,7 @@ class Modules {
             $("<a>", {
                 href: "#",
                 class: "detailed module_link",
+                'data-name': module.identificator,
                 url: Session.getBaseUrl() + module.url
             }).append(
                 $("<span>", {
