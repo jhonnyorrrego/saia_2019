@@ -23,14 +23,14 @@ trait TRDTrait
 
         switch (get_class($this)) {
 
-            case 'SerieController':
-                $query->from('serie', 's')
-                    ->innerJoin('s', 'dependencia_serie', 'd', 's.idserie=d.fk_serie');
-                break;
-
-            default: //TRDLoadController
+            case 'TRDLoadController':
                 $query->from('serie_temp', 's')
                     ->innerJoin('s', 'dependencia_serie_temp', 'd', 's.idserie=d.fk_serie');
+                break;
+
+            default: //SerieController //Serie
+                $query->from('serie', 's')
+                    ->innerJoin('s', 'dependencia_serie', 'd', 's.idserie=d.fk_serie');
                 break;
         }
 
