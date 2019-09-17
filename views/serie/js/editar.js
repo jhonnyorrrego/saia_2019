@@ -54,7 +54,6 @@ $(function () {
         <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
-            <input name="idserie" id="idserie" type="hidden" value="${data.idserie}" class="form-control required">
         </div>
 
         <div class="form-group form-group-default required">
@@ -69,7 +68,6 @@ $(function () {
         <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
-            <input name="idserie" id="idserie" type="text" value="${data.idserie}" class="form-control required">
         </div>
 
         <div class="form-group form-group-default required">
@@ -139,7 +137,6 @@ $(function () {
         let template = `<div class="form-group form-group-default required">
             <label>Tipo documental:</label>
             <input name="nombre" id="nombre" type="text" value="${data.nombre}" class="form-control required">
-            <input name="idserie" id="idserie" type="hidden" value="${data.idserie}" class="form-control required">
         </div>
 
         <div class="form-group form-group-default required">
@@ -171,7 +168,6 @@ $(function () {
         let template = ` <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
-            <input name="idserie" id="idserie" type="hidden" value="${data.idserie}" class="form-control required">
         </div>
 
         <div class="form-group form-group-default required">
@@ -282,14 +278,13 @@ $('#trd_form').validate({
                         message: 'Datos actualizados!',
                         type: 'success'
                     });
-
+                    top.successModalEvent();
                 } else {
                     top.notification({
                         message: response.message,
                         type: 'error'
                     });
                 }
-                top.closeTopModal();
             }
         });
     }

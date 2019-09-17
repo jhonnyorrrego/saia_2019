@@ -696,14 +696,13 @@ $('#trd_form').validate({
                         message: 'Datos guardados!',
                         type: 'success'
                     });
-
+                    top.successModalEvent();
                 } else {
                     top.notification({
                         message: response.message,
                         type: 'error'
                     });
                 }
-                top.closeTopModal();
             }
         });
     }
