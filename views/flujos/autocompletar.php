@@ -28,7 +28,7 @@ echo json_encode($resp);
 
 function consultar($consulta, $valor)
 {
-    
+
     /*
      $consulta = array(
      "campoid" => $parametros->campoid,
@@ -48,7 +48,9 @@ function consultar($consulta, $valor)
             $campos[] = $arr_consulta["campotexto"][$i];
             $campos[] = "' '";
         }
-        $campos_nombre = concatenar_cadena_sql($campos);
+        throw new Exception("pendiente por cambiar concatenar sql", 1);
+
+        //$campos_nombre = concatenar_cadena_sql($campos);
     }
 
     $campo_id = $arr_consulta["campoid"];

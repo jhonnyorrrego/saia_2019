@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0,
@@ -21,42 +21,45 @@ $Response = (object)[
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
+    $query = strtolower(trim($_REQUEST['query']));
+
+    $QueryBuilder = Model::getQueryBuilder()
+        ->select([
+            'a.iddocumento',
+            'a.numero',
+            'a.descripcion',
+            'MAX(b.fecha) AS fecha'
+        ])
+        ->from('documento', 'a')
+        ->join('a', 'buzon_salida', 'b', 'b.archivo_idarchivo = a.iddocumento')
+        ->where("
+            CONCAT(
+                a.numero,
+                CONCAT(
+                    ' ',
+                    CONCAT(
+                        LOWER(a.descripcion),
+                        CONCAT(
+                            ' ',
+                            b.fecha
+                        )
+                    )
+                )
+            ) LIKE :query
+        ")
+        ->setParameter(':query', "%{$query}%")
+        ->setFirstResult(0)
+        ->setMaxResults(10)
+        ->groupBy('iddocumento,numero,descripcion');
+
     if (!$_REQUEST['all']) {
         $userId = SessionController::getValue('idfuncionario');
 
-        $condition = "(
-            origen = {$userId} or
-            destino = {$userId}
-        )";
-    } else {
-        $condition = "(1=1)";
+        $QueryBuilder->andWhere("origen = :userId or destino = :userId");
+        $QueryBuilder->setParameter(':userId', $userId, \Doctrine\DBAL\Types\Type::INTEGER);
     }
 
-    $s = htmlentities(strtolower(trim($_REQUEST['query'])));
-    $concat = StaticSql::concat([
-        "numero",
-        "' '",
-        "LOWER(a.descripcion)",
-        "' '",
-        StaticSql::getDateFormat('b.fecha', 'Y-m-d')
-    ]);
-
-    $sql = <<<SQL
-        SELECT
-            a.iddocumento,
-            a.numero,
-            a.descripcion,
-            MAX(b.fecha) AS fecha
-        FROM
-            documento a JOIN
-            buzon_salida b 
-            ON
-                b.archivo_idarchivo = a.iddocumento
-        WHERE            
-            {$concat} LIKE '%{$s}%'
-        group by iddocumento,numero,descripcion
-SQL;
-    $documents = Documento::findByQueryBuilder($sql, true, 0, 10);
+    $documents = Documento::findByQueryBuilder($QueryBuilder);
 
     if ($documents) {
         $data = [];
@@ -64,7 +67,7 @@ SQL;
         foreach ($documents as $Documento) {
             $label = $Documento->numero . ' - ';
             $label .= $Documento->fecha . ' - ';
-            $label .= html_entity_decode(strip_tags($Documento->descripcion));
+            $label .= strip_tags($Documento->descripcion);
 
             $data[] = [
                 'id' => $Documento->getPK(),

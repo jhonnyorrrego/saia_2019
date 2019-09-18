@@ -11,8 +11,8 @@ class PermisoExpediente extends Model
     protected $tipo_funcionario;
     protected $permiso;
     protected $fk_expediente;
-    
-    
+
+
 
     public function __construct($id = null)
     {
@@ -21,7 +21,7 @@ class PermisoExpediente extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcionario',
                 'fk_entidad',
@@ -49,7 +49,7 @@ class PermisoExpediente extends Model
     public static function deleteAllPermisoExpediente(int $fkEntidadSerie, int $llaveEntidad, int $fkEntidad, int $tipoPermiso)
     {
         $sql = "DELETE FROM permiso_expediente WHERE fk_entidad_serie={$fkEntidadSerie} AND llave_entidad={$llaveEntidad} AND fk_entidad={$fkEntidad} AND tipo_permiso={$tipoPermiso} and tipo_funcionario=0 AND permiso<>'v'";
-        return StaticSql::query($sql);
+        return; //ejecutaba el delete;
     }
     /**
      * Inserta los permisos sobre los expedientes
@@ -69,36 +69,36 @@ class PermisoExpediente extends Model
             case 1:
                 $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                 SELECT {$llaveEntidad},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                if (StaticSql::insert($sql)) {
-                    $response = true;
-                }
+                //if (//ejecutaba el insert) {
+                $response = true;
+                //}
                 break;
             case 2:
                 $sql = "SELECT DISTINCT idfuncionario FROM vfuncionario_dc WHERE estado=1 and estado_dc=1 and iddependencia={$llaveEntidad}";
-                $funcionarios = StaticSql::search($sql);
-                if ($funcionarios) {
-                    foreach ($funcionarios as $fila) {
-                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
+
+                //if (//si el sql le trae datos) {
+                foreach ($funcionarios as $fila) {
+                    $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                         SELECT {$fila['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                        if (StaticSql::insert($sql)) {
-                            $response = true;
-                        }
-                    }
+                    //if (//si insertaba) {
+                    $response = true;
+                    //}
                 }
+                //}
                 break;
 
             case 4:
                 $sql = "SELECT DISTINCT idfuncionario FROM vfuncionario_dc WHERE estado=1 and estado_dc=1 and idcargo={$llaveEntidad}";
-                $funcionarios = StaticSql::search($sql);
-                if ($funcionarios) {
-                    foreach ($funcionarios as $fila) {
-                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
+
+                //if (//si el sql le trae datos) {
+                foreach ($funcionarios as $fila) {
+                    $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                         SELECT {$fila['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                        if (StaticSql::insert($sql)) {
-                            $response = true;
-                        }
-                    }
+                    //if (//si insertaba) {
+                    $response = true;
+                    //}
                 }
+                //}
                 break;
         }
         return $response;

@@ -35,13 +35,13 @@ class ExpedienteFuncionario
         ];
     }
     /**
- * Setea los valores que le lleguen del request
- * para utilizarlos en la clase
- *
- * @param array $data: El request
- * @return void
- * @author Andres.Agudelo <andres.agudelo@cerok.com>
- */
+     * Setea los valores que le lleguen del request
+     * para utilizarlos en la clase
+     *
+     * @param array $data: El request
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function setOptions(array $data = [])
     {
         if (!empty($data['estado_archivo'])) {
@@ -53,7 +53,7 @@ class ExpedienteFuncionario
         if (!empty($data['onlyExp'])) {
             $this->onlyExp = $data['onlyExp'];
         } else {
-          $this->onlyExp = 0;
+            $this->onlyExp = 0;
         }
     }
 
@@ -74,7 +74,7 @@ class ExpedienteFuncionario
         AND v.cod_padre={$this->id} 
         AND (v.agrupador =1 OR fk_funcionario={$this->idfuncionario}))";
         $sql = "SELECT * FROM expediente WHERE idexpediente IN ({$subConsulta})";
-        $records = Expediente::findByQueryBuilder($sql);
+        //$records = se debe buscar con queryBuilder
 
         $objetoJson = [];
         if ($records) {
@@ -102,24 +102,24 @@ class ExpedienteFuncionario
                 ];
 
                 if (!$cerrado) {
-                    $okPerm=false;
-                    if ($this->onlyExp && $Expediente->getAccessUser('a')){
-                        $okPerm=true;
-                        if($Expediente->agrupador==0 || $Expediente->agrupador==3) {
+                    $okPerm = false;
+                    if ($this->onlyExp && $Expediente->getAccessUser('a')) {
+                        $okPerm = true;
+                        if ($Expediente->agrupador == 0 || $Expediente->agrupador == 3) {
                             $item['checkbox'] = true;
                         }
                     }
 
                     $item["lazy"] = $Expediente->hasChild();
                     if ($item["lazy"]) {
-                        if($Expediente->agrupador==2 && $okPerm){
-                            if(!$Expediente->hasChild(2)){
+                        if ($Expediente->agrupador == 2 && $okPerm) {
+                            if (!$Expediente->hasChild(2)) {
                                 $item['checkbox'] = true;
                             }
                         }
                         $item["children"] = $this->llenaExpediente($item['key']);
                     } else if (!$this->onlyExp && $Expediente->agrupador == 0) {
-                        $item["children"] = $this->llenaTipoDocumental($Expediente);                        
+                        $item["children"] = $this->llenaTipoDocumental($Expediente);
                     }
                 }
                 $objetoJson[] = $item;
@@ -128,18 +128,18 @@ class ExpedienteFuncionario
         return $objetoJson;
     }
     /**
- * Muestra los tipos documentales vinculados al expedientep
- *
- * @param Expediente $Expediente :Instancia del expediente
- * @return array
- * @author Andres.Agudelo <andres.agudelo@cerok.com>
- */
+     * Muestra los tipos documentales vinculados al expedientep
+     *
+     * @param Expediente $Expediente :Instancia del expediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function llenaTipoDocumental(Expediente $Expediente): array
     {
         $sql = "SELECT * FROM serie WHERE tipo=3 AND estado=1 
         AND cod_padre={$Expediente->fk_serie}";
-        
-        $records = Serie::findByQueryBuilder($sql);
+
+        //$records = Serie::se debe buscar con queryBuilder
         $objetoJson = [];
         if ($records) {
             foreach ($records as $Serie) {
@@ -147,8 +147,9 @@ class ExpedienteFuncionario
 
                 if (PermisoSerie::hasAccessUser(
                     $Expediente->fk_dependencia,
-                    $Serie->getPK(), 'a')
-                ) {
+                    $Serie->getPK(),
+                    'a'
+                )) {
                     $item['checkbox'] = true;
                     $text = $Serie->nombre;
                 } else {
@@ -158,9 +159,9 @@ class ExpedienteFuncionario
                 $item['title'] = $text;
                 $item['key'] = $Serie->getPK() . '-' . $Expediente->getPK();
                 $item['data'] = [
-                    'fk_expediente' => (int)$Expediente->getPK(),
-                    'fk_serie' => (int)$Serie->getPK(),
-                    'fk_entidad_serie' => (int)$Expediente->fk_entidad_serie
+                    'fk_expediente' => (int) $Expediente->getPK(),
+                    'fk_serie' => (int) $Serie->getPK(),
+                    'fk_entidad_serie' => (int) $Expediente->fk_entidad_serie
                 ];
                 $objetoJson[] = $item;
             }
@@ -168,4 +169,3 @@ class ExpedienteFuncionario
         return $objetoJson;
     }
 }
- 

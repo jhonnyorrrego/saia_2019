@@ -81,12 +81,12 @@ class Funcion extends LogModel
      */
     public static function findAllByTerm($term)
     {
-        $sql = <<<SQL
-            SELECT * 
-            FROM funcion
-            WHERE
-                nombre like '%{$term}%'
-SQL;
-        return self::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('*')
+            ->from('funcion')
+            ->where('nombre like :like')
+            ->setParameter(':like', "%{$term}%");
+
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

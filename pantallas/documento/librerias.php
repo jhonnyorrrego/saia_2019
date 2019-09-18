@@ -19,7 +19,7 @@ include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
 function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
 {
-    
+
 
     $ruta = "";
     $numero = intval($numero);
@@ -50,8 +50,7 @@ function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $est
             $ejecutor = busca_filtro_tabla("nombre", "ejecutor", "idejecutor=" . $datos_ejecutor[0]["ejecutor_idejecutor"], "");
         } elseif ($tipo_radicado == 2) {
             $datos_ejecutor = busca_filtro_tabla("A.ejecutor", "documento A", "A.iddocumento=" . $doc, "");
-            $cadena_concat = concatenar_cadena_sql(array("nombres", "' '", "apellidos"));
-            $ejecutor = busca_filtro_tabla($cadena_concat . " as nombre", "funcionario", "funcionario_codigo=" . $datos_ejecutor[0]["ejecutor"], "");
+            $ejecutor = busca_filtro_tabla("CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "funcionario", "funcionario_codigo=" . $datos_ejecutor[0]["ejecutor"], "");
         }
 
         if ($ejecutor["numcampos"] && $datos_ejecutor[0]["plantilla"] == "") {
@@ -71,7 +70,7 @@ function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $est
 
 function serie_documento($idserie)
 {
-    
+
 
     if ($idserie == 'serie') {
         return ("Sin Serie Asignada");
@@ -85,7 +84,7 @@ function serie_documento($idserie)
 
 function nombre_plantilla($plantilla, $iddoc = null)
 {
-    
+
     $tablas = "formato f";
     $where = "lower(f.nombre)='" . strtolower($plantilla) . "'";
     if (!empty($iddoc) && (empty($plantilla) || $plantilla == 'plantilla')) {
@@ -138,7 +137,7 @@ function obtener_iddocumento()
 
 function filtro_despacho()
 {
-    
+
 
     if ($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda'] != '') {
         $docs = busca_filtro_tabla("", "documento,ft_despacho_ingresados", "documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=" . $_REQUEST['variable_busqueda'], "");
@@ -153,7 +152,7 @@ function filtro_despacho()
 
 function iddoc_distribuidos()
 {
-    
+
     $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "");
     $iddoc = array();
 
@@ -182,7 +181,7 @@ function iddoc_distribuidos()
 
 function iddoc_no_distribuidos()
 {
-    
+
     $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "");
 
     $iddoc = array();

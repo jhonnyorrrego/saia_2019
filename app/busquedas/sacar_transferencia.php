@@ -13,24 +13,35 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'success' => 0,
     'message' => '',
     'data' => []
 ];
 
 if ($_SESSION['idfuncionario'] && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $sql = "select idtransferencia from buzon_salida where idtransferencia = {$_REQUEST['transfer']} and destino = {$_REQUEST['key']}";
-    $records = StaticSql::search($sql);
-
+    $BuzonSalida = new BuzonSalida($_REQUEST['transfer']);
     $documentList = implode(',', $_REQUEST['selections']);
-    if (count($records)) { //recibidos
-        $sql = "update buzon_salida set recibido = 0 where archivo_idarchivo in ({$documentList}) and destino={$_REQUEST['key']}";
-    } else { //enviados
-        $sql = "update buzon_salida set enviado = 0 where archivo_idarchivo in ({$documentList}) and origen={$_REQUEST['key']}";
-    }
 
-    $update = StaticSql::query($sql);
+    if ($BuzonSalida && $BuzonSalida->destino == $_REQUEST['key']) { //recibidos
+        $update = Model::getQueryBuilder()
+            ->update('buzon_salida')
+            ->set('recibido', 0)
+            ->where('archivo_idarchivo in (:documentList')
+            ->andWhere('destino = :key')
+            ->setParameter(':documentList', $_REQUEST['selections'], \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+            ->setParameter('key', $_REQUEST['key'],  \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+    } else { //enviados
+        $update = Model::getQueryBuilder()
+            ->update('buzon_salida')
+            ->set('enviado', 0)
+            ->where('archivo_idarchivo in (:documentList')
+            ->andWhere('origen = :key')
+            ->setParameter(':documentList', $_REQUEST['selections'], \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+            ->setParameter('key', $_REQUEST['key'],  \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+    }
 
     if ($update) {
         $trashId = Etiqueta::getUserTrashId($_REQUEST['key']);

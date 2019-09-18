@@ -17,7 +17,7 @@ include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 //Adicionar
 function mostrar_radicado_entrada($idformato, $iddoc)
 {
-    
+
     $fecha = date('Y-m-d');
     $campo = '<label class="form-control" id="numero_radicado">';
     if ($_REQUEST["iddoc"]) {
@@ -121,7 +121,7 @@ function datos_editar_radicacion($idformato, $iddoc)
 
 function quitar_descripcion_entrada($idformato, $iddoc)
 {
-    
+
     ?>
     <script>
         if ($("#descripcion").val() == "Pendiente por llenar datos") {
@@ -305,7 +305,7 @@ function serie_documental_radicacion($idformato, $iddoc)
 
 function buscar_dependencias_principal($iddependencia)
 {
-    
+
     $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "");
 
     if ($cod_dep['numcampos']) {
@@ -734,17 +734,11 @@ function obtener_informacion_proveedor($idformato, $iddoc)
             echo implode(", &nbsp;", $texto);
         }
     } else {
-        $array_concat = array(
-            "nombres",
-            "' '",
-            "apellidos"
-        );
-        $cadena_concat = concatenar_cadena_sql($array_concat);
         if ($datos[0]['area_responsable']) {
-            $origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "");
+            $origen = busca_filtro_tabla("nombres,apellidos,dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "");
             if ($origen["numcampos"]) {
                 $texto = array();
-                $texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
+                $texto[] = "<b>Nombre:</b> " . $origen[0]["nombres"] . " " . $origen[0]["apellidos"];
                 $texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
                 $texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
                 echo implode("<br />", $texto);
@@ -755,7 +749,7 @@ function obtener_informacion_proveedor($idformato, $iddoc)
 
 function mostrar_item_destino_radicacion($idformato, $iddoc)
 {
-    
+
     echo mostrar_listado_distribucion_documento($idformato, $iddoc, 1);
 }
 
@@ -786,7 +780,7 @@ function mostrar_copia_electronica($idformato, $iddoc)
 
 function cambiar_estado($idformato, $iddoc)
 {
-    
+
     $doc = busca_filtro_tabla("estado", "documento A", "iddocumento=" . $iddoc, "");
     if ($doc[0]["estado"] == 'INICIADO') {
         $sql1 = "UPDATE documento SET estado='APROBADO' WHERE iddocumento=" . $iddoc;
@@ -904,7 +898,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
 
 function actualizar_campos_documento($idformato, $iddoc)
 {
-    
+
     $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "");
     if ($datos["numcampos"]) {
         $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "");
@@ -941,8 +935,14 @@ function radicacion_entrada_fab_buttons()
     $entrada = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["documentId"], "");
     $datos = array();
     if ($entrada[0]["estado"] == 'INICIADO') {
-        $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $entrada[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $_REQUEST["documentId"];
-        StaticSql::query($sql);
+        Model::getQueryBuilder()
+            ->update('ft_radicacion_entrada')
+            ->set('tipo_origen', ':origin')
+            ->where('documento_iddocumento = :documentId')
+            ->setParameter(':origin', $entrada[0]['tipo_radicado'])
+            ->setParameter(':documentId', $_REQUEST["documentId"], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+
         $datos2 = array('editarRadicacion' => [
             'button' => [
                 'id' => "editarRadicacion",

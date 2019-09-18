@@ -7,7 +7,7 @@ class Pais extends Model
     protected $estado;
     protected $sortname;
     protected $phonecode;
-    
+
 
     function __construct($id = null)
     {
@@ -19,7 +19,7 @@ class Pais extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'nombre',
                 'estado',
@@ -40,16 +40,13 @@ class Pais extends Model
      */
     public static function findAllByTerm($term)
     {
-        $sql = <<<SQL
-        SELECT 
-            idpais,nombre,estado
-        FROM 
-            pais
-        WHERE
-            nombre LIKE '%{$term}%' AND
-            estado = 1
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select(' idpais,nombre,estado')
+            ->from('pais')
+            ->where('estado = 1')
+            ->andWhere('nombre like :like')
+            ->setParameter(':like', "%{$term}%");
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

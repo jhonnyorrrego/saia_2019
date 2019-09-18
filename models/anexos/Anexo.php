@@ -67,13 +67,14 @@ class Anexo extends LogModel
     public function getLastLog()
     {
         if (!$this->Log) {
-            $sql = <<<SQL
-            select max(fk_log) as idlog
-            from anexo_log 
-            where fk_anexo = {$this->getPK()}
-SQL;
-            $record = StaticSql::search($sql);
-            $this->Log = new Log($record[0]['idlog']);
+            $record = self::getQueryBuilder()
+                ->select('max(fk_log) as idlog')
+                ->from('anexo_log')
+                ->where('fk_anexo = :fileId')
+                ->setParameter(':fileId', $this->getPK(), \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute()->fetch();
+
+            $this->Log = new Log($record['idlog']);
         }
 
         return $this->Log;
@@ -108,8 +109,16 @@ SQL;
         $Anexo = new Anexo($fileId);
 
         if ($Anexo->fk_anexo) {
-            $sql = "select * from anexo where idanexo <>{$fileId} and fk_anexo={$Anexo->fk_anexo} order by idanexo desc";
-            $response = Anexo::findByQueryBuilder($sql);
+            $QueryBuilder = Model::getQueryBuilder()
+                ->select('*')
+                ->from('anexo')
+                ->where('idanexo <> :fileId')
+                ->andWhere('fk_anexo = :parentId')
+                ->orderBy('idanexo', 'desc')
+                ->setParameter(':fileId', $fileId, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':parentId', $Anexo->fk_anexo, \Doctrine\DBAL\Types\Type::INTEGER);
+
+            $response = Anexo::findByQueryBuilder($QueryBuilder);
         } else {
             $response = [];
         }

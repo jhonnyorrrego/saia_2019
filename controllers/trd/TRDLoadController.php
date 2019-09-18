@@ -129,12 +129,12 @@ class TRDLoadController
 
     protected function saveSerie()
     {
-        $sql = SerieTemp::getQueryBuilder()
+        $QueryBuilder = SerieTemp::getQueryBuilder()
             ->select('*')
             ->from('serie_temp')
             ->orderBy('idserie', 'ASC');
 
-        $data = SerieTemp::findByQueryBuilder($sql);
+        $data = SerieTemp::findByQueryBuilder($QueryBuilder);
 
         $ids = [0 => 0];
         foreach ($data as $SerieTemp) {
@@ -152,11 +152,11 @@ class TRDLoadController
         }
         unset($this->fila);
 
-        $sql = DependenciaSerieTemp::getQueryBuilder()
+        $QueryBuilder = DependenciaSerieTemp::getQueryBuilder()
             ->select('*')
             ->from('dependencia_serie_temp')
             ->orderBy('iddependencia_serie', 'ASC');
-        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
+        $data = DependenciaSerieTemp::findByQueryBuilder($QueryBuilder);
 
         foreach ($data as $DependenciaSerie) {
 

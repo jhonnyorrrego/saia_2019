@@ -220,21 +220,28 @@ function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = 
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn = null)
+function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $start, $end, $conn = null)
 {
-    $sql = "SELECT ";
-    $sql .= $campos ? $campos : "*";
-    $sql .= " FROM {$tabla}";
-    $sql .= $filtro ? " WHERE {$filtro} " : ' ';
-    $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
-        $orden : "ORDER BY {$orden} ") : '';
-    $sql = htmlspecialchars_decode($sql);
+    $QueryBuilder = Model::getQueryBuilder()
+        ->select($campos ? $campos : '*')
+        ->from($tabla);
 
-    $return = StaticSql::search($sql, $inicio, $registros);
-    $return['numcampos'] = count($return);
-    $return['tabla'] = $tabla;
-    $return['sql'] = $sql;
-    return $return;
+    if ($filtro) {
+        $QueryBuilder->where($filtro);
+    }
+
+    if ($orden) {
+        $QueryBuilder->add('orderBy', $orden);
+    }
+
+    $response = $QueryBuilder
+        ->setFirstResult($start)
+        ->setMaxResults($end)
+        ->execute()
+        ->fetchAll();
+
+    $response['numcampos'] = count($response);
+    return $response;
 }
 
 /**

@@ -1,6 +1,7 @@
 <?php
 
-class Elemento extends Model implements IAnexos {
+class Elemento extends Model implements IAnexos
+{
 
 	use TFlujo;
 
@@ -18,26 +19,29 @@ class Elemento extends Model implements IAnexos {
 	protected $fk_tipo_elemento;
 	protected $tipo_elemento;
 
-	function __construct($id = null) {
+	function __construct($id = null)
+	{
 		parent::__construct($id);
 		$this->getTipoElemento();
 	}
 
-	public static function conFkFlujo( $id ) {
+	public static function conFkFlujo($id)
+	{
 		$instance = new self();
 		$instance->fk_flujo = $id;
 		return $instance;
 	}
 
-	protected function defineAttributes() {
+	protected function defineAttributes()
+	{
 		$this->dbAttributes = (object) [
 			'safe' => [
 				"nombre",
 				"bpmn_id",
 				"info",
 				"fk_flujo",
-			    "req_calidad_in",
-			    "req_calidad_out",
+				"req_calidad_in",
+				"req_calidad_out",
 				"fk_formato_flujo",
 				"fk_tipo_elemento"
 			],
@@ -46,9 +50,10 @@ class Elemento extends Model implements IAnexos {
 		];
 	}
 
-	public function getTipoElemento() {
-		if(empty($this->tipo_elemento)) {
-			if(!empty($this->fk_tipo_elemento)) {
+	public function getTipoElemento()
+	{
+		if (empty($this->tipo_elemento)) {
+			if (!empty($this->fk_tipo_elemento)) {
 				$te = new TipoElemento($this->fk_tipo_elemento);
 				$this->tipo_elemento = $te;
 			}
@@ -56,19 +61,22 @@ class Elemento extends Model implements IAnexos {
 		return $this->tipo_elemento;
 	}
 
-	public function setTipoElemento($tipo) {
+	public function setTipoElemento($tipo)
+	{
 		$this->tipo_elemento = $tipo;
 	}
 
-	public static function findByBpmnId($idflujo, $name) {
+	public static function findByBpmnId($idflujo, $name)
+	{
 		return self::findByAttributes([
-		    "fk_flujo" =>  $idflujo,
+			"fk_flujo" =>  $idflujo,
 			"bpmn_id" => $name
 		]);
 	}
 
-	public function findActiveFiles($params) {
-	    $sql = <<<SQL
+	public function findActiveFiles($params)
+	{
+		$sql = <<<SQL
             select a.*
             from anexo a
             join wf_anexo_actividad af
@@ -79,10 +87,8 @@ class Elemento extends Model implements IAnexos {
                 f.idelemento = $this->idelemento and a.eliminado = 0
             order by $params->order
 SQL;
-	    $records = StaticSql::search($sql, $params->offset, $params->limit);
+		//$records = //ejecuta el select
 
-	    return self::convertToArray($records);
+		return self::convertToArray($records);
 	}
-
 }
-

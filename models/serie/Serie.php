@@ -250,7 +250,7 @@ class Serie extends LogModel
         }
         $data = [];
         $sql = "SELECT idserie FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
-        $hijos = $this->search($sql);
+        //$hijos = //ejecuta la busqueda
         if ($hijos) {
             foreach ($hijos as $fila) {
                 if ($instance) {
@@ -268,7 +268,7 @@ class Serie extends LogModel
         $response = [];
         $codArbol = str_replace('.', ',', $this->cod_arbol);
         $sql = "SELECT idserie,nombre,tipo FROM serie WHERE idserie IN ({$codArbol}) ";
-        $records = $this->findByQueryBuilder($sql, false);
+        $records = //buscar con queryBuilder
         if ($records) {
             $etiq = [];
             foreach ($records as $record) {

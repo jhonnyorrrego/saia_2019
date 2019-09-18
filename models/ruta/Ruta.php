@@ -118,7 +118,7 @@ class Ruta extends Model
     public static function findActiveRoute($documentId)
     {
         $type = RutaDocumento::TIPO_RADICACION;
-        $sql = Model::getQueryBuilder()
+        $QueryBuilder = Model::getQueryBuilder()
             ->select("a.*")
             ->from("ruta", "a")
             ->join("a", "ruta_documento", "b", "a.fk_ruta_documento = b.idruta_documento")
@@ -128,7 +128,7 @@ class Ruta extends Model
             ->setParameter(':documento', $documentId)
             ->setParameter(':tipo', $type);
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -163,25 +163,20 @@ class Ruta extends Model
      */
     public static function getStepFromDocumet($documentId)
     {
-        $type = RutaDocumento::TIPO_RADICACION;
-        $sql = <<<SQL
-        SELECT a.*
-        FROM 
-            ruta a 
-            JOIN
-                ruta_documento b ON
-                    b.idruta_documento = a.fk_ruta_documento
-            JOIN
-                buzon_entrada c ON
-                    a.idruta = c.ruta_idruta
-        WHERE
-            b.estado = 1 AND
-            b.fk_documento = {$documentId} AND
-            c.activo = 1 AND
-            b.tipo = {$type}         
-        ORDER BY a.orden ASC
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('ruta', 'a')
+            ->join('a', 'ruta_documento', 'b', 'b.idruta_documento = a.fk_ruta_documento')
+            ->join('a', 'buzon_entrada', 'c', 'a.idruta = c.ruta_idruta')
+            ->where('b.estado = 1 and c.activo = 1')
+            ->andWhere('b.fk_documento = :documentId')
+            ->andWhere('b.tipo = :type')
+            ->orderBy('a.orden', 'asc')
+            ->setParameter(':documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':type', RutaDocumento::TIPO_RADICACION, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setFirstResult(0)
+            ->setMaxResults(1);
 
-        return self::findByQueryBuilder($sql, true, 0, 1)[0];
+        return self::findByQueryBuilder($QueryBuilder)[0];
     }
 }

@@ -68,14 +68,8 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         "tipo_firma" => 0,
         "tipo" => 1
     ));
-    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array(
-        "'ELIMINA_'",
-        "nombre"
-    )) . " where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
-    phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array(
-        "'ELIMINA_'",
-        "nombre"
-    )) . " WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')");
+    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=CONCAT('ELIMINA_',nombre) where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+    phpmkr_query("UPDATE buzon_salida SET nombre=CONCAT('ELIMINA_',nombre) WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')");
 
     for ($i = 0; $i < count($ruta) - 1; $i++) {
         if (!isset($ruta[$i]["tipo_firma"])) {

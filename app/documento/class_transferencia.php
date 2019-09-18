@@ -824,23 +824,6 @@ function cargo_rol($iddoc)
     return $tipo;
 }
 
-function crear_pretexto($asunto, $contenido)
-{
-
-    $campos = "asunto";
-    $valores = "'" . $asunto . "'";
-    $sql = "INSERT INTO pretexto(" . $campos . ") VALUES (" . $valores . ")";
-    phpmkr_query($sql);
-    $idpretexto = phpmkr_insert_id();
-    guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
-    // Guardo la relacion de la plantilla con el suaurio
-    $idfuncionario = $_SESSION["idfuncionario"];
-    $campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
-    $valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
-    $sql = "INSERT INTO entidad_pretexto(" . $campos . ") VALUES (" . $valores . ") ";
-    phpmkr_query($sql);
-}
-
 function ejecutoradd($sKey)
 {
 

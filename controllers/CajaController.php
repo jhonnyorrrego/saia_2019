@@ -2,7 +2,7 @@
 class CajaController
 {
 
-    public static function createCajaCont(array $data = []) : array
+    public static function createCajaCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -42,7 +42,7 @@ class CajaController
         return $response;
     }
 
-    public static function updateCajaCont(array $data = []) : array
+    public static function updateCajaCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -73,7 +73,7 @@ class CajaController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function updateResponsableCajaCont(array $data = []) : array
+    public static function updateResponsableCajaCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -113,7 +113,7 @@ class CajaController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function deleteCajaCont(array $data = []) : array
+    public static function deleteCajaCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -124,7 +124,7 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 1) {
                 $sql = "SELECT count(idcaja_eli) as cant FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $exis = StaticSql::search($sql);
+                //$exis = //ejecuta el select
                 if (!$exis[0]['cant']) {
                     $CajaEli = new CajaEli();
                     $attributes = [
@@ -141,7 +141,7 @@ class CajaController
                             $response['message'] = 'Caja eliminada';
                             if ($data['eliminar_expediente']) {
                                 $sql = "UPDATE expediente SET estado=0,fk_caja_eli={$CajaEli->getPK()} WHERE fk_caja={$data['idcaja']} AND estado=1";
-                                if (StaticSql::query($sql)) {
+                                /*if (//ejecuta el update) {
                                     $response['exito'] = 1;
                                 } else {
                                     $CajaEli->delete();
@@ -149,16 +149,15 @@ class CajaController
                                     $Caja->fk_caja_eli = 'NULL';
                                     $Caja->update();
                                     $response['message'] = 'Error al eliminar los expedientes de la caja';
-                                }
+                                }*/
                             } else {
                                 $sql = "UPDATE expediente SET fk_caja=NULL WHERE fk_caja={$data['idcaja']}";
-                                if (StaticSql::query($sql)) {
+                                /*if (//ejecuta el update) {
                                     $response['exito'] = 1;
                                 } else {
                                     $response['message'] = 'Error al actualizar la caja de los expedientes';
-                                }
+                                }*/
                             }
-
                         } else {
                             $CajaEli->delete();
                             $response['message'] = 'Error al eliminar la Caja';
@@ -184,7 +183,7 @@ class CajaController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function restoreCajaCont(array $data = []) : array
+    public static function restoreCajaCont(array $data = []): array
     {
 
         $response = [
@@ -196,19 +195,19 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findByQueryBuilder($sql);
+                //$instance = CajaEli:: buscar con queryBuilder;
                 if ($instance) {
                     $Caja->estado = 1;
                     $Caja->fk_caja_eli = 'NULL';
                     if ($Caja->update()) {
                         $CajaDel = $instance[0];
                         $CajaDel->fecha_accion = date('Y-m-d H:i:s');
-                        $CajaDel->accion =2;
+                        $CajaDel->accion = 2;
                         if ($CajaDel->update()) {
                             $response['message'] = 'Caja restaurada';
                             if ($CajaDel->eliminar_expediente) {
                                 $sql = "UPDATE expediente SET estado=1,fk_caja_eli=NULL WHERE fk_caja_eli={$CajaDel->getPK()}";
-                                if (StaticSql::query($sql)) {
+                                /*if (//ejecuta el update) {
                                     $response['exito'] = 1;
                                 } else {
                                     $Caja->estado = 0;
@@ -219,7 +218,7 @@ class CajaController
                                     $CajaDel->accion = 'NULL';
                                     $CajaDel->update();
                                     $response['message'] = 'No se pudieron restaurar los expedientes vinculados a la caja';
-                                }
+                                }*/
                             } else {
                                 $response['exito'] = 1;
                             }
@@ -232,7 +231,6 @@ class CajaController
                     } else {
                         $response['message'] = 'No se pudo restaurar la caja';
                     }
-
                 } else {
                     $response['message'] = 'No se puede restaurar la caja, contacte al administrador';
                 }
@@ -245,7 +243,7 @@ class CajaController
         return ($response);
     }
 
- /**
+    /**
      * Elimina definitivamente la caja
      *
      * @param array $data : array con idcaja
@@ -253,7 +251,7 @@ class CajaController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function deleteDefCajaCont(array $data = []) : array
+    public static function deleteDefCajaCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -264,15 +262,15 @@ class CajaController
             $Caja = new Caja($data['idcaja']);
             if ($Caja->estado == 0) {
                 $sql = "SELECT * FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_accion IS NULL";
-                $instance = CajaEli::findByQueryBuilder($sql);
+                //$instance = CajaEli:: buscar con queryBuilder
                 if ($instance) {
-                    $CajaDel=$instance[0];
-                    $CajaDel->fecha_accion=date("Y-m-d H:i:s");
-                    $CajaDel->accion=1;
-                    if($CajaDel->update()){
-                        $response['exito']=1;
-                        $response['message']='Se ha eliminado la caja';
-                    }else{
+                    $CajaDel = $instance[0];
+                    $CajaDel->fecha_accion = date("Y-m-d H:i:s");
+                    $CajaDel->accion = 1;
+                    if ($CajaDel->update()) {
+                        $response['exito'] = 1;
+                        $response['message'] = 'Se ha eliminado la caja';
+                    } else {
                         $response['message'] = 'se presento un error al eliminar definitivamente la caja, intente de nuevo';
                     }
                 } else {
@@ -295,7 +293,7 @@ class CajaController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function getCajaEntidadSerieCont(array $data = []) : array
+    public static function getCajaEntidadSerieCont(array $data = []): array
     {
         $response = [
             'data' => [],
@@ -308,7 +306,7 @@ class CajaController
             FROM caja c,caja_entidadserie ce,entidad_serie e,dependencia d,serie s 
             WHERE c.idcaja=ce.fk_caja AND ce.fk_entidad_serie=e.identidad_serie AND e.fk_dependencia=d.iddependencia 
             AND e.fk_serie=s.idserie AND e.estado=1 AND s.estado=1 AND d.estado=1 AND c.idcaja={$data['idcaja']} ";
-            $records = StaticSql::search($sql);
+            //$records = //ejecuta el select
             if ($records) {
                 $data = [];
                 foreach ($records as $record) {
@@ -338,7 +336,7 @@ class CajaController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function listEntidadSerie(array $data = []) : array
+    public static function listEntidadSerie(array $data = []): array
     {
         $response = [
             'results' => []
@@ -349,7 +347,7 @@ class CajaController
             $sql = "SELECT e.identidad_serie,d.nombre as dependencia,s.nombre as serie FROM entidad_serie e, dependencia d,serie s 
             WHERE e.fk_dependencia=d.iddependencia AND e.fk_serie=s.idserie AND e.estado=1 AND d.estado=1 AND s.estado=1  AND s.tipo in (1,2)
             AND e.identidad_serie NOT IN ({$subQuery}) AND (s.nombre like '%{$data['search']}%' OR d.nombre like '%{$data['search']}%')";
-            $records = StaticSql::search($sql);
+            //$records = //ejecuta el select
             if ($records) {
                 $results = [];
                 foreach ($records as $record) {
@@ -364,7 +362,7 @@ class CajaController
         return $response;
     }
 
-    public function insertCajaEntidadSerieCont(array $data = []) : array
+    public function insertCajaEntidadSerieCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -401,7 +399,7 @@ class CajaController
         return $response;
     }
 
-    public function deleteVinCajaEntidadSerieCont(array $data = []) : array
+    public function deleteVinCajaEntidadSerieCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
