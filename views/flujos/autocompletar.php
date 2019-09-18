@@ -28,7 +28,7 @@ echo json_encode($resp);
 
 function consultar($consulta, $valor)
 {
-    global $conn;
+    
     /*
      $consulta = array(
      "campoid" => $parametros->campoid,
@@ -61,7 +61,7 @@ function consultar($consulta, $valor)
 
     $where_final = $condicion . " AND lower($campos_nombre) like '%$valor%'";
     // Tipo de LLenado =1 es para los funcionarios
-    $usuarios = busca_filtro_tabla("$campos_nombre as nombre, $campo_id as id", $tablas, $where_final, $orden, $conn);
+    $usuarios = busca_filtro_tabla("$campos_nombre as nombre, $campo_id as id", $tablas, $where_final, $orden);
 
     $tipo_id = "funcionario_codigo";
     $resp = array();

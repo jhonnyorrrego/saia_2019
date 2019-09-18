@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "core/autoload.php";
 require_once $ruta_db_superior . 'assets/librerias.php';
-require_once $ruta_db_superior . 'librerias_saia.php';
+require_once $ruta_db_superior . 'assets/librerias.php';
 
 $params = (!empty($_REQUEST)) ? $_REQUEST : [];
 $params2 = $params;

@@ -33,9 +33,9 @@ echo $texto;
 function crear_campo($nombre) {
 	global $conn, $etiquetas;
 	if ($nombre == "fecha_nacimiento")
-		$datos_ejecutor = busca_filtro_tabla(fecha_db_obtener($nombre, "Y-m-d") . " as fecha_nacimiento", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=" . $_REQUEST["idejecutor"], "fecha desc", $conn);
+		$datos_ejecutor = busca_filtro_tabla(fecha_db_obtener($nombre, "Y-m-d") . " as fecha_nacimiento", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=" . $_REQUEST["idejecutor"], "fecha desc");
 	else
-		$datos_ejecutor = busca_filtro_tabla($nombre, "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=" . $_REQUEST["idejecutor"], "fecha desc", $conn);
+		$datos_ejecutor = busca_filtro_tabla($nombre, "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=" . $_REQUEST["idejecutor"], "fecha desc");
     if ($nombre != "titulo" && $nombre != "ciudad") {
         $texto = '<div class="row">
         <label id="label_' . $nombre . '" class="control-label col-5">' . $etiquetas[$nombre] . ':</label>';
@@ -105,8 +105,8 @@ function crear_campo($nombre) {
 }
 
 function generar_ciudad($ciudad, $campo) {
-	global $conn;
-	if (!$ciudad) {$ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
+	
+	if (!$ciudad) {$ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "");
 		if ($ciudad_conf["numcampos"]) {
 			$ciudad_valor = $ciudad_conf[0][0];
 		} else {
@@ -114,11 +114,11 @@ function generar_ciudad($ciudad, $campo) {
 		}
 	} else
 		$ciudad_valor = $ciudad;
-	$municipio = busca_filtro_tabla("idmunicipio,iddepartamento,idpais", "municipio A,departamento B, pais C", "A.departamento_iddepartamento=B.iddepartamento AND C.idpais=B.pais_idpais AND A.idmunicipio=" . $ciudad_valor, "", $conn);
+	$municipio = busca_filtro_tabla("idmunicipio,iddepartamento,idpais", "municipio A,departamento B, pais C", "A.departamento_iddepartamento=B.iddepartamento AND C.idpais=B.pais_idpais AND A.idmunicipio=" . $ciudad_valor, "");
 	if ($municipio["numcampos"]) {
-		$paises = busca_filtro_tabla("", "pais", "", "lower(nombre)", $conn);
-		$departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)", $conn);
-		$municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)", $conn);
+		$paises = busca_filtro_tabla("", "pais", "", "lower(nombre)");
+		$departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)");
+		$municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)");
 		$texto = '<script src="../../assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
 <script src="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 <script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>

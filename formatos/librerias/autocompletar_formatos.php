@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 
 if($_REQUEST["idcomponente"] && $_REQUEST["digitado"])
-{$componente=busca_filtro_tabla("valor,nombre","campos_formato","idcampos_formato=".$_REQUEST["idcomponente"],"",$conn);
+{$componente=busca_filtro_tabla("valor,nombre","campos_formato","idcampos_formato=".$_REQUEST["idcomponente"],"");
 
  if($componente["numcampos"])
    {$parametros=explode(";",$componente[0]["valor"]);
@@ -21,7 +21,7 @@ if($_REQUEST["idcomponente"] && $_REQUEST["digitado"])
     */
     $parametros[0]=str_replace('"',"'",stripslashes($parametros[0]));
     $parametros[1]=str_replace('"',"'",stripslashes($parametros[1]));
-     $datos=busca_filtro_tabla($parametros[0]." as nombre,".$parametros[1]." as id",$parametros[2],"lower(".$parametros[0].") like '".strtolower(((trim($_REQUEST["digitado"]))))."%'","",$conn);
+     $datos=busca_filtro_tabla($parametros[0]." as nombre,".$parametros[1]." as id",$parametros[2],"lower(".$parametros[0].") like '".strtolower(((trim($_REQUEST["digitado"]))))."%'","");
   
      if($datos["numcampos"])
        {for($i=0;$i<$datos["numcampos"];$i++)

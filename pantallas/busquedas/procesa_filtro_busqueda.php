@@ -24,7 +24,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 	if (@$_REQUEST["adicionar_consulta"]) {
 		$arreglo = array();
 		$consulta_adicional = campos_especiales();
-		$componente = busca_filtro_tabla("", "busqueda_componente a", "a.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
+		$componente = busca_filtro_tabla("", "busqueda_componente a", "a.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "");
 		if ($componente["numcampos"] && $componente[0]["nombre"] == 'listado_documentos') {
 			$arreglo_sub = array();
 			$conta = 0;
@@ -82,7 +82,6 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 					'fecha' => date("Y-m-d H:i:s")
 
 				]);
-				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
 				$FiltroTemp = new BusquedaFiltroTemp();
 				$idbusqueda_temp = $FiltroTemp::newRecord([
@@ -238,7 +237,7 @@ function valor_dato($campo, $valor)
 
 function filtros_adicionales()
 {
-	global $conn;
+
 	if (@$_REQUEST["filtro_adicional"]) {
 		$datos = $_REQUEST["filtro_adicional"];
 		$idbusqueda_componente = $_REQUEST["idbusqueda_componente"];
@@ -256,9 +255,7 @@ function filtros_adicionales()
 			$where = stripslashes($valores[1]);
 		}
 		$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
-		$conn->query($sql1);
-		$idbusqueda = $conn->lastInsertId();
-		return $idbusqueda;
+		phpmkr_query($sql1);
 	}
 }
 
@@ -332,7 +329,7 @@ function campos_especiales()
 							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios3[$j]))) . "%'";
 						}
 					}
-					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "", $conn);
+					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "");
 
 					for ($k = 0; $k < $datos_ejecutor["numcampos"]; $k++) {
 						$cadena[] = "(" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%'')";
@@ -357,7 +354,7 @@ function realizar_consulta()
 {
 	global $conn, $ruta_db_superior;
 	$tablas = array();
-	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden", $conn);
+	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden");
 	if ($datos_busqueda[0]["tablas"] != '' && $datos_busqueda[0]["tablas_adicionales"] != '') {
 		$datos_busqueda[0]["tablas"] = $datos_busqueda[0]["tablas"] . "," . $datos_busqueda[0]["tablas_adicionales"];
 	}
@@ -370,7 +367,7 @@ function realizar_consulta()
 	}
 	$campos .= "," . $datos_busqueda[0]["llave"];
 	$tablas = explode(",", $datos_busqueda[0]["tablas"]);
-	$condicion = crear_condicion_sql($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
+	$condicion = crear_condicion_sql($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], '');
 	$tablas_consulta = strtolower(implode(",", array_unique($tablas)));
 	$campos2 = explode(",", $campos);
 	foreach ($campos2 as $valor) {
@@ -390,6 +387,7 @@ function realizar_consulta()
 		$librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
 		array_walk($librerias, "incluir_librerias_busqueda");
 	}
+	$variables_final = [];
 	foreach ($funciones_condicion as $key => $valor) {
 		unset($valor_variables);
 		$valor_variables = array();
@@ -407,15 +405,13 @@ function realizar_consulta()
 	}
 	if ($datos_busqueda[0]["ordenado_por"]) {
 		$sidx = $datos_busqueda[0]["ordenado_por"];
-		if (!$sord) {
-			$sord = " DESC ";
-		}
+		$sord = " DESC ";
 	}
 	if ($sidx && $sord) {
 		if ($datos_busqueda[0]["direccion"] != '') {
 			$sord = $datos_busqueda[0]["direccion"];
 		}
-		$ordenar_consulta .= $sidx . " " . $sord;
+		$ordenar_consulta = $sidx . " " . $sord;
 	}
 	$condicion = strtolower($condicion);
 	$ordenar_consulta = strtolower($ordenar_consulta);
@@ -428,11 +424,11 @@ function realizar_consulta()
 
 function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
 {
-	global $conn;
+
 	$condicion_filtro = '';
-	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden");
 	if (!$datos_condicion["numcampos"]) {
-		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
+		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "");
 		$condicion = $datos_condicion[0]["codigo_where"];
 	} else {
 		if ($filtros != '') {

@@ -25,7 +25,7 @@ if(
             <meta name="apple-mobile-web-app-status-bar-style" content="default">
             <meta content="" name="description" />
             <meta content="" name="Cero K" /> 
-            <?php include_once('../../librerias_saia.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../class_transferencia.php'); ?><?php include_once('../carta/../librerias/funciones_generales.php'); ?><?php include_once('../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../carta/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../radicacion_entrada/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../librerias/funciones_generales.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../carta/../../pantallas/qr/librerias.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?>
+            <?php include_once('../../assets/librerias.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../class_transferencia.php'); ?><?php include_once('../carta/../librerias/funciones_generales.php'); ?><?php include_once('../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../carta/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../radicacion_entrada/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../librerias/funciones_generales.php'); ?><?php include_once('funciones.php'); ?><?php include_once('../carta/../../pantallas/qr/librerias.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?>
             <table border="0" cellspacing="0" style="border-collapse:collapse; width:100%">
               <tbody>
                   <tr>

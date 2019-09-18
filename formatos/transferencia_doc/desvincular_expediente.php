@@ -1,14 +1,14 @@
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 echo(librerias_notificaciones());
 
 $idexpediente=@$_REQUEST["idexpediente"];
 $iddoc=@$_REQUEST["iddoc"];
 $idformato=@$_REQUEST["idformato"];
 
-$datos=busca_filtro_tabla("expediente_vinculado","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
+$datos=busca_filtro_tabla("expediente_vinculado","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"");
 
 $mystring = $datos[0]["expediente_vinculado"];
 $findme   = 'cajas_';

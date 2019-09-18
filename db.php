@@ -56,11 +56,11 @@ function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
 </Clase>  */
 function leido($codigo, $llave)
 {
-    global $conn;
-    $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $llave . " and llave_entidad=" . $codigo, "fecha_inicial DESC", $conn);
+
+    $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $llave . " and llave_entidad=" . $codigo, "fecha_inicial DESC");
 
     if ($pendiente["numcampos"] > 0) {
-        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_entrada", "archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= " . fecha_db_almacenar($pendiente[0]["fecha_inicial"], "Y-m-d H:i:s"), "", $conn);
+        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_entrada", "archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= " . fecha_db_almacenar($pendiente[0]["fecha_inicial"], "Y-m-d H:i:s"), "");
         if (!$leido["numcampos"]) {
             BuzonSalida::newRecord([
                 'archivo_idarchivo' => $llave,
@@ -85,7 +85,7 @@ function leido($codigo, $llave)
             ]);
         }
     } else {
-        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_salida", "archivo_idarchivo=$llave and destino='$codigo'", "fecha desc", $conn);
+        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_salida", "archivo_idarchivo=$llave and destino='$codigo'", "fecha desc");
         if (!$leido["numcampos"] || $leido[0]["nombre"] <> "LEIDO") {
 
             BuzonSalida::newRecord([
@@ -220,7 +220,7 @@ function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = 
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn)
+function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn = null)
 {
     $sql = "SELECT ";
     $sql .= $campos ? $campos : "*";
@@ -301,7 +301,7 @@ function extrae_campo($arreglo, $campo, $banderas = "U,M")
     return $retorno;
 }
 
-function sincronizar_carpetas($tipo, $conn)
+function sincronizar_carpetas($tipo)
 {
     $idimagenes = array();
     $max_salida = 6;
@@ -320,7 +320,7 @@ function sincronizar_carpetas($tipo, $conn)
     $peso = 2000000;
     $tabla = "pagina";
     $estado = "";
-    $configuracion = busca_filtro_tabla("*", "configuracion A", "A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'", "A.idconfiguracion DESC", $conn);
+    $configuracion = busca_filtro_tabla("*", "configuracion A", "A.tipo='ruta' OR A.tipo='imagen' OR A.tipo='peso'", "A.idconfiguracion DESC");
     for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
         switch ($configuracion[$i]["nombre"]) {
             case "temporal_digitalizacion":
@@ -375,7 +375,7 @@ function sincronizar_carpetas($tipo, $conn)
     }
     //Define si se almacena en la BD o en archivos
 
-    $config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "", $conn);
+    $config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "");
     if ($config["numcampos"]) {
         $tipo_almacenamiento = $config[0]['valor'];
     } else { // Si no encuentra el registro en configuracion almacena en archivo
@@ -422,11 +422,11 @@ function sincronizar_carpetas($tipo, $conn)
                     }
                     $fieldList["id_documento"] = $cad;
 
-                    $datos_doc = busca_filtro_tabla("estado," . fecha_db_obtener('fecha', 'Y-m') . " as fecha,iddocumento", "documento", "iddocumento=" . $fieldList["id_documento"], "", $conn);
+                    $datos_doc = busca_filtro_tabla("estado," . fecha_db_obtener('fecha', 'Y-m') . " as fecha,iddocumento", "documento", "iddocumento=" . $fieldList["id_documento"], "");
                     $estado = $datos_doc[0]["estado"];
                     $fecha = $datos_doc[0]["fecha"];
 
-                    $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
+                    $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina");
                     $numero_pagina = $paginas["numcampos"];
                     // Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
                     //$ruta_imagenes = ruta_almacenamiento("imagenes");
@@ -573,9 +573,9 @@ function sincronizar_carpetas($tipo, $conn)
                         $cad = "0";
                     }
                     $fieldList["id_documento"] = $cad;
-                    $num = busca_filtro_tabla("A.pagina", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"] . " AND pagina=" . $cont, "", $conn);
+                    $num = busca_filtro_tabla("A.pagina", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"] . " AND pagina=" . $cont, "");
                     if ($num["numcampos"] && $cad_temp == "") {
-                        $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
+                        $paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina");
                         $paginas_temporales = array();
                         for ($h = 0; $h < $paginas["numcampos"]; $h++) {
                             $punto2 = strrpos($paginas[$h]["ruta"], ".");
@@ -661,7 +661,7 @@ function sincronizar_carpetas($tipo, $conn)
         }
     }
 
-    $config = busca_filtro_tabla("", "configuracion", "nombre='activar_estampado'", "", $conn);
+    $config = busca_filtro_tabla("", "configuracion", "nombre='activar_estampado'", "");
     if ($fieldList["id_documento"] != '' && $config[0]["valor"] == 'TRUE') {
         if (is_file("digital_signed/estampado_tiempo.php")) {
             include_once("digital_signed/estampado_tiempo.php");
@@ -701,7 +701,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $data_sql['etiqueta'] = $etiqueta;
     $data_sql['tipo'] = $extension;
 
-    $datos_documento = busca_filtro_tabla("a.formato_idformato,b.idcampos_formato", "documento a LEFT JOIN campos_formato b ON a.formato_idformato=b.formato_idformato", "b.etiqueta_html='archivo' AND a.iddocumento=" . $iddoc, "", $conn);
+    $datos_documento = busca_filtro_tabla("a.formato_idformato,b.idcampos_formato", "documento a LEFT JOIN campos_formato b ON a.formato_idformato=b.formato_idformato", "b.etiqueta_html='archivo' AND a.iddocumento=" . $iddoc, "");
     $data_sql['formato'] = null;
     $data_sql['campos_formato'] = null;
     if ($datos_documento['numcampos']) {
@@ -714,7 +714,7 @@ function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
     $strsql .= ") VALUES (" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'";    //fecha_anexo
     $strsql .= implode("','", array_values($data_sql));
     $strsql .= "')";
-    phpmkr_query($strsql, $conn);
+    phpmkr_query($strsql);
     $idanexo = phpmkr_insert_id();
     $data_sql = array();
     $data_sql['anexos_idanexos'] = $idanexo;
@@ -807,7 +807,7 @@ function contador($counter, $documentId)
 function muestra_contador($cad)
 {
     global  $conn;
-    $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "", $conn);
+    $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "");
     if ($cuenta["numcampos"]) {
         $consecutivo = $cuenta[0]["consecutivo"];
         return $consecutivo;
@@ -844,20 +844,20 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
         $filtro = "A.login='" . $dato . "'";
     }
     if ($tipo == 'nit' || $tipo == 'id' || $tipo == 'login' || $tipo == 1 || $tipo == 2 || $tipo == 3) {
-        $temp = busca_filtro_tabla("*", "funcionario A", $filtro, "", $conn);
+        $temp = busca_filtro_tabla("*", "funcionario A", $filtro, "");
         if ($temp["numcampos"] == 0)
             error("Datos del Funcionario Origen de Dependencia no Existe");
         else {
             $dorig = $temp[0]['idfuncionario'];
-            $datorig = busca_filtro_tabla("d.*,c.*,f.*,f.estado AS estado_f,d.estado AS estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC", $conn);
+            $datorig = busca_filtro_tabla("d.*,c.*,f.*,f.estado AS estado_f,d.estado AS estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC");
         }
     } else if ($tipo == "cargo" || $tipo == 4) {
-        $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=" . $dependencia, "A.estado", $conn);
+        $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=" . $dependencia, "A.estado");
         if ($datorig["numcampos"])
-            $datorig = busca_cargo_funcionario(5, $datorig[0]["iddependencia_cargo"], "", $conn);
+            $datorig = busca_cargo_funcionario(5, $datorig[0]["iddependencia_cargo"], "");
         else alerta(codifica_encabezado("No existe nadie en ésta dependencia con el cargo especificado"));
     } else if ($tipo == 'iddependencia_cargo' || $tipo == 5) {
-        $datorig = busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "dependencia_cargo d,funcionario f,cargo", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "f.estado", $conn);
+        $datorig = busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "dependencia_cargo d,funcionario f,cargo", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "f.estado");
     } else {
         $datorig[0]['iddependencia_cargo'] = $dato;
     }
@@ -1016,14 +1016,14 @@ function ruta_almacenamiento($tipo, $raiz = 1)
 
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
 {
-    global $conn;
+
     //$fun_codigo= funcionario_codigo del usuario a consultar
     $retorno = array();
     $retorno['exito'] = 0;
     if ($tipo) {
-        $reemplazo = busca_filtro_tabla("nuevo,idreemplazo_saia", "reemplazo_saia", "antiguo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
+        $reemplazo = busca_filtro_tabla("nuevo,idreemplazo_saia", "reemplazo_saia", "antiguo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc");
     } else {
-        $reemplazo = busca_filtro_tabla("antiguo,idreemplazo_saia", "reemplazo_saia", "nuevo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
+        $reemplazo = busca_filtro_tabla("antiguo,idreemplazo_saia", "reemplazo_saia", "nuevo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc");
     }
     if ($reemplazo['numcampos']) {
         $retorno['exito'] = 1;

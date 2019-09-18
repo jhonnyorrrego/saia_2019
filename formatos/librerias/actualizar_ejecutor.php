@@ -32,12 +32,12 @@ if (@$_REQUEST["identificacion"]) {
 $ejecutor["numcampos"] = 0;
 
 if (trim(@$_REQUEST["identificacion"]) <> "") {
-	$ejecutor = busca_filtro_tabla("", "ejecutor", "identificacion LIKE '" . @$identificacion . "'", "", $conn);
+	$ejecutor = busca_filtro_tabla("", "ejecutor", "identificacion LIKE '" . @$identificacion . "'", "");
 	if (!$ejecutor["numcampos"]) {
-		$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "') and (identificacion is null or identificacion='')", "", $conn);
+		$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "') and (identificacion is null or identificacion='')", "");
 	}
 } elseif (trim(@$_REQUEST["nombre"]) <> "") {
-	$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "')", "", $conn);
+	$ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('" . @$nombre . "')", "");
 }
 
 if ($ejecutor["numcampos"]) {
@@ -52,20 +52,20 @@ if ($ejecutor["numcampos"]) {
 		$otros .= ",tipo_ejecutor='" . $_REQUEST["tipo_ejecutor"] . "'";
 
 	$sql = "UPDATE ejecutor SET nombre ='" . @$_REQUEST["nombre"] . "'" . $otros . " WHERE idejecutor=" . $ejecutor[0]["idejecutor"];
-	phpmkr_query($sql, $conn);
+	phpmkr_query($sql);
 	$idejecutor = $ejecutor[0]["idejecutor"];
 } else {
 	$sql = "INSERT INTO ejecutor(nombre,identificacion)VALUES('" . @$nombre . "','" . @$identificacion . "')";
-	phpmkr_query($sql, $conn);
+	phpmkr_query($sql);
 	$idejecutor = phpmkr_insert_id();
 	if (isset($_REQUEST["tipo_ejecutor"]) && $_REQUEST["tipo_ejecutor"])
-		phpmkr_query("update ejecutor set tipo_ejecutor='" . $_REQUEST["tipo_ejecutor"] . "' where idejecutor=$idejecutor", $conn);
+		phpmkr_query("update ejecutor set tipo_ejecutor='" . $_REQUEST["tipo_ejecutor"] . "' where idejecutor=$idejecutor");
 
 	if (isset($_REQUEST["lugar_expedicion"]) && $_REQUEST["lugar_expedicion"])
-		phpmkr_query("update ejecutor set lugar_expedicion='" . $_REQUEST["lugar_expedicion"] . "' where idejecutor=$idejecutor", $conn);
+		phpmkr_query("update ejecutor set lugar_expedicion='" . $_REQUEST["lugar_expedicion"] . "' where idejecutor=$idejecutor");
 
 	if (isset($_REQUEST["tipo_documento"]) && $_REQUEST["tipo_documento"])
-		phpmkr_query("update ejecutor set tipo_documento='" . $_REQUEST["tipo_documento"] . "' where idejecutor=$idejecutor", $conn);
+		phpmkr_query("update ejecutor set tipo_documento='" . $_REQUEST["tipo_documento"] . "' where idejecutor=$idejecutor");
 
 	$insertado = 1;
 }
@@ -91,17 +91,17 @@ for ($i = 0; $i < count($campos_ejecutor); $i++) {
 		}
 	}
 }
-$datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor . $condicion_actualiza, "", $conn);
+$datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor . $condicion_actualiza, "");
 
 if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "") {
-	$datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "iddatos_ejecutor desc", $conn);
+	$datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "iddatos_ejecutor desc");
 
 	$campos = array();
 	$valores = array();
 	$insertcolumns = [];
 	$insertvalues = [];
 	if (!isset($_REQUEST["ciudad"]) || strtolower($_REQUEST["ciudad"]) == "undefined") {
-		$config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "", $conn);
+		$config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "");
 		if ($config["numcampos"])
 			$_REQUEST["ciudad"] = $config[0][0];
 		else
@@ -145,10 +145,10 @@ if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "")
 	}
 	$municipio->execute();
 
-	phpmkr_query($sql, $conn);
+	phpmkr_query($sql);
 	$iddatos_ejecutor = phpmkr_insert_id();
 	if (isset($_REQUEST["codigo"]) && $_REQUEST["codigo"]) {
-		$datos = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "", $conn);
+		$datos = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "");
 		if ($datos["numcampos"] > 0)
 			phpmkr_query("UPDATE datos_ejecutor SET codigo=" . $_REQUEST["codigo"] . " where ejecutor_idejecutor=" . $idejecutor);
 	}

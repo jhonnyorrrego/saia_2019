@@ -214,7 +214,7 @@ class radicar_factura extends rcube_plugin {
     }
 
     private function _inicializarSaia() {
-        global $conn;
+        
         $max_salida = 10;
         $ruta_db_superior = $ruta = "";
         while ($max_salida > 0) {

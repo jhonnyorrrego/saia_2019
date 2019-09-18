@@ -15,10 +15,10 @@ include_once($ruta_db_superior."core/autoload.php");
 
 
 if($_REQUEST['tipo_radicacion']==1){
-    $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','',$conn);
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','');
     $tipo="E";
 }else {
-    $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',$conn);
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','');
     $tipo="I";
 }
 $fecha=date('Y-m-d');

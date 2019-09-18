@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once($ruta_db_superior."core/autoload.php");
 
-$max_destinos = busca_filtro_tabla("valor", "configuracion", "nombre='max_transferencias'", "", $conn);
+$max_destinos = busca_filtro_tabla("valor", "configuracion", "nombre='max_transferencias'", "");
 $cant = contar_destinos($_REQUEST["destino"]);
 
 if ($cant > $max_destinos[0]["valor"]) {
@@ -23,17 +23,17 @@ if ($cant > $max_destinos[0]["valor"]) {
 
 function contar_destinos($destinos)
 {
-	global $conn;
+	
 	$destinos = explode(",", $destinos);
 	$cantidad = 0;
 	foreach ($destinos as $fila) {
 		if (strpos($fila, '#') > 0) {
-			$dep = busca_filtro_tabla("", "dependencia", "iddependencia=" . str_replace("#", "", $fila), "", $conn);
+			$dep = busca_filtro_tabla("", "dependencia", "iddependencia=" . str_replace("#", "", $fila), "");
 
 			if ($dep[0]["cod_padre"] == 0 || $dep[0]["cod_padre"] == '' || !$dep[0]["cod_padre"]) {
 				return 10000000;
 			}
-			$roles = busca_filtro_tabla("distinct funcionario_idfuncionario", "dependencia_cargo", "dependencia_iddependencia=" . str_replace("#", "", $fila), "", $conn);
+			$roles = busca_filtro_tabla("distinct funcionario_idfuncionario", "dependencia_cargo", "dependencia_iddependencia=" . str_replace("#", "", $fila), "");
 			$cantidad += $roles["numcampos"];
 		} else {
 			$cantidad += 1;

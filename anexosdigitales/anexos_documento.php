@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
 include_once "funciones_archivo.php";
 
 if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
@@ -64,7 +63,7 @@ if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
 
 <?php
 
-//echo(estilo_bootstrap());
+//echo(bootstrap());
 $tabla = null;
 if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] != "0") { // Si esta en menu_ordenar omite el header el footer y el menu
     include_once("../header.php");
@@ -98,7 +97,7 @@ if (isset($_REQUEST["Adicionar"])) { // Se procesa el formulario
                 }, "*");
             }
         </script>
-    <?php
+<?php
         //abrir_url("anexos_documento.php?key=" . $iddocumento . "&adicional=" . rand(), "_self");
     } else {
         //abrir_url("../ordenar.php?accion=mostrar&key=" . $iddocumento, "centro");

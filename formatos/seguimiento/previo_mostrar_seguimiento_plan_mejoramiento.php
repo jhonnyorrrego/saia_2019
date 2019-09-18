@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 
 
 
-$idformato_seguimiento_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='seguimiento'","",$conn);
+$idformato_seguimiento_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='seguimiento'","");
 
 ?>
 

@@ -11,18 +11,18 @@ $ruta.="../";
 $max_salida--; 
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-echo(estilo_bootstrap());
+echo(bootstrap());
 echo(librerias_arboles());
-echo(librerias_jquery('1.7'));
+echo(jquery());
 
 if(isset($_REQUEST['aprobar'])){
 	$iddocs=explode(",", $_REQUEST['iddocs']);
 	
 	foreach ($iddocs as $value) {
 		$idft=busca_filtro_tabla("idft_radicacion_facturas","ft_radicacion_facturas","documento_iddocumento=".$value,"",$con);	
-		$dependencia=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+		$dependencia=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=".usuario_actual("funcionario_codigo"),"");
 		
 		$insert="insert into ft_item_aprobaciones (ft_radicacion_facturas,fecha_aprobacion,dependencia,accion,observaciones) values (".$idft[0]['idft_radicacion_facturas'].",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".$dependencia[0]['iddependencia_cargo'].",'pagada','".$_REQUEST['observaciones']."')";
 		phpmkr_query($insert);

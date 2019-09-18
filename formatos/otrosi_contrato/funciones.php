@@ -12,9 +12,9 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 function validar_contrato_otrosi($idformato,$iddoc){
-    global $conn;
-    $datos_papa=busca_filtro_tabla("valor_iva,valor_contrato,valor_contrato_moned","ft_identifica_contrato","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
-    $naturaleza=busca_filtro_tabla("naturaleza_contrato,".fecha_db_obtener("fecha_subscripcion","Y-m-d")." AS fecha_subscripcion,".fecha_db_obtener("fecha_final_contrato","Y-m-d")." AS fecha_final_contrato,".fecha_db_obtener("fecha_acta","Y-m-d")." AS fecha_acta","ft_identifica_contrato","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+    
+    $datos_papa=busca_filtro_tabla("valor_iva,valor_contrato,valor_contrato_moned","ft_identifica_contrato","documento_iddocumento=".$_REQUEST['anterior'],"");
+    $naturaleza=busca_filtro_tabla("naturaleza_contrato,".fecha_db_obtener("fecha_subscripcion","Y-m-d")." AS fecha_subscripcion,".fecha_db_obtener("fecha_final_contrato","Y-m-d")." AS fecha_final_contrato,".fecha_db_obtener("fecha_acta","Y-m-d")." AS fecha_acta","ft_identifica_contrato","documento_iddocumento=".$_REQUEST['anterior'],"");
     
     ?>
     <script>
@@ -279,8 +279,8 @@ function validar_contrato_otrosi($idformato,$iddoc){
     <?php 
 }
 function mostrar_otrosi_contrato($idformato,$iddoc){
-    global $conn;
-    $actividad=busca_filtro_tabla("tipo,".fecha_db_obtener("fecha_firma","Y-m-d")." AS fecha_firma,".fecha_db_obtener("fecha_inicio","Y-m-d")." AS fecha_inicio,".fecha_db_obtener("fecha_fin","Y-m-d")." AS fecha_fin,valor_total_moneda,valor_adicionado_mon,valor_iva,valor_total_otrosi_m,valor_iva_contr_mone,nuevo_valor_contra_m,objeto_modificacion,actividad_inicial","ft_otrosi_contrato","documento_iddocumento=".$iddoc,"",$conn);
+    
+    $actividad=busca_filtro_tabla("tipo,".fecha_db_obtener("fecha_firma","Y-m-d")." AS fecha_firma,".fecha_db_obtener("fecha_inicio","Y-m-d")." AS fecha_inicio,".fecha_db_obtener("fecha_fin","Y-m-d")." AS fecha_fin,valor_total_moneda,valor_adicionado_mon,valor_iva,valor_total_otrosi_m,valor_iva_contr_mone,nuevo_valor_contra_m,objeto_modificacion,actividad_inicial","ft_otrosi_contrato","documento_iddocumento=".$iddoc,"");
     $tabla='<table class="table table-bordered">';
     $tipo="";
     
@@ -334,7 +334,7 @@ function mostrar_otrosi_contrato($idformato,$iddoc){
                     </tr>';
             break;
         case 3:
-            $actividad_inicial=busca_filtro_tabla("nombre","cf_etapa_actividad","idcf_etapa_actividad=".$actividad[0]['actividad_inicial'],"",$conn);
+            $actividad_inicial=busca_filtro_tabla("nombre","cf_etapa_actividad","idcf_etapa_actividad=".$actividad[0]['actividad_inicial'],"");
             $tabla.='<tr>
                         <td><strong>Tipo de Otro si&nbsp;</strong></td>
                         <td>'.$tipo.'</td>

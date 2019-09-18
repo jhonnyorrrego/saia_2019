@@ -19,7 +19,7 @@ $idft_ruta_distribucion = $_REQUEST['idft_ruta_distribucion'];
 $retorno = array();
 $retorno['exito'] = 1;
 if ($estado == 1) {
-	$datos = busca_filtro_tabla("nombre_ruta", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "c.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO') AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND a.ft_ruta_distribucion<>" . $idft_ruta_distribucion . " AND a.estado_dependencia=1 AND a.dependencia_asignada=" . $idft, "", $conn);
+	$datos = busca_filtro_tabla("nombre_ruta", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "c.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO') AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND a.ft_ruta_distribucion<>" . $idft_ruta_distribucion . " AND a.estado_dependencia=1 AND a.dependencia_asignada=" . $idft, "");
 	if ($datos['numcampos']) {
 		$retorno['mensaje'] = 'La dependencia se encuentra activa actualmente en la ruta de distribucion: ' . $datos[0]['nombre_ruta'];
 		$retorno['exito'] = 0;

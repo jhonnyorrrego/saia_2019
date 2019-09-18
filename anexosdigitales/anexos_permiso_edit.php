@@ -14,8 +14,8 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
 if (isset($_REQUEST["editar_anexo"])) {
-	global $conn;
-	$info = busca_filtro_tabla("", "anexos", "idanexos=" . $_REQUEST["idanexo"], "", $conn);
+	
+	$info = busca_filtro_tabla("", "anexos", "idanexos=" . $_REQUEST["idanexo"], "");
 	$ruta_nueva = $ruta_db_superior . $info[0]["ruta"];
 	if (is_file($_FILES['anexo']['tmp_name'])) {
 		$ext1 = explode(".", $_FILES['anexo']['name']);
@@ -50,7 +50,7 @@ if (isset($_REQUEST["editar_anexo"])) {
 		$ruta = array("servidor" => $arr_origen["servidor"], "ruta" => $nueva_ruta);
 		$sql = "UPDATE anexos SET ruta='" . json_encode($ruta) . "', etiqueta='" . $_FILES['anexo']['name'] . "', tipo='" . $ext1[1] . "' WHERE idanexos=" . $_REQUEST["idanexo"];
 
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql);
 		alerta("Anexo editado.", 'success', 4000);
 		//echo "<script>window.parent.hs.close();</script>";
 	}

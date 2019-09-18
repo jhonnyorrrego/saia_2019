@@ -21,11 +21,11 @@ function llena_formato($formato, $estado = 0) {
 	$texto = "";
 	$campo_descripcion = array();
 	$permiso = new PERMISO();
-	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "", $conn);
+	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "");
 	$ok = $permiso -> permiso_usuario($formato[0]["nombre"], "");
 
 	if ($formato["numcampos"] && $ok) {
-		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "orden ASC", $conn);
+		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "orden ASC");
 
 		if ($descripcion["numcampos"]) {
 			for ($i = 0; $i < $descripcion["numcampos"]; $i++) {
@@ -65,7 +65,7 @@ function llena_vista($formato) {
 	$texto = "";
 
 	if($conn->verificar_existencia("vista_formato")) {
-		$vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "", $conn);
+		$vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "");
 		for($i = 0; $i < $vista["numcampos"]; $i++) {
 			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
 			$texto .= 'text="' . $vista[$i]["etiqueta"] . '" id="' . $arreglo[0] . '-vista_formato-' . $arreglo[1] . '-vista-' . $vista[$i]["idvista_formato"] . '">';
@@ -101,16 +101,16 @@ function llena_datos($idformato, $tabla, $campo) {
 	$cad_tips[] = "documento_iddocumento";
 	$cad_tips = array_unique($cad_tips);
 	$cad_tips = implode(",", $cad_tips);
-	$dato = busca_filtro_tabla($cad_tips, $tabla, $arreglo[2] . "=" . $arreglo[1], "id" . $tabla . " asc", $conn);
+	$dato = busca_filtro_tabla($cad_tips, $tabla, $arreglo[2] . "=" . $arreglo[1], "id" . $tabla . " asc");
 
 	for ($i = 0; $i < $dato["numcampos"]; $i++) {
-		$estado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $dato[$i]["documento_iddocumento"], "", $conn);
+		$estado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $dato[$i]["documento_iddocumento"], "");
 		if ($estado[0][0] <> "ELIMINADO") {$tips = "";
 			for ($j = 0; $j < $num_campo; $j++) {
 				$tips .= strip_tags(str_replace('"', '', decodifica($campo[$j]["etiqueta"]) . ": ")) . str_replace('"', '', decodifica(mostrar_valor_campo($campo[$j]["nombre"], $arreglo[0], $dato[$i]["documento_iddocumento"], 1))) . "\n";
 			}
 
-			$version = busca_filtro_tabla("max(version) as max_version", "version_documento a", "a.documento_iddocumento=" . $dato[$i]["documento_iddocumento"], "", $conn);
+			$version = busca_filtro_tabla("max(version) as max_version", "version_documento a", "a.documento_iddocumento=" . $dato[$i]["documento_iddocumento"], "");
 			if (!$version["numcampos"])
 				$cadena_version = 1;
 			else
@@ -153,8 +153,8 @@ function llena_datos_item($idformato, $tabla, $campo) {
 	$cad_tips[] = "id" . $tabla;
 	$cad_tips = array_unique($cad_tips);
 	$cad_tips = implode(",", $cad_tips);
-	$formato = busca_filtro_tabla("", "formato", "idformato=(select cod_padre from formato where idformato=" . $arreglo[0] . ")", "", $conn);
-	$dato = busca_filtro_tabla($cad_tips, $tabla, $formato[0]["nombre_tabla"] . "=" . $arreglo[1], "id" . $tabla . " asc", $conn);
+	$formato = busca_filtro_tabla("", "formato", "idformato=(select cod_padre from formato where idformato=" . $arreglo[0] . ")", "");
+	$dato = busca_filtro_tabla($cad_tips, $tabla, $formato[0]["nombre_tabla"] . "=" . $arreglo[1], "id" . $tabla . " asc");
 
 	for ($i = 0; $i < $dato["numcampos"]; $i++) {
 		$tips = "";
@@ -172,7 +172,7 @@ function llena_datos_item($idformato, $tabla, $campo) {
 function llena_anexos($iddoc) {
 	global $conn, $imagenes;
 	$texto = "";
-	$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+	$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "");
 	if ($anexos["numcampos"]) {
 		$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes . ' text="anexos" id="' . rand() . '">';
 		for ($i = 0; $i < $anexos["numcampos"]; $i++) {
@@ -188,7 +188,7 @@ function llena_anexos($iddoc) {
 function llena_items($idformato, $iddato, $tabla) {
 	global $conn, $imagenes;
 	$texto = "";
-	$formato = busca_filtro_tabla("", "formato", "item=1 and cod_padre=" . $idformato, "", $conn);
+	$formato = busca_filtro_tabla("", "formato", "item=1 and cod_padre=" . $idformato, "");
 	for ($i = 0; $i < $formato["numcampos"]; $i++) {
 		$llave = $formato[$i]["idformato"] . "-" . $iddato . "-" . "id" . $formato[$i]["nombre_tabla"] . "-" . $iddato;
 		$texto .= llena_formato($llave, 1);
@@ -199,10 +199,10 @@ function llena_items($idformato, $iddato, $tabla) {
 function llena_hijos($idformato, $iddato, $tabla) {
 	global $conn, $imagenes;
 	$texto = "";
-	$formato = busca_filtro_tabla("", "formato", "item=0 and cod_padre=" . $idformato, "orden asc,etiqueta asc", $conn);
+	$formato = busca_filtro_tabla("", "formato", "item=0 and cod_padre=" . $idformato, "orden asc,etiqueta asc");
 
 	for ($i = 0; $i < $formato["numcampos"]; $i++) {
-		$campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "", $conn);
+		$campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "");
 		$llave = $formato[$i]["idformato"] . "-" . $iddato;
 		if ($campo_formato["numcampos"]) {
 			$llave .= "-" . $campo_formato[0]["nombre"] . "-" . $iddato;

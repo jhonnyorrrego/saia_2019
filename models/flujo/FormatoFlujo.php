@@ -31,15 +31,15 @@ class FormatoFlujo extends Model {
     }
     
     public function findFormatosByFlujo($limit = 0) {
-    	global $conn;
+    	
     	$campos = "idformato, nombre, etiqueta";
     	$tablas = $this->getTable() . " fwf join formato f on fwf.fk_formato = f.idformato";
     	$condicion = "fwf.fk_flujo = " . $this->fk_flujo;
     	$orden = "";
     	if($limit) {
-    		$records = busca_filtro_tabla_limit($campos, $tablas, $condicion, $orden, 0, $limit, $conn);
+    		$records = busca_filtro_tabla_limit($campos, $tablas, $condicion, $orden, 0, $limit);
     	} else {
-    		$records = busca_filtro_tabla($campos, $tablas, $condicion, $orden, $conn);
+    		$records = busca_filtro_tabla($campos, $tablas, $condicion, $orden);
     	}
     	if($records["numcampos"]) {
     		$response = $this->convertToArray($records);

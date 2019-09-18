@@ -31,12 +31,12 @@ include_once $ruta_db_superior . "core/autoload.php";
  */
 function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
 {
-    global $conn;
+    
 
-    $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "", $conn);
+    $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "");
     $nombre_tabla = $datos_plantilla[0]['nombre_tabla'];
 
-    $datos_documento = busca_filtro_tabla($campo_origen . "," . $campo_destino, $nombre_tabla, "documento_iddocumento=" . $iddoc, "", $conn);
+    $datos_documento = busca_filtro_tabla($campo_origen . "," . $campo_destino, $nombre_tabla, "documento_iddocumento=" . $iddoc, "");
     if ($datos_documento['numcampos']) {
 
         $lista_destinos = explode(',', $datos_documento[0][$campo_destino]);
@@ -206,23 +206,23 @@ function obtener_mensajero_ruta_distribucion($idft_ruta_distribucion)
 
 function obtener_numero_distribucion($iddoc)
 {
-    global $conn;
+    
 
-    $numero_radicado = busca_filtro_tabla("numero,estado", "documento", "iddocumento=" . $iddoc, "", $conn);
-    $distribuciones_iddoc = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+    $numero_radicado = busca_filtro_tabla("numero,estado", "documento", "iddocumento=" . $iddoc, "");
+    $distribuciones_iddoc = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
     $numero_distribucion = $numero_radicado[0]['numero'] . '.' . ($distribuciones_iddoc['numcampos'] + 1);
     return $numero_distribucion;
 }
 
 function obtener_funcionarios_dependencia_destino($iddependencia)
 {
-    global $conn;
+    
 
     $array_funcionarios = array();
     $dependencia = str_replace("#", "", $iddependencia);
     $dependencia .= "," . buscar_dependencias_hijas_distribucion($dependencia);
     $dependencia = trim($dependencia, ',');
-    $busca_funcionarios = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "tipo_cargo=1 AND estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia IN(" . $dependencia . ")", "", $conn);
+    $busca_funcionarios = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "tipo_cargo=1 AND estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia IN(" . $dependencia . ")", "");
     for ($j = 0; $j < $busca_funcionarios['numcampos']; $j++) {
         $array_funcionarios[] = $busca_funcionarios[$j]['iddependencia_cargo'];
     }
@@ -231,9 +231,9 @@ function obtener_funcionarios_dependencia_destino($iddependencia)
 
 function buscar_dependencias_hijas_distribucion($iddependencia)
 {
-    global $conn;
+    
     $lista_hijas = '';
-    $busca_hijas = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=" . $iddependencia, "", $conn);
+    $busca_hijas = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=" . $iddependencia, "");
     if ($busca_hijas['numcampos']) {
         for ($i = 0; $i < $busca_hijas['numcampos']; $i++) {
             $lista_hijas .= $busca_hijas[$i]['iddependencia'] . ",";
@@ -246,8 +246,8 @@ function buscar_dependencias_hijas_distribucion($iddependencia)
 
 function accionFinalizarDistribucion($iddoc)
 {
-    global $conn;
-    $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+    
+    $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
     $retorno = false;
     for ($i = 0; $i < $distribuciones["numcampos"]; $i++) {
         if (generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion'])) {
@@ -261,7 +261,7 @@ function accionFinalizarDistribucion($iddoc)
 function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0)
 {
     global $conn, $ruta_db_superior;
-    $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+    $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
     $tabla = '';
     if ($distribuciones['numcampos']) {
         $tabla = '
@@ -324,10 +324,10 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 
         //ROLES USUARIO _ACTUAL
         $funcionario_codigo_usuario_actual = $_SESSION["usuario_actual"];
-        $busca_roles_usuario_actual = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "", $conn);
+        $busca_roles_usuario_actual = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "");
         $vector_roles_usuario_actual = extrae_campo($busca_roles_usuario_actual, 'iddependencia_cargo', "U");
 
-        $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,origen,tipo_destino,destino,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
+        $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,origen,tipo_destino,destino,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "");
         $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
 
         $retornar_enlace = 0;
@@ -412,7 +412,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
 
 function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion, $origen)
 { //Ruta
-    global $conn;
+    
     if ($estado_recogida == 'estado_recogida') {
         $estado_recogida = 0;
     }
@@ -431,7 +431,7 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
 
     $nombre_ruta_distribucion = 'Sin definir';
     if ($idft_ruta_distribucion) {
-        $ruta_distribucion = busca_filtro_tabla("nombre_ruta", "ft_ruta_distribucion", "idft_ruta_distribucion=" . $idft_ruta_distribucion, "", $conn);
+        $ruta_distribucion = busca_filtro_tabla("nombre_ruta", "ft_ruta_distribucion", "idft_ruta_distribucion=" . $idft_ruta_distribucion, "");
         if ($ruta_distribucion['numcampos']) {
             $nombre_ruta_distribucion = $ruta_distribucion[0]['nombre_ruta'] . '<input type="hidden" id="idruta_dist_' . $iddistribucion . '" value="' . $idft_ruta_distribucion . '"/>';
         }
@@ -459,9 +459,9 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
 
 function select_mensajeros_ruta_distribucion($iddistribucion)
 { //Mensajero
-    global $conn;
+    
 
-    $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
+    $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "");
 
     $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
 
@@ -479,12 +479,12 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
 
 function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion, $diligencia)
 {
-    global $conn;
+    
     $html = '';
     if ($tipo_origen == 1) { //internos
         if ($diligencia == 'RECOGIDA') {
             if ($mensajero_origen) {
-                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_origen=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "", $conn);
+                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_origen=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "");
                 $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
                 $html .= '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $datos_mensajero[0]['iddependencia_cargo'] . '-i">' . $nombre_mensajero . '</label>';
             } else {
@@ -492,11 +492,11 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
             }
         } elseif ($diligencia == 'ENTREGA') {
             if ($mensajero_destino && $tipo_destino == 2) {
-                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "", $conn);
+                $datos_mensajero = busca_filtro_tabla("b.nombres,b.apellidos,b.iddependencia_cargo", "distribucion a, vfuncionario_dc b", "a.mensajero_destino=b.iddependencia_cargo and a.iddistribucion=" . $iddistribucion, "");
                 $nombre_mensajero = $datos_mensajero[0]['nombres'] . ' ' . $datos_mensajero[0]['apellidos'];
                 $html .= '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $datos_mensajero[0]['iddependencia_cargo'] . '-i">' . $nombre_mensajero . '</label>';
             } elseif ($empresa_transportadora && $tipo_destino == 1) {
-                $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
+                $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "");
                 $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
             } else {
                 $html .= '<label  id="select_mensajeros_ditribucion_' . $iddistribucion . '"> No tiene mensajero asignado</label>';
@@ -504,7 +504,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
         }
     } else { //externos
         if ($empresa_transportadora) {
-            $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "", $conn);
+            $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1 and idcf_empresa_trans=" . $mensajero_destino, "");
             $html = '<label id="select_mensajeros_ditribucion_' . $iddistribucion . '" valor="' . $mensajero_destino . '-e">' . $empresas_transportadoras[0]['nombre'] . '-e</label>';
         } elseif ($mensajero_destino) {
 
@@ -540,9 +540,9 @@ function filtro_planilla_distribucion()
 }
 function mostrar_planilla_diligencia_distribucion($iddistribucion)
 { //Planilla Asociada
-    global $conn;
+    
 
-    $planillas = busca_filtro_tabla("b.iddocumento,b.numero", "ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c", "a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=" . $iddistribucion, "", $conn);
+    $planillas = busca_filtro_tabla("b.iddocumento,b.numero", "ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c", "a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=" . $iddistribucion, "");
     $html = "No tiene planilla asociada";
     //Pendiente
     //el componente 379 tiene busqueda de planillas
@@ -557,7 +557,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
 
 function generar_check_accion_distribucion($iddistribucion)
 {
-    global $conn;
+    
     $checkbox = '<input type="checkbox" class="accion_distribucion" value="' . $iddistribucion . '">';
     return $checkbox;
 }
@@ -580,14 +580,14 @@ function mostrar_destino_distribucion($tipo_destino, $destino)
 
 function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
 {
-    global $conn;
+    
 
     $ubicacion = '';
     if ($tipo == 1) { //iddependencia_cargo
-        $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
+        $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "");
         $ubicacion = $datos[0]['dependencia'] . '<br> ' . $datos[0]['cargo'] . '';
     } else { //iddatos_ejecutor
-        $datos = busca_filtro_tabla("direccion,cargo,c.nombre", "ejecutor a, datos_ejecutor b, municipio c", "c.idmunicipio=b.ciudad AND a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
+        $datos = busca_filtro_tabla("direccion,cargo,c.nombre", "ejecutor a, datos_ejecutor b, municipio c", "c.idmunicipio=b.ciudad AND a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "");
         $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['nombre'];
     }
     return $ubicacion;
@@ -595,13 +595,13 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
 
 function retornar_origen_destino_distribucion($tipo, $valor)
 {
-    global $conn;
+    
 
     if ($tipo == 1) { //iddependencia_cargo
-        $datos = busca_filtro_tabla("nombres,apellidos,login", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
+        $datos = busca_filtro_tabla("nombres,apellidos,login", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "");
         $nombre = $datos[0]['nombres'] . ' ' . $datos[0]['apellidos'] . ' (' . $datos[0]['login'] . ')';
     } else { //iddatos_ejecutor
-        $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
+        $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "");
         $nombre = $datos[0]['nombre'];
     }
     return $nombre;
@@ -609,12 +609,12 @@ function retornar_origen_destino_distribucion($tipo, $valor)
 
 function condicion_adicional_distribucion()
 {
-    global $conn;
+    
 
     $condicion_adicional = "";
 
     $funcionario_codigo_usuario_actual = usuario_actual('funcionario_codigo');
-    $es_mensajero = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "lower(cargo)='mensajero' AND funcionario_codigo='" . $funcionario_codigo_usuario_actual . "' AND estado_dc=1", "", $conn);
+    $es_mensajero = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "lower(cargo)='mensajero' AND funcionario_codigo='" . $funcionario_codigo_usuario_actual . "' AND estado_dc=1", "");
     $administrador_mensajeria = validar_administrador_mensajeria();
 
     //CONDICION VENTANILLA
@@ -717,15 +717,15 @@ function condicion_adicional_distribucion()
 
 function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion, $iddependencia, $estado)
 {
-    global $conn;
+    
 
     /*
      * $estado = 1 -> activo ; 2-> inactivo
      */
 
-    $busca_distribuciones_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b, vfuncionario_dc c", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND c.iddependencia_cargo=a.origen AND c.iddependencia=" . $iddependencia, "", $conn);
+    $busca_distribuciones_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b, vfuncionario_dc c", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND c.iddependencia_cargo=a.origen AND c.iddependencia=" . $iddependencia, "");
 
-    $busca_distribuciones_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b, vfuncionario_dc c", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND c.iddependencia_cargo=a.destino AND c.iddependencia=" . $iddependencia, "", $conn);
+    $busca_distribuciones_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b, vfuncionario_dc c", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND c.iddependencia_cargo=a.destino AND c.iddependencia=" . $iddependencia, "");
 
     //ASIGNO O RETIRO RUTA DE DISTRIBUCION, SEGUN SI ACTIVAN O INACTIVAN UNA DEPENDENCIA EN UNA RUTA DE DISTRIBUCION.
 
@@ -766,11 +766,11 @@ function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion, $idde
 
 function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddependencia_cargo_mensajero, $estado)
 {
-    global $conn;
+    
 
     if ($estado == 2) { //SI INACTIVAN EL MENSAJERO, LO RETIRO DE LAS DISTRIBUCIONES
         //ACTUALIZACION_ORIGEN (RECOGIDA)
-        $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND mensajero_origen=" . $iddependencia_cargo_mensajero . " AND a.ruta_origen=" . $idft_ruta_distribucion, "", $conn);
+        $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND mensajero_origen=" . $iddependencia_cargo_mensajero . " AND a.ruta_origen=" . $idft_ruta_distribucion, "");
 
         for ($i = 0; $i < $busca_distribuciones_mensajero_origen['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_mensajero_origen[$i]['iddistribucion'];
@@ -779,7 +779,7 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
         }
 
         //ACTUALIZACION_DESTINO (ENTREGA)
-        $busca_distribuciones_mensajero_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND mensajero_destino=" . $iddependencia_cargo_mensajero . " AND a.ruta_destino=" . $idft_ruta_distribucion, "", $conn);
+        $busca_distribuciones_mensajero_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND mensajero_destino=" . $iddependencia_cargo_mensajero . " AND a.ruta_destino=" . $idft_ruta_distribucion, "");
 
         for ($i = 0; $i < $busca_distribuciones_mensajero_destino['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_mensajero_destino[$i]['iddistribucion'];
@@ -790,7 +790,7 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 
     if ($estado == 3) { //ASIGNA UN MENSAJERO A LAS DISTRIBUCIONES QUE NO TIENEN MENSAJERO ASIGNADO
         //ACTUALIZACION_ORIGEN (RECOGIDA)
-        $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND a.mensajero_origen=0 AND a.ruta_origen=" . $idft_ruta_distribucion, "", $conn);
+        $busca_distribuciones_mensajero_origen = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND a.mensajero_origen=0 AND a.ruta_origen=" . $idft_ruta_distribucion, "");
 
         for ($i = 0; $i < $busca_distribuciones_mensajero_origen['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_mensajero_origen[$i]['iddistribucion'];
@@ -799,7 +799,7 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
         }
 
         //ACTUALIZACION_DESTINO (ENTREGA)
-        $busca_distribuciones_mensajero_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND a.mensajero_destino=0 AND a.ruta_destino=" . $idft_ruta_distribucion, "", $conn);
+        $busca_distribuciones_mensajero_destino = busca_filtro_tabla("a.iddistribucion", "distribucion a, documento b", "a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND a.mensajero_destino=0 AND a.ruta_destino=" . $idft_ruta_distribucion, "");
 
         for ($i = 0; $i < $busca_distribuciones_mensajero_destino['numcampos']; $i++) {
             $iddistribucion = $busca_distribuciones_mensajero_destino[$i]['iddistribucion'];
@@ -813,13 +813,13 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 
 function validar_administrador_mensajeria($funcionario_codigo = 0)
 {
-    global $conn;
+    
 
     $funcionario_codigo_usuario_actual = $funcionario_codigo;
     if (!$funcionario_codigo_usuario_actual) {
         $funcionario_codigo_usuario_actual = usuario_actual('funcionario_codigo');
     }
-    $cargo_administrador_mensajeria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", " lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "", $conn);
+    $cargo_administrador_mensajeria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", " lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "");
     $administrador_mensajeria = 0;
     if ($cargo_administrador_mensajeria['numcampos']) {
         $administrador_mensajeria = 1;

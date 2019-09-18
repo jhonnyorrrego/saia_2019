@@ -18,9 +18,9 @@ function parsear_fecha_reserva1($fecha) {
 }
 
 function nombre_solicitante($rol) {
-	global $conn;
+	
 	$cadena = "";
-	$nombres = busca_filtro_tabla("A.nombres, A.apellidos", "vfuncionario_dc A", "A.iddependencia_cargo=" . $rol, "", $conn);
+	$nombres = busca_filtro_tabla("A.nombres, A.apellidos", "vfuncionario_dc A", "A.iddependencia_cargo=" . $rol, "");
 	if ($nombres["numcampos"]) {
 		$cadena = ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"]));
 	}
@@ -28,7 +28,7 @@ function nombre_solicitante($rol) {
 }
 
 function enlace_documento_reservar($doc, $numero) {
-	global $conn;
+	
 	if ($numero == "numero") {
 		$numero = 0;
 	}
@@ -37,9 +37,9 @@ function enlace_documento_reservar($doc, $numero) {
 }
 
 function mostrar_informacion_expediente($fk_expediente) {
-	global $conn;
+	
 	$html = "";
-	$expediente = busca_filtro_tabla("nombre,codigo_numero", "expediente", "idexpediente=" . $fk_expediente, "", $conn);
+	$expediente = busca_filtro_tabla("nombre,codigo_numero", "expediente", "idexpediente=" . $fk_expediente, "");
 	if ($expediente["numcampos"]) {
 		$html = $expediente[0]['nombre'] . '(' . $expediente[0]['codigo_numero'] . ')';
 	}
@@ -59,11 +59,11 @@ function parsear_fecha_reserva3($fecha) {
 }
 
 function accion_entrega($idft_item_prestamo_exp, $funcionario, $fecha, $observacion, $estado_prestamo) {
-	global $conn;
+	
 	if (($funcionario == 'funcionario_prestamo' || !$funcionario) && (!$estado_prestamo || $estado_prestamo == 'estado_prestamo')) {
 		$texto = '<input type="checkbox" class="_entregar" value="' . $idft_item_prestamo_exp . '">';
 	} else if ($funcionario && $funcionario != 'funcionario_prestamo') {
-		$usuario = busca_filtro_tabla("nombres,apellidos", "funcionario A", "A.idfuncionario=" . $funcionario, "", $conn);
+		$usuario = busca_filtro_tabla("nombres,apellidos", "funcionario A", "A.idfuncionario=" . $funcionario, "");
 		if ($usuario["numcampos"]) {
 			$cadena = ucwords(strtolower($usuario[0]["nombres"] . " " . $usuario[0]["apellidos"]));
 		}
@@ -75,11 +75,11 @@ function accion_entrega($idft_item_prestamo_exp, $funcionario, $fecha, $observac
 }
 
 function accion_devuelto($idft_item_prestamo_exp, $funcionario, $fecha, $observacion, $estado_prestamo) {
-	global $conn;
+	
 	if (($funcionario == 'funcionario_devoluci' || !$funcionario) && $estado_prestamo == 1) {
 		$texto = '<input type="checkbox" class="_devolver" value="' . $idft_item_prestamo_exp . '">';
 	} else if ($funcionario && $funcionario != 'funcionario_devoluci') {
-		$usuario = busca_filtro_tabla("nombres,apellidos", "funcionario A", "A.idfuncionario=" . $funcionario, "", $conn);
+		$usuario = busca_filtro_tabla("nombres,apellidos", "funcionario A", "A.idfuncionario=" . $funcionario, "");
 		if ($usuario["numcampos"]) {
 			$cadena = ucwords(strtolower($usuario[0]["nombres"] . " " . $usuario[0]["apellidos"]));
 		}
@@ -91,7 +91,7 @@ function accion_devuelto($idft_item_prestamo_exp, $funcionario, $fecha, $observa
 }
 
 function tiempo_transcurrido_reserva($fecha_entrega, $fecha_devolver) {
-	global $conn;
+	
 	$ok = 0;
 	$html = "";
 	if ($fecha_entrega != 'fecha_prestamo') {
@@ -106,7 +106,7 @@ function tiempo_transcurrido_reserva($fecha_entrega, $fecha_devolver) {
 				$sql = "SELECT TIMESTAMPDIFF(day, '" . $fecha_entrega . "', '" . $fecha_devolver . "') as day";
 				break;
 		}
-		$day = ejecuta_filtro_tabla($sql, $conn);
+		$day = ejecuta_filtro_tabla($sql);
 		$html = $day[0]["day"] . " dia(s)";
 	}
 	return $html;

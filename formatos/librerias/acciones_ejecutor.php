@@ -47,17 +47,17 @@ foreach ($campos as $key => $valor) {
           <input type="hidden" id="idejecutor" name="idejecutor_temp" value="">
           <?php
           if (!empty($_REQUEST['iddoc'])) {
-            $destinos = busca_filtro_tabla($_REQUEST["campo_autocompletar"], $_REQUEST["tabla"], "documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+            $destinos = busca_filtro_tabla($_REQUEST["campo_autocompletar"], $_REQUEST["tabla"], "documento_iddocumento=" . $_REQUEST["iddoc"], "");
 
             if ($destinos["numcampos"]) {
-              $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $destinos[0][0] . ")", "nombre", $conn);
+              $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $destinos[0][0] . ")", "nombre");
             } else {
               echo "<input type=hidden name='iddoc' value='" . $_REQUEST['iddoc'] . "'>";
             }
           }
 
           if (!empty($_REQUEST["destinos"])) {
-            $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $_REQUEST["destinos"] . ")", "nombre", $conn);
+            $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $_REQUEST["destinos"] . ")", "nombre");
           }
 
           if ($_REQUEST["tipo"] == "multiple") {
@@ -520,9 +520,9 @@ if (@$_REQUEST['funcion']) {
 
 function campoCiudad($ciudad = null, $campo)
 {
-  global $conn;
+  
   if (!$ciudad) {
-    $ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
+    $ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "");
     if ($ciudad_conf["numcampos"]) {
       $ciudad_valor = $ciudad_conf[0]["valor"];
     } else {
@@ -540,9 +540,9 @@ function campoCiudad($ciudad = null, $campo)
     ->setParameter(":idmunicipio", $ciudad_valor)->execute()->fetchAll();
 
   if (count($municipio)) {
-    $paises = busca_filtro_tabla("", "pais", "", "lower(nombre)", $conn);
-    $departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)", $conn);
-    $municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)", $conn);
+    $paises = busca_filtro_tabla("", "pais", "", "lower(nombre)");
+    $departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)");
+    $municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)");
 
     $texto = '
 		<div id="div_ciudad_ejecutor">

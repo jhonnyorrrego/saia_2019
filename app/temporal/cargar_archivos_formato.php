@@ -22,7 +22,7 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
         eliminar_temporal($idformato, $campo_formato, $archivo);
     } else {
         header('Content-type: application/json');
-        $configuracion = busca_filtro_tabla("valor,nombre", "configuracion", "nombre IN ('extensiones_upload', 'tamanio_maximo_upload', 'ruta_temporal')", "", $conn);
+        $configuracion = busca_filtro_tabla("valor,nombre", "configuracion", "nombre IN ('extensiones_upload', 'tamanio_maximo_upload', 'ruta_temporal')", "");
 
         $extensiones = '';
         $max_tamanio = '';
@@ -43,7 +43,7 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
             }
         }
 
-        $campos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = $idformato AND idcampos_formato = $campo_formato", "", $conn);
+        $campos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = $idformato AND idcampos_formato = $campo_formato", "");
         $lista_campos = array();
         if ($campos["numcampos"]) {
             for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -99,7 +99,7 @@ function unwrap_file($file) {
 }
 
 function guardar($file, $uuid, $ruta_temporal) {
-    global $conn;
+    
     $campos = array(
         "uuid" => "'" . $uuid . "'",
         "ruta" => "'" . $ruta_temporal . $file["name"] . "'",
@@ -122,7 +122,7 @@ function eliminar_temporal($idformato, $campo_formato, $archivo) {
     if (empty($archivo)) {
         die("No se envio identificador");
     }
-    $archivos = busca_filtro_tabla("", "anexos_tmp", "idanexos_tmp = " . $archivo, "", $conn);
+    $archivos = busca_filtro_tabla("", "anexos_tmp", "idanexos_tmp = " . $archivo, "");
     if ($archivos["numcampos"]) {
         $sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = $archivo";
         phpmkr_query($sql2) or die($sql2);

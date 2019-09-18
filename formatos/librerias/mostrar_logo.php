@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 /*muestra una imagen con la firma del funcionario identificado con $_GET["codigo"]*/
-$func=busca_filtro_tabla("logo","dependencia","iddependencia=".@$_REQUEST["codigo"],"",$conn);
+$func=busca_filtro_tabla("logo","dependencia","iddependencia=".@$_REQUEST["codigo"],"");
 
 header("Content-Type: image/jpeg");
 if(MOTOR=="Oracle"){

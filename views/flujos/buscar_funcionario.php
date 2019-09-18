@@ -18,7 +18,7 @@ $data = [];
 if(!empty($_REQUEST["termino"])) {
 
 	$termino = $_REQUEST["termino"];
-	$funcionarios = busca_filtro_tabla("idfuncionario, login, nombres, apellidos, email", "funcionario", "estado = 1 and nombres like '%$termino%' or apellidos like '%$termino%'", "", $conn);
+	$funcionarios = busca_filtro_tabla("idfuncionario, login, nombres, apellidos, email", "funcionario", "estado = 1 and nombres like '%$termino%' or apellidos like '%$termino%'", "");
 	
 
 	if($funcionarios["numcampos"]) {

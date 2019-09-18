@@ -20,7 +20,7 @@ if(!empty($_REQUEST["idactividad"])) {
     $idactividad = $_REQUEST["idactividad"];
 
     $listado = busca_filtro_tabla("fa.idfuncionario_actividad, fa.fk_funcionario, f.login, f.nombres, f.apellidos, f.email",
-        "wf_funcionario_actividad fa join funcionario f on fa.fk_funcionario = f.idfuncionario", "fa.fk_actividad = $idactividad", "", $conn);
+        "wf_funcionario_actividad fa join funcionario f on fa.fk_funcionario = f.idfuncionario", "fa.fk_actividad = $idactividad", "");
 
     if($listado["numcampos"]) {
         $total = isset($listado['numcampos']) ? $listado['numcampos'] : count($listado);

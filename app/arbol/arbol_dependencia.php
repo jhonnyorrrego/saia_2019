@@ -88,9 +88,9 @@ class ArbolDependencia
     {
         $objetoJson = [];
         if ($id == 0) {
-            $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
+            $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC");
         } else {
-            $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $conn);
+            $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC");
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -136,7 +136,7 @@ class ArbolDependencia
                     $item["unselectableStatus"] = true;
                 }
 
-                $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $conn);
+                $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "");
                 if ($hijos[0]["cant"]) {
                     $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"], $enableCheck);
                 }

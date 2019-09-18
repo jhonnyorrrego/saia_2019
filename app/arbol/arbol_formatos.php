@@ -28,9 +28,9 @@ function buscar_papa($idformato)
     if ($exit > 20) {
         return false;
     }
-    $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato . " and cod_padre<>0", "", $conn);
+    $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato . " and cod_padre<>0", "");
     if ($formato["numcampos"] > 0) {
-        $padre = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "", $conn);
+        $padre = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "");
         $id_padre = buscar_papa($padre[0]["idformato"]);
         return $id_padre;
     } else {
@@ -64,7 +64,7 @@ echo json_encode($objetoJson);
 
 function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = null, $cargar_seleccionado = null, $seleccionable = null)
 {
-    global $conn;
+    
     $formatoExcluido = '';
     if ($_REQUEST["excluido"]) {
         $idExcluido = $_REQUEST["excluido"];
@@ -81,18 +81,18 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
         $adicionales = ' AND idformato IN(' . $filtrar . ')';
     }
     if (empty($id)) {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", $valida_item . " (cod_padre=0 OR cod_padre IS NULL)" . $adicionales . $formatoExcluido, "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", $valida_item . " (cod_padre=0 OR cod_padre IS NULL)" . $adicionales . $formatoExcluido, "etiqueta ASC");
     } else if ($cargar_seleccionado == 1) {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "idformato=" . $id, "etiqueta ASC", $conn);
-        // $papas = busca_filtro_tabla("idformato, etiqueta", "formato", $valida_item . " idformato=" . $id . $adicionales, "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "idformato=" . $id, "etiqueta ASC");
+        // $papas = busca_filtro_tabla("idformato, etiqueta", "formato", $valida_item . " idformato=" . $id . $adicionales, "etiqueta ASC");
     } else {
-        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "cod_padre=" . $id . $adicionales . $formatoExcluido, "etiqueta ASC", $conn);
+        $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "cod_padre=" . $id . $adicionales . $formatoExcluido, "etiqueta ASC");
     }
     $resp = array();
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
 
-            $hijos = busca_filtro_tabla("count(*) total", "formato", $valida_item . "  cod_padre=" . $papas[$i]["idformato"], "", $conn);
+            $hijos = busca_filtro_tabla("count(*) total", "formato", $valida_item . "  cod_padre=" . $papas[$i]["idformato"], "");
             $item = [
                 "extraClasses" => "estilo-arbol karbol_saia"
             ];

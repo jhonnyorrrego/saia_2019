@@ -39,9 +39,9 @@ function buscar_papa($idcategoriaFormato)
     if ($exit > 20) {
         return false;
     }
-    $categoriaFormato = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato in(" . $idcategoriaFormato . ") and cod_padre<>0", "", $conn);
+    $categoriaFormato = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato in(" . $idcategoriaFormato . ") and cod_padre<>0", "");
     if ($categoriaFormato["numcampos"] > 0 && $categoriaFormato[0]["cod_padre"] > 0) {
-        $padre = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato=" . $categoriaFormato[0]["cod_padre"], "", $conn);
+        $padre = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato=" . $categoriaFormato[0]["cod_padre"], "");
         $id_padre = buscar_papa($padre[0]["idcategoria_formato"]);
         return $id_padre;
     } else {
@@ -71,17 +71,17 @@ echo json_encode($objetoJson);
 
 function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $seleccionable = null)
 {
-    global $conn;
+    
 
     /*if ($tipo != 1) {
         $where = " AND estado=1 ";
     }*/
     if (empty($id)) {
-        $papas = busca_filtro_tabla("*", "categoria_formato", "(cod_padre=0 OR cod_padre is null)" . $where, "", $conn);
+        $papas = busca_filtro_tabla("*", "categoria_formato", "(cod_padre=0 OR cod_padre is null)" . $where, "");
     } else if ($cod_padre != '') {
-        $papas = busca_filtro_tabla("*", "categoria_formato", "cod_padre='" . $cod_padre . "'" . $where, "", $conn);
+        $papas = busca_filtro_tabla("*", "categoria_formato", "cod_padre='" . $cod_padre . "'" . $where, "");
     } else {
-        $papas = busca_filtro_tabla("*", "categoria_formato", "cod_padre=" . $id . $where, "", $conn);
+        $papas = busca_filtro_tabla("*", "categoria_formato", "cod_padre=" . $id . $where, "");
     }
 
 
@@ -92,7 +92,7 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
     $resp = array();
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
-            $hijos = busca_filtro_tabla("count(*) total", "categoria_formato", "cod_padre=" . $papas[$i]["idcategoria_formato"], "", $conn);
+            $hijos = busca_filtro_tabla("count(*) total", "categoria_formato", "cod_padre=" . $papas[$i]["idcategoria_formato"], "");
             $item = [
                 "extraClasses" => "estilo-arbol kenlace_saia"
             ];

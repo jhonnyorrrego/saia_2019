@@ -22,22 +22,22 @@ for($i=0;$i<$cant;$i++){
 
 /*FUNCIONES DEL SQL*/
 function filtro_where(){
-global $conn;
+
 	$parteWhere=" a.estado not in ('ELIMINADO','ANULADO','ACTIVO')";
 	
 	if(@$_REQUEST['usuario']=="actual"){
-		$rol_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
+		$rol_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","idfuncionario=".usuario_actual('idfuncionario'),"");
 		$roles=extrae_campo($rol_actual,"iddependencia_cargo");
 		$parteWhere.=" and c.responsable in (".implode(",", $roles).")";
 	}
 	return ($parteWhere); 
 }
 function filtro_where2(){
-global $conn;
+
 	$parteWhere=" a.iddocumento=b.documento_iddocumento AND b.idft_pqrsf=c.ft_pqrsf AND c.serie=d.idserie AND c.documento_iddocumento=e.iddocumento AND lower(e.estado) not in('eliminado','anulado') AND lower(a.estado) not in('anulado','eliminado') ";
 	
 	if(@$_REQUEST['usuario']=="actual"){
-		$rol_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
+		$rol_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","idfuncionario=".usuario_actual('idfuncionario'),"");
 		$roles=extrae_campo($rol_actual,"iddependencia_cargo");
 		$parteWhere.=" and c.responsable in (".implode(",", $roles).")";
 	}
@@ -57,27 +57,27 @@ function ver_documento($iddocumento,$radicado,$html=""){
 }
 
 function ver_tipo($iddocumento){
-$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"",$conn);	
+$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"");	
 return(mostrar_valor_campo('tipo',$idformato[0][0],$iddocumento,1));
 }
 
 function ver_rol($iddocumento){
-	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"",$conn);
+	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"");
 	return(mostrar_valor_campo('rol_institucion',$idformato[0][0],$iddocumento,1));
 }
 function ver_comentario($iddocumento){
-	//$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"",$conn);
+	//$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"");
 	//$comentarios=mostrar_valor_campo('comentarios',$idformato[0][0],$iddocumento,1);
 	
-	$comentario=busca_filtro_tabla("","ft_pqrsf","documento_iddocumento=".$iddocumento,"",$conn);
+	$comentario=busca_filtro_tabla("","ft_pqrsf","documento_iddocumento=".$iddocumento,"");
 	$ncomentario=str_replace('"', "'", $comentario[0]['comentarios']);//las comillas dobles dañan los resultados del reporte.
 	return ($ncomentario);
 }
 
 function ver_clasificacion($iddocumento){
-	$idformato=busca_filtro_tabla("idformato","formato f","nombre='clasificacion_pqrsf'","",$conn);
+	$idformato=busca_filtro_tabla("idformato","formato f","nombre='clasificacion_pqrsf'","");
 	$cadena=array();
-	$clasificaciones=busca_filtro_tabla("C.iddocumento","ft_pqrsf A, ft_clasificacion_pqrsf B, documento C","A.documento_iddocumento=".$iddocumento." AND A.idft_pqrsf=B.ft_pqrsf AND B.documento_iddocumento=C.iddocumento AND C.estado not in('ELIMINADO', 'ANULADO')","",$conn);
+	$clasificaciones=busca_filtro_tabla("C.iddocumento","ft_pqrsf A, ft_clasificacion_pqrsf B, documento C","A.documento_iddocumento=".$iddocumento." AND A.idft_pqrsf=B.ft_pqrsf AND B.documento_iddocumento=C.iddocumento AND C.estado not in('ELIMINADO', 'ANULADO')","");
 	if($clasificaciones["numcampos"]){
 		for($i=0;$i<$clasificaciones["numcampos"];$i++){
 			$cadena[]=mostrar_valor_campo('serie',$idformato[0][0],$clasificaciones[$i]["iddocumento"],1);
@@ -90,9 +90,9 @@ function ver_clasificacion($iddocumento){
 }
 
 function ver_respon($iddocumento){
-	$idformato=busca_filtro_tabla("idformato","formato f","nombre='clasificacion_pqrsf'","",$conn);
+	$idformato=busca_filtro_tabla("idformato","formato f","nombre='clasificacion_pqrsf'","");
 	$cadena=array();
-	$clasificaciones=busca_filtro_tabla("C.iddocumento","ft_pqrsf A, ft_clasificacion_pqrsf B, documento C","A.documento_iddocumento=".$iddocumento." AND A.idft_pqrsf=B.ft_pqrsf AND B.documento_iddocumento=C.iddocumento AND C.estado not in('ELIMINADO', 'ANULADO')","",$conn);
+	$clasificaciones=busca_filtro_tabla("C.iddocumento","ft_pqrsf A, ft_clasificacion_pqrsf B, documento C","A.documento_iddocumento=".$iddocumento." AND A.idft_pqrsf=B.ft_pqrsf AND B.documento_iddocumento=C.iddocumento AND C.estado not in('ELIMINADO', 'ANULADO')","");
 	if($clasificaciones["numcampos"]){
 		for($i=0;$i<$clasificaciones["numcampos"];$i++){
 			$cadena[]=ver_responsable($idformato[0][0],$clasificaciones[$i]["iddocumento"],1);
@@ -105,14 +105,14 @@ function ver_respon($iddocumento){
 }
 
 function estado_reporte_pqrsf($estado,$iddoc){
-	global $conn;
-	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddoc,"",$conn);
+	
+	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddoc,"");
 	$html="<div id='estado_veri_".$iddoc."'>".mostrar_valor_campo('estado_reporte',$idformato[0][0],$iddoc,1)."</div>";
 	return($html);
 }
 function verificacion($iddocumento,$estado_ver){
-	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"",$conn);
-	$valores=busca_filtro_tabla("valor","campos_formato","nombre='estado_verificacion' and formato_idformato=".$idformato[0][0],"",$conn);
+	$idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(d.plantilla)=lower(f.nombre) and d.iddocumento=".$iddocumento,"");
+	$valores=busca_filtro_tabla("valor","campos_formato","nombre='estado_verificacion' and formato_idformato=".$idformato[0][0],"");
 	$campos=explode(";", $valores[0][0]);
 	
 	$select="<select style='width:100px' iddocumento='".$iddocumento."' id='estado_verificacion' class='estado_verificacion' name='estado_verificacion'><option value=''>Seleccione</option>";
@@ -138,7 +138,7 @@ function verificacion($iddocumento,$estado_ver){
 }
 
 function funcionario_cambio($funcionario,$fecha,$iddoc){
-global $conn;	
+	
 	$opt=0;
 	if($fecha=="fecha_reporte"){
 		$fecha=date("Y-m-d");
@@ -147,7 +147,7 @@ global $conn;
 	$date = new DateTime($fecha);
 	$html="<div id='funcionario_".$iddoc."'>";
 	if($funcionario!="" && $funcionario!=0){
-		$datos=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$funcionario,"",$conn);
+		$datos=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$funcionario,"");
 		
 		$html.="<b>Funcionario: </b>".$datos[0]['nombres']." ".$datos[0]['apellidos']."<br/>";
 		if($opt==1){
@@ -168,14 +168,14 @@ if(isset($_REQUEST['iddoc_verificacion'])){
 	$sql="UPDATE ft_pqrsf SET estado_reporte=4,funcionario_reporte=".$idfun.",estado_verificacion=".$_REQUEST['estado_verif'].",fecha_reporte=".$date." WHERE documento_iddocumento=".$_REQUEST['iddoc_verificacion'];//Cambio a Verificado
 	phpmkr_query($sql);
 	$htmlfun="";
-	$datos_fun=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$idfun,"",$conn);
+	$datos_fun=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$idfun,"");
 	$htmlfun.="<b>Funcionario: </b>".$datos_fun[0]['nombres']." ".$datos_fun[0]['apellidos']."<br/>";
 	$htmlfun.="<b>Fecha: </b>".date("Y-m-d H:i");
 	echo $htmlfun;
 }
 function cantidad_total_funcion(){
-	global $conn;
-	$consulta=busca_filtro_tabla("count(*) as cant","ft_pqrsf a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO')","",$conn);
+	
+	$consulta=busca_filtro_tabla("count(*) as cant","ft_pqrsf a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO')","");
 	$cadena="Total<br/>";
 	$cadena.=$consulta[0]["cant"];
 	return($cadena);

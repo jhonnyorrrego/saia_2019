@@ -16,16 +16,16 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."app/qr/librerias.php");
 
 function mostrar_radicado_factura($idformato,$iddoc){
-	global $conn;
+	
 	if($_REQUEST["iddoc"]){
-		$doc=busca_filtro_tabla("","documento a","iddocumento=".$_REQUEST["iddoc"],"",$conn);
+		$doc=busca_filtro_tabla("","documento a","iddocumento=".$_REQUEST["iddoc"],"");
 		echo '<td><b>'.$doc[0]["numero"].'</b></td>'; 
 	}
 	else
 		echo '<td><b>'.muestra_contador("radicacion_entrada").'</b></td>';
 }
 function add_edit(){
-	global $conn;
+	
 	$fecha=date('Y-m-d H-i-s');
 	?>
 	<script>
@@ -39,13 +39,13 @@ function add_edit(){
 
 function mostrar_informacion_general_factura($idformato, $iddoc) {
 	global $conn, $ruta_db_superior, $datos;
-	$datos = busca_filtro_tabla("serie_idserie,numero_radicado,descripcion,anexos_fisicos,anexos_digitales," . fecha_db_obtener("fecha_radicado", "Y-m-d") . " AS fecha_radicado," . fecha_db_obtener("fecha_radicado", "Y-m-d") . " AS fecha_radicado,estado", "ft_radicacion_facturas", "documento_iddocumento=" . $iddoc, "", $conn);
-	$documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
-	$tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
+	$datos = busca_filtro_tabla("serie_idserie,numero_radicado,descripcion,anexos_fisicos,anexos_digitales," . fecha_db_obtener("fecha_radicado", "Y-m-d") . " AS fecha_radicado," . fecha_db_obtener("fecha_radicado", "Y-m-d") . " AS fecha_radicado,estado", "ft_radicacion_facturas", "documento_iddocumento=" . $iddoc, "");
+	$documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "");
+	$tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "");
 	$fecha_radicacion = $documento[0]['fecha'];
 	$numero_radicado = $datos[0]['fecha_radicado'] . "-" . $documento[0]['numero'];
 
-	$estado_doc = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "", $conn);
+	$estado_doc = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "");
 	if ($estado_doc[0]['estado'] == 'APROBADO') {
 		$img = mostrar_codigo_qr($idformato, $iddoc, 1);
 	}
@@ -77,11 +77,11 @@ function mostrar_informacion_general_factura($idformato, $iddoc) {
 
 function item_factura($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
-	$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
+	$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"");
 	if(!$anexos['numcampos']){
 		echo '<span style="color:red; font-weight: bold;">El documento no tiene anexo</span><br><br>';
 	}
-	$dato=busca_filtro_tabla("","ft_radicacion_facturas A join documento B on A.documento_iddocumento=B.iddocumento left join ft_item_facturas c on A.idft_radicacion_facturas=c.ft_radicacion_facturas","B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  
+	$dato=busca_filtro_tabla("","ft_radicacion_facturas A join documento B on A.documento_iddocumento=B.iddocumento left join ft_item_facturas c on A.idft_radicacion_facturas=c.ft_radicacion_facturas","B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"");  
 	
 	if($_REQUEST['tipo']!=5 && empty($dato[0]['idft_item_facturas'])){
 			$permiso_mod=new Permiso();
@@ -90,14 +90,14 @@ function item_factura($idformato,$iddoc){
 				echo '<a style="color: #FFFFFF;text-decoration:none;" href="../item_facturas/adicionar_item_facturas.php?pantalla=padre&amp;idpadre='.$iddoc.'&amp;idformato='.$idformato.'&amp;padre='.$dato[0]['idft_radicacion_facturas'].'&anterior='.$iddoc.'" target="_self"><button class="btn btn-warning btn-mini">CLASIFICACIÓN DE FACTURA</button></a>'; 	
 			} 
 	}else{
-		$estado_doc=busca_filtro_tabla("activa_admin","documento","iddocumento=".$iddoc,"",$conn);
+		$estado_doc=busca_filtro_tabla("activa_admin","documento","iddocumento=".$iddoc,"");
 		if($dato[0]['idft_item_facturas'] && $estado_doc[0]['activa_admin']==1){
-			$idform_item=busca_filtro_tabla("idformato","formato","nombre like 'item_facturas'","",$conn);
+			$idform_item=busca_filtro_tabla("idformato","formato","nombre like 'item_facturas'","");
 			echo '<a style="color: #FFFFFF;text-decoration:none;" href="../item_facturas/editar_item_facturas.php?idformato='.$idform_item[0]['idformato'].'&iddoc='.$dato[0]['idft_item_facturas'].'&item='.$dato[0]['idft_item_facturas'].'" target="_self"><button class="btn btn-warning btn-mini">CLASIFICACIÓN DE FACTURA</button></a>';	
 		}
 	}
 
-	$item=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos,' - ',b.cargo) as nombre,a.*","ft_item_facturas a,vfuncionario_dc b","a.dependencia=b.iddependencia_cargo and ft_radicacion_facturas=".$dato[0]['idft_radicacion_facturas'],"",$conn);
+	$item=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos,' - ',b.cargo) as nombre,a.*","ft_item_facturas a,vfuncionario_dc b","a.dependencia=b.iddependencia_cargo and ft_radicacion_facturas=".$dato[0]['idft_radicacion_facturas'],"");
 	if($item['numcampos']){
 		include_once($ruta_db_superior."app/documento/class_transferencia.php");
 		$tabla='<table class="table table-bordered" style="width: 100%;" border="1">
@@ -136,7 +136,7 @@ function item_factura($idformato,$iddoc){
 					$prioridad='Alta';
 					break;
 			}
-			$resp=busca_filtro_tabla("concat(nombres,' ',apellidos) as nombre","vfuncionario_dc","iddependencia_cargo=".$item[$i]['responsable'],"",$conn);
+			$resp=busca_filtro_tabla("concat(nombres,' ',apellidos) as nombre","vfuncionario_dc","iddependencia_cargo=".$item[$i]['responsable'],"");
 			$tabla.='<tr>
 					<td>'.$clasif.'</td><td style="text-align:right;"> $'.number_format($item[$i]['valor_factura']).'</td><td style="text-align:center;">'.$item[$i]['fecha_programada'].'</td><td style="text-align:center;">'.$prioridad.'</td><td style="text-align:center;">'.$item[$i]['numero_orden'].'</td><td style="text-align:left;">'.$resp[0]['nombre'].'</td><td style="text-align:left;">'.$item[$i]['nombre'].'</td>
 				</tr>';
@@ -145,8 +145,8 @@ function item_factura($idformato,$iddoc){
 		echo $tabla;
 		
 		//----ITEM APROBACIONES
-		$item_recibida=busca_filtro_tabla("a.*,".fecha_db_obtener("fecha_recibida","Y-m-d")." as fecha","ft_item_recibidos a","a.ft_radicacion_facturas=".$dato[0]['ft_radicacion_facturas'],"idft_item_recibidos desc",$conn);
-		$cargo_juridica=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","estado=1 and estado_dc=1 and cargo like 'Aprobador Juridica' and funcionario_codigo=".$_SESSION['usuario_actual'],"",$conn);
+		$item_recibida=busca_filtro_tabla("a.*,".fecha_db_obtener("fecha_recibida","Y-m-d")." as fecha","ft_item_recibidos a","a.ft_radicacion_facturas=".$dato[0]['ft_radicacion_facturas'],"idft_item_recibidos desc");
+		$cargo_juridica=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","estado=1 and estado_dc=1 and cargo like 'Aprobador Juridica' and funcionario_codigo=".$_SESSION['usuario_actual'],"");
 		if($_REQUEST['tipo']!=5){
 			?>
 			<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
@@ -166,7 +166,7 @@ function item_factura($idformato,$iddoc){
 			
 		}
 		
-		$aprobacion=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos,' - ',b.cargo) as nombre,a.*","ft_item_aprobaciones a,vfuncionario_dc b","a.dependencia=b.iddependencia_cargo and ft_radicacion_facturas=".$dato[0]['ft_radicacion_facturas'],"idft_item_aprobaciones desc",$conn);
+		$aprobacion=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos,' - ',b.cargo) as nombre,a.*","ft_item_aprobaciones a,vfuncionario_dc b","a.dependencia=b.iddependencia_cargo and ft_radicacion_facturas=".$dato[0]['ft_radicacion_facturas'],"idft_item_aprobaciones desc");
 
 		if($aprobacion['numcampos']){
 			$tabla_aprobacion='<table class="table table-bordered" style="width: 100%;" border="1">
@@ -209,9 +209,9 @@ function item_factura($idformato,$iddoc){
 						break;
 				}
 				if($tipo_transferencia==1){
-					$transferido_a=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos) as nombre","funcionario b","b.estado=1 and b.funcionario_codigo in (".$aprobacion[$i]['transferido_a'].")","",$conn);
+					$transferido_a=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos) as nombre","funcionario b","b.estado=1 and b.funcionario_codigo in (".$aprobacion[$i]['transferido_a'].")","");
 				}else if($tipo_transferencia==2){
-					$transferido_a=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos) as nombre","funcionario b","b.estado=1 and b.iddependencia_cargo in (".$aprobacion[$i]['arbol_devuelto'].")","",$conn);
+					$transferido_a=busca_filtro_tabla("concat(b.nombres,' ',b.apellidos) as nombre","funcionario b","b.estado=1 and b.iddependencia_cargo in (".$aprobacion[$i]['arbol_devuelto'].")","");
 				}
 				$tabla_aprobacion.='<tr>
 					<td style="text-align:center;">'.$aprobacion[$i]['fecha_aprobacion'].'</td><td style="text-align:center;"> '.$aprobacion[$i]['nombre'].'</td><td style="text-align:center;"> '.mayusculas(strip_tags(implode(" - ",extrae_campo($transferido_a,"nombre")))).'</td><td style="text-align:center;">'.$accion.'</td><td style="text-align:center;">'.$aprobacion[$i]['observaciones'].'</td>
@@ -239,7 +239,7 @@ function item_factura($idformato,$iddoc){
 						$tipo='Incompleto';
 						break;
 				}
-				$funcionario=busca_filtro_tabla("concat(nombres,' ',apellidos) as nombre","funcionario","funcionario_codigo=".$item_recibida[0]['creador_recibida'],"",$conn);
+				$funcionario=busca_filtro_tabla("concat(nombres,' ',apellidos) as nombre","funcionario","funcionario_codigo=".$item_recibida[0]['creador_recibida'],"");
 				$tabla_recibida.='<tr>
 				<td style="text-align:center;">'.$item_recibida[$i]['fecha'].'</td><td style="text-align:center;"> '.$tipo.'</td><td style="text-align:center;"> '.$item_recibida[0]['observaciones_reci'].'</td><td style="text-align:center;">'.$funcionario[0]['nombre'].'</td>
 			</tr>';
@@ -258,25 +258,25 @@ function item_factura($idformato,$iddoc){
 }
 
 function transferir_copia($idformato, $iddoc) {
-	global $conn;
-	$clasificador = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "cargo like lower('clasificador%factura') and estado=1 and estado_dc=1", "", $conn);
+	
+	$clasificador = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "cargo like lower('clasificador%factura') and estado=1 and estado_dc=1", "");
 	if ($clasificador['numcampos']) {
 		$total_funcionarios = extrae_campo($clasificador, "funcionario_codigo");
 		transferencia_automatica($idformato, $iddoc, implode("@", $total_funcionarios), 3);
 	}
-	$dato = busca_filtro_tabla("copia_electronica", "ft_radicacion_facturas", "documento_iddocumento=" . $iddoc, "", $conn);
+	$dato = busca_filtro_tabla("copia_electronica", "ft_radicacion_facturas", "documento_iddocumento=" . $iddoc, "");
 	if ($dato["numcampos"] && $dato[0]["copia_electronica"] != "") {
 		$separado = explode(",", $dato[0]['copia_electronica']);
 		$funcionarios = '';
 		foreach ($separado as $value) {
 			if (strpos($value, "#") > 1) {
-				$dato = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and iddependencia=" . $value, "", $conn);
+				$dato = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and iddependencia=" . $value, "");
 				if ($dato["numcampos"]) {
 					$funcionarios = implode(",", extrae_campo($dato, 'funcionario_codigo'));
 					transferencia_automatica($idformato, $iddoc, str_replace(",", "@", $funcionarios), 3);
 				}
 			} else {
-				$dato = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and iddependencia_cargo=" . $value, "", $conn);
+				$dato = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and iddependencia_cargo=" . $value, "");
 				if ($dato["numcampos"]) {
 					transferencia_automatica($idformato, $iddoc, $dato[0]['funcionario_codigo'], 3);
 				}

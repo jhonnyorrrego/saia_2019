@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias_funciones_generales.php";
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 
 /* ADICIONAR - EDITAR */
@@ -72,13 +72,13 @@ function add_edit_ruta_dist($idformato, $iddoc)
 
     function crearItemDependencia($item)
     {
-        global $conn;
+        
 
         $tabla = '';
         if ($item['estado_dependencia'] == 1) { //VINCULO RUTA DE DISTRIBUCION DE LAS DEPENDENCIAS ACTIVAS A LOS DOCUMENTOS
             actualizar_dependencia_ruta_distribucion($item['ft_ruta_distribucion'], $item['dependencia_asignada'], 1);
         }
-        $dependencia = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $item['dependencia_asignada'], '', $conn);
+        $dependencia = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $item['dependencia_asignada'], '');
         $tabla .= '<tr>
         <td style="width:20%;font-size:90%">' . $item['fecha_item_dependenc'] . '</td>
         <td style="width:30%;font-size:90%">' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item['dependencia_asignada'] . '"></td>';
@@ -323,12 +323,12 @@ function add_edit_ruta_dist($idformato, $iddoc)
 function crear_items_ruta_distribucion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
-    $datos = busca_filtro_tabla("", "ft_ruta_distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("", "ft_ruta_distribucion", "documento_iddocumento=" . $iddoc, "");
     $dependencias = explode(",", $datos[0]['asignar_dependencias']);
     $mensajeros = explode(",", $datos[0]['asignar_mensajeros']);
     $fecha_almacenar = date('Y-m-d');
     for ($i = 0; $i < count($dependencias); $i++) {
-        $busca_dep = busca_filtro_tabla("idft_dependencias_ruta,estado", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "lower(c.estado)='aprobado' AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND  a.estado_dependencia=1 AND a.ft_ruta_distribucion<>" . $datos[0]['idft_ruta_distribucion'] . " AND a.dependencia_asignada=" . $dependencias[$i], "", $conn);
+        $busca_dep = busca_filtro_tabla("idft_dependencias_ruta,estado", "ft_dependencias_ruta a,ft_ruta_distribucion b,documento c", "lower(c.estado)='aprobado' AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND  a.estado_dependencia=1 AND a.ft_ruta_distribucion<>" . $datos[0]['idft_ruta_distribucion'] . " AND a.dependencia_asignada=" . $dependencias[$i], "");
         $estado_dependencia = 1;
         if ($busca_dep['numcampos']) {
             $estado_dependencia = 2;
@@ -375,7 +375,7 @@ function crear_items_ruta_distribucion($idformato, $iddoc)
 function vincular_dependencia_ruta_distribucion($idformato, $iddoc)
 { //POSTERIOR AL APROBAR
     global $conn, $ruta_db_superior;
-    $datos = busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada", "ft_ruta_distribucion a, ft_dependencias_ruta b", "b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada", "ft_ruta_distribucion a, ft_dependencias_ruta b", "b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=" . $iddoc, "");
     if ($datos['numcampos']) {
         include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
         for ($i = 0; $i < $datos['numcampos']; $i++) {

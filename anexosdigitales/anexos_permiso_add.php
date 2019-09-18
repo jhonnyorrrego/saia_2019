@@ -28,8 +28,8 @@ while ($max_salida > 0) {
 }
 
 include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-include_once($ruta_db_superior . "librerias_saia.php");
-echo (librerias_jquery());
+include_once($ruta_db_superior . "assets/librerias.php");
+echo query();
 
 include_once("funciones_archivo.php");
 //$_REQUEST["idanexo"]=1;
@@ -62,7 +62,7 @@ if (isset($_REQUEST["idanexo"]) && $_REQUEST["idanexo"] != "" && isset($_REQUEST
 } else // Carga los permisos si estan definidos 
 {
   $idanexo = $_REQUEST["idanexo"];
-  $permisos_actuales = busca_filtro_tabla("", "permiso_anexo", "anexos_idanexos=" . $idanexo, "", $conn);
+  $permisos_actuales = busca_filtro_tabla("", "permiso_anexo", "anexos_idanexos=" . $idanexo, "");
 
   if ($permisos_actuales["numcampos"] > 0) {
     $p_cargo = str_split($permisos_actuales[0]["caracteristica_cargo"]);

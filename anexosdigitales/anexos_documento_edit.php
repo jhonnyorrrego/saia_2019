@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
 include_once "funciones_archivo.php";
 ?>
 
@@ -32,7 +31,7 @@ include_once "funciones_archivo.php";
 <body>
 
 	<?php
-	$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+	$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "");
 	if ($config["numcampos"]) {
 		$style = "
      <style type=\"text/css\">
@@ -124,7 +123,7 @@ include_once "funciones_archivo.php";
 	}
 	echo $tabla;
 
-	$validaciones = busca_filtro_tabla("valor", "campos_formato A", "A.idcampos_formato=" . @$_REQUEST["idcampo"], "", $conn);
+	$validaciones = busca_filtro_tabla("valor", "campos_formato A", "A.idcampos_formato=" . @$_REQUEST["idcampo"], "");
 	$extensiones = "";
 	if ($validaciones[0]["valor"]) {
 		$extensiones_fijas = $validaciones[0]["valor"];

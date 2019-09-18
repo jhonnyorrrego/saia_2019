@@ -24,7 +24,7 @@ if(!empty($_REQUEST["idnotificacion"])) {
             join wf_destinatario_formato df on d.iddestinatario = df.iddestinatario
             join wf_formato_flujo ff on df.fk_formato_flujo = df.idformato_flujo
             join campos_formato cf on df.fk_campo_formato = cf.idcampos_formato',
-            "d.fk_notificacion = $idnotificacion", "", $conn);
+            "d.fk_notificacion = $idnotificacion", "");
 
     if($listado["numcampos"]) {
         $total = isset($listado['numcampos']) ? $listado['numcampos'] : count($listado);

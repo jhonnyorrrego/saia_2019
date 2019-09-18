@@ -2,7 +2,7 @@
 //Almacena un archvios binario y retorna un id 
 function almacena_binario_db($archivo,$descripcion)
 {
-  global $conn;
+  
   $sKeyWrk = NULL;
     //  Insercion en la tabla binario
  
@@ -13,7 +13,7 @@ function almacena_binario_db($archivo,$descripcion)
   
 	$strsql = "INSERT INTO binario (descripcion,nombre_original) values('".$descripcion."','".$nombre_original."')";
    //echo $strsql;
-	phpmkr_query($strsql,$conn);
+	phpmkr_query($strsql);
    $sKeyWrk=phpmkr_insert_id();
   
    if($sKeyWrk!=NULL) // Re - Verificacion
@@ -24,14 +24,14 @@ function almacena_binario_db($archivo,$descripcion)
 			$theValue = addslashes($fileContent);
 			//Borrar el archivo 
  		   //@unlink($_FILES["x_firma"]["tmp_name"]);
-			guardar_lob("datos","binario","idbinario=".$sKeyWrk,$theValue,"archivo",$conn);
+			guardar_lob("datos","binario","idbinario=".$sKeyWrk,$theValue,"archivo");
 			
  
       }
   
   if($sKeyWrk!=NULL)
    { 
-     $datos=busca_filtro_tabla("datos","binario","binario.idbinario=".$sKeyWrk,"",$conn);
+     $datos=busca_filtro_tabla("datos","binario","binario.idbinario=".$sKeyWrk,"");
 	  if($datos["numcampos"])
 	   {
 	    $dat=stripslashes($datos[0]["datos"]);
@@ -43,7 +43,7 @@ function almacena_binario_db($archivo,$descripcion)
 	      { echo "<br> ----------------- El binario presenta diferencias con el archivo original. Datos documento :".$nombre." Datos archivo :".$archivo;
 			  // Se elimina el binario inconsistente
            $strsql = "DELETE FROM binario WHERE idbinario=".$sKeyWrk;
-           phpmkr_query($strsql,$conn);
+           phpmkr_query($strsql);
 			  $sKeyWrk =NULL;
 	        alerta("No se Pudo almacenar el archivo :".$nombre_original."en la base de datos",'error',4000);
 	          
@@ -59,11 +59,11 @@ return($sKeyWrk);
 
 function mostrar_miniatura($idpag)
 {
-   $datos=busca_filtro_tabla("idbinario_min","pagina","where id_pagina=".$idpag,"",$conn);
+   $datos=busca_filtro_tabla("idbinario_min","pagina","where id_pagina=".$idpag,"");
    
    if( $datos["numcampos"]>0 &&  $datos[0]["idbinario_min"] != NULL)
     { 
-      $datos_min=busca_filtro_tabla("datos","binario","where idbinaria=".$idpag,"",$conn);
+      $datos_min=busca_filtro_tabla("datos","binario","where idbinaria=".$idpag,"");
     }  
     
 }

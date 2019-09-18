@@ -7,13 +7,13 @@
 <?php
 include_once ("../db.php");
 $fecha_actual = date("Y-m-d");
-$color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+$color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "");
 /**
  * ************* para el link de ver mas ***************
  * muestra un solo contenido, completo
  */
 if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
-    $contenidos = busca_filtro_tabla("", "contenidos_carrusel", "idcontenidos_carrusel=" . $_REQUEST["idcontenido"], "", $conn);
+    $contenidos = busca_filtro_tabla("", "contenidos_carrusel", "idcontenidos_carrusel=" . $_REQUEST["idcontenido"], "");
     if ($contenidos[0]["imagen"] != "") {
         $objeto = json_decode($contenidos[0]["imagen"]);
         if (is_object($objeto)) {
@@ -27,12 +27,12 @@ if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
     echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[0]["contenido"])));
     exit();
 } else if (isset($_REQUEST["idcarrusel"]) && $_REQUEST["idcarrusel"]) {
-    $carrusel = busca_filtro_tabla("", "carrusel", "idcarrusel=" . $_REQUEST["idcarrusel"], "", $conn);
+    $carrusel = busca_filtro_tabla("", "carrusel", "idcarrusel=" . $_REQUEST["idcarrusel"], "");
 } else {
     /**
      * ******* para ver todos los sliders vigentes *********
      */
-    $carrusel = busca_filtro_tabla("", "carrusel", "'" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "", $conn);
+    $carrusel = busca_filtro_tabla("", "carrusel", "'" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "");
 
     if ($carrusel["numcampos"]) {
         echo "<table align=center width=100%>";
@@ -82,7 +82,7 @@ if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
 <body>
 <?php
 
-$contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[0]["idcarrusel"] . " and '" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden", $conn);
+$contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[0]["idcarrusel"] . " and '" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden");
 
 if ($contenidos["numcampos"]) {
     // print_r($contenidos);

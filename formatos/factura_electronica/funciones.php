@@ -10,18 +10,18 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
 function mostrar_datos_factura($idformato, $iddoc) {
-    global $conn;
+    
     $texto = "";
-    $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "", $conn);
+    $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "");
     if ($factura["numcampos"]) {
         $texto = "No se encont&oacute; proveedor";
         if (!empty($factura[0]["proveedor"])) {
             $lineas = [];
-            $tercero = busca_filtro_tabla("", "datos_ejecutor de join ejecutor e on de.ejecutor_idejecutor = e.idejecutor", "de.iddatos_ejecutor = {$factura[0]["proveedor"]}", "", $conn);
+            $tercero = busca_filtro_tabla("", "datos_ejecutor de join ejecutor e on de.ejecutor_idejecutor = e.idejecutor", "de.iddatos_ejecutor = {$factura[0]["proveedor"]}", "");
             if ($tercero["numcampos"]) {
                 $lineas[] = "<div>";
                 $lineas[] = $tercero[0]["nombre"];
@@ -38,11 +38,11 @@ function mostrar_datos_factura($idformato, $iddoc) {
 }
 
 function mostrar_detalle_factura($idformato, $iddoc) {
-    global $conn;
+    
     $texto = "";
-    $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "", $conn);
+    $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "");
     if ($factura["numcampos"]) {
-        $items = busca_filtro_tabla("", "ft_ite_factur_electronica", "ft_factura_electronica = {$factura[0]["idft_factura_electronica"]}", "", $conn);
+        $items = busca_filtro_tabla("", "ft_ite_factur_electronica", "ft_factura_electronica = {$factura[0]["idft_factura_electronica"]}", "");
         if ($items["numcampos"]) {
             $lineas = [];
             $lineas[] = '<table style="width:100%;">';

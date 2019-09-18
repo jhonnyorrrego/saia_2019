@@ -24,11 +24,11 @@ include_once $ruta_db_superior . "bpmn/librerias_formato.php";
  </Clase>  */
 function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
 {
-	global $conn;
+	
 	if ($accion) { // Se buscan las acciones particulares
-		$acciones = busca_filtro_tabla("", "accion", "nombre='" . $accion . "'", "", $conn);
+		$acciones = busca_filtro_tabla("", "accion", "nombre='" . $accion . "'", "");
 	} else {
-		$acciones = busca_filtro_tabla("", "accion", "", "", $conn);
+		$acciones = busca_filtro_tabla("", "accion", "", "");
 	}
 
 	if ($acciones["numcampos"]) {
@@ -39,7 +39,7 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
 			$condicion .= " AND momento='" . $momento . "'";
 		}
 		// Funciones relacionadas con la accion y el formato
-		$funciones_asociadas = busca_filtro_tabla("", "funciones_formato_accion", $condicion, "orden asc", $conn);
+		$funciones_asociadas = busca_filtro_tabla("", "funciones_formato_accion", $condicion, "orden asc");
 		if ($funciones_asociadas["numcampos"]) {
 			$retorno = "";
 			$retorno = $funciones_asociadas[0]["idfunciones_formato"];
@@ -64,18 +64,18 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
  </Clase>  */
 function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = "ANTERIOR", $estado = 1)
 {
-	global $conn;
+	
 	if ($idaccion == NULL || $idformato == NULL || $idfunciones_formato == NULL)
 		return (FALSE);
-	$datos_accion = busca_filtro_tabla("idaccion", "accion", "idaccion=" . $idaccion, "", $conn);
-	$datos_formato = busca_filtro_tabla("idformato", "formato", "idformato=" . $idformato, "", $conn);
-	$datos_funciones_formato = busca_filtro_tabla("idfunciones_formato", "funciones_formato", "idfunciones_formato=" . $idfunciones_formato, "", $conn);
+	$datos_accion = busca_filtro_tabla("idaccion", "accion", "idaccion=" . $idaccion, "");
+	$datos_formato = busca_filtro_tabla("idformato", "formato", "idformato=" . $idformato, "");
+	$datos_funciones_formato = busca_filtro_tabla("idfunciones_formato", "funciones_formato", "idfunciones_formato=" . $idfunciones_formato, "");
 	//Se verifican los datos antes de registrar la relacion
-	$datos_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $idfunciones_formato . " AND accion_idaccion=" . $idaccion . " AND formato_idformato=" . $idformato, "", $conn);
+	$datos_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $idfunciones_formato . " AND accion_idaccion=" . $idaccion . " AND formato_idformato=" . $idformato, "");
 	if (!$datos_funcion_accion["numcampos"] && $datos_accion["numcampos"] > 0 && $datos_formato["numcampos"] > 0 && $datos_funciones_formato["numcampos"] > 0) {
 		$sql = "INSERT INTO funciones_formato_accion(accion_idaccion,formato_idformato,idfunciones_formato,momento) VALUES(";
 		$sql .= $idaccion . "," . $idformato . "," . $idfunciones_formato . ",'" . $momento . "')";
-		$res = phpmkr_query($sql, $conn);
+		$res = phpmkr_query($sql);
 	} else if ($datos_funcion_accion["numcampos"]) {
 		alerta("La Funcion ya se encuentra asiganda al formato");
 		return (false);
@@ -98,7 +98,7 @@ function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  </Clase>  */
 function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
 {
-	global $conn;
+	
 	if ($accion_funcion) {
 		$campos = array();
 		if ($idaccion)
@@ -112,7 +112,7 @@ function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
 		}
 		if (count($campos)) {
 			$sql = "UPDATE funciones_formato_accion SET " . implode(",", $campos) . " WHERE idfunciones_formato_accion=" . $accion_funcion;
-			phpmkr_query($sql, $conn);
+			phpmkr_query($sql);
 			return (true);
 		}
 	} else {
@@ -132,10 +132,10 @@ function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  </Clase>  */
 function eliminar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
 {
-	global $conn;
+	
 	if ($accion_funcion) {
 		$sql = "DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=" . $accion_funcion;
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql);
 		return (true);
 	} else {
 		alerta("No ha sido posible eliminar la asignacion");
@@ -185,12 +185,12 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 	$encontrado = 0;
 
 	for ($i = 0; $i < count($ar_func); $i++) {
-		$datos_funcion = busca_filtro_tabla("", "funciones_formato A", "idfunciones_formato=" . $ar_func[$i], "", $conn);
+		$datos_funcion = busca_filtro_tabla("", "funciones_formato A", "idfunciones_formato=" . $ar_func[$i], "");
 		$ruta = null;
 		if ($datos_funcion["numcampos"]) {
 			if (!function_exists($datos_funcion[0]["nombre_funcion"])) {
 				include_once($ruta_db_superior . "app/documento/class_transferencia.php");
-				$datos_formato = busca_filtro_tabla("f.nombre", "formato f,funciones_formato_enlace e", "f.idformato=e.formato_idformato and e.funciones_formato_fk=" . $ar_func[$i], "", $conn);
+				$datos_formato = busca_filtro_tabla("f.nombre", "formato f,funciones_formato_enlace e", "f.idformato=e.formato_idformato and e.funciones_formato_fk=" . $ar_func[$i], "");
 				for ($j = 0; $j < $datos_formato["numcampos"]; $j++) {
 					$ruta = $ruta_db_superior . 'formatos/' . $datos_formato[$j]["nombre"] . "/" . $datos_funcion[0]["ruta"];
 					if (is_file($ruta)) {

@@ -25,7 +25,7 @@ if(
             <meta name="apple-mobile-web-app-status-bar-style" content="default">
             <meta content="" name="description" />
             <meta content="" name="Cero K" /> 
-            <?php include_once('../../librerias_saia.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../class_transferencia.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?>
+            <?php include_once('../../assets/librerias.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../class_transferencia.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?>
             
             <?php include_once('../../formatos/librerias/footer_nuevo.php'); ?>
 <?php else:

@@ -11,9 +11,9 @@ while ($max_salida > 0) {
 }
 
 include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "assets/librerias.php");
 $validar_enteros = array("idanexo");
-echo (librerias_jquery());
+echo (jquery());
 ?>
 <script>
   function cerrar() {
@@ -51,7 +51,7 @@ include_once("funciones_archivo.php");
 if (isset($_REQUEST["Eliminar"]) && isset($_REQUEST["idanexo"])) // Permisos a una anexo ALMACENADO  
 {
   $idanexo = $_REQUEST["idanexo"];
-  $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "", $conn);
+  $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "");
   if ($anexo["numcampos"] > 0) {
     $idanexo = $_REQUEST["idanexo"];
     $iddocumento = $anexo[0]["documento_iddocumento"];
@@ -65,7 +65,7 @@ if (isset($_REQUEST["Eliminar"]) && isset($_REQUEST["idanexo"])) // Permisos a u
 } elseif (isset($_REQUEST["idanexo"])) // Obtiene el parametro y verifica la existencia del anexo
 {
   $idanexo = $_REQUEST["idanexo"];
-  $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "", $conn);
+  $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "");
   if (!$anexo["numcampos"] > 0) // Se recibe un anexo invalido no se imprime el formulario 
   {
     alerta("No se encontraron los datos del anexo a eliminar", 'error', 4000);

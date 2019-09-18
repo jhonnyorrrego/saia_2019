@@ -64,21 +64,21 @@ class Imprime_Pdf
 
 	function __construct($iddocumento)
 	{
-		global $conn;
+		
 		if ($iddocumento == "url") {
 			$this->tipo_salida = "FI";
 			$this->imprimir_plantilla = 1;
 			$this->documento[0]["iddocumento"] = "url";
 		} else if ($iddocumento) {
-			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $iddocumento, "", $conn);
+			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $iddocumento, "");
 			if (!$this->documento["numcampos"]) {
 				die("documento no encontrado.");
 			}
-			$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "", $conn);
+			$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "");
 			$this->formato = $formato;
 
 			if ($formato["numcampos"]) {
-				$plantilla = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
+				$plantilla = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "");
 				$this->mostrar_encabezado = $plantilla[0]["encabezado"];
 				$this->info_ft = $plantilla;
 				$this->imprimir_plantilla = 1;
@@ -96,7 +96,7 @@ class Imprime_Pdf
 					"inferior" => $vmargen[3]
 				);
 
-				$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra_pdf'", "", $conn);
+				$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra_pdf'", "");
 				if ($tipo_fuente["numcampos"]) {
 					$this->font_family = $tipo_fuente[0][0];
 				}
@@ -347,20 +347,20 @@ class Imprime_Pdf
 
 	public function configurar_encabezado()
 	{
-		global $conn;
+		
 		$this->pdf->marca_agua = 0;
 		if ($this->documento[0]["estado"] == "ACTIVO" || $this->documento[0]["estado"] == "ANULADO") {
 			$this->pdf->marca_agua = 1;
 		}
 		if ($this->formato[0]["encabezado"]) {
-			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["encabezado"], "", $conn);
+			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["encabezado"], "");
 			if ($encabezado["numcampos"]) {
 				$this->pdf->encabezado = crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
 			}
 		}
 
 		if ($this->formato[0]["pie_pagina"]) {
-			$pie_pag = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["pie_pagina"], "", $conn);
+			$pie_pag = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["pie_pagina"], "");
 			if ($pie_pag["numcampos"]) {
 				$this->pdf->pie_pagina = crear_encabezado_pie_pagina($pie_pag[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1);
 			}
@@ -380,11 +380,11 @@ class Imprime_Pdf
 
 	public function imprimir_paginas()
 	{
-		global $conn;
+		
 		if ($this->idpaginas != "") {
-			$paginas = busca_filtro_tabla("ruta", "pagina", "consecutivo in(" . $this->idpaginas . ")", "", $conn);
+			$paginas = busca_filtro_tabla("ruta", "pagina", "consecutivo in(" . $this->idpaginas . ")", "");
 		} else {
-			$paginas = busca_filtro_tabla("ruta", "pagina", "id_documento=" . $this->documento[0]["iddocumento"], "", $conn);
+			$paginas = busca_filtro_tabla("ruta", "pagina", "id_documento=" . $this->documento[0]["iddocumento"], "");
 		}
 
 		if ($paginas["numcampos"]) {
@@ -415,7 +415,7 @@ class Imprime_Pdf
 
 	public function extraer_contenido($iddocumento, $vista = 0)
 	{
-		global $conn;
+		
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
@@ -424,10 +424,10 @@ class Imprime_Pdf
 			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']);
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
 		} else {
-			$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=" . $iddocumento, "", $conn);
-			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
+			$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=" . $iddocumento, "");
+			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "");
 			if ($vista > 0) {
-				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
+				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "");
 				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . 'formatos/' . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
@@ -478,8 +478,8 @@ class Imprime_Pdf
 
 	public function vincular_anexos()
 	{
-		global $conn;
-		$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "", $conn);
+		
+		$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "");
 		if ($anexos["numcampos"]) {
 			for ($i = 0; $i < $anexos["numcampos"]; $i++) {
 				$this->pdf->Annotation(10, 5, 5, 5, "Anexos digitales", array(

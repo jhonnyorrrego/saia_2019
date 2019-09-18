@@ -473,12 +473,12 @@ if(!empty($_REQUEST["idactividad"])) {
 
 <?php
 function obtenerListaFormatos($idactividad) {
-    global $conn;
+    
 
     $lista_campos = [];
     $formatos = busca_filtro_tabla("ff.idformato_flujo",
         "wf_formato_actividad fa join wf_formato_flujo ff on fa.fk_formato_flujo = ff.idformato_flujo",
-        "fa.fk_actividad = " . $idactividad, "", $conn);
+        "fa.fk_actividad = " . $idactividad, "");
     for ($i = 0; $i < $formatos["numcampos"]; $i++) {
         $lista_campos[] = $formatos[$i]["idformato_flujo"];
     }

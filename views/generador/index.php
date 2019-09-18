@@ -38,7 +38,7 @@ if ($formatId) {
     $extensiones = ["filter" => []];
     $arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones);
 
-    $formato = busca_filtro_tabla("", "formato", "idformato=" . $formatId, "", $conn);
+    $formato = busca_filtro_tabla("", "formato", "idformato=" . $formatId, "");
     $Formato = new Formato($formatId);
     $Modulo = $Formato->getModule();
     $idModulo = $Modulo->getPK();
@@ -57,7 +57,7 @@ if ($formatId) {
     }
 
     if ($cod_padre) {
-        $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "", $conn);
+        $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "");
     }
 
     $origen = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $formatId, "seleccionados" => $cod_padre, "seleccionable" => "radio"));
@@ -81,7 +81,7 @@ if ($formatId) {
     $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 }
 
-$tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)", $conn);
+$tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)");
 
 /**
  * Esta funcion puede servir para
@@ -131,8 +131,8 @@ function check_banderas($bandera, $chequear = true)
 
 function cargarCampos($categoria)
 {
-    global $conn;
-    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '', $conn);
+    
+    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '');
     echo "<h5>" . $categoria . "</h5>";
     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
         $etiqueta = $listadoComponentes[$i]["etiqueta"];
@@ -295,7 +295,7 @@ function cargarCampos($categoria)
                                                     <div class="mt-4">
                                                         <select style="height:44px;width:100%" name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador" required>
                                                             <?php
-                                                            $contadores = busca_filtro_tabla("", "contador", "nombre<>'' and estado=1", "nombre", $conn);
+                                                            $contadores = busca_filtro_tabla("", "contador", "nombre<>'' and estado=1", "nombre");
                                                             $reinicia_contador = 1;
                                                             for ($i = 0; $i < $contadores["numcampos"]; $i++) {
                                                                 echo ('<option value="' . $contadores[$i]["idcontador"] . '"');
@@ -432,7 +432,7 @@ function cargarCampos($categoria)
 
                                         <div class="mx-4 my-3 pt-2">
                                             <?php
-                                            $profiles = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC", $conn);
+                                            $profiles = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC");
 
                                             if ($profiles['numcampos']) {
                                                 echo '<div>';
@@ -459,7 +459,7 @@ function cargarCampos($categoria)
                                             <ul id="contenedorComponentes" class="sortable boxy px-4" style="margin-left: 1em;">
                                                 <h6 style="text-align:center;position:absolute;top:160px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
                                                 <?php
-                                                $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
+                                                $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "");
                                                 $campos_excluir = array(
                                                     "dependencia",
                                                     "documento_iddocumento",
@@ -474,20 +474,20 @@ function cargarCampos($categoria)
                                                     $campos_lectura = str_replace(",", "','", $campos_lectura);
                                                     $busca_idft = strpos($campos_lectura, "idft_");
                                                     if ($busca_idft !== false) {
-                                                        $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $formatId, "", $conn);
+                                                        $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $formatId, "");
                                                         $campos_lectura = str_replace("idft_", "id" . $consulta_ft[0]['nombre_tabla'], $campos_lectura);
                                                         $campos_excluir[] =  $campos_lectura;
                                                     }
                                                 }
                                                 $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
-                                                $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $formatId . $condicion_adicional, "B.orden", $conn);
+                                                $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $formatId . $condicion_adicional, "B.orden");
                                                 $texto = '';
                                                 if ($pantalla['numcampos']) {
                                                     $count = 1;
                                                     for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
-                                                        $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $pantalla[$i]['idcampos_formato'] . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
+                                                        $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $pantalla[$i]['idcampos_formato'] . " AND A.etiqueta_html=B.etiqueta_html", "");
                                                         if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
-                                                            $pantalla_componente = busca_filtro_tabla("clase,nombre", "pantalla_componente", "idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}", "", $conn);
+                                                            $pantalla_componente = busca_filtro_tabla("clase,nombre", "pantalla_componente", "idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}", "");
                                                             $texto .= "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> <div id='c_{$pantalla_campos[0]["idpantalla_campos"]}' class='d-inline' >" . $pantalla_campos[0]["etiqueta"] . "</div> <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
                                                         }
                                                         $count++;

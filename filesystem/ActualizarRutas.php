@@ -54,7 +54,7 @@ class ActualizarRutas {
 	}
 
 	public function actualizar_rutas() {
-		global $conn;
+		
 		$actualizados = 0;
 		foreach ($this->tablas as $tabla => $campos) {
 			foreach ($campos as $campo) {
@@ -67,7 +67,7 @@ class ActualizarRutas {
 				if ($tabla == "configuracion") {
 					$cond_extra = " AND nombre='logo'";
 				}
-				$datos = busca_filtro_tabla("$key, $campo", $tabla, "$campo not like '{%'" . $cond_extra, "", $conn);
+				$datos = busca_filtro_tabla("$key, $campo", $tabla, "$campo not like '{%'" . $cond_extra, "");
 				// print_r($datos);die();
 				if ($datos["numcampos"]) {
 					for ($i = 0; $i < $datos["numcampos"]; $i++) {

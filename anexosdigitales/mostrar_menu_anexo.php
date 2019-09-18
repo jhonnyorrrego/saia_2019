@@ -8,18 +8,18 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "assets/librerias.php");
 if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
     if (!@$_REQUEST["iddoc"])
         $_REQUEST["iddoc"] = @$_REQUEST["key"];
-    include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
+    include_once($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
     menu_principal_documento($_REQUEST["iddoc"]);
 }
 $imprimir = '';
 if (@$_REQUEST['idanexo']) {
     $idanexo = $_REQUEST['idanexo'];
-    $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "", $conn);
+    $anexo = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "");
     if ($anexo['numcampos']) {
         $array = array(
             "pdf",
@@ -37,19 +37,18 @@ if (@$_REQUEST['idanexo']) {
     $imprimir = '<div class="alert alert-warning"><b>ATENCI&Oacute;N</b><br>No hay ningun anexo para mostrar</div>';
 }
 
-echo (librerias_jquery('1.7'));
+echo jquery();
 ?>
 <script>
-$(document).ready(function(){
-	var alto_menu=$("#menu_principal_documento").height();
-	if(parseInt(alto_menu)>=0){
-		var alto=($(window).height());
-		$("#detalles").height((alto-alto_menu)-20);
-	}
-	else{
-		var alto=($(window).height());
-		$("#detalles").height(alto-20);
-	}
-});
+    $(document).ready(function() {
+        var alto_menu = $("#menu_principal_documento").height();
+        if (parseInt(alto_menu) >= 0) {
+            var alto = ($(window).height());
+            $("#detalles").height((alto - alto_menu) - 20);
+        } else {
+            var alto = ($(window).height());
+            $("#detalles").height(alto - 20);
+        }
+    });
 </script>
-<iframe id="detalles" width="100%" frameborder="0" name="detalles" src="<?php echo($imprimir); ?>"></iframe>
+<iframe id="detalles" width="100%" frameborder="0" name="detalles" src="<?php echo ($imprimir); ?>"></iframe>

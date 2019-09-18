@@ -17,7 +17,7 @@ $update_adicional="";
 	$idft_ruta_distribucion=@$_REQUEST['idft_ruta_distribucion'];
 	$idft_destino_radicacion=$_REQUEST['idft_destino_radicacion'];
 	
-	$destino=busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
+	$destino=busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"");
 	
 	if(!$destino[0]['estado_recogida'] && $destino[0]['tipo_origen']==2){
 		$update_adicional=" ,ruta_origen=".$idft_ruta_distribucion;	

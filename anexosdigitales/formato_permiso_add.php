@@ -13,8 +13,8 @@ while ($max_salida > 0) {
 
 include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 $validar_enteros = array("idformato",);
-include_once($ruta_db_superior . "librerias_saia.php");
-echo (librerias_jquery());
+include_once($ruta_db_superior . "assets/librerias.php");
+echo (jquery());
 
 include_once("funciones_archivo.php");
 //$_REQUEST["idformato"]=1;

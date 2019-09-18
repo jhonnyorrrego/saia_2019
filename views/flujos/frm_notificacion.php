@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 
-include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 require_once ($ruta_db_superior . "app/arbol/crear_arbol_ft.php");
 
@@ -503,10 +503,10 @@ if (empty($idflujo)) {
         <?php
 
         function obtenerListaFormatos($idnotificacion) {
-            global $conn;
+            
 
             $lista_formatos = [];
-            $formatos = busca_filtro_tabla("ff.*", "wf_adjunto_notificacion an join wf_formato_flujo ff on ff.idformato_flujo = an.fk_formato_flujo", "an.fk_notificacion= " . $idnotificacion, "", $conn);
+            $formatos = busca_filtro_tabla("ff.*", "wf_adjunto_notificacion an join wf_formato_flujo ff on ff.idformato_flujo = an.fk_formato_flujo", "an.fk_notificacion= " . $idnotificacion, "");
             for ($i = 0; $i < $formatos["numcampos"]; $i++) {
                 $lista_formatos[] = $formatos[$i]["fk_formato"];
             }

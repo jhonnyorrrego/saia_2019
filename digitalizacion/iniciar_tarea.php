@@ -20,7 +20,7 @@ $resp = array(
 );
 
 //Cancelar las tareas pendientes de la misma ip
-$buscar_tarea = busca_filtro_tabla("", "tarea_dig", "estado=1 and direccion_ip='$dir_ip' and idfuncionario=$idfunc", "", $conn);
+$buscar_tarea = busca_filtro_tabla("", "tarea_dig", "estado=1 and direccion_ip='$dir_ip' and idfuncionario=$idfunc", "");
 if ($buscar_tarea["numcampos"]) {
 	$ids_tareas = array();
 	for ($i = 0; $i < $buscar_tarea["numcampos"]; $i++) {

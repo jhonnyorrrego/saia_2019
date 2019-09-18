@@ -17,7 +17,7 @@ $idcategoria_formato = $_REQUEST['idcategoria_formato'] ?? 2;
 $formats = Formato::findAllByAttributes([
     'cod_padre' => 0,
 ]);
-$proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
+$proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '');
 ?>
 <!DOCTYPE html>
 <html lang="es">

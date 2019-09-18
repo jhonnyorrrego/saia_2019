@@ -17,7 +17,7 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 $parametros=json_decode($_REQUEST['parametros']);
 $parametros=array_filter($parametros); //Elimina campos vacios
 $iddoc=$_REQUEST['iddoc'];
-$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"");
 
 $idformato=$_REQUEST['idformato'];
 $cont=count($parametros);
@@ -25,14 +25,14 @@ $cont=count($parametros);
 $repetidos=array(); //Se usa debido a que los mostrar cuando tienen mas de 1 pagina, duplican las validaciones js
 for ($i=0; $i < $cont; $i++) {
     if(!in_array($parametros[$i][0], $repetidos)){
-        $estado_item=busca_filtro_tabla("estado_item","ft_destino_radicacion","idft_destino_radicacion=".$parametros[$i][0],"",$conn); 
+        $estado_item=busca_filtro_tabla("estado_item","ft_destino_radicacion","idft_destino_radicacion=".$parametros[$i][0],""); 
     	if($estado_item[0]['estado_item']==0){
             $sql="UPDATE ft_destino_radicacion SET observacion_destino='".$parametros[$i][1]."', estado_item=1 WHERE idft_destino_radicacion=".$parametros[$i][0];
         }else{
             $sql="UPDATE ft_destino_radicacion SET observacion_destino='".$parametros[$i][1]."' WHERE idft_destino_radicacion=".$parametros[$i][0];
         }
         phpmkr_query($sql);
-        $tipo_destino=busca_filtro_tabla("tipo_destino,nombre_destino","ft_destino_radicacion","idft_destino_radicacion=".$parametros[$i][0],"",$conn);
+        $tipo_destino=busca_filtro_tabla("tipo_destino,nombre_destino","ft_destino_radicacion","idft_destino_radicacion=".$parametros[$i][0],"");
         if($tipo_destino[0]['tipo_destino']==2){
             transferencia_automatica($idformato,$iddoc,$tipo_destino[0]['nombre_destino'],1,"");
         }
@@ -45,10 +45,10 @@ for ($i=0; $i < $cont; $i++) {
 			$datos_destino[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
 		}else{
 			$campo_ruta='ruta_destino';
-			$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
+			$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'');
 		}
-    	$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos_destino[0]['nombre_destino'],"",$conn);
-    	$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+    	$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos_destino[0]['nombre_destino'],"");
+    	$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"");
     	if($responsable['numcampos']){
     		$sql="UPDATE ft_destino_radicacion SET ".$campo_ruta."=".$responsable[0]['idft_ruta_distribucion'].",tipo_mensajero='i',mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$parametros[$i][0];
 			phpmkr_query($sql);

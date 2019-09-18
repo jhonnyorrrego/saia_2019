@@ -9,13 +9,13 @@ while ($max_salida > 0) {
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 
 //MOSTRAR
 function mostrar_unidad_admin_transf($idformato,$iddoc){
-    global $conn;
-    $datos=busca_filtro_tabla("b.cod_padre,b.nombre","ft_transferencia_doc a, dependencia b","a.oficina_productora=b.iddependencia AND a.documento_iddocumento=".$iddoc,"",$conn);
-    $padre=busca_filtro_tabla("","dependencia","iddependencia=".$datos[0]['cod_padre'],"",$conn);
+    
+    $datos=busca_filtro_tabla("b.cod_padre,b.nombre","ft_transferencia_doc a, dependencia b","a.oficina_productora=b.iddependencia AND a.documento_iddocumento=".$iddoc,"");
+    $padre=busca_filtro_tabla("","dependencia","iddependencia=".$datos[0]['cod_padre'],"");
     if(!$padre['numcampos']){
         $padre=$datos;
     }
@@ -23,16 +23,16 @@ function mostrar_unidad_admin_transf($idformato,$iddoc){
     echo($padre[0]['nombre']);
 }
 function mostrar_oficina_productora_transf($idformato,$iddoc){
-    global $conn;
-    $datos=busca_filtro_tabla("b.nombre","ft_transferencia_doc a, dependencia b","a.oficina_productora=b.iddependencia AND a.documento_iddocumento=".$iddoc,"",$conn);
+    
+    $datos=busca_filtro_tabla("b.nombre","ft_transferencia_doc a, dependencia b","a.oficina_productora=b.iddependencia AND a.documento_iddocumento=".$iddoc,"");
      echo($datos[0]['nombre']);
 }
 
 function validacion_js_transferencia($idformato, $iddoc) {
-    global $conn;
+    
 
     if (@$_REQUEST["id"]) {//SI LLEGA UNA LISTA DE EXPEDIENTES
-        $busca_estado = busca_filtro_tabla("estado_archivo", "expediente", "idexpediente IN(" . $_REQUEST["id"] . ")", "", $conn);
+        $busca_estado = busca_filtro_tabla("estado_archivo", "expediente", "idexpediente IN(" . $_REQUEST["id"] . ")", "");
         $estado_archivo = $busca_estado[0]['estado_archivo'];
         $selecciona = 0;
         switch($estado_archivo) {
@@ -77,18 +77,18 @@ function validacion_js_transferencia($idformato, $iddoc) {
 }
 
 function guardar_expedientes_add($idformato, $iddoc) {
-    global $conn;
+    
     $ids = @$_REQUEST["id"];
     $texto = "";
     if ($ids) {
-        $expedientesPadres = busca_filtro_tabla("nombre,idexpediente," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.idexpediente in(" . $ids . ")", "", $conn);
+        $expedientesPadres = busca_filtro_tabla("nombre,idexpediente," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.idexpediente in(" . $ids . ")", "");
     } else if (@$_REQUEST['id_caja']) {
         $ids_caja = $_REQUEST['id_caja'];
-        $expedientesPadres = busca_filtro_tabla("A.nombre,A.idexpediente," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.fk_idcaja in(" . $ids_caja . ")", "", $conn);
+        $expedientesPadres = busca_filtro_tabla("A.nombre,A.idexpediente," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.fk_idcaja in(" . $ids_caja . ")", "");
     } else if (@$_REQUEST['iddoc']) {
-        $datos = busca_filtro_tabla("expedientes_padre", "ft_transferencia_doc", "documento_iddocumento=" . $_REQUEST['iddoc'], "", $conn);
+        $datos = busca_filtro_tabla("expedientes_padre", "ft_transferencia_doc", "documento_iddocumento=" . $_REQUEST['iddoc'], "");
         $ids = $datos[0]['expedientes_padre'];
-        $expedientesPadres = busca_filtro_tabla("idexpediente,nombre," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.idexpediente in(" . $ids . ")", "", $conn);
+        $expedientesPadres = busca_filtro_tabla("idexpediente,nombre," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie,estado_archivo", "expediente A", "A.idexpediente in(" . $ids . ")", "");
     } 
     $html = "
 		<td><input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value=''>
@@ -105,10 +105,10 @@ function guardar_expedientes_add($idformato, $iddoc) {
 				</tr>";
 
     for ($i = 0; $i < $expedientesPadres['numcampos']; $i++) {
-        $caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $expedientesPadres[$i]['fk_idcaja'], "", $conn);
+        $caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $expedientesPadres[$i]['fk_idcaja'], "");
         $cadena_caja = $caja[0]['codigo_dependencia'] . $caja[0]['codigo_serie'] . $caja[0]['no_consecutivo'] . "(" . $caja[0]['fondo'] . ")";
 
-        $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expedientesPadres[$i]['serie_idserie'], "", $conn);
+        $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expedientesPadres[$i]['serie_idserie'], "");
         $cadena_serie = $serie[0]['nombre'];
         $html .= "
 			<tr>
@@ -123,15 +123,15 @@ function guardar_expedientes_add($idformato, $iddoc) {
 			</tr>				
 		";
 		
-		$hijosExpediente = busca_filtro_tabla("idexpediente,nombre," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente","estado_cierre=2 AND (cod_arbol LIKE '%." . $expedientesPadres[$i]['idexpediente'] . ".%' OR cod_arbol LIKE '"  . $expedientesPadres[$i]['idexpediente'] . ".%')","",$conn);
+		$hijosExpediente = busca_filtro_tabla("idexpediente,nombre," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente","estado_cierre=2 AND (cod_arbol LIKE '%." . $expedientesPadres[$i]['idexpediente'] . ".%' OR cod_arbol LIKE '"  . $expedientesPadres[$i]['idexpediente'] . ".%')","");
 		
 		for ($j = 0; $j < $hijosExpediente['numcampos']; $j++) {
 			
 			if ($hijosExpediente[$j]['idexpediente'] != $expedientesPadres[$i]['idexpediente']) {
-				$caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $hijosExpediente[$j]['fk_idcaja'], "", $conn);
+				$caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $hijosExpediente[$j]['fk_idcaja'], "");
 		        $cadena_caja = $caja[0]['codigo_dependencia'] . $caja[0]['codigo_serie'] . $caja[0]['no_consecutivo'] . "(" . $caja[0]['fondo'] . ")";
 		
-		        $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $hijosExpediente[$j]['serie_idserie'], "", $conn);
+		        $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $hijosExpediente[$j]['serie_idserie'], "");
 		        $cadena_serie = $serie[0]['nombre'];
 		        $html .= "
 					<tr>
@@ -225,11 +225,11 @@ function guardar_expedientes_add($idformato, $iddoc) {
 
 function expedientes_vinculados_funcion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$nombre_entidad = busca_filtro_tabla('valor', 'configuracion', "nombre='nombre'", "", $conn);
+	$nombre_entidad = busca_filtro_tabla('valor', 'configuracion', "nombre='nombre'", "");
 	$nombre_entidad = strtoupper(codifica_encabezado(html_entity_decode($nombre_entidad[0]['valor'])));
 	$texto = '';
-	$datos = busca_filtro_tabla("", "ft_transferencia_doc A, documento B", "A.documento_iddocumento=" . $iddoc . " and A.documento_iddocumento=B.iddocumento", "", $conn);
-	$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $datos[0]["expediente_vinculado"] . ")", "", $conn);
+	$datos = busca_filtro_tabla("", "ft_transferencia_doc A, documento B", "A.documento_iddocumento=" . $iddoc . " and A.documento_iddocumento=B.iddocumento", "");
+	$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $datos[0]["expediente_vinculado"] . ")", "");
 	if ($expedientes["numcampos"]) {
 		$estilo_general = ' style="text-align:center;font-weight:bold;"';
 		$texto .= '<p>&nbsp;</p><table style="width:100%;border-collapse:collapse;" border="1">';
@@ -365,7 +365,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 			if ($expedientes[$i]['tomo_padre']) {
 				$tomo_padre = $expedientes[$i]['tomo_padre'];
 			}
-			$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
+			$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "");
 			$cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
 			//tomos + el padre
 			$cadena_tomos = ("<i><b style='font-size:10px;'></b></i><i style='font-size:10px;'>" . $expedientes[$i]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
@@ -415,8 +415,8 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 
 
 function cambiar_estado_expedientes($idformato, $iddoc) {
-    global $conn;
-    $datos = busca_filtro_tabla("a.expediente_vinculado, a.transferir_a,a.tipo_transferencia,a.recibido_por,a.expedientes_padre,a.agrupador", "ft_transferencia_doc a", "a.documento_iddocumento=" . $iddoc, "", $conn);
+    
+    $datos = busca_filtro_tabla("a.expediente_vinculado, a.transferir_a,a.tipo_transferencia,a.recibido_por,a.expedientes_padre,a.agrupador", "ft_transferencia_doc a", "a.documento_iddocumento=" . $iddoc, "");
 
     $mystring = $datos[0]["expediente_vinculado"];
     $findme = 'cajas_';
@@ -426,7 +426,7 @@ function cambiar_estado_expedientes($idformato, $iddoc) {
         $ids_caja = trim($datos[0]["expediente_vinculado"], "cajas_");
         $sql_c = "UPDATE caja SET estado_archivo=" . $datos[0]["transferir_a"] . " WHERE idcaja IN(" . $ids_caja . ")";
         phpmkr_query($sql_c);
-        $busca_expediente = busca_filtro_tabla("idexpediente", "expediente", "fk_idcaja IN(" . $ids_caja . ")", "", $conn);
+        $busca_expediente = busca_filtro_tabla("idexpediente", "expediente", "fk_idcaja IN(" . $ids_caja . ")", "");
         $expedientes_lista = implode(",", extrae_campo($busca_expediente, 'idexpediente'));
         $expedientes = explode(',', $expedientes_lista);
         obtener_expedientes_hijos($expedientes_lista, $expedientes, 1);
@@ -449,14 +449,14 @@ function cambiar_estado_expedientes($idformato, $iddoc) {
 }
 
 function obtener_expedientes_hijos($idexpediente,&$expedientes,$indice){
-	global $conn;
+	
 	if($indice>=100)return false;
 	
-	$expediente=busca_filtro_tabla("","expediente a","a.cod_padre in(".$idexpediente.")","",$conn);
+	$expediente=busca_filtro_tabla("","expediente a","a.cod_padre in(".$idexpediente.")","");
 	for($i=0;$i<$expediente["numcampos"];$i++){
 		$expedientes[]=$expediente[$i]["idexpediente"];
 		
-		$hijos=busca_filtro_tabla("","expediente a","a.cod_padre=".$expediente[$i]["idexpediente"],"",$conn);
+		$hijos=busca_filtro_tabla("","expediente a","a.cod_padre=".$expediente[$i]["idexpediente"],"");
 		if($hijos["numcampos"]){
 			$indice++;
 			obtener_expedientes_hijos($expediente[$i]["idexpediente"],$expedientes,$indice);

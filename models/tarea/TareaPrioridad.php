@@ -38,7 +38,7 @@ class TareaPrioridad extends Model
 
     public static function findHistoryByTask($taskId)
     {
-        global $conn;
+        
 
         $sql = <<<SQL
             select 

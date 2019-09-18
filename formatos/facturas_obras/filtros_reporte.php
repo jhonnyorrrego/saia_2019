@@ -9,17 +9,17 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 include_once ($ruta_db_superior . "calendario/calendario.php");
 
 echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap());
+echo(jquery());
+echo(bootstrap());
 echo(librerias_validar_formulario());
 echo(librerias_arboles());
  
 $options='<option value="" selected>Seleccione...</option>';
-$ventanillas=busca_filtro_tabla("idcf_ventanilla,valor","cf_ventanilla","estado=1","",$conn);
+$ventanillas=busca_filtro_tabla("idcf_ventanilla,valor","cf_ventanilla","estado=1","");
 for($i=0;$i<$ventanillas['numcampos'];$i++){
 	$options.='<option value="'.$ventanillas[$i]['idcf_ventanilla'].'">'.$ventanillas[$i]['valor'].'</option>';
 }

@@ -13,8 +13,8 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 
 function botones_tiempo($idformato,$iddoc,$campo)
-{global $conn;
- $formato=busca_filtro_tabla("nombre_tabla","formato","idformato=$idformato","",$conn); 
+{
+ $formato=busca_filtro_tabla("nombre_tabla","formato","idformato=$idformato",""); 
 ?>
 <script type="text/javascript" src="../../js/jquery.js"></script>
 <script>
@@ -64,10 +64,10 @@ $("#terminar").click(function(){
 });
 </script>
 <?php 
- $iniciado=busca_filtro_tabla("count(*)","tabla_tiempos","documento_iddocumento=$iddoc and fecha_final is null","",$conn);
- $finalizado=busca_filtro_tabla("count(*)","tabla_tiempos","documento_iddocumento=$iddoc and fecha_final is not null","",$conn);
+ $iniciado=busca_filtro_tabla("count(*)","tabla_tiempos","documento_iddocumento=$iddoc and fecha_final is null","");
+ $finalizado=busca_filtro_tabla("count(*)","tabla_tiempos","documento_iddocumento=$iddoc and fecha_final is not null","");
   
- $valor=busca_filtro_tabla($campo,$formato[0][0],"documento_iddocumento=$iddoc","",$conn); 
+ $valor=busca_filtro_tabla($campo,$formato[0][0],"documento_iddocumento=$iddoc",""); 
  
  if($valor[0][0]=="")
   {
@@ -90,21 +90,21 @@ $("#terminar").click(function(){
 }
 
 function iniciar()
-{global $conn;
+{
  $sql="insert into tabla_tiempos(fecha_inicial,documento_iddocumento) values(".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",'".$_REQUEST["iddoc"]."')";
- phpmkr_query($sql,$conn);
+ phpmkr_query($sql);
  //echo $sql; 
 }
 function detener()
 {$sql="update tabla_tiempos set fecha_final=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." where documento_iddocumento='".$_REQUEST["iddoc"]."' and fecha_final is null";
- phpmkr_query($sql,$conn); 
+ phpmkr_query($sql); 
  //echo $sql;
 }
 function terminar_conteo($idformato,$iddoc,$campo,$tabla)
 {$sql="update tabla_tiempos set fecha_final=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." where documento_iddocumento='".$iddoc."' and fecha_final is null";
  //echo $sql;
- phpmkr_query($sql,$conn);   
- $tiempos=busca_filtro_tabla(resta_horas("fecha_final","fecha_inicial"),"tabla_tiempos","documento_iddocumento=".$iddoc,"",$conn);
+ phpmkr_query($sql);   
+ $tiempos=busca_filtro_tabla(resta_horas("fecha_final","fecha_inicial"),"tabla_tiempos","documento_iddocumento=".$iddoc,"");
   
  $horas=0;
  $minutos=0;
@@ -117,10 +117,10 @@ function terminar_conteo($idformato,$iddoc,$campo,$tabla)
    }
  $total=$minutos+($horas*60)+intval($segundos/60);
  $sql="update ".$tabla." set ".$campo."='$total' where documento_iddocumento=".$iddoc;
-  phpmkr_query($sql,$conn);
+  phpmkr_query($sql);
   //echo "<br />".$sql;
  $sql="delete from tabla_tiempos where documento_iddocumento=".$iddoc;
-  phpmkr_query($sql,$conn); 
+  phpmkr_query($sql); 
  // echo $total;
 // die();
 }

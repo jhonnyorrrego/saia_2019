@@ -1,62 +1,158 @@
-<?php
-$max_salida = 10;
-$ruta_db_superior = $ruta = '';
+$(function() {
+    let baseUrl = Session.getBaseUrl();
+    let params = $('script[data-params]').data('params');
+    let loadedFiles = [];
 
-while ($max_salida > 0) {
-    if (is_file($ruta . 'db.php')) {
-        $ruta_db_superior = $ruta;
-        break;
+    let myDropzone = new Dropzone('#dropzone', {
+        url: `${baseUrl}app/temporal/cargar_anexos.php`,
+        dictDefaultMessage:
+            'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+        maxFilesize: 3,
+        maxFiles: 3,
+        dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+        dictMaxFilesExceeded: 'Máximo 3 archivos',
+        params: {
+            key: localStorage.getItem('key'),
+            dir: 'documento'
+        },
+        paramName: 'task_file',
+        init: function() {
+            this.on('success', function(file, response) {
+                response = jQuery.parseJSON(response);
+
+                if (response.success) {
+                    response.data.forEach(e => {
+                        loadedFiles.push(e);
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            });
+        }
+    });
+
+    $('#users_tree').fancytree({
+        checkbox: true,
+        selectMode: 3,
+        source: {
+            url: `${baseUrl}arboles/arbol_funcionario.php?checkbox=1&idcampofun=funcionario_codigo`
+        }
+    });
+
+    $('#select_users').select2({
+        minimumInputLength: 3,
+        language: 'es',
+        ajax: {
+            url: `${baseUrl}app/funcionario/autocompletar.php`,
+            dataType: 'json',
+            data: function(params) {
+                return {
+                    term: params.term,
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    identificator: 'funcionario_codigo'
+                };
+            },
+            processResults: function(response) {
+                return response.success ? { results: response.data } : {};
+            }
+        }
+    });
+
+    $("[name='change_type']").on('click', function() {
+        if ($(this).val() == 'input') {
+            $('#input').show();
+            $('#tree').hide();
+        } else {
+            $('#input').hide();
+            $('#tree').show();
+        }
+    });
+
+    $('#btn_success').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: `${baseUrl}app/documento/transferir.php`,
+            data: {
+                key: localStorage.getItem('key'),
+                documentId: params.documentId,
+                destination: getUsers(),
+                message: $('#message').val(),
+                files: loadedFiles,
+                dir: 'documento'
+            },
+            beforeSend: function() {
+                $('#btn_success,#spiner')
+                    .parent()
+                    .toggle();
+            },
+            success: function(response) {
+                $('#btn_success,#spiner')
+                    .parent()
+                    .toggle();
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                    top.closeTopModal();
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            }
+        });
+    });
+
+    function getUsers() {
+        let users = $('#select_users').val() || [];
+        let nodes = $('#users_tree')
+            .fancytree('getTree')
+            .getSelectedNodes();
+
+        nodes.forEach(n => {
+            users.push(n.key);
+        });
+
+        return users;
     }
 
-    $ruta .= '../';
-    $max_salida--;
-}
+    (function defaultUsers(params) {
+        if (parseInt(params.type) == 2) {
+            var data = {
+                defaultUser: params.userInfo.user,
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
+            };
+        } else if (parseInt(params.type) == 3) {
+            var data = {
+                documentId: params.documentId,
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
+            };
+        } else {
+            return;
+        }
 
-include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
-?>
-<?= fancyTree() ?>
-<div class="row">
-    <div class="col-12">
-        <div class="radio radio-complete">
-            <input type="radio" value="input" name="change_type" id="input_type" checked="checked">
-            <label for="input_type">Seleccionar por usuario</label>
-            <input type="radio" value="tree" name="change_type" id="tree_type">
-            <label for="tree_type">Seleccionar usuarios por dependencia</label>
-        </div>
-    </div>
-</div>
-<div class="row" id="input">
-    <div class="col-12">
-        <div class="form-group form-group-default">
-            <label>Puede buscar y elegir a los usuarios</label>
-            <select class="full-width" data-init-plugin="select2" multiple id="select_users"></select>
-        </div>
-    </div>
-</div>
-<div class="row" id="tree" style="display:none">
-    <div class="col-12 mb-2">
-        <div id="users_tree"></div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="form-group form-group-default">
-            <label>Mensaje</label>
-            <textarea class="form-control" id="message" placeholder="Escriba el mensaje que desea enviar al destino" rows="4"></textarea>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div id="dropzone" class="dropzone" style="min-height:150px"></div>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col-12" style="display:none">
-        <div class="float-right progress-circle-indeterminate" id="spiner"></div>
-    </div>
-</div>
-<?= dropzone() ?>
-<?= select2() ?>
-<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-params='<?= json_encode($_REQUEST) ?>'></script> 
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: `${baseUrl}app/funcionario/autocompletar.php`,
+            data: data,
+            success: function(response) {
+                response.data.forEach(u => {
+                    var option = new Option(u.text, u.id, true, true);
+                    $('#select_users')
+                        .append(option)
+                        .trigger('change');
+                });
+            }
+        });
+    })(params);
+});
