@@ -9,7 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 $diafinal = date("t");
 ?>
 <link rel="stylesheet" type="text/css" media="all" href="<?php echo($ruta_db_superior); ?>css/daterangepicker-bs3.css" />

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 
 echo(librerias_notificaciones());
 
@@ -20,7 +20,7 @@ function guardar_expedientes_prestamos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$html = "<td>";
 	if ($_REQUEST["iddoc"]) {
-		$consul_ids = busca_filtro_tabla("transferencia_presta", "ft_solicitud_prestamo", "documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+		$consul_ids = busca_filtro_tabla("transferencia_presta", "ft_solicitud_prestamo", "documento_iddocumento=" . $_REQUEST["iddoc"], "");
 		if ($consul_ids["numcampos"] == 0 || $consul_ids[0]["transferencia_presta"] != "") {
 			$ids = $consul_ids[0]["transferencia_presta"];
 		}
@@ -31,7 +31,7 @@ function guardar_expedientes_prestamos($idformato, $iddoc) {
 		redirecciona($ruta_db_superior . "vacio.php");
 	}
 	if ($ids) {
-		$expedientes = busca_filtro_tabla("nombre,idexpediente," . fecha_db_obtener('fecha', 'Y-m-d') . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie", "expediente A", "A.idexpediente in(" . $ids . ")", "", $conn);
+		$expedientes = busca_filtro_tabla("nombre,idexpediente," . fecha_db_obtener('fecha', 'Y-m-d') . " AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie", "expediente A", "A.idexpediente in(" . $ids . ")", "");
 		if ($expedientes["numcampos"]) {
 			$html .= "<table style='width:100%;border-collapse:collapse;'  border='1'>
 				<tr style='font-weight:bold;text-align:center;'>
@@ -46,14 +46,14 @@ function guardar_expedientes_prestamos($idformato, $iddoc) {
 				</tr>";
 
 			for ($i = 0; $i < $expedientes['numcampos']; $i++) {
-				$caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $expedientes[$i]['fk_idcaja'], "", $conn);
+				$caja = busca_filtro_tabla("fondo,codigo_dependencia,codigo_serie,no_consecutivo", "caja", "idcaja=" . $expedientes[$i]['fk_idcaja'], "");
 				$cadena_caja = "";
 				if ($caja["numcampos"]) {
 					$cadena_caja = $caja[0]['codigo_dependencia'] . $caja[0]['codigo_serie'] . $caja[0]['no_consecutivo'] . "(" . $caja[0]['fondo'] . ")";
 				}
 
 				$cadena_serie = "";
-				$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expedientes[$i]['serie_idserie'], "", $conn);
+				$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expedientes[$i]['serie_idserie'], "");
 				if ($serie["numcampos"]) {
 					$cadena_serie = $serie[0]['nombre'];
 				}
@@ -93,9 +93,9 @@ function guardar_expedientes_prestamos($idformato, $iddoc) {
 
 /*MOSTRAR*/
 function ver_creador_prestamo($idformato, $iddoc) {
-	global $conn;
+	
 	$html = "";
-	$solicitante = busca_filtro_tabla("A.nombres,A.apellidos", "vfuncionario_dc A,ft_solicitud_prestamo B", "A.iddependencia_cargo=B.dependencia and B.documento_iddocumento=" . $iddoc, "", $conn);
+	$solicitante = busca_filtro_tabla("A.nombres,A.apellidos", "vfuncionario_dc A,ft_solicitud_prestamo B", "A.iddependencia_cargo=B.dependencia and B.documento_iddocumento=" . $iddoc, "");
 	if ($solicitante["numcampos"]) {
 		$html = $solicitante[0]['nombres'] . "  " . $solicitante[0]['apellidos'];
 	}
@@ -105,10 +105,10 @@ function ver_creador_prestamo($idformato, $iddoc) {
 function mostrar_expedientes_prestamos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$texto = '';
-	$datos = busca_filtro_tabla("fk_expediente", "ft_solicitud_prestamo A, documento B, ft_item_prestamo_exp C", "A.idft_solicitud_prestamo=C.ft_solicitud_prestamo AND A.documento_iddocumento=" . $iddoc . " and A.documento_iddocumento=B.iddocumento", "", $conn);
+	$datos = busca_filtro_tabla("fk_expediente", "ft_solicitud_prestamo A, documento B, ft_item_prestamo_exp C", "A.idft_solicitud_prestamo=C.ft_solicitud_prestamo AND A.documento_iddocumento=" . $iddoc . " and A.documento_iddocumento=B.iddocumento", "");
 	if ($datos["numcampos"]) {
 		$lista_expedientes = implode(',', extrae_campo($datos, 'fk_expediente', 'U'));
-		$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $lista_expedientes . ")", "", $conn);
+		$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $lista_expedientes . ")", "");
 		if ($expedientes["numcampos"]) {
 			$vector_soportes = array(
 				1 => 'CD-ROM',
@@ -158,7 +158,7 @@ function mostrar_expedientes_prestamos($idformato, $iddoc) {
 				if ($expedientes[$i]['tomo_padre']) {
 					$tomo_padre = $expedientes[$i]['tomo_padre'];
 				}
-				$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
+				$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "");
 				$cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
 				//tomos + el padre
 				$cadena_tomos = $expedientes[$i]['tomo_no'] . " de " . $cantidad_tomos;
@@ -195,8 +195,8 @@ function mostrar_expedientes_prestamos($idformato, $iddoc) {
 
 /*POSTERIOR APROBAR*/
 function insertar_item_prestamo_exp($idformato, $iddoc) {
-	global $conn;
-	$prestamo_expedientes = busca_filtro_tabla("transferencia_presta,idft_solicitud_prestamo", "ft_solicitud_prestamo", "documento_iddocumento=" . $iddoc, "", $conn);
+	
+	$prestamo_expedientes = busca_filtro_tabla("transferencia_presta,idft_solicitud_prestamo", "ft_solicitud_prestamo", "documento_iddocumento=" . $iddoc, "");
 	if ($prestamo_expedientes["numcampos"]) {
 		$vector_prestamo_expedientes = explode(',', $prestamo_expedientes[0]['transferencia_presta']);
 		for ($i = 0; $i < count($vector_prestamo_expedientes); $i++) {

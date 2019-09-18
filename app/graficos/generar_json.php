@@ -1,4 +1,5 @@
 <?php
+
 use function GuzzleHttp\json_decode;
 
 $max_salida = 10;
@@ -16,7 +17,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0

@@ -107,13 +107,14 @@ class DocumentoVinculado extends Model
      */
     public static function findRelations($documentId)
     {
-        $sql = <<<SQL
-            select *
-            from documento_vinculado
-            where
-                origen = {$documentId} or
-                destino = {$documentId}
-SQL;
-        return self::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('*')
+            ->from('documento_vinculado')
+            ->where('origen = :origin')
+            ->orWhere('destino = :destination')
+            ->setParameter(':origin', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':destination', $documentId, \Doctrine\DBAL\Types\Type::INTEGER);
+
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

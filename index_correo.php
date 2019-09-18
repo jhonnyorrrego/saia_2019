@@ -9,16 +9,16 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 
-echo(estilo_bootstrap());
+echo(bootstrap());
 
 if (is_dir("roundcubemail")) {
 	if (!is_dir($ruta_db_superior . "roundcubemail/temp")) {
 		mkdir($ruta_db_superior . "roundcubemail/temp/", 0777);
 	}
 
-	$funcionario = busca_filtro_tabla("idfuncionario, email, email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+	$funcionario = busca_filtro_tabla("idfuncionario, email, email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "");
 	if (!$funcionario["numcampos"]) {
 	?>
 	<div class="alert alert-error">

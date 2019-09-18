@@ -18,8 +18,8 @@ if(@$_REQUEST["idft_destino_radicacion"]){
     $nombre_destino=@$_REQUEST['nombre_destino'];
     $campo=@$_REQUEST['campo'];
 
-    $datos_destino=busca_filtro_tabla("ft_radicacion_entrada","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
-    $datos_radicacion=busca_filtro_tabla($campo.",idft_radicacion_entrada","ft_radicacion_entrada","idft_radicacion_entrada=".$datos_destino[0]['ft_radicacion_entrada'],"",$conn);
+    $datos_destino=busca_filtro_tabla("ft_radicacion_entrada","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"");
+    $datos_radicacion=busca_filtro_tabla($campo.",idft_radicacion_entrada","ft_radicacion_entrada","idft_radicacion_entrada=".$datos_destino[0]['ft_radicacion_entrada'],"");
     $lista_destinos=explode(',',$datos_radicacion[0][$campo]);
     $cantidad=count($lista_destinos);
     for($i=0;$i<$cantidad;$i++){

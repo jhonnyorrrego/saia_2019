@@ -45,7 +45,7 @@ function buscar_funcionarios2($dependencia, $arreglo = null)
 
     $dependencias = array_unique($dependencias);
 
-    $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1", "", $conn);
+    $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1", "");
 
     $arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
 
@@ -54,12 +54,12 @@ function buscar_funcionarios2($dependencia, $arreglo = null)
 
 function serie_subserie($idformato, $iddoc, $tipo = 0)
 {
-    global $conn;
 
-    $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
-    $serie = busca_filtro_tabla("A.codigo,A.cod_padre", "serie A," . $formato[0]['nombre_tabla'] . " B", "B.serie_idserie=A.idserie and B.documento_iddocumento=$iddoc", "", $conn);
+
+    $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "");
+    $serie = busca_filtro_tabla("A.codigo,A.cod_padre", "serie A," . $formato[0]['nombre_tabla'] . " B", "B.serie_idserie=A.idserie and B.documento_iddocumento=$iddoc", "");
     if ($serie[0][0] == "") {
-        $serie_papa = busca_filtro_tabla("codigo,cod_padre", "serie", "idserie=" . $serie[0][1], "", $conn);
+        $serie_papa = busca_filtro_tabla("codigo,cod_padre", "serie", "idserie=" . $serie[0][1], "");
         if ($tipo) {
             return ($serie_papa[0][0]);
         } else {
@@ -93,7 +93,7 @@ function transferencia_automatica(
     $notas = "",
     $nombre = "TRANSFERIDO"
 ) {
-    global $conn;
+
 
     $adicionales = array();
 
@@ -102,8 +102,8 @@ function transferencia_automatica(
     } elseif ($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
         $vector = explode("@", $destinos);
     } elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
-        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato = " . $idformato, "", $conn);
-        $dato = busca_filtro_tabla($destinos, $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato = " . $idformato, "");
+        $dato = busca_filtro_tabla($destinos, $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
 
         if ($dato['numcampos']) {
             $vector = explode(",", $dato[0][0]);
@@ -125,7 +125,7 @@ function transferencia_automatica(
                 );
             } else {
                 if ($fila) {
-                    $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "", $conn);
+                    $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "");
                     $lista = array(
                         $codigos[0]["funcionario_codigo"]
                     );
@@ -147,14 +147,14 @@ function transferencia_automatica(
 
 function mostrar_preparo($idformato, $iddoc)
 {
-    global $conn;
-    $ejecutor = busca_filtro_tabla("ejecutor", "documento", "iddocumento=$iddoc", "", $conn);
+
+    $ejecutor = busca_filtro_tabla("ejecutor", "documento", "iddocumento=$iddoc", "");
 
     if ($ejecutor["numcampos"] == 0)
         return;
     else {
-        $tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-        $preparo = busca_filtro_tabla("iniciales", $tabla[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+        $tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "");
+        $preparo = busca_filtro_tabla("iniciales", $tabla[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
         echo 'Prepar&oacute; :' . $preparo[0]["iniciales"] . ' ';
         return;
     }
@@ -162,15 +162,15 @@ function mostrar_preparo($idformato, $iddoc)
 
 function buscar_jefe_directo($dep)
 {
-    global $conn;
-    $funcionario_dependencia = busca_filtro_tabla("c.funcionario_codigo", "dependencia_cargo a, cargo b, funcionario c", "a.funcionario_idfuncionario=c.idfuncionario and a.estado=1 and a.dependencia_iddependencia=" . $dep . " and a.cargo_idcargo=b.idcargo and (lower(b.nombre) like '%director%' OR lower(b.nombre) like '%lider%' OR lower(b.nombre) like '%jefe%')", "", $conn);
+
+    $funcionario_dependencia = busca_filtro_tabla("c.funcionario_codigo", "dependencia_cargo a, cargo b, funcionario c", "a.funcionario_idfuncionario=c.idfuncionario and a.estado=1 and a.dependencia_iddependencia=" . $dep . " and a.cargo_idcargo=b.idcargo and (lower(b.nombre) like '%director%' OR lower(b.nombre) like '%lider%' OR lower(b.nombre) like '%jefe%')", "");
 
     if ($funcionario_dependencia["numcampos"])
         return ($funcionario_dependencia[0]["funcionario_codigo"]);
     else {
-        $dependencia = busca_filtro_tabla("cod_padre", "dependencia", "iddependencia=" . $dep, "", $conn);
+        $dependencia = busca_filtro_tabla("cod_padre", "dependencia", "iddependencia=" . $dep, "");
         if ($dependencia[0][0] == "") { // no encontró y retorna el predeterminado
-            $configuracion = busca_filtro_tabla("valor", "configuracion", "nombre='jefe predeterminado'", "", $conn);
+            $configuracion = busca_filtro_tabla("valor", "configuracion", "nombre='jefe predeterminado'", "");
             return $configuracion[0][0];
         } else
             return buscar_jefe_directo($dependencia[0][0]);
@@ -198,7 +198,7 @@ function nivel_cargo($idcargo)
     if ($niveles > 10) {
         return false;
     }
-    $cargo = busca_filtro_tabla("", "cargo", "idcargo=" . $idcargo, "", $conn);
+    $cargo = busca_filtro_tabla("", "cargo", "idcargo=" . $idcargo, "");
     if ($cargo[0]["cod_padre"] != 0) {
         $idcargo = nivel_cargo($cargo[0]["cod_padre"]);
         return $idcargo;
@@ -222,8 +222,8 @@ function nivel_cargo($idcargo)
 
 function ejecutores_fbcomplete()
 {
-    global $conn;
-    $ejecutores = busca_filtro_tabla("distinct nombre,identificacion,idejecutor", "ejecutor", "", "trim(lower(nombre))", $conn);
+
+    $ejecutores = busca_filtro_tabla("distinct nombre,identificacion,idejecutor", "ejecutor", "", "trim(lower(nombre))");
     $texto = '';
     if ($ejecutores["numcampos"]) {
         for ($i = 0; $i < $ejecutores["numcampos"]; $i++)
@@ -247,8 +247,8 @@ function ejecutores_fbcomplete()
 
 function mostrar_ultimo_upload($idformato, $campo, $iddoc)
 {
-    global $conn;
-    $campo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='$campo' and formato_idformato=$idformato", "", $conn);
+
+    $campo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='$campo' and formato_idformato=$idformato", "");
     include_once("../../anexosdigitales/funciones_archivo.php");
     echo listar_anexos_documento($iddoc, $idformato, $campo[0][0], $_REQUEST["tipo"], "DESCARGAR|ULTIMO");
 }
@@ -277,10 +277,10 @@ function mostrar_ultimo_upload($idformato, $campo, $iddoc)
 
 function componente_ejecutor($idcampo, $iddoc)
 {
-    global $conn;
+
     $adicionales = "";
-    $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
-    $formato = busca_filtro_tabla("", "formato", "idformato=" . $campo[0]["formato_idformato"], "", $conn);
+    $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "");
+    $formato = busca_filtro_tabla("", "formato", "idformato=" . $campo[0]["formato_idformato"], "");
     if ($iddoc != "")
         $adicionales = "&iddoc=$iddoc";
     if ($campo[0]["valor"] != "")
@@ -297,7 +297,6 @@ function componente_ejecutor($idcampo, $iddoc)
             <script>
                 $( document ).ready(function() {               
                     $(window).resize(function(){
-                       console.log("1");
                        document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
                        document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
                     });
@@ -322,8 +321,8 @@ function componente_ejecutor($idcampo, $iddoc)
 
 function busca_campo($campos, $llave, $tabla, $id)
 {
-    global $conn;
-    $resultado = busca_filtro_tabla($campos, $tabla, $llave . "='" . $id . "'", "", $conn);
+
+    $resultado = busca_filtro_tabla($campos, $tabla, $llave . "='" . $id . "'", "");
 
     if (strpos($campos, ",") > 0) {
         $lista = explode(",", $campos);
@@ -349,8 +348,8 @@ function busca_campo($campos, $llave, $tabla, $id)
 
 function combo_pais()
 {
-    global $conn;
-    $pais1 = busca_filtro_tabla("*", "pais", "", "nombre", $conn);
+
+    $pais1 = busca_filtro_tabla("*", "pais", "", "nombre");
     echo "<select name='x_nacionalidadejecutor' id='x_nacionalidadejecutor'><option>Seleccionar  ...</option>";
     for ($i = 0; $i < $pais1["numcampos"]; $i++) {
         if ($pais1[$i]["idpais"] == 1)
@@ -379,13 +378,13 @@ function cargos_memo($func, $fecha, $tipo, $campo)
     global $conn, $sql;
     switch ($campo) {
         case 1:
-            /* $roles=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and lower(cargo.nombre)<>'distribuidor de documentos' and dependencia_cargo.estado=1 and funcionario.estado=1 AND dependencia.tipo<>0 and funcionario_codigo='$func'","",$conn); 	 */
-            $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='$fecha' and fecha_final>='$fecha' and funcionario_codigo='$func'", "", $conn);
+            /* $roles=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and lower(cargo.nombre)<>'distribuidor de documentos' and dependencia_cargo.estado=1 and funcionario.estado=1 AND dependencia.tipo<>0 and funcionario_codigo='$func'",""); 	 */
+            $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='$fecha' and fecha_final>='$fecha' and funcionario_codigo='$func'", "");
             if (!$roles["numcampos"])
-                $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='$func'", "fecha desc", $conn);
+                $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='$func'", "fecha desc");
             break;
         case 5:
-            $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$func", "", $conn);
+            $roles = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$func", "");
     }
     if ($tipo == "para")
         return ucwords($roles[0]["nombres"] . " " . $roles[0]["apellidos"]) . ", " . $roles[0]["nombre"];
@@ -408,17 +407,17 @@ function cargos_memo($func, $fecha, $tipo, $campo)
 
 function listar_funcionarios($idformato, $nombre_campo, $iddoc)
 {
-    global $conn;
-    $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
-    $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
+
+    $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '');
+    $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '');
 
     if ($valor["numcampos"]) {
         $lista = explode(',', $valor[0][0]);
         for ($i = 0; $i < count($lista); $i++) {
             if (strpos($lista[$i], '#') !== false) { // dependencia
-                $nombre = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . str_replace("#", "", $lista[$i]), '', $conn);
+                $nombre = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . str_replace("#", "", $lista[$i]), '');
             } else { // funcionario
-                $nombre = busca_filtro_tabla('nombres,apellidos', 'funcionario', 'funcionario_codigo="' . $lista[$i] . '"', '', $conn);
+                $nombre = busca_filtro_tabla('nombres,apellidos', 'funcionario', 'funcionario_codigo="' . $lista[$i] . '"', '');
                 // $cargo=cargos_memo();
                 $nombre[0]["nombre"] = $nombre[0]["nombres"] . " " . $nombre[0]["apellidos"];
             }
@@ -442,14 +441,14 @@ function listar_funcionarios($idformato, $nombre_campo, $iddoc)
 
 function listar_dependencias($idformato, $nombre_campo, $iddoc)
 {
-    global $conn;
-    $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
-    $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
+
+    $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '');
+    $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '');
 
     if ($valor["numcampos"]) {
         $lista = explode(',', $valor[0][0]);
         for ($i = 0; $i < count($lista); $i++) {
-            $nombre = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $lista[$i], '', $conn);
+            $nombre = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $lista[$i], '');
             echo $nombre[0]["nombre"] . "<br />";
         }
     }
@@ -501,7 +500,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
     function guardar_plantilla($idformato, $idcampo, $iddoc = null)
     {
-        $campo .= '<div class="form-group" id="tr_guardar_plantilla">
+        echo '<div class="form-group" id="tr_guardar_plantilla">
                 <label title="">GUARDAR COMO PLANTILLA:</label>
                 <div class="row">
                     <div class="px-1">
@@ -523,7 +522,6 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     
                 </div>
             </div>';
-        echo $campo;
     }
 
     /*
@@ -541,11 +539,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
     function ciudad($idformato = 0, $iddoc = 0, $tipo = 0)
     {
-        global $conn;
 
-        $ciudad = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
+
+        $ciudad = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "");
         if ($ciudad["numcampos"]) {
-            $nombre_ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ciudad[0]["valor"], "", $conn);
+            $nombre_ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ciudad[0]["valor"], "");
             $ciudad_valor = $ciudad[0][0];
             $valor = $nombre_ciudad[0][0];
         } else {
@@ -574,7 +572,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
     function mostrar_fecha($idformato, $iddoc, $tipo = null)
     {
-        global $conn;
+
         $datos = Formato::findAllByAttributes(['idformato' => $idformato], ['nombre', 'nombre_tabla']);
 
         $resultado = Model::getQueryBuilder()
@@ -649,7 +647,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
     function despedida($idformato, $idcampo, $iddoc = null)
     {
-        global $conn;
+
         if ($iddoc == null) {
             echo '<td width="79%" bgcolor="#F5F5F5" id="despedida">
           <select name="despedida" id="obligatorio">
@@ -704,15 +702,15 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
     function anexos_fisicos($idformato, $idcampo, $iddoc = null)
     {
-        global $conn;
+
         ?>
         <td bgcolor="#F5F5F5">
             <?php
                 $anexos_fisicos = array();
                 $anexos_fisicos["numcampos"] = 0;
                 if ($iddoc != null) {
-                    $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
-                    $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+                    $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "");
+                    $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "");
                     if ($anexos_fisicos["numcampos"]) {
                         $listado_anexos = explode(",", $anexos_fisicos[0]["anexos_fisicos"]);
                     }
@@ -753,9 +751,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $buscar = 0)
         {
-            global $conn;
+
             $columnas = 3;
-            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=" . $idcampo, "");
             $sql = trim($campo[0]["valor"]);
             $sql = str_replace('', '', $sql);
             $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
@@ -766,11 +764,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             $required = '';
             if ($campo[0]["obligatoriedad"]) {
                 $obligatorio[] = "class='required'";
-                $labelRequired = '<label id="' . $campos[$h]["nombre"] . '-error" class="error" for="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
+                $labelRequired = '<label id="' . $campo[0]["nombre"] . '-error" class="error" for="' . $campo[0]["nombre"] . '" style="display: none;"></label>';
                 $required = 'required';
             }
 
-            $caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "", $conn);
+            $caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "");
             for ($i = 0; $i < $caracteristicas["numcampos"]; $i++)
                 $obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
 
@@ -781,7 +779,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
             $listado0 = array();
             if ($accion == "SELECT") {
-                $datos = ejecuta_filtro_tabla($campo[0]["valor"], $conn);
+                $datos = ejecuta_filtro_tabla($campo[0]["valor"]);
                 if ($datos["numcampos"]) {
                     for ($i = 0; $i < $datos["numcampos"]; $i++) {
                         array_push($listado0, html_entity_decode($datos[$i][0] . "," . $datos[$i][1]));
@@ -795,14 +793,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             $tipo = $campo[0]["etiqueta_html"];
             $nombre = $campo[0]["nombre"];
 
-            $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
+            $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "");
             if ($buscar) {
                 $default = "";
             } elseif ($iddoc != null) {
                 if ($tabla[0]["item"]) {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "");
                 } else {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "");
                 }
                 $default = $valor[0][0];
             } else {
@@ -905,7 +903,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     $idcampo = $campo[0]["idcampos_formato"];
                     // dibujo el primer select
                     $select = explode(";", $parametros[0]);
-                    $datos_padre = ejecuta_filtro_tabla($select[1], $conn);
+                    $datos_padre = ejecuta_filtro_tabla($select[1]);
                     if (count($parametros) > 2) {
                         $select2 = explode(";", $parametros[1]);
                         $hijo = $select2[0] . $idcampo;
@@ -944,7 +942,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             preg_match("/(\w+) as id/", strtolower($select[1]), $llave);
                             $cuerpo = substr($select[1], 0, strpos($select[1], "where"));
                             // preg_match("/(.+) where/", strtolower($select[1]), $cuerpo);
-                            $valor = ejecuta_filtro_tabla($cuerpo . " where " . $llave[1] . "=" . $default, $conn);
+                            $valor = ejecuta_filtro_tabla($cuerpo . " where " . $llave[1] . "=" . $default);
                             $texto .= "<option value='$default' selected>" . $valor[0]["nombre"] . "</option>";
                         } else
                             $texto .= "<option value='' selected>Seleccionar...</option>";
@@ -971,11 +969,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function buscar_dependencia($iformato = 0)
         {
-            global $conn;
+
             if (isset($_REQUEST['iddoc'])) {
-                $idformato = busca_filtro_tabla("idformato,nombre_tabla", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $_REQUEST['iddoc'], "", $conn);
+                $idformato = busca_filtro_tabla("idformato,nombre_tabla", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $_REQUEST['iddoc'], "");
                 if ($idformato['numcampos']) {
-                    $datos = busca_filtro_tabla("dependencia", $idformato[0]['nombre_tabla'] . " ft", "documento_iddocumento=" . $_REQUEST['iddoc'], "", $conn);
+                    $datos = busca_filtro_tabla("dependencia", $idformato[0]['nombre_tabla'] . " ft", "documento_iddocumento=" . $_REQUEST['iddoc'], "");
                     $dep_sel = $datos[0]['dependencia'];
                 }
             } else {
@@ -1023,6 +1021,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             echo $html;
         }
 
+        function ventanillaUsuario()
+        { }
+
         /*
  * <Clase>
  * <Nombre>iniciales</Nombre>
@@ -1038,17 +1039,17 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function iniciales($idformato, $idcampo, $iddoc = null)
         {
-            global $conn;
+
             if (!$iddoc) {
-                $resultado = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
+                $resultado = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "");
                 // print_r($resultado);
                 $nombres = explode(" ", $resultado[0]["nombres"]);
                 $apellidos = explode(" ", $resultado[0]["apellidos"]);
                 // $iniciales=@$nombres[0][0]."".@$nombres[1][0]."".$apellidos[0][0]."".$apellidos[1][0];
                 $iniciales = $resultado[0]["nombres"];
             } else {
-                $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-                $campo = busca_filtro_tabla("iniciales", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+                $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "");
+                $campo = busca_filtro_tabla("iniciales", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
                 $iniciales = $campo[0][0];
             }
             echo '<td width="79%" bgcolor="#F5F5F5">
@@ -1070,9 +1071,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function fecha_formato($idformato, $idcampo, $iddoc = null)
         {
-            global $conn;
-            $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
+
+            $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "");
+            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=$idcampo", "");
 
             if ($campo[0]["tipo_dato"] == 'DATE')
                 $formato = "Y-m-d";
@@ -1082,7 +1083,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             if ($iddoc == null) {
                 $valor = date($formato);
             } else {
-                $resultado = busca_filtro_tabla(fecha($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+                $resultado = busca_filtro_tabla(fecha($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
                 $valor = $resultado[0]["fecha"];
             }
             echo "<input type='text' class='form-control' name='" . $campo[0]["nombre"] . "' id='" . $campo[0]["nombre"] . "' value='$valor' readonly='true'>";
@@ -1151,7 +1152,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function listar_item($campoenlace, $llave, $parametros, $edicion = 0)
         {
-            global $conn;
+
             $vector_parametros = explode("@", $parametros);
             $filtro_campos = "";
             $filtro_funciones = "";
@@ -1166,14 +1167,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     $filtro_funciones = " and nombre_funcion in('') ";
             }
             $etiquetas_funciones = array();
-            $info_formato = busca_filtro_tabla("etiqueta,nombre_tabla,nombre,ruta_editar,ruta_adicionar,ruta_mostrar", "formato", "idformato=" . $formato, "", $conn);
+            $info_formato = busca_filtro_tabla("etiqueta,nombre_tabla,nombre,ruta_editar,ruta_adicionar,ruta_mostrar", "formato", "idformato=" . $formato, "");
 
-            $campos = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "etiqueta_html not in('hidden','detalle') $filtro_campos and formato_idformato=" . $formato, "", $conn);
+            $campos = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "etiqueta_html not in('hidden','detalle') $filtro_campos and formato_idformato=" . $formato, "");
 
             $nombres_campos = extrae_campo($campos, "nombre", "");
             $etiquetas_campos = extrae_campo($campos, "etiqueta", "");
-            $ids = busca_filtro_tabla("id" . $info_formato[0]["nombre_tabla"], $info_formato[0]["nombre_tabla"], "$campoenlace=$llave", "", $conn);
-            $funciones = busca_filtro_tabla("", "funciones_formato", "formato=$formato and acciones like '%m%' $filtro_funciones", "", $conn);
+            $ids = busca_filtro_tabla("id" . $info_formato[0]["nombre_tabla"], $info_formato[0]["nombre_tabla"], "$campoenlace=$llave", "");
+            $funciones = busca_filtro_tabla("", "funciones_formato", "formato=$formato and acciones like '%m%' $filtro_funciones", "");
             if ($funciones["numcampos"]) {
                 $etiquetas_funciones = extrae_campo($funciones, "etiqueta", "U");
                 $nombres_funciones = extrae_campo($funciones, "nombre_funcion", "U");
@@ -1224,7 +1225,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
         {
             global $conn, $ruta_db_superior;
-            $datos = busca_filtro_tabla("nombre_tabla,detalle,etiqueta_html,valor,item,tipo_dato,autoguardado,A.nombre as formato,ruta_adicionar,ruta_editar,ruta_mostrar,tipo_edicion,B.opciones", "formato A,campos_formato B", "B.formato_idformato=A.idformato AND A.idformato=" . $idformato . " AND B.nombre LIKE '" . $campo . "'", "", $conn);
+            $datos = busca_filtro_tabla("nombre_tabla,detalle,etiqueta_html,valor,item,tipo_dato,autoguardado,A.nombre as formato,ruta_adicionar,ruta_editar,ruta_mostrar,tipo_edicion,B.opciones", "formato A,campos_formato B", "B.formato_idformato=A.idformato AND A.idformato=" . $idformato . " AND B.nombre LIKE '" . $campo . "'", "");
             if ($datos[0]["item"]) {
                 $llave = "id" . $datos[0]["nombre_tabla"];
                 if (@$_REQUEST["item"]) {
@@ -1239,11 +1240,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             $retorno = "";
             if ($datos["numcampos"]) {
                 if ($datos[0]["etiqueta_html"] == "item") {
-                    $datos_detalle = busca_filtro_tabla("id" . $datos[0]["nombre_tabla"] . ",d.estado", $datos[0]["nombre_tabla"] . " f,documento d", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+                    $datos_detalle = busca_filtro_tabla("id" . $datos[0]["nombre_tabla"] . ",d.estado", $datos[0]["nombre_tabla"] . " f,documento d", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "");
 
                     $editar = 0;
                     if (!isset($_REQUEST["tipo"]) || @$_REQUEST["tipo"] == 1) {
-                        $permisos = busca_filtro_tabla("permisos", "permiso_documento", "funcionario='" . usuario_actual("funcionario_codigo") . "' and documento_iddocumento='" . $iddoc . "'", "", $conn);
+                        $permisos = busca_filtro_tabla("permisos", "permiso_documento", "funcionario='" . usuario_actual("funcionario_codigo") . "' and documento_iddocumento='" . $iddoc . "'", "");
                         $v_permisos = explode(",", @$permisos[0]["permisos"]);
                     }
                     if (($datos_detalle[0]["estado"] == "ACTIVO" || $datos[0]["tipo_edicion"] == "1") && in_array('m', $v_permisos)) {
@@ -1259,9 +1260,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $formato_fecha = "Y-m-d H:i";
                     }
 
-                    $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
+                    $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "");
                 } else {
-                    $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
+                    $campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "");
                 }
 
                 if ($campos["numcampos"]) {
@@ -1269,14 +1270,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     if ($datos[0]["etiqueta_html"] == "arbol") {
 
                         $tipo_arbol = explode(";", $datos[0]["valor"]);
-                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
+                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "");
                         $retorno = mostrar_seleccionados($idformato, $idcampo[0][0], $tipo_arbol[6], $iddoc, 1);
                     } elseif ($datos[0]["etiqueta_html"] == "arbol_fancytree") {
-                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
+                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "");
                         $retorno = mostrar_seleccionados_ft($idformato, $idcampo[0][0], $iddoc, 1);
                     } elseif ($datos[0]["etiqueta_html"] == "archivo") {
                         include_once("../../anexosdigitales/funciones_archivo.php");
-                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
+                        $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "");
                         $retorno = listar_anexos_ver_descargar($idformato, $iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
                     } elseif ($datos[0]["etiqueta_html"] == "autocompletar") {
 
@@ -1297,7 +1298,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             } else {
                                 $parametros = explode("@", $datos[0]["valor"]);
                             }
-                            $ejecutores = busca_filtro_tabla("", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $campos[0][$campo] . ")", "", $conn);
+                            $ejecutores = busca_filtro_tabla("", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $campos[0][$campo] . ")", "");
                             if ($parametros[3] != "") {
                                 include_once($ruta_db_superior . "/formatos/librerias/funciones_ejecutor.php");
                                 $retorno .= llamado_ejecutor($parametros[3], $campo, $idformato, $iddoc);
@@ -1307,7 +1308,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     for ($h = 0; $h < $ejecutores["numcampos"]; $h++) {
                                         if ($fila_e == "ciudad") {
                                             if ($ejecutores[$h][$fila_e]) {
-                                                $ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ejecutores[$h][$fila_e], "", $conn);
+                                                $ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ejecutores[$h][$fila_e], "");
                                                 $datos_mostrar[$h][$fila_e] = $ciudad[0][0];
                                             } else {
                                                 $datos_mostrar[$h][$fila_e] = "&nbsp;";
@@ -1363,7 +1364,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     $retorno = str_replace("<!-- pagebreak -->", "<div class='page_break'></div>", $retorno);
                 } else if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
 
-                    $conf = busca_filtro_tabla("", "configuracion a", "a.nombre='exportar_pdf'", "", $conn);
+                    $conf = busca_filtro_tabla("", "configuracion a", "a.nombre='exportar_pdf'", "");
                     if ($conf[0]["valor"] == "html2ps") {
                         $retorno = str_replace("<!-- pagebreak -->", '<pagebreak/>', $retorno);
                     } else if ($conf[0]["valor"] == "class_impresion") {
@@ -1395,14 +1396,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function formatea_campo($valor, $tipo, $llenado, $opciones)
         {
-            global $conn;
+
             $resultado = array();
             $valores = explode(",", $valor);
             $select = array();
             if ($llenado != "" && strpos($llenado, "*}") === false) {
                 if (strpos(strtoupper($llenado), "SELECT") !== false) {
                     if ($tipo != "dependientes") {
-                        $valor2 = ejecuta_filtro_tabla($llenado, $conn);
+                        $valor2 = ejecuta_filtro_tabla($llenado);
                         for ($i = 0; $i < $valor2["numcampos"]; $i++) {
                             foreach ($valores as $fila) {
                                 if ($valor2[$i]["id"] == $fila) {
@@ -1417,7 +1418,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $cuerpo = substr($select[1], 0, strpos($select[1], "where"));
                         preg_match("/(\w+) as id/", strtolower($select[1]), $llave);
                         $sql_datos = $cuerpo . " where " . $llave[1] . " in(" . $valor . ")";
-                        $datos = ejecuta_filtro_tabla($sql_datos, $conn);
+                        $datos = ejecuta_filtro_tabla($sql_datos);
                         $valores = array();
                         for ($j = 0; $j < $datos["numcampos"]; $j++) {
                             $valores[] = $datos[$j]["nombre"];
@@ -1480,7 +1481,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function asignar_responsables($campo, $idformato, $iddoc = null)
         {
-            global $conn;
+
 
             $campo = '<div class="form-group" id="tr_asignar_responsables">
                 <label title="">ASIGNAR RESPONSABLES</label>
@@ -1491,7 +1492,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             <label class="etiqueta_selector" for="varias">Varios</label>
                         </div>
             </div>';
-            $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
+            $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "");
             $responsable = html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"]);
             $responsable = strtoupper($responsable);
             $campo .= '<div class="form-group" id="tr_firma">
@@ -1530,10 +1531,10 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function mostrar_imagenes($idformato, $campo, $iddoc = null)
         {
-            global $conn;
+
             if ($iddoc != null) {
-                $tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-                $datos = busca_filtro_tabla("firma,encabezado", $tabla[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+                $tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "");
+                $datos = busca_filtro_tabla("firma,encabezado", $tabla[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
             } else {
                 $datos[0]["encabezado"] = 1;
                 $datos[0]["firma"] = 1;
@@ -1634,9 +1635,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             include_once("estilo_formulario.php");
             $campos = array();
             $texto = "";
-            $formato = busca_filtro_tabla("", "formato", "idformato=" . $formato_detalle, "", $conn);
+            $formato = busca_filtro_tabla("", "formato", "idformato=" . $formato_detalle, "");
             if ($formato["numcampos"] && $tabla_formato != "") {
-                $listado_detalles = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $formato_detalle . " AND (A.acciones LIKE '%d%' OR acciones LIKE '%p%')", "orden ASC", $conn);
+                $listado_detalles = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $formato_detalle . " AND (A.acciones LIKE '%d%' OR acciones LIKE '%p%')", "orden ASC");
                 if ($listado_detalles["numcampos"]) {
                     $texto .= '<table border="0" cellspacing="1" cellpadding="1" width="100%" bgcolor="#CCCCCC">
    <tr>';
@@ -1644,7 +1645,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $texto .= '<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">' . $listado_detalles[$i]["etiqueta"] . '</span></td>';
                         array_push($campos, "A." . $listado_detalles[$i]["nombre"]);
                     }
-                    $listado = busca_filtro_tabla("A.documento_iddocumento," . implode(",", $campos), $formato[0]["nombre_tabla"] . " A, " . $tabla_formato . " B,documento C", "A." . $tabla_formato . "=B.id" . $tabla_formato . " and A.documento_iddocumento=C.iddocumento AND C.estado<>'ELIMINADO' AND B.documento_iddocumento=" . $iddoc, "A.documento_iddocumento DESC", $conn);
+                    $listado = busca_filtro_tabla("A.documento_iddocumento," . implode(",", $campos), $formato[0]["nombre_tabla"] . " A, " . $tabla_formato . " B,documento C", "A." . $tabla_formato . "=B.id" . $tabla_formato . " and A.documento_iddocumento=C.iddocumento AND C.estado<>'ELIMINADO' AND B.documento_iddocumento=" . $iddoc, "A.documento_iddocumento DESC");
                     /* Se busca el formato que esat relacionado con */
                     if ($iddoc && $idformato) {
                         $enlace = '<br /><a href="../../responder.php?idformato=' . $formato_detalle . '&iddoc=' . $iddoc . '" target="detalles">Adicionar ' . $formato[0]["etiqueta"] . '</a>';
@@ -1662,7 +1663,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                     }
                     $texto .= "</table>";
                 } else {
-                    $listado = busca_filtro_tabla("B.id" . $formato[0]["nombre_tabla"], "" . $tabla_formato . " A," . $formato[0]["nombre_tabla"] . " B", "A.documento_iddocumento=" . $iddoc . " AND A.id" . $formato[0]["nombre_tabla"] . " IN( B.id" . $formato[0]["nombre_tabla"] . ")", "", $conn);
+                    $listado = busca_filtro_tabla("B.id" . $formato[0]["nombre_tabla"], "" . $tabla_formato . " A," . $formato[0]["nombre_tabla"] . " B", "A.documento_iddocumento=" . $iddoc . " AND A.id" . $formato[0]["nombre_tabla"] . " IN( B.id" . $formato[0]["nombre_tabla"] . ")", "");
                     $texto .= '<table border="0" cellspacing="1" cellpadding="1" bgcolor="#CCCCCC">
    <tr>';
                     $texto .= '<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">id ' . $formato[0]["nombre_tabla"] . '</span></td>';
@@ -1696,7 +1697,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         {
             global $conn, $idformato, $iddoc;
             if ($formato["numcampos"]) {
-                $campos = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $idformato . " AND (acciones LIKE '%d%' OR acciones LIKE '%p%')", "orden ASC", $conn);
+                $campos = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $idformato . " AND (acciones LIKE '%d%' OR acciones LIKE '%p%')", "orden ASC");
                 if ($campos["numcampos"]) {
                     $cadena = '<table border="0" cellspacing="1" cellpadding="1" bgcolor="#CCCCCC">';
                     for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -1724,16 +1725,16 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function cargar_seleccionados($idformato, $idcampo, $tipo = 1, $iddoc)
         {
-            global $conn;
+
             $texto = "";
             $vector = array();
-            $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
+            $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "");
             if ($iddoc != null) {
-                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
+                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "");
                 if ($tabla[0]["item"])
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "");
                 else
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "");
                 // print_r($valor);
                 if ($valor["numcampos"]) {
                     if ($tipo) {
@@ -1760,15 +1761,15 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo = 0)
         {
-            global $conn;
-            $campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+
+            $campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "");
             $nombres = array();
             if ($iddoc != null) {
-                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
+                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "");
                 if ($tabla[0]["item"]) {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "");
                 } else {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "");
                 }
                 $ok = 0;
                 if (preg_match("/.*nombre_campo=([^&]+)/", $campo[0]["valor"], $nom_campo)) {
@@ -1784,7 +1785,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         case 0:
                             //Funcionarios
                             if (strpos($fila, 'd') > 0) {
-                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
+                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "");
                                 if ($datos["numcampos"]) {
                                     $nombres[] = $datos[0]["nombre"];
                                 }
@@ -1793,12 +1794,12 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     $fila = substr($fila, 0, $pos);
                                 }
                                 if ($ok) {
-                                    $datos = busca_filtro_tabla($nombre_campo, "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+                                    $datos = busca_filtro_tabla($nombre_campo, "funcionario", "funcionario_codigo=" . $fila, "");
                                     if ($datos["numcampos"]) {
                                         $nombres[] = ucwords($datos[0][0]);
                                     }
                                 } else {
-                                    $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+                                    $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "");
                                     if ($datos["numcampos"]) {
                                         $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
                                     }
@@ -1808,9 +1809,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         case 1:
                             //Series
                             if ($ok) {
-                                $datos = busca_filtro_tabla($nombre_campo, "serie", "idserie=" . $fila, "", $conn);
+                                $datos = busca_filtro_tabla($nombre_campo, "serie", "idserie=" . $fila, "");
                             } else {
-                                $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
+                                $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "");
                             }
                             if ($datos["numcampos"]) {
                                 $nombres[] = ucwords($datos[0][0]);
@@ -1819,9 +1820,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         case 2:
                             //Dependencia
                             if ($ok) {
-                                $datos = busca_filtro_tabla($nombre_campo, "dependencia", "iddependencia=" . $fila, "", $conn);
+                                $datos = busca_filtro_tabla($nombre_campo, "dependencia", "iddependencia=" . $fila, "");
                             } else {
-                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
+                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "");
                             }
                             if ($datos["numcampos"]) {
                                 $nombres[] = ucwords($datos[0][0]);
@@ -1837,9 +1838,9 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                 if (preg_match("/.*tabla=([^&]+)/", $campo[0]["valor"], $info_tabla)) {
                                     $tabla = $info_tabla[1];
                                     if ($ok) {
-                                        $valor_tabla = busca_filtro_tabla($nombre_campo, $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+                                        $valor_tabla = busca_filtro_tabla($nombre_campo, $tabla, "id" . $tabla . " =" . $fila, "");
                                     } else {
-                                        $valor_tabla = busca_filtro_tabla("nombre", $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+                                        $valor_tabla = busca_filtro_tabla("nombre", $tabla, "id" . $tabla . " =" . $fila, "");
                                     }
                                     if ($valor_tabla["numcampos"]) {
                                         $nombres[] = $valor_tabla[0][0];
@@ -1852,7 +1853,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             //roles
                         default:
                             if (strpos($fila, 'd') > 0) {
-                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
+                                $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "");
                                 if ($datos["numcampos"]) {
                                     $nombres[] = $datos[0]["nombre"];
                                 }
@@ -1861,12 +1862,12 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     $fila = substr($fila, 0, $pos);
                                 }
                                 if ($ok) {
-                                    $datos = busca_filtro_tabla($nombre_campo, "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+                                    $datos = busca_filtro_tabla($nombre_campo, "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "");
                                     if ($datos["numcampos"]) {
                                         $nombres[] = ucwords($datos[0][0]);
                                     }
                                 } else {
-                                    $datos = busca_filtro_tabla("nombres,apellidos,cargo", "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+                                    $datos = busca_filtro_tabla("nombres,apellidos,cargo", "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "");
                                     if ($datos["numcampos"]) {
                                         $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
                                     }
@@ -1891,8 +1892,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
         {
-            global $conn;
-            //$campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+
+            //$campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "");
             $campo = Model::getQueryBuilder()
                 ->select("nombre,valor")
                 ->from("campos_formato")
@@ -1913,11 +1914,11 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         $tipo_arbol = $output_array[1];
                     }
                 }
-                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
+                $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "");
                 if ($tabla[0]["item"]) {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "");
                 } else {
-                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
+                    $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "");
                 }
                 $vector = explode(",", str_replace("#", "d", $valor[0][0]));
                 $vector = array_unique($vector);
@@ -1928,7 +1929,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                         case "funcionario":
                             //Funcionarios
                             if ($fila) {
-                                $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+                                $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "");
                                 if ($datos["numcampos"]) {
                                     $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
                                 }
@@ -1936,14 +1937,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             break;
                         case "serie":
                             //Series
-                            $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
+                            $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "");
                             if ($datos["numcampos"]) {
                                 $nombres[] = ucwords($datos[0][0]);
                             }
                             break;
                         case "dependencia":
                             //Dependencia
-                            $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
+                            $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "");
                             if ($datos["numcampos"]) {
                                 $nombres[] = ucwords($datos[0][0]);
                             }
@@ -1951,7 +1952,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
                         case "cargo":
                             // cargo
-                            $datos = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $fila, "", $conn);
+                            $datos = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $fila, "");
                             if ($datos["numcampos"]) {
                                 $nombres[] = ucwords($datos[0][0]);
                             }
@@ -1996,8 +1997,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function numero_radicado($idformato, $iddoc)
         {
-            global $conn;
-            $doc = busca_filtro_tabla("numero", "documento", "iddocumento=" . $iddoc, "", $conn);
+
+            $doc = busca_filtro_tabla("numero", "documento", "iddocumento=" . $iddoc, "");
             if ($doc["numcampos"]) {
                 echo ($doc[0]["numero"]);
             } else
@@ -2020,7 +2021,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         function foto_pagina($idformato, $iddoc)
         {
             global $conn, $ruta_db_superior;
-            $foto = busca_filtro_tabla("consecutivo,imagen,ruta", "pagina", "id_documento=" . $iddoc, "pagina ASC LIMIT 0,1", $conn);
+            $foto = busca_filtro_tabla("consecutivo,imagen,ruta", "pagina", "id_documento=" . $iddoc, "pagina ASC LIMIT 0,1");
             if ($foto["numcampos"]) {
                 echo ("<a href='../../comentario_mostrar.php?key=" . $iddoc . "&pag=" . $foto[0]["consecutivo"] . "' border='0' target='centro'><img src='../../" . $foto[0]["imagen"] . "'></a>");
             } else
@@ -2042,8 +2043,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function datos_usuario_documento($idformato, $iddoc)
         {
-            global $conn;
-            $datos = busca_filtro_tabla("A.nombres,A.apellidos", "funcionario A,documento B", "B.iddocumento=" . $iddoc . " AND B.ejecutor=A.funcionario_codigo", "", $conn);
+
+            $datos = busca_filtro_tabla("A.nombres,A.apellidos", "funcionario A,documento B", "B.iddocumento=" . $iddoc . " AND B.ejecutor=A.funcionario_codigo", "");
             if ($datos["numcampos"]) {
                 echo ($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
             } else
@@ -2065,20 +2066,20 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function listar_select_padres($tabla)
         {
-            global $conn;
+
 
             if (!@$_REQUEST["anterior"]) {
-                $listado = busca_filtro_tabla("A.*, B.numero AS nombre_doc", $tabla . " A, documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "", $conn);
+                $listado = busca_filtro_tabla("A.*, B.numero AS nombre_doc", $tabla . " A, documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "");
 
                 if ($listado["numcampos"]) {
-                    $campos = busca_filtro_tabla("A.nombre", "campos_formato A,formato B", "A.formato_idformato=B.idformato AND B.nombre_tabla LIKE'" . $tabla . "' AND acciones LIKE '%p%'", "orden", $conn);
+                    $campos = busca_filtro_tabla("A.nombre", "campos_formato A,formato B", "A.formato_idformato=B.idformato AND B.nombre_tabla LIKE'" . $tabla . "' AND acciones LIKE '%p%'", "orden");
 
-                    $etiqueta = busca_filtro_tabla("etiqueta", "formato", "nombre_tabla like '$tabla'", "", $conn);
+                    $etiqueta = busca_filtro_tabla("etiqueta", "formato", "nombre_tabla like '$tabla'", "");
 
                     $nombres_campos = array();
                     for ($i = 0; $i < $campos["numcampos"]; $i++)
                         $nombres_campos[] = $campos[$i][0];
-                    $valores = busca_filtro_tabla("A." . implode(",A.", $nombres_campos) . ",id$tabla", $tabla . " A,documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "A." . implode(",A.", $nombres_campos), $conn);
+                    $valores = busca_filtro_tabla("A." . implode(",A.", $nombres_campos) . ",id$tabla", $tabla . " A,documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "A." . implode(",A.", $nombres_campos));
                     // $etiqueta=substr(str_replace("_"," ",$tabla),2);
 
                     echo ('<tr ><td class="encabezado">' . strtoupper($etiqueta[0][0]) . '</td><td bgcolor="#F5F5F5">');
@@ -2115,8 +2116,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function listado_100($idforma, $idcampo)
         {
-            global $conn;
-            $ncampo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+
+            $ncampo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=" . $idcampo, "");
             if ($ncampo["numcampos"]) {
                 echo ('<td><select name="' . $ncampo[0]["nombre"] . '">');
                 for ($i = 0; $i < 101; $i++) {
@@ -2141,8 +2142,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function listar_tareas($idformato, $iddoc)
         {
-            global $conn;
-            $ltareas = busca_filtro_tabla("", "tarea A,asignacion B,asignacion_entidad C", "C.asignacion_idasignacion=B.idasignacion AND A.idtarea=B.tarea_idtarea AND A.nombre='mantenimiento' AND B.documento_iddocumento=" . $iddoc, "fecha_inicial DESC", $conn);
+
+            $ltareas = busca_filtro_tabla("", "tarea A,asignacion B,asignacion_entidad C", "C.asignacion_idasignacion=B.idasignacion AND A.idtarea=B.tarea_idtarea AND A.nombre='mantenimiento' AND B.documento_iddocumento=" . $iddoc, "fecha_inicial DESC");
             if ($ltareas["numcampos"]) {
                 echo ('<table width="100%">');
                 echo ('<tr class="encabezado_list"><td>Descripcion </td><td>Estado Tarea</td><td>Fecha Inicial</td><td>Fecha Vencimiento</td></tr>');
@@ -2161,7 +2162,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             if (count($campos)) {
                 $where .= " AND A.nombre IN('" . implode("','", $campos) . "')";
             }
-            $lcampos = busca_filtro_tabla("A.*,B.idformato", "campos_formato A,formato B", "B.nombre_tabla LIKE '" . $tabla . "' AND A.formato_idformato=B.idformato" . $where, "A.orden", $conn);
+            $lcampos = busca_filtro_tabla("A.*,B.idformato", "campos_formato A,formato B", "B.nombre_tabla LIKE '" . $tabla . "' AND A.formato_idformato=B.idformato" . $where, "A.orden");
             $hijo = busca_filtro_tabla("a.*", $tabla . " a,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and " . $campo_enlace . "=" . $llave . $condicion, $orden, $lcampos);
 
             if ($hijo["numcampos"] && $lcampos["numcampos"]) {
@@ -2198,7 +2199,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function formato_nombre($idformato, $iddoc, $tipo = null)
         {
-            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
+            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "");
             if ($formato["numcampos"]) {
                 if ($tipo)
                     return ($formato[0]["etiqueta"]);
@@ -2222,14 +2223,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function diferencia_inicial_respuesta($idformato, $iddoc)
         {
-            global $conn;
-            $tiempo_origen = busca_filtro_tabla("respuesta.*,documento.fecha AS fecha_aprob", "respuesta,documento", "origen=iddocumento AND origen=" . $iddoc, "", $conn);
+
+            $tiempo_origen = busca_filtro_tabla("respuesta.*,documento.fecha AS fecha_aprob", "respuesta,documento", "origen=iddocumento AND origen=" . $iddoc, "");
             if ($tiempo_origen) {
                 for ($i = 0; $i < $tiempo_origen["numcampos"]; $i++) {
-                    $tiempo_respuesta = busca_filtro_tabla("A.*,B.nombre,B.ruta_mostrar", "documento A,formato B", "A.plantilla=B.nombre AND A.iddocumento=" . $tiempo_origen[$i]["destino"], "", $conn);
+                    $tiempo_respuesta = busca_filtro_tabla("A.*,B.nombre,B.ruta_mostrar", "documento A,formato B", "A.plantilla=B.nombre AND A.iddocumento=" . $tiempo_origen[$i]["destino"], "");
                     if ($tiempo_respuesta["numcampos"]) {
 
-                        $diferencia = ejecuta_filtro("SELECT DATEDIFF('" . $tiempo_origen[$i]["fecha_aprob"] . "','" . $tiempo_respuesta[0]["fecha"] . "') AS dif_dias, TIMEDIFF('" . $tiempo_respuesta[0]["fecha"] . "','" . $tiempo_origen[$i]["fecha_aprob"] . "') AS dif_horas", $conn);
+                        $diferencia = ejecuta_filtro("SELECT DATEDIFF('" . $tiempo_origen[$i]["fecha_aprob"] . "','" . $tiempo_respuesta[0]["fecha"] . "') AS dif_dias, TIMEDIFF('" . $tiempo_respuesta[0]["fecha"] . "','" . $tiempo_origen[$i]["fecha_aprob"] . "') AS dif_horas");
                         if ($diferencia["numcampos"]) {
                             $tiempo = explode(":", $diferencia["dif_horas"]);
                             echo ('<a href="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/' . $tiempo_respuesta[0]["nombre"] . '/' . $tiempo_respuesta[0]["ruta_mostrar"] . '?iddoc=' . $tiempo_respuesta[0]["iddocumento"] . '" target="_black">ver respuesta</a>&nbsp;');
@@ -2259,10 +2260,10 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function reportar_respuesta($idformato, $iddoc)
         {
-            global $conn;
-            $respuesta = busca_filtro_tabla("origen", "respuesta", "destino=$iddoc", "", $conn);
+
+            $respuesta = busca_filtro_tabla("origen", "respuesta", "destino=$iddoc", "");
             if ($respuesta["numcampos"]) {
-                $origen = busca_filtro_tabla("", "documento", "iddocumento=" . $respuesta[0]["origen"], "", $conn);
+                $origen = busca_filtro_tabla("", "documento", "iddocumento=" . $respuesta[0]["origen"], "");
                 if ($origen["numcampos"]) {
                     $datos["archivo_idarchivo"] = $iddoc;
                     $datos["nombre"] = "TRANSFERIDO";
@@ -2277,14 +2278,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function mostrar_firma_funcionario($func, $fechadoc, $retorno = 0)
         {
-            global $conn;
-            $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
+
+            $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "");
             if (!$ancho_firma["numcampos"])
                 $ancho_firma[0]["valor"] = 200;
-            $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
+            $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "");
             if (!$alto_firma["numcampos"])
                 $alto_firma[0]["valor"] = 100;
-            $func = busca_filtro_tabla("nombres,apellidos,firma,funcionario_codigo", "funcionario", "funcionario_codigo=" . $func, "", $conn);
+            $func = busca_filtro_tabla("nombres,apellidos,firma,funcionario_codigo", "funcionario", "funcionario_codigo=" . $func, "");
 
             $cargo = cargos_memo($func[0]["funcionario_codigo"], $fechadoc, "de", 1);
 
@@ -2321,7 +2322,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function registrar_imagenes_documento($idformato, $iddoc, $campo)
         {
-            global $conn;
+
             $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
             $ruta_db_superior = $ruta = "";
             while ($max_salida > 0) {
@@ -2335,8 +2336,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             if ($iddoc == '')
                 $iddoc = $_REQUEST["iddoc"];
 
-            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
-            $contenido = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "");
+            $contenido = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "");
             $cadena = $contenido[0][$campo];
 
             // --------------------------Creo el destino si no existe--------------------------
@@ -2363,18 +2364,18 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function buscar_papa_formato_campo($idformato, $iddoc, $nombre_tabla, $campo)
         {
-            global $conn;
-            $formato = busca_filtro_tabla("nombre_tabla,idformato,cod_padre", "formato", "idformato=" . $idformato, "", $conn);
+
+            $formato = busca_filtro_tabla("nombre_tabla,idformato,cod_padre", "formato", "idformato=" . $idformato, "");
 
             if ($formato["numcampos"]) {
-                $documento = busca_filtro_tabla("ft.*,d.estado,d.ejecutor,d.numero", $formato[0]["nombre_tabla"] . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and ft.documento_iddocumento=" . $iddoc, "", $conn);
+                $documento = busca_filtro_tabla("ft.*,d.estado,d.ejecutor,d.numero", $formato[0]["nombre_tabla"] . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and ft.documento_iddocumento=" . $iddoc, "");
 
                 if ($formato[0]["nombre_tabla"] == $nombre_tabla && $documento["numcampos"]) {
                     return ($documento[0][$campo]);
                 } elseif ($formato[0]["cod_padre"] != '' && $formato[0]["cod_padre"] != 0) {
-                    $papa = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "", $conn);
+                    $papa = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "");
                     if ($papa["numcampos"]) {
-                        $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "", $conn);
+                        $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "");
                         if ($documento_papa["numcampos"]) {
                             $doc = buscar_papa_formato_campo($papa[0]['idformato'], $documento_papa[0]["documento_iddocumento"], $nombre_tabla, $campo);
                             // print_r($doc);
@@ -2396,8 +2397,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function formato_primero($idformato, $campo)
         {
-            global $conn;
-            $idformato_papa = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
+
+            $idformato_papa = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "");
             if ($idformato_papa['numcampos']) {
                 if ($idformato_papa[0]['cod_padre'] == "") {
                     return ($idformato_papa[0][$campo]);
@@ -2412,13 +2413,13 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function transferir_desde_papa($idformato, $iddoc, $destinos, $tipo, $notas = "")
         {
-            global $conn;
+
 
             if ($tipo == "1") { // cuando es una lista de funcionarios fijos (roles)
                 $vector = explode("@", $destinos);
             } elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
-                $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
-                $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=" . $iddoc, "", $conn);
+                $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "");
+                $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=" . $iddoc, "");
                 $vector = explode(",", @$dato[0][0]);
             } elseif ($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
                 $vector = explode("@", $destinos);
@@ -2431,7 +2432,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             $fila
                         );
                     } else {
-                        $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario and iddependencia_cargo=" . $fila, "", $conn);
+                        $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario and iddependencia_cargo=" . $fila, "");
                         $lista = array(
                             $codigos[0]["funcionario_codigo"]
                         );
@@ -2458,16 +2459,16 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
          */
         function buscar_papa_primero($documentId, $exit = 0)
         {
-            global $conn;
+
 
             if ($exit > 20) {
                 return false;
             }
 
-            $documents = busca_filtro_tabla("B.cod_padre,B.nombre_tabla", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND B.cod_padre <> 0 AND iddocumento=" . $documentId, "", $conn);
+            $documents = busca_filtro_tabla("B.cod_padre,B.nombre_tabla", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND B.cod_padre <> 0 AND iddocumento=" . $documentId, "");
             if ($documents["numcampos"]) {
-                $parentFormat = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $documents[0]["cod_padre"], "", $conn);
-                $document = busca_filtro_tabla("B.documento_iddocumento", $documents[0]["nombre_tabla"] . " A," . $parentFormat[0]["nombre_tabla"] . " B", $parentFormat[0]["nombre_tabla"] . "=id" . $parentFormat[0]["nombre_tabla"] . " AND A.documento_iddocumento=" . $documentId, "", $conn);
+                $parentFormat = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $documents[0]["cod_padre"], "");
+                $document = busca_filtro_tabla("B.documento_iddocumento", $documents[0]["nombre_tabla"] . " A," . $parentFormat[0]["nombre_tabla"] . " B", $parentFormat[0]["nombre_tabla"] . "=id" . $parentFormat[0]["nombre_tabla"] . " AND A.documento_iddocumento=" . $documentId, "");
                 return buscar_papa_primero($document[0]["documento_iddocumento"], ++$exit);
             } else {
                 return $documentId;
@@ -2491,10 +2492,10 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function generar_ruta_documento($idformato, $iddoc)
         {
-            global $conn;
+
             $diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $iddoc, '', conn);
             if ($diagram_instance["numcampos"]) {
-                $listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "", $conn);
+                $listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "");
                 $ruta = array();
                 // pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
                 for ($i = 0; $i < $listado_pasos["numcampos"]; $i++) {
@@ -2516,35 +2517,35 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
         {
             global $conn, $ruta_db_superior;
             include_once($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
-            $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $idformato, "orden", $conn);
+            $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $idformato, "orden");
             $rut = array();
             for ($i = 0; $i < $dato["numcampos"]; $i++) {
                 $funcionario = "";
                 if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 1) {
                     $funcionario = $dato[$i]["llave"];
                 } else if ($dato[$i]["entidad"] == 2 && $dato[$i]["tipo_campo"] == 1) {
-                    $cargo = busca_filtro_tabla("", "cargo a, dependencia_cargo b, funcionario c", "idcargo=" . $dato[$i]["llave"] . " and cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and b.estado=1", "", $conn);
+                    $cargo = busca_filtro_tabla("", "cargo a, dependencia_cargo b, funcionario c", "idcargo=" . $dato[$i]["llave"] . " and cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and b.estado=1", "");
                     $funcionario = $cargo[0]["funcionario_codigo"];
                 } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 1) {
-                    $funcionario_temp = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $dato[$i]["llave"], "", $conn);
+                    $funcionario_temp = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $dato[$i]["llave"], "");
                     if ($funcionario_temp["numcampos"]) {
                         if ($funcionario_temp[0]["estado_dc"] && $funcionario_temp[0]["estado"]) {
                             $funcionario = $funcionario_temp[0]["funcionario_codigo"];
                         } else {
-                            $funcionario_temp2 = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia=" . $funcionario_temp[0]["iddependencia"] . " AND idcargo=" . $funcionario_temp[0]["idcargo"] . " AND estado_dc=1 AND estado=1", "", $conn);
+                            $funcionario_temp2 = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia=" . $funcionario_temp[0]["iddependencia"] . " AND idcargo=" . $funcionario_temp[0]["idcargo"] . " AND estado_dc=1 AND estado=1", "");
                             if ($funcionario_temp2["numcampos"]) {
                                 $funcionario = $funcionario_temp2[0]["funcionario_codigo"];
                             }
                         }
                     }
                 } else if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 2) {
-                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "", $conn);
-                    $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "", $conn);
+                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+                    $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
                     $funcionario = $datos[0][$formato[0]["nom_campo"]];
                 } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 2) {
-                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "", $conn);
-                    $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "", $conn);
-                    $funcionario_codigo = busca_filtro_tabla("B.funcionario_codigo", "dependencia_cargo A, funcionario B", "A.iddependencia_cargo=" . $datos[0][$formato[0]["nom_campo"]] . " AND A.funcionario_idfuncionario=B.idfuncionario", "", $conn);
+                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+                    $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
+                    $funcionario_codigo = busca_filtro_tabla("B.funcionario_codigo", "dependencia_cargo A, funcionario B", "A.iddependencia_cargo=" . $datos[0][$formato[0]["nom_campo"]] . " AND A.funcionario_idfuncionario=B.idfuncionario", "");
                     $funcionario = $funcionario_codigo[0]["funcionario_codigo"];
                 } else if ($dato[$i]["tipo_campo"] == 3) {
                     include_once($ruta_db_superior . $dato[$i]["ruta"]);
@@ -2572,14 +2573,14 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
          */
         function transferencia_automatica_tareas($idformato, $iddoc, $origen, $destinos, $tipo, $notas = "")
         {
-            global $conn;
+
             if ($tipo == "1") // cuando es una lista de funcionarios fijos (roles)
                 $vector = explode("@", $destinos);
             elseif ($tipo == "3") // cuando es una lista de funcionarios fijos (funcionario_codigo)
                 $vector = explode("@", $destinos);
             elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
-                $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-                $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=$iddoc", "", $conn);
+                $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "");
+                $dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=$iddoc", "");
                 $vector = explode(",", @$dato[0][0]);
             }
             $adicionales = array();
@@ -2595,7 +2596,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             $fila
                         );
                     else {
-                        $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario and iddependencia_cargo=$fila", "", $conn);
+                        $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario and iddependencia_cargo=$fila", "");
                         $lista = array(
                             $codigos[0]["funcionario_codigo"]
                         );
@@ -2618,19 +2619,19 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
          */
         function buscar_papa_formato($idformato, $iddoc, $nombre_tabla)
         {
-            global $conn;
-            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
+
+            $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "");
             // print_r($formato);
             if ($formato["numcampos"]) {
-                $documento = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+                $documento = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "");
                 // print_r($documento);
                 // echo($nombre_tabla."<---->".$formato[0]["nombre_tabla"]."<br />");
                 if ($formato[0]["nombre_tabla"] == $nombre_tabla && $documento["numcampos"]) {
                     return ($documento[0]['documento_iddocumento']);
                 } elseif ($formato[0]["cod_padre"] != '' && $formato[0]["cod_padre"] != 0) {
-                    $papa = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "", $conn);
+                    $papa = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "");
                     if ($papa["numcampos"]) {
-                        $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "", $conn);
+                        $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "");
                         if ($documento_papa["numcampos"]) {
                             $doc = buscar_papa_formato($papa[0]['idformato'], $documento_papa[0]["documento_iddocumento"], $nombre_tabla);
                             // print_r($doc);
@@ -2650,58 +2651,21 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
             return ($doc);
         }
 
-        /*
- * <Clase>
- * <Nombre>actualizar_dependencia</Nombre>
- * <Parametros>$iddoc:id del documento</Parametros>
- * <Responsabilidades>
- * Se encarga de actualizar el campo dependencia para los SAIA's antiguos los cuales equivalían al iddependencia, los nuevos SAIA's debe ir el rol(iddependencia_cargo).
- * <Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-
-        function actualizar_dependencia($iddoc)
-        {
-            global $conn;
-
-            $fecha = busca_filtro_tabla("", "configuracion", "nombre='fecha_dependencia'", "", $conn);
-            $tabla = busca_filtro_tabla(fecha('fecha', 'Y-m-d') . " as fech,a.*,b.*", "documento a, funcionario b", "a.iddocumento=" . $iddoc . " and ejecutor=funcionario_codigo and a.fecha<=" . fecha_db_almacenar($fecha[0]["valor"], 'Y-m-d'), "", $conn);
-            if ($tabla["numcampos"]) {
-                $nombre_tabla = "ft_" . strtolower($tabla[0]["plantilla"]);
-                $formato = busca_filtro_tabla("dependencia", $nombre_tabla . " a", "a.documento_iddocumento=" . $iddoc, "", $conn);
-                $rol = busca_filtro_tabla("", "dependencia_cargo a", "a.funcionario_idfuncionario=" . $tabla[0]["idfuncionario"] . " and fecha_inicial<=" . fecha_db_almacenar($tabla[0]["fech"], 'Y-m-d') . " and fecha_final>=" . fecha_db_almacenar($doc[$i]["fech"], 'Y-m-d') . "", "", $conn);
-
-                if ($rol["numcampos"]) {
-                    $sql1 = "UPDATE " . $nombre_tabla . " SET dependencia='" . $rol[0]["iddependencia_cargo"] . "' WHERE documento_iddocumento=" . $iddoc;
-                } else {
-                    $rol = busca_filtro_tabla("", "dependencia_cargo a", "a.funcionario_idfuncionario=" . $tabla[0]["idfuncionario"], "", $conn);
-                    $sql1 = "UPDATE " . $nombre_tabla . " SET dependencia='" . $rol[0]["iddependencia_cargo"] . "' WHERE documento_iddocumento=" . $iddoc;
-                }
-            } else {
-                return;
-            }
-        }
-
         function firma_externa_funcion($idformato, $iddoc, $tabla, $campo = "firma_externa", $campo_tabla = "documento_iddocumento", $llave_modificar = "", $adicional, $retorno = 2)
         {
             global $conn, $ruta_db_superior;
-            $formato = busca_filtro_tabla("", "formato a", "a.idformato=" . $idformato, "", $conn);
+            $formato = busca_filtro_tabla("", "formato a", "a.idformato=" . $idformato, "");
             if (!$tabla)
                 $tabla = $formato[0]["nombre_tabla"];
             if (!$llave_modificar)
                 $llave_modificar = $iddoc;
-            $ruta_firma = busca_filtro_tabla($campo, $tabla . " a", "a." . $campo_tabla . "=" . $llave_modificar, "", $conn);
+            $ruta_firma = busca_filtro_tabla($campo, $tabla . " a", "a." . $campo_tabla . "=" . $llave_modificar, "");
 
             if ($ruta_firma[0][$campo]) {
-                $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
+                $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "");
                 if (!$ancho_firma["numcampos"])
                     $ancho_firma[0]["valor"] = 200;
-                $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
+                $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "");
                 if (!$alto_firma["numcampos"])
                     $alto_firma[0]["valor"] = 100;
                 $texto = "<img src='" . $ruta_db_superior . "formatos/librerias/mostrar_foto_manual.php?campo_seleccion=" . $campo . $adicional . "&campo_tabla=" . $campo_tabla . "&llave_seleccion=" . $llave_modificar . "&tabla=" . $tabla . "' width='" . $ancho_firma[0]["valor"] . "' height='" . $alto_firma[0]["valor"] . "' style='background:white' />";
@@ -2736,8 +2700,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 $adicional = "";
                 $seleccionado = "";
                 if ($iddoc) {
-                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre", "formato a, campos_formato b", "a.idformato=b.formato_idformato and a.idformato='" . $idformato . "' and b.idcampos_formato='" . $campo . "'", "", $conn);
-                    $datos = busca_filtro_tabla($formato[0]["nombre"] . " as expediente", $formato[0]["nombre_tabla"] . " a", "a.documento_iddocumento=" . $iddoc, "", $conn);
+                    $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre", "formato a, campos_formato b", "a.idformato=b.formato_idformato and a.idformato='" . $idformato . "' and b.idcampos_formato='" . $campo . "'", "");
+                    $datos = busca_filtro_tabla($formato[0]["nombre"] . " as expediente", $formato[0]["nombre_tabla"] . " a", "a.documento_iddocumento=" . $iddoc, "");
                     $adicional = "&seleccionado=" . $datos[0]["expediente"];
                     $seleccionado = $datos[0]["expediente"];
                 }
@@ -2825,7 +2789,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
                             function vincular_expediente_documento($idformato, $iddoc)
                             {
-                                global $conn;
+
                                 $max_salida = 6;
                                 $ruta_db_superior = $ruta = "";
                                 while ($max_salida > 0) {
@@ -2845,7 +2809,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                         }
                                     }
                                 } else if (@$_REQUEST["serie_idserie"]) {
-                                    $idexpediente = busca_filtro_tabla("b.idexpediente", "serie a, expediente b", "a.idserie=" . $_REQUEST["serie_idserie"] . " and a.cod_padre=b.serie_idserie", "", $conn);
+                                    $idexpediente = busca_filtro_tabla("b.idexpediente", "serie a, expediente b", "a.idserie=" . $_REQUEST["serie_idserie"] . " and a.cod_padre=b.serie_idserie", "");
                                     if ($idexpediente["numcampos"]) {
                                         include_once($ruta_db_superior . "pantallas/expediente/librerias.php");
                                         vincular_documento_expediente($idexpediente[0]["idexpediente"], $iddoc);
@@ -2856,8 +2820,8 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
                             function obtener_datos_documento($iddocumento)
                             {
-                                global $conn;
-                                $documento = busca_filtro_tabla(fecha("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
+
+                                $documento = busca_filtro_tabla(fecha("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "");
                                 if ($_REQUEST["funcionario_codigo"]) {
                                     $funcionario_codigo = $_REQUEST["funcionario_codigo"];
                                 } else {
@@ -2909,7 +2873,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                 include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
                                 $formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
                                 $tipo_almacenamiento = new SaiaStorage("archivos");
-                                $funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
+                                $funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "");
                                 $cant = 0;
                                 $guar = 0;
                                 foreach ($anexos as $key => $value) {
@@ -2990,7 +2954,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             {
                                 global $ruta_db_superior;
                                 $documentos = array();
-                                $anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+                                $anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $iddoc, "");
                                 if ($anexos["numcampos"]) {
                                     for ($i = 0; $i < $anexos['numcampos']; $i++) {
                                         $documentos['anexos'][] = array(
@@ -3002,7 +2966,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     }
                                 }
 
-                                $paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $iddoc, "", $conn);
+                                $paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $iddoc, "");
                                 if ($paginas["numcampos"]) {
                                     for ($i = 0; $i < $paginas['numcampos']; $i++) {
                                         $documentos['paginas'][] = array(
@@ -3021,7 +2985,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                     "exito" => 0,
                                     "msn" => ""
                                 );
-                                $datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+                                $datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "");
                                 if ($datos_pdf["numcampos"]) {
                                     $crear = 1;
                                     if ($datos_pdf[0]["pdf"] != "") {
@@ -3059,7 +3023,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                         $responce = curl_exec($ch);
                                         curl_close($ch);
 
-                                        $datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+                                        $datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "");
                                         if ($datos_pdf["numcampos"]) {
                                             $crear = 1;
                                             if ($datos_pdf[0]["pdf"] != "") {
@@ -3207,13 +3171,13 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_aprobar")
                             {
                                 global $conn, $ruta_db_superior;
-                                $formato = busca_filtro_tabla("nombre_tabla, nombre", "formato", "idformato=" . $idformato, "", $conn);
+                                $formato = busca_filtro_tabla("nombre_tabla, nombre", "formato", "idformato=" . $idformato, "");
                                 if ($formato["numcampos"]) {
-                                    $datos_formato = busca_filtro_tabla($nomb_campo . ",d.estado", $formato[0]['nombre_tabla'] . " ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+                                    $datos_formato = busca_filtro_tabla($nomb_campo . ",d.estado", $formato[0]['nombre_tabla'] . " ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "");
                                     if ($datos_formato["numcampos"]) {
-                                        $usuario_confirma = busca_filtro_tabla("destino", "buzon_entrada", "nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=" . $iddoc, "idtransferencia asc", $conn);
+                                        $usuario_confirma = busca_filtro_tabla("destino", "buzon_entrada", "nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=" . $iddoc, "idtransferencia asc");
                                         if ($datos_formato[0][$nomb_campo] == 1 && $usuario_confirma["numcampos"]) {
-                                            $funcionario = busca_filtro_tabla("login,nombres,apellidos,funcionario_codigo", "vfuncionario_dc", "estado=1 and funcionario_codigo=" . $usuario_confirma[0]['destino'], "", $conn);
+                                            $funcionario = busca_filtro_tabla("login,nombres,apellidos,funcionario_codigo", "vfuncionario_dc", "estado=1 and funcionario_codigo=" . $usuario_confirma[0]['destino'], "");
                                             if ($funcionario["numcampos"]) {
                                                 $ch = curl_init();
                                                 $fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&conexion_remota=1&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA];
@@ -3223,7 +3187,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                                 curl_close($ch);
 
                                                 $anexos = array();
-                                                $consulta = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+                                                $consulta = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "");
                                                 if ($consulta[0]['pdf'] != "") {
                                                     $ruta_imagen = json_decode($consulta[0]['pdf']);
                                                     if (is_object($ruta_imagen)) {
@@ -3235,7 +3199,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                                                     }
                                                 }
 
-                                                $adjuntos = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+                                                $adjuntos = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $iddoc, "");
                                                 if ($adjuntos["numcampos"]) {
                                                     for ($k = 0; $k < $adjuntos["numcampos"]; $k++) {
                                                         $ruta_imagen = json_decode($adjuntos[$k]['ruta']);
@@ -3251,7 +3215,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
                                                 $info = 'iddoc-' . $iddoc . ',usuario-' . $funcionario[0]['login'];
                                                 $resultado = base64_encode($info);
-                                                $busca_configuracion_correo = busca_filtro_tabla("valor", "configuracion", "nombre='email_aprobacion'", "", $conn);
+                                                $busca_configuracion_correo = busca_filtro_tabla("valor", "configuracion", "nombre='email_aprobacion'", "");
                                                 $enlaces = '<a href="' . $busca_configuracion_correo[0]['valor'] . 'index.php?info=' . $resultado . '" target="_blank">Gestionar documento</a><br />';
 
                                                 $mensaje = 'Saludos ' . $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'] . ',<br /><br />
@@ -3276,7 +3240,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                             {
                                 global $conn, $ruta_db_superior;
                                 $fecha_creacion = '';
-                                $consulta_datos = busca_filtro_tabla(fecha("fecha_creacion", "Y-m-d") . " as fecha_creacion", "documento", "iddocumento=" . $iddoc, "", $conn);
+                                $consulta_datos = busca_filtro_tabla(fecha("fecha_creacion", "Y-m-d") . " as fecha_creacion", "documento", "iddocumento=" . $iddoc, "");
                                 if ($consulta_datos['numcampos']) {
                                     $fecha_creacion = $consulta_datos[0]['fecha_creacion'];
                                 }

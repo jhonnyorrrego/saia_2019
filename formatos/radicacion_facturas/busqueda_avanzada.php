@@ -9,12 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."calendario/calendario.php");
 echo(librerias_html5());
-echo(librerias_jquery("1.7"));
+echo(jquery());
 echo(librerias_arboles());
-echo(estilo_bootstrap()); 
+echo(bootstrap()); 
 if($_REQUEST['info_externo']){
 	$adicional='?info_externo=1';
 }

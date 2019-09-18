@@ -12,26 +12,28 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-$Response = (object)array(
+$Response = (object) array(
     'success' => 1,
     'message' => '',
-    'data' => (object)array()
+    'data' => (object) array()
 );
 
-if($_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $Response->data = StaticSql::search('select * from permiso_perfil where perfil_idperfil = ' . $_REQUEST["profileId"]);
+if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    $permissions = PermisoPerfil::countRecords([
+        'perfil_idperfil' => $_REQUEST['profileId']
+    ]);
 
-    if(count($Response->data) !== 0){
+    if ($permissions) {
         $Response->success = 0;
         $Response->message = "Debe eliminar los permisos asociados a este perfil antes de eliminarlo";
-    }else{
+    } else {
         $Perfil = new Perfil($_REQUEST['profileId']);
-        if(!$Perfil->delete()){
+        if (!$Perfil->delete()) {
             $Response->success = 0;
             $Response->message = "Error al Eliminar";
         }
-    }     
-}else{
+    }
+} else {
     $Response->success = 0;
     $Response->message = 'Debe iniciar session';
 }

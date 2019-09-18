@@ -30,7 +30,7 @@ class DateController
      */
     public static function dias_habiles_entre_fechas($Fecha_inicial, $Fecha_final)
     {
-        global $conn;
+        
 
         if (!is_object($Fecha_inicial) || !is_object($Fecha_final)) {
             $dias_restantes = 0;
@@ -52,7 +52,7 @@ class DateController
                 $signo = "-1";
             }
 
-            $busca_festivos = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento='-1'  AND fecha_inicial < " . fecha_db_almacenar($fecha_final, 'Y-m-d') . " AND fecha_final > " . fecha_db_almacenar($fecha_inicial, 'Y-m-d'), "", $conn);
+            $busca_festivos = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento='-1'  AND fecha_inicial < " . fecha_db_almacenar($fecha_final, 'Y-m-d') . " AND fecha_final > " . fecha_db_almacenar($fecha_inicial, 'Y-m-d'), "");
             $numero_festivos = $busca_festivos['numcampos'];
 
             $dias_restantes = ($diferencia->days - $numero_festivos) * $signo;

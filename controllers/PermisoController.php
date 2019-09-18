@@ -64,19 +64,21 @@ class PermisoController
         }
 
         if (!empty($tabla) && !is_null($accion) && $this->login) {
-            $sql = <<<SQL
-                SELECT count(*) as total
-                FROM funcionario,permiso,modulo
-                WHERE 
-                    funcionario.idfuncionario = permiso.funcionario_idfuncionario AND
-                    modulo.idmodulo = permiso.modulo_idmodulo AND
-                    funcionario.login='{$this->login}' AND
-                    funcionario.estado = 1 AND
-                    accion='{$accion}' AND
-                    modulo.nombre='{$tabla}'
-SQL;
-            $query = StaticSql::search($sql);
-            return $query[0]['total'] > 0;
+            $total = Model::getQueryBuilder()
+                ->select('count(*) as total')
+                ->from('funcionario', 'a')
+                ->join('a', 'permiso', 'b', 'a.idfuncionario = b.funcionario_idfuncionario')
+                ->join('b', 'modulo', 'c', 'c.idmodulo = b.modulo_idmodulo')
+                ->where('a.login = :login')
+                ->andWhere('a.estado = 1')
+                ->andWhere('accion = :action')
+                ->andWhere('c.nombre = :module')
+                ->setParameter(':login', $this->login)
+                ->setParameter(':action', $accion)
+                ->setParameter(':login', $tabla)
+                ->execute()->fetch();
+
+            return $total['total'] > 0;
         } else if (!empty($tabla)) {
             return $this->acceso_modulo_perfil($tabla);
         }
@@ -95,19 +97,17 @@ SQL;
      */
     function acceso_modulo($nombre)
     {
-        $sql = <<<SQL
-            SELECT count(*) as total
-            FROM 
-                permiso a
-                JOIN modulo b
-                    ON a.modulo_idmodulo = b.idmodulo
-            WHERE
-                a.funcionario_idfuncionario = {$this->idfuncionario} AND
-                b.nombre='{$nombre}'
-SQL;
-        $query = StaticSql::search($sql);
+        $total = Model::getQueryBuilder()
+            ->select('count(*) as total')
+            ->from('permiso', 'a')
+            ->join('a', 'modulo', 'b', 'a.modulo_idmodulo = b.idmodulo')
+            ->where('a.funcionario_idfuncionario = :userId')
+            ->andWhere('b.nombre = :module')
+            ->setParameter(':userId', $this->idfuncionario, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':module', $nombre)
+            ->execute()->fetch();
 
-        return $query[0]['total'] > 0;
+        return $total['total'] > 0;
     }
 
     /**
@@ -127,19 +127,18 @@ SQL;
             return true;
         }
 
-        $sql = <<<SQL
-            SELECT count(*) AS total
-            FROM
-                modulo a
-                JOIN permiso_perfil b
-                    ON b.modulo_idmodulo = a.idmodulo
-            WHERE
-                b.perfil_idperfil in({$this->perfil}) AND
-                a.nombre='{$nombre}'
-SQL;
-        $query = StaticSql::search($sql);
+        $profiles = explode(',', $this->perfil);
+        $total = Model::getQueryBuilder()
+            ->select('count(*) as total')
+            ->from('modulo', 'a')
+            ->join('a', 'permiso_perfil', 'b', 'b.modulo_idmodulo = a.idmodulo')
+            ->where('b.perfil_idperfil in (:profileList)')
+            ->andWhere('a.nombre = :module')
+            ->setParameter(':profileList', $profiles, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->setParameter(':module', $nombre)
+            ->execute()->fetch();
 
-        return $query[0]['total'] ?
+        return $total['total'] ?
             !$this->permiso_usuario($nombre, '0') : $this->acceso_modulo($nombre);
     }
 

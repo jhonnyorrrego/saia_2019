@@ -24,11 +24,11 @@ try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     $Response->data = '';
-    global $conn;
+    
 
     function cargarCampos($categoria)
     {
-        $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '', $conn);
+        $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '');
         $listado = '';
         $listado .= "<h5>" . $categoria . "</h5>";
         for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {

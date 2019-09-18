@@ -23,7 +23,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
     $listado1 = busca_filtro_tabla("d.iddestinatario, concat(f.nombres, concat(' ', f.apellidos)) nombre, f.email, d.fk_tipo_destinatario, 'Usuario de SAIA' nombre_tipo",
             "wf_dest_notificacion d join wf_destinatario_saia ds on d.iddestinatario = ds.iddestinatario "
             . "join funcionario f on ds.fk_funcionario = f.idfuncionario",
-            "d.fk_notificacion = $idnotificacion", "", $conn);
+            "d.fk_notificacion = $idnotificacion", "");
 
     if ($listado1["numcampos"]) {
         $total = isset($listado1['numcampos']) ? $listado1['numcampos'] : count($listado1);
@@ -44,7 +44,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
             . "join wf_formato_flujo ff on df.fk_formato_flujo = df.fk_formato_flujo "
             . "join formato f on ff.fk_formato = f.idformato "
             . "join campos_formato cf on df.fk_campo_formato = cf.idcampos_formato and f.idformato = cf.formato_idformato",
-            "d.fk_notificacion = $idnotificacion", "", $conn);
+            "d.fk_notificacion = $idnotificacion", "");
 
     if ($listado2["numcampos"]) {
         $total = isset($listado2['numcampos']) ? $listado2['numcampos'] : count($listado2);
@@ -62,7 +62,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
 
     $listado3 = busca_filtro_tabla("d.iddestinatario, de.nombre, de.email, d.fk_tipo_destinatario, 'Usuario externo' nombre_tipo",
             "wf_dest_notificacion d join wf_destinatario_externo de on d.iddestinatario = de.iddestinatario",
-            "d.fk_notificacion = $idnotificacion", "", $conn);
+            "d.fk_notificacion = $idnotificacion", "");
 
     if ($listado3["numcampos"]) {
         $total = isset($listado3['numcampos']) ? $listado3['numcampos'] : count($listado3);

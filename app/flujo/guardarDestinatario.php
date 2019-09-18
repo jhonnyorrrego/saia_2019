@@ -58,7 +58,7 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
 echo json_encode($response);
 
 function mapearDatosDestinatario($datos) {
-    global $conn;
+    
     $tipoDestinatario = $datos["fk_tipo_destinatario"];
     $atributos = array();
 
@@ -68,20 +68,20 @@ function mapearDatosDestinatario($datos) {
             $atributos["fk_campo_formato"] = $datos['fk_campo_formato'];
             $existe = busca_filtro_tabla("dn.iddestinatario", "wf_dest_notificacion dn join wf_destinatario_formato dt on dn.iddestinatario = dt.iddestinatario",
                     "dn.fk_notificacion = " . $datos['fk_notificacion'] .
-                    " AND dt.fk_formato_flujo = " . $datos['fk_formato_flujo'] . " AND dt.fk_campo_formato = " . $datos['fk_campo_formato'], "", $conn);
+                    " AND dt.fk_formato_flujo = " . $datos['fk_formato_flujo'] . " AND dt.fk_campo_formato = " . $datos['fk_campo_formato'], "");
             break;
         case TipoDestinatario::TIPO_EXTERNO:
             $atributos["email"] = $datos['email'];
             $atributos["nombre"] = $datos['nombre'];
             $existe = busca_filtro_tabla("dn.iddestinatario", "wf_dest_notificacion dn join wf_destinatario_externo dt on dn.iddestinatario = dt.iddestinatario",
                 "dn.fk_notificacion = " . $datos['fk_notificacion'] .
-                " AND dt.email = '{$datos["email"]}'", "", $conn);
+                " AND dt.email = '{$datos["email"]}'", "");
             break;
         case TipoDestinatario::TIPO_FUNCIONARIO:
             $atributos["fk_funcionario"] = $datos['fk_funcionario'];
             $existe = busca_filtro_tabla("dn.iddestinatario", "wf_dest_notificacion dn join wf_destinatario_saia dt on dn.iddestinatario = dt.iddestinatario",
                 "dn.fk_notificacion = " . $datos['fk_notificacion'] .
-                " AND dt.fk_funcionario  = " . $datos['fk_funcionario'], "", $conn);
+                " AND dt.fk_funcionario  = " . $datos['fk_funcionario'], "");
             break;
     }
     if($existe["numcampos"]) {

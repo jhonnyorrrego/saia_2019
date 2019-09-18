@@ -92,8 +92,7 @@ abstract class GraficoController
     public function getValues()
     {
         $sql = $this->getSql();
-        $query = StaticSql::search($sql);
-
+        $query = Connection::getInstance()->executeQuery($sql)->fetchAll();
         $stats = [];
         $field = $this->Grafico->columna;
         $modelName = $this->Grafico->modelo;

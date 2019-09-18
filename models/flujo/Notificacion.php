@@ -1,5 +1,6 @@
 <?php
-class Notificacion extends Model implements IAnexos {
+class Notificacion extends Model implements IAnexos
+{
 
     use TFlujo;
     protected $idnotificacion;
@@ -9,17 +10,20 @@ class Notificacion extends Model implements IAnexos {
     protected $fk_evento_notificacion;
     protected $fk_formato_flujo;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         parent::__construct($id);
     }
 
-    public static function conFkFlujo($id) {
+    public static function conFkFlujo($id)
+    {
         $instance = new self();
         $instance->fk_flujo = $id;
         return $instance;
     }
 
-    protected function defineAttributes() {
+    protected function defineAttributes()
+    {
         $this->dbAttributes = (object) [
             'safe' => [
                 "asunto",
@@ -33,14 +37,16 @@ class Notificacion extends Model implements IAnexos {
         ];
     }
 
-    public function findByFlujo($asArray = false) {
-        if(isset($this->fk_flujo)) {
+    public function findByFlujo($asArray = false)
+    {
+        if (isset($this->fk_flujo)) {
             return $this->findByFk("fk_flujo", $this->fk_flujo, $asArray);
         }
         return null;
     }
 
-    public function findActiveFiles($params) {
+    public function findActiveFiles($params)
+    {
         $sql = <<<SQL
             select a.*
             from anexo a
@@ -52,9 +58,8 @@ class Notificacion extends Model implements IAnexos {
                 f.idnotificacion = {$this->idnotificacion} and a.eliminado = 0
             order by $params->order
 SQL;
-        $records = StaticSql::search($sql, $params->offset, $params->limit);
+        //$records = //ejecuta el select
 
         return self::convertToArray($records);
     }
-
 }

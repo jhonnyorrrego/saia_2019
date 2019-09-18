@@ -16,7 +16,7 @@ include_once($ruta_db_superior."db.php");
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
-$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
+$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'",""); 
  if($config["numcampos"])
  {  $style = "
      <style type=\"text/css\">

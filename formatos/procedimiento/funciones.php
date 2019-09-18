@@ -3,15 +3,15 @@ include_once("../../db.php");
 include_once("../librerias/funciones_generales.php");
 /*
 function listado_pasos_procedimiento($idformato,$iddoc){
-global $conn;
+
 $texto="No existen Pasos Para este Procedimiento";
-$formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
+$formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"");
 print_r($formato);
 if($formato["numcampos"]){
-  $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+  $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"");
   print_r($procedimiento);
  if($procedimiento["numcampos"]){
-    $actividades=busca_filtro_tabla("","ft_actividades_procedimiento","ft_procedimiento=".$procedimiento[0]["id".$formato[0]["nombre_tabla"]],"orden",$conn);
+    $actividades=busca_filtro_tabla("","ft_actividades_procedimiento","ft_procedimiento=".$procedimiento[0]["id".$formato[0]["nombre_tabla"]],"orden");
     if($actividades["numcampos"]){
       $texto.='<td class="encabezado_list" ></td>';
       $texto.="</tr>";
@@ -32,25 +32,25 @@ if($formato["numcampos"]){
 echo($texto);
 }
 function control_procedimiento($idformato,$iddoc){
-global $conn;
-global $conn;
+
+
 $texto="No existen Pasos Para este Procedimiento";
-$formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
+$formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"");
 if($formato["numcampos"]){
-  $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"idft_procedimiento=".$iddoc,"",$conn);
+  $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"idft_procedimiento=".$iddoc,"");
   //print_r($procedimiento);
   if($procedimiento["numcampos"]){
     $campos=array("nombre","responsable");
     $texto=listar_formato_hijo($campos,"ft_control_procedimiento","ft_procedimiento",$procedimiento[0]["id".$formato[0]["nombre_tabla"]],"");
   }
-//$control=busca_filtro_tabla("","ft_control_procedimiento","ft_procedimiento=".$iddoc,"",$conn);
+//$control=busca_filtro_tabla("","ft_control_procedimiento","ft_procedimiento=".$iddoc,"");
 
 }
 echo($texto);
 }
 function riesgo_procedimientos($idformato,$iddoc){
-global $conn;
-$proceso=busca_filtro_tabla("ft_proceso","ft_procedimiento","idft_procedimiento=".$iddoc,"",$conn);
+
+$proceso=busca_filtro_tabla("ft_proceso","ft_procedimiento","idft_procedimiento=".$iddoc,"");
 if($proceso["numcampos"]){
   include_once("../proceso/funciones.php");
   enlace_riesgos(1,$proceso[0]["ft_proceso"]);
@@ -58,18 +58,18 @@ if($proceso["numcampos"]){
 }
 */
 function listar_pasos_procedimiento($idformato,$iddoc){
-  global $conn;
+  
   $texto="No existen Pasos Para este Procedimiento";
-  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
+  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"");
   if($formato["numcampos"]){
-    $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+    $procedimiento=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"");
   
     if($procedimiento["numcampos"]){
-      $formato_actividades=busca_filtro_tabla("","formato A","nombre LIKE 'actividades_procedimiento'","",$conn);
+      $formato_actividades=busca_filtro_tabla("","formato A","nombre LIKE 'actividades_procedimiento'","");
       if(!$formato_actividades["numcampos"]){
         $formato_actividades[0]["idformato"]=4;
       }
-      $actividades=busca_filtro_tabla("","ft_actividades_procedimiento,documento","documento_iddocumento=iddocumento and documento.estado<>'ELIMINADO' and ft_actividades_procedimiento.estado<>'INACTIVO' and ft_procedimiento=".$procedimiento[0]["id".$formato[0]["nombre_tabla"]],"orden",$conn);
+      $actividades=busca_filtro_tabla("","ft_actividades_procedimiento,documento","documento_iddocumento=iddocumento and documento.estado<>'ELIMINADO' and ft_actividades_procedimiento.estado<>'INACTIVO' and ft_procedimiento=".$procedimiento[0]["id".$formato[0]["nombre_tabla"]],"orden");
       if($actividades["numcampos"]){
         $texto='<table class="tabla_borde" border="1" style="border-collapse:collapse" bordercolor="gray">
                   <tr class="encabezado_list">
@@ -88,9 +88,9 @@ function listar_pasos_procedimiento($idformato,$iddoc){
   echo($texto);
 }
 function vigencia_procedimiento($idformato,$iddoc){
-  global $conn;
-  $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
-  $fecha = busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+  
+  $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"");
+  $fecha = busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"");
   //$fecha_vigencia = explode("-",$fecha[0]["fecha_nomina"]);
   
   return($fecha[0]["vigencia"]);

@@ -9,12 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
-echo(librerias_jquery("1.7"));
+include_once($ruta_db_superior."assets/librerias.php");
+echo(jquery());
 include_once("../../header.php");
 
 
-$indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,ft_proceso p","ft_proceso=idft_proceso and p.documento_iddocumento=".$_REQUEST["proceso"],"lower(i.nombre) asc",$conn);
+$indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,ft_proceso p","ft_proceso=idft_proceso and p.documento_iddocumento=".$_REQUEST["proceso"],"lower(i.nombre) asc");
 
 ?>
 <script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
@@ -44,9 +44,9 @@ $indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,
 </tr>
 <?php
 for($i=0;$i<$indicadores["numcampos"];$i++)
-  {$planes=busca_filtro_tabla("distinct d.*","seguimiento_planes a,documento d,ft_indicadores_calidad b,ft_formula_indicador, ft_seguimiento_indicador c,ft_plan_mejoramiento e","c.idft_seguimiento_indicador=a.idft_seguimiento_indicador and c.ft_formula_indicador=idft_formula_indicador and ft_indicadores_calidad=idft_indicadores_calidad and d.estado<>'ELIMINADO' and iddocumento=a.plan_mejoramiento and e.documento_iddocumento=a.plan_mejoramiento and e.estado<>'INACTIVO' and idft_indicadores_calidad=".$indicadores[$i]["idft_indicadores_calidad"],"",$conn);
+  {$planes=busca_filtro_tabla("distinct d.*","seguimiento_planes a,documento d,ft_indicadores_calidad b,ft_formula_indicador, ft_seguimiento_indicador c,ft_plan_mejoramiento e","c.idft_seguimiento_indicador=a.idft_seguimiento_indicador and c.ft_formula_indicador=idft_formula_indicador and ft_indicadores_calidad=idft_indicadores_calidad and d.estado<>'ELIMINADO' and iddocumento=a.plan_mejoramiento and e.documento_iddocumento=a.plan_mejoramiento and e.estado<>'INACTIVO' and idft_indicadores_calidad=".$indicadores[$i]["idft_indicadores_calidad"],"");
   
-  $formulas=busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,documento_iddocumento","ft_formula_indicador","ft_indicadores_calidad=".$indicadores[$i]["idft_indicadores_calidad"],"",$conn);
+  $formulas=busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,documento_iddocumento","ft_formula_indicador","ft_indicadores_calidad=".$indicadores[$i]["idft_indicadores_calidad"],"");
   
   echo "<tr>
 <td><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:500,preserveContent:false } )' href='../indicadores_calidad/mostrar_indicadores_calidad.php?iddoc=".$indicadores[$i]["documento_iddocumento"]."'>".$indicadores[$i]["nombre"]."</a></td>
@@ -136,8 +136,8 @@ echo "</td>
 include_once("../../footer.php");
 
 function seguimientos_fecha($mes,$indicador)
-{global $conn;
- $seguimientos=busca_filtro_tabla(fecha_db_obtener("fecha_seguimiento","Y-m-d")." as fecha_seguimiento,c.observaciones,iddocumento,numero,f.nombre as formula","documento d,ft_indicadores_calidad b,ft_formula_indicador f, ft_seguimiento_indicador c","c.ft_formula_indicador=idft_formula_indicador and ft_indicadores_calidad=idft_indicadores_calidad and d.estado<>'ELIMINADO' and c.documento_iddocumento=iddocumento and ".fecha_db_obtener("fecha_seguimiento","Y-m")." like '".date("Y")."-"."$mes' and idft_indicadores_calidad=".$indicador,"",$conn);
+{
+ $seguimientos=busca_filtro_tabla(fecha_db_obtener("fecha_seguimiento","Y-m-d")." as fecha_seguimiento,c.observaciones,iddocumento,numero,f.nombre as formula","documento d,ft_indicadores_calidad b,ft_formula_indicador f, ft_seguimiento_indicador c","c.ft_formula_indicador=idft_formula_indicador and ft_indicadores_calidad=idft_indicadores_calidad and d.estado<>'ELIMINADO' and c.documento_iddocumento=iddocumento and ".fecha_db_obtener("fecha_seguimiento","Y-m")." like '".date("Y")."-"."$mes' and idft_indicadores_calidad=".$indicador,"");
  
  $cadena="";
  for($i=0;$i<$seguimientos["numcampos"];$i++)
@@ -147,7 +147,7 @@ function seguimientos_fecha($mes,$indicador)
 }
 
 function graficas_cumplimiento($formulas,$indicador)
-{global $conn;
+{
  $cadena="";
  for($i=0;$i<$formulas["numcampos"];$i++)
    {if(is_file("../indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"].".png"))
@@ -158,7 +158,7 @@ function graficas_cumplimiento($formulas,$indicador)
 
 
 function graficas_resultado($formulas,$indicador)
-{global $conn;
+{
  $cadena="";
  for($i=0;$i<$formulas["numcampos"];$i++)
    {if(is_file("../indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png"))

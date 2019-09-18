@@ -16,8 +16,8 @@ $sql1='';
 for($i=0;$i<count($idft_funcionario);$i++){
 	$separacion_idft_funcionario=explode('|',$idft_funcionario[$i]['value']);
 	
-	$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable,tipo_destino","ft_radicacion_entrada","idft_radicacion_entrada=".$separacion_idft_funcionario[2],"",$conn);
-	$datos=busca_filtro_tabla('nombre_destino,estado_recogida,recepcion','ft_destino_radicacion','idft_destino_radicacion='.$separacion_idft_funcionario[0],'',$conn);
+	$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable,tipo_destino","ft_radicacion_entrada","idft_radicacion_entrada=".$separacion_idft_funcionario[2],"");
+	$datos=busca_filtro_tabla('nombre_destino,estado_recogida,recepcion','ft_destino_radicacion','idft_destino_radicacion='.$separacion_idft_funcionario[0],'');
 	if(($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2 || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1) && !$datos[0]['estado_recogida']){
 		$adicional="tipo_mensajero='i'";
 		if($tipo_mensajeria_radicacion[0]['tipo_destino']==1){
@@ -25,8 +25,8 @@ for($i=0;$i<count($idft_funcionario);$i++){
 			$responsable[0]['idft_ruta_distribucion']='';
 			$adicional="tipo_mensajero=''";
 		}else{
-			$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
-			$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+			$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"");
+			$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"");
 		}
 		$sql="UPDATE ft_destino_radicacion SET estado_recogida=1,estado_item=1 WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];	
 		

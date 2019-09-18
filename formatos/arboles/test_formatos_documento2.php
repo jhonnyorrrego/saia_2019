@@ -29,18 +29,18 @@ function llena_formato($formato, $estado = 0)
     $texto = "";
     $campo_descripcion = array();
     $permiso = new PERMISO();
-    $formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "etiqueta", $conn);
+    $formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "etiqueta");
     $ok = $permiso->permiso_usuario($formato[0]["nombre"], "");
 /*
 Si el funcionario no tiene el permiso de forma regular se valida si tiene permiso asociado a un flujo
 
 if(!$ok){
-$doc=busca_filtro_tabla("documento_iddocumento",$arreglo[2]." A","A.id".$arreglo[2]."=".$arreglo[1],"",$conn);
+$doc=busca_filtro_tabla("documento_iddocumento",$arreglo[2]." A","A.id".$arreglo[2]."=".$arreglo[1],"");
 $ok=$permiso->acceso_flujo($doc[0]["documento_iddocumento"],$arreglo[0]);
 }
  */
     if ($formato["numcampos"] && $ok) {
-        $descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%p%'", "orden ASC", $conn);
+        $descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%p%'", "orden ASC");
 
         if ($descripcion["numcampos"]) {
             for ($i = 0; $i < $descripcion["numcampos"]; $i++) {
@@ -83,7 +83,7 @@ function llena_vista($formato)
     $permiso = new PERMISO();
 //$ok=$permiso->permiso_usuario($vista[0]["nombre"],"");
     //if($ok){
-    $vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "", $conn);
+    $vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "");
     for ($i = 0; $i < $vista["numcampos"]; $i++) {
         $texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
         $texto .= 'text="' . $vista[$i]["etiqueta"] . '" id="' . $arreglo[0] . '-vista_formato-' . $arreglo[1] . '-vista-' . $vista[$i]["idvista_formato"] . '">';
@@ -122,16 +122,16 @@ function llena_datos($idformato, $tabla, $campo)
     $cad_tips[] = "documento_iddocumento";
     $cad_tips = array_unique($cad_tips);
     $cad_tips = implode(",", $cad_tips);
-    $dato = busca_filtro_tabla($cad_tips, $tabla, $arreglo[2] . "=" . $arreglo[1], "id" . $tabla . " asc", $conn);
+    $dato = busca_filtro_tabla($cad_tips, $tabla, $arreglo[2] . "=" . $arreglo[1], "id" . $tabla . " asc");
 
     for ($i = 0; $i < $dato["numcampos"]; $i++) {
-        $estado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $dato[$i]["documento_iddocumento"], "", $conn);
+        $estado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $dato[$i]["documento_iddocumento"], "");
         if ($estado[0][0] != "ELIMINADO") {$tips = "";
             for ($j = 0; $j < $num_campo; $j++) {
                 $tips .= strip_tags(str_replace('"', '', decodifica($campo[$j]["etiqueta"]) . ": ")) . str_replace('"', '', decodifica(mostrar_valor_campo($campo[$j]["nombre"], $arreglo[0], $dato[$i]["documento_iddocumento"], 1))) . "\n";
             }
 
-            $version = busca_filtro_tabla("max(version) as max_version", "version_documento a", "a.documento_iddocumento=" . $dato[$i]["documento_iddocumento"], "", $conn);
+            $version = busca_filtro_tabla("max(version) as max_version", "version_documento a", "a.documento_iddocumento=" . $dato[$i]["documento_iddocumento"], "");
             if (!$version["numcampos"]) {
                 $cadena_version = 1;
             } else {
@@ -182,8 +182,8 @@ function llena_datos_item($idformato, $tabla, $campo)
     $cad_tips[] = "id" . $tabla;
     $cad_tips = array_unique($cad_tips);
     $cad_tips = implode(",", $cad_tips);
-    $formato = busca_filtro_tabla("", "formato", "idformato=(select cod_padre from formato where idformato=" . $arreglo[0] . ")", "", $conn);
-    $dato = busca_filtro_tabla($cad_tips, $tabla, $formato[0]["nombre_tabla"] . "=" . $arreglo[1], "id" . $tabla . " asc", $conn);
+    $formato = busca_filtro_tabla("", "formato", "idformato=(select cod_padre from formato where idformato=" . $arreglo[0] . ")", "");
+    $dato = busca_filtro_tabla($cad_tips, $tabla, $formato[0]["nombre_tabla"] . "=" . $arreglo[1], "id" . $tabla . " asc");
 
     for ($i = 0; $i < $dato["numcampos"]; $i++) {
         $tips = "";
@@ -201,7 +201,7 @@ function llena_anexos($iddoc)
 {
     global $conn, $imagenes;
     $texto = "";
-    $anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+    $anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "");
     if ($anexos["numcampos"]) {
         $texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes . ' text="anexos" id="' . rand() . '">';
         for ($i = 0; $i < $anexos["numcampos"]; $i++) {
@@ -218,7 +218,7 @@ function llena_items($idformato, $iddato, $tabla)
 
     global $conn, $imagenes;
     $texto = "";
-    $formato = busca_filtro_tabla("", "formato", "item=1 and cod_padre=" . $idformato, "", $conn);
+    $formato = busca_filtro_tabla("", "formato", "item=1 and cod_padre=" . $idformato, "");
 
     for ($i = 0; $i < $formato["numcampos"]; $i++) {
         $llave = $formato[$i]["idformato"] . "-" . $iddato . "-" . "id" . $formato[$i]["nombre_tabla"] . "-" . $iddato;
@@ -230,10 +230,10 @@ function llena_hijos($idformato, $iddato, $tabla)
 {
     global $conn, $imagenes;
     $texto = "";
-    $formato = busca_filtro_tabla("", "formato", "item=0 and cod_padre=" . $idformato, "etiqueta", $conn);
+    $formato = busca_filtro_tabla("", "formato", "item=0 and cod_padre=" . $idformato, "etiqueta");
 //print_r($formato);
     for ($i = 0; $i < $formato["numcampos"]; $i++) {
-        $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "", $conn);
+        $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "");
         $llave = $formato[$i]["idformato"] . "-" . $iddato;
         if ($campo_formato["numcampos"]) {
             $llave .= "-" . $campo_formato[0]["nombre"] . "-" . $iddato;

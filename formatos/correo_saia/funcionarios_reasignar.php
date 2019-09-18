@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 
 
 if(@$_REQUEST["valor"]){
-    $datos=busca_filtro_tabla(concatenar_cadena_sql(array("ISNULL(A.nombres,'')","' '","ISNULL(A.apellidos,'')","' ('",'A.cargo',"' - '",'A.dependencia',"')'"))." as nombre, A.iddependencia_cargo as id, A.estado, A.nombres, A.apellidos, A.estado_dc, A.idfuncionario","vfuncionario_dc A","".concatenar_cadena_sql(array("ISNULL(A.nombres,'')","' '","ISNULL(A.apellidos,'')"))." like '%".htmlentities(str_replace(" ","%",trim($_REQUEST["valor"])))."%' ","A.estado, nombre",$conn);
+    $datos=busca_filtro_tabla(concatenar_cadena_sql(array("ISNULL(A.nombres,'')","' '","ISNULL(A.apellidos,'')","' ('",'A.cargo',"' - '",'A.dependencia',"')'"))." as nombre, A.iddependencia_cargo as id, A.estado, A.nombres, A.apellidos, A.estado_dc, A.idfuncionario","vfuncionario_dc A","".concatenar_cadena_sql(array("ISNULL(A.nombres,'')","' '","ISNULL(A.apellidos,'')"))." like '%".htmlentities(str_replace(" ","%",trim($_REQUEST["valor"])))."%' ","A.estado, nombre");
     
     if($datos['numcampos']){
         $html="<ul>";

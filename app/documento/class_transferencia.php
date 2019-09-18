@@ -70,7 +70,7 @@ function procesar_estados($idorigen, $iddestino, $nombre_transferencia, $iddocum
 
 function eliminar_asignacion($funcionario, $iddocumento)
 {
-    global $conn;
+
     $datos_asignacion = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento=$iddocumento AND entidad_identidad=1 AND llave_entidad=$funcionario and tarea_idtarea=2", "");
     if ($datos_asignacion["numcampos"]) {
         for ($i = 0; $i < $datos_asignacion["numcampos"]; $i++) {
@@ -115,7 +115,7 @@ function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $li
 
 function buscar_funcionarios($dependencia, $arreglo = null)
 {
-    global $conn;
+
     $dependencias = dependencias($dependencia);
     array_push($dependencias, $dependencia);
     $dependencias = array_unique($dependencias);
@@ -126,7 +126,7 @@ function buscar_funcionarios($dependencia, $arreglo = null)
 
 function dependencias($padre)
 {
-    global $conn;
+
     $listado1 = array();
     $listado2 = array();
     $listado3 = array();
@@ -149,7 +149,7 @@ function dependencias($padre)
 
 function busca_cargofuncionario($tipo, $dato, $dependencia)
 {
-    global $conn;
+
     $filtro = "";
     $datorig[0]["iddependencia_cargo"] = $dato;
     $temp = "";
@@ -187,7 +187,7 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
 
 function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = null)
 {
-    global $conn;
+
     $idtransferencia = array();
     sort($destino);
 
@@ -397,7 +397,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
 
 function aprobar($iddoc = 0, $opcion = 0)
 {
-    global $conn;
+
     $aprobar_posterior = 0;
     if (isset($_REQUEST["iddoc"]) && $_REQUEST["iddoc"]) {
         $iddoc = $_REQUEST["iddoc"];
@@ -565,7 +565,7 @@ function aprobar($iddoc = 0, $opcion = 0)
         } else {
             $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "");
             if ($formato_ant["numcampos"]) {
-                $iddoc_anterior = busca_filtro_tabla("a.documento_iddocumento", $formato_ant[0]["nombre_tabla"] . " a," . $datos_formato[0]["nombre_tabla"] . " b", "a.id" . $formato_ant[0]["nombre_tabla"] . "=b." . $formato_ant[0]["nombre_tabla"] . " and b.documento_iddocumento=" . $iddoc, "", $con);
+                $iddoc_anterior = busca_filtro_tabla("a.documento_iddocumento", $formato_ant[0]["nombre_tabla"] . " a," . $datos_formato[0]["nombre_tabla"] . " b", "a.id" . $formato_ant[0]["nombre_tabla"] . "=b." . $formato_ant[0]["nombre_tabla"] . " and b.documento_iddocumento=" . $iddoc, "");
                 if ($iddoc_anterior["numcampos"]) {
                     $_REQUEST["anterior"] = $iddoc_anterior[0]["documento_iddocumento"];
                 }
@@ -577,6 +577,7 @@ function aprobar($iddoc = 0, $opcion = 0)
 
 function mostrar_estado_proceso($idformato, $iddoc)
 {
+    $revisados = "";
     $campos_formato = ""; // La variable no estaba definida, la he definido provisionalmente como string vacio.
 
     if (!isset($_REQUEST["ocultar_firmas"]) || $_REQUEST["ocultar_firmas"] == 0) {
@@ -584,15 +585,13 @@ function mostrar_estado_proceso($idformato, $iddoc)
         $estado_doc = busca_filtro_tabla("A.estado,A.serie,A.ejecutor,A.documento_antiguo", "documento A", "A.iddocumento=" . $iddoc, "");
         $iniciales = $estado_doc[0]["ejecutor"];
         $ultimo_ruta = busca_filtro_tabla("max(A.idtransferencia) as idbuzon", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc, "");
-        if ($pagina != "mostrar_calidad") {
-            $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "");
-            $mostrar_firmas_doc = busca_filtro_tabla("A.firma,dependencia" . $campos_formato, "" . $tabla[0]["nombre_tabla"] . " A,documento B", "A.documento_iddocumento=B.iddocumento and B.iddocumento=" . $iddoc, "");
-            if ($mostrar_firmas_doc["numcampos"] > 0) {
-                $mostrar_firmas = $mostrar_firmas_doc[0]["firma"];
-            }
-        } else {
-            $mostrar_firmas = 1;
+
+        $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "");
+        $mostrar_firmas_doc = busca_filtro_tabla("A.firma,dependencia" . $campos_formato, "" . $tabla[0]["nombre_tabla"] . " A,documento B", "A.documento_iddocumento=B.iddocumento and B.iddocumento=" . $iddoc, "");
+        if ($mostrar_firmas_doc["numcampos"] > 0) {
+            $mostrar_firmas = $mostrar_firmas_doc[0]["firma"];
         }
+
 
         if (!array_key_exists("tipo", $_REQUEST)) {
             $_REQUEST["tipo"] = 1;
@@ -770,15 +769,14 @@ function mostrar_estado_proceso($idformato, $iddoc)
 
 function cargo_rol($iddoc)
 {
-    global $conn;
+
     $resultado = array();
     $origenes = array();
     $tipo = busca_filtro_tabla(
         "distinct activo,nombre,obligatorio,ruta.origen,ruta.tipo_origen,orden,ruta.idruta,ruta.firma_externa",
         "buzon_entrada,ruta",
         "ruta_idruta=idruta and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and (obligatorio in(1,2,5)) and ruta.tipo='ACTIVO'  and archivo_idarchivo=" . $iddoc,
-        "ruta.idruta asc,buzon_entrada.nombre asc",
-        $conn
+        "ruta.idruta asc,buzon_entrada.nombre asc"
     );
 
     $query = Model::getQueryBuilder();
@@ -826,26 +824,9 @@ function cargo_rol($iddoc)
     return $tipo;
 }
 
-function crear_pretexto($asunto, $contenido)
-{
-    global $conn;
-    $campos = "asunto";
-    $valores = "'" . $asunto . "'";
-    $sql = "INSERT INTO pretexto(" . $campos . ") VALUES (" . $valores . ")";
-    phpmkr_query($sql);
-    $idpretexto = phpmkr_insert_id();
-    guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
-    // Guardo la relacion de la plantilla con el suaurio
-    $idfuncionario = $_SESSION["idfuncionario"];
-    $campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
-    $valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
-    $sql = "INSERT INTO entidad_pretexto(" . $campos . ") VALUES (" . $valores . ") ";
-    phpmkr_query($sql);
-}
-
 function ejecutoradd($sKey)
 {
-    global $conn;
+
     $x_identificacion = $_REQUEST["x_nitejecutor2"];
     $x_nombre = $_REQUEST["cliente0"];
     $x_direccion = $_REQUEST["x_direccionejecutor"];
@@ -873,7 +854,7 @@ function ejecutoradd($sKey)
                 $x_nacionalidad = phpmkr_insert_id();
             }
             // --------------------------------------------
-            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
+            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $campo[0]["idejecutor"] . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
             return phpmkr_insert_id();
         }
     } else { // comprobar si existe la nacionalidad -----
@@ -887,7 +868,7 @@ function ejecutoradd($sKey)
         $idejecutor = phpmkr_insert_id();
 
         if ($idejecutor) {
-            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $idejecutor . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','" . (($x_titulo)) . "','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
+            phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(" . $idejecutor . ",'" . (($x_telefono)) . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . (($x_celular)) . "','" . (($x_direccion)) . "','','" . (($x_email)) . "','$x_nacionalidad')") or error("NO SE INSERTO REMITENTE");
             return phpmkr_insert_id();
         }
     }

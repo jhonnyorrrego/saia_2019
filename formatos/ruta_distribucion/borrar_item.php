@@ -9,7 +9,7 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 $idft=$_REQUEST['idft'];

@@ -16,7 +16,7 @@ if(isset($_REQUEST['nombre'])){
 	
 	$nombre=strtolower($_REQUEST['nombre']);
 	
-	$datos=busca_filtro_tabla("nombre","ft_activo_fijo"," lower(nombre) LIKE '%".$nombre."%' and tipo_activo=".$_REQUEST['tipo_activo']." group by nombre","",$conn);	
+	$datos=busca_filtro_tabla("nombre","ft_activo_fijo"," lower(nombre) LIKE '%".$nombre."%' and tipo_activo=".$_REQUEST['tipo_activo']." group by nombre","");	
 	
 	$html="<ul>";
 	if($datos['numcampos']){

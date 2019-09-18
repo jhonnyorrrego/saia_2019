@@ -13,21 +13,21 @@ $iddocumento=0;
 $texto='<span class="phpmaker">';
 if($_REQUEST["iddoc"]){
 $iddocumento=$_REQUEST["iddoc"];
-  $formato=busca_filtro_tabla("A.numero,A.descripcion AS etiqueta,B.nombre_tabla,B.idformato,B.nombre, A.iddocumento","documento A,formato B","lower(A.plantilla)=B.nombre AND A.iddocumento=".$iddocumento,"",$conn);
+  $formato=busca_filtro_tabla("A.numero,A.descripcion AS etiqueta,B.nombre_tabla,B.idformato,B.nombre, A.iddocumento","documento A,formato B","lower(A.plantilla)=B.nombre AND A.iddocumento=".$iddocumento,"");
   //print_r($formato);
   if($formato["numcampos"]){
     $numero=$formato[0]["numero"];
     $texto.='<b>'.strtoupper($formato[0]["nombre"]).':</b><br>';
     $texto.="Numero Radicado: ".$formato[0]["numero"]."<br>";
     $texto.=strip_tags(html_entity_decode("Descripcion:".(stripslashes($formato[0]["etiqueta"]))),"<br>");
-    $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
+    $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","");
     if($descripcion["numcampos"]){
       $campo_descripcion=$descripcion[0]["nombre"];
     }
     else{
       $campo_descripcion="id".$formato[0]["nombre_tabla"];
     }
-  $papas=busca_filtro_tabla("id".$formato[0]["nombre_tabla"]." AS llave, ".$campo_descripcion." AS etiqueta ,'".$formato[0]["nombre_tabla"]."' AS nombre_tabla",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddocumento,"id".$formato[0]["nombre_tabla"]." ASC",$conn);
+  $papas=busca_filtro_tabla("id".$formato[0]["nombre_tabla"]." AS llave, ".$campo_descripcion." AS etiqueta ,'".$formato[0]["nombre_tabla"]."' AS nombre_tabla",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddocumento,"id".$formato[0]["nombre_tabla"]." ASC");
  
     if($papas["numcampos"]){
       $iddoc=$formato[0]["idformato"]."-".$papas[0]["llave"]."-id".$formato[0]["nombre_tabla"];
@@ -54,7 +54,7 @@ $_SESSION["iddoc"]=$iddocumento;
 $texto.="</span>";
 if(@$_REQUEST["seleccionar"])
   {$datos_seleccionar=explode("-",$_REQUEST["seleccionar"]);
-   $id=busca_filtro_tabla("id".$datos_seleccionar[2],$datos_seleccionar[2],"documento_iddocumento=".$datos_seleccionar[3],"",$conn);
+   $id=busca_filtro_tabla("id".$datos_seleccionar[2],$datos_seleccionar[2],"documento_iddocumento=".$datos_seleccionar[3],"");
    $nodoinicial=$datos_seleccionar[0]."-".$datos_seleccionar[1]."-".$id[0]["id".$datos_seleccionar[2]]."-".$datos_seleccionar[3];
   }
 elseif(@$_REQUEST["llave"]){
@@ -366,9 +366,9 @@ if ($("#openCloseIdentifier2").is(":hidden")) {
 		<div id="slider2">
 			<div id="sliderContent2">
 <?php
-$notas_trans=busca_filtro_tabla("notas,f1.nombres as nombres1,f1.apellidos as apellidos1,f2.nombres as nombres2,f2.apellidos as apellidos2,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida,funcionario f1,funcionario f2","destino=f2.funcionario_codigo and origen=f1.funcionario_codigo and (destino='".usuario_actual("funcionario_codigo")."' or ver_notas=1) and (notas is not null) and archivo_idarchivo=".$_REQUEST["iddoc"],"fecha desc",$conn);
-$notas_postit=busca_filtro_tabla("nombres,apellidos,comentario,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","comentario_img,funcionario","funcionario=login and documento_iddocumento=".$_REQUEST["iddoc"],"fecha desc",$conn);
-$formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn); 
+$notas_trans=busca_filtro_tabla("notas,f1.nombres as nombres1,f1.apellidos as apellidos1,f2.nombres as nombres2,f2.apellidos as apellidos2,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida,funcionario f1,funcionario f2","destino=f2.funcionario_codigo and origen=f1.funcionario_codigo and (destino='".usuario_actual("funcionario_codigo")."' or ver_notas=1) and (notas is not null) and archivo_idarchivo=".$_REQUEST["iddoc"],"fecha desc");
+$notas_postit=busca_filtro_tabla("nombres,apellidos,comentario,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","comentario_img,funcionario","funcionario=login and documento_iddocumento=".$_REQUEST["iddoc"],"fecha desc");
+$formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],""); 
 if($notas_trans["numcampos"]){
 echo "<b>Notas Transferencias:</b><br />" ;
 for($i=0;$i<$notas_trans["numcampos"] && $i<2;$i++ )

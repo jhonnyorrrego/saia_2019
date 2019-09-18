@@ -96,9 +96,9 @@ class ArbolCargo
 
         $objetoJson = [];
         if ($id == 0) {
-            $papas = busca_filtro_tabla("", "cargo", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
+            $papas = busca_filtro_tabla("", "cargo", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC");
         } else {
-            $papas = busca_filtro_tabla("", "cargo", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $conn);
+            $papas = busca_filtro_tabla("", "cargo", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC");
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -132,7 +132,7 @@ class ArbolCargo
                     $item["unselectableStatus"] = true;
                 }
 
-                $hijos = busca_filtro_tabla("count(*) as cant", "cargo", "cod_padre=" . $papas[$i]["idcargo"] . $condicion_ad, "", $conn);
+                $hijos = busca_filtro_tabla("count(*) as cant", "cargo", "cod_padre=" . $papas[$i]["idcargo"] . $condicion_ad, "");
                 if ($hijos[0]["cant"]) {
                     $item["children"] = $this->llena_cargo($papas[$i]["idcargo"]);
                 } else {

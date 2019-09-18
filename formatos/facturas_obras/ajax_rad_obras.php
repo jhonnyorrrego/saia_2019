@@ -23,7 +23,7 @@ if ($_REQUEST["opt"] == 1 && isset($_REQUEST["fecha"]) && isset($_REQUEST["cant_
 echo json_encode($retorno);
 
 function dias_habiles($dias, $formato = NULL, $fecha_inicial = NULL) {
-	global $conn;
+	
 	if (!$formato) {
 		$formato = "Y-m-d";
 	}
@@ -37,7 +37,7 @@ function dias_habiles($dias, $formato = NULL, $fecha_inicial = NULL) {
 		$diainicial = $ar_fechaini["day"];
 		$fecha_inicial = date($formato, mktime(0, 0, 0, $mesinicial, $diainicial + 1, $anioinicial));
 
-		$asignacion = busca_filtro_tabla("idasignacion", "asignacion a", "a.documento_iddocumento=-1 and " . fecha_db_obtener('a.fecha_inicial', $formato) . "<='" . $fecha_inicial . "' and " . fecha_db_obtener('a.fecha_final', $formato) . ">'" . $fecha_inicial . "'", "", $conn);
+		$asignacion = busca_filtro_tabla("idasignacion", "asignacion a", "a.documento_iddocumento=-1 and " . fecha_db_obtener('a.fecha_inicial', $formato) . "<='" . $fecha_inicial . "' and " . fecha_db_obtener('a.fecha_final', $formato) . ">'" . $fecha_inicial . "'", "");
 		if ($asignacion["numcampos"])
 			$dias++;
 	}

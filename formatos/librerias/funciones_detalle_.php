@@ -6,7 +6,7 @@ include_once("../../db.php");
     }
     function editar()
     {
-        global $conn;
+        
         $lista_campos = listar_campos_tabla();
         $update = array();
         $campos = array();
@@ -17,7 +17,7 @@ include_once("../../db.php");
             }
         }
         $sql = "update " . $_REQUEST["tabla"] . " set " . implode(",", $update) . " where id" . $_REQUEST["tabla"] . "=" . $_REQUEST["item"];
-        phpmkr_query($sql, $conn);
+        phpmkr_query($sql);
         echo '<script>location="../librerias/funciones_detalle.php?accion=listar_detalle&tabla=' . $_REQUEST["tabla"] . '&campos=' . implode(",", $campos) . '&seleccionados="+parent.document.getElementById("' . $_REQUEST["padre"] . '").value+"&campo=' . $_REQUEST["padre"] . '&formato=' . $_REQUEST["tipo_radicado"] . '&padre=' . $_REQUEST["padre"] . '"</script>;';
     }
     function llamar_pagina()
@@ -27,16 +27,16 @@ include_once("../../db.php");
     }
     function eliminar_detalle()
     {
-        global $conn;
+        
         $sql = "delete from " . $_REQUEST["tabla"] . " where id" . $_REQUEST["tabla"] . "=" . $_REQUEST["id"];
-        phpmkr_query($sql, $conn);
+        phpmkr_query($sql);
         echo "<script>eliminarItem_padre('" . $_REQUEST["campo"] . "','" . $_REQUEST["id"] . "','" . $_REQUEST["tabla"] . "','" . $_REQUEST["campos"] . "','" . $_REQUEST["formato"] . "');            </script>";
     }
     function listar_detalle()
     {
-        global $conn;
+        
         include_once("estilo_formulario.php");
-        $resultado = busca_filtro_tabla("id" . $_REQUEST["tabla"] . "," . $_REQUEST["campos"], $_REQUEST["tabla"], "id" . $_REQUEST["tabla"] . " in(" . $_REQUEST["seleccionados"] . ")", "", $conn);
+        $resultado = busca_filtro_tabla("id" . $_REQUEST["tabla"] . "," . $_REQUEST["campos"], $_REQUEST["tabla"], "id" . $_REQUEST["tabla"] . " in(" . $_REQUEST["seleccionados"] . ")", "");
         $campos = explode(",", $_REQUEST["campos"]);
         $encabezados = implode("</td><td class=encabezado_list >", $campos);
         echo "<body bgcolor='#F5F5F5'><table border=1 width=100%>         <tr align=center ><td class=encabezado_list >" . $encabezados . "</td><td colspan=2 class=encabezado_list>Opciones</td></tr>";
@@ -44,10 +44,10 @@ include_once("../../db.php");
             echo "<tr>";
             for ($j = 0; $j < count($campos); $j++) {
                 if ($_REQUEST["tabla"] == "inicio_fin_proceso") {
-                    $e_s = busca_filtro_tabla("distinct identrada_salida,proveedor,entrada", "entrada_salida", "identrada_salida=" . $resultado[$i][$j + 1], "proveedor,entrada", $conn);
+                    $e_s = busca_filtro_tabla("distinct identrada_salida,proveedor,entrada", "entrada_salida", "identrada_salida=" . $resultado[$i][$j + 1], "proveedor,entrada");
                     echo "<td>" . codifica_encabezado(html_entity_decode($e_s[0]["proveedor"] . " - " . $e_s[0]["entrada"])) . "&nbsp;</td>";
                 } elseif ($_REQUEST["tabla"] == "proveedores_usuarios") {
-                    $e_s = busca_filtro_tabla("distinct nombre_proceso", "proceso", "idproceso=" . $resultado[$i][$j + 1], "", $conn);
+                    $e_s = busca_filtro_tabla("distinct nombre_proceso", "proceso", "idproceso=" . $resultado[$i][$j + 1], "");
                     echo "<td>" . codifica_encabezado(html_entity_decode($e_s[0]["nombre_proceso"])) . "&nbsp;</td>";
                 } else             echo "<td>" . codifica_encabezado(html_entity_decode($resultado[$i][$j + 1])) . "&nbsp;</td>";
             }
@@ -59,7 +59,7 @@ include_once("../../db.php");
     }
     function guardar_detalle()
     {
-        global $conn;
+        
         $lista_campos = listar_campos_tabla();
         foreach ($_REQUEST as $key => $valor) {
             if (in_array(strtolower($key), $lista_campos) && $key <> "id" . $_REQUEST["tabla"]) {
@@ -68,6 +68,6 @@ include_once("../../db.php");
             }
         }
         $sql = "insert into " . $_REQUEST["tabla"] . "(" . implode(",", $campos) . ") values(" . implode(",", $valores) . ")";
-        ejecuta_sql($sql, $conn);
+        ejecuta_sql($sql);
     }
 ?> 

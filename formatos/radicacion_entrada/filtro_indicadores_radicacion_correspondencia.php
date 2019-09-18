@@ -10,8 +10,8 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."core/autoload.php");
-include_once($ruta_db_superior."librerias_saia.php");
-echo(librerias_jquery("1.7"));
+include_once($ruta_db_superior."assets/librerias.php");
+echo(jquery());
 ?>
 <link rel="stylesheet" type="text/css" media="all" href="<?php echo($ruta_db_superior);?>css/daterangepicker-bs3.css" />
 <style>

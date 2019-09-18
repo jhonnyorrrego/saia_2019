@@ -113,12 +113,18 @@ class Anexos extends LogModel
         return !$this->campos_formato ? 'Soporte' : $this->getFieldName();
     }
 
+    /**
+     * obtiene el nombre del campo al que 
+     * fue cargo el anexo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-18
+     */
     public function getFieldName()
     {
-        $sql = 'select etiqueta from campos_formato where idcampos_formato =' . $this->campos_formato;
-        $record = StaticSql::search($sql);
-
-        return $record[0]['etiqueta'];
+        $CamposFormato = new CamposFormato($this->campos_formato);
+        return $CamposFormato ? $CamposFormato->etiqueta : '';
     }
 
     /**
@@ -130,13 +136,14 @@ class Anexos extends LogModel
     public function getLastLog()
     {
         if (!$this->Log) {
-            $sql = <<<SQL
-            select max(fk_log) as idlog
-            from anexos_log 
-            where fk_anexos = {$this->getPK()}
-SQL;
-            $record = StaticSql::search($sql);
-            $this->Log = $record[0]['idlog'] ? new Log($record[0]['idlog']) : null;
+            $record = self::getQueryBuilder()
+                ->select('max(fk_log) as idlog')
+                ->from('anexos_log')
+                ->where('fk_anexos = :fileId')
+                ->setParameter(':fileId', $this->getPK(), \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute()->fetch();
+
+            $this->Log = new Log($record['idlog']);
         }
 
         return $this->Log;
@@ -170,9 +177,17 @@ SQL;
     {
         $Anexos = new Anexos($fileId);
 
-        if ($Anexos->fk_anexos) {
-            $sql = "select * from anexos where idanexos <>{$fileId} and fk_anexos={$Anexos->fk_anexos} order by idanexos desc";
-            $response = Anexos::findByQueryBuilder($sql);
+        if ($Anexos->fk_anexo) {
+            $QueryBuilder = Model::getQueryBuilder()
+                ->select('*')
+                ->from('anexos')
+                ->where('idanexos <> :fileId')
+                ->andWhere('fk_anexos = :parentId')
+                ->orderBy('idanexos', 'desc')
+                ->setParameter(':fileId', $fileId, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':parentId', $Anexos->fk_anexos, \Doctrine\DBAL\Types\Type::INTEGER);
+
+            $response = Anexos::findByQueryBuilder($QueryBuilder);
         } else {
             $response = [];
         }

@@ -11,18 +11,18 @@ $ruta.="../";
 $max_salida--; 
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-echo(estilo_bootstrap());
+echo(bootstrap());
 echo(librerias_arboles());
-echo(librerias_jquery('1.7'));
+echo(jquery());
 
 if(isset($_REQUEST['aprobar'])){
 	$insert="insert into ft_item_recibidos (ft_radicacion_facturas,fecha_recibida,tipo_recibido,observaciones_reci,creador_recibida) values (".$_REQUEST['idft'].",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$_REQUEST['tipo_recibido']."','".$_REQUEST['observaciones']."','".usuario_actual('funcionario_codigo')."')";
 	phpmkr_query($insert); 
 	   
 	if($_REQUEST['tipo_recibido']==2 || $_REQUEST['tipo_recibido']==3){
-		$funcionario=busca_filtro_tabla("v.funcionario_codigo","ft_radicacion_facturas a,ft_item_facturas b,vfuncionario_dc v","a.idft_radicacion_facturas=b.ft_radicacion_facturas and  b.responsable=v.iddependencia_cargo and a.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+		$funcionario=busca_filtro_tabla("v.funcionario_codigo","ft_radicacion_facturas a,ft_item_facturas b,vfuncionario_dc v","a.idft_radicacion_facturas=b.ft_radicacion_facturas and  b.responsable=v.iddependencia_cargo and a.documento_iddocumento=".$_REQUEST['iddoc'],"");
 		if($funcionario['numcampos']){
 			transferencia_automatica($_REQUEST['idformato'],$_REQUEST['iddoc'],$funcionario[0]['funcionario_codigo'],3);
 		}

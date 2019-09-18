@@ -13,17 +13,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . "librerias_saia.php";
-include_once $ruta_db_superior . "librerias_saia.php";   
+include_once $ruta_db_superior . "assets/librerias.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
-echo estilo_bootstrap();
-echo librerias_jquery('1.7');
+echo jquery();
+echo jquery();
 ?>
 <div class="container">
   <h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5><br>
   <?php
   if (!isset($_REQUEST["accion"])) {
-    $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "", "nombre", $conn);
+    $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "", "nombre");
     ?>
     <ul class="nav nav-tabs">
       <li class="active"><a href='sliderconfig.php'>Inicio</a></li>
@@ -31,49 +31,49 @@ echo librerias_jquery('1.7');
       <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a></li>
     </ul>
     <?php
-    if (!$carrusel["numcampos"])
-      echo "No se encontraron registros.";
-    else {
-      echo "<table width='100%'  class='table table-bordered table-striped'>
+      if (!$carrusel["numcampos"])
+        echo "No se encontraron registros.";
+      else {
+        echo "<table width='100%'  class='table table-bordered table-striped'>
          <tr ><td colspan=3 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE PUBLICACION</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE CADUCIDAD</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDOS</td></tr>";
-      for ($i = 0; $i < $carrusel["numcampos"]; $i++) {
-        $contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"] . " and '" . date("Y-m-d") . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . date("Y-m-d") . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden", $conn);
-        echo "<tr><td>
+        for ($i = 0; $i < $carrusel["numcampos"]; $i++) {
+          $contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"] . " and '" . date("Y-m-d") . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . date("Y-m-d") . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden");
+          echo "<tr><td>
              <a href='sliderconfig.php?accion=editar&id=" . $carrusel[$i]["idcarrusel"] . "'>Editar
              </a></td>
              <td>
              <a href='#' onclick='if(confirm(\"Desea borrar el carrusel y todos sus contenidos?\")) window.location=\"sliderconfig.php?accion=eliminar&id=" . $carrusel[$i]["idcarrusel"] . "\"'>Eliminar
              </a></td>";
-        if ($contenidos['numcampos']) {
-          echo ("<td>
+          if ($contenidos['numcampos']) {
+            echo ("<td>
 			 			<a target='_blank' href='mostrar_todos.php?idcarrusel=" . $carrusel[$i]["idcarrusel"] . "'>Ver</a>
 			 		</td>");
-        } else {
-          echo ("<td></td>");
+          } else {
+            echo ("<td></td>");
+          }
+          echo "<td>" . $carrusel[$i]["nombre"] . "</td>";
+          echo "<td>" . $carrusel[$i]["fecha_inicio"] . "</td>";
+          echo "<td>" . $carrusel[$i]["fecha_fin"] . "</td>";
+          echo "<td><table width=100% class='table table-bordered table-striped'><tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. INICIO</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. FINAL</td><td colspan=2 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td></tr>";
+          $contenidos = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"], "orden");
+          for ($j = 0; $j < $contenidos["numcampos"]; $j++)
+            echo "<tr><td>" . $contenidos[$j]["nombre"] . "</td><td>" . $contenidos[$j]["fecha_inicio"] . "</td><td>" . $contenidos[$j]["fecha_fin"] . "</td><td><a href='contenidoconfig.php?accion=editar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Editar</a></td><td><a href='contenidoconfig.php?accion=eliminar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Eliminar</a></td></tr>";
+          echo "</table></td></tr>";
         }
-        echo "<td>" . $carrusel[$i]["nombre"] . "</td>";
-        echo "<td>" . $carrusel[$i]["fecha_inicio"] . "</td>";
-        echo "<td>" . $carrusel[$i]["fecha_fin"] . "</td>";
-        echo "<td><table width=100% class='table table-bordered table-striped'><tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. INICIO</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. FINAL</td><td colspan=2 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td></tr>";
-        $contenidos = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"], "orden", $conn);
-        for ($j = 0; $j < $contenidos["numcampos"]; $j++)
-          echo "<tr><td>" . $contenidos[$j]["nombre"] . "</td><td>" . $contenidos[$j]["fecha_inicio"] . "</td><td>" . $contenidos[$j]["fecha_fin"] . "</td><td><a href='contenidoconfig.php?accion=editar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Editar</a></td><td><a href='contenidoconfig.php?accion=eliminar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Eliminar</a></td></tr>";
-        echo "</table></td></tr>";
+        echo "</table>";
       }
-      echo "</table>";
-    }
-  } elseif ($_REQUEST["accion"] == "adicionar" || $_REQUEST["accion"] == "editar") {
-    if (isset($_REQUEST["id"]) && $_REQUEST["id"])
-      $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "idcarrusel=" . $_REQUEST["id"], "", $conn);
-    else
-      $carrusel[0] = array("autoplay" => "1", "delay" => "3000", "easing" => "easeInOutExpo", "animationtime" => "600");
+    } elseif ($_REQUEST["accion"] == "adicionar" || $_REQUEST["accion"] == "editar") {
+      if (isset($_REQUEST["id"]) && $_REQUEST["id"])
+        $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "idcarrusel=" . $_REQUEST["id"], "");
+      else
+        $carrusel[0] = array("autoplay" => "1", "delay" => "3000", "easing" => "easeInOutExpo", "animationtime" => "600");
 
-    include_once("../calendario/calendario.php");
-    ?>
+      include_once("../calendario/calendario.php");
+      ?>
     <script type="text/javascript" src="../js/jquery.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.js"></script>
     <style>
@@ -109,7 +109,7 @@ echo librerias_jquery('1.7');
     </ul>
     <br />
 
-    <?php
+  <?php
     echo "<fieldset><legend>" . ucwords($_REQUEST["accion"] . " carrusel") . "</legend></fieldset><form name='form1' id='form1' method='post'><table class='table table-bordered table-striped'>";
     echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Nombre*</td><td><input class='required'  type='text' name='nombre' value='" . @$carrusel[0]["nombre"] . "'></td></tr>";
     echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Fecha de publicaci&oacute;n*</td><td>" . '<input type="text" readonly="true" name="fecha_inicio"  class="required dateISO"  id="fecha_inicio" value="' . @$carrusel[0]["fecha_inicio"] . '">';
@@ -179,7 +179,7 @@ echo librerias_jquery('1.7');
     }
     $sql1 = "insert into carrusel(" . implode(",", $nombres) . ") values(" . implode(",", $valores) . ")";
     //die($sql1);
-    phpmkr_query($sql1, $conn);
+    phpmkr_query($sql1);
     header("location: sliderconfig.php");
   } elseif ($_REQUEST["accion"] == "guardar_editar") {
     $campos = array("autoplay", "delay", "easing", "animationtime", "nombre");
@@ -189,13 +189,13 @@ echo librerias_jquery('1.7');
       $valores[] = $fila . "='" . $_REQUEST[$fila] . "'";
     }
     $sql = "update carrusel set " . implode(",", $valores) . " where idcarrusel=" . $_REQUEST["id"];
-    phpmkr_query($sql, $conn);
+    phpmkr_query($sql);
     header("location: sliderconfig.php");
   } elseif ($_REQUEST["accion"] == "eliminar") {
     $sql = "delete from contenidos_carrusel where carrusel_idcarrusel=" . $_REQUEST["id"];
-    phpmkr_query($sql, $conn);
+    phpmkr_query($sql);
     $sql = "delete from carrusel where idcarrusel=" . $_REQUEST["id"];
-    phpmkr_query($sql, $conn);
+    phpmkr_query($sql);
     header("location: sliderconfig.php");
   }
   function botones($nombre, $valor)

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 function add_edit_item_factura() {
-	global $conn;
+	
 	?>
 	<script>
 		$(document).ready(function (){

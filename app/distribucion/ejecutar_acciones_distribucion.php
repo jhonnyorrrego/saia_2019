@@ -15,7 +15,7 @@ include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 
 function cambiar_mensajero_distribucion()
 {
-    global $conn;
+    
     $retorno = array(
         'exito' => 0,
         'msn' => "Error al actualizar el mensajero"
@@ -25,7 +25,7 @@ function cambiar_mensajero_distribucion()
     if ($iddistribucion) {
 
         $vector_mensajero_nuevo = explode('-', @$_REQUEST['mensajero']);
-        $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "", $conn);
+        $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino", "distribucion", "iddistribucion in(" . $iddistribucion . ")", "");
         
         //Valida que todos los items sean internos o externos
         $retorno = validar_oriden_destino_distribucion($iddistribucion);
@@ -73,7 +73,7 @@ function cambiar_mensajero_distribucion()
 
 function validar_oriden_destino_distribucion($distribucion)
 {
-    global $conn;
+    
     $cantidad = count(explode(",", $distribucion));
     $retorno = array(
         'exito' => 0,
@@ -81,8 +81,8 @@ function validar_oriden_destino_distribucion($distribucion)
         'tipo_origen' => 0,
         'tipo_destino' => 0,
     );
-    $tipo_origen_externo = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-    $tipo_origen_interno = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+    $tipo_origen_externo = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =1 and iddistribucion in(" . $distribucion . ")", "");
+    $tipo_origen_interno = busca_filtro_tabla("count(tipo_origen) as cantidad", "distribucion", "tipo_origen =2 and iddistribucion in(" . $distribucion . ")", "");
 
     if ($tipo_origen_externo[0]['cantidad'] == $cantidad || $tipo_origen_interno[0]['cantidad'] == $cantidad) {
         if ($tipo_origen_externo[0]['cantidad'] == $cantidad) {
@@ -90,8 +90,8 @@ function validar_oriden_destino_distribucion($distribucion)
         } else {
             $retorno['tipo_origen'] = 2;
         }
-        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =1 and iddistribucion in(" . $distribucion . ")", "", $conn);
-        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =2 and iddistribucion in(" . $distribucion . ")", "", $conn);
+        $tipo_destino_externo = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =1 and iddistribucion in(" . $distribucion . ")", "");
+        $tipo_destino_interno = busca_filtro_tabla("count(tipo_destino) as cantidad", "distribucion", "tipo_destino =2 and iddistribucion in(" . $distribucion . ")", "");
 
         if ($tipo_destino_externo[0]['cantidad'] == $cantidad || $tipo_destino_interno[0]['cantidad'] == $cantidad) {
             if ($tipo_destino_externo[0]['cantidad'] == $cantidad) {
@@ -111,7 +111,7 @@ function validar_oriden_destino_distribucion($distribucion)
 
 function finalizar_distribucion()
 {
-    global $conn;
+    
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
 
@@ -120,7 +120,7 @@ function finalizar_distribucion()
         for ($i = 0; $i < count($vector_iddistribucion); $i++) {
             $iddistribucion = $vector_iddistribucion[$i];
 
-            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "", $conn);
+            $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "");
             $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
             $upd = '';
             switch ($diligencia) {
@@ -153,7 +153,7 @@ function finalizar_distribucion()
 
 function confirmar_recepcion_distribucion()
 {
-    global $conn;
+    
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
         $vector_iddistribucion = explode(',', $_REQUEST['iddistribucion']);
@@ -170,7 +170,7 @@ function confirmar_recepcion_distribucion()
 //fin function confirmar_recepcion_distribucion()
 function confirmar_recepcion_item_planilla()
 {
-global $conn;
+
     $retorno = array('exito' => 0);
     if (@$_REQUEST['ft_item_despacho_ingres']) {
         $vector_planilla = explode(',', $_REQUEST['ft_item_despacho_ingres']);
@@ -179,7 +179,7 @@ global $conn;
             $upd = " UPDATE dt_recep_despacho SET recepcion=1,idfuncionario=".SessionController::getValue('idfuncionario')." WHERE ft_item_despacho_ingres=" . $ft_item_despacho_ingres;
 
             phpmkr_query($upd);
-            /*$iddistribucion=busca_filtro_tabla("iddistribucion","dt_recep_despacho","ft_item_despacho_ingres=". $ft_item_despacho_ingres,"",$conn);
+            /*$iddistribucion=busca_filtro_tabla("iddistribucion","dt_recep_despacho","ft_item_despacho_ingres=". $ft_item_despacho_ingres,"");
             $actualiza_por_disitrbuir="UPDATE disitrbucion SET estado_disitrbucion=1 WHERE iddistribucion=".$iddistribucion['iddistribucion'];
             phpmkr_query($actualiza_por_disitrbuir);*/
         }
@@ -189,11 +189,11 @@ global $conn;
 }
 function finalizar_entrega_personal()
 {
-    global $conn;
+    
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
         $vector_iddistribucion = explode(',', $_REQUEST['iddistribucion']);
-        $finaliza_rol = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND idfuncionario=" . usuario_actual('idfuncionario'), "", $conn);
+        $finaliza_rol = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND idfuncionario=" . usuario_actual('idfuncionario'), "");
         $finaliza_fecha = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 
         for ($i = 0; $i < count($vector_iddistribucion); $i++) {

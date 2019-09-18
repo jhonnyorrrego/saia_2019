@@ -193,8 +193,6 @@ class GuardarFtController
                             'route' => $route
                         ];
                     }
-
-                    break;
                 }
 
                 if ($edit) {

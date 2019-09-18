@@ -13,84 +13,6 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
-function listado_hijos_formato($idformato, $iddoc)
-{
-    global $conn;
-    if ($idformato) {
-        $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
-
-        if ($formato["numcampos"]) {
-            $campos = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $idformato . " AND etiqueta_html NOT IN('detalle','hidden')", "", $conn);
-            //$datos_hijo=busca_filtro_tabla("",$formato[0]["nombre_tabla"],$_REQUEST["llave"]."=".$iddoc,"",$conn);
-            /* campos:arreglo con datos a mostrar
-              tabla: Tabla a mostrar
-              campo: campo que sirve de enlace entre padre e hijo
-              llave: llave que sirve de enlace id del padre
-              orden: campo por el que se debe ordenar
-             */
-            $lcampos = extrae_campo($campos, "nombre", "U");
-            $tabla = $formato[0]["nombre_tabla"];
-
-            $formato_padre = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "", $conn);
-            $id_padre = busca_filtro_tabla("id" . $formato_padre[0]["nombre_tabla"] . " as id", $formato_padre[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
-
-            $campo_enlace = $formato_padre[0]["nombre_tabla"];
-            $id = $id_padre[0]["id"];
-            $enlace_adicionar = "";
-            array_push($lcampos, "id" . $tabla);
-
-            if (@$_REQUEST["iddoc"]) {
-                agrega_boton("texto", "../../botones/formatos/adicionar.gif", "../../responder.php?idformato=" . $idformato . "&iddoc=" . $_REQUEST["padre"], "", "Adicionar " . $formato[0]["etiqueta"], $formato[0]["nombre_tabla"], "", "", 0);
-                $enlace_adicionar .= "<br /><br />";
-            }
-            $texto .= $enlace_adicionar . listar_formato_hijo2($lcampos, $tabla, $campo_enlace, $id, $orden);
-            echo ($texto);
-        }
-    }
-}
-
-function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden)
-{
-    global $conn, $idformato;
-    $where = "";
-    $condicion = " AND B.estado<>'ELIMINADO'";
-    if (in_array("estado", $campos) && !@$_REQUEST["enlace_adicionar_formato"]) {
-        $condicion .= " AND A.estado<>'INACTIVO'";
-    }
-
-    if (count($campos)) {
-        $where .= " AND A.nombre IN('" . implode("','", $campos) . "')";
-    }
-    $lcampos = busca_filtro_tabla("A.*,B.idformato,B.nombre AS nombre_formato,B.ruta_mostrar", "campos_formato A,formato B", "B.nombre_tabla LIKE '" . $tabla . "' AND A.formato_idformato=B.idformato" . $where, "A.orden", $conn);
-
-    $hijo = busca_filtro_tabla("", $tabla . " A, documento B", "A.documento_iddocumento=B.iddocumento AND A." . $campo_enlace . "=" . $llave . $condicion, $orden, $conn);
-
-    if ($hijo["numcampos"] && $lcampos["numcampos"]) {
-        $texto .= '<div style="overflow:auto; border:1px solid; width:100%; height:94$;"><table border="1px" style="border-collapse:collapse;width:60%" ><thead><tr class="encabezado_list">';
-        for ($j = 0; $j < $lcampos["numcampos"]; $j++) {
-            if ($lcampos[$j]["nombre"] == "id" . $tabla) {
-                $texto .= '<td>&nbsp;</td>';
-            } else
-                $texto .= '<td>' . $lcampos[$j]["etiqueta"] . "</td>";
-        }
-        $texto .= '</tr></thead><tbody style="overflow:auto; ">';
-        for ($i = 0; $i < $hijo["numcampos"]; $i++) {
-            $texto .= '<tr class="celda_transparente">';
-            for ($j = 0; $j < $lcampos["numcampos"]; $j++) {
-                $avance = '';
-                if ($lcampos[$j]["nombre"] == 'avance')
-                    $avance = '%&nbsp;';
-                if ($lcampos[$j]["nombre"] == "id" . $tabla) {
-                    $texto .= '<td><a href="../' . $lcampos[0]["nombre_formato"] . '/' . $lcampos[0]["ruta_mostrar"] . '?idformato=' . $lcampos[0]["idformato"] . '&iddoc=' . $hijo[$i]["documento_iddocumento"] . '">Ver</a></td>';
-                } else
-                    $texto .= '<td align="center">' . mostrar_valor_campo($lcampos[$j]["nombre"], $lcampos[$j]["formato_idformato"], $hijo[$i]["documento_iddocumento"], 1) . "&nbsp;" . $avance . "</td>";
-            }
-            $texto .= '</tr>';
-        }
-        $texto .= '</tbody></table></div>';
-    }
-    return ($texto);
-}
 
 /**
  * crea la nueva ruta de radicacion para un documento
@@ -109,8 +31,6 @@ function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden)
  */
 function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
 {
-    global $conn;
-
     if ($ruta2) {
         if ($ruta2[0]['tipo'] == 5) {
             $VfuncionarioDc = VfuncionarioDc::findByRole($ruta2[0]['funcionario']);
@@ -142,20 +62,14 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         'tipo_flujo' => RutaDocumento::FLUJO_SERIE
     ]);
 
-    $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "", $conn);
+    $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "");
     array_push($ruta, array(
         "funcionario" => $radicador[0]["funcionario_codigo"],
         "tipo_firma" => 0,
         "tipo" => 1
     ));
-    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array(
-        "'ELIMINA_'",
-        "nombre"
-    )) . " where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
-    phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array(
-        "'ELIMINA_'",
-        "nombre"
-    )) . " WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
+    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=CONCAT('ELIMINA_',nombre) where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+    phpmkr_query("UPDATE buzon_salida SET nombre=CONCAT('ELIMINA_',nombre) WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')");
 
     for ($i = 0; $i < count($ruta) - 1; $i++) {
         if (!isset($ruta[$i]["tipo_firma"])) {
@@ -169,7 +83,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         }
 
         if ($ruta[$i]["tipo"] == 5) {
-            $func_codigo1 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i]["funcionario"], "", $conn);
+            $func_codigo1 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i]["funcionario"], "");
             $funcionario1 = $func_codigo1[0]['funcionario_codigo'];
         } else {
             $funcionario1 = $ruta[$i]["funcionario"];
@@ -179,7 +93,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         if ($retorno1['exito']) {
             $funcionario1 = $retorno1['funcionario_codigo'][0];
             if ($ruta[$i]["tipo"] == 5) {
-                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno1['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i]["funcionario"], "", $conn);
+                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno1['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i]["funcionario"], "");
                 if ($equiv["numcampos"]) {
                     $ruta[$i]["funcionario"] = $equiv[0]["llave_entidad_destino"];
                 } else {
@@ -190,7 +104,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         }
 
         if ($ruta[$i + 1]["tipo"] == 5) {
-            $func_codigo2 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i + 1]["funcionario"], "", $conn);
+            $func_codigo2 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i + 1]["funcionario"], "");
             $funcionario2 = $func_codigo2[0]['funcionario_codigo'];
         } else {
             $funcionario2 = $ruta[$i + 1]["funcionario"];
@@ -200,7 +114,7 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         if ($retorno2['exito']) {
             $funcionario2 = $retorno2['funcionario_codigo'][0];
             if ($ruta[$i + 1]["tipo"] == 5) {
-                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno2['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i + 1]["funcionario"], "", $conn);
+                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno2['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i + 1]["funcionario"], "");
                 if ($equiv["numcampos"]) {
                     $ruta[$i + 1]["funcionario"] = $equiv[0]["llave_entidad_destino"];
                 } else {

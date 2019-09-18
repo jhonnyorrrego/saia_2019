@@ -17,9 +17,9 @@ function mostrar_codigo_qr_encabezado($idformato, $iddoc)
 
 function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $height = 80)
 {
-	global $conn;
+	
 
-	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
+	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "");
 	$img = '';
 	$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
 
@@ -71,7 +71,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 		$idfunc = $_SESSION["idfuncionario"];
 	}
 
-	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
+	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "");
 	if ($codigo_qr["numcampos"]) {
 		$retorno["exito"] = 1;
 		$retorno["msn"] = "El QR ya existe";

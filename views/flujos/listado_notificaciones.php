@@ -38,8 +38,8 @@ $resp = [
 echo json_encode($resp);
 
 function consultarDestinatarios($idNotificacion) {
-    global $conn;
-    $listado = busca_filtro_tabla("email", "vwf_dest_notificacion", "fk_notificacion = $idNotificacion", "", $conn);
+    
+    $listado = busca_filtro_tabla("email", "vwf_dest_notificacion", "fk_notificacion = $idNotificacion", "");
     $resp = [];
     if($listado["numcampos"]) {
         for($i=0; $i < $listado["numcampos"]; $i++) {

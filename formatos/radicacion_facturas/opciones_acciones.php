@@ -27,7 +27,7 @@ if ($_REQUEST['opcion']) {
 			$tipo = 'Para aprobaci%n de Compras';
 			break;
 	}
-	$opciones = busca_filtro_tabla("b.nombre", "cf_acciones a,cf_acciones b", "b.estado=1 and a.idcf_acciones=b.cod_padre and a.nombre like '" . $tipo . "'", "", $conn);
+	$opciones = busca_filtro_tabla("b.nombre", "cf_acciones a,cf_acciones b", "b.estado=1 and a.idcf_acciones=b.cod_padre and a.nombre like '" . $tipo . "'", "");
 
 	if ($opciones['numcampos']) {
 		$html = '';

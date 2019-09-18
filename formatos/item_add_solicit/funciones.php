@@ -94,10 +94,10 @@ function valida_valor_solicitud($idformato,$iddoc){
 	<?php
 }
 function validar_items_tipo_solicitud($idformato,$iddoc){
-	global $conn;
+	
 	$editar = $_REQUEST["item"];
 	if($editar){
-		$datos_solicitudes=busca_filtro_tabla("v.documento_iddocumento, tipo_solicitud","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","s.idft_item_add_solicit=".$editar,"",$conn);
+		$datos_solicitudes=busca_filtro_tabla("v.documento_iddocumento, tipo_solicitud","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","s.idft_item_add_solicit=".$editar,"");
 		$id_papa = $datos_solicitudes[0]["documento_iddocumento"];
 		$id_tipo_solicitud = $datos_solicitudes[0]["tipo_solicitud"];	
 		?>
@@ -108,7 +108,7 @@ function validar_items_tipo_solicitud($idformato,$iddoc){
 		</script>
 		<?php
 		
-		$datos_solicitudes=busca_filtro_tabla("","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","s.tipo_solicitud not in(".$id_tipo_solicitud.") and v.documento_iddocumento=".$id_papa,"",$conn);
+		$datos_solicitudes=busca_filtro_tabla("","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","s.tipo_solicitud not in(".$id_tipo_solicitud.") and v.documento_iddocumento=".$id_papa,"");
 		if($datos_solicitudes["numcampos"]){
 			for($i=0;$i<$datos_solicitudes["numcampos"];$i++){
 				?>
@@ -123,7 +123,7 @@ function validar_items_tipo_solicitud($idformato,$iddoc){
 		}
 	}
 	$idpadre=$_REQUEST["idpadre"];
-	$datos_solicitudes=busca_filtro_tabla("","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","v.documento_iddocumento=".$idpadre,"",$conn);
+	$datos_solicitudes=busca_filtro_tabla("","ft_validacion_tramite v left join ft_item_add_solicit s on v.idft_validacion_tramite=s.ft_validacion_tramite","v.documento_iddocumento=".$idpadre,"");
 	if($datos_solicitudes["numcampos"]){
 		for($i=0;$i<$datos_solicitudes["numcampos"];$i++){
 			?>
@@ -140,7 +140,7 @@ function validar_items_tipo_solicitud($idformato,$iddoc){
 function validacion_crear_solicitud($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$idpadre=$_REQUEST["idpadre"];	
-	$datos_solicitudes=busca_filtro_tabla("","ft_item_add_solicit s left join ft_validacion_tramite v on v.idft_validacion_tramite=s.ft_validacion_tramite","v.documento_iddocumento=".$idpadre,"",$conn);
+	$datos_solicitudes=busca_filtro_tabla("","ft_item_add_solicit s left join ft_validacion_tramite v on v.idft_validacion_tramite=s.ft_validacion_tramite","v.documento_iddocumento=".$idpadre,"");
 	if($datos_solicitudes["numcampos"]){
 		alerta("Este item solo se puede realizar una sóla vez");
 		//die();

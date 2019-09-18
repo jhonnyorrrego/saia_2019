@@ -13,39 +13,40 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'success' => 1,
     'message' => '',
     'data' => []
 ];
 
-if($_SESSION['idfuncionario'] == $_REQUEST['key']){
+if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    $selections = $_REQUEST['selections'];
     $tags = Etiqueta::findAllByAttributes([
         'estado' => 1,
         'fk_funcionario' => $_REQUEST['key'],
         'nucleo' => 0
     ]);
 
-    if($_REQUEST['selections']){
-        if($_REQUEST['dataBind'] == 'document'){
-            foreach($tags as $key => $Etiqueta){
+    if ($selections) {
+        if ($_REQUEST['dataBind'] == 'document') {
+            foreach ($tags as $key => $Etiqueta) {
                 $Response->data[] = [
-                    'checkboxType' => EtiquetaDocumento::defineCheckboxType($Etiqueta->getPK(), $_REQUEST['selections']),
+                    'checkboxType' => EtiquetaDocumento::defineCheckboxType($Etiqueta->getPK(), $selections),
                     'idetiqueta' => $Etiqueta->getPK(),
                     'nombre' => $Etiqueta->nombre
                 ];
             }
-        }else if($_REQUEST['dataBind'] == 'task'){
-            foreach($tags as $key => $Etiqueta){
+        } else if ($_REQUEST['dataBind'] == 'task') {
+            foreach ($tags as $key => $Etiqueta) {
                 $Response->data[] = [
-                    'checkboxType' => TareaEtiqueta::isActive($Etiqueta->getPK(), $_REQUEST['selections']),
+                    'checkboxType' => TareaEtiqueta::isActive($Etiqueta->getPK(), $selections),
                     'idetiqueta' => $Etiqueta->getPK(),
                     'nombre' => $Etiqueta->nombre
                 ];
             }
         }
     }
-}else{
+} else {
     $Response->success = 0;
     $Response->message = 'Debe iniciar session';
 }

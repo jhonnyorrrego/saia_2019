@@ -87,9 +87,9 @@ function llena_dependencia($id)
 	global $conn, $checkbox, $condicion_dep, $no_padre;
 	$objetoJson = array();
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $condicion_dep, "nombre ASC", $conn);
+		$papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $condicion_dep, "nombre ASC");
 	} else {
-		$papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $condicion_dep, "nombre ASC", $conn);
+		$papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $condicion_dep, "nombre ASC");
 	}
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -108,8 +108,8 @@ function llena_dependencia($id)
 			} else {
 				$item["checkbox"] = true;
 			}
-			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "", $conn);
-			$funcionario = busca_filtro_tabla("count(*) as cant", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $papas[$i]["iddependencia"], "", $conn);
+			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "");
+			$funcionario = busca_filtro_tabla("count(*) as cant", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $papas[$i]["iddependencia"], "");
 			$dependencias_hijas = array();
 			if ($hijos[0]["cant"] || $funcionario[0]["cant"]) {
 				$dependencias_hijas = llena_dependencia($papas[$i]["iddependencia"]);
@@ -138,7 +138,7 @@ function llena_funcionario($iddep)
 	global $campo, $seleccionados, $checkbox, $condicion_vfun;
 	
 	$objetoJson = array();
-	$papas = busca_filtro_tabla("iddependencia_cargo,idfuncionario,funcionario_codigo,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $iddep, "", $conn);
+	$papas = busca_filtro_tabla("iddependencia_cargo,idfuncionario,funcionario_codigo,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $iddep, "");
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$text = $papas[$i]["nombres"] . " " . $papas[$i]["apellidos"] . " - " . $papas[$i]["cargo"];

@@ -24,30 +24,30 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if ($data) {
         $ids = implode(',', $data);
         $sql = "SELECT * FROM documento WHERE iddocumento in ({$ids}) AND estado NOT IN ('ELIMINADO','ACTIVO')";
-        $records = Documento::findByQueryBuilder($sql);
+        //$records = Documento:: se debe buscar con querybuilder
         if ($records) {
             $response['success'] = 1;
             $dataTable = [];
             foreach ($records as $Documento) {
-                $dataTable['id'] = (int)$Documento->getPK();
+                $dataTable['id'] = (int) $Documento->getPK();
                 $dataTable['icono'] = '<i class="fa fa-minus-circle cursor f-20 remove-doc" data-id="' . $dataTable['id'] . '"></i>';
                 $dataTable['documento'] = $Documento->descripcion;
 
                 $tipo = 'SIN CLASIFICAR';
                 $dataTable['idserie'] = 0;
                 if ($Documento->serie) {
-                    $dataTable['idserie'] = (int)$Documento->serie;
+                    $dataTable['idserie'] = (int) $Documento->serie;
                     $tipo = $Documento->getRelationFk('Serie', 'serie')->getInfoCodArbol()['etiqueta'];
                 }
                 $dataTable['tipoDoc'] = $tipo;
 
                 $sql = "SELECT DISTINCT e.idexpediente,e.nombre FROM expediente_doc ed,expediente e WHERE e.idexpediente=ed.fk_expediente AND e.estado=1 AND ed.fk_documento='{$dataTable['id']}'";
-                $expeDoc = ExpedienteDoc::findByQueryBuilder($sql,false);
+                //$expeDoc = ExpedienteDoc:: se debe buscar con querybuilder
                 $html = '';
                 if ($expeDoc) {
                     $html .= '<ol>';
                     foreach ($expeDoc as $expedienteDoc) {
-                        $html .= '<li>'. $expedienteDoc['nombre'] .'</li>';
+                        $html .= '<li>' . $expedienteDoc['nombre'] . '</li>';
                     }
                     $html .= '</ol>';
                     $dataTable['expVinc'] = $html;

@@ -54,11 +54,11 @@ if($orden){
   $cont=count($datos);
   for($i=0;$i<$cont;$i++){
     $sql="UPDATE ruta SET orden=".($i+1)." WHERE idruta=".$datos[$i];
-    phpmkr_query($sql,$conn);
+    phpmkr_query($sql);
   }
 redirecciona("ordenar_firmas.php?iddoc=".$iddoc);
 }
-$campos=busca_filtro_tabla("a.idruta,a.orden,b.nombres,b.apellidos","ruta a,funcionario b,dependencia_cargo dc","obligatorio>0 and iddependencia_cargo=origen and funcionario_idfuncionario=idfuncionario and documento_iddocumento=".$iddoc,"orden ASC",$conn);
+$campos=busca_filtro_tabla("a.idruta,a.orden,b.nombres,b.apellidos","ruta a,funcionario b,dependencia_cargo dc","obligatorio>0 and iddependencia_cargo=origen and funcionario_idfuncionario=idfuncionario and documento_iddocumento=".$iddoc,"orden ASC");
 
 $texto='';
 if($campos["numcampos"]){

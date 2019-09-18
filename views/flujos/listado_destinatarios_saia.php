@@ -19,7 +19,7 @@ $datos = [];
 if(!empty($_REQUEST["idnotificacion"])) {
     $idnotificacion = $_REQUEST["idnotificacion"];
 
-    $listado = busca_filtro_tabla("d.iddestinatario, f.idfuncionario, f.login, f.nombres, f.apellidos, f.email", "wf_dest_notificacion d join wf_destinatario_saia ds on d.iddestinatario = ds.iddestinatario join funcionario f on ds.fk_funcionario = f.idfuncionario", "d.fk_notificacion = $idnotificacion", "", $conn);
+    $listado = busca_filtro_tabla("d.iddestinatario, f.idfuncionario, f.login, f.nombres, f.apellidos, f.email", "wf_dest_notificacion d join wf_destinatario_saia ds on d.iddestinatario = ds.iddestinatario join funcionario f on ds.fk_funcionario = f.idfuncionario", "d.fk_notificacion = $idnotificacion", "");
 
     if($listado["numcampos"]) {
         $total = isset($listado['numcampos']) ? $listado['numcampos'] : count($listado);

@@ -16,16 +16,16 @@ trait TFlujo {
 	}
 
 	function findI($conditions, $fields = [], $order = '', $limit = 0, $asArray = false) {
-		global $conn;
+		
 
 		$table = $this->getTable();
 		$select = self::createSelect($fields);
 		$condition = self::createCondition($conditions);
 
 		if($limit) {
-			$records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
+			$records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit);
 		} else {
-			$records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+			$records = busca_filtro_tabla($select, $table, $condition, $order);
 		}
 
 		if($records['numcampos']) {
@@ -42,15 +42,15 @@ trait TFlujo {
 	}
 
 	static function findS($table, $conditions, $fields = [], $order = '', $limit = 0, $asArray = false) {
-	    global $conn;
+	    
 
 	    $select = self::createSelect($fields);
 	    $condition = self::createCondition($conditions);
 
 	    if($limit) {
-	        $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
+	        $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit);
 	    } else {
-	        $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+	        $records = busca_filtro_tabla($select, $table, $condition, $order);
 	    }
 
 	    if($records['numcampos']) {
@@ -67,15 +67,15 @@ trait TFlujo {
 	}
 
 	static function findAll($order = '', $limit = 0, $asArray = false) {
-		global $conn;
+		
 		$table = self::getTableName();
 		$select = self::createSelect([]);
 		$condition = "1 = 1";
 
 		if($limit) {
-			$records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
+			$records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit);
 		} else {
-			$records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+			$records = busca_filtro_tabla($select, $table, $condition, $order);
 		}
 		if($records['numcampos']) {
 			if($asArray) {

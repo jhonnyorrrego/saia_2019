@@ -10,7 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 function nombre_mensajero_distribucion_fisica($nombre_mensajero){
-  $dato=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$nombre_mensajero,"",$conn);
+  $dato=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$nombre_mensajero,"");
   $texto=$dato[0]["nombres"]." ".$dato[0]["apellidos"];
   return($texto);
 }
@@ -38,7 +38,7 @@ function recibido_despacho_distribucion($fecha_recibido,$usuario_recibido,$idft_
   else{
     $texto='';
     $texto.='Fecha: '.$fecha_recibido."<br />";
-    $usuario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$usuario_recibido,"",$conn);
+    $usuario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$usuario_recibido,"");
     $texto.='Por: '.$usuario[0]["nombres"]." ".$usuario[0]["apellidos"];
     return($texto);  
   }
@@ -67,7 +67,7 @@ function entregado_despacho_distribucion($fecha_entregado,$usuario_entregado,$id
   else{
     $texto='';
     $texto.='Fecha: '.$fecha_entregado."<br />";
-    $usuario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$usuario_entregado,"",$conn);
+    $usuario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$usuario_entregado,"");
     $texto.='Por: '.$usuario[0]["nombres"]." ".$usuario[0]["apellidos"];
     return($texto);  
   }

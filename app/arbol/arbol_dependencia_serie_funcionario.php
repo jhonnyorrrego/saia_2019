@@ -32,14 +32,14 @@ if(@$_REQUEST['funcionario']) {
 	// $ids_funcionario = busca_datos_administrativos_funcionario("ids");
 	if(!empty($datos_admin_funcionario["identidad_serie"])) {
     	$lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
-    	$datos = busca_filtro_tabla("llave_entidad", "entidad_serie", "identidad_serie in (" . $lista_entidades . ") and entidad_identidad=2 and estado=1", "", $conn);
+    	$datos = busca_filtro_tabla("llave_entidad", "entidad_serie", "identidad_serie in (" . $lista_entidades . ") and entidad_identidad=2 and estado=1", "");
 	} else {
 	    $datos = ["numcampos" => 0];
 	}
 	if($datos["numcampos"]) {
 		$lista_dependencias = extrae_campo($datos, "llave_entidad", "U");
 		// print_r($lista_dependencias);
-		$dependencias = busca_filtro_tabla("iddependencia,nombre,codigo_arbol,codigo", "dependencia", "iddependencia in (" . implode(",", $lista_dependencias) . ") and estado=1", "", $conn);
+		$dependencias = busca_filtro_tabla("iddependencia,nombre,codigo_arbol,codigo", "dependencia", "iddependencia in (" . implode(",", $lista_dependencias) . ") and estado=1", "");
 		//print_r($dependencias["sql"]);
 		if($dependencias["numcampos"]) {
 			$elementos = array();
@@ -108,7 +108,7 @@ function &existe(&$array, $id) {
 }
 
 function busca_dependencia($iddep) {
-	$dependencias = busca_filtro_tabla("iddependencia, cod_padre, codigo, nombre, codigo_arbol", "dependencia", "iddependencia = $iddep", "", $conn);
+	$dependencias = busca_filtro_tabla("iddependencia, cod_padre, codigo, nombre, codigo_arbol", "dependencia", "iddependencia = $iddep", "");
 
 	if($dependencias["numcampos"]) {
 		$item = [
@@ -129,9 +129,9 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 	$condicion_serie = " AND idserie IN(" . $lista_series_funcionario . ")";
 	$objetoJson = array();
 	if($id == 0) {
-		$papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2" . $condicion_serie, "s.nombre ASC", $conn);
+		$papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2" . $condicion_serie, "s.nombre ASC");
 	} else {
-		$papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2" . $condicion_serie, "s.nombre ASC", $conn);
+		$papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2" . $condicion_serie, "s.nombre ASC");
 	}
 	// print_r($papas["sql"]);
 	if($papas["numcampos"]) {
@@ -145,7 +145,7 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 			$item["title"] = $text;
 			$item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
 			if($nombre_dependencia=="" || $dependencia_codigo == ""){
-				/*$dependencias = busca_filtro_tabla("codigo, nombre", "dependencia", "iddependencia = $iddep", "", $conn);
+				/*$dependencias = busca_filtro_tabla("codigo, nombre", "dependencia", "iddependencia = $iddep", "");
 				if($dependencias["numcampos"]){
 
 				}*/
@@ -162,7 +162,7 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 					"serie_idserie" => $papas[$i]["idserie"]
 			);
 			// $item["expanded"]=true;
-			$validar_permisos = busca_filtro_tabla("", "vpermiso_serie", "identidad_serie=" . $papas[$i]["identidad_serie"] . " and idfuncionario=" . $idfuncionario . " and permiso like '%a,v'", "", $conn);
+			$validar_permisos = busca_filtro_tabla("", "vpermiso_serie", "identidad_serie=" . $papas[$i]["identidad_serie"] . " and idfuncionario=" . $idfuncionario . " and permiso like '%a,v'", "");
 			// print_r($validar_permisos["sql"]);
 			if($papas[$i]["tipo"] != 3 && $validar_permisos["numcampos"]) {
 				$item["checkbox"] = $checkbox;
@@ -170,7 +170,7 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 			if(in_array($item["key"], $seleccionados) !== false) {
 				$item["selected"] = true;
 			}
-			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
+			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "");
 			if($hijos[0]["cant"]) {
 				$item["folder"] = 1;
 				$item["children"] = llena_serie($papas[$i]["idserie"], $iddep, $tipo,$nombre_dependencia,$dependencia_codigo);

@@ -41,11 +41,11 @@ header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
 function llena_formato($idflujo, $idnotificacion, $seleccionados = array(), $seleccionable = null) {
-    global $conn;
+    
 
     $papas = busca_filtro_tabla("f.idformato, f.etiqueta, f.descripcion_formato, f.version, ff.idformato_flujo",
         "wf_formato_flujo ff join formato f on ff.fk_formato = f.idformato",
-        "f.item <> 1 AND ff.fk_flujo = $idflujo", "etiqueta ASC", $conn);
+        "f.item <> 1 AND ff.fk_flujo = $idflujo", "etiqueta ASC");
 
     $resp = array();
     if ($papas["numcampos"]) {

@@ -28,7 +28,7 @@ class Digitalizacion {
 	 * @url POST consultar_info/{dir_ip}
 	 */
 	public function consultar_info($dir_ip) {
-		global $conn;
+		
 
 		// Sort out the parameters and grab their data
 
@@ -40,7 +40,7 @@ class Digitalizacion {
 		if ($dir_ip) {
 			// TODO: Posiblemente filtrar por fecha
 			// fecha_db_obtener();
-			$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "estado=1 and direccion_ip='$dir_ip'", "idtarea_dig desc", $conn);
+			$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "estado=1 and direccion_ip='$dir_ip'", "idtarea_dig desc");
 			if ($datos_dig["numcampos"]) {
 
 				/*
@@ -49,12 +49,12 @@ class Digitalizacion {
 				 * }
 				 */
 
-				$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
+				$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "");
 
 				$params = array();
 				$configuracion["numcampos"] = 0;
-				$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
-				$documento = busca_filtro_tabla("d.numero,d.descripcion", "documento d", "d.iddocumento=" . $datos_dig[0]["iddocumento"], "", $conn);
+				$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "");
+				$documento = busca_filtro_tabla("d.numero,d.descripcion", "documento d", "d.iddocumento=" . $datos_dig[0]["iddocumento"], "");
 				if (!$documento["numcampos"]) {
 					$resp["message"] = "No se encontró información del documento";
 					return $resp;
@@ -180,7 +180,7 @@ class Digitalizacion {
 	 * @url POST actualizar_estado/{id_tarea}
 	 */
 	public function actualizar_estado($id_tarea) {
-		global $conn;
+		
 
 		$resp = array(
 				"status" => 0,
@@ -205,7 +205,7 @@ class Digitalizacion {
 	 * @url POST actualizar_estado/{dir_ip}
 	 */
 	public function actualizar_estado_ip($dir_ip) {
-		global $conn;
+		
 
 		$resp = array(
 				"status" => 0,
@@ -230,16 +230,16 @@ class Digitalizacion {
 	 * @url POST sincronizar_archivos/{id_tarea}
 	 */
 	public function sincronizar_archivos($id_tarea) {
-		global $conn;
+		
 
 		$resp = array(
 				"status" => 0,
 				"message" => "Error de ejecucion"
 		);
 
-		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
+		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "");
 		if ($datos_dig["numcampos"]) {
-			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
+			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "");
 			if ($user_info["numcampos"]) {
 				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
 				$_SESSION["usuario_actual"] = $user_info[0]["funcionario_codigo"];
@@ -283,10 +283,10 @@ class Digitalizacion {
 				"message" => "Error de ejecucion"
 		);
 
-		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
+		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "");
 		if ($datos_dig["numcampos"]) {
-			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
-			$configuracion = busca_filtro_tabla("A.*", "configuracion A", "nombre = 'temporal_digitalizacion'", "", $conn);
+			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "");
+			$configuracion = busca_filtro_tabla("A.*", "configuracion A", "nombre = 'temporal_digitalizacion'", "");
 
 			if ($user_info["numcampos"]) {
 				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
@@ -324,7 +324,7 @@ class Digitalizacion {
 	 * @url POST verificar_login/{user}/{pass}
 	 */
 	public function verificar_login($user, $pass) {
-		global $conn;
+		
 
 		$resp = array(
 				"status" => 0,
@@ -361,7 +361,7 @@ class Digitalizacion {
 		$contenido = json_decode($contenido);
 
 		// TODO: convertir $contenido a json y validar que la variable ingresar sea = 1
-		$user_data = busca_filtro_tabla("idfuncionario", "funcionario", "login='" . $user . "'", "", $conn);
+		$user_data = busca_filtro_tabla("idfuncionario", "funcionario", "login='" . $user . "'", "");
 		if ($user_data['numcampos'] && $contenido->ingresar) {
 			return $user_data[0]["idfuncionario"];
 		}

@@ -13,12 +13,12 @@ include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 
 /*ADICIONAR*/
 function add_resp_pqrsf($idformato, $iddoc) {
-	global $conn;
+	
 	$ok=0;
 	if ($_REQUEST["anterior"]) {
-		$datos_papa = busca_filtro_tabla("d.numero,ft.email,ft.nombre,ft.documento,ft.telefono", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["anterior"], "", $conn);
+		$datos_papa = busca_filtro_tabla("d.numero,ft.email,ft.nombre,ft.documento,ft.telefono", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["anterior"], "");
 		if($datos_papa["numcampos"]){
-			$eje=busca_filtro_tabla("iddatos_ejecutor","vejecutor","lower(nombre) like '".$datos_papa[0]["nombre"]."' and lower(email) like '".$datos_papa[0]["email"]."' ","",$conn);
+			$eje=busca_filtro_tabla("iddatos_ejecutor","vejecutor","lower(nombre) like '".$datos_papa[0]["nombre"]."' and lower(email) like '".$datos_papa[0]["email"]."' ","");
 			if($eje["numcampos"]){
 				$ok=$eje[0]["iddatos_ejecutor"];
 			}
@@ -59,10 +59,10 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 	curl_close($ch);
 
 	$iddoc_papa = buscar_papa_formato_campo($idformato, $iddoc, "ft_pqrsf", "documento_iddocumento");
-	$datos_papa = busca_filtro_tabla("d.numero,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc_papa, "", $conn);
+	$datos_papa = busca_filtro_tabla("d.numero,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc_papa, "");
 
 	$anexos = array();
-	$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+	$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "");
 	if ($anexos_pqrsf["numcampos"]) {
 		for ($i = 0; $i < $anexos_pqrsf["numcampos"]; $i++) {
 			$ruta_archivo = json_decode($anexos_pqrsf[$i]['ruta']);
@@ -76,7 +76,7 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 		}
 	}
 
-	$datos = busca_filtro_tabla("d.numero,d.pdf,ft.destinos,ft.copia", "ft_respuesta_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+	$datos = busca_filtro_tabla("d.numero,d.pdf,ft.destinos,ft.copia", "ft_respuesta_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
 	if ($datos[0]["pdf"] != "") {
 		$ruta_archivo = json_decode($datos[0]["pdf"]);
 		if (is_object($ruta_archivo)) {
@@ -93,14 +93,14 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 		"copia" => "email"
 	);
 	if ($datos[0]["destinos"] != "") {
-		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor=" . $datos[0]["destinos"], "", $conn);
+		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor=" . $datos[0]["destinos"], "");
 		if ($eje["numcampos"] && $eje[0]["email"] != "") {
 			$email["para"][] = $eje[0]["email"];
 		}
 	}
 
 	if ($datos[0]["copia"] != "") {
-		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor in (" . $datos[0]["copia"] . ")", "", $conn);
+		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor in (" . $datos[0]["copia"] . ")", "");
 		if ($eje["numcampos"] && $eje[0]["email"] != "") {
 			$email["copia"][] = $eje[0]["email"];
 		}
@@ -121,7 +121,7 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 
 function distribucion_res_pqrsf($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$datos = busca_filtro_tabla("tipo_mensajeria,requiere_recogida", "ft_respuesta_pqrsf", "documento_iddocumento=" . $iddoc, "", $conn);
+	$datos = busca_filtro_tabla("tipo_mensajeria,requiere_recogida", "ft_respuesta_pqrsf", "documento_iddocumento=" . $iddoc, "");
 	if ($datos["numcampos"]) {
 		$estado_recogida = 0;
 		$estado_distribucion = 1;

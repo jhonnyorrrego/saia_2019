@@ -7,7 +7,7 @@ if(@$_REQUEST["iddocumento"]){
 }
 if($_REQUEST["seleccionar"]){
 	$datos_seleccionar=explode("-",$_REQUEST["seleccionar"]);
-   	$id=busca_filtro_tabla("id".$datos_seleccionar[2],$datos_seleccionar[2],"documento_iddocumento=".$datos_seleccionar[3],"",$conn);
+   	$id=busca_filtro_tabla("id".$datos_seleccionar[2],$datos_seleccionar[2],"documento_iddocumento=".$datos_seleccionar[3],"");
    	$nodoinicial=$datos_seleccionar[0]."-".$datos_seleccionar[1]."-".$id[0]["id".$datos_seleccionar[2]];
 }
 $cadena="";

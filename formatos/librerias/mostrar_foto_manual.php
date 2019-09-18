@@ -12,14 +12,14 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 //include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-global $conn;
+
 
 $campo_seleccion=$_REQUEST["campo_seleccion"];
 $campo_tabla=$_REQUEST["campo_tabla"];
 $llave_seleccion=$_REQUEST["llave_seleccion"];
 $tabla=$_REQUEST["tabla"];
 
-$func=busca_filtro_tabla($campo_seleccion,$tabla,$campo_tabla."=".$llave_seleccion,"",$conn);
+$func=busca_filtro_tabla($campo_seleccion,$tabla,$campo_tabla."=".$llave_seleccion,"");
 $file=$ruta_db_superior.$func[0][$campo_seleccion];
 $contenido_archivo=file_get_contents($file);
 

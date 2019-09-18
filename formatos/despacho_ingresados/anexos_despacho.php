@@ -11,16 +11,16 @@ while ($max_salida > 0) {
 
 include_once($ruta_db_superior . "core/autoload.php");
 include_once($ruta_db_superior . "app/documento/class_transferencia.php");
-include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "assets/librerias.php");
 include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 require_once($ruta_db_superior . 'filesystem/StorageUtils.php');
 require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
-echo (librerias_jquery("1.7"));
+echo (jquery());
 echo (librerias_notificaciones());
 function cargar_anexos_documento_despacho($datos_documento, $anexos)
 {
 	global $conn, $ruta_db_superior;
-	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
+	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "");
 	$formato_ruta =$formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
 	$tipo_almacenamiento = new SaiaStorage("archivos");
 	$ruta = $formato_ruta . "/anexos";
@@ -63,7 +63,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 <body>
 
 	<?php
-	$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+	$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "");
 	if ($config["numcampos"]) {
 		$style = "
      <style type=\"text/css\">
@@ -142,8 +142,8 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 		$j = 0;
 		for ($i = 0; $i < count($iddoc); $i++) {
 			if ($iddoc[$i]) {
-				$info_doc = busca_filtro_tabla("d.estado," . fecha_db_obtener("d.fecha", "Y-m") . " as fecha,d.ejecutor,d.plantilla", "documento d", "d.iddocumento=" . $iddoc[$i], "", $conn);
-				$idformato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($info_doc[0]['plantilla']) . "'", "", $conn);
+				$info_doc = busca_filtro_tabla("d.estado," . fecha_db_obtener("d.fecha", "Y-m") . " as fecha,d.ejecutor,d.plantilla", "documento d", "d.iddocumento=" . $iddoc[$i], "");
+				$idformato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($info_doc[0]['plantilla']) . "'", "");
 				if ($iddoc[$i] && sizeof($info_anexo['anexos'])) {
 					$datos_anexo = array();
 					$datos_anexo['funcionario_codigo'] = usuario_actual('funcionario_codigo');
@@ -153,7 +153,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 					$datos_anexo["idformato"] = $idformato[0]["idformato"];
 					$info = cargar_anexos_documento_despacho($datos_anexo, $info_anexo['anexos']);
 				}
-				$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=" . $iddoc[$i], "", $conn);
+				$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=" . $iddoc[$i], "");
 				$datos["origen"] = usuario_actual("funcionario_codigo");
 				$datos["archivo_idarchivo"] = $iddoc[$i];
 				$datos["tipo_destino"] = 1;
@@ -174,7 +174,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 		}
 		abrir_url($ruta_db_superior . "pantallas/buscador_principal.php?idbusqueda=9", "centro");
 	}
-	$validaciones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "", $conn);
+	$validaciones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "");
 	$adicional = "";
 	if ($validaciones[0]["valor"]) {
 		$adicional = 'accept="' . $validaciones[0]["valor"] . '"';

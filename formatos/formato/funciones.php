@@ -9,7 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 
 function no_permitir_adicion_formatos_acalidad($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;

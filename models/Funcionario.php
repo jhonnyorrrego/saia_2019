@@ -171,8 +171,11 @@ TEXT;
      */
     public function getProfiles()
     {
-        $sql = "select * from perfil where idperfil in ({$this->perfil})";
-        return Perfil::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select("*")
+            ->from("perfil")
+            ->where("idperfil in ({$this->perfil})");
+        return Perfil::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -323,21 +326,23 @@ TEXT;
      */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
-        $concat = StaticSql::concat([
-            "nombres",
-            "' '",
-            "apellidos"
-        ]);
-        $sql = <<<SQL
-            SELECT 
-                {$field},idfuncionario,nombres,apellidos
-            FROM 
-                funcionario
-            WHERE
-                LOWER({$concat}) LIKE '%{$term}%'
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select([$field, 'idfuncionario', 'nombres', 'apellidos'])
+            ->from('funcionario')
+            ->where("
+                LOWER(
+                    CONCAT(
+                        nombres,
+                        CONCAT(
+                            ' ',
+                            apellidos
+                        )
+                    )
+                ) like :like
+            ")
+            ->setParameter(':like', "%{$term}%");
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -351,19 +356,23 @@ SQL;
      */
     public static function findByDocumentTransfer($documentId)
     {
-        $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
-        $records = self::search($sql);
+        $records = BuzonSalida::findAllByAttributes([
+            'archivo_idarchivo' => $documentId
+        ]);
 
         $users = [];
-        foreach ($records as $key => $value) {
-            array_push($users, $value['origen'], $value['destino']);
+        foreach ($records as $key => $BuzonSalida) {
+            array_push($users, $BuzonSalida->origen, $BuzonSalida->destino);
         }
 
         $users = array_unique($users);
-        $list = implode(',', $users);
-        $sql = "select * from funcionario where funcionario_codigo in ({$list})";
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('*')
+            ->from('funcionario')
+            ->where('funcionario_codigo in (:userList)')
+            ->setParameter(':userList', $users, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY);
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -394,25 +403,19 @@ SQL;
      */
     public static function checkAdition()
     {
-        $exclude = self::excludeCondition();
-        $sql = <<<SQL
-            select
-                count(*) as total 
-            from 
-                funcionario
-            where
-                {$exclude}
-                AND
-                estado = 1
-SQL;
-        $row = StaticSql::search($sql);
-        $total = $row[0]['total'];
+        $total = self::getQueryBuilder()
+            ->select('count(*) as total')
+            ->from('funcionario')
+            ->where(self::excludeCondition())
+            ->andWhere('estado = 1')
+            ->execute()->fetch();
 
         $Configuracion = Configuracion::findByAttributes([
             'nombre' => 'numero_usuarios'
         ]);
+
         $limit = $Configuracion->getValue();
 
-        return $limit > $total;
+        return $limit > $total['total'];
     }
 }

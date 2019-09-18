@@ -46,15 +46,36 @@ try {
         $data->banderas = implode(',', $data->banderas);
     }
 
-    if ($data->funcion_predeterminada && is_array($data->funcion_predeterminada)) {
-        $data->funcion_predeterminada = implode(',', $data->funcion_predeterminada);
+    if ($data->funcion_predeterminada) {
+        if ($data->funcion_predeterminada && is_array($data->funcion_predeterminada)) {
+            $data->funcion_predeterminada = implode(',', $data->funcion_predeterminada);
+        }
+    } else {
+        $data->funcion_predeterminada = 0;
+    }
+
+    if ($data->paginar) {
+        $data->paginar = 1;
+    } else {
+        $data->paginar = 0;
+    }
+
+    if ($data->mostrar_pdf) {
+        $data->mostrar_pdf = 1;
+    } else {
+        $data->mostrar_pdf = 0;
+    }
+
+    if ($data->tipo_edicion) {
+        $data->tipo_edicion = 1;
+    } else {
+        $data->tipo_edicion = 0;
     }
 
     $data->mostrar_pdf = $data->mostrar_pdf ?? 0;
     $data->cod_padre = $data->cod_padre ? $data->cod_padre : 0;
     $data->firma_digital = $data->firma_digital ? (int) $data->firma_digital : 0;
-    $data->mostrar_tipodoc_pdf = $data->mostrar_tipodoc_pdf ?
-        $data->mostrar_tipodoc_pdf : 0;
+    $data->mostrar_tipodoc_pdf = $data->mostrar_tipodoc_pdf ? $data->mostrar_tipodoc_pdf : 0;
 
     /*
      * Se valida que si el tiempo que llega es menor 

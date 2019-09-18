@@ -29,17 +29,17 @@ try {
 
     function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
     {
-        global $conn;
+        
         $retorno = [
             "exito" => 0,
             "idpantalla_campos" => $idpantalla_campos
         ];
-        $pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html,formato_idformato", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
+        $pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html,formato_idformato", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "");
         $acciones = array("a", "e", "b");
         if ($pantalla_campos["numcampos"]) {
             $datos = $_REQUEST;
 
-            $consultarNombre = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}", "", $conn);
+            $consultarNombre = busca_filtro_tabla("", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and nombre = '{$datos['fs_nombre']}' and idcampos_formato <> {$idpantalla_campos}", "");
             if (!$consultarNombre['numcampos']) {
                 $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
                 $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
@@ -68,7 +68,7 @@ try {
                                 $retorno["fs_predeterminado"] = $value;
                                 break;
                             case "fs_opciones":
-                                $consultarValores = busca_filtro_tabla("opciones", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and idcampos_formato = {$idpantalla_campos}", "", $conn);
+                                $consultarValores = busca_filtro_tabla("opciones", "campos_formato", "formato_idformato = {$pantalla_campos[0]['formato_idformato']} and idcampos_formato = {$idpantalla_campos}", "");
 
                                 $opcionesGuardadas = json_decode($consultarValores[0]['opciones'], true);
                                 $elementosGuardados = [];

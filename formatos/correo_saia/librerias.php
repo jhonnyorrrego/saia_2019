@@ -19,15 +19,15 @@ function mostrar_documento_factura_correo($iddoc, $numero) {
 }
 
 function transferido_correo($funcionario_codigo) {
-    global $conn;
-    $funcionario = busca_filtro_tabla('nombres,apellidos', 'funcionario', 'funcionario_codigo=' . $funcionario_codigo, '', $conn);
+    
+    $funcionario = busca_filtro_tabla('nombres,apellidos', 'funcionario', 'funcionario_codigo=' . $funcionario_codigo, '');
     return ($funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos']);
 }
 
 function nombre_proveedor_reporte($iddatos_ejecutor){
 	global $conn,$ruta_db_superior;
 	
-	$proveedor=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=" . $iddatos_ejecutor,"",$conn);
+	$proveedor=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=" . $iddatos_ejecutor,"");
 	
 	return $proveedor[0]['nombre'];
 }

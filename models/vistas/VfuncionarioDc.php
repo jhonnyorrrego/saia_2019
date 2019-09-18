@@ -106,7 +106,7 @@ class VfuncionarioDc extends Funcionario
             'fecha_fin_inactivo'
         ];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes,
             'primary' => 'idfuncionario'
@@ -137,25 +137,28 @@ class VfuncionarioDc extends Funcionario
      */
     public static function findAllByTerm($term, $field = 'idfuncionario')
     {
-        $concat = StaticSql::concat([
-            "nombres",
-            "' '",
-            "apellidos",
-            "' '",
-            "cargo",
-        ]);
-        $sql = <<<SQL
-        SELECT 
-            {$field},idfuncionario,nombres,apellidos,cargo
-        FROM 
-            vfuncionario_dc
-        WHERE
-            LOWER({$concat}) LIKE '%{$term}%' AND
-            estado = 1 AND
-            estado_dc = 1                 
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select([$field, 'idfuncionario', 'nombres', 'apellidos', 'cargo'])
+            ->from('vfuncionario_dc')
+            ->where('estado = 1 AND estado_dc = 1')
+            ->andWhere("
+                CONCAT(
+                    nombres,
+                    CONCAT(
+                        ' ',
+                        CONCAT(
+                            apellidos,
+                            CONCAT(
+                                ' ',
+                                cargo
+                            )
+                        )
+                    )
+                ) like :like
+            ")
+            ->setParameter(':like', "%{$term}%");
 
-        return  self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**

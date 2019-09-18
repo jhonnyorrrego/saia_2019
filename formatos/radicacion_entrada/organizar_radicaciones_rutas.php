@@ -14,33 +14,33 @@ $max_salida--;
 include_once($ruta_db_superior."core/autoload.php");
 
 
-$destinos_radicacion=busca_filtro_tabla("idft_destino_radicacion","ft_destino_radicacion","estado_item<>3","",$conn);
+$destinos_radicacion=busca_filtro_tabla("idft_destino_radicacion","ft_destino_radicacion","estado_item<>3","");
 for($r=0;$r<$destinos_radicacion['numcampos'];$r++){
 	$idft_ruta_distribucion=0;
 	$idft_destino_radicacion=$destinos_radicacion[$r]['idft_destino_radicacion'];
 		
 
 		
-	  $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',$conn);
+	  $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'');
 	
 //-------------------------------------------------
 
 	$destino_externo=0;
     if($datos[0]['tipo_origen']==2 && !$datos[0]['estado_recogida']){  //SI ES RECOGIDA
-    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_origen'],"",$conn);
-		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_origen'],"");
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"");
 		$idft_ruta_distribucion="ruta_origen=".$nombre_ruta[0]['idft_ruta_distribucion'];
 		$mensajero_ruta=$nombre_ruta[0]['mensajero_ruta'];
 		
 		
     }else if($datos[0]['tipo_destino']==2 && $datos[0]['estado_recogida']){  //SI ES ENTREGA INTERNA POSTERIOR A RECOGIDA
-    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
-		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"");
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"");
 		$idft_ruta_distribucion="ruta_destino=".$nombre_ruta[0]['idft_ruta_distribucion'];
 				$mensajero_ruta=$nombre_ruta[0]['mensajero_ruta'];
     }else if($datos[0]['tipo_origen']==1 && $datos[0]['tipo_destino']==2){  //SI ES ENTREGA INTERNA DE UN ORIGEN EXTERNO
-    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
-		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"");
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion,c.mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"");
 		$idft_ruta_distribucion="ruta_destino=".$nombre_ruta[0]['idft_ruta_distribucion'];
 		$mensajero_ruta=$nombre_ruta[0]['mensajero_ruta'];	
     }else if($datos[0]['tipo_destino']==1 && $datos[0]['estado_recogida']){

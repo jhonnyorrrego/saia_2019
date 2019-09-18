@@ -28,7 +28,7 @@ echo json_encode($resp);
 
 function consultar($consulta, $valor)
 {
-    global $conn;
+
     /*
      $consulta = array(
      "campoid" => $parametros->campoid,
@@ -48,7 +48,9 @@ function consultar($consulta, $valor)
             $campos[] = $arr_consulta["campotexto"][$i];
             $campos[] = "' '";
         }
-        $campos_nombre = concatenar_cadena_sql($campos);
+        throw new Exception("pendiente por cambiar concatenar sql", 1);
+
+        //$campos_nombre = concatenar_cadena_sql($campos);
     }
 
     $campo_id = $arr_consulta["campoid"];
@@ -61,7 +63,7 @@ function consultar($consulta, $valor)
 
     $where_final = $condicion . " AND lower($campos_nombre) like '%$valor%'";
     // Tipo de LLenado =1 es para los funcionarios
-    $usuarios = busca_filtro_tabla("$campos_nombre as nombre, $campo_id as id", $tablas, $where_final, $orden, $conn);
+    $usuarios = busca_filtro_tabla("$campos_nombre as nombre, $campo_id as id", $tablas, $where_final, $orden);
 
     $tipo_id = "funcionario_codigo";
     $resp = array();

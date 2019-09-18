@@ -46,11 +46,10 @@ class SerieVersion extends Model
     private static function getSQLCurrentVersion(): Doctrine\DBAL\Query\QueryBuilder
     {
         $subConsulta = "(SELECT MAX(version) FROM serie_version WHERE estado=1)";
-        $sql = self::getQueryBuilder()
+        return self::getQueryBuilder()
             ->select('*')
             ->from('serie_version')
             ->where("version={$subConsulta}");
-        return $sql;
     }
 
     /**

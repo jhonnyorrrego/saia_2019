@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'views/generador/librerias.php';
 
@@ -72,8 +72,8 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
 function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 {
-    global $conn;
-    $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
+    
+    $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "");
 
     $pantalla_campos["exito"] = 0;
     if ($pantalla_campos["numcampos"]) {
@@ -254,10 +254,10 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 <?php
 function obtener_valores_campo($idcampo_formato, $opciones_defecto)
 {
-    global $conn;
+    
     $resp = array();
 
-    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
+    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "");
 
     if ($campo_formato["numcampos"]) {
 

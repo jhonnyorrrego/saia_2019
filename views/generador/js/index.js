@@ -3,7 +3,9 @@ $(document).ready(function() {
     let step = 1;
 
     (function init() {
-        $('#serie_idserie,#tipo_registro,#contador_idcontador').select2();
+        $(
+            '#serie_idserie,#tipo_registro,#contador_idcontador,#papel,#font_size'
+        ).select2();
 
         if (params.formatId) {
             setFormatData();
@@ -624,4 +626,6 @@ $(document).ready(function() {
             }
         }
     }
+    $('#tipo_registro_2').attr('selected');
+    $('#tipo_registro_2').select2();
 });

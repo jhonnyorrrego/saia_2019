@@ -19,9 +19,13 @@ $Response = (object) array(
     'success' => 1
 );
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $Response->data = StaticSql::search('select * from cf_ventanilla where estado = 1');
-}else{
+if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    $Response->data = Funcionario::getQueryBuilder()
+        ->select("*")
+        ->from("cf_ventanilla")
+        ->where("estado = 1")
+        ->execute()->fetchAll();
+} else {
     $Response->message = "Debe iniciar sesion";
     $Response->success = 0;
 }
