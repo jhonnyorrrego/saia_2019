@@ -8,7 +8,7 @@ class Configuracion extends Model
     protected $tipo;
     protected $fecha;
     protected $encrypt;
-    
+
 
     function __construct($id = null)
     {
@@ -31,7 +31,7 @@ class Configuracion extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -56,7 +56,6 @@ class Configuracion extends Model
         return $response;
     }
 
-
     /**
      * Recibe una lista de nombres y devuelve un arreglo de objetos
      * @param array $nombres
@@ -64,8 +63,12 @@ class Configuracion extends Model
      */
     public static function findByNames($names)
     {
-        $names = implode("','", $names);
-        $sql = "select nombre,valor from configuracion where nombre IN('{$names}')";
-        return self::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('nombre,valor')
+            ->from('configuracion')
+            ->where('nombre in (:list)')
+            ->setParameter(':list', $names, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

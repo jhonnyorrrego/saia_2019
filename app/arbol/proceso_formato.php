@@ -14,9 +14,9 @@ include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 
 function findDocumentChilds($documentId){
-    global $conn;
+    
 
-    $document = busca_filtro_tabla('iddocumento,descripcion', 'documento', 'iddocumento='. $documentId, '', $conn);
+    $document = busca_filtro_tabla('iddocumento,descripcion', 'documento', 'iddocumento='. $documentId, '');
 
     $ouput = array(
         'title' => substr($document[0]['descripcion'], 0, 40),
@@ -24,7 +24,7 @@ function findDocumentChilds($documentId){
         'active' => $documentId == $_REQUEST['documentId']
     );
 
-    $documentChilds = busca_filtro_tabla('d.iddocumento', 'documento a, formato b, formato c, documento d', 'lower(a.plantilla) = lower(b.nombre) and c.cod_padre = b.idformato and lower(d.plantilla) = lower(c.nombre) and a.iddocumento = ' . $documentId, '', $conn);
+    $documentChilds = busca_filtro_tabla('d.iddocumento', 'documento a, formato b, formato c, documento d', 'lower(a.plantilla) = lower(b.nombre) and c.cod_padre = b.idformato and lower(d.plantilla) = lower(c.nombre) and a.iddocumento = ' . $documentId, '');
 
     if($documentChilds['numcampos']){
         for($i = 0; $i < $documentChilds['numcampos']; $i++){

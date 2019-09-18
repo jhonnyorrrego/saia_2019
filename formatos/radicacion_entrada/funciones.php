@@ -17,11 +17,11 @@ include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 //Adicionar
 function mostrar_radicado_entrada($idformato, $iddoc)
 {
-    global $conn;
+
     $fecha = date('Y-m-d');
     $campo = '<label class="form-control" id="numero_radicado">';
     if ($_REQUEST["iddoc"]) {
-        $doc = busca_filtro_tabla("", "documento a", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+        $doc = busca_filtro_tabla("", "documento a", "iddocumento=" . $_REQUEST["iddoc"], "");
         $campo .= '<b>' . $doc[0]["numero"] . '</b>';
     } else {
         $campo .= $fecha . "-<b>" . muestra_contador("radicacion_entrada") . '</b>-E';
@@ -35,7 +35,7 @@ function mostrar_radicado_entrada($idformato, $iddoc)
 function datos_editar_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
-    $datos = busca_filtro_tabla("", "ft_radicacion_entrada", "documento_iddocumento=" . $_REQUEST['iddoc'], "", $conn);
+    $datos = busca_filtro_tabla("", "ft_radicacion_entrada", "documento_iddocumento=" . $_REQUEST['iddoc'], "");
     if ($datos[0]['tipo_origen'] == 1) {
         ?>
         <script>
@@ -121,7 +121,7 @@ function datos_editar_radicacion($idformato, $iddoc)
 
 function quitar_descripcion_entrada($idformato, $iddoc)
 {
-    global $conn;
+
     ?>
     <script>
         if ($("#descripcion").val() == "Pendiente por llenar datos") {
@@ -202,11 +202,11 @@ function serie_documental_radicacion($idformato, $iddoc)
     global $conn, $ruta_db_superior;
 
 
-    $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
+    $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "");
 
-    $dependencia_actual = busca_filtro_tabla("iddependencia", "vfuncionario_dc", "estado_dep=1 AND estado_dc=1 AND funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
+    $dependencia_actual = busca_filtro_tabla("iddependencia", "vfuncionario_dc", "estado_dep=1 AND estado_dc=1 AND funcionario_codigo=" . usuario_actual("funcionario_codigo"), "");
     $dependencia_principal = buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
-    $primeros_hijos = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=" . $dependencia_principal, "", $conn);
+    $primeros_hijos = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=" . $dependencia_principal, "");
 
     for ($i = 0; $i < $primeros_hijos['numcampos']; $i++) {
         $arreglo[] = $primeros_hijos[$i]['iddependencia'];
@@ -305,8 +305,8 @@ function serie_documental_radicacion($idformato, $iddoc)
 
 function buscar_dependencias_principal($iddependencia)
 {
-    global $conn;
-    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "", $conn);
+
+    $cod_dep = busca_filtro_tabla("cod_padre", "dependencia", "cod_padre is not null and iddependencia=" . $iddependencia, "");
 
     if ($cod_dep['numcampos']) {
         return buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
@@ -319,7 +319,7 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 { //en el adicionar
     global $conn, $ruta_db_superior;
     $funcionario_codigo = usuario_actual('funcionario_codigo');
-    $cargo = busca_filtro_tabla("iddependencia,iddependencia_cargo", "vfuncionario_dc a", "estado_dc=1 AND a.funcionario_codigo=" . $funcionario_codigo, "", $conn);
+    $cargo = busca_filtro_tabla("iddependencia,iddependencia_cargo", "vfuncionario_dc a", "estado_dc=1 AND a.funcionario_codigo=" . $funcionario_codigo, "");
     $lista_iddependencia_cargo = implode(',', (extrae_campo($cargo, 'iddependencia_cargo')));
     $dependencia_principal = buscar_dependencias_principal($cargo[0]["iddependencia"]);
     ?>
@@ -470,7 +470,7 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 
         function refrescar_arbol_tipo_documental_funcionario_responsable(nodeId, parentId) {
             <?php
-                $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "", $conn);
+                $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "");
                 ?>
             var dependencia, padre;
             if ($("input:radio[name=tipo_origen]:checked").val() == 2 && $("input:radio[name=tipo_destino]:checked").val() == 1) {
@@ -541,7 +541,7 @@ function tipo_radicado_radicacion($idformato, $iddoc)
 function llenar_datos_funcion($idformato, $iddoc)
 {
     global $conn, $datos;
-    $datos = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
     if ($datos[0]["estado"] == 'INICIADO') {
         $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $datos[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $iddoc;
         phpmkr_query($sql);
@@ -559,7 +559,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         ->setParameter(":iddoc", $iddoc)->execute()->fetchAll();
 
     //$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", 
-    //"ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+    //"ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "");
     $documento = Model::getQueryBuilder()
         ->select("numero,tipo_radicado,fecha")
         ->from("documento")
@@ -577,9 +577,9 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         $numero_radicado = $datos[0]['fecha_radicacion_entrada'] . "-" . $documento[0]['numero'] . "-" . $tipo;
     }
     if (!empty($datos[0]["serie_idserie"])) {
-        $tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
+        $tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "");
     }
-    $anexos = busca_filtro_tabla("etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+    $anexos = busca_filtro_tabla("etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "");
     $nombre_anexos = '';
     $fecha_radicacion = $documento[0]['fecha'];
 
@@ -720,7 +720,7 @@ function obtener_informacion_proveedor($idformato, $iddoc)
 {
     global $conn, $datos;
     if ($datos[0]['tipo_origen'] == 1 && $datos[0]["persona_natural"]) {
-        $info = busca_filtro_tabla("", "datos_ejecutor B, ejecutor C", "B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
+        $info = busca_filtro_tabla("", "datos_ejecutor B, ejecutor C", "B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=" . $datos[0]["persona_natural"], "");
         if ($info["numcampos"]) {
             $texto = array();
             $texto[] = "<b>Nombre:</b> " . $info[0]["nombre"];
@@ -734,17 +734,11 @@ function obtener_informacion_proveedor($idformato, $iddoc)
             echo implode(", &nbsp;", $texto);
         }
     } else {
-        $array_concat = array(
-            "nombres",
-            "' '",
-            "apellidos"
-        );
-        $cadena_concat = concatenar_cadena_sql($array_concat);
         if ($datos[0]['area_responsable']) {
-            $origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "", $conn);
+            $origen = busca_filtro_tabla("nombres,apellidos,dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "");
             if ($origen["numcampos"]) {
                 $texto = array();
-                $texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
+                $texto[] = "<b>Nombre:</b> " . $origen[0]["nombres"] . " " . $origen[0]["apellidos"];
                 $texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
                 $texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
                 echo implode("<br />", $texto);
@@ -755,7 +749,7 @@ function obtener_informacion_proveedor($idformato, $iddoc)
 
 function mostrar_item_destino_radicacion($idformato, $iddoc)
 {
-    global $conn;
+
     echo mostrar_listado_distribucion_documento($idformato, $iddoc, 1);
 }
 
@@ -786,8 +780,8 @@ function mostrar_copia_electronica($idformato, $iddoc)
 
 function cambiar_estado($idformato, $iddoc)
 {
-    global $conn;
-    $doc = busca_filtro_tabla("estado", "documento A", "iddocumento=" . $iddoc, "", $conn);
+
+    $doc = busca_filtro_tabla("estado", "documento A", "iddocumento=" . $iddoc, "");
     if ($doc[0]["estado"] == 'INICIADO') {
         $sql1 = "UPDATE documento SET estado='APROBADO' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
@@ -800,7 +794,7 @@ function cambiar_estado($idformato, $iddoc)
 function post_aprobar_rad_entrada($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
-    $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "", $conn);
+    $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "");
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
     // echo($insert);die();
     phpmkr_query($insert);
@@ -813,7 +807,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
         actualizar_campos_documento($idformato, $iddoc);
         actualizar_datos_documento($idformato, $iddoc);
 
-        $datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+        $datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "");
         if ($datos[0]['tipo_destino'] == 2) { //INTERNO
             transferencia_automatica($idformato, $iddoc, "destino", 2);
         }
@@ -822,7 +816,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
         phpmkr_query($sql1);
 
         if ($datos[0]['tipo_mensajeria'] == 3) { // Entrega Personal/Medios Propios
-            $tipo_destino = busca_filtro_tabla("tipo_destino,destino", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+            $tipo_destino = busca_filtro_tabla("tipo_destino,destino", "distribucion", "documento_iddocumento=" . $iddoc, "");
             for ($i = 0; $i < $tipo_destino['numcampos']; $i++) {
                 if ($tipo_destino[$i]['tipo_destino'] == 1) {
                     transferencia_automatica($idformato, $iddoc, $tipo_destino[$i]['destino'], 1);
@@ -846,7 +840,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
 function ingresar_item_destino_radicacion($idformato, $iddoc)
 {
     global $conn, $ruta_db_superior;
-    $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "", $conn);
+    $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "");
 
     /**
      * Para la radicacion de correspondencia los campos para la distribucion son: 
@@ -904,10 +898,10 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
 
 function actualizar_campos_documento($idformato, $iddoc)
 {
-    global $conn;
-    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+
+    $datos = busca_filtro_tabla("persona_natural,numero_oficio,numero_oficio,descripcion_anexos", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "");
     if ($datos["numcampos"]) {
-        $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "", $conn);
+        $campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='descripcion_anexos'", "");
         $valores = array();
         if ($campo_formato["numcampos"]) {
             $filas = explode(";", $campo_formato[0]["valor"]);
@@ -918,7 +912,7 @@ function actualizar_campos_documento($idformato, $iddoc)
             }
         }
         if ($datos[0]["persona_natural"]) {
-            $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
+            $ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "");
         }
 
         $Documento = new Documento($iddoc);
@@ -938,11 +932,17 @@ function radicacion_entrada_fab_buttons()
 {
     global $conn, $datos;
 
-    $entrada = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["documentId"], "", $conn);
+    $entrada = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["documentId"], "");
     $datos = array();
     if ($entrada[0]["estado"] == 'INICIADO') {
-        $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $entrada[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $_REQUEST["documentId"];
-        StaticSql::query($sql);
+        Model::getQueryBuilder()
+            ->update('ft_radicacion_entrada')
+            ->set('tipo_origen', ':origin')
+            ->where('documento_iddocumento = :documentId')
+            ->setParameter(':origin', $entrada[0]['tipo_radicado'])
+            ->setParameter(':documentId', $_REQUEST["documentId"], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+
         $datos2 = array('editarRadicacion' => [
             'button' => [
                 'id' => "editarRadicacion",
@@ -963,7 +963,7 @@ function radicacion_entrada_fab_buttons()
         $datos = array_merge($datos, $datos2);
     }
 
-    $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "", $conn);
+    $distribuciones = busca_filtro_tabla("iddistribucion,numero_distribucion", "distribucion", "documento_iddocumento=" . $_REQUEST["documentId"], "");
     for ($i = 0; $i < $distribuciones["numcampos"]; $i++) {
         if (generar_enlace_finalizar_distribucion($distribuciones[$i]["iddistribucion"])) {
             $datos2 = array('confirmarRecibido' . $distribuciones[$i]["iddistribucion"] => [

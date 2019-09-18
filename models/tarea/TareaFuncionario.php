@@ -94,17 +94,17 @@ class TareaFuncionario extends Model
      */
     public static function findUsersByType($taskId, $type)
     {
-        $sql = <<<SQL
-            select b.* 
-            from tarea_funcionario a 
-            join funcionario b on 
-            a.fk_funcionario = b.idfuncionario 
-            where 
-                a.estado =1 and
-                a.fk_tarea = {$taskId} and
-                a.tipo = {$type}
-SQL;
-        return Funcionario::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('b.*')
+            ->from('tarea_funcionario', 'a')
+            ->join('a', 'funcionario', 'b', 'a.fk_funcionario = b.idfuncionario')
+            ->where('a.estado =1')
+            ->andWhere('a.fk_tarea = :taskId')
+            ->andWhere('a.tipo = :type')
+            ->setParameter(':taskId', $taskId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':type', $type, \Doctrine\DBAL\Types\Type::INTEGER);
+
+        return Funcionario::findByQueryBuilder($QueryBuilder);
     }
 
     /**

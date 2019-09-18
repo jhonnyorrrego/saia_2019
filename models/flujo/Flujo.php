@@ -1,6 +1,7 @@
 <?php
 
-class Flujo extends Model implements IAnexos {
+class Flujo extends Model implements IAnexos
+{
 
     use TFlujo;
 
@@ -18,36 +19,39 @@ class Flujo extends Model implements IAnexos {
     protected $mostrar_codigo;
     protected $info;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         parent::__construct($id);
     }
 
-    protected function defineAttributes() {
+    protected function defineAttributes()
+    {
         $this->dbAttributes = (object) [
-                    'safe' => [
-                        "nombre",
-                        "descripcion",
-                        "codigo",
-                        "version",
-                        "expediente",
-                        "diagrama",
-                        "duracion",
-                        "version_actual",
-                        "fecha_creacion",
-                        "fecha_modificacion",
-                        "info",
-                        "mostrar_codigo"
-                    ],
-                    'date' => [
-                        "fecha_creacion",
-                        "fecha_modificacion",
-                    ],
-                    "table" => "wf_flujo",
-                    "primary" => "idflujo"
+            'safe' => [
+                "nombre",
+                "descripcion",
+                "codigo",
+                "version",
+                "expediente",
+                "diagrama",
+                "duracion",
+                "version_actual",
+                "fecha_creacion",
+                "fecha_modificacion",
+                "info",
+                "mostrar_codigo"
+            ],
+            'date' => [
+                "fecha_creacion",
+                "fecha_modificacion",
+            ],
+            "table" => "wf_flujo",
+            "primary" => "idflujo"
         ];
     }
 
-    public function findActiveFiles($params) {
+    public function findActiveFiles($params)
+    {
         $sql = <<<SQL
             select a.*
             from anexo a 
@@ -59,9 +63,8 @@ class Flujo extends Model implements IAnexos {
                 f.idflujo = $this->idflujo and a.eliminado = 0
             order by $params->order
 SQL;
-        $records = StaticSql::search($sql, $params->offset, $params->limit);
-        
+        //$records = //ejecuta el select
+
         return self::convertToArray($records);
     }
-
 }

@@ -21,11 +21,11 @@ function editar() {
 		$lista_campos[$i] = strtolower($lista_campos[$i]);
 	}
 	$i = 0;
-	$formato = busca_filtro_tabla("", "formato", "nombre='" . $_REQUEST["formato"] . "'", "", $conn);
+	$formato = busca_filtro_tabla("", "formato", "nombre='" . $_REQUEST["formato"] . "'", "");
 	foreach ($_REQUEST as $key => $valor) {
 		if (in_array(strtolower($key), $lista_campos) && $key <> "id" . $_REQUEST["tabla"]) {
 			$campos[$i] = $key;
-			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html,predeterminado", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "", $conn);
+			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html,predeterminado", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "");
 			if (strtolower($tipo[0]["tipo_dato"]) == 'date') {
 				if ($valor != '0000-00-00 00:00' && $valor != "") {
 					$update[$i] = $key . "=" . htmlentities(decodifica_encabezado(fecha_db_almacenar($valor, 'Y-m-d')));
@@ -66,15 +66,15 @@ function editar() {
 		}
 	}
 
-	$padre = busca_filtro_tabla("", "formato", "idformato='" . $formato[0]["cod_padre"] . "'", "", $conn);
-	$doc_padre = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"] . "," . $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $padre[0]["nombre_tabla"] . " and id" . $formato[0]["nombre_tabla"] . "=" . $_REQUEST["item"], "", $conn);
+	$padre = busca_filtro_tabla("", "formato", "idformato='" . $formato[0]["cod_padre"] . "'", "");
+	$doc_padre = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"] . "," . $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $padre[0]["nombre_tabla"] . " and id" . $formato[0]["nombre_tabla"] . "=" . $_REQUEST["item"], "");
 
 	redirecciona($ruta_db_superior . 'formatos/' . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
 
 function eliminar_item() {
 	global $conn, $ruta_db_superior;
-	$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre_tabla like '" . $_REQUEST["tabla"] . "'", "", $conn);
+	$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre_tabla like '" . $_REQUEST["tabla"] . "'", "");
 	if ($_REQUEST["anterior_eliminar"]) {
 		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_eliminar"]);
@@ -90,9 +90,9 @@ function eliminar_item() {
 			$funcion($formato[0]['idformato'], 0);
 		}
 	}
-	$padre = busca_filtro_tabla("idformato,nombre,ruta_mostrar,nombre_tabla,cod_padre", "formato", "idformato=(select cod_padre from formato where nombre_tabla like '" . $_REQUEST["tabla"] . "')", "", $conn);
-	$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "", $conn);
-	$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "", $conn);
+	$padre = busca_filtro_tabla("idformato,nombre,ruta_mostrar,nombre_tabla,cod_padre", "formato", "idformato=(select cod_padre from formato where nombre_tabla like '" . $_REQUEST["tabla"] . "')", "");
+	$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "");
+	$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "");
 	if ($_REQUEST["formato"] == 'adicionales_orden') {
 		$superior["numcampos"] = 0;
 	}
@@ -120,11 +120,11 @@ function guardar_item() {
 		$lista_campos[$i] = strtolower($lista_campos[$i]);
 	}
 	$i = 0;
-	$formato = busca_filtro_tabla("", "formato", "nombre='" . $_REQUEST["formato"] . "'", "", $conn);
+	$formato = busca_filtro_tabla("", "formato", "nombre='" . $_REQUEST["formato"] . "'", "");
 	foreach ($_REQUEST as $key => $valor) {
 		if (in_array(strtolower($key), $lista_campos) && $key <> "id" . $_REQUEST["tabla"]) {
 			$campos[$i] = $key;
-			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html,predeterminado", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "", $conn);
+			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html,predeterminado", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "");
 			if (strtolower($tipo[0]["tipo_dato"]) == 'date') {
 				if ($valor != '0000-00-00 00:00' && $valor != "") {
 					$valores[$i] = htmlentities(decodifica_encabezado(fecha_db_almacenar($valor, 'Y-m-d')));
@@ -155,7 +155,7 @@ function guardar_item() {
 	}
 
 	$sql = "insert into " . $_REQUEST["tabla"] . "(" . implode(",", $campos) . ") values(" . implode(",", $valores) . ")";
-	phpmkr_query($sql, $conn);
+	phpmkr_query($sql);
 	$insertado = phpmkr_insert_id();
 	if ($insertado > 0) {
 		if (isset($_REQUEST["plantilla"]) && $_REQUEST["plantilla"] == 1) {
@@ -170,10 +170,10 @@ function guardar_item() {
 				$funcion($formato[0]['idformato'], $insertado);
 			}
 		}
-		$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre like '" . $_REQUEST["formato"] . "'", "", $conn);
-		$padre = busca_filtro_tabla("idformato,nombre,ruta_mostrar,nombre_tabla,cod_padre", "formato", "idformato=(select cod_padre from formato where nombre like '" . $_REQUEST["formato"] . "')", "", $conn);
-		$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "", $conn);
-		$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "", $conn);
+		$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre like '" . $_REQUEST["formato"] . "'", "");
+		$padre = busca_filtro_tabla("idformato,nombre,ruta_mostrar,nombre_tabla,cod_padre", "formato", "idformato=(select cod_padre from formato where nombre like '" . $_REQUEST["formato"] . "')", "");
+		$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "");
+		$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "");
 
 		if ($_REQUEST["opcion_item"] <> "adicionar") { 
 			echo(json_encode([
@@ -224,7 +224,7 @@ function crear_pretexto_item($asunto, $contenido) {
 	$sql = "INSERT INTO " . "pretexto" . "(" . $campos . ") VALUES (" . $valores . ")";
 	phpmkr_query($sql);
 	$idpretexto = phpmkr_insert_id();
-	guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto", $conn);
+	guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
 	// Guardo la relacion de la plantilla con el suaurio
 	$idfuncionario = usuario_actual("idfuncionario");
 	$campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";

@@ -13,8 +13,8 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 
-include_once($ruta_db_superior."librerias_saia.php");
-global $conn;
+include_once($ruta_db_superior."assets/librerias.php");
+
 
 function fecha_bloqueada_valoracion($idformato,$iddoc){//A.A
 	echo "<td><input type='text' name='fecha_valoracion' value='".date('Y-m-d')."' readonly='readonly'/></td>";
@@ -28,7 +28,7 @@ function adicionar_modificaciones($idformato,$iddoc){//A.A
 	phpmkr_query($sql);
 }
 function modificaciones($idformato,$iddoc){//A.A
-	$datos=busca_filtro_tabla(fecha_db_obtener("A.fecha","Y-m-d H:i")." as fecha,B.nombres,B.apellidos","ft_cr_historial A,funcionario B","A.funcionario_idfuncionario=B.idfuncionario and A.documento_iddocumento=$iddoc","",$conn);
+	$datos=busca_filtro_tabla(fecha_db_obtener("A.fecha","Y-m-d H:i")." as fecha,B.nombres,B.apellidos","ft_cr_historial A,funcionario B","A.funcionario_idfuncionario=B.idfuncionario and A.documento_iddocumento=$iddoc","");
 	
 	$html="";
 	$html.="<table width='100%' border='1' style='border-collapse:collapse'>";
@@ -46,8 +46,8 @@ function modificaciones($idformato,$iddoc){//A.A
 	echo $html;
 }
 function consecutivo_funcion_control($idformato,$iddoc){
-	global $conn;
-	$ultimo2=busca_filtro_tabla("max(consecutivo_control) as ultimo","ft_control_riesgos a","ft_riesgos_proceso=".$_REQUEST["padre"],"",$conn);
+	
+	$ultimo2=busca_filtro_tabla("max(consecutivo_control) as ultimo","ft_control_riesgos a","ft_riesgos_proceso=".$_REQUEST["padre"],"");
 	echo '<td><input type="text" readonly="readonly" name="consecutivo_control" value="'.($ultimo2[0]["ultimo"]+1).'"></td>';
 }
 function llenar_orientacion($idformato,$iddoc){
@@ -120,7 +120,7 @@ function validar_revision_aprobacion_control_riesgos($idformato, $iddoc){
 	echo(librerias_notificaciones());		
 	
 	$proceso = busca_filtro_tabla("a.documento_iddocumento, a.fecha_aprobacion_riesgo,a.fecha_revision_riesgo,a.nombre","
-ft_proceso a, ft_riesgos_proceso b","a.idft_proceso=b.ft_proceso AND b.documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+ft_proceso a, ft_riesgos_proceso b","a.idft_proceso=b.ft_proceso AND b.documento_iddocumento=".$_REQUEST['anterior'],"");
 	
 	if($proceso[0]['fecha_aprobacion_riesgo'] && $proceso[0]['fecha_revision_riesgo']){	
 ?>
@@ -134,10 +134,10 @@ $(document).ready(function(){
 	}*/
 }
 function validar_tipo_riesgo($idformato, $iddoc){
-	global $conn;
+	
 	
 	/*if($iddoc){
-		$tipo_riesgo = busca_filtro_tabla("lower(b.tipo_riesgo) as tipo_riesgo, a.responsables_ejecucion, a.frecuencia_ejecucion","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$iddoc,"",$conn);	
+		$tipo_riesgo = busca_filtro_tabla("lower(b.tipo_riesgo) as tipo_riesgo, a.responsables_ejecucion, a.frecuencia_ejecucion","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$iddoc,"");	
 		
 		if($tipo_riesgo[0]['tipo_riesgo'] != 'corrupcion'){
 			$tabla ='
@@ -166,9 +166,9 @@ function validar_tipo_riesgo($idformato, $iddoc){
 		
 		echo($tabla);
 	}elseif($_REQUEST['anterior']){
-		$tipo_riesgo = busca_filtro_tabla("lower(tipo_riesgo) as tipo_riesgo","ft_riesgos_proceso","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+		$tipo_riesgo = busca_filtro_tabla("lower(tipo_riesgo) as tipo_riesgo","ft_riesgos_proceso","documento_iddocumento=".$_REQUEST['anterior'],"");
 	}elseif($_REQUEST['iddoc']){
-		$tipo_riesgo = busca_filtro_tabla("lower(b.tipo_riesgo) as tipo_riesgo","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+		$tipo_riesgo = busca_filtro_tabla("lower(b.tipo_riesgo) as tipo_riesgo","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$_REQUEST['iddoc'],"");
 	}
 	
 	if($tipo_riesgo[0]['tipo_riesgo'] == 'corrupcion'){
@@ -189,10 +189,10 @@ function validar_tipo_riesgo($idformato, $iddoc){
 function botones_valoracion_riesgos($idformato, $iddoc){
   global $ruta_db_superior;
   if($_REQUEST['tipo']!=5){
-  $control = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_control_riesgos b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);
-  $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
- $area=busca_filtro_tabla("b.area_responsable","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
-  $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
+  $control = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_control_riesgos b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"");
+  $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"");
+ $area=busca_filtro_tabla("b.area_responsable","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"");  
+  $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo");
 		
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"]){
 	  		$boton  = '<button type="button" id = "editar_valoracion_riesgo">Editar</button>';
@@ -235,7 +235,7 @@ function botones_valoracion_riesgos($idformato, $iddoc){
 }
 
 function registrar_edicion_documento($idformato, $iddoc){ 
-global $conn;
+
 $nombre  = usuario_actual('nombres').' '.usuario_actual('apellidos');
 $mensaje = 'Se edita el documeto por el funcionario '.$nombre;  
 registrar_accion_digitalizacion($iddoc,'EDICI&Oacute;N DEL DOCUMENTO',$mensaje);

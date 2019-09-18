@@ -19,25 +19,25 @@ include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
 function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
 {
-    global $conn;
+
 
     $ruta = "";
     $numero = intval($numero);
     $pre_texto = '';
     if (in_array($estado, array("APROBADO", "GESTION", "CENTRAL", "HISTORICO", "ACTIVO")) !== false) {
-        $docu = busca_filtro_tabla("lower(plantilla) as plantilla, nombre_tabla,cod_padre,idformato", "documento A, formato B", "A.iddocumento=" . $doc . " AND lower(plantilla)=lower(B.nombre)", "", $conn);
+        $docu = busca_filtro_tabla("lower(plantilla) as plantilla, nombre_tabla,cod_padre,idformato", "documento A, formato B", "A.iddocumento=" . $doc . " AND lower(plantilla)=lower(B.nombre)", "");
         if ($docu[0]["plantilla"] == 'radicacion_entrada' || $docu[0]["plantilla"] == 'radicacion_salida') {
-            $remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
+            $remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "");
             $texto = ucwords(strtolower($remitente[0]["nombre"]));
         } else {
-            $remitente = busca_filtro_tabla("B.nombres, B.apellidos", "documento A,funcionario B", "A.ejecutor=B.funcionario_codigo AND A.iddocumento=" . $doc, "", $conn);
+            $remitente = busca_filtro_tabla("B.nombres, B.apellidos", "documento A,funcionario B", "A.ejecutor=B.funcionario_codigo AND A.iddocumento=" . $doc, "");
             $texto = $remitente[0]["nombres"] . " " . $remitente[0]["apellidos"];
         }
         if ($remitente["numcampos"]) {
             $ruta = $texto . "-" . serie_documento($serie);
         }
     } else {
-        $remitente = busca_filtro_tabla("B.nombres, B.apellidos", "documento A,funcionario B", "A.ejecutor=B.funcionario_codigo AND A.iddocumento=" . $doc, "", $conn);
+        $remitente = busca_filtro_tabla("B.nombres, B.apellidos", "documento A,funcionario B", "A.ejecutor=B.funcionario_codigo AND A.iddocumento=" . $doc, "");
         $texto = $remitente[0]["nombres"] . " " . $remitente[0]["apellidos"];
         if ($remitente["numcampos"]) {
             $ruta = $remitente[0]["nombres"] . " " . $remitente[0]["apellidos"] . "-" . serie_documento($serie);
@@ -46,12 +46,11 @@ function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $est
 
     if (!$ruta) {
         if ($tipo_ejecutor == 1 && $tipo_radicado == 1) {
-            $datos_ejecutor = busca_filtro_tabla("A.plantilla,B.ejecutor_idejecutor", "documento A,datos_ejecutor B", "A.ejecutor=B.iddatos_ejecutor and A.iddocumento=" . $doc, "", $conn);
-            $ejecutor = busca_filtro_tabla("nombre", "ejecutor", "idejecutor=" . $datos_ejecutor[0]["ejecutor_idejecutor"], "", $conn);
+            $datos_ejecutor = busca_filtro_tabla("A.plantilla,B.ejecutor_idejecutor", "documento A,datos_ejecutor B", "A.ejecutor=B.iddatos_ejecutor and A.iddocumento=" . $doc, "");
+            $ejecutor = busca_filtro_tabla("nombre", "ejecutor", "idejecutor=" . $datos_ejecutor[0]["ejecutor_idejecutor"], "");
         } elseif ($tipo_radicado == 2) {
-            $datos_ejecutor = busca_filtro_tabla("A.ejecutor", "documento A", "A.iddocumento=" . $doc, "", $conn);
-            $cadena_concat = concatenar_cadena_sql(array("nombres", "' '", "apellidos"));
-            $ejecutor = busca_filtro_tabla($cadena_concat . " as nombre", "funcionario", "funcionario_codigo=" . $datos_ejecutor[0]["ejecutor"], "", $conn);
+            $datos_ejecutor = busca_filtro_tabla("A.ejecutor", "documento A", "A.iddocumento=" . $doc, "");
+            $ejecutor = busca_filtro_tabla("CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "funcionario", "funcionario_codigo=" . $datos_ejecutor[0]["ejecutor"], "");
         }
 
         if ($ejecutor["numcampos"] && $datos_ejecutor[0]["plantilla"] == "") {
@@ -71,12 +70,12 @@ function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $est
 
 function serie_documento($idserie)
 {
-    global $conn;
+
 
     if ($idserie == 'serie') {
         return ("Sin Serie Asignada");
     }
-    $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $idserie, "", $conn);
+    $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $idserie, "");
     if ($serie["numcampos"]) {
         return (ucwords(strtolower($serie[0]["nombre"])));
     }
@@ -85,19 +84,19 @@ function serie_documento($idserie)
 
 function nombre_plantilla($plantilla, $iddoc = null)
 {
-    global $conn;
+
     $tablas = "formato f";
     $where = "lower(f.nombre)='" . strtolower($plantilla) . "'";
     if (!empty($iddoc) && (empty($plantilla) || $plantilla == 'plantilla')) {
         $tablas .= ", documento d";
         $where = "d.iddocumento = $iddoc and lower(f.nombre)=lower(d.plantilla)";
     }
-    $formato = busca_filtro_tabla("f.etiqueta", $tablas, $where, "", $conn);
+    $formato = busca_filtro_tabla("f.etiqueta", $tablas, $where, "");
     if ($formato["numcampos"]) {
         return (ucfirst(codifica_encabezado(strtolower($formato[0]["etiqueta"]))));
     } else {
         if ($iddoc) {
-            $tipo = busca_filtro_tabla("", "documento a", "a.iddocumento=" . $iddoc, "", $conn);
+            $tipo = busca_filtro_tabla("", "documento a", "a.iddocumento=" . $iddoc, "");
             if ($tipo[0]["tipo_radicado"] == 1)
                 return "Entrada";
             if ($tipo[0]["tipo_radicado"] == 2)
@@ -138,10 +137,10 @@ function obtener_iddocumento()
 
 function filtro_despacho()
 {
-    global $conn;
+
 
     if ($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda'] != '') {
-        $docs = busca_filtro_tabla("", "documento,ft_despacho_ingresados", "documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=" . $_REQUEST['variable_busqueda'], "", $conn);
+        $docs = busca_filtro_tabla("", "documento,ft_despacho_ingresados", "documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=" . $_REQUEST['variable_busqueda'], "");
         if ($docs['numcampos']) {
             $where = " and iddocumento in(" . $docs[0]['docs_seleccionados'] . ")";
         } else {
@@ -153,8 +152,8 @@ function filtro_despacho()
 
 function iddoc_distribuidos()
 {
-    global $conn;
-    $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "", $conn);
+
+    $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "");
     $iddoc = array();
 
     if ($distribuidos['numcampos']) {
@@ -182,8 +181,8 @@ function iddoc_distribuidos()
 
 function iddoc_no_distribuidos()
 {
-    global $conn;
-    $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "", $conn);
+
+    $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "");
 
     $iddoc = array();
 

@@ -9,7 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once $ruta_db_superior . "core/autoload.php";
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 
 function limpiarContenido($texto){
       $textoLimpio = preg_replace('([^ A-Za-z0-9_-ñÑ,&;@\.\-])', '', utf8_decode($texto));                            
@@ -17,11 +17,11 @@ function limpiarContenido($texto){
 }
 
 if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
-    echo(estilo_bootstrap());
-    echo(librerias_jquery("1.7"));
+    echo(bootstrap());
+    echo(jquery());
     echo(librerias_arboles());
     echo (librerias_validar_formulario("11"));
-    $datos_dt = busca_filtro_tabla(fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "'", "", $conn);
+    $datos_dt = busca_filtro_tabla(fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "'", "");
     $html = '';
     if ($datos_dt["numcampos"]) {
         $html .= '<table class="table table-bordered" align="center" style="width:80%">';
@@ -198,12 +198,12 @@ if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
         notificaciones_saia("Por favor espere mientras se radican los Emails", "warning", 10000);
     }
     include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
-    $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad=0", "", $conn);
+    $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad=0", "");
     if ($datos["numcampos"]) {
         $tabla = "ft_correo_saia";
-        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
-        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
-        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "", $conn);
+        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "");
+        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "");
+        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "");
         $campos = extrae_campo($campos_formato, "idcampos_formato");
 
         $_REQUEST["asunto"] = limpiarContenido($datos[0]["asunto"]);
@@ -235,7 +235,7 @@ if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
         if ($iddoc) {
-            $ok = busca_filtro_tabla("d.iddocumento,d.numero", $tabla . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+            $ok = busca_filtro_tabla("d.iddocumento,d.numero", $tabla . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
             if ($ok["numcampos"]) {
                 $update_ok = "UPDATE dt_datos_correo SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_correo=" . $datos[0]["iddt_datos_correo"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT");
@@ -253,8 +253,8 @@ if ($_REQUEST["idgrupo"] != "" && $_REQUEST["formulario"] == 1) {
         redirecciona("radicar_correo_masivo.php?idgrupo=" . $_REQUEST["idgrupo"]);
         die();
     } else {
-        $cant_error = busca_filtro_tabla("count(*) as cant", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad=-1", "", $conn);
-        $cant_ok = busca_filtro_tabla("count(*) as cant", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad>0", "", $conn);
+        $cant_error = busca_filtro_tabla("count(*) as cant", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad=-1", "");
+        $cant_ok = busca_filtro_tabla("count(*) as cant", "dt_datos_correo", "idgrupo='" . $_REQUEST["idgrupo"] . "' and iddoc_rad>0", "");
         if ($cant_error[0]["cant"] != 0) {
             $mensaje = "Hubo problemas al radicar los Emails:<br/>Email OK:" . $cant_ok[0]["cant"] . "<br/> Email Error:" . $cant_error[0]["cant"];
             $tipo = "warning";

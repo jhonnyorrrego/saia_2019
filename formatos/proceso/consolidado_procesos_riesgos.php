@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."header.php");
-$procesos=busca_filtro_tabla("nombre,idft_proceso","ft_proceso p,documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' AND p.estado<>'INACTIVO'","nombre",$conn);
+$procesos=busca_filtro_tabla("nombre,idft_proceso","ft_proceso p,documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' AND p.estado<>'INACTIVO'","nombre");
 ?>
 <br><b>CONSOLIDADO DE RIESGOS POR PROCESO Y ESTADO</b><br><br>
 <table border="1" width="100%">
@@ -122,14 +122,14 @@ echo "</tr></table>";
 
 include_once($ruta_db_superior."footer.php");
 function cuadrante($idproceso,$calificacion){
-global $conn;
+
 $texto="";
  
-$riesgos=busca_filtro_tabla("impacto,probabilidad,descripcion AS nombre,idft_riesgos_proceso,consecutivo,documento_iddocumento ","ft_riesgos_proceso","estado<>'INACTIVO' AND ft_proceso=".$idproceso,"idft_riesgos_proceso asc",$conn);
+$riesgos=busca_filtro_tabla("impacto,probabilidad,descripcion AS nombre,idft_riesgos_proceso,consecutivo,documento_iddocumento ","ft_riesgos_proceso","estado<>'INACTIVO' AND ft_proceso=".$idproceso,"idft_riesgos_proceso asc");
 $cuenta=0;
 //print_r($riesgos);
 for($i=0;$i<$riesgos["numcampos"];$i++)
-{$seguimientos=busca_filtro_tabla("","ft_seguimiento_riesgo,documento","ft_riesgos_proceso=".$riesgos[$i]["idft_riesgos_proceso"]." AND documento_iddocumento=iddocumento and estado<>'ELIMINADO'","iddocumento asc",$conn);
+{$seguimientos=busca_filtro_tabla("","ft_seguimiento_riesgo,documento","ft_riesgos_proceso=".$riesgos[$i]["idft_riesgos_proceso"]." AND documento_iddocumento=iddocumento and estado<>'ELIMINADO'","iddocumento asc");
  
   if($seguimientos["numcampos"]){ 
    for($j=0;$j<$seguimientos["numcampos"];$j++) 

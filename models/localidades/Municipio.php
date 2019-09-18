@@ -6,7 +6,7 @@ class Municipio extends Model
     protected $nombre;
     protected $departamento_iddepartamento;
     protected $estado;
-    
+
 
     //relations
     protected $Departamento;
@@ -21,7 +21,7 @@ class Municipio extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'nombre',
                 'estado',
@@ -60,17 +60,14 @@ class Municipio extends Model
      */
     public static function findAllByTerm($term, $parentId)
     {
-        $sql = <<<SQL
-        SELECT 
-            idmunicipio,nombre,estado
-        FROM 
-            municipio
-        WHERE
-            nombre LIKE '%{$term}%' AND
-            departamento_iddepartamento = {$parentId}
-        ORDER BY nombre ASC
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('idmunicipio,nombre,estado')
+            ->from('municipio')
+            ->where('departamento_iddepartamento = :parentId')
+            ->andWhere('nombre like :like')
+            ->setParameter(':like', "%{$term}%")
+            ->orderBy('nombre', 'asc');
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

@@ -209,27 +209,22 @@ class Tarea extends LogModel
      */
     public static function findBetweenDates($userId, $initialDate, $finalDate, $type)
     {
-        $initial = StaticSql::getDateFormat('a.fecha_inicial', 'Y-m-d H:i:s');
-        $final =  StaticSql::getDateFormat('a.fecha_final', 'Y-m-d H:i:s');
-        $sql = <<<SQL
-            SELECT
-                a.*
-            FROM
-                tarea a
-            JOIN
-                tarea_funcionario b
-            ON
-                a.idtarea = b.fk_tarea
-            WHERE
-                a.estado = 1 AND
-                b.estado = 1 AND
-                b.fk_funcionario = {$userId} AND
-                b.tipo= {$type} AND
-                {$initial} >='{$initialDate}' AND
-                {$final} <= '{$finalDate}'
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('tarea', 'a')
+            ->join('a', 'tarea_funcionario', 'b', 'a.idtarea = b.fk_tarea')
+            ->where('a.estado = 1')
+            ->andWhere('b.estado = 1')
+            ->andWhere('b.fk_funcionario :userId')
+            ->andWhere('b.tipo = :type')
+            ->andWhere('a.fecha_inicial >= :initialDate')
+            ->andWhere('a.fecha_final >= :finalDate')
+            ->setParameter(':userId', $userId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':type', $type, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':initialDate', new DateTime($initialDate), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(':finalDate', new DateTime($finalDate), \Doctrine\DBAL\Types\Type::DATETIME);
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -241,20 +236,19 @@ SQL;
      */
     public static function findActiveFiles($params)
     {
-        $sql = <<<SQL
-            SELECT a.*
-            FROM anexo a 
-            JOIN tarea_anexo b 
-                ON a.idanexo = b.fk_anexo 
-            JOIN tarea c
-                ON b.fk_tarea = c.idtarea
-            WHERE
-                c.idtarea = $params->task AND
-                a.eliminado = 0 AND 
-                a.estado = 1
-            ORDER BY $params->order
-SQL;
-        return Anexo::findByQueryBuilder($sql, true, $params->offset, $params->limit);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('anexo', 'a')
+            ->join('a', 'tarea_anexo', 'b', 'a.idanexo = b.fk_anexo')
+            ->join('b', 'tarea', 'c', 'b.fk_tarea = c.idtarea')
+            ->where('a.eliminado = 0 AND a.estado = 1')
+            ->andWhere('c.idtarea = :taskId')
+            ->setParameter(':taskId', $params->task, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->add('orderBy', $params->order)
+            ->setFirstResult($params->offset)
+            ->setMaxResults($params->limit);
+
+        return Anexo::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -265,19 +259,16 @@ SQL;
      */
     public static function countActiveFiles($taskId)
     {
-        $sql = <<<SQL
-        select count(*) as total 
-        from anexo a 
-        join tarea_anexo b 
-            on a.idanexo = b.fk_anexo 
-        join tarea c
-            on b.fk_tarea = c.idtarea
-        where 
-            c.idtarea = {$taskId} and
-            a.eliminado = 0 and 
-            a.estado = 1
-SQL;
-        $record = StaticSql::search($sql);
-        return $record[0]['total'];
+        $record = self::getQueryBuilder()
+            ->select('count(*) as total')
+            ->from('anexo', 'a')
+            ->join('a', 'tarea_anexo', 'b', 'a.idanexo = b.fk_anexo')
+            ->join('b', 'tarea', 'c', 'b.fk_tarea = c.idtarea')
+            ->where('a.eliminado = 0 and a.estado = 1')
+            ->andWhere('c.idtarea = :taskId')
+            ->setParameter(':taskId', $taskId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetch();
+
+        return $record['total'];
     }
 }

@@ -16,7 +16,7 @@ if (isset($_REQUEST["nombre_ruta"]) && trim($_REQUEST["nombre_ruta"])!="") {
 	if($_REQUEST["opt"]==1){
 		$parte=" and b.iddocumento<>".$_REQUEST["iddoc"];
 	}
-	$existe = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion a,documento b", " b.estado NOT IN ('ELIMINADO','ANULADO') AND a.documento_iddocumento=b.iddocumento AND lower(a.nombre_ruta) LIKE '" . strtolower($_REQUEST['nombre_ruta']) . "'".$parte, "", $conn);
+	$existe = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion a,documento b", " b.estado NOT IN ('ELIMINADO','ANULADO') AND a.documento_iddocumento=b.iddocumento AND lower(a.nombre_ruta) LIKE '" . strtolower($_REQUEST['nombre_ruta']) . "'".$parte, "");
 	if ($existe['numcampos']) {
 		$retorno['exito'] = 1;
 	}

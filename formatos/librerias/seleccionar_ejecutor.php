@@ -13,7 +13,7 @@ include_once $ruta_db_superior . 'core/autoload.php';
 
 if (isset($_REQUEST["datosCiudad"])) {
 	$ubicacion = array();
-	$departamento = busca_filtro_tabla("departamento_iddepartamento", "municipio", "idmunicipio = " . $_REQUEST["datosCiudad"], "", $conn);
+	$departamento = busca_filtro_tabla("departamento_iddepartamento", "municipio", "idmunicipio = " . $_REQUEST["datosCiudad"], "");
 	$ubicacion["departamento"] = $departamento[0]['departamento_iddepartamento'];
 	$pais = Model::getQueryBuilder()
 		->select("pais_idpais")
@@ -35,7 +35,7 @@ if (isset($_REQUEST["datosCiudad"])) {
 		$select = 'distinct(idejecutor),nombre,identificacion';
 	}
 	$where_estado = ' and estado=1';
-	$busqueda = busca_filtro_tabla("" . $select, "ejecutor" . $tabla, "lower(" . $tipo . ") LIKE lower('" . $_REQUEST['nombre'] . "%')" . $where . $where_estado, "", $conn);
+	$busqueda = busca_filtro_tabla("" . $select, "ejecutor" . $tabla, "lower(" . $tipo . ") LIKE lower('" . $_REQUEST['nombre'] . "%')" . $where . $where_estado, "");
 
 	if ($busqueda['numcampos']) {
 		$html = '<ul class="list-group">';

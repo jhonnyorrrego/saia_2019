@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 if (@$_REQUEST['idft_proceso']) {
-	$coordenadas = busca_filtro_tabla("coordenadas", "ft_proceso", "idft_proceso=" . $_REQUEST['idft_proceso'], "", $conn);
+	$coordenadas = busca_filtro_tabla("coordenadas", "ft_proceso", "idft_proceso=" . $_REQUEST['idft_proceso'], "");
 	$retorno = array();
 	$retorno['coordenadas'] = 0;
 	if ($coordenadas['numcampos'] && @$coordenadas[0]['coordenadas'] != '' && !is_null(@$coordenadas[0]['coordenadas'])) {

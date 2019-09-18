@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 
-include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 
 require_once ($ruta_db_superior . "app/arbol/crear_arbol_ft.php");
@@ -188,10 +188,10 @@ function eliminarDestinatarios(idnotificacion, ids) {
 
 <?php
 function obtenerListaFormatos($idnotificacion) {
-    global $conn;
+    
 
     $lista_campos = [];
-    $formatos = busca_filtro_tabla("df.*, dn.iddestinatario", "wf_dest_notificacion dn join wf_destinatario_formato df on dn.iddestinatario = df.iddestinatario", "dn.fk_notificacion= " . $idnotificacion, "", $conn);
+    $formatos = busca_filtro_tabla("df.*, dn.iddestinatario", "wf_dest_notificacion dn join wf_destinatario_formato df on dn.iddestinatario = df.iddestinatario", "dn.fk_notificacion= " . $idnotificacion, "");
     for ($i = 0; $i < $formatos["numcampos"]; $i++) {
         $lista_campos["campos"][] = $formatos[$i]["fk_campo_formato"];
         $lista_campos["destinos"][] = $formatos[$i]["iddestinatario"];

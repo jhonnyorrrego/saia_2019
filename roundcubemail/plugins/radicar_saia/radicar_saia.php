@@ -52,7 +52,7 @@ class radicar_saia extends rcube_plugin
             $ruta .= "../";
             $max_salida--;
         }
-        global $conn;
+        
         include_once($ruta_db_superior . "core/autoload.php");
         $this->add_texts('localization');
 
@@ -137,7 +137,7 @@ class radicar_saia extends rcube_plugin
         unset($_SESSION["conexion_remota"]);
 
         $ruta_formato = 'formatos/correo_saia/';
-        $configuracion = busca_filtro_tabla("valor", "configuracion", "tipo='correo' AND nombre='formato_correo'", "", $conn);
+        $configuracion = busca_filtro_tabla("valor", "configuracion", "tipo='correo' AND nombre='formato_correo'", "");
         if ($configuracion["numcampos"]) {
             $ruta_formato = $configuracion[0]["valor"];
         }

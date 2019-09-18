@@ -22,7 +22,7 @@ if(!empty($_REQUEST["idactividad"])) {
     $listadoTareas = busca_filtro_tabla("r.idriesgo, r.fk_actividad, r.riesgo, r.descripcion, ir.impacto, pr.probabilidad",
             "wf_riesgo_actividad r join wf_tipo_prob_riesgo pr on pr.idtipo_probabilidad = r.fk_probabilidad
              join wf_tipo_impacto_riesgo ir on ir.idtipo_impacto = r.fk_impacto",
-            "r.fk_actividad = $idactividad", "", $conn);
+            "r.fk_actividad = $idactividad", "");
 
     if($listadoTareas["numcampos"]) {
         $total = isset($listadoTareas['numcampos']) ? $listadoTareas['numcampos'] : count($listadoTareas);

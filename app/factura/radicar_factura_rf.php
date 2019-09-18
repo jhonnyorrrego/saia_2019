@@ -42,8 +42,8 @@ if (isset($_REQUEST["datos_correo"])) {
 //$nombre_formato = 'factura_electronica';
 $nombre_formato = 'radicacion_facturas';
 //logear_funcionario_webservice("radicador_web");
-$datos_funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login", "funcionario", "idfuncionario=$saia_key", "", $conn);
-$formato = busca_filtro_tabla("idformato", "formato", "nombre='{$nombre_formato}'", "", $conn);
+$datos_funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login", "funcionario", "idfuncionario=$saia_key", "");
+$formato = busca_filtro_tabla("idformato", "formato", "nombre='{$nombre_formato}'", "");
 $idformato = $formato[0]["idformato"];
 
 if ($datos_funcionario["numcampos"]) {
@@ -184,7 +184,7 @@ function procesar_factura($adjuntos) {
 }
 
 function registar_correo($info_correo) {
-    global $conn;
+    
     $search = array("<", ">", "&", '"');
     $replace = array("", "", "", "");
 
@@ -207,7 +207,7 @@ function registar_correo($info_correo) {
 }
 
 function registar_factura($info_factura) {
-    global $conn;
+    
     $insert = "INSERT INTO dt_datos_factura (" . implode(", ", array_keys($info_factura)) . ") VALUES (" . implode(", ", array_values($info_factura)) . ")";
     // print_r(array_keys($valores));
 
@@ -218,12 +218,12 @@ function registar_factura($info_factura) {
 function radicar_correo($idgrupo) {
     global $ruta_db_superior, $conn;
     include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
-    $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $idgrupo . "' and iddoc_rad=0", "", $conn);
+    $datos = busca_filtro_tabla("TOP 1 " . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d H:i") . " as fecha,*", "dt_datos_correo", "idgrupo='" . $idgrupo . "' and iddoc_rad=0", "");
     if ($datos["numcampos"]) {
         $tabla = "ft_correo_saia";
-        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
-        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
-        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "", $conn);
+        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "");
+        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "");
+        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "");
         $campos = extrae_campo($campos_formato, "idcampos_formato");
 
         $_REQUEST["asunto"] = limpiarContenido($datos[0]["asunto"]);
@@ -255,7 +255,7 @@ function radicar_correo($idgrupo) {
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
         if ($iddoc) {
-            $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+            $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
             if ($ok["numcampos"]) {
                 $update_ok = "UPDATE dt_datos_correo SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_correo=" . $datos[0]["iddt_datos_correo"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT");
@@ -278,7 +278,7 @@ function radicar_correo($idgrupo) {
 }
 
 function mover_correo_buzon($info_correo) {
-    $email = busca_filtro_tabla("email,email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+    $email = busca_filtro_tabla("email,email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "");
     // $cstr = "{" . SERVIDOR_CORREO_IMAP . ":" . PUERTO_SERVIDOR_CORREO . "/imap/ssl}";
     $cstr = "{" . ltrim(SERVIDOR_CORREO_IMAP, "ssl://") . ":" . PUERTO_SERVIDOR_CORREO . "/ssl/novalidate-cert}";
     $imapStream = imap_open($cstr, $email[0]['email'], $email[0]['email_contrasena']) or die("No es posible conectar al servidor de correo: " . imap_last_error());
@@ -301,9 +301,9 @@ function radicar_factura($datos) {
     include_once ($ruta_db_superior . "app/documento/class_transferencia.php");
     if (!empty($datos)) {
         $tabla = "ft_{$nombre_formato}";
-        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
-        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
-        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "", $conn);
+        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "");
+        $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "");
+        $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "");
         $campos = extrae_campo($campos_formato, "idcampos_formato");
 
         $_REQUEST["num_factura"] = $datos["num_factura"];
@@ -338,7 +338,7 @@ function radicar_factura($datos) {
         $_POST = $_REQUEST;
         $iddoc = radicar_plantilla();
         if ($iddoc) {
-            $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+            $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
             if ($ok["numcampos"]) {
                 $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT: $update_ok");
@@ -362,7 +362,7 @@ function radicar_factura($datos) {
 function guardar_anexos($datos, $idformato, $iddoc) {
     global $conn, $ruta_db_superior;
     require_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
-    // $datos = busca_filtro_tabla("anexos,numero", "ft_{$nombre_formato},documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+    // $datos = busca_filtro_tabla("anexos,numero", "ft_{$nombre_formato},documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "");
     $vector = $datos;
     $total = count($vector);
     for ($i = 0; $i < $total; $i++) {
@@ -389,7 +389,7 @@ function guardar_anexos($datos, $idformato, $iddoc) {
                     "ruta" => $dir_anexos . $archivo
                 );
                 $datos_anexo = pathinfo($ruta_real);
-                $consulta_campos_formato = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='anexos' and formato_idformato=" . $idformato, "", $conn);
+                $consulta_campos_formato = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='anexos' and formato_idformato=" . $idformato, "");
                 $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $archivo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
                 phpmkr_query($sql) or die("Error al registrar el anexo: $sql");
                 $idanexo = phpmkr_insert_id();
@@ -409,7 +409,7 @@ function limpiarContenido($texto) {
 }
 
 function obtener_ejecutor($datos) {
-    global $conn;
+    
     //$datos_ejecutor = explode($separador_ejecutor, $datos);
 
     // $datos["nit_proveedor"];
@@ -430,17 +430,17 @@ function obtener_ejecutor($datos) {
         $nombre = trim(trim($datos["nombre_proveedor"], "'"));
         $identificacion = trim(trim($datos["nit_proveedor"], "'"));
         $datos_persona["departamento"] = 0;
-        $valida_dep = busca_filtro_tabla("iddepartamento", "departamento", "lower(nombre) like lower('" . htmlentities($datos["estado_proveedor"]) . "')", "", $conn);
+        $valida_dep = busca_filtro_tabla("iddepartamento", "departamento", "lower(nombre) like lower('" . htmlentities($datos["estado_proveedor"]) . "')", "");
         if ($valida_dep["numcampos"]) {
             $datos_persona["departamento"] = $valida_dep[0]["iddepartamento"];
         }
         if (!empty($datos_persona["departamento"])) {
-            $valida_ciudad = busca_filtro_tabla("m.idmunicipio", "departamento d, municipio m", "d.iddepartamento=m.departamento_iddepartamento and d.iddepartamento=" . $datos_persona["departamento"] . " and lower(m.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "", $conn);
+            $valida_ciudad = busca_filtro_tabla("m.idmunicipio", "departamento d, municipio m", "d.iddepartamento=m.departamento_iddepartamento and d.iddepartamento=" . $datos_persona["departamento"] . " and lower(m.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "");
             if ($valida_ciudad["numcampos"]) {
                 $datos_persona["ciudad"] = $valida_ciudad[0]["idmunicipio"];
             }
         } else {
-            $valor = busca_filtro_tabla("", "municipio A", "lower(A.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "", $conn);
+            $valor = busca_filtro_tabla("", "municipio A", "lower(A.nombre) like lower('" . htmlentities($datos["ciudad_proveedor"]) . "')", "");
             if ($valor) {
                 $datos_persona["ciudad"] = $valor[0]["idmunicipio"];
             }
@@ -451,7 +451,7 @@ function obtener_ejecutor($datos) {
         // $datos_persona["email"] =
 
         if (!isset($datos_persona["ciudad"]) || empty($datos_persona["ciudad"])) {
-            $config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "", $conn);
+            $config = busca_filtro_tabla("valor", "configuracion", "lower(nombre) like 'ciudad'", "");
             if ($config["numcampos"]) {
                 $datos_persona["ciudad"] = $config[0][0];
             } else {
@@ -463,13 +463,13 @@ function obtener_ejecutor($datos) {
             "numcampos" => 0
         );
         if ($identificacion != "") {
-            $ejecutor = busca_filtro_tabla("", "ejecutor", "identificacion LIKE '$identificacion'", "", $conn);
+            $ejecutor = busca_filtro_tabla("", "ejecutor", "identificacion LIKE '$identificacion'", "");
 
             if (!$ejecutor["numcampos"]) {
-                $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre') and (identificacion is null or identificacion='')", "", $conn);
+                $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre') and (identificacion is null or identificacion='')", "");
             }
         } elseif (trim($nombre) != "") {
-            $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre ')", "", $conn);
+            $ejecutor = busca_filtro_tabla("", "ejecutor", "lower(nombre) LIKE lower('$nombre ')", "");
         }
         if ($ejecutor["numcampos"]) {
             $otros = "";
@@ -513,9 +513,9 @@ function obtener_ejecutor($datos) {
                 }
             }
         }
-        $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor . $condicion_actualiza, "", $conn);
+        $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor . $condicion_actualiza, "");
         if ((!$datos_ejecutor["numcampos"] || $insertado) && $condicion_actualiza != "") {
-            $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "iddatos_ejecutor desc", $conn);
+            $datos_ejecutor = busca_filtro_tabla("", "datos_ejecutor", "ejecutor_idejecutor=" . $idejecutor, "iddatos_ejecutor desc");
             $campos = array();
             $valores = array();
 

@@ -72,14 +72,14 @@ header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
 function llena_dependencia($id, $partes = false) {
-    global $conn;
+    
     $objetoJson = array();
     $parte_text = "";
     if ($id == 0) {
-        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC");
         $parte_text = " - TRD";
     } else {
-        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "cod_padre=" . $id, "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "cod_padre=" . $id, "nombre ASC");
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -92,8 +92,8 @@ function llena_dependencia($id, $partes = false) {
             $item["title"] = $text;
             $item["key"] = $papas[$i]["iddependencia"] . ".0";
 
-            $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
-            $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $papas[$i]["iddependencia"] . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
+            $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "");
+            $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $papas[$i]["iddependencia"] . " and (s.cod_padre=0 or s.cod_padre is null)", "");
 
             $dependencias_hijas = array();
             $series_hijas = array();
@@ -124,12 +124,12 @@ function llena_dependencia($id, $partes = false) {
 }
 
 function llena_serie($id, $iddep) {
-    global $conn;
+    
     $objetoJson = array();
     if ($id == 0) {
-        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2 and e.estado=1", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2 and e.estado=1", "s.nombre ASC");
     } else {
-        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and s.cod_padre=" . $id . " and s.categoria=2 and e.estado=1", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and s.cod_padre=" . $id . " and s.categoria=2 and e.estado=1", "s.nombre ASC");
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -144,7 +144,7 @@ function llena_serie($id, $iddep) {
             $item["key"] = $iddep . "." . $papas[$i]["idserie"];
 
             $item["data"] = array("entidad_serie" => $identidad_serie);
-            $hijos = busca_filtro_tabla("count(*) as cant", "serie", " cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
+            $hijos = busca_filtro_tabla("count(*) as cant", "serie", " cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "");
             if ($hijos[0]["cant"]) {
                 $item["children"] = llena_serie($papas[$i]["idserie"], $iddep);
             }
@@ -155,13 +155,13 @@ function llena_serie($id, $iddep) {
 }
 
 function llena_serie_sin_asignar($id) {
-    global $conn;
+    
     $objetoJson = array();
 
     if ($id == 0) {
-        $papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=2", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=2", "nombre ASC");
     } else {
-        $papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=2", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=2", "nombre ASC");
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -170,7 +170,7 @@ function llena_serie_sin_asignar($id) {
                 $text .= " - INACTIVO";
             }
             $item = array();
-            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and fk_serie=" . $papas[$i]["idserie"], "", $conn);
+            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and fk_serie=" . $papas[$i]["idserie"], "");
             $style = "estilo-serie";
             if ($asig[0]["cant"] == 0 && $papas[$i]["tipo"] != 3) {
                 $style = "estilo-serie-sa";
@@ -180,7 +180,7 @@ function llena_serie_sin_asignar($id) {
             $item["title"] = $text;
             $item["key"] = "0." . $papas[$i]["idserie"];
 
-            $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
+            $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "");
             if ($hijos[0]["cant"]) {
                 $item["children"] = llena_serie_sin_asignar($papas[$i]["idserie"]);
             }
@@ -191,12 +191,12 @@ function llena_serie_sin_asignar($id) {
 }
 
 function llena_otras_categorias($id) {
-    global $conn;
+    
     $objetoJson = array();
     if ($id == 0) {
-        $papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=3", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=3", "nombre ASC");
     } else {
-        $papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=3", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=3", "nombre ASC");
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -209,7 +209,7 @@ function llena_otras_categorias($id) {
             $item["title"] = $text;
             $item["key"] = "0." . $papas[$i]["idserie"];
 
-            $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3", "", $conn);
+            $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3", "");
             if ($hijos[0]["cant"]) {
                 $item["children"] = llena_otras_categorias($papas[$i]["idserie"]);
             }

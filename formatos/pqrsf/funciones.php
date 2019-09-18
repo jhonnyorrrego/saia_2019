@@ -8,41 +8,44 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-include_once ("../clasificacion_pqrsf/funciones.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+include_once("../clasificacion_pqrsf/funciones.php");
 
 
 /*ADICIONAR*/
-function mostrar_radicado_pqrsf($idformato, $iddoc) {
-	global $conn;
-	$contador = busca_filtro_tabla("b.consecutivo", "formato a, contador b", "a.contador_idcontador=b.idcontador AND a.idformato=" . $idformato, "", $conn);
-	echo("<td><input type='text' readonly id='numero_radicado' name='numero_radicado' value='" . $contador[0]['consecutivo'] . "'></td>");
+function mostrar_radicado_pqrsf($idformato, $iddoc)
+{
+
+	$contador = busca_filtro_tabla("b.consecutivo", "formato a, contador b", "a.contador_idcontador=b.idcontador AND a.idformato=" . $idformato, "");
+	echo ("<td><input type='text' readonly id='numero_radicado' name='numero_radicado' value='" . $contador[0]['consecutivo'] . "'></td>");
 }
 
 /*ADICIONAR-EDITAR*/
-function add_edit_pqrsf($idformato, $iddoc){
+function add_edit_pqrsf($idformato, $iddoc)
+{
 	global $ruta_db_superior;
-	if($_REQUEST["iddoc"]){
-		$opt=1;
-	}else{
-		$opt=0;
+	if ($_REQUEST["iddoc"]) {
+		$opt = 1;
+	} else {
+		$opt = 0;
 	}
-?>
-<script>
-	$(document).ready(function (){
-		$("#tr_tipo td").eq(1).append('<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )" href="mensaje.php">Ayuda</a> ');
-		$("#email").addClass("required email");
-	});
-</script>
+	?>
+	<script>
+		$(document).ready(function() {
+			$("#tr_tipo td").eq(1).append('<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )" href="mensaje.php">Ayuda</a> ');
+			$("#email").addClass("required email");
+		});
+	</script>
 <?php
 }
 
 /*POSTERIOR EDITAR*/
-function post_edit_pqrsf($idformato, $iddoc) {
-	global $conn;
-	$datos = busca_filtro_tabla("estado", "documento", "iddocumento=" . $iddoc, "", $conn);
-	if($datos[0]["estado"]=="INICIADO"){
+function post_edit_pqrsf($idformato, $iddoc)
+{
+
+	$datos = busca_filtro_tabla("estado", "documento", "iddocumento=" . $iddoc, "");
+	if ($datos[0]["estado"] == "INICIADO") {
 		$up = "UPDATE documento SET estado='APROBADO' WHERE iddocumento=" . $iddoc;
 		phpmkr_query($up);
 		post_aprobar_pqrsf($idformato, $iddoc);
@@ -50,28 +53,32 @@ function post_edit_pqrsf($idformato, $iddoc) {
 }
 
 /*MOSTRAR*/
-function enlace_llenar_datos_radicacion_rapida_pqrsf($idformato, $iddoc) {
-	global $conn,$datos;
-	$html="";
-	$datos = busca_filtro_tabla("idft_pqrsf,d.estado,".fecha_db_obtener("fecha_reporte","Y-m-d")." as fecha_reporte", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);	
-	if($datos["numcampos"]){
-		if ($datos[0]['estado'] == 'INICIADO' && $_REQUEST["tipo"]!=5) {
+function enlace_llenar_datos_radicacion_rapida_pqrsf($idformato, $iddoc)
+{
+	global $conn, $datos;
+	$html = "";
+	$datos = busca_filtro_tabla("idft_pqrsf,d.estado," . fecha_db_obtener("fecha_reporte", "Y-m-d") . " as fecha_reporte", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
+	if ($datos["numcampos"]) {
+		if ($datos[0]['estado'] == 'INICIADO' && $_REQUEST["tipo"] != 5) {
 			$html = '<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_pqrsf.php?no_sticker=1&iddoc=' . $iddoc . '&idformato=' . $idformato . '\';">Llenar datos</button>';
 		}
 	}
 	echo $html;
 }
 
-function ver_fecha_reporte($idformato, $iddoc) {
-	global $conn,$datos;
-	echo($datos[0]['fecha_reporte']);
+function ver_fecha_reporte($idformato, $iddoc)
+{
+	global $conn, $datos;
+	echo ($datos[0]['fecha_reporte']);
 }
 
-function mostrar_datos_hijos($idformato, $iddoc) {
+function mostrar_datos_hijos($idformato, $iddoc)
+{
 	global $conn, $datos;
-	$clasificacion = busca_filtro_tabla("d.iddocumento,idft_clasificacion_pqrsf", "ft_clasificacion_pqrsf c,documento d", "c.documento_iddocumento=d.iddocumento and d.iddocumento not in ('ELIMINADO','ANULADO','ACTIVO') and c.ft_pqrsf=" . $datos[0]['idft_pqrsf'], "", $conn);
+	$clasificacion = busca_filtro_tabla("d.iddocumento,idft_clasificacion_pqrsf", "ft_clasificacion_pqrsf c,documento d", "c.documento_iddocumento=d.iddocumento and d.iddocumento not in ('ELIMINADO','ANULADO','ACTIVO') and c.ft_pqrsf=" . $datos[0]['idft_pqrsf'], "");
 	if ($clasificacion["numcampos"]) {
-		$idfor_clas = busca_filtro_tabla("idformato", "formato", "nombre_tabla='ft_clasificacion_pqrsf'", "", $conn);
+		$idfor_clas = busca_filtro_tabla("idformato", "formato", "nombre_tabla='ft_clasificacion_pqrsf'", "");
+		$html = '';
 		for ($i = 0; $i < $clasificacion['numcampos']; $i++) {
 			$html .= '<table style="border-collapse: collapse; width: 100%;" border="1">
 			<tr>
@@ -89,9 +96,9 @@ function mostrar_datos_hijos($idformato, $iddoc) {
 			<td colspan="2">&nbsp;' . mostrar_valor_campo('observaciones', $idfor_clas[0]["idformato"], $clasificacion[$i]['iddocumento'], 1) . '</td>
 			</tr>
 			</table><br/>';
-			$analisis = busca_filtro_tabla("iddocumento", "ft_analisis_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and ft.ft_clasificacion_pqrsf=" . $clasificacion[$i]['idft_clasificacion_pqrsf'], "", $conn);
+			$analisis = busca_filtro_tabla("iddocumento", "ft_analisis_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and ft.ft_clasificacion_pqrsf=" . $clasificacion[$i]['idft_clasificacion_pqrsf'], "");
 			if ($analisis["numcampos"]) {
-				$idfor_anali = busca_filtro_tabla("idformato", "formato", "nombre_tabla='ft_analisis_pqrsf'", "", $conn);
+				$idfor_anali = busca_filtro_tabla("idformato", "formato", "nombre_tabla='ft_analisis_pqrsf'", "");
 				for ($j = 0; $j < $analisis['numcampos']; $j++) {
 					$html .= '<table style="border-collapse: collapse; width: 100%;" border="1">
 					<tr>
@@ -107,12 +114,13 @@ function mostrar_datos_hijos($idformato, $iddoc) {
 	echo $html;
 }
 
-function mostrar_items($idformato, $iddoc) {
-	global $conn;
+function mostrar_items($idformato, $iddoc)
+{
+
 	$html = "";
-	$idft = busca_filtro_tabla("idft_analisis_pqrsf,estado", "ft_analisis_pqrsf,documento", "iddocumento=documento_iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+	$idft = busca_filtro_tabla("idft_analisis_pqrsf,estado", "ft_analisis_pqrsf,documento", "iddocumento=documento_iddocumento and documento_iddocumento=" . $iddoc, "");
 	if ($idft["numcampos"]) {
-		$item = busca_filtro_tabla("I.accion_causa,nombres, apellidos," . fecha_db_obtener('I.fecha_limite', 'Y-m-d') . " as fecha_limite,idft_item_causas_pqrsf", "ft_item_causas_pqrsf I,vfuncionario_dc v", "v.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=" . $idft[0][0], "", $conn);
+		$item = busca_filtro_tabla("I.accion_causa,nombres, apellidos," . fecha_db_obtener('I.fecha_limite', 'Y-m-d') . " as fecha_limite,idft_item_causas_pqrsf", "ft_item_causas_pqrsf I,vfuncionario_dc v", "v.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=" . $idft[0][0], "");
 		if ($item["numcampos"]) {
 			$html = '<table  style="border-collapse: collapse; width: 100%;" border="1">';
 			$html .= "<tr align='center'><th>Accion</th> <th>Responsable</th> <th>Fecha Limite</th>";
@@ -129,13 +137,14 @@ function mostrar_items($idformato, $iddoc) {
 
 
 /*POSTERIOR APROBAR-EDITAR*/
-function validar_digitalizacion_formato_pqr($idformato, $iddoc) {
+function validar_digitalizacion_formato_pqr($idformato, $iddoc)
+{
 	global $conn, $ruta_db_superior;
-	if(!isset($_REQUEST["no_redirecciona"])){
+	if (!isset($_REQUEST["no_redirecciona"])) {
 		if ($_REQUEST["digitalizacion"] == 1) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
 			abrir_url($ruta_db_superior . "views/documento/paginaadd.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
-		}else if ($_REQUEST["digitalizacion"] == 0) {
+		} else if ($_REQUEST["digitalizacion"] == 0) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
 			abrir_url($ruta_db_superior . "app/documento/colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 		}
@@ -144,13 +153,14 @@ function validar_digitalizacion_formato_pqr($idformato, $iddoc) {
 
 
 /*POSTERIOR APROBAR*/
-function post_aprobar_pqrsf($idformato, $iddoc) {//es llamada desde el webservice
+function post_aprobar_pqrsf($idformato, $iddoc)
+{ //es llamada desde el webservice
 	global $conn, $ruta_db_superior;
 	$ok = false;
 	vincular_distribucion_pqrsf($idformato, $iddoc);
 	if (!isset($_REQUEST["no_redirecciona"])) {
 		$anexos = array();
-		$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+		$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "");
 		if ($anexos_pqrsf["numcampos"]) {
 			for ($i = 0; $i < $anexos_pqrsf["numcampos"]; $i++) {
 				$ruta_archivo = json_decode($anexos_pqrsf[$i]['ruta']);
@@ -171,7 +181,7 @@ function post_aprobar_pqrsf($idformato, $iddoc) {//es llamada desde el webservic
 		$contenido = curl_exec($ch);
 		curl_close($ch);
 
-		$datos = busca_filtro_tabla("d.numero,d.pdf,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+		$datos = busca_filtro_tabla("d.numero,d.pdf,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
 		if ($datos[0]["email"] != "") {
 			if ($datos[0]["pdf"] != "") {
 				$ruta_archivo = json_decode($datos[0]["pdf"]);
@@ -193,14 +203,15 @@ function post_aprobar_pqrsf($idformato, $iddoc) {//es llamada desde el webservic
 	return $ok;
 }
 
-function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
+function vincular_distribucion_pqrsf($idformato, $iddoc)
+{ //POSTERIOR AL APROBAR
 	global $conn, $ruta_db_superior;
-	if(isset($_REQUEST["radicacion_rapida"])){
+	if (isset($_REQUEST["radicacion_rapida"])) {
 		$update = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
 		phpmkr_query($update);
-	}else{
-		$datos = busca_filtro_tabla("a.nombre,a.documento,a.email,a.telefono", "ft_pqrsf a,documento b", "a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=" . $iddoc, "", $conn);
-		if($datos["numcampos"] && trim($datos[0]["nombre"])!="-"){
+	} else {
+		$datos = busca_filtro_tabla("a.nombre,a.documento,a.email,a.telefono", "ft_pqrsf a,documento b", "a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=" . $iddoc, "");
+		if ($datos["numcampos"] && trim($datos[0]["nombre"]) != "-") {
 			//INGRESAMOS EL ORIGEN COMO UN REMITENTE
 			$ie = " INSERT INTO ejecutor (identificacion,nombre,fecha_ingreso,estado,tipo_ejecutor) VALUES ('" . $datos[0]['documento'] . "',	'" . $datos[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",1,1)";
 			phpmkr_query($ie);
@@ -211,20 +222,20 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 				phpmkr_query($ide);
 				$iddatos_ejecutor = phpmkr_insert_id();
 			}
-		
+
 			$upr = "UPDATE ft_pqrsf SET remitente_origen=" . $iddatos_ejecutor . " WHERE documento_iddocumento=" . $iddoc;
 			phpmkr_query($upr);
-		
+
 			//DESTINO INTERNO DE LA PQRSF
-			$lasignadas = busca_filtro_tabla("B.parametros", "funciones_formato_accion C,accion A,funciones_formato B", "C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato and B.nombre_funcion='transferencia_automatica' AND C.formato_idformato=" . $idformato, "", $conn);
+			$lasignadas = busca_filtro_tabla("B.parametros", "funciones_formato_accion C,accion A,funciones_formato B", "C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato and B.nombre_funcion='transferencia_automatica' AND C.formato_idformato=" . $idformato, "");
 			$rol_destino = 0;
 			if ($lasignadas['numcampos']) {
 				$vector_parametros = explode(',', $lasignadas[0]['parametros']);
 				$rol_destino = $vector_parametros[0];
 			}
-		
+
 			if ($iddatos_ejecutor && $rol_destino) {
-				include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
+				include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 				//EXT -INT
 				$datos_distribucion = array();
 				$datos_distribucion['origen'] = $iddatos_ejecutor;
@@ -233,7 +244,7 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 				$datos_distribucion['tipo_destino'] = 1;
 				$datos_distribucion['estado_distribucion'] = 1;
 				$ingresar = ingresar_distribucion($iddoc, $datos_distribucion);
-			} 
+			}
 		}
 	}
 }

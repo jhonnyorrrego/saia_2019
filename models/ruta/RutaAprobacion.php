@@ -174,18 +174,15 @@ class RutaAprobacion extends Model
      */
     public static function findActivesByDocument($documentId)
     {
-        $sql = <<<SQL
-            SELECT a.*
-            FROM 
-                ruta_aprobacion a JOIN
-                ruta_documento b ON
-                    b.idruta_documento = a.fk_ruta_documento
-            WHERE
-                b.estado = 1 AND
-                b.fk_documento = {$documentId}                
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('ruta_aprobacion', 'a')
+            ->join('a', 'ruta_documento', 'b', 'b.idruta_documento = a.fk_ruta_documento')
+            ->where('b.estado = 1')
+            ->andWhere('b.fk_documento = :documentId')
+            ->setParameter(':documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER);
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -199,20 +196,17 @@ SQL;
      */
     public static function getStepFromDocumet($documentId)
     {
-        $sql = <<<SQL
-        SELECT a.*
-        FROM 
-            ruta_aprobacion a JOIN
-            ruta_documento b ON
-                b.idruta_documento = a.fk_ruta_documento
-        WHERE
-            b.estado = 1 AND
-            b.fk_documento = {$documentId} AND
-            a.ejecucion IS NULL AND
-            a.fecha_ejecucion IS NULL
-        ORDER BY a.orden ASC
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('ruta_aprobacion', 'a')
+            ->join('a', 'ruta_documento', 'b', 'b.idruta_documento = a.fk_ruta_documento')
+            ->where('b.estado = 1 AND a.ejecucion IS NULL AND a.fecha_ejecucion IS NULL')
+            ->andWhere('b.fk_documento = :documentId')
+            ->setParameter(':documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->orderBy('a.orden', 'asc')
+            ->setFirstResult(0)
+            ->setMaxResults(1);
 
-        return self::findByQueryBuilder($sql, true, 0, 1)[0];
+        return self::findByQueryBuilder($QueryBuilder)[0];
     }
 }

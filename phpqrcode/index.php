@@ -29,7 +29,7 @@ include_once ($ruta_db_superior."phpqrcode/qrlib.php");
         if (trim($_REQUEST['dato']) == '')
             $error=1;
         // user data
-        $ruta=busca_filtro_tabla("","configuracion","nombre ='ruta_codigos_qr'","",$conn);
+        $ruta=busca_filtro_tabla("","configuracion","nombre ='ruta_codigos_qr'","");
         
         //$filename = $ruta_db_superior.$ruta[0]["valor"]."/".$_REQUEST["ruta"].'.png';
         $filename = $ruta_db_superior.$ruta[0]["valor"];

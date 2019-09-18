@@ -22,7 +22,7 @@ if(!empty($_REQUEST["idflujo"]) && !empty($_REQUEST["bpmn_id"])) {
 
     $listadoTareas = busca_filtro_tabla("g.*, e.nombre nombre_dst, e.bpmn_id bpmn_id_dst",
             "wf_enlace g join wf_elemento e on g.fk_elemento_destino = e.idelemento",
-            "g.fk_flujo = $idflujo and g.bpmn_origen = '$idactividad'", "", $conn);
+            "g.fk_flujo = $idflujo and g.bpmn_origen = '$idactividad'", "");
 
     if($listadoTareas["numcampos"]) {
         $total = isset($listadoTareas['numcampos']) ? $listadoTareas['numcampos'] : count($listadoTareas);

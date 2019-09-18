@@ -42,14 +42,14 @@ header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
 function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
-	global $conn;
+	
 
-	$papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND idformato IN(" . $filtrar . ")", "etiqueta ASC", $conn);
+	$papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND idformato IN(" . $filtrar . ")", "etiqueta ASC");
 
 	$resp = array();
 	if($papas["numcampos"]) {
 		for($i = 0; $i < $papas["numcampos"]; $i++) {
-			$hijos = busca_filtro_tabla("count(*) total", "campos_formato", "formato_idformato = " . $papas[$i]["idformato"], "", $conn);
+			$hijos = busca_filtro_tabla("count(*) total", "campos_formato", "formato_idformato = " . $papas[$i]["idformato"], "");
 			$item = [
 				"extraClasses" => "estilo-arbol kenlace_saia"
 			];
@@ -79,13 +79,13 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 }
 
 function llena_campos($id, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
-	global $conn;
+	
 
 	$filtroCampo = "formato_idformato = " . $id;
 	if(!empty($filtroEmail)) {
 	    $filtroCampo .= " and (etiqueta like '%correo%' or etiqueta like '%mail%' )";
 	}
-	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC", $conn);
+	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC");
 	$resp = array();
 	if($papas["numcampos"]) {
 		for($i = 0; $i < $papas["numcampos"]; $i++) {

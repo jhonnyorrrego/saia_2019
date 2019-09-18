@@ -43,7 +43,7 @@ global $texto;
 }
 function crear_dato_formato($nombre){
 global $texto,$conn,$imagenes,$formatos_calidad;
-$formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","idformato DESC",$conn);
+$formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","idformato DESC");
 
   if($formato["numcampos"]){
     $imagenes=' im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
@@ -60,11 +60,11 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
 function crear_macroprocesos($formato){  
 global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro;
 if($formato["numcampos"]){
-  $macros=busca_filtro_tabla("","ft_macroproceso_calidad B, documento c","B.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO')","",$conn);
-	$formato_macro=busca_filtro_tabla("","formato","lower(nombre)='macroproceso_calidad'","",$conn);
+  $macros=busca_filtro_tabla("","ft_macroproceso_calidad B, documento c","B.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO')","");
+	$formato_macro=busca_filtro_tabla("","formato","lower(nombre)='macroproceso_calidad'","");
   for($i=0;$i<$macros["numcampos"];$i++){
     	$validar_macro=1;
-      $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"",$conn);
+      $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"");
       $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" ';     
       //print_r($documentos);
       //$iddoc=$formato[0]["idformato"]."-proceso-ft_proceso";
@@ -81,7 +81,7 @@ if($formato["numcampos"]){
       ;*/   
       $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"]."-".$documentos[$j]["documento_iddocumento"];                
       llenar_documentos($iddoc);
-      /*$papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
+      /*$papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"");
       if($papas["numcampos"])
         $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
       else $iddoc=0;
@@ -99,7 +99,7 @@ global $conn,$texto;
   if(@$_REQUEST["iddocumento"]){
     $where.=' AND iddocumento='.@$_REQUEST["iddocumento"];
   }
-  $campo_ordenar=busca_filtro_tabla("c.nombre,nombre_tabla","campos_formato c,formato f","formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.nombre='".strtolower($arreglo[1])."'","",$conn);
+  $campo_ordenar=busca_filtro_tabla("c.nombre,nombre_tabla","campos_formato c,formato f","formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.nombre='".strtolower($arreglo[1])."'","");
  if($campo_ordenar["numcampos"])
    { $orden="b.".$campo_ordenar[0]["nombre"]." asc";
    }
@@ -111,16 +111,16 @@ global $conn,$texto;
   }
  
   if($campo_ordenar["numcampos"]) 
-    $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A,".$campo_ordenar[0]["nombre_tabla"]." b","documento_iddocumento=iddocumento AND A.estado<>'ELIMINADO'".$validacion_macroproceso,$orden,$conn);
+    $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A,".$campo_ordenar[0]["nombre_tabla"]." b","documento_iddocumento=iddocumento AND A.estado<>'ELIMINADO'".$validacion_macroproceso,$orden);
   else
-   $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$validacion_macroproceso,"iddocumento asc",$conn);
-  /*$formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$where,"",$conn); */
+   $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$validacion_macroproceso,"iddocumento asc");
+  /*$formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$where,""); */
    //print_r($formato);
   /*echo("<HR/>");*/
  // print_r($formato);
   
   for($i=0;$i<$formato["numcampos"];$i++){
-      $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
+      $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"");
     //print_r($papas);die();
     if($papas["numcampos"]){
         $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
@@ -136,12 +136,12 @@ global $conn,$texto;
 function llena_datos_formato($formato,$estado=0){
 global $conn,$texto,$imagenes,$formatos_calidad;
 $arreglo=explode("-",$formato);
-$formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn);
+$formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","");
 
 
 
 if($formato["numcampos"]){
-  $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
+  $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","");    
 
   if($descripcion["numcampos"]){
     $campo_descripcion=$descripcion[0]["nombre"];
@@ -171,7 +171,7 @@ function llena_datos($idformato,$tabla,$campo){
 global $conn,$texto,$imagenes,$validar_macro;
 $arreglo=explode("-",$idformato);
 //echo("<br />".$idformato."<br />");
-$estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
+$estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"");
 
 
 
@@ -180,16 +180,16 @@ if($tabla=='ft_seguimiento_riesgo'){
 	$adicional=" and seguimiento_antiguo='2' ";
 }
 if($tabla=="ft_proceso" && !$validar_macro){
-  $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
+  $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"");
   //print_r($dato);
   if($dato["numcampos"] && (@$dato[0]["macroproceso"]!='' && @$dato[0]["macroproceso"]!=0)){
     return($texto);
   }
 }  
 if($estado["numcampos"])
-$dato=busca_filtro_tabla("a.".$campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." AND a.estado<>'INACTIVO' and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc",$conn);
+$dato=busca_filtro_tabla("a.".$campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." AND a.estado<>'INACTIVO' and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc");
 else
-$dato=busca_filtro_tabla($campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc",$conn);
+$dato=busca_filtro_tabla($campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc");
 
 
 //print_r($dato);
@@ -217,9 +217,9 @@ return($texto);
 }
 function llena_hijos($idformato,$iddato,$tabla){
 global $conn,$texto,$formatos_calidad;
-$formato=busca_filtro_tabla("","formato","cod_padre=".$idformato." AND nombre_tabla IN('".implode("','",$formatos_calidad)."')","etiqueta",$conn);
+$formato=busca_filtro_tabla("","formato","cod_padre=".$idformato." AND nombre_tabla IN('".implode("','",$formatos_calidad)."')","etiqueta");
 for($i=0;$i<$formato["numcampos"];$i++){
-  $campo_formato=busca_filtro_tabla("","campos_formato","nombre LIKE '".$tabla."' AND formato_idformato=".$formato[$i]["idformato"],"",$conn);
+  $campo_formato=busca_filtro_tabla("","campos_formato","nombre LIKE '".$tabla."' AND formato_idformato=".$formato[$i]["idformato"],"");
   $llave=$formato[$i]["idformato"]."-".$iddato;
   if($campo_formato["numcampos"]){
     $llave.="-".$campo_formato[0]["nombre"]."-".$iddato;

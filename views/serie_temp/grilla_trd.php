@@ -53,7 +53,7 @@ $params = json_encode([
             </div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior ?>views/serie/js/grilla_trd.js" id="trd_report_script" data-params='<?= $params ?>'></script>
+    <script src="<?= $ruta_db_superior ?>views/serie_temp/js/grilla_trd.js" id="trd_report_script" data-params='<?= $params ?>'></script>
 </body>
 
 </html>

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "app/arbol/crear_arbol_ft.php";
 
 $source = array(

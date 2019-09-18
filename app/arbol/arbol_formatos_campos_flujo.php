@@ -42,16 +42,16 @@ header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
 function llena_formato($filtrar, $idnotificacion, $seleccionados = array(), $seleccionable = null) {
-	global $conn;
+	
 
 	$idflujo = $filtrar;
 	$papas = busca_filtro_tabla("f.idformato, f.etiqueta, f.descripcion_formato, f.version, ff.idformato_flujo",
-	        "wf_formato_flujo ff join formato f on ff.fk_formato = f.idformato", "f.item <> 1 AND ff.fk_flujo = $idflujo", "etiqueta ASC", $conn);
+	        "wf_formato_flujo ff join formato f on ff.fk_formato = f.idformato", "f.item <> 1 AND ff.fk_flujo = $idflujo", "etiqueta ASC");
 
 	$resp = array();
 	if($papas["numcampos"]) {
 		for($i = 0; $i < $papas["numcampos"]; $i++) {
-			$hijos = busca_filtro_tabla("count(*) total", "campos_formato", "formato_idformato = " . $papas[$i]["idformato"], "", $conn);
+			$hijos = busca_filtro_tabla("count(*) total", "campos_formato", "formato_idformato = " . $papas[$i]["idformato"], "");
 			$item = [
 				"extraClasses" => "estilo-arbol kenlace_saia"
 			];
@@ -81,10 +81,10 @@ function llena_formato($filtrar, $idnotificacion, $seleccionados = array(), $sel
 }
 
 function llena_campos($id, $seleccionados = array(), $seleccionable = null, $idnotificacion, $idformato_flujo) {
-	global $conn;
+	
 
 	$filtroCampo = "formato_idformato = $id and (etiqueta like '%correo%' or etiqueta like '%mail%' )";
-	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC", $conn);
+	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC");
 	$resp = array();
 	if($papas["numcampos"]) {
 		for($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -105,7 +105,7 @@ function llena_campos($id, $seleccionados = array(), $seleccionable = null, $idn
 
 			$destinos = busca_filtro_tabla("dn.iddestinatario",
 			        "wf_dest_notificacion dn join wf_destinatario_formato df on dn.iddestinatario = df.iddestinatario",
-			        "dn.fk_notificacion = $idnotificacion and df.fk_formato_flujo = $idformato_flujo and df.fk_campo_formato = " . $papas[$i]["idcampos_formato"], "", $conn);
+			        "dn.fk_notificacion = $idnotificacion and df.fk_formato_flujo = $idformato_flujo and df.fk_campo_formato = " . $papas[$i]["idcampos_formato"], "");
 			if($destinos["numcampos"]) {
 			    $item["data"]["iddestinatario"] = $destinos[0]["iddestinatario"];
 			}

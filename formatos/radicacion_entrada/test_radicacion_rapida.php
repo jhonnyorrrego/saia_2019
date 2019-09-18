@@ -24,7 +24,7 @@ echo "<tree id=\"0\">\n";
 $ok = new PermisoController();
 
 //FORMATO radicacion_entrada
-$formato_radicacion = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre='radicacion_entrada'", "", $conn);
+$formato_radicacion = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre='radicacion_entrada'", "");
 if ($formato_radicacion["numcampos"]) {
 	$ok_radicacion_entrada = $ok -> acceso_modulo_perfil("crear_" . $formato_radicacion[0]['nombre']);
 	if ($ok_radicacion_entrada) {
@@ -36,7 +36,7 @@ if ($formato_radicacion["numcampos"]) {
 	}
 }
 //FORMATOS
-$formatos = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre != 'radicacion_entrada' AND (fk_categoria_formato like '1' OR fk_categoria_formato like '1,%' OR fk_categoria_formato like '%,1,%' OR fk_categoria_formato like '%,1') ", "", $conn);
+$formatos = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre != 'radicacion_entrada' AND (fk_categoria_formato like '1' OR fk_categoria_formato like '1,%' OR fk_categoria_formato like '%,1,%' OR fk_categoria_formato like '%,1') ", "");
 if ($formatos["numcampos"]) {
 	$ok_formato = $ok -> acceso_modulo_perfil("crear_" . $formatos[0]['nombre']);
 	if ($ok_formato) {

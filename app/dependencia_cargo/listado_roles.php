@@ -25,40 +25,31 @@ try {
         throw new Exception("Debe indicar un usuario", 1);
     }
 
-    $order = DependenciaCargo::getPrimaryLabel() . " " . $_REQUEST["sortOrder"];
-    $offset = ($_REQUEST["pageNumber"] - 1)  * $_REQUEST["pageSize"];
-    $limit = $_REQUEST["pageSize"];
-    $sql = <<<SQL
-        SELECT
-            a.*,
-            b.nombre as nombre_dependencia,
-            c.nombre as nombre_cargo
-        FROM
-            dependencia_cargo a 
-            JOIN dependencia b 
-                ON a.dependencia_iddependencia = b.iddependencia
-            JOIN cargo c
-                ON a.cargo_idcargo = c.idcargo
-        WHERE
-            a.funcionario_idfuncionario = {$_REQUEST["userId"]}
-        ORDER BY {$order}
-SQL;
-    $roles = StaticSql::search($sql, $offset, $limit);
+    $page = (int) $_REQUEST['pageNumber'] ?? 1;
+    $end = (int) $_REQUEST['pageSize'] ?? 30;
+    $start = ($page - 1) * $end;
 
-    $sql = <<<SQL
-        SELECT
-            count(*) as total
-        FROM
-            dependencia_cargo a 
-            JOIN dependencia b 
-                ON a.dependencia_iddependencia = b.iddependencia
-            JOIN cargo c
-                ON a.cargo_idcargo = c.idcargo
-        WHERE
-            a.funcionario_idfuncionario = {$_REQUEST["userId"]}
-SQL;
-    $total = StaticSql::search($sql);
-    $Response->total = $total[0]['total'];
+    $roles = Model::getQueryBuilder()
+        ->select(['a.*', 'b.nombre as nombre_dependencia', 'c.nombre as nombre_cargo'])
+        ->from('dependencia_cargo', 'a')
+        ->join('a', 'dependencia', 'b', 'a.dependencia_iddependencia = b.iddependencia')
+        ->join('a', 'cargo', 'c', 'a.cargo_idcargo = c.idcargo')
+        ->where('a.funcionario_idfuncionario = :userId')
+        ->setParameter(':userId', $_REQUEST["userId"], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->orderBy('iddependencia_cargo', $_REQUEST["sortOrder"])
+        ->setFirstResult($start)
+        ->setMaxResults($end)
+        ->execute()->fetchAll();
+
+    $total = $roles = Model::getQueryBuilder()
+        ->select(['count(*) as total'])
+        ->from('dependencia_cargo', 'a')
+        ->join('a', 'dependencia', 'b', 'a.dependencia_iddependencia = b.iddependencia')
+        ->join('a', 'cargo', 'c', 'a.cargo_idcargo = c.idcargo')
+        ->where('a.funcionario_idfuncionario = :userId')
+        ->setParameter(':userId', $_REQUEST["userId"], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetch();
+    $Response->total = $total['total'];
 
     foreach ($roles as $key => $row) {
         $Response->rows[] = [

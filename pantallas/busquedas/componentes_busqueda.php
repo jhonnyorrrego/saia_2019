@@ -15,16 +15,16 @@ include_once $ruta_db_superior . 'core/autoload.php';
 
 function acceso_modulo($idmodulo = 0)
 {
-    global $conn;
+    
     if ($idmodulo) {
-        $modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "", $conn);
+        $modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "");
         return PermisoController::moduleAccess($modulo[0]["nombre"]);
     } else {
         return true;
     }
 }
 
-$components = busca_filtro_tabla("A.*", "busqueda_componente A, busqueda B", "A.busqueda_idbusqueda=B.idbusqueda AND B.idbusqueda=" . $_REQUEST["idbusqueda"] . " AND A.estado<>0", "orden", $conn);
+$components = busca_filtro_tabla("A.*", "busqueda_componente A, busqueda B", "A.busqueda_idbusqueda=B.idbusqueda AND B.idbusqueda=" . $_REQUEST["idbusqueda"] . " AND A.estado<>0", "orden");
 ?>
 <div class="panel-body">
     <div class="block-nav">

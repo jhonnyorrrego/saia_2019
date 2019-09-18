@@ -10,14 +10,14 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 echo(librerias_notificaciones());
 
 function add_edit_formula_ind() {
 	global $conn,$ruta_db_superior;
 	if ($_REQUEST["anterior"]) {
 		$opt = 0;
-		$unico=busca_filtro_tabla("d.iddocumento","ft_formula_indicador f,documento d","d.iddocumento=f.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO') and ft_indicadores_calidad=".$_REQUEST["padre"],"",$conn);
+		$unico=busca_filtro_tabla("d.iddocumento","ft_formula_indicador f,documento d","d.iddocumento=f.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO') and ft_indicadores_calidad=".$_REQUEST["padre"],"");
 		if($unico["numcampos"]){
 			notificaciones("Solo se puede crear un documento de este formato","error");
 			redirecciona($ruta_db_superior."vacio.php");
@@ -113,10 +113,10 @@ function add_edit_formula_ind() {
 
 
 function rango_formula($idformato,$iddoc){
-	global $conn;
+	
 	if($_REQUEST["iddoc"]){
 		$iddoc=$_REQUEST["iddoc"];
-		$seleccionado=busca_filtro_tabla("rango_colores","ft_formula_indicador A","A.documento_iddocumento=".$iddoc,"",$conn);
+		$seleccionado=busca_filtro_tabla("rango_colores","ft_formula_indicador A","A.documento_iddocumento=".$iddoc,"");
 		$datos=explode(",",$seleccionado[0]["rango_colores"]);
 	}
 	?>

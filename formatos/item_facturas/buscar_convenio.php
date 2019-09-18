@@ -13,7 +13,7 @@ while($max_salida>0)
 
 include_once($ruta_db_superior."db.php");
 if(isset($_REQUEST['nombre_convenio'])){
-	$datos=busca_filtro_tabla("","cf_convenios","estado=1 and (nombre like '%".$_REQUEST['nombre_convenio']."%')","",$conn);
+	$datos=busca_filtro_tabla("","cf_convenios","estado=1 and (nombre like '%".$_REQUEST['nombre_convenio']."%')","");
 	$html="<ul>";
 	if($datos['numcampos']){
 		for($i=0;$i<$datos['numcampos'];$i++){

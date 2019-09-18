@@ -22,12 +22,12 @@ $d=rand(1, 10000); // Truco para obligar a redibujar y evitar cache
 abrir_url("festivos_list.php?anio=".$anio."&aleatorio=".$d,"centro");
 
 function adicionar_festivo($dia,$mes,$anio,$formato = NULL)
-{ global $conn;
+{ 
   if(!$formato)
      $formato="Y-m-d";
   $fecha_inicial= date($formato, mktime( 0, 0, 0,$mes, $dia ,$anio));
   $fecha_final=  date($formato, mktime( 0, 0, 0,$mes, $dia + 1 ,$anio));
-  $datos= busca_filtro_tabla("idasignacion","asignacion","asignacion.documento_iddocumento='-1'  AND ".fecha_db_obtener("fecha_inicial",'Y-m-d')."='$fecha_inicial' ","",$conn);
+  $datos= busca_filtro_tabla("idasignacion","asignacion","asignacion.documento_iddocumento='-1'  AND ".fecha_db_obtener("fecha_inicial",'Y-m-d')."='$fecha_inicial' ","");
 
  if($datos["numcampos"])
   {
@@ -37,7 +37,7 @@ function adicionar_festivo($dia,$mes,$anio,$formato = NULL)
  else
   {   // Busco la tarea de dias festivos para asignara
       // Al momento no hay interface se debe crear manualmente en la tabla tarea
-   $datos= busca_filtro_tabla("idtarea","tarea","tarea.nombre='FESTIVO' ","",$conn);
+   $datos= busca_filtro_tabla("idtarea","tarea","tarea.nombre='FESTIVO' ","");
 
    if($datos["numcampos"])
     {
@@ -54,7 +54,7 @@ return(TRUE);
 }
 
 function eliminar_festivo($id_asignacion)
-{ global $conn;
+{ 
   if(!$id_asignacion)
   {
     alerta("Existe otro Festivo o Dia no Laboral Asignado este dia");

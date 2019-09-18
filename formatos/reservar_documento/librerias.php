@@ -25,24 +25,24 @@ function parsear_fecha_reserva3($fecha){
 	return($cadena);
 }
 function nombre_solicitante($ejecutor){
-	global $conn;
-	$nombres=busca_filtro_tabla("A.nombres, A.apellidos","funcionario A","A.funcionario_codigo=".$ejecutor,"",$conn);
+	
+	$nombres=busca_filtro_tabla("A.nombres, A.apellidos","funcionario A","A.funcionario_codigo=".$ejecutor,"");
 	$cadena=ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"]));
 	return($cadena);
 }
 function enlace_documento_reservar($doc){
-	global $conn;
-	$numero=busca_filtro_tabla("A.numero","documento A, formato B","A.iddocumento=".$doc." AND lower(A.plantilla)=lower(B.nombre)","",$conn);
+	
+	$numero=busca_filtro_tabla("A.numero","documento A, formato B","A.iddocumento=".$doc." AND lower(A.plantilla)=lower(B.nombre)","");
 	$cadena='<span class="link kenlace_saia" title="Radicado No '.$numero[0]["numero"].'" titulo="Radicado No '.$numero[0]["numero"].'" conector="iframe" enlace="ordenar.php?mostrar_formato=1&key='.$doc.'" style="color:#0088CC">Ver documento '.$numero[0]["numero"].'</span>';
 	return($cadena);
 }
 function accion_entrega($iddocumento,$funcionario,$fecha,$observacion,$estado_doc){
-	global $conn;
+	
 	if(($funcionario=='usuario_entrega' || !$funcionario)&&$estado_doc==1){
 		$texto='<input type="checkbox" class="_entregar" name="" value="'.$iddocumento.'">';
 	}
 	else if($funcionario && $funcionario!='usuario_entrega'){
-		$usuario=busca_filtro_tabla("","funcionario A","A.idfuncionario=".$funcionario,"",$conn);
+		$usuario=busca_filtro_tabla("","funcionario A","A.idfuncionario=".$funcionario,"");
 		$cadena=ucwords(strtolower($usuario[0]["nombres"]." ".$usuario[0]["apellidos"]));
 		$cadena.="<br />".parsear_fecha_reserva1($fecha);
 		$cadena.="<br />".$observacion;
@@ -51,12 +51,12 @@ function accion_entrega($iddocumento,$funcionario,$fecha,$observacion,$estado_do
 	return($texto);
 }
 function accion_devuelto($iddocumento,$funcionario,$fecha,$observacion,$estado_doc){
-	global $conn;
+	
 	if(($funcionario=='usuario_devolver' || !$funcionario)&&$estado_doc==2){
 		$texto='<input type="checkbox" class="_devolver" name="" value="'.$iddocumento.'">';
 	}
 	else if($funcionario && $funcionario!='usuario_devolver'){
-		$usuario=busca_filtro_tabla("","funcionario A","A.idfuncionario=".$funcionario,"",$conn);
+		$usuario=busca_filtro_tabla("","funcionario A","A.idfuncionario=".$funcionario,"");
 		$cadena=ucwords(strtolower($usuario[0]["nombres"]." ".$usuario[0]["apellidos"]));
 		$cadena.="<br />".parsear_fecha_reserva1($fecha);
 		$cadena.="<br />".$observacion;

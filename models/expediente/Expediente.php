@@ -70,7 +70,7 @@ class Expediente extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fecha',
                 'nombre',
@@ -238,7 +238,7 @@ class Expediente extends Model
             if ($this->update()) {
                 $sql = "SELECT identidad_expediente FROM entidad_expediente 
                 WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
-                $idEnt = $this->search($sql);
+                //$idEnt = //ejecuta la busqueda
                 if ($idEnt) {
                     $EntidadExpediente = new EntidadExpediente($idEnt[0]['identidad_expediente']);
                     $EntidadExpediente->fk_funcionario = $this->responsable;
@@ -375,11 +375,11 @@ class Expediente extends Model
         if ($this->tomo_padre) {
             $sql = "SELECT count(idexpediente) as cant FROM expediente 
             WHERE tomo_padre={$this->tomo_padre}";
-            $data = $this->search($sql);
+            //$data = //ejecuta la busqueda
         } else {
             $sql = "SELECT count(idexpediente) as cant FROM expediente 
             WHERE tomo_padre={$this->idexpediente}";
-            $data = $this->search($sql);
+            //$data = //ejecuta la busqueda
         }
         return $data ? $data[0]['cant'] + 1 : 1;
     }
@@ -405,7 +405,7 @@ class Expediente extends Model
     {
         $sql = "SELECT COUNT(idexpediente) as cant FROM expediente
         WHERE agrupador={$tipoAg} AND cod_padre={$this->idexpediente} AND estado=1";
-        $response = $this->search($sql);
+        //$response = //ejecuta la busqueda
         return $response ? $response[0]['cant'] : 0;
     }
 
@@ -421,7 +421,7 @@ class Expediente extends Model
     {
         $sql = "SELECT COUNT(idexpediente) as cant FROM expediente 
         WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
-        $response = StaticSql::search($sql);
+        //$response =//ejecutaba el sql
         return $response ? $response[0]['cant'] : 0;
     }
 
@@ -476,7 +476,7 @@ class Expediente extends Model
         }
         $sql = "SELECT count(idexpediente) as cant FROM expediente 
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1 {$where}";
-        $cant = $this->findByQueryBuilder($sql, false);
+        //$cant = buscar con querybuilder
         return ($cant[0]['cant']) ? true : false;
     }
 
@@ -491,7 +491,7 @@ class Expediente extends Model
         $sql = "SELECT count(idexpediente) as cant FROM expediente
         WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 
         AND estado=1 AND estado_cierre=1";
-        $cant = $this->findByQueryBuilder($sql, false);
+        //$cant = //buscar con querybuilder
         return (!$cant[0]['cant']) ? true : false;
     }
 
@@ -548,7 +548,7 @@ class Expediente extends Model
         } else {*/
         $sql = "SELECT permiso FROM permiso_expediente 
         WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
-        $consPermiso = $this->search($sql);
+        //$consPermiso = //ejecuta la busqueda
         if ($consPermiso) {
             foreach ($consPermiso as $fila) {
                 $permisos = explode(',', $fila['permiso']);
@@ -642,7 +642,7 @@ class Expediente extends Model
             WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 
             AND c.estado=1 AND c.estado_archivo={$Expediente->estado_archivo} 
             AND ce.fk_entidad_serie={$Expediente->fk_entidad_serie}";
-            $records = StaticSql::search($sql);
+            //$records = //ejecutaba el select
             if ($records) {
                 foreach ($records as $record) {
                     if ($Expediente->fk_caja == $record['idcaja']) {

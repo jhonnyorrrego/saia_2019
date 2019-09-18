@@ -16,8 +16,8 @@ $id=explode("-",@$_REQUEST["id"]);
 $idformato=$id[0];
 $campoid=$id[1];
 $idft=$id[2];
-$formato=busca_filtro_tabla("nombre_tabla","formato A","A.idformato=".$idformato,"",$conn);
-$dato=busca_filtro_tabla("A.documento_iddocumento as iddoc,A.nombre",$formato[0]["nombre_tabla"]." A","A.".$campoid."=".$idft,"",$conn);
+$formato=busca_filtro_tabla("nombre_tabla","formato A","A.idformato=".$idformato,"");
+$dato=busca_filtro_tabla("A.documento_iddocumento as iddoc,A.nombre",$formato[0]["nombre_tabla"]." A","A.".$campoid."=".$idft,"");
 $texto="ordenar.php?key=".$dato[0]["iddoc"]."&mostrar_formato=1|".$dato[0]["nombre"];
 echo($texto);
 ?>

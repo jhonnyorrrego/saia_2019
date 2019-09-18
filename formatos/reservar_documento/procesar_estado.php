@@ -9,7 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-$componente=busca_filtro_tabla("","busqueda_componente A","A.nombre='reporte_reserva_documentos'","",$conn);
+$componente=busca_filtro_tabla("","busqueda_componente A","A.nombre='reporte_reserva_documentos'","");
 
 if(@$_REQUEST["accion"]==1){//Entregar documentos
 	$documentos=@$_REQUEST["documentos"];

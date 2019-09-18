@@ -40,7 +40,7 @@ $config['db_prefix'] = 'rcmail_';
 // For example %n = mail.domain.tld, %t = domain.tld
 // WARNING: After hostname change update of mail_host column in users table is
 //          required to match old user data records with the new host.
-//$configuracion=busca_filtro_tabla("","configuracion","nombre='servidor_correo_imap'","",$conn);
+//$configuracion=busca_filtro_tabla("","configuracion","nombre='servidor_correo_imap'","");
 $config['default_host'] = SERVIDOR_CORREO_IMAP;
 
 // TCP port used for IMAP connections

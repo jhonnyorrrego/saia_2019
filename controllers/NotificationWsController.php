@@ -165,7 +165,8 @@ class NotificationWsController
                 notificado = 0
             GROUP BY destino
 SQL;
-        $data = StaticSql::search($sql);
+        throw new Exception("ejecutar la consulta", 1);
+
 
         foreach ($data as $value) {
             $sockets = $this->clients[$value['destino']];
@@ -182,9 +183,10 @@ SQL;
                 destino in ({$userList}) AND
                 notificado = 0
 SQL;
-        StaticSql::query($sql);
+        throw new Exception("ejecutar el update", 1);
 
-        sleep(5);
+
+        //sleep(5);
     }
 
     /**

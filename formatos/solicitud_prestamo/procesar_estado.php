@@ -9,7 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-$componente = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='reporte_solicitud_prestamo'", "", $conn);
+$componente = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='reporte_solicitud_prestamo'", "");
 
 if (@$_REQUEST["accion"]) {
 	$idft_item_prestamo_exp = @$_REQUEST["idft_item_prestamo_exp"];

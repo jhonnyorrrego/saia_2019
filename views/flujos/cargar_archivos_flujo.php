@@ -86,7 +86,7 @@ function unwrap_file($file) {
 }
 
 function guardar($file, $uuid, $ruta_temporal) {
-	global $conn;
+	
 	$campos = array(
 		"uuid" => "'" . $uuid . "'",
 		"ruta" => "'" . $ruta_temporal . $file["name"] . "'",
@@ -110,7 +110,7 @@ function eliminar_temporal($archivo) {
 	if (empty($archivo)) {
 		die("No se envio identificador");
 	}
-	$archivos = busca_filtro_tabla("", "anexos_tmp", "idanexos_tmp = $archivo", "", $conn);
+	$archivos = busca_filtro_tabla("", "anexos_tmp", "idanexos_tmp = $archivo", "");
 	if ($archivos["numcampos"]) {
 		$sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = $archivo";
 		phpmkr_query($sql2) or die($sql2);

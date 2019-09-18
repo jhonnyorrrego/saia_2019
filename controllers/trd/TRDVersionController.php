@@ -93,7 +93,7 @@ class TRDVersionController
      */
     public function findSeries($dependencieId)
     {
-        $sql = Model::getQueryBuilder()
+        $QueryBuilder = Model::getQueryBuilder()
             ->select(
                 'a.idserie,
                 a.nombre,
@@ -114,7 +114,7 @@ class TRDVersionController
             ->setParameter(':iddependencia', $dependencieId, Type::INTEGER)
             ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
-        $this->series = Serie::findByQueryBuilder($sql);
+        $this->series = Serie::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -128,8 +128,7 @@ class TRDVersionController
      */
     public function findSubSeries($dependencieId, $serieId)
     {
-
-        $sql = Model::getQueryBuilder()
+        $QueryBuilder = Model::getQueryBuilder()
             ->select(
                 'a.idserie,
                 a.nombre,
@@ -152,7 +151,7 @@ class TRDVersionController
             ->setParameter(':idserie', $serieId, Type::INTEGER)
             ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
-        $this->subSeries = Serie::findByQueryBuilder($sql);
+        $this->subSeries = Serie::findByQueryBuilder($QueryBuilder);
     }
 
     /**
@@ -165,7 +164,7 @@ class TRDVersionController
      */
     public function findDocumentaryTypes($serieId)
     {
-        $sql = Model::getQueryBuilder()
+        $QueryBuilder = Model::getQueryBuilder()
             ->select(
                 'a.idserie,
                 a.nombre,
@@ -179,7 +178,7 @@ class TRDVersionController
             ->setParameter(':idserie', $serieId, Type::INTEGER)
             ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
 
-        $this->documentaryTypes = Serie::findByQueryBuilder($sql);
+        $this->documentaryTypes = Serie::findByQueryBuilder($QueryBuilder);
     }
 
     /**

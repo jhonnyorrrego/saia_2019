@@ -21,10 +21,10 @@ if(!empty($_REQUEST["idactividad"])) {
 
     $listadoCargos = busca_filtro_tabla("d.idresponsable_actividad, d.fk_responsable, d.tipo_responsable, 'Rol - Cargo' as texto_tipo, c.nombre", 
             "wf_responsable_actividad d join cargo c on d.fk_responsable = c.idcargo", 
-            "d.tipo_responsable = 1 and d.fk_actividad = $idactividad", "", $conn);
+            "d.tipo_responsable = 1 and d.fk_actividad = $idactividad", "");
     $listadoFuncionarios = busca_filtro_tabla("d.idresponsable_actividad, d.fk_responsable, d.tipo_responsable, 'Funcionario' as texto_tipo, concat(concat(f.nombres, ' '), f.apellidos) as nombre", 
             "wf_responsable_actividad d join funcionario f on d.fk_responsable = f.idfuncionario", 
-            "d.tipo_responsable = 2 and d.fk_actividad = $idactividad", "", $conn);
+            "d.tipo_responsable = 2 and d.fk_actividad = $idactividad", "");
 
     if($listadoCargos["numcampos"]) {
         $total = isset($listadoCargos['numcampos']) ? $listadoCargos['numcampos'] : count($listadoCargos);

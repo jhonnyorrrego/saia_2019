@@ -12,7 +12,7 @@ class DocumentoFuncionario extends Model
     protected $fecha;
     protected $estado;
     protected $user;
-    
+
 
     function __construct($id = null)
     {
@@ -35,7 +35,7 @@ class DocumentoFuncionario extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -63,26 +63,31 @@ class DocumentoFuncionario extends Model
         return $this->save();
     }
 
+    /**
+     * verifica si tiene permiso para eliminar
+     *
+     * @param integer $userId
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
+     */
     public function deleteAccess($userId)
     {
         if ($this->fk_funcionario == $userId) {
             $response = 1;
         } else {
-            $sql = <<<SQL
-            select
-                count(*) as total
-            from
-                buzon_salida a join
-                funcionario b
-            on 
-                a.origen = b.funcionario_codigo
-            where 
-                a.nombre = 'APROBADO' and 
-                b.idfuncionario = {$userId} and
-                a.archivo_idarchivo = {$this->fk_documento}
-SQL;
-            $query = self::search($sql);
-            $response = $query[0]['total'];
+            $query = self::getQueryBuilder()
+                ->select('count(*) as total')
+                ->from('buzon_salida', 'a')
+                ->join('a', 'funcionario', 'b', 'a.origen = b.funcionario_codigo')
+                ->where('a.nombre = "APROBADO"')
+                ->andWhere('b.idfuncionario = :userId')
+                ->andWhere('a.archivo_idarchivo = :documentId')
+                ->setParameter('userId', $userId, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':documentId', $this->fk_documento, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute()->fetch();
+
+            $response = $query['total'];
         }
 
         return (int) $response;

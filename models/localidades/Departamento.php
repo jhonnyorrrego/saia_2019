@@ -6,7 +6,7 @@ class Departamento extends Model
     protected $nombre;
     protected $estado;
     protected $pais_idpais;
-    
+
 
     function __construct($id = null)
     {
@@ -18,7 +18,7 @@ class Departamento extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'nombre',
                 'estado',
@@ -38,17 +38,14 @@ class Departamento extends Model
      */
     public static function findAllByTerm($term, $parentId)
     {
-        $sql = <<<SQL
-        SELECT 
-            iddepartamento,nombre,estado
-        FROM 
-            departamento
-        WHERE
-            nombre LIKE '%{$term}%' AND
-            pais_idpais = {$parentId}
-        ORDER BY nombre ASC
-SQL;
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('iddepartamento,nombre,estado')
+            ->from('departamento')
+            ->where('pais_idpais = :parentId')
+            ->andWhere('nombre like :like')
+            ->setParameter(':like', "%{$term}%")
+            ->orderBy('nombre', 'asc');
 
-        return self::findByQueryBuilder($sql);
+        return self::findByQueryBuilder($QueryBuilder);
     }
 }

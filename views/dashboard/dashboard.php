@@ -284,7 +284,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
     <!-- Modal -->
     <button data-toggle="modal" data-target="#dinamic_modal" style="display:none"></button>
-    <div class="modal" tabindex="-1" role="dialog" id="dinamic_modal">
+    <div class="modal" tabindex="-1" role="dialog" id="dinamic_modal" data-backdrop="true" data-keyboard="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">

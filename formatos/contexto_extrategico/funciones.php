@@ -12,8 +12,8 @@ include_once ($ruta_db_superior . "db.php");
 
 /*ADICIONAR*/
 function obtener_valor_campos_estrat($idformato,$iddoc){
-	global $conn;
-	$datos = busca_filtro_tabla("nombre,objetivo","ft_proceso","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+	
+	$datos = busca_filtro_tabla("nombre,objetivo","ft_proceso","documento_iddocumento=".$_REQUEST['anterior'],"");
 	?>
 	<script type="text/javascript">
 		$(document).ready(function(){		
@@ -27,8 +27,8 @@ function obtener_valor_campos_estrat($idformato,$iddoc){
 /*MOSTRAR*/
 function adiconar_factores_contexto($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$contexto_estrategico = busca_filtro_tabla("", "ft_contexto_extrategico A", "A.documento_iddocumento=" . $iddoc, "", $conn);
-	$factores_contexto_estrategico = busca_filtro_tabla("", "ft_factores_contexto B", "B.ft_contexto_extrategico=" . $contexto_estrategico[0]['idft_contexto_extrategico'], "idft_factores_contexto ASC", $conn);
+	$contexto_estrategico = busca_filtro_tabla("", "ft_contexto_extrategico A", "A.documento_iddocumento=" . $iddoc, "");
+	$factores_contexto_estrategico = busca_filtro_tabla("", "ft_factores_contexto B", "B.ft_contexto_extrategico=" . $contexto_estrategico[0]['idft_contexto_extrategico'], "idft_factores_contexto ASC");
 	for ($i = 0; $i < $factores_contexto_estrategico['numcampos']; $i++) {
 		if ($factores_contexto_estrategico[$i]['factores_contexto'] == 1) {
 			$internos .= '<tr>

@@ -9,12 +9,12 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."assets/librerias.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."app/documento/class_transferencia.php");
 echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap());
+echo(jquery());
+echo(bootstrap());
 echo(librerias_validar_formulario('11'));
 
 $iddoc=@$_REQUEST['iddoc'];
@@ -32,7 +32,7 @@ if (@$_REQUEST['continuar']) {
 	
 	echo('<script>window.parent.hs.close();setTimeout(function(){ window.parent.location.reload(); }, 50);</script>');
 }else{
-    $datos=busca_filtro_tabla('idft_correo_saia,transferencia_correo','ft_correo_saia','documento_iddocumento='.$iddoc,'',$conn);
+    $datos=busca_filtro_tabla('idft_correo_saia,transferencia_correo','ft_correo_saia','documento_iddocumento='.$iddoc,'');
 	
     ?>
     <html>
@@ -79,9 +79,9 @@ if (@$_REQUEST['continuar']) {
                         <td class="encabezado_list" style="width: 50%; font-size: 12px;">Transferido</td>
                     </tr>
                     <?php
-                    $datos_item=busca_filtro_tabla(fecha_db_obtener('fecha_reasignacion','Y-m-d') . 'as fecha,transferencia_correo','ft_reasignar_transferid','ft_correo_saia=' . $datos[0]['idft_correo_saia'],'idft_reasignar_transferid DESC',$conn);
+                    $datos_item=busca_filtro_tabla(fecha_db_obtener('fecha_reasignacion','Y-m-d') . 'as fecha,transferencia_correo','ft_reasignar_transferid','ft_correo_saia=' . $datos[0]['idft_correo_saia'],'idft_reasignar_transferid DESC');
                     for ($i=0; $i < $datos_item['numcampos']; $i++) {
-                    	$nombre_transferido=busca_filtro_tabla('nombres, apellidos','vfuncionario_dc','iddependencia_cargo=' . $datos_item[$i]['transferencia_correo'],'',$conn); 
+                    	$nombre_transferido=busca_filtro_tabla('nombres, apellidos','vfuncionario_dc','iddependencia_cargo=' . $datos_item[$i]['transferencia_correo'],''); 
                         echo '<tr>
                         	<td style="text-align:center;">' . $datos_item[$i]['fecha'] . '</td>
                         	<td style="text-align:center;">' . $nombre_transferido[0]['nombres'] . ' ' . $nombre_transferido[0]['apellidos'] . '</td>

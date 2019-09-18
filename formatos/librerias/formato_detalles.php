@@ -6,7 +6,7 @@
 include_once("../../db.php");
 include_once("estilo_formulario.php");
 include_once("funciones_generales.php");
-$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
+$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","");
 $idformato=@$_REQUEST["idformato"];
 $iddoc=@$_REQUEST["iddoc"];
 $texto="";
@@ -66,8 +66,8 @@ body
   <?php
     global $sql;
     if($idformato){
-      $datos=busca_filtro_tabla("A.*,B.nombre AS nombre_formato","campos_formato A, formato B","A.formato_idformato=B.idformato AND A.etiqueta_html LIKE 'detalle' AND A.valor=".$idformato,"A.etiqueta",$conn);
-      $formato0=busca_filtro_tabla("*","formato","idformato=".$idformato,"",$conn);
+      $datos=busca_filtro_tabla("A.*,B.nombre AS nombre_formato","campos_formato A, formato B","A.formato_idformato=B.idformato AND A.etiqueta_html LIKE 'detalle' AND A.valor=".$idformato,"A.etiqueta");
+      $formato0=busca_filtro_tabla("*","formato","idformato=".$idformato,"");
       $permiso=new PERMISO();
       $ok=$permiso->permiso_usuario($formato0[0]["nombre"],"");
       if($formato0["numcampos"] && $ok){

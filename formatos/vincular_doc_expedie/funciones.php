@@ -71,7 +71,7 @@ $(document).ready(function (){
 
 /*MOSTRAR*/
 function fecha_documento_funcion($idformato, $iddoc) {
-	global $conn;
+	
 	$fecha_doc = busca_filtro_tabla(fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc", "ft_vincular_doc_expedie A", "A.documento_iddocumento=" . $iddoc, "");
 	$datos = date_parse($fecha_doc[0]["fecha_doc"]);
 	echo($datos["day"] . " de " . mes($datos["month"]) . " del " . $datos["year"]);
@@ -79,7 +79,7 @@ function fecha_documento_funcion($idformato, $iddoc) {
 
 function ver_anexos_doc_vincu($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
-	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"", $conn);
+	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"");
 	$html="";
 	if($anexos["numcampos"]){
 		for ($i=0; $i <$anexos["numcampos"] ; $i++) {
@@ -92,7 +92,7 @@ function ver_anexos_doc_vincu($idformato, $iddoc){
 
 /*POSTERIOR APROBAR*/
 function post_aprob_vincu_exp($idformato, $iddoc) {
-	global $conn;
+	
 	if($_REQUEST["redirecciona_exp"]==1){
 		?>
 		<script>
@@ -104,20 +104,20 @@ function post_aprob_vincu_exp($idformato, $iddoc) {
 }
 function mostrar_informacion_qr($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc,observaciones","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"",$conn);
+	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc,observaciones","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"");
 
-  //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
+  //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"");
   	$dato_serie = explode(".",$datos_vincular_doc[0]["serie_idserie"]);
-	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$dato_serie[0],"",$conn);
+	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$dato_serie[0],"");
 
 	if($tipo_documento["numcampos"]){
-		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);
+		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"");
 	}
 
 	$datos_fecha = date_parse($datos_vincular_doc[0]["fecha_doc"]);
 	$fecha_doc = $datos_fecha["day"] . " de " . mes($datos_fecha["month"]) . " del " . $datos_fecha["year"];
 
-	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
+	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"");
 	if($estado_doc[0]['estado']=='APROBADO'){
 		include_once ($ruta_db_superior . "app/qr/librerias.php");
 		$img=mostrar_codigo_qr($idformato, $iddoc, 1);
@@ -147,10 +147,10 @@ function mostrar_informacion_qr($idformato,$iddoc){
 
 }
 function cargar_serie_documental($idformato,$iddoc){
-	global $conn;
+	
 	/*
 	$idex=$_REQUEST["idexpediente"];
-	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"",$conn);
+	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"");
 	?>
 	<script>
 		$(document).ready(function(){

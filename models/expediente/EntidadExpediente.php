@@ -8,8 +8,8 @@ class EntidadExpediente extends Model
     protected $tipo_funcionario;
     protected $fecha;
     protected $fk_expediente;
-    
-    
+
+
 
     protected $accessPermits;
 
@@ -19,7 +19,8 @@ class EntidadExpediente extends Model
         $this->massiveAssigned();
     }
 
-    public function massiveAssigned(){
+    public function massiveAssigned()
+    {
         if ($this->identidad_expediente) {
             $this->accessPermits = [
                 'd' => false,
@@ -36,7 +37,7 @@ class EntidadExpediente extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcionario',
                 'permiso',
@@ -58,9 +59,9 @@ class EntidadExpediente extends Model
     public function afterDelete()
     {
         $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE fk_entidad=1 AND tipo_permiso=2 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
-        $records = PermisoExpediente::findByQueryBuilder($sql);
+        //$records = PermisoExpediente:: buscar con querybuilder
         if ($records) {
-            foreach ($$records as $instance) {
+            foreach ($records as $instance) {
                 $instance->delete();
             }
         }
@@ -77,7 +78,7 @@ class EntidadExpediente extends Model
      * @param bool $estado: true para dar el permiso, false para quitar
      * @return boolean
      */
-    public function setAccessPermits(string $permiso = null, bool $estado = true) : bool
+    public function setAccessPermits(string $permiso = null, bool $estado = true): bool
     {
         $response = false;
         if ($permiso) {
@@ -103,7 +104,7 @@ class EntidadExpediente extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateEntidadExpediente() : array
+    public function updateEntidadExpediente(): array
     {
         $response = [
             'exito' => 0,
@@ -113,7 +114,7 @@ class EntidadExpediente extends Model
             $response['exito'] = 1;
             $response['message'] = 'Entidad expediente actualizado!';
             $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE tipo_permiso=2 AND fk_entidad=1 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
-            $record = $this->search($sql);
+            //$record = //ejecuta el select
             if ($record) {
                 $PermisoExpediente = new PermisoExpediente($record[0]['idpermiso_expediente']);
                 $PermisoExpediente->permiso = $this->permiso;
@@ -128,7 +129,6 @@ class EntidadExpediente extends Model
                 $response['message'] = 'No se pudo actualizar el permiso del expediente1';
                 $this->delete();
             }
-
         }
         return $response;
     }
@@ -141,7 +141,7 @@ class EntidadExpediente extends Model
      * utilizado cuando es un expediente nuevo
      * @return array
      */
-    public function createEntidadExpediente(bool $updatePermisos = true) : array
+    public function createEntidadExpediente(bool $updatePermisos = true): array
     {
         $response = [
             'data' => [],
@@ -175,18 +175,18 @@ class EntidadExpediente extends Model
                         if ($Expediente->getCodPadre()->agrupador != 1) {
                             //Se valida que el funcionario tenga permisos sobre los expedientes padres
                             $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario={$this->tipo_funcionario} AND fk_funcionario={$this->fk_funcionario} AND fk_expediente={$Expediente->cod_padre}";
-                            if (!$this->search($sql)) {
-                                $attributes = [
-                                    'fk_funcionario' => $this->fk_funcionario,
-                                    'fecha' => date('Y-m-d H:i:s'),
-                                    'tipo_funcionario' => $this->tipo_funcionario,
-                                    'permiso' => 'v',
-                                    'fk_expediente' => $Expediente->cod_padre
-                                ];
-                                $EntidadExpediente = new EntidadExpediente();
-                                $EntidadExpediente->setAttributes($attributes);
-                                $info = $EntidadExpediente->createEntidadExpediente(false);
-                            }
+                            //if (//si no tiene resultados) {
+                            $attributes = [
+                                'fk_funcionario' => $this->fk_funcionario,
+                                'fecha' => date('Y-m-d H:i:s'),
+                                'tipo_funcionario' => $this->tipo_funcionario,
+                                'permiso' => 'v',
+                                'fk_expediente' => $Expediente->cod_padre
+                            ];
+                            $EntidadExpediente = new EntidadExpediente();
+                            $EntidadExpediente->setAttributes($attributes);
+                            $info = $EntidadExpediente->createEntidadExpediente(false);
+                            //}
                         }
                     }
                     if ($updatePermisos) {

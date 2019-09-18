@@ -25,7 +25,7 @@ class Ejecutor extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             "safe" => [
                 "identificacion",
                 "nombre",
@@ -63,75 +63,6 @@ class Ejecutor extends Model
     public function getDatosEjecutor()
     {
         return $this->datosEjecutor;
-    }
-
-    public static function findByIdentificacion($identificacion)
-    {
-        if (!empty($identificacion)) {
-            $sql = <<<SQL
-                select t.*
-                from ejecutor t
-                join datos_ejecutor dt
-                    on t.idejecutor = dt.ejecutor_idejecutor
-                where
-                    t.estado = {self::ESTADO_ACTIVO}
-                    AND t.identificacion = '{$identificacion}'
-SQL;
-            $records = StaticSql::search($sql);
-            $total = count($records);
-
-            $data = [];
-            for ($row = 0; $row < $total; $row++) {
-                $tercero = new self();
-                $datosTercero = new DatosEjecutor();
-                $tercero->idejecutor = $records[$row]['idejecutor'];
-                $datosTercero->iddatos_ejecutor = $records[$row]['iddatos_ejecutor'];
-                $tercero->setAttributes($records[$row]);
-                $datosTercero->setAttributes($records[$row]);
-                $tercero->setDatosEjecutor($datosTercero);
-                $data[] = $tercero;
-            }
-
-            return $data;
-        }
-        return null;
-    }
-
-    public static function findByIdentificacionTipo($identificacion, $tipo)
-    {
-        if (!in_array($tipo, [self::TIPO_PERSONA_NATURAL, self::TIPO_PERSONA_JURIDICA])) {
-            return null;
-        }
-        if (!empty($identificacion) && !empty($tipo)) {
-            $sql = <<<SQL
-                select t.*
-                from ejecutor t
-                join datos_ejecutor dt
-                    on t.idejecutor = dt.ejecutor_idejecutor
-                where
-                    t.estado = {self::ESTADO_ACTIVO}
-                    AND t.identificacion = '{$identificacion}'
-                    AND t.tipo = {$tipo}
-SQL;
-            $records = StaticSql::search($sql);
-
-            $total = count($records);
-
-            $data = [];
-            for ($row = 0; $row < $total; $row++) {
-                $tercero = new self();
-                $datosTercero = new DatosEjecutor();
-                $tercero->idejecutor = $records[$row]['idejecutor'];
-                $datosTercero->iddatos_ejecutor = $records[$row]['iddatos_ejecutor'];
-                $tercero->setAttributes($records[$row]);
-                $datosTercero->setAttributes($records[$row]);
-                $tercero->setDatosEjecutor($datosTercero);
-                $data[] = $tercero;
-            }
-
-            return $data;
-        }
-        return null;
     }
 
     public function consultarDatos()

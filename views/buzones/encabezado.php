@@ -12,9 +12,9 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 
-$datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
+$datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "");
 
 if ($datos_busqueda[0]["ruta_libreria"]) {
     $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));

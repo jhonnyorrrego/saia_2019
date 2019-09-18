@@ -24,10 +24,10 @@ td {
 
 </style>
 <?php
-$norma=busca_filtro_tabla("a.*","ft_norma_proceso a, documento b","b.iddocumento=a.documento_iddocumento  and b.estado<>'ELIMINADO' and a.ft_proceso=".$_REQUEST["idproceso"],"",$conn);
+$norma=busca_filtro_tabla("a.*","ft_norma_proceso a, documento b","b.iddocumento=a.documento_iddocumento  and b.estado<>'ELIMINADO' and a.ft_proceso=".$_REQUEST["idproceso"],"");
 imprime_normas_secretaria($norma,"NORMOGRAMA DEL PROCESO");
 imprime_normas_etiqueta($norma);
-$norma=busca_filtro_tabla("a.*","ft_norma_procedimiento a,ft_procedimiento b,documento c, documento d","c.iddocumento=a.documento_iddocumento and d.iddocumento=b.documento_iddocumento  and d.estado<>'ELIMINADO' and c.estado<>'ELIMINADO' and a.ft_procedimiento=idft_procedimiento and b.ft_proceso=".$_REQUEST["idproceso"],"",$conn);
+$norma=busca_filtro_tabla("a.*","ft_norma_procedimiento a,ft_procedimiento b,documento c, documento d","c.iddocumento=a.documento_iddocumento and d.iddocumento=b.documento_iddocumento  and d.estado<>'ELIMINADO' and c.estado<>'ELIMINADO' and a.ft_procedimiento=idft_procedimiento and b.ft_proceso=".$_REQUEST["idproceso"],"");
 imprime_normas_procedimiento($norma,"NORMOGRAMA DE LOS PROCEDIMIENTOS");
 echo '<br /><b>Convenci&oacute;n</b><br /><img src="../../js/imgs/guia.gif" />Norma Interna <img src="../../js/imgs/manual.gif" />Norma Externa';
 function imprime_normas_secretaria($norma,$titulo){
@@ -39,13 +39,13 @@ if($norma["numcampos"]){
   $texto='<table width="100%"><tr class="encabezado_list"><td colspan=2><b>'.$titulo.'</b></td></tr>';
   $items_fila=2;
   for($i=0;$i<count($lsecretarias) && $lsecretarias[$i]!="";$i++){
-    $dep=busca_filtro_tabla("nombre","dependencia","iddependencia=".str_replace("d","",$lsecretarias[$i]),"",$conn);
+    $dep=busca_filtro_tabla("nombre","dependencia","iddependencia=".str_replace("d","",$lsecretarias[$i]),"");
   $texto.='<tr><td colspan="'.$items_fila.'" align="center" border="1px"><br /><br /><b>'.strtoupper($dep[0]["nombre"]).'</b><br /><br /></td></tr><tr>';
   $encontrados=array();
   for($k=0;$k<$norma["numcampos"];$k++)
    {$secretarias=explode(",",$norma[$k]["secretarias"]);
     if(in_array($lsecretarias[$i],$secretarias)){ 
-    $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,ruta,a.documento_iddocumento,a.formato,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","",$conn);
+    $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,ruta,a.documento_iddocumento,a.formato,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","");
     
     if($anexos["numcampos"]){
       
@@ -87,14 +87,14 @@ if($norma["numcampos"]){
   $texto='<table width="100%"><tr class="encabezado_list"><td colspan=2><b>'.$titulo.'</b></td></tr>';
   $items_fila=2;
   for($i=0;$i<count($procedimientos);$i++){
-    $dep=busca_filtro_tabla("nombre","ft_procedimiento","idft_procedimiento=".$procedimientos[$i],"",$conn);
+    $dep=busca_filtro_tabla("nombre","ft_procedimiento","idft_procedimiento=".$procedimientos[$i],"");
    
   $texto.='<tr><td colspan="'.$items_fila.'" align="center" border="1px"><br /><br /><b>'.mayusculas($dep[0]["nombre"]).'</b><br /><br /></td></tr><tr>';
   $encontrados=array();
   for($k=0;$k<$norma["numcampos"];$k++)
    {if($norma[$k]["ft_procedimiento"]==$procedimientos[$i]){ 
-    //$anexos=busca_filtro_tabla("idanexos,etiqueta,tipo,ruta,documento_iddocumento,formato","anexos","idanexos in(".$norma[$k]["normograma"].")","",$conn);
-    $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,a.ruta,a.documento_iddocumento,a.formato,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","",$conn);
+    //$anexos=busca_filtro_tabla("idanexos,etiqueta,tipo,ruta,documento_iddocumento,formato","anexos","idanexos in(".$norma[$k]["normograma"].")","");
+    $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,a.ruta,a.documento_iddocumento,a.formato,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","");
     if($anexos["numcampos"]){
       
       for($h=0,$j=0;$h<$anexos["numcampos"];$h++){      
@@ -133,8 +133,8 @@ if($norma["numcampos"]){
   
   $encontrados=array();
   for($k=0;$k<$norma["numcampos"];$k++)
-   {//$anexos=busca_filtro_tabla("idanexos,etiqueta,tipo,ruta","anexos","idanexos in(".$norma[$k]["normograma"].")","",$conn);
-     $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,a.ruta,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","",$conn);
+   {//$anexos=busca_filtro_tabla("idanexos,etiqueta,tipo,ruta","anexos","idanexos in(".$norma[$k]["normograma"].")","");
+     $anexos=busca_filtro_tabla("a.idanexos,a.etiqueta,a.tipo,a.ruta,b.tipo as tiponorma","anexos a,ft_norma_calidad b","a.documento_iddocumento=b.documento_iddocumento and idanexos in(".$norma[$k]["normograma"].")","");
     if($anexos["numcampos"]&&$norma[$k]["etiqueta"]<>""){
      $texto.='<tr><td colspan="'.$items_fila.'" align="center" border="1px"><b>'.strtoupper($norma[$k]["etiqueta"]).'</b></td></tr><tr>'; 
       for($h=0,$j=0;$h<$anexos["numcampos"];$h++){      

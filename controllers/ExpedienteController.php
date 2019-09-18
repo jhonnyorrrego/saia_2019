@@ -10,7 +10,7 @@ class ExpedienteController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function deleteDefExpedienteCont(array $data = []) : array
+    public static function deleteDefExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -22,15 +22,15 @@ class ExpedienteController
             if ($Expediente->estado == 0) {
                 $sql = "SELECT * FROM expediente_eli 
                 WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                $instance = ExpedienteEli::findByQueryBuilder($sql);
+                //$instance = ExpedienteEli:: buscar con querybuilder
                 if ($instance) {
-                    $ExpedienteDel=$instance[0];
-                    $ExpedienteDel->fecha_accion=date("Y-m-d H:i:s");
-                    $ExpedienteDel->accion=1;
-                    if($ExpedienteDel->update()){
-                        $response['exito']=1;
-                        $response['message']='Se ha eliminado el expediente';
-                    }else{
+                    $ExpedienteDel = $instance[0];
+                    $ExpedienteDel->fecha_accion = date("Y-m-d H:i:s");
+                    $ExpedienteDel->accion = 1;
+                    if ($ExpedienteDel->update()) {
+                        $response['exito'] = 1;
+                        $response['message'] = 'Se ha eliminado el expediente';
+                    } else {
                         $response['message'] = 'se presento un error al eliminar definitivamente el expediente, intente de nuevo';
                     }
                 } else {
@@ -51,21 +51,22 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function VincularExpedienteDocCont(array $data = []) : array
+    public static function VincularExpedienteDocCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
             'message' => ''
         ];
-        if (!empty($data['iddocumentos']) && !empty($data['idexpedientes']) 
+        if (
+            !empty($data['iddocumentos']) && !empty($data['idexpedientes'])
             && !empty($data['tipodocumental'])
         ) {
             $success = 0;
             $cant = 0;
             foreach ($data['iddocumentos'] as $iddoc) {
-                $Documento=new Documento($iddoc);
-                $Documento->serie= $data['tipodocumental'];
-                if($Documento->update()){
+                $Documento = new Documento($iddoc);
+                $Documento->serie = $data['tipodocumental'];
+                if ($Documento->update()) {
                     foreach ($data['idexpedientes'] as $idexp) {
                         $attributes = [
                             'fk_expediente' => $idexp,
@@ -76,14 +77,14 @@ class ExpedienteController
                             'tipo' => 1
                         ];
                         $cant++;
-                        $sql="SELECT count(idexpediente_doc) as cant FROM expediente_doc 
+                        $sql = "SELECT count(idexpediente_doc) as cant FROM expediente_doc 
                         WHERE fk_expediente={$idexp} AND fk_documento={$iddoc} AND tipo=1";
-                        $exist=ExpedientoDoc::search($sql);
-                        if(!$exist[0]['cant']){
+                        $exist = ExpedientoDoc::search($sql);
+                        if (!$exist[0]['cant']) {
                             if (ExpedienteDoc::newRecord($attributes)) {
                                 $success++;
                             }
-                        }else{
+                        } else {
                             $success++;
                         }
                     }
@@ -111,7 +112,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function deleteDirectExpedienteCont(array $data = []) : array
+    public static function deleteDirectExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -130,7 +131,6 @@ class ExpedienteController
                 } else {
                     $response['message'] = 'No se pudo eliminar el acceso directo';
                 }
-
             } else {
                 $response['message'] = 'El acceso al expediente ya ha sido eliminado';
             }
@@ -147,7 +147,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function directExpedienteCont(array $data = []) : array
+    public static function directExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -157,7 +157,7 @@ class ExpedienteController
             $sql = "SELECT idexpediente_directo FROM expediente_directo 
             WHERE fk_funcionario={$_SESSION['idfuncionario']} 
             AND fk_expediente={$data['idexpediente']}";
-            $record = StaticSql::search($sql);
+            //$record = //ejecuta el select
             if (!$record) {
                 $Directo = new ExpedienteDirecto();
                 $attributes = [
@@ -188,7 +188,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function aperturaCierreExpedienteCont(array $data = []) : array
+    public static function aperturaCierreExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -245,7 +245,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function updateResponsableExpedienteCont(array $data = []) : array
+    public static function updateResponsableExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -279,7 +279,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function insertPemisoExpedienteCont(array $data = []) : array
+    public static function insertPemisoExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -299,7 +299,7 @@ class ExpedienteController
                         foreach ($idExp as $idexpediente) {
                             $cant++;
                             $sql .= " AND fk_expediente={$idexpediente}";
-                            $record = StaticSql::search($sql);
+                            //$record = //ejecuta el select
                             if ($record) {
                                 $EntidadExpediente = new EntidadExpediente($record[0]['identidad_expediente']);
                                 $EntidadExpediente->setAccessPermits('c');
@@ -334,7 +334,6 @@ class ExpedienteController
                     } else {
                         $response['message'] = 'Error al vincular el permiso a los expedientes';
                     }
-
                 } else {
                     $response['message'] = 'faltan el identificador del funcionario(s)';
                 }
@@ -353,7 +352,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function listFuncionarios(array $data = []) : array
+    public static function listFuncionarios(array $data = []): array
     {
         $response = [
             'results' => []
@@ -365,7 +364,7 @@ class ExpedienteController
             if (!empty($data['where'])) {
                 $sql .= $data['where'];
             }
-            $records = StaticSql::search($sql);
+            //$records = //ejecuta el select
             if ($records) {
                 $results = [];
                 foreach ($records as $record) {
@@ -387,7 +386,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function deletePemisoExpedienteCont(array $data = []) : array
+    public static function deletePemisoExpedienteCont(array $data = []): array
     {
         $response = [
             'exito' => 0,
@@ -399,7 +398,7 @@ class ExpedienteController
                 WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente 
                 AND p.tipo_funcionario=ex.tipo_funcionario 
                 AND p.idpermiso_expediente={$data['idpermiso']}";
-                $instance = EntidadExpediente::findByQueryBuilder($sql);
+                //$instance = EntidadExpediente:: buscar con query builder
                 if ($instance) {
                     $EntidadExpediente = $instance[0];
                     $EntidadExpediente->setAccessPermits('c', false);
@@ -427,7 +426,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function getPermisoExpedienteCont(array $data = []) : array
+    public static function getPermisoExpedienteCont(array $data = []): array
     {
         $response = [
             'data' => [],
@@ -447,7 +446,7 @@ class ExpedienteController
                     $sql .= " AND p.fk_expediente={$data['idexpediente']}";
                 }
 
-                $records = StaticSql::search($sql);
+                //$records = //ejecuta el select
                 if ($records) {
                     $permisos = [];
                     foreach ($records as $record) {
@@ -475,7 +474,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function createExpedienteCont(array $data = []) : array
+    public static function createExpedienteCont(array $data = []): array
     {
         $response = [
             'data' => [],
@@ -535,7 +534,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function updateExpedienteCont(array $data = []) : array
+    public static function updateExpedienteCont(array $data = []): array
     {
         $response = [
             'data' => [],
@@ -578,7 +577,7 @@ class ExpedienteController
                     if ($editChildren) {
                         $sql = "UPDATE expediente SET fk_caja={$Expediente->fk_caja} 
                         WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
-                        StaticSql::query($sql);
+                        //ejecuta el update
                     }
                 }
             } else {
@@ -596,7 +595,7 @@ class ExpedienteController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function deleteExpedienteCont(array $data = []) : array
+    public static function deleteExpedienteCont(array $data = []): array
     {
 
         $response = [
@@ -609,7 +608,7 @@ class ExpedienteController
             if ($Expediente->estado == 1) {
                 $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli 
                 WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                $exis = StaticSql::search($sql);
+                //$exis = //ejecuta el select
                 if (!$exis[0]['cant']) {
                     $ExpDel = new ExpedienteEli();
                     $attributes = [
@@ -623,13 +622,13 @@ class ExpedienteController
                         $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()}
                         WHERE idexpediente={$data['idexpediente']} 
                         OR (cod_arbol like '{$Expediente->cod_arbol}.%' AND estado=1)";
-                        if (StaticSql::query($sql)) {
+                        /*if (//ejecuta el update) {
                             $response['exito'] = 1;
                             $response['message'] = 'Expediente eliminado';
                         } else {
                             $ExpDel->delete();
                             $response['message'] = 'Error al eliminar el expediente';
-                        }
+                        }*/
                     }
                 } else {
                     $response['message'] = 'No se puede eliminar el expediente, contacte al administrador';
@@ -651,7 +650,7 @@ class ExpedienteController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public static function restoreExpedienteCont(array $data = []) : array
+    public static function restoreExpedienteCont(array $data = []): array
     {
 
         $response = [
@@ -670,15 +669,15 @@ class ExpedienteController
                         } else {
                             $sql = "SELECT * FROM expediente_eli 
                             WHERE fk_expediente={$data['idexpediente']} AND fecha_accion IS NULL";
-                            $instance = ExpedienteEli::findByQueryBuilder($sql);
+                            //$instance = ExpedienteEli::buscar con querybuilder
                             if ($instance) {
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_accion = date('Y-m-d H:i:s');
-                                $ExpDel->accion=2;
+                                $ExpDel->accion = 2;
                                 if ($ExpDel->update()) {
                                     $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL 
                                     WHERE fk_expediente_eli={$ExpDel->getPK()}";
-                                    if (StaticSql::query($sql)) {
+                                    /*if (//ejecuta el ypdate) {
                                         $response['exito'] = 1;
                                         $response['message'] = 'Expediente restaurado';
                                     } else {
@@ -686,7 +685,7 @@ class ExpedienteController
                                         $ExpDel->accion = 'NULL';
                                         $ExpDel->update();
                                         $response['message'] = 'Error al restaurar el expediente';
-                                    }
+                                    }*/
                                 }
                             } else {
                                 $response['message'] = 'No se puede restaurar el expediente, contacte al administrador';
@@ -695,7 +694,6 @@ class ExpedienteController
                     } else {
                         $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra eliminado';
                     }
-
                 } else {
                     $response['message'] = 'No se encuentran datos del expediente superior';
                 }
@@ -715,7 +713,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function createTomoExpedienteCont(array $data = []) : array
+    public static function createTomoExpedienteCont(array $data = []): array
     {
         $response = [
             'data' => [],
@@ -739,14 +737,13 @@ class ExpedienteController
                     'responsable' => $_SESSION['idfuncionario'],
                     'tomo_padre' => $tomoPadre,
                     'tomo_no' => $cant + 1,
-                    'estado_cierre'=>1,
-                    'fecha_cierre'=>'NULL',
-                    'funcionario_cierre'=>'NULL',
+                    'estado_cierre' => 1,
+                    'fecha_cierre' => 'NULL',
+                    'funcionario_cierre' => 'NULL',
                     'cod_arbol' => 0
                 ];
                 $ExpTomo->setAttributes($attributes);
                 $response = $ExpTomo->CreateExpediente();
-
             }
         }
 
@@ -762,7 +759,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function createEntidadSerieCodArbol(string $codArbol, array $attributes = []) : array
+    public static function createEntidadSerieCodArbol(string $codArbol, array $attributes = []): array
     {
         $response = [
             'data' => [],
@@ -778,7 +775,7 @@ class ExpedienteController
             foreach ($SeriesPadres as $id) {
                 $sql = "SELECT identidad_serie FROM entidad_serie 
                 WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
-                $exist = StaticSql::search($sql);
+                //$exist = //ejecuta el select
                 if (!$exist) {
                     $attributesPadre = $attributes;
                     $attributesPadre['fk_serie'] = $id;
@@ -792,7 +789,6 @@ class ExpedienteController
                 } else {
                     $ok++;
                 }
-
             }
             if ($cant == $ok) {
                 $response['exito'] = 1;
@@ -807,5 +803,4 @@ class ExpedienteController
         }
         return $response;
     }
-
 }

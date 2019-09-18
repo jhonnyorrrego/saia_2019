@@ -18,7 +18,7 @@ $data = [];
 if(!empty($_REQUEST["termino"])) {
 
 	$termino = $_REQUEST["termino"];
-	$funcionarios = busca_filtro_tabla("distinct idcargo, cargo", "vfuncionario_dc", "estado = 1 and cargo like '%$termino%'", "", $conn);
+	$funcionarios = busca_filtro_tabla("distinct idcargo, cargo", "vfuncionario_dc", "estado = 1 and cargo like '%$termino%'", "");
 	
 
 	if($funcionarios["numcampos"]) {

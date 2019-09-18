@@ -14,11 +14,15 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$records = StaticSql::search("select * from busqueda_componente where info like '%|-|%'");
+$QueryBuilder = Model::getQueryBuilder()
+    ->select('*')
+    ->from('busqueda_componente')
+    ->where("info like '%|-|%'");
+$records = BusquedaComponente::findByQueryBuilder($QueryBuilder);
 
-foreach ($records as $row) {
+foreach ($records as $BusquedaComponente) {
     $data = [];
-    $columns = explode('|-|', $row['info']);
+    $columns = explode('|-|', $BusquedaComponente['info']);
     foreach ($columns as $key => $column) {
         $pieces = explode('|', $column);
         $data[$key]['title'] = $pieces[0];
@@ -26,13 +30,6 @@ foreach ($records as $row) {
         $data[$key]['align'] = $pieces[2];
     }
     $data = json_encode($data);
-    $sql = <<<SQL
-        UPDATE
-            busqueda_componente 
-        SET 
-            info='{$data}'
-        WHERE 
-            idbusqueda_componente= {$row['idbusqueda_componente']}
-SQL;
-    StaticSql::query($sql);
+    $BusquedaComponente->info = $data;
+    $BusquedaComponente->save();
 }

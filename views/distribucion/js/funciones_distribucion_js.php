@@ -14,9 +14,9 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 function opciones_acciones_distribucion($datos)
 {
-    global $conn;
+    
 
-    $cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "", $conn);
+    $cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "");
     $nombre_componente = $cnombre_componente[0]['nombre'];
 
     $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-xs'>";
@@ -51,7 +51,7 @@ function opciones_acciones_distribucion($datos)
 
 function select_mensajero_distribucion()
 {
-    global $conn;
+    
 
     $select = "";
     $array_concat = array(
@@ -104,7 +104,7 @@ function select_mensajero_distribucion()
         $select .= "<option class='select_mensajeros_ditribucion' value='" . $mensajeros_externos[$i]['iddependencia_cargo'] . "-i' " . $selected . ">" . $mensajeros_externos[$i]['nombre'] . "&nbsp;-&nbsp;Mensajero Externo</option>";
     }
 
-    $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1", "", $conn);
+    $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1", "");
     for ($i = 0; $i < $empresas_transportadoras['numcampos']; $i++) {
         $selected = '';
         if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'e') {

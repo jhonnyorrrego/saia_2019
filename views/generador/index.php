@@ -38,7 +38,7 @@ if ($formatId) {
     $extensiones = ["filter" => []];
     $arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones);
 
-    $formato = busca_filtro_tabla("", "formato", "idformato=" . $formatId, "", $conn);
+    $formato = busca_filtro_tabla("", "formato", "idformato=" . $formatId, "");
     $Formato = new Formato($formatId);
     $Modulo = $Formato->getModule();
     $idModulo = $Modulo->getPK();
@@ -57,7 +57,7 @@ if ($formatId) {
     }
 
     if ($cod_padre) {
-        $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "", $conn);
+        $nombre_cod_padre = busca_filtro_tabla("", "formato a", "a.idformato=" . $cod_padre, "");
     }
 
     $origen = array("url" => "app/arbol/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $formatId, "seleccionados" => $cod_padre, "seleccionable" => "radio"));
@@ -81,7 +81,7 @@ if ($formatId) {
     $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 }
 
-$tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)", $conn);
+$tipoDocumental = busca_filtro_tabla("", "serie", "tipo=3 and estado=1", "lower(nombre)");
 
 /**
  * Esta funcion puede servir para
@@ -131,8 +131,8 @@ function check_banderas($bandera, $chequear = true)
 
 function cargarCampos($categoria)
 {
-    global $conn;
-    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '', $conn);
+
+    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '');
     echo "<h5>" . $categoria . "</h5>";
     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
         $etiqueta = $listadoComponentes[$i]["etiqueta"];
@@ -295,7 +295,7 @@ function cargarCampos($categoria)
                                                     <div class="mt-4">
                                                         <select style="height:44px;width:100%" name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador" required>
                                                             <?php
-                                                            $contadores = busca_filtro_tabla("", "contador", "nombre<>'' and estado=1", "nombre", $conn);
+                                                            $contadores = busca_filtro_tabla("", "contador", "nombre<>'' and estado=1", "nombre");
                                                             $reinicia_contador = 1;
                                                             for ($i = 0; $i < $contadores["numcampos"]; $i++) {
                                                                 echo ('<option value="' . $contadores[$i]["idcontador"] . '"');
@@ -432,7 +432,7 @@ function cargarCampos($categoria)
 
                                         <div class="mx-4 my-3 pt-2">
                                             <?php
-                                            $profiles = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC", $conn);
+                                            $profiles = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A", "", "A.nombre ASC");
 
                                             if ($profiles['numcampos']) {
                                                 echo '<div>';

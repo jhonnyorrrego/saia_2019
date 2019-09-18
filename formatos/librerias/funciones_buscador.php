@@ -3,7 +3,7 @@ include_once("../../db.php");
 
 echo(buscar_plantilla());
 function buscar_plantilla($tipo=0){
-   global $conn;
+   
    $insertado=0;
    $lasignaciones=array();
    $valores=array();
@@ -18,13 +18,13 @@ function buscar_plantilla($tipo=0){
       $_REQUEST["origen"]=substr($_REQUEST["origen"],0,$pos);
      }
     }
-   $buscar = phpmkr_query("SELECT A.*,".fecha_db_obtener("A.fecha",'Y-m-d H:i:s')." as fecha FROM ".$_REQUEST["tabla"]." A WHERE 1=0",$conn);
+   $buscar = phpmkr_query("SELECT A.*,".fecha_db_obtener("A.fecha",'Y-m-d H:i:s')." as fecha FROM ".$_REQUEST["tabla"]." A WHERE 1=0");
 
    if(@$_REQUEST["idformato"]){
     $idformato=$_REQUEST["idformato"];
    }
    else if(@$_REQUEST["tabla"]){
-    $formato = busca_filtro_tabla("idformato","formato","nombre_tabla LIKE '".strtolower($_REQUEST["tabla"])."'","",$conn);
+    $formato = busca_filtro_tabla("idformato","formato","nombre_tabla LIKE '".strtolower($_REQUEST["tabla"])."'","");
     if($formato["numcampos"]){
       $idformato = $formato[0]["idformato"];
     }
@@ -44,7 +44,7 @@ function buscar_plantilla($tipo=0){
     $where= "formato_idformato=".$idformato;
     if($i)
       $where.=" AND nombre IN('".implode("','",$lista_campos)."')";
-    $lcampos=busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html","campos_formato",$where,"",$conn);
+    $lcampos=busca_filtro_tabla("idcampos_formato,tipo_dato,nombre,etiqueta_html","campos_formato",$where,"");
     for($j=0;$j<$lcampos["numcampos"];$j++){
       if($lcampos[$j]["tipo_dato"]=="DATE" && $_REQUEST[$lcampos[$j]["nombre"]."_1"] && $_REQUEST[$lcampos[$j]["nombre"]."_2"])
         {$fecha_x=@$_REQUEST[$lcampos[$j]["nombre"]."_1"];
@@ -84,7 +84,7 @@ function buscar_plantilla($tipo=0){
               if($dato_temporal<>'')
               {if($_REQUEST[$lcampos[$j]["nombre"]][0]=="")
     	             $_REQUEST[$lcampos[$j]["nombre"]][0]=0;            
-               $r_ejecutor=busca_filtro_tabla("distinct iddatos_ejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and (nombre like '%$dato_temporal%')","",$conn);
+               $r_ejecutor=busca_filtro_tabla("distinct iddatos_ejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and (nombre like '%$dato_temporal%')","");
                //print_r($r_ejecutor);die();
               for($m=0;$m<$r_ejecutor["numcampos"];$m++)
                   $condiciones[]=$lcampos[$j]["nombre"]." like '".$r_ejecutor[$m][0]."' or ".$lcampos[$j]["nombre"]." like '%,".$r_ejecutor[$m][0]."' or ".$lcampos[$j]["nombre"]." like '".$r_ejecutor[$m][0].",%' or ".$lcampos[$j]["nombre"]." like '%,".$r_ejecutor[$m][0].",%' ";
@@ -176,7 +176,7 @@ for($i=0;$i<count($where_busqueda);$i++){
 }
 
 if($consulta_busqueda<>"")
-{$resultado=ejecuta_filtro_tabla("SELECT documento_iddocumento FROM ".$_REQUEST["tabla"]." WHERE $consulta_busqueda",$conn);
+{$resultado=ejecuta_filtro_tabla("SELECT documento_iddocumento FROM ".$_REQUEST["tabla"]." WHERE $consulta_busqueda");
  if($resultado["numcampos"])
    {$ids=extrae_campo($resultado,"documento_iddocumento","U");
     $consulta_busqueda="(".implode(",",$ids).")";

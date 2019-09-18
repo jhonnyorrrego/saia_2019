@@ -12,7 +12,7 @@ include_once ($ruta_db_superior . "db.php");
 if (@$_REQUEST["proceso"]) {
 	if (@$_REQUEST["w"] > 10 && @$_REQUEST["h"] > 10) {
 		$sql = "UPDATE ft_proceso SET coordenadas='" . $_REQUEST["x"] . "," . $_REQUEST["y"] . "," . $_REQUEST["x2"] . "," . $_REQUEST["y2"] . "' WHERE idft_proceso=" . $_REQUEST["proceso"];
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql);
 	}
 }
 
@@ -79,20 +79,20 @@ if (is_uploaded_file(@$_FILES['imagen_politicas']['tmp_name']) && $_FILES['image
 		alerta("Imagen Modificada con Exito");
 }
 
-$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar", "formato", "nombre_tabla='ft_proceso'", "", $conn);
-$proceso = busca_filtro_tabla("coordenadas,idft_proceso,documento_iddocumento,nombre", "ft_proceso A, documento B", "documento_iddocumento=iddocumento AND B.estado NOT IN ('ALIMINADO','ANULADO','ACTIVO')", "", $conn);
+$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar", "formato", "nombre_tabla='ft_proceso'", "");
+$proceso = busca_filtro_tabla("coordenadas,idft_proceso,documento_iddocumento,nombre", "ft_proceso A, documento B", "documento_iddocumento=iddocumento AND B.estado NOT IN ('ALIMINADO','ANULADO','ACTIVO')", "");
 $ok = @$_REQUEST["editar"];
 
-$iddoc_mapa_proceso=busca_filtro_tabla("a.descripcion_base,a.documento_iddocumento","ft_bases_calidad a, serie b,documento c","c.estado not in ('ELIMINADO','ANULADO','ACTIVO') AND a.documento_iddocumento=c.iddocumento AND a.tipo_base_calidad=b.idserie AND lower(b.nombre) LIKE'mapa de proceso%' ","",$conn);
-$mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc_mapa_proceso[0]['documento_iddocumento'],"",$conn);
+$iddoc_mapa_proceso=busca_filtro_tabla("a.descripcion_base,a.documento_iddocumento","ft_bases_calidad a, serie b,documento c","c.estado not in ('ELIMINADO','ANULADO','ACTIVO') AND a.documento_iddocumento=c.iddocumento AND a.tipo_base_calidad=b.idserie AND lower(b.nombre) LIKE'mapa de proceso%' ","");
+$mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc_mapa_proceso[0]['documento_iddocumento'],"");
 
 $permiso_admin_calidad=new Permiso();
 $permiso_modulo_admin_calidad=$permiso_admin_calidad->acceso_modulo_perfil("administracion_calidad");
 
-include_once ($ruta_db_superior . 'librerias_saia.php');
-echo(librerias_jquery("1.7"));
+include_once ($ruta_db_superior . 'assets/librerias.php');
+echo(jquery());
 echo(librerias_jqcrop());
-echo(estilo_bootstrap());
+echo(bootstrap());
 ?>
 
 <html>

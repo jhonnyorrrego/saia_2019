@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 
-include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'core/autoload.php';
 
 $idactividad = null;

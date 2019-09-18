@@ -13,14 +13,14 @@ include_once ($ruta_db_superior . "db.php");
 /*ADICIONAR-EDITAR*/
 
 function formulario_variables($idcampo, $idformato, $iddoc = NULL) {
-	global $conn;
+	
 	if ($_REQUEST["anterior"]) {
 		$opt = 0;
-		$formula = busca_filtro_tabla("nombre", "ft_formula_indicador", "documento_iddocumento=" . $_REQUEST["anterior"], "", $conn);
+		$formula = busca_filtro_tabla("nombre", "ft_formula_indicador", "documento_iddocumento=" . $_REQUEST["anterior"], "");
 	} else {
 		$opt = 1;
-		$formula = busca_filtro_tabla("f.nombre", "ft_formula_indicador f,ft_seguimiento_indicador s", "f.idft_formula_indicador=s.ft_formula_indicador and documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
-		$variables = busca_filtro_tabla("resultado", "ft_seguimiento_indicador", "documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+		$formula = busca_filtro_tabla("f.nombre", "ft_formula_indicador f,ft_seguimiento_indicador s", "f.idft_formula_indicador=s.ft_formula_indicador and documento_iddocumento=" . $_REQUEST["iddoc"], "");
+		$variables = busca_filtro_tabla("resultado", "ft_seguimiento_indicador", "documento_iddocumento=" . $_REQUEST["iddoc"], "");
 	}
 	preg_match_all("([A-Za-z_]+[0-9]*)", $formula[0]["nombre"], $resultados);
 	$lista = implode(";", $resultados[0]);
@@ -47,10 +47,10 @@ function formulario_variables($idcampo, $idformato, $iddoc = NULL) {
 
 
 function add_edit_seg_indicador($idformato, $iddoc) {
-	global $conn;
+	
 	$adicion = 0;
 	if ($_REQUEST["anterior"]) {
-		$formula = busca_filtro_tabla("rango_colores", "ft_formula_indicador", "documento_iddocumento=" . $_REQUEST["anterior"], "", $conn);
+		$formula = busca_filtro_tabla("rango_colores", "ft_formula_indicador", "documento_iddocumento=" . $_REQUEST["anterior"], "");
 		$adicion = 1;
 		$limite = explode(",", $formula[0]["rango_colores"]);
 	}
@@ -108,9 +108,9 @@ function add_edit_seg_indicador($idformato, $iddoc) {
 
 /*MOSTRAR*/
 function mostrar_variables($idformato, $iddoc) {
-	global $conn;
+	
 	$html = "";
-	$variables = busca_filtro_tabla("resultado", "ft_seguimiento_indicador", "documento_iddocumento=" . $iddoc, "", $conn);
+	$variables = busca_filtro_tabla("resultado", "ft_seguimiento_indicador", "documento_iddocumento=" . $iddoc, "");
 	if ($variables["numcampos"]) {
 		$html .= '<table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">';
 		for ($i = 0; $i <= count($resultados); $i++) {

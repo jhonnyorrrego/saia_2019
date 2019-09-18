@@ -9,8 +9,8 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo(estilo_bootstrap());
+include_once ($ruta_db_superior . "assets/librerias.php");
+echo(bootstrap());
 
 $idfun = usuario_actual("idfuncionario");
 if (isset($_POST["ok"]) && isset($_POST["fecha_pago"]) && isset($_POST["iddoc"])) {

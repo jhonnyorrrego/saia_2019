@@ -98,19 +98,15 @@ class DocumentoTarea extends Model
      */
     public static function findTaskByDocument($documentId)
     {
-        $sql = <<<SQL
-            select
-                a.*
-            from
-                tarea a join documento_tarea b
-            on
-                a.idtarea = b.fk_tarea
-            where 
-                b.fk_documento = {$documentId}
-            order by 
-                a.fecha_inicial asc
-SQL;
-        return Tarea::findByQueryBuilder($sql);
+        $QueryBuilder = self::getQueryBuilder()
+            ->select('a.*')
+            ->from('tarea', 'a')
+            ->join('a', 'documento_tarea', 'b', 'a.idtarea = b.fk_tarea')
+            ->where('b.fk_documento = :documentId')
+            ->orderBy('a.fecha_inicial', 'asc')
+            ->setParameter(':documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER);
+
+        return Tarea::findByQueryBuilder($QueryBuilder);
     }
 
     /**

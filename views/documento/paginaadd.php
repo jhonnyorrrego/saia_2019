@@ -38,7 +38,7 @@ if (isset($_REQUEST["key"])) {
 	$key = @$_SESSION["iddoc"];
 }
 if ($key != 0 && $key != "") {
-	$idformato = busca_filtro_tabla("idformato", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $key, "", $conn);
+	$idformato = busca_filtro_tabla("idformato", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $key, "");
 	if ($idformato["numcampos"] && $sAction == "") {
 		llama_funcion_accion($key, $idformato[0][0], "digitalizar", "ANTERIOR");
 	}
@@ -85,7 +85,7 @@ if (($sAction == "") || (($sAction == NULL))) {
 	if (@$_POST["x_enlace"]) {
 		$x_enlace = @$_POST["x_enlace"];
 	}
-	sincronizar_carpetas($tabla, $conn);
+	sincronizar_carpetas($tabla);
 }
 
 switch ($sAction) {
@@ -121,7 +121,7 @@ switch ($sAction) {
 		exit();
 		break;
 }
-$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "");
 ?>
 
 <style type="text/css">
@@ -202,7 +202,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	$puerto_ftp = 21;
 	$params = array();
 	$configuracion["numcampos"] = 0;
-	$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
+	$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "");
 	for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
 		switch ($configuracion[$i]["nombre"]) {
 			case "ruta_servidor":

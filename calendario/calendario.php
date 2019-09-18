@@ -28,7 +28,7 @@ echo "<script type='text/javascript' src='" . $ruta_db_superior . "calendario/ac
  * Dibuja un calendario mensual con las asignaciones de un documento 
  */
 function calendario_asignaciones_mes($id_documento,$anio=NULL,$mes=NULL,$script,$id_responsable=NULL,$tipo_responsable=NULL)
-{ global $conn; 
+{  
     //TODO Implementar filtro por responsable func,cargo,dependencia, .....if(isset($id_responsable)&&isset($tipo_responsable))	
 
 	//Se incia el calendario
@@ -79,7 +79,7 @@ function calendario_festivos($anio=NULL,$script=NULL)
    $calendario->enableYearNav("festivos_list.php");
    $calendario->enableDayLinks($script);
 // asignaciones 
- $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento='-1'  AND ".fecha_db_obtener("fecha_inicial",'Y-m-d').">='$anio-01-01'  AND  ".fecha_db_obtener("fecha_inicial",'Y-m-d')."<='$anio-12-31'","",$conn);
+ $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento='-1'  AND ".fecha_db_obtener("fecha_inicial",'Y-m-d').">='$anio-01-01'  AND  ".fecha_db_obtener("fecha_inicial",'Y-m-d')."<='$anio-12-31'","");
  
  if($asignaciones["numcampos"])
 	 {  
@@ -111,7 +111,7 @@ function calendario_festivos($anio=NULL,$script=NULL)
 
 function calendario_reservas($anio=NULL,$script=NULL)
 {
-    global $conn; 
+     
 	// se incia el calendario
 	
 	if(!$anio)
@@ -132,7 +132,7 @@ function calendario_reservas($anio=NULL,$script=NULL)
    $calendario->enableYearNav($script."?solicitudes=".$_REQUEST["solicitudes"]."&posicion=".$_REQUEST["posicion"]);
    
 // asignaciones 
- $asignaciones=busca_filtro_tabla("idreserva,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","reserva",fecha_db_obtener("fecha_inicial","d-m-Y").">='$fecha_inicial' and ".fecha_db_obtener("fecha_final","d-m-Y")."<='$fecha_final'","",$conn);
+ $asignaciones=busca_filtro_tabla("idreserva,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","reserva",fecha_db_obtener("fecha_inicial","d-m-Y").">='$fecha_inicial' and ".fecha_db_obtener("fecha_final","d-m-Y")."<='$fecha_final'","");
 
  if($asignaciones["numcampos"])
 	 {  
@@ -217,21 +217,21 @@ function calendario_reservas($anio=NULL,$script=NULL)
  */
 function asignaciones_mes($id_documento,$anio=NULL,$mes=NULL,$id_responsable=NULL,$tipo_responsable=NULL)
 {
-global $conn;
+
 $ini_mes=date("Y-m-d H:i:s", mktime( 0, 0, 0, $mes, 1, $anio));
 $fin_mes=date("Y-m-d H:i:s", mktime( 0, 0, 0, $mes+1, 1, $anio));
 
 if(isset($id_documento))
 {  
- $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento=\"$id_documento\" AND fecha_inicial<=\"$fin_mes\" AND  fecha_final>=\"$ini_mes\"","",$conn);
+ $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento=\"$id_documento\" AND fecha_inicial<=\"$fin_mes\" AND  fecha_final>=\"$ini_mes\"","");
  // Busco la serie del documento
- $series_doc=busca_filtro_tabla("documento.serie","documento","documento.iddocumento=\"$id_documento\"","",$conn);
+ $series_doc=busca_filtro_tabla("documento.serie","documento","documento.iddocumento=\"$id_documento\"","");
 
   if($series_doc["numcampos"]) // Encontro la serie asociada al documento  
 	{
 	 $id_serie=$series_doc[0]["serie"];
 	 //Busca asignaciones para la serie a la cual pertenece 
-	 $asignaciones_serie=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.serie_idserie=$id_serie AND fecha_inicial<=\"$fin_mes\" AND  fecha_final>=\"$ini_mes\"","",$conn);
+	 $asignaciones_serie=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.serie_idserie=$id_serie AND fecha_inicial<=\"$fin_mes\" AND  fecha_final>=\"$ini_mes\"","");
 	} 
  if ($asignaciones["numcampos"]) // unifica los resultados  
   {
@@ -367,7 +367,7 @@ if(!isset($anio)||!isset($mes)) //Obtiene la fecha actual por defecto si no se e
 */
 
 function dias_habiles($dias,$formato=NULL,$fecha_inicial=NULL){
-	global $conn; 
+	 
    if(!$formato)
      $formato="d-m-Y"; 
    $formato_bd= "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
@@ -381,7 +381,7 @@ function dias_habiles($dias,$formato=NULL,$fecha_inicial=NULL){
 		  $diainicial=$ar_fechaini["day"];
 		 	$fecha_inicial=date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + 1,$anioinicial));
 		
-			$asignacion=busca_filtro_tabla("","asignacion a","a.documento_iddocumento=-1 and ".fecha_db_obtener('a.fecha_inicial',$formato)."<='".$fecha_inicial."' and ".fecha_db_obtener('a.fecha_final',$formato).">'".$fecha_inicial."'","",$conn);
+			$asignacion=busca_filtro_tabla("","asignacion a","a.documento_iddocumento=-1 and ".fecha_db_obtener('a.fecha_inicial',$formato)."<='".$fecha_inicial."' and ".fecha_db_obtener('a.fecha_final',$formato).">'".$fecha_inicial."'","");
 			
 			if($asignacion["numcampos"])$dias++;
 	 }

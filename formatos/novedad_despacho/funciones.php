@@ -17,9 +17,9 @@ function cargar_items_radicacion($idformato, $iddoc) {
 
     include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
-    $padre = busca_filtro_tabla("idft_despacho_ingresados", "ft_despacho_ingresados", "documento_iddocumento=" . $_REQUEST['anterior'], "", $conn);
+    $padre = busca_filtro_tabla("idft_despacho_ingresados", "ft_despacho_ingresados", "documento_iddocumento=" . $_REQUEST['anterior'], "");
 
-    $items = busca_filtro_tabla("ft_destino_radicacio", "ft_item_despacho_ingres", "ft_despacho_ingresados=" . $padre[0]['idft_despacho_ingresados'], "", $conn);
+    $items = busca_filtro_tabla("ft_destino_radicacio", "ft_item_despacho_ingres", "ft_despacho_ingresados=" . $padre[0]['idft_despacho_ingresados'], "");
     $cadena_items_seleccionados = '';
     for ($i = 0; $i < $items['numcampos']; $i++) {
         $cadena_items_seleccionados .= $items[$i]['ft_destino_radicacio'];
@@ -28,7 +28,7 @@ function cargar_items_radicacion($idformato, $iddoc) {
         }
     }
 
-    $registros = busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion," . fecha_db_obtener("a.fecha_creacion", "Y-m-d") . " as fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion", "distribucion a,documento b", "a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(" . $cadena_items_seleccionados . ")", "", $conn);
+    $registros = busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion," . fecha_db_obtener("a.fecha_creacion", "Y-m-d") . " as fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion", "distribucion a,documento b", "a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(" . $cadena_items_seleccionados . ")", "");
 
     $html = "<td>
 		<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
@@ -114,9 +114,9 @@ function cargar_items_radicacion($idformato, $iddoc) {
 }
 
 function mostrar_numero_item_novedad($idformato, $iddoc) {
-    global $conn;
-    $items_seleccionados = busca_filtro_tabla("item_radicacion", "ft_novedad_despacho", "documento_iddocumento=" . $iddoc, "", $conn);
-    $registros = busca_filtro_tabla("b.numero_distribucion", "distribucion b", "b.iddistribucion in(" . $items_seleccionados[0]['item_radicacion'] . ")", "", $conn);
+    
+    $items_seleccionados = busca_filtro_tabla("item_radicacion", "ft_novedad_despacho", "documento_iddocumento=" . $iddoc, "");
+    $registros = busca_filtro_tabla("b.numero_distribucion", "distribucion b", "b.iddistribucion in(" . $items_seleccionados[0]['item_radicacion'] . ")", "");
     $cadena = '';
     for ($i = 0; $i < $registros['numcampos']; $i++) {
         $cadena .= $registros[$i]['numero_distribucion'];
@@ -134,7 +134,7 @@ function mostrar_novedad_despacho_anexo_soporte($idformato, $iddoc) {
     require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
     $tipo_almacenamiento = new SaiaStorage("archivos");
 
-    $anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+    $anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "");
     if ($anexos['numcampos']) {
         $tabla = '<ul>';
         for ($j = 0; $j < $anexos['numcampos']; $j++) {
@@ -175,7 +175,7 @@ function mostrar_novedad_despacho_anexo_soporte($idformato, $iddoc) {
 function generar_select_novedad($idformato, $iddoc) {
     global $ruta_db_superior, $conn;
 
-    $configuracion_tipo_novedad = busca_filtro_tabla("valor", "configuracion", "nombre='novedad_despacho' AND tipo='tipo_novedad'", "", $conn);
+    $configuracion_tipo_novedad = busca_filtro_tabla("valor", "configuracion", "nombre='novedad_despacho' AND tipo='tipo_novedad'", "");
     $select = '<select class="full-width" name="novedad" id="novedad"><option value="">Por favor seleccione...</option>';
     if ($configuracion_tipo_novedad['numcampos']) {
         $vector_novedades = explode(',', $configuracion_tipo_novedad[0]['valor']);

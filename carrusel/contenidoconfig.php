@@ -14,10 +14,10 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_cripto.php";
 include_once("../calendario/calendario.php");
-echo estilo_bootstrap();
+echo jquery();
+echo bootstrap();
 ?>
 <?= dropzone() ?>
 <div class="container" style="overflow-y:auto; height:100%">
@@ -55,7 +55,7 @@ echo estilo_bootstrap();
             break;
         case "eliminar":
             $sql = "delete from contenidos_carrusel where idcontenidos_carrusel=" . $_REQUEST["id"];
-            phpmkr_query($sql, $conn);
+            phpmkr_query($sql);
             redirecciona($ruta_db_superior . "carrusel/sliderconfig.php");
             break;
     }
@@ -68,7 +68,7 @@ echo estilo_bootstrap();
     {
         global $ruta_db_superior, $conn;
         if (isset($_REQUEST["id"]) && $_REQUEST["id"]) {
-            $contenido = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "idcontenidos_carrusel=" . $_REQUEST["id"], "", $conn);
+            $contenido = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "idcontenidos_carrusel=" . $_REQUEST["id"], "");
         }
         ?>
             <script type="text/javascript" src="../js/jquery.js"></script>
@@ -123,7 +123,7 @@ echo estilo_bootstrap();
                 echo "<fieldset><legend>" . ucwords($accion . " contenido") . "</legend></fieldset><form action='contenidoconfig.php' name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
                 echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE*</td><td><input class='required'  type='text' name='nombre' value='" . @$contenido[0]["nombre"] . "'></td></tr>";
                 echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CARRUSEL*</td><td><select class='required'  type='text' name='carrusel_idcarrusel'>";
-                $carrusel = busca_filtro_tabla("idcarrusel,nombre", "carrusel", "", "nombre", $conn);
+                $carrusel = busca_filtro_tabla("idcarrusel,nombre", "carrusel", "", "nombre");
                 for ($i = 0; $i < $carrusel["numcampos"]; $i++) {
                     echo "<option value='" . $carrusel[$i]["idcarrusel"] . "' ";
                     if ($carrusel[$i]["idcarrusel"] == @$contenido[0]["carrusel_idcarrusel"]) {
@@ -234,9 +234,9 @@ echo estilo_bootstrap();
 
 
             $sql1 = "insert into contenidos_carrusel(" . implode(",", array_keys($datos)) . ") values(" . implode(",", array_values($datos)) . ")";
-            phpmkr_query($sql1, $conn);
+            phpmkr_query($sql1);
             $id = phpmkr_insert_id();
-            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto", $conn);
+            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto");
 
             guardar_archivos($id, $_REQUEST["form_uuid"]);
             redirecciona($ruta_db_superior . "carrusel/sliderconfig.php");
@@ -255,11 +255,11 @@ echo estilo_bootstrap();
             $id = $_REQUEST["id"];
             $sql1 = "update contenidos_carrusel set " . implode(",", $fields) . " where idcontenidos_carrusel=" . $id;
 
-            phpmkr_query($sql1, $conn);
-            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto", $conn);
+            phpmkr_query($sql1);
+            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto");
 
             if ($accion == "guardar_editar" && @$_REQUEST["borrar_imagen"]) {
-                $contenido = busca_filtro_tabla("imagen", "contenidos_carrusel", "idcontenidos_carrusel=$id", "", $conn);
+                $contenido = busca_filtro_tabla("imagen", "contenidos_carrusel", "idcontenidos_carrusel=$id", "");
                 if (MOTOR == "MySql") {
                     phpmkr_query("update contenidos_carrusel set imagen=null where idcontenidos_carrusel=$id");
                 } else if (MOTOR == "Oracle") {
@@ -281,7 +281,7 @@ echo estilo_bootstrap();
         {
             global $ruta_db_superior, $conn;
 
-            $archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid'", "", $conn);
+            $archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid'", "");
             for ($j = 0; $j < $archivos["numcampos"]; $j++) {
                 $ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
 
@@ -305,7 +305,7 @@ echo estilo_bootstrap();
                     if ($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)) {
                         $ruta_anexos = json_encode($ruta_anexos);
                         $sql1 = "update contenidos_carrusel set imagen='" . $ruta_anexos . "' where idcontenidos_carrusel=" . $id;
-                        phpmkr_query($sql1, $conn);
+                        phpmkr_query($sql1);
 
                         @unlink($ruta_temporal);
                         unlink("$ruta_temporal.lock");
