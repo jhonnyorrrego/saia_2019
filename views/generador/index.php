@@ -459,44 +459,25 @@ function cargarCampos($categoria)
                                             <ul id="contenedorComponentes" class="sortable boxy px-4" style="margin-left: 1em;">
                                                 <h6 style="text-align:center;position:absolute;top:160px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
                                                 <?php
-                                                $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-                                                $campos_excluir = array(
-                                                    "dependencia",
-                                                    "documento_iddocumento",
-                                                    "estado_documento",
-                                                    "firma",
-                                                    "serie_idserie",
-                                                    "encabezado"
-                                                );
-                                                if ($consulta_campos_lectura['numcampos']) {
-                                                    $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-                                                    $campos_lectura = implode(",", $campos_lectura);
-                                                    $campos_lectura = str_replace(",", "','", $campos_lectura);
-                                                    $busca_idft = strpos($campos_lectura, "idft_");
-                                                    if ($busca_idft !== false) {
-                                                        $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $formatId, "", $conn);
-                                                        $campos_lectura = str_replace("idft_", "id" . $consulta_ft[0]['nombre_tabla'], $campos_lectura);
-                                                        $campos_excluir[] =  $campos_lectura;
-                                                    }
-                                                }
-                                                $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
-                                                $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $formatId . $condicion_adicional, "B.orden", $conn);
-                                                $texto = '';
-                                                if ($pantalla['numcampos']) {
-                                                    $count = 1;
-                                                    for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
-                                                        $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $pantalla[$i]['idcampos_formato'] . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
-                                                        if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
-                                                            $pantalla_componente = busca_filtro_tabla("clase,nombre", "pantalla_componente", "idpantalla_componente={$pantalla_campos[0]['idpantalla_componente']}", "", $conn);
-                                                            $texto .= "<li class='agregado' idpantalla_campo='" . $pantalla_campos[0]['idpantalla_campos'] . "' idpantalla_componente='" . $pantalla_campos[0]['idpantalla_componente'] . "' data-position='" . $count . "' ><i class='fa {$pantalla_componente[0]["clase"]} mr-3'></i> <div id='c_{$pantalla_campos[0]["idpantalla_campos"]}' class='d-inline' >" . $pantalla_campos[0]["etiqueta"] . "</div> <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'><i class='fa fa-trash eliminar'></i></div></li>";
-                                                        }
-                                                        $count++;
-                                                    }
+                                                $fields = $Formato->getProcessFields();
 
-                                                    $texto = str_replace("? >", "?" . ">", $texto);
-                                                    $texto = str_replace("< ?php ", "<" . "?php", $texto);
+                                                foreach ($fields as $CamposFormato) {
+                                                    $PantallaComponente = PantallaComponente::findByAttributes([
+                                                        'etiqueta_html' => $CamposFormato->etiqueta_html
+                                                    ]);
+
+                                                    echo "<li 
+                                                        class='agregado'
+                                                        idpantalla_campo='{$CamposFormato->getPK()}'
+                                                        idpantalla_componente='{$PantallaComponente->getPK()}'
+                                                        data-position='{$CamposFormato->orden}' >
+                                                            <i class='fa {$PantallaComponente->clase} mr-3'></i>
+                                                            <div id='c_{$CamposFormato->getPK()}' class='d-inline' >{$CamposFormato->etiqueta}</div>
+                                                            <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'>
+                                                                <i class='fa fa-trash eliminar'></i>
+                                                            </div>
+                                                    </li>";
                                                 }
-                                                echo $texto;
                                                 ?>
                                             </ul>
                                         </div>

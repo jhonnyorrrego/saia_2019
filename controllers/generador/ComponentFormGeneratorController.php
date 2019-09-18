@@ -121,10 +121,7 @@ class ComponentFormGeneratorController
                 $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>{$labelRequired}<br></div>";
                 break;
             case "select":
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>';
-                $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?> </div>";
-
+                $texto = $this->generateSelect();
                 break;
             case "dependientes":
                 /* parametros:
@@ -193,10 +190,7 @@ class ComponentFormGeneratorController
                 $texto .= $this->generateInteger($this->CamposFormato);
                 break;
             default: // text
-                $texto .= '<div class="form-group col-12"  id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . str_replace("ACUTE;", "acute;", strtoupper($this->CamposFormato->etiqueta)) . $obliga . '</label>
-                                    <input class="form-control" ' . $obligatorio . ' type="text"  size="100" id="' . $this->CamposFormato->nombre . '" name="' . $this->CamposFormato->nombre . '" ' . $obligatorio . ' value="' . $valor . '">
-                                    </div>';
+                $texto .= $this->generateText();
                 break;
         }
         return $texto;
@@ -283,7 +277,7 @@ class ComponentFormGeneratorController
      */
     public function generateParagraph()
     {
-        return "<p id='{$this->CamposFormato->nombre}'>
+        return "<p id='{$this->CamposFormato->nombre}' title='{$this->CamposFormato->ayuda}'>
             {$this->CamposFormato->valor}
         </p>";
     }
@@ -693,11 +687,17 @@ HTML;
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-11
+     * Modificación para obtener el ancho del campo clase "pequeño:col-md-3 mediano:col-md-6 grande:col-md-12"
+     * @author Julian Otalvaro <julian.otalvaro@cerok.com>
+     * @date 2019-09-18 
      */
     private function generateInteger($campo, $moneda = false)
     {
         $campo = $campo->getAttributes();
-        $valor = $campo["valor"];
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $value = $this->getComponentValue();
+        $options = json_decode($this->CamposFormato->opciones);
 
         if ($campo["obligatoriedad"]) {
             $obligatorio = " required ";
@@ -758,8 +758,8 @@ HTML;
             $aux2[] = 'max="' . $fin . '"';
             $aux2[] = 'step=' . $incremento;
             $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
-        } else if (!empty($valor)) {
-            $parametros = explode("@", $valor);
+        } else if (!empty($value)) {
+            $parametros = explode("@", $value);
             if (is_numeric($parametros[0])) {
                 $aux2[] = 'min="' . $parametros[0] . '"';
             }
@@ -779,19 +779,16 @@ HTML;
         }
         $pre = "";
         $post = "";
-        $texto[] = '<div class="form-group ' . $obligatorio . $ancho . '" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . '</label>';
+        $texto[] = "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}' id='tr_{$campo["nombre"]}'>";
+        $texto[] = "<label title='{$campo['ayuda']}' for='{$campo["nombre"]}'>{$campo["etiqueta"]}</label>";
         if ($moneda) {
-            $pre = '<div class="input-group">
-                        <div class="input-group-prepend">
-                          <div class="input-group-text">$</div>
-                        </div>';
-            $post = '</div>';
+            $pre = "<div class='input-group'><div class='input-group-prepend'><div class='input-group-text'>$</div></div>";
+            $post = "</div>";
             $ancho = "";
         }
         $texto[] = $pre;
-        $texto[] = '<input class="form-control" ' . " $adicionales . $obligatorio" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '"  value="' . $valor . '">';
-        $texto[] = '</div>';
+        $texto[] = "<input class='form-control' {$adicionales} {$requiredClass} type='number' id='{$this->CamposFormato->nombre}' name='{$campo["nombre"]}'  value='{$value}'>";
+        $texto[] = "</div>";
         $texto[] = $post;
         return implode("\n", $texto);
     }
@@ -920,5 +917,43 @@ HTML;
         }
 
         return $response;
+    }
+
+    /* Genera el campo tipo texto con sus respectivos atributos, se realizo cambio de ancho del campo de estilo a opciones
+              tipo clase y sus tamaño pequeño "col-md-3", mediano "col-md-6" y grande ""col-md-3""
+     *
+     * @author Julian Otalvaro <julian.otalvaro@cerok.com> - jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-18
+     */
+
+    public function generateText()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $value = $this->getComponentValue();
+        $options = json_decode($this->CamposFormato->opciones);
+        return "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}'  id='tr_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <input class='form-control {$requiredClass}' type='text' id='{$this->CamposFormato->nombre}' name='{$this->CamposFormato->nombre}' value='{$value}' />
+        </div>";
+    }
+
+
+    /* Genera el campo tipo Select con sus respectivos atributos, se realizo cambio de ancho del campo de estilo a opciones
+              tipo clase y sus tamaño pequeño "col-md-3", mediano "col-md-6" y grande ""col-md-3""
+     *
+     * @author Julian Otalvaro <julian.otalvaro@cerok.com> - jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-18
+     */
+
+    public function generateSelect()
+    {
+
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $options = json_decode($this->CamposFormato->opciones);
+        $texto = "<div class='form-group col-12 {$options->clase}' id='tr_{$this->CamposFormato->nombre}'><label title='{$this->CamposFormato->ayuda}'>{$label}</label>";
+        $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?> </div>";
+
+        return $texto;
     }
 }
