@@ -184,6 +184,10 @@ class Serie extends LogModel
 
 
 
+
+
+
+
     /**
      * retornar la etiqueta del tipo de la serie
      *

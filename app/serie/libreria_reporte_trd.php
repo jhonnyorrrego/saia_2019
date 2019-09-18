@@ -41,8 +41,9 @@ function opciones($idserie_version, $estado, $anexo)
         ]);
     }
 
-    if (!$versionActual) {
-        $versionActual = (int) SerieVersion::getCurrentVersion()->getPK();
+    if (is_null($versionActual)) {
+        $versionActual = SerieVersion::getCurrentVersion() ?
+            SerieVersion::getCurrentVersion()->getPK() : 0;
         $GLOBALS['versionActual'] =  $versionActual;
     }
 

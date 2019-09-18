@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) [
-    'data' => new stdClass(),
+    'data' => [],
     'message' => '',
     'success' => 0
 ];
@@ -24,14 +24,17 @@ try {
 
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $version = 0;
+    if (!SerieVersion::existTemporalVersion()) {
 
-    if ($SerieVersion = SerieVersion::getCurrentVersion()) {
-        $version = (int) $SerieVersion->version + 1;
+        $version = 0;
+        if ($SerieVersion = SerieVersion::getCurrentVersion()) {
+            $version = (int) $SerieVersion->version + 1;
+        }
+        $Response->data['version'] = $version;
+        $Response->success = 1;
+    } else {
+        $Response->success = 2;
     }
-
-    $Response->data->version = $version;
-    $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
 }

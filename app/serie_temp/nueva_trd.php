@@ -28,11 +28,10 @@ try {
     if (!$_REQUEST['tipo']) {
         throw new Exception('Debe indicar una acción', 1);
     }
+    throw new Exception("No se pudo almacenar la información", 1);
 
     $dataAditional = [];
     $folder = "TRD/version_{$_REQUEST['version']}";
-
-    $ok = 1;
     $urlExcel = false;
 
     if ($_REQUEST['tipo'] == 1) {
@@ -47,12 +46,13 @@ try {
 
             $dataAditional['archivo_trd'] = $jsonDB;
         } else {
-            $ok = 0;
-            $Response->message = 'No se pudo leer el archivo TRD';
+            throw new Exception("No se pudo leer el archivo TRD", 1);
         }
+    } else if (!SerieVersion::existCurrentVersion()) {
+        throw new Exception("No existe una TRD vigente, no se puede clonar", 1);
     }
 
-    if (!empty($_REQUEST['file_anexos']) && $ok) {
+    if (!empty($_REQUEST['file_anexos'])) {
         $urlAnexo = $ruta_db_superior . $_REQUEST['file_anexos'];
 
         if (is_file($urlAnexo)) {
@@ -61,35 +61,20 @@ try {
 
             $content = file_get_contents($urlAnexo);
             $json = TemporalController::createFileDbRoute($route, "archivos", $content);
+
             $dataAditional['anexos'] = $json;
         } else {
-            $ok = 0;
-            $Response->message = 'No se pudo cargar el anexo TRD';
+            throw new Exception("No se pudo leer el anexo TRD", 1);
         }
     }
 
-    if ($ok) {
-        if ($SerieVersion = SerieVersion::getCurrentVersion()) {
+    unset($_REQUEST['file_trd'], $_REQUEST['file_anexos']);
+    $attributes = array_merge($_REQUEST, $dataAditional);
 
-            $TRDVersionController = new TRDVersionController($SerieVersion->getPK());
-            $TRDVersionController->removeTemporalFile();
-            $folder = "TRD/version_{$SerieVersion->version}";
+    $conn = Connection::getInstance();
+    $conn->beginTransaction();
 
-            $SerieVersion->setAttributes([
-                'json_trd' => TemporalController::createFileDbRoute($folder . "/trd.txt", "archivos", $TRDVersionController->getTrdData()),
-                'json_clasificacion' => TemporalController::createFileDbRoute($folder . "/clasificacion.txt", "archivos", $TRDVersionController->getClasificationData())
-            ]);
-            $SerieVersion->update();
-        }
-
-        $attributes = [
-            'version' => $_REQUEST['version'],
-            'tipo' => $_REQUEST['tipo'],
-            'nombre' => $_REQUEST['nombre'],
-            'descripcion' => $_REQUEST['descripcion']
-        ];
-        $attributes = array_merge($attributes, $dataAditional);
-
+    try {
         if ($idSerieVersion = SerieVersion::newRecord($attributes)) {
             if ($_REQUEST['tipo'] == 1) {
                 new TRDLoadController($urlExcel, $idSerieVersion);
@@ -99,9 +84,13 @@ try {
 
             $Response->success = 1;
             $Response->message = "Datos Guardados!";
+            $conn->commit();
         } else {
-            $Response->message = "No se pudo almacenar la información";
+            throw new Exception("No se pudo almacenar la información", 1);
         }
+    } catch (\Throwable $th) {
+        $conn->rollBack();
+        throw new Exception($th->getMessage(), 1);
     }
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();

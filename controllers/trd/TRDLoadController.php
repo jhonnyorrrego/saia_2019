@@ -31,18 +31,8 @@ class TRDLoadController
 
     protected function init()
     {
-        $this->truncate()
-            ->getDataExcel()
-            ->loadTRD()
-            ->saveSerie();
-    }
-
-    protected function truncate()
-    {
-        SerieTemp::truncateTable('serie_temp');
-        DependenciaSerieTemp::truncateTable('dependencia_serie_temp');
-
-        return $this;
+        $this->getDataExcel()
+            ->loadTRD();
     }
 
     protected function getDataExcel()
@@ -88,7 +78,8 @@ class TRDLoadController
 
             if (
                 $rowAnterior['cod_serie'] != $registro['cod_serie'] && $registro['cod_serie']
-                || $rowAnterior['cod_dependencia'] != $registro['cod_dependencia'] && $registro['cod_dependencia']
+                || $rowAnterior['cod_dependencia'] != $registro['cod_dependencia'] &&
+                $registro['cod_dependencia']
             ) {
 
                 $this->row = $this->validateFields($registro);
@@ -127,52 +118,8 @@ class TRDLoadController
         return $this;
     }
 
-    protected function saveSerie()
-    {
-        $sql = SerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('serie_temp')
-            ->orderBy('idserie', 'ASC');
-
-        $data = SerieTemp::findByQueryBuilder($sql);
-
-        $ids = [0 => 0];
-        foreach ($data as $SerieTemp) {
-            $attributesSerie = $SerieTemp->getAttributes();
-            $attributesSerie['estado'] = 1;
-            $attributesSerie['cod_arbol'] = 0;
-            $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
-            $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
-
-            if ($id = Serie::newRecord($attributesSerie)) {
-                $ids[$id] = $SerieTemp->getPK();
-            } else {
-                $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
-            }
-        }
-        unset($this->fila);
-
-        $sql = DependenciaSerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('dependencia_serie_temp')
-            ->orderBy('iddependencia_serie', 'ASC');
-        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
-
-        foreach ($data as $DependenciaSerie) {
-
-            $attributesDep = $DependenciaSerie->getAttributes();
-            $attributesDep['fk_serie'] = array_search($attributesDep['fk_serie'], $ids);
-
-            if (!DependenciaSerie::newRecord($attributesDep)) {
-                $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$DependenciaSerie->getPK()}");
-            }
-        }
-        return $this;
-    }
-
     private function validateFields($row)
     {
-
         if (
             (is_null($row['ret_gestion'])  && is_null($row['ret_central']))
             || ($row['ret_gestion'] == -1 && $row['ret_central'] == -1)
@@ -185,7 +132,6 @@ class TRDLoadController
                     $this->errorException("No debe seleccionar ningun tipo de disposicion si la retencion en gestion es permanente");
                 }
             }
-
 
             $row['ret_gestion'] = -1;
             $row['ret_central'] = -1;
@@ -247,7 +193,6 @@ class TRDLoadController
 
     private function validateDependencia($codDependencia)
     {
-
         $existDep = Dependencia::getQueryBuilder()
             ->select('estado,iddependencia')
             ->from('dependencia')
@@ -420,11 +365,12 @@ class TRDLoadController
 
     private function validateSerieSubserie($data = array(), $tipo = 1)
     {
+
         $existSerie = $this->validateDependenciaSerie(
             $tipo,
             $data['cod_serie'],
             $this->row['iddependencia'],
-            $data['idseriePadre']
+            $data['idseriePadre'] ?? 0
         );
 
         if ($existSerie) {
@@ -443,9 +389,6 @@ class TRDLoadController
 
     private function errorException($message)
     {
-        $SerieVersion = new SerieVersion($this->fk_serie_version);
-        $SerieVersion->delete();
-
         if ($this->fila) {
             $text = "En la fila {$this->fila} : {$message}";
         } else {
@@ -453,4 +396,53 @@ class TRDLoadController
         }
         throw new Exception($text);
     }
+
+    public static function truncate()
+    {
+        SerieTemp::truncateTable('serie_temp');
+        DependenciaSerieTemp::truncateTable('dependencia_serie_temp');
+    }
+
+    /*protected function saveSerie()
+    {
+        $sql = SerieTemp::getQueryBuilder()
+            ->select('*')
+            ->from('serie_temp')
+            ->orderBy('idserie', 'ASC');
+
+        $data = SerieTemp::findByQueryBuilder($sql);
+
+        $ids = [0 => 0];
+        foreach ($data as $SerieTemp) {
+            $attributesSerie = $SerieTemp->getAttributes();
+            $attributesSerie['estado'] = 1;
+            $attributesSerie['cod_arbol'] = 0;
+            $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
+            $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
+
+            if ($id = Serie::newRecord($attributesSerie)) {
+                $ids[$id] = $SerieTemp->getPK();
+            } else {
+                $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
+            }
+        }
+        unset($this->fila);
+
+        $sql = DependenciaSerieTemp::getQueryBuilder()
+            ->select('*')
+            ->from('dependencia_serie_temp')
+            ->orderBy('iddependencia_serie', 'ASC');
+        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
+
+        foreach ($data as $DependenciaSerie) {
+
+            $attributesDep = $DependenciaSerie->getAttributes();
+            $attributesDep['fk_serie'] = array_search($attributesDep['fk_serie'], $ids);
+
+            if (!DependenciaSerie::newRecord($attributesDep)) {
+                $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$DependenciaSerie->getPK()}");
+            }
+        }
+        return $this;
+    }*/
 }

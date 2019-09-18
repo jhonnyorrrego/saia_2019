@@ -3,8 +3,8 @@ $(function () {
     $('#loadTrd_script').removeAttr('data-params');
 
     (function init() {
-        createFileInput();
         getVersion();
+        createFileInput();
     })();
 
     function createFileInput() {
@@ -73,11 +73,20 @@ $(function () {
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    if (response.data.version) {
-                        $("#version").val(response.data.version).attr("readonly", true);
+                    if (response.success == 2) {
+                        top.notification({
+                            message: 'Ya existe una TRD en borrador',
+                            type: 'error'
+                        });
+                        top.$("[data-name='versiones_trd']").click();
                     } else {
-                        $("#version").val(1);
+                        if (response.data.version) {
+                            $("#version").val(response.data.version).attr("readonly", true);
+                        } else {
+                            $("#version").val(1);
+                        }
                     }
+
                 } else {
                     top.notification({
                         message: response.message,
@@ -129,22 +138,14 @@ $('#loadTRDForm').validate({
             url: `${params.baseUrl}views/serie/progress.php`,
             size: 'modal-lg',
             buttons: {},
-            title: 'Cargando .....',
-            beforeShow: function () {
-                $('#modal_title', parent.document)
-                    .next()
-                    .hide();
-            },
-            afterHide: function () {
-                $('#modal_title', parent.document)
-                    .next()
-                    .show();
-            }
+            backdrop: 'static',
+            keyboard: false,
+            title: 'Cargando .....'
         };
 
         $.ajax({
             type: 'POST',
-            url: `${params.baseUrl}app/serie/nueva_trd.php`,
+            url: `${params.baseUrl}app/serie_temp/nueva_trd.php`,
             data,
             dataType: 'json',
             beforeSend: function () {
@@ -153,12 +154,12 @@ $('#loadTRDForm').validate({
             success: function (response) {
                 if (response.success) {
                     top.closeTopModal();
+                    top.$("[data-name='versiones_trd']").click();
 
                     top.notification({
                         message: response.message,
                         type: 'success'
                     });
-                    window.location.reload();
                 } else {
                     options = {
                         params: {

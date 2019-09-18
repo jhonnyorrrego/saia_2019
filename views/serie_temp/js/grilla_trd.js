@@ -1,0 +1,403 @@
+$(function () {
+    let params = $('#trd_report_script').data('params');
+    $('#trd_report_script').removeAttr('data-params');
+
+    (function init() {
+        createTable();
+        showBtnAdd();
+    })();
+
+    function showBtnAdd() {
+        (params.currentVersion == 1 && params.type == 'json_trd')
+            ? modalAddEdit() : $("#btn_add").remove()
+    }
+
+    function modalAddEdit() {
+        $("#btn_add").show();
+
+        $('#btn_add').on('click', function () {
+            top.topModal({
+                url: `${params.baseUrl}views/serie/adicionar.php`,
+                size: 'modal-xl',
+                title: 'Crear',
+                onSuccess: function (data) {
+                    top.closeTopModal();
+                    $('#trd_table').bootstrapTable('refresh');
+                },
+                buttons: {
+                    success: {
+                        label: 'Guardar',
+                        class: 'btn btn-complete'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        class: 'btn btn-danger'
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '.edit-serie', function () {
+
+            let type = $(this).data('type');
+            let id = $(this).data('id');
+            let iddep = $(this).data('iddep');
+            let name = [];
+            name[1] = 'Serie';
+            name[2] = 'Subserie';
+            name[3] = 'Tipo documental';
+
+            top.topModal({
+                url: `${params.baseUrl}views/serie/editar.php`,
+                size: 'modal-xl',
+                title: 'Editar ' + name[type],
+                params: {
+                    idserie: id,
+                    iddependencia: iddep,
+                },
+                onSuccess: function () {
+                    top.closeTopModal();
+                    $('#trd_table').bootstrapTable('refresh');
+                },
+                buttons: {
+                    success: {
+                        label: 'Guardar',
+                        class: 'btn btn-complete'
+                    },
+                    cancel: {
+                        label: 'Cancelar',
+                        class: 'btn btn-danger'
+                    }
+                }
+            });
+        });
+    }
+
+    function createTable() {
+        $('#trd_table').bootstrapTable({
+            url: `${params.baseUrl}app/serie/reporte_trd.php`,
+            queryParams: function (queryParams) {
+                queryParams = $.extend(queryParams, {
+                    key: localStorage.getItem('key'),
+                    token: localStorage.getItem('token'),
+                    id: params.id,
+                    type: params.type,
+                    currentVersion: params.currentVersion,
+                    generateTRD: 1
+                });
+                return queryParams;
+            },
+            responseHandler: function (response) {
+                if (params.currentVersion == 1 && params.type == 'json_trd') {
+
+                    for (let index = 0; index < response.rows.length; index++) {
+                        let dataParams = {
+                            'idserie': response.rows[index].idserie,
+                            'idsubserie': response.rows[index].idsubserie,
+                            'idtipo': response.rows[index].idtipo,
+                            'iddependencia': response.rows[index].iddependencia
+                        };
+                        response.rows[index].opciones = templateOptions(dataParams);
+                    }
+                }
+                return response;
+            },
+            toolbar: '#toolbar',
+            search: true,
+            showSearchButton: true,
+            showColumns: true,
+            showRefresh: true,
+            icons: {
+                search: 'fa fa-search',
+                refresh: 'fa-refresh',
+                columns: 'fa fa-th-list',
+                export: 'fa fa-download'
+            },
+            classes: 'table table-hover table-bordered mt-0',
+            theadClasses: 'thead-light',
+            queryParamsType: 'other',
+            pagination: true,
+            paginationSuccessivelySize: 1,
+            paginationPagesBySide: 1,
+            filterControl: true,
+            showExport: true,
+            exportTypes: ['csv', 'txt', 'excel', 'pdf'],
+            exportDataType: 'all',
+            exportOptions: {
+                fileName: 'TRD',
+                jspdf: {
+                    orientation: 'l',
+                    margins: { left: 10, right: 10, top: 30, bottom: 30 },
+                    autotable: {
+                        styles: {
+                            cellPadding: 2,
+                            rowHeight: 20,
+                            fontStyle: 'normal',
+                            overflow: 'linebreak',
+                            valign: 'middle'
+                        },
+                        tableWidth: 'wrap'
+                    }
+                }
+            },
+            columns: getColumns()
+        });
+    }
+
+    function templateOptions(data) {
+        let template = `<div class="dropdown f-20">
+            <button class="btn mx-1" 
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false"
+            >
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+                    <i class="fa fa-edit"></i> Editar Serie
+                </a>
+                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+                <i class="fa fa-edit"></i> Editar Subserie
+            </a>
+            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+            <i class="fa fa-edit"></i> Editar Tipo documental
+        </a>
+            </div>
+        </div>`;
+        return template;
+    }
+
+    function getColumns() {
+        return params.type == 'json_clasificacion'
+            ? clasificationColumns()
+            : trdColumns();
+    }
+
+    function trdColumns() {
+        return params.currentVersion == 1
+            ? trdCurrentVersionColumns()
+            : trdPreviousVersionColumns();
+    }
+
+    function trdPreviousVersionColumns() {
+        return [
+            [
+                {
+                    title: 'Códigos',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Descripción documental',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Retención',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Soporte',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Disposición',
+                    colspan: 4,
+                    align: 'center'
+                },
+                {
+                    field: 'procedimiento',
+                    title: 'Procedimiento',
+                    rowspan: 2,
+                    align: 'center'
+                }
+            ],
+            [
+                {
+                    field: 'dependencia',
+                    title: 'Dependencia',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serie',
+                    title: 'Serie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerie',
+                    title: 'SubSerie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serieDocumental',
+                    title: 'Serie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerieDocumental',
+                    title: 'SubSerie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'tipoDocumental',
+                    title: 'Tipo Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                { field: 'gestion', title: 'Gestion', align: 'center' },
+                { field: 'central', title: 'Central', align: 'center' },
+                { field: 'p', title: 'P', align: 'center' },
+                { field: 'el', title: 'El', align: 'center' },
+                { field: 'e', title: 'E', align: 'center' },
+                { field: 's', title: 'S', align: 'center' },
+                { field: 'ct', title: 'Ct', align: 'center' },
+                { field: 'md', title: 'Md', align: 'center' }
+            ]
+        ];
+    }
+
+    function trdCurrentVersionColumns() {
+        return [
+            [
+                {
+                    title: 'Códigos',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Descripción documental',
+                    colspan: 3,
+                    align: 'center'
+                },
+                {
+                    title: 'Retención',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Soporte',
+                    colspan: 2,
+                    align: 'center'
+                },
+                {
+                    title: 'Disposición',
+                    colspan: 4,
+                    align: 'center'
+                },
+                {
+                    field: 'procedimiento',
+                    title: 'Procedimiento',
+                    rowspan: 2,
+                    align: 'center'
+                },
+                {
+                    field: 'opciones',
+                    title: 'Opciones',
+                    rowspan: 2,
+                    align: 'center'
+                }
+            ],
+            [
+                {
+                    field: 'dependencia',
+                    title: 'Dependencia',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serie',
+                    title: 'Serie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerie',
+                    title: 'SubSerie',
+                    filterControl: 'select',
+                    align: 'center'
+                },
+                {
+                    field: 'serieDocumental',
+                    title: 'Serie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'subSerieDocumental',
+                    title: 'SubSerie Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                {
+                    field: 'tipoDocumental',
+                    title: 'Tipo Documental',
+                    filterControl: 'input',
+                    align: 'center'
+                },
+                { field: 'gestion', title: 'Gestion', align: 'center' },
+                { field: 'central', title: 'Central', align: 'center' },
+                { field: 'p', title: 'P', align: 'center' },
+                { field: 'el', title: 'El', align: 'center' },
+                { field: 'e', title: 'E', align: 'center' },
+                { field: 's', title: 'S', align: 'center' },
+                { field: 'ct', title: 'Ct', align: 'center' },
+                { field: 'md', title: 'Md', align: 'center' }
+            ]
+        ];
+    }
+
+    function clasificationColumns() {
+        return [
+            {
+                field: 'No',
+                title: 'No.',
+                align: 'center'
+            },
+            {
+                field: 'SiglaDependencia',
+                title: 'Sigla Dependencia',
+                align: 'center'
+            },
+            {
+                field: 'codigoDependencia',
+                title: 'Código Dependencia',
+                filterControl: 'select',
+                align: 'center'
+            },
+            {
+                field: 'CodigoSerie',
+                title: 'Código Serie',
+                filterControl: 'select',
+                align: 'center'
+            },
+            {
+                field: 'serieDocumental',
+                title: 'Serie documental',
+                filterControl: 'input',
+                align: 'center'
+            },
+            {
+                field: 'subSerie',
+                title: 'Código subserie',
+                filterControl: 'select',
+                align: 'center'
+            },
+            {
+                field: 'subSerieDocumental',
+                title: 'Subserie Documental',
+                filterControl: 'input',
+                align: 'center'
+            }
+        ];
+    }
+
+});
