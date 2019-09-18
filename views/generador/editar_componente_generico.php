@@ -68,8 +68,6 @@ if (@$_REQUEST["idpantalla_campos"]) {
 }
 $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
-
-
 function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 {
     global $conn;
@@ -186,6 +184,8 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                     }
                 }
             };
+
+            console.log(opciones_form['data']);
             $('#editar_pantalla_campo').alpaca(opciones_form);
         });
 

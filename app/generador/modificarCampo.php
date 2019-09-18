@@ -111,9 +111,9 @@ try {
 
                         array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
                         array_push($camposModificados, $key);
+                        print_r($value);
                     }
                 }
-
                 $camposVacios = obtenerCamposVacios($camposModificados, $idpantalla_campos);
 
                 if (count($sql_update)) {
