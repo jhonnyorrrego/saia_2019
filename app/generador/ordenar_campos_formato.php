@@ -29,7 +29,7 @@ try {
 
     foreach ($_REQUEST["ordenComponentes"] as $key => $idcamposFormatos) {
         $CamposFormato = new CamposFormato($idcamposFormatos);
-        $CamposFormato->orden = $key;
+        $CamposFormato->orden = ($key+2);
         $CamposFormato->save();
     }
 

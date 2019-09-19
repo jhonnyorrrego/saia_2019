@@ -1071,22 +1071,22 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
         function fecha_formato($idformato, $idcampo, $iddoc = null)
         {
+            global $conn;
+            $Formato=new Formato($idformato);
+            $CamposFormato=new CamposFormato($idcampo);
 
-            $datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "");
-            $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=$idcampo", "");
-
-            if ($campo[0]["tipo_dato"] == 'DATE')
+            if ($CamposFormato->tipo_dato == 'DATE')
                 $formato = "Y-m-d";
-            elseif ($campo[0]["tipo_dato"] == 'DATETIME')
+            elseif ($CamposFormato->tipo_dato == 'DATETIME')
                 $formato = "Y-m-d H:i";
 
             if ($iddoc == null) {
                 $valor = date($formato);
             } else {
-                $resultado = busca_filtro_tabla(fecha($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
+                $resultado = busca_filtro_tabla(fecha($CamposFormato->nombre, $formato) . " as fecha", $Formato->nombre_tabla, "documento_iddocumento=$iddoc", "");
                 $valor = $resultado[0]["fecha"];
             }
-            echo "<input type='text' class='form-control' name='" . $campo[0]["nombre"] . "' id='" . $campo[0]["nombre"] . "' value='$valor' readonly='true'>";
+            echo "<input type='text' class='form-control' name='" . $CamposFormato->nombre . "' id='" . $CamposFormato->nombre . "' value='$valor' readonly='true'>";
         }
 
         /*
@@ -1099,6 +1099,23 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
  * <Pre-condiciones>
  * <Post-condiciones>
  */
+        
+function digitalizar_formato($idformato, $iddoc)
+{
+    echo '<div class="form-group" id="tr_digitalizacion">
+            <label class = "etiqueta_campo" title = "">DESEA DIGITALIZAR?</label>
+            <div class = "row">
+                <div class = "col-3 px-1">
+                    <div class = "radio radio-success">
+                        <input  class = "form-check-input" name="digitalizacion" type="radio" id="digitaliza_si" value="1" checked>
+                        <label class = "etiqueta_selector" for = "digitaliza_si">Si</label>
+                        <input class = "form-check-input" id="digitaliza_no" name="digitalizacion" type="radio" value="0" >
+                        <label class = "etiqueta_selector" for = "digitaliza_no">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>';
+}
 
         function mes($mes)
         {

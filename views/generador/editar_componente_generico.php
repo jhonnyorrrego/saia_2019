@@ -70,7 +70,7 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 
 function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 {
-    
+
     $pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "");
 
     $pantalla_campos["exito"] = 0;
@@ -184,8 +184,6 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                     }
                 }
             };
-
-            console.log(opciones_form['data']);
             $('#editar_pantalla_campo').alpaca(opciones_form);
         });
 
@@ -254,7 +252,7 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 <?php
 function obtener_valores_campo($idcampo_formato, $opciones_defecto)
 {
-    
+
     $resp = array();
 
     $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda, etiqueta_html", "campos_formato", "idcampos_formato=$idcampo_formato", "");

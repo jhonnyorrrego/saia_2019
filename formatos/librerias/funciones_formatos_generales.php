@@ -164,23 +164,6 @@ function validar_digitalizacion_formato($idformato, $iddoc)
   <Post-condiciones><Post-condiciones>
   </Clase> */
 
-function digitalizar_formato($idformato, $iddoc)
-{
-    echo '<div class="form-group" id="tr_digitalizacion">
-            <label class = "etiqueta_campo" title = "">DESEA DIGITALIZAR?</label>
-            <div class = "row">
-                <div class = "col-3 px-1">
-                    <div class = "radio radio-success">
-                        <input  class = "form-check-input" name="digitalizacion" type="radio" id="digitaliza_si" value="1" checked>
-                        <label class = "etiqueta_selector" for = "digitaliza_si">Si</label>
-                        <input class = "form-check-input" id="digitaliza_no" name="digitalizacion" type="radio" value="0" >
-                        <label class = "etiqueta_selector" for = "digitaliza_no">No</label>
-                    </div>
-                </div>
-            </div>
-        </div>';
-}
-
 function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false)
 {
     $f0 = strtotime($fecha_principal);

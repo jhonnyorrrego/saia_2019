@@ -217,7 +217,7 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 	}
 	return;
 }
-
+ 
 /*<Clase>
  <Nombre>llama_funcion_accion</Nombre>
  <Parametros>$iddoc:id del documento;$idformato:id del formato;$accion:acci�n relacionada;$momento:momento de ejecucion(anterior,posterior)</Parametros>
@@ -231,7 +231,6 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL)
 {
 	$listado_acciones = listar_acciones_formato($idformato, $accion, $momento);
-
 	if ($listado_acciones != "") {
 		ejecutar_acciones_formato($iddoc, $idformato, $listado_acciones);
 	}

@@ -798,7 +798,6 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
     // echo($insert);die();
     phpmkr_query($insert);
-
     if ($_REQUEST["radicacion_rapida"] == 1) {
         $sql1 = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
@@ -859,7 +858,6 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
      * El $estado_distribucion determina el buzon en donde esta el tramite 0,Pediente o entrega interna a ventanilla; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
      * El $estado_recogida corresponde a si se necesita una acción de recogida en este caso se debe enviar el valor (1) para cuando es si y el valor de (0) cuando es no 
      */
-
     if ($datos['numcampos']) {
         //por defecto se maneja que si se necesita entrega (1)
         $estado_distribucion = 1;
@@ -867,7 +865,6 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         if ($datos[0]['tipo_mensajeria'] == 3) {
             $estado_distribucion = 3;
         }
-
         //caso 1: Origen Externo y destino Interno
         if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {
             pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);

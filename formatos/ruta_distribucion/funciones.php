@@ -206,7 +206,6 @@ function add_edit_ruta_dist($idformato, $iddoc)
     function crearItemFuncionario($item)
     {
         $VfuncionarioDc = new VfuncionarioDc($item['mensajero_ruta']);
-
         $seleccionar = array(
             1 => "",
             2 => ""
@@ -246,6 +245,7 @@ function add_edit_ruta_dist($idformato, $iddoc)
                 ->where("a.ft_ruta_distribucion = :dato")
                 ->setParameter(':dato', $dato[0]['idft_ruta_distribucion'])
                 ->execute()->fetchAll();
+
             if ($item) {
                 $estado = array(
                     1 => "Activo",
