@@ -118,49 +118,6 @@ class TRDLoadController
         return $this;
     }
 
-    /*protected function saveSerie()
-    {
-        $QueryBuilder = SerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('serie_temp')
-            ->orderBy('idserie', 'ASC');
-
-        $data = SerieTemp::findByQueryBuilder($QueryBuilder);
-
-        $ids = [0 => 0];
-        foreach ($data as $SerieTemp) {
-            $attributesSerie = $SerieTemp->getAttributes();
-            $attributesSerie['estado'] = 1;
-            $attributesSerie['cod_arbol'] = 0;
-            $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
-            $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
-
-            if ($id = Serie::newRecord($attributesSerie)) {
-                $ids[$id] = $SerieTemp->getPK();
-            } else {
-                $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
-            }
-        }
-        unset($this->fila);
-
-        $QueryBuilder = DependenciaSerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('dependencia_serie_temp')
-            ->orderBy('iddependencia_serie', 'ASC');
-        $data = DependenciaSerieTemp::findByQueryBuilder($QueryBuilder);
-
-        foreach ($data as $DependenciaSerie) {
-
-            $attributesDep = $DependenciaSerie->getAttributes();
-            $attributesDep['fk_serie'] = array_search($attributesDep['fk_serie'], $ids);
-
-            if (!DependenciaSerie::newRecord($attributesDep)) {
-                $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$DependenciaSerie->getPK()}");
-            }
-        }
-        return $this;
-    }*/
-
     private function validateFields($row)
     {
         if (

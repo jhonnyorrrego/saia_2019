@@ -988,7 +988,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
                 ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
                 ->andWhere(
                     $query->expr()->lte('fecha_inicial', ':fechaI'),
-                    $query->expr()->gte('fecha_final', ':fechaF'),
+                    $query->expr()->gte('fecha_final', ':fechaF')
                 )->setParameter(":login", SessionController::getLogin())
                 ->setParameter(':fechaI', new \DateTime("now"), "datetime")
                 ->setParameter(':fechaF', new \DateTime("now"), "datetime")

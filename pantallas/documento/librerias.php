@@ -309,12 +309,7 @@ function unread($documentId, $date)
         ->where('archivo_idarchivo = :documentId')
         ->andWhere('origen = :userCode')
         ->andWhere('fecha >= :date')
-        ->andWhere(
-            $QueryBuilder->expr()->orX(
-                "nombre = 'LEIDO'",
-                "nombre = 'BORRADOR'",
-            )
-        )
+        ->andWhere("nombre='LEIDO' OR nombre='BORRADOR'")
         ->setParameter(':documentId', $documentId, 'integer')
         ->setParameter(':userCode', $userCode, 'integer')
         ->setParameter(':date', $date, 'datetime')

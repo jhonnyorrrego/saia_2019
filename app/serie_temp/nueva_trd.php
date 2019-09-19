@@ -28,7 +28,6 @@ try {
     if (!$_REQUEST['tipo']) {
         throw new Exception('Debe indicar una acción', 1);
     }
-    throw new Exception("No se pudo almacenar la información", 1);
 
     $dataAditional = [];
     $folder = "TRD/version_{$_REQUEST['version']}";

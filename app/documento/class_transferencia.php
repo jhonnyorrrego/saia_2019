@@ -791,18 +791,19 @@ function cargo_rol($iddoc)
                     $query->expr()->in("a.nombre", ":estado"),
                     $query->expr()->andX(
                         "a.nombre='POR_APROBAR'",
-                        "a.activo = 1",
+                        "a.activo = 1"
                     )
                 ),
-                $query->expr()->in("b.obligatorio", [1, 2, 5]),
-                "b.tipo = 'ACTIVO'",
-                "a.archivo_idarchivo = :iddoc",
+                $query->expr()->in("b.obligatorio", [1, 2, 5])
             )
-        )->setParameter(":estado", ['APROBADO', 'REVISADO'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+        )->andWhere("b.tipo = 'ACTIVO'")
+        ->andWhere("a.archivo_idarchivo = :iddoc")
+        ->setParameter(":estado", ['APROBADO', 'REVISADO'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
         ->setParameter(":iddoc", $iddoc)
         ->execute()->fetchAll();
 
-    for ($i = 0; $i < $tipo["numcampos"]; $i++) {
+    for ($i = 0, $total = count($tipo); $i < $total; $i++) {
+
         if (in_array($tipo[$i]["origen"], $origenes)) {
             unset($tipo[$i]);
             continue;
