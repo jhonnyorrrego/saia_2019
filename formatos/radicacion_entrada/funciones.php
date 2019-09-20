@@ -452,8 +452,6 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#tr_persona_natural_dest').show();
                 $('#persona_natural_dest').addClass('required');
                 //$('#tipo_mensajeria0').parent().show();
-
-
                 refrescar_arbol_tipo_documental_funcionario_responsable();
 
             } else {
@@ -463,8 +461,6 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 $('#tr_persona_natural_dest').hide();
                 $('#persona_natural_dest').removeClass('required');
                 //$('#tipo_mensajeria0').parent().hide();
-
-
             }
         }
 
@@ -749,7 +745,6 @@ function obtener_informacion_proveedor($idformato, $iddoc)
 
 function mostrar_item_destino_radicacion($idformato, $iddoc)
 {
-
     echo mostrar_listado_distribucion_documento($idformato, $iddoc, 1);
 }
 
@@ -780,7 +775,7 @@ function mostrar_copia_electronica($idformato, $iddoc)
 
 function cambiar_estado($idformato, $iddoc)
 {
-
+    print_r("cambiar estado !!!!!!");
     $doc = busca_filtro_tabla("estado", "documento A", "iddocumento=" . $iddoc, "");
     if ($doc[0]["estado"] == 'INICIADO') {
         $sql1 = "UPDATE documento SET estado='APROBADO' WHERE iddocumento=" . $iddoc;
@@ -793,6 +788,7 @@ function cambiar_estado($idformato, $iddoc)
 
 function post_aprobar_rad_entrada($idformato, $iddoc)
 {
+    print_r("post_aprobar_rad_entrada!!!!!! ");
     global $conn, $ruta_db_superior;
     $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "");
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
@@ -804,7 +800,9 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
     } else {
         ingresar_item_destino_radicacion($idformato, $iddoc);
         actualizar_campos_documento($idformato, $iddoc);
-        actualizar_datos_documento($idformato, $iddoc);
+
+        $Documento = new Documento($iddoc);
+        $Documento->refreshDescription();
 
         $datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "");
         if ($datos[0]['tipo_destino'] == 2) { //INTERNO
@@ -838,6 +836,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
 //posterior al adicionar - editar
 function ingresar_item_destino_radicacion($idformato, $iddoc)
 {
+    print_r("llega a ingresar_item_destino_radicacion !!!!!");
     global $conn, $ruta_db_superior;
     $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "");
 

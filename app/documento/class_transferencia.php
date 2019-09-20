@@ -239,6 +239,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     $destino[0] = $datos_destino[0]["funcionario_codigo"];
                 }
             }
+
             if ($datos["ruta_idruta"] == "") {
                 $datos["ruta_idruta"] = 0;
             }
@@ -250,9 +251,12 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
 
             foreach ($destino as $user) {
                 if ($user == null) {
+
                     continue;
                 }
+
                 if ($datos["nombre"] != "POR_APROBAR") {
+
                     $buzonSalida = [
                         'archivo_idarchivo' => $idarchivo,
                         'nombre' => $datos["nombre"],
@@ -284,6 +288,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                         $VfuncionarioDc->getPK()
                     );
                 } else if ($datos["nombre"] == "POR_APROBAR") {
+
+
                     $fk_ruta_documento = RutaDocumento::newRecord([
                         'tipo' => RutaDocumento::TIPO_RADICACION,
                         'estado' => 1,
@@ -337,16 +343,17 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                     'tipo_origen' => '1',
                     'ruta_idruta' => $datos["ruta_idruta"],
                     'tipo_destino' => $tipo_destino,
-                    'ver_notas' => $$ver_notas,
+                    'ver_notas' => $ver_notas,
+                    'activo' => $datos['activo'],
                     'origen' => $user
                 ];
+
 
                 if ($adicionales) {
                     $buzonEntrada = array_merge($buzonEntrada, $adicionales);
                 }
 
                 $idInsertadoEntrada1 = BuzonEntrada::newRecord($buzonEntrada);
-
                 if ($texto_notas != "") {
                     $idbuzon_e = $idInsertadoEntrada1;
                     guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', 0);
@@ -366,6 +373,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
                 'origen' => $destino,
                 'tipo_origen' => '1',
                 'tipo_destino' => $tipo_destino,
+                'activo' => $datos['activo'],
                 'ver_notas' => $ver_notas
             ];
 
@@ -388,6 +396,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         'titulo' => 'Documento transferido.'
     ]);
     llama_funcion_accion($idarchivo, $idformato, "transferir", "POSTERIOR");
+    print_r($datos['']);
     if ($anexos == 1) {
         return $idtransferencia;
     } else {
@@ -494,6 +503,7 @@ function aprobar($iddoc = 0, $opcion = 0)
             }
 
             if ($aprobar_posterior == 1) {
+
                 $Documento = new Documento($iddoc);
                 $Serie = new Serie($tipo_radicado[0]["serie"]);
 

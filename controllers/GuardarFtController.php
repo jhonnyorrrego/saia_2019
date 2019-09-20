@@ -137,15 +137,16 @@ class GuardarFtController
         $datos = [
             "archivo_idarchivo" => $this->Documento->getPK(),
             "nombre" => "POR_APROBAR",
+            "activo" => "1",
             "tipo" => ""
         ];
 
-        $banderas = explode(",", $this->Formato->banderas);
+        transferir_archivo_prueba($datos, [SessionController::getValue('usuario_actual')], "", "");
 
+        $banderas = explode(",", $this->Formato->banderas);
         if (in_array("e", $banderas)) {
             aprobar($this->Documento->getPK(), 1);
         }
-
         return $this->Documento->getPK();
     }
 

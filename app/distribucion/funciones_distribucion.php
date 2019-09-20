@@ -31,6 +31,7 @@ include_once $ruta_db_superior . "core/autoload.php";
  */
 function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
 {
+    print_r("pre_ingresar_distribucion !!!!!!!!!!!!");
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "");
     $nombre_tabla = $datos_plantilla[0]['nombre_tabla'];
     $datos_documento = busca_filtro_tabla($campo_origen . "," . $campo_destino, $nombre_tabla, "documento_iddocumento=" . $iddoc, "");
@@ -395,7 +396,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
 
 function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion, $origen)
 { //Ruta
-    
+
     if ($estado_recogida == 'estado_recogida') {
         $estado_recogida = 0;
     }
@@ -534,7 +535,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
 
 function generar_check_accion_distribucion($iddistribucion)
 {
-    
+
     $checkbox = '<input type="checkbox" class="accion_distribucion" value="' . $iddistribucion . '">';
     return $checkbox;
 }

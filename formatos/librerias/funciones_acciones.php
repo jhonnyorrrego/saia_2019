@@ -24,7 +24,7 @@ include_once $ruta_db_superior . "bpmn/librerias_formato.php";
  </Clase>  */
 function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
 {
-	
+
 	if ($accion) { // Se buscan las acciones particulares
 		$acciones = busca_filtro_tabla("", "accion", "nombre='" . $accion . "'", "");
 	} else {
@@ -41,6 +41,7 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
 		// Funciones relacionadas con la accion y el formato
 		$funciones_asociadas = busca_filtro_tabla("", "funciones_formato_accion", $condicion, "orden asc");
 		if ($funciones_asociadas["numcampos"]) {
+			print_r($funciones_asociadas);
 			$retorno = "";
 			$retorno = $funciones_asociadas[0]["idfunciones_formato"];
 			for ($i = 1; $i < $funciones_asociadas["numcampos"]; $i++) {
@@ -64,7 +65,7 @@ function listar_acciones_formato($idformato, $accion = NULL, $momento = NULL)
  </Clase>  */
 function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = "ANTERIOR", $estado = 1)
 {
-	
+
 	if ($idaccion == NULL || $idformato == NULL || $idfunciones_formato == NULL)
 		return (FALSE);
 	$datos_accion = busca_filtro_tabla("idaccion", "accion", "idaccion=" . $idaccion, "");
@@ -98,7 +99,7 @@ function adicionar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  </Clase>  */
 function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
 {
-	
+
 	if ($accion_funcion) {
 		$campos = array();
 		if ($idaccion)
@@ -132,7 +133,7 @@ function modificar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunc
  </Clase>  */
 function eliminar_funciones_accion($idaccion = NULL, $idformato = NULL, $idfunciones_formato = NULL, $momento = NULL, $estado = NULL, $accion_funcion = 0)
 {
-	
+
 	if ($accion_funcion) {
 		$sql = "DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=" . $accion_funcion;
 		phpmkr_query($sql);
@@ -217,7 +218,7 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 	}
 	return;
 }
- 
+
 /*<Clase>
  <Nombre>llama_funcion_accion</Nombre>
  <Parametros>$iddoc:id del documento;$idformato:id del formato;$accion:acci�n relacionada;$momento:momento de ejecucion(anterior,posterior)</Parametros>
@@ -231,6 +232,11 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL)
 {
 	$listado_acciones = listar_acciones_formato($idformato, $accion, $momento);
+	if ($accion == 'confirmar' && $momento == 'ANTERIOR') {
+		print_r('listado acciones : ');
+		print_r($listado_acciones);
+	}
+
 	if ($listado_acciones != "") {
 		ejecutar_acciones_formato($iddoc, $idformato, $listado_acciones);
 	}
