@@ -506,7 +506,6 @@ function aprobar($iddoc = 0, $opcion = 0)
 
                 $Documento = new Documento($iddoc);
                 $Serie = new Serie($tipo_radicado[0]["serie"]);
-
                 contador($tipo_radicado[0]["nombre"], $Documento->getPK());
                 $Documento->setAttributes([
                     "estado" => 'APROBADO',
@@ -538,8 +537,9 @@ function aprobar($iddoc = 0, $opcion = 0)
                     $datos["tipo_destino"] = "1";
                     for ($i = 0; $i < $respuestas["numcampos"]; $i++) {
                         if ($respuestas[$i]["estado"] == "TRAMITE" || $respuestas[$i]["estado"] == "ACTIVO") {
-                            $sql = "UPDATE documento set estado='APROBADO' where iddocumento='" . $respuestas[$i]["origen"] . "'";
-                            phpmkr_query($sql);
+                            $DocumentoRespuestas = new Documento($respuestas[$i]["origen"]);
+                            $DocumentoRespuestas->estado = 'APROBADO';
+                            $DocumentoRespuestas->save();
                         }
                         $datos["archivo_idarchivo"] = $respuestas[$i]["origen"];
                         $destino_respuesta[0] = $origen_respuesta[0]["origen"];
@@ -549,16 +549,16 @@ function aprobar($iddoc = 0, $opcion = 0)
                 }
 
                 if ($datos_formato[0]["mostrar_pdf"] == 1) {
-                    $sql1 = "UPDATE documento SET pdf=null WHERE iddocumento=" . $iddoc;
-                    phpmkr_query($sql1);
+                    $Documento->pdf = null;
+                    $Documento->save();
                 }
             }
         }
     }
 
     if ($datos_formato[0]["mostrar_pdf"] == 1) {
-        $sql1 = "UPDATE documento SET pdf=null WHERE iddocumento=" . $iddoc;
-        phpmkr_query($sql1);
+        $Documento->pdf = null;
+        $Documento->save();
     }
 
     llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "confirmar", "POSTERIOR");

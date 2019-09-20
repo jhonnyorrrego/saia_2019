@@ -775,7 +775,6 @@ function mostrar_copia_electronica($idformato, $iddoc)
 
 function cambiar_estado($idformato, $iddoc)
 {
-    print_r("cambiar estado !!!!!!");
     $doc = busca_filtro_tabla("estado", "documento A", "iddocumento=" . $iddoc, "");
     if ($doc[0]["estado"] == 'INICIADO') {
         $sql1 = "UPDATE documento SET estado='APROBADO' WHERE iddocumento=" . $iddoc;

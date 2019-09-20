@@ -783,7 +783,6 @@ function contador($counter, $documentId)
     $Contador = Contador::findByAttributes([
         'nombre' => $counter
     ]);
-
     switch (MOTOR) {
         case 'MySql':
         case 'Oracle':
@@ -942,45 +941,6 @@ function usuario_actual($campo)
     }
 }
 
-/*
- * <Clase>
- * <Nombre>crear_archivo</Nombre>
- * <Parametros>$nombre:nombre del archivo a crear;$texto: texto que se va a copiar dentro del archivo;$modo:modo de apertura del archivo</Parametros>
- * <Responsabilidades>Crea un archivo con cierto texto dentro<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function crear_archivo($nombre, $texto = null, $modo = 'wb')
-{
-    $path = pathinfo($nombre);
-    $ruta = $path["dirname"];
-    if (!is_dir($ruta)) {
-        if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
-            chmod($ruta, PERMISOS_CARPETAS);
-        } else {
-            return false;
-        }
-    }
-    if (is_file($nombre)) {
-        unlink($nombre);
-    }
-    $f = fopen($nombre, $modo);
-    $resp = false;
-    if ($f) {
-        chmod($nombre, PERMISOS_ARCHIVOS);
-        $texto = str_replace("? >", "?" . ">", $texto);
-        if (fwrite($f, $texto, strlen($texto)) !== false) {
-            $resp = $nombre;
-        }
-    }
-    fclose($f);
-    return $resp;
-}
-
 /**
  * crea una carpeta con los permisos
  * indicados en el define
@@ -1038,32 +998,6 @@ function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
         $retorno['idreemplazo'] = extrae_campo($reemplazo, 1);
     }
     return $retorno;
-}
-
-function return_megabytes($val)
-{
-    $val = trim($val);
-
-    if (is_numeric($val)) {
-        return $val;
-    }
-    $last = strtolower($val[strlen($val) - 1]);
-    $val = substr($val, 0, -1); // necessary since PHP 7.1; otherwise optional
-
-    switch ($last) {
-            // The 'G' modifier is available since PHP 5.1.0
-        case 'g':
-            $val *= 1024;
-            break;
-        case 'm':
-            $val = $val;
-            break;
-        case 'k':
-            $val /= 1024;
-            break;
-    }
-
-    return $val;
 }
 
 /*Manipulacion de Imagenes*/
