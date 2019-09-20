@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     var session = new Session();
     var baseUrl = Session.getBaseUrl();
     var xDown = null;
@@ -13,16 +13,16 @@ $(function() {
         }
     })();
 
-    $('#btn_logout').on('click', function(event) {
+    $('#btn_logout').on('click', function (event) {
         event.preventDefault();
         Ui.close();
     });
 
-    $('#menu_user_info').mouseleave(function() {
+    $('#menu_user_info').mouseleave(function () {
         $('#user_info').trigger('click');
     });
 
-    $('#config_profile').on('click', function() {
+    $('#config_profile').on('click', function () {
         let modal_options = {
             url: `${baseUrl}views/funcionario/cambio_datos_personales.php`,
             params: {
@@ -34,7 +34,7 @@ $(function() {
         topModal(modal_options);
     });
 
-    $('#change_password').on('click', function() {
+    $('#change_password').on('click', function () {
         let modal_options = {
             url: `${baseUrl}views/funcionario/cambiar_clave.php`,
             params: {
@@ -56,7 +56,7 @@ $(function() {
         topModal(modal_options);
     });
 
-    $('#new_action_mobile').on('click', function() {
+    $('#new_action_mobile').on('click', function () {
         let html = `
             <a href="#" class="dropdown-item new_add" data-type="folder">
                 <i class="fa fa-folder-open"></i> Expediente
@@ -85,13 +85,13 @@ $(function() {
         topModal(modal_options);
     });
 
-    $('#edit_photo_modal').on('shown.bs.modal', function() {
+    $('#edit_photo_modal').on('shown.bs.modal', function () {
         Ui.imageAreaSelect();
     });
 
-    $('#file_photo').on('change', function() {
+    $('#file_photo').on('change', function () {
         var data = new FormData();
-        $.each($('#file_photo')[0].files, function(i, file) {
+        $.each($('#file_photo')[0].files, function (i, file) {
             data.append('image', file);
         });
 
@@ -103,7 +103,7 @@ $(function() {
             cache: false,
             contentType: false,
             processData: false,
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#img_edit_photo')
                     .hide()
                     .parent()
@@ -111,11 +111,11 @@ $(function() {
                 Ui.hideImgAreaSelect();
                 return true;
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     let route = baseUrl + response.data;
                     $('#img_edit_photo').attr('src', route);
-                    $('#img_edit_photo').on('load', function() {
+                    $('#img_edit_photo').on('load', function () {
                         $('#img_edit_photo')
                             .show()
                             .parent()
@@ -133,11 +133,11 @@ $(function() {
         });
     });
 
-    $('#edit_photo_modal').on('hide.bs.modal', function() {
+    $('#edit_photo_modal').on('hide.bs.modal', function () {
         Ui.hideImgAreaSelect();
     });
 
-    $('#btn_save_photo').on('click', function() {
+    $('#btn_save_photo').on('click', function () {
         let ias = $('#img_edit_photo').imgAreaSelect({ instance: true });
         let options = ias.getSelection();
         options.imageWidth = $('#img_edit_photo').width();
@@ -146,7 +146,7 @@ $(function() {
         $.post(
             `${baseUrl}app/funcionario/guardar_recorte.php`,
             options,
-            function(response) {
+            function (response) {
                 if (response.success) {
                     let user = JSON.parse(localStorage.getItem('user'));
                     user.cutedPhoto = response.data.foto_recorte;
@@ -167,11 +167,11 @@ $(function() {
         );
     });
 
-    $('#toggle_right_navbar').on('click', function() {
+    $('#toggle_right_navbar').on('click', function () {
         $('#note_tab').trigger('click');
     });
 
-    $(document).on('click', '.new_add', function() {
+    $(document).on('click', '.new_add', function () {
         switch ($(this).data('type')) {
             case 'folder':
                 newExpediente();
@@ -189,12 +189,12 @@ $(function() {
         }
     });
 
-    $('.tab-content').on('touchstart', function(evt) {
+    $('.tab-content').on('touchstart', function (evt) {
         xDown = getTouches(evt)[0].clientX;
         yDown = getTouches(evt)[0].clientY;
     });
 
-    $('.tab-content').on('touchmove', function(evt) {
+    $('.tab-content').on('touchmove', function (evt) {
         if (!xDown || !yDown) {
             return;
         }
@@ -226,7 +226,7 @@ $(function() {
 
     document
         .getElementById('note_content')
-        .addEventListener('paste', function(e) {
+        .addEventListener('paste', function (e) {
             // cancel paste
             e.preventDefault();
 
@@ -245,7 +245,7 @@ $(function() {
 
     window.addEventListener(
         'orientationchange',
-        function() {
+        function () {
             setTimeout(() => {
                 Ui.resizeIframe();
             }, 500);
@@ -253,7 +253,7 @@ $(function() {
         false
     );
 
-    $(window).resize(function() {
+    $(window).resize(function () {
         Ui.resizeIframe();
     });
 
@@ -278,7 +278,7 @@ $(function() {
 
     function taskAction() {
         let options = {
-            url: `${baseUrl}views/tareas/crear.php`,
+            url: `views/tareas/crear.php`,
             centerAlign: false,
             size: 'modal-lg',
             title: 'Tarea o Recordatorio',
@@ -290,7 +290,7 @@ $(function() {
 
     function newExpediente() {
         let options = {
-            url: `${baseUrl}views/expediente/seleccionar.php`,
+            url: `views/expediente/seleccionar.php`,
             size: 'modal-lg',
             title: 'SELECCIONAR EXPEDIENTE SUPERIOR',
             centerAlign: false,

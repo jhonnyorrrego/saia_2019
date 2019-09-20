@@ -135,15 +135,13 @@ $('#loadTRDForm').validate({
             });
 
         let optionsDefaults = {
-            url: `${params.baseUrl}views/trd/serie_version/progress.php`,
+            url: `views/serie_version/progress.php`,
             size: 'modal-lg',
             buttons: {},
             backdrop: 'static',
             keyboard: false,
             title: 'Cargando .....'
         };
-        /*console.log(optionsDefaults)
-        return false;*/
 
         $.ajax({
             type: 'POST',

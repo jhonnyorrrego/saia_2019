@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var params = $("#scriptSeleccionar").data("params");
-    
+
     var configuracion = {
         icon: false,
         lazy: false,
@@ -13,7 +13,7 @@ $(document).ready(function () {
         selectMode: 1,
         source: {
             url: `${params.baseUrl}app/arbol/arbol_expediente_funcionario.php`,
-            data:{
+            data: {
                 'onlyExp': 1
             }
         }
@@ -23,10 +23,10 @@ $(document).ready(function () {
     $("#formulario").validate({
         submitHandler: function (form) {
             let selExp = $('#treebox').fancytree('getTree').getSelectedNodes();
-            if (selExp.length){
+            if (selExp.length) {
                 let idexp = selExp[0].data.idexpediente;
                 let options = {
-                    url: `${params.baseUrl}views/expediente/adicionar_expediente.php`,
+                    url: `views/expediente/adicionar_expediente.php`,
                     params: {
                         codPadre: idexp,
                         panelId: -1
@@ -37,7 +37,7 @@ $(document).ready(function () {
                     buttons: {}
                 };
                 top.topModal(options);
-            }else{
+            } else {
                 top.notification({
                     message: 'Por favor seleccione el expediente superior',
                     type: "error",

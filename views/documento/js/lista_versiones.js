@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let params = $('#script_version_list').data('params');
     $('#script_version_list').removeAttr('data-params');
 
@@ -10,7 +10,7 @@ $(function() {
         if (typeof List == 'undefined') {
             $.getScript(
                 `${
-                    params.baseUrl
+                params.baseUrl
                 }assets/theme/assets/js/cerok_libraries/list/list.js`,
                 () => {
                     createList();
@@ -24,7 +24,7 @@ $(function() {
     function createList() {
         let options = {
             selector: '#versions_list',
-            source: function() {
+            source: function () {
                 let data = [];
 
                 $.ajax({
@@ -37,7 +37,7 @@ $(function() {
                         key: localStorage.getItem('key'),
                         documentId: params.documentId
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             data = response.data;
                         } else {
@@ -54,11 +54,9 @@ $(function() {
             inlineButtons: [
                 {
                     icon: 'fa fa-eye',
-                    click: function(item) {
+                    click: function (item) {
                         let options = {
-                            url: `${
-                                params.baseUrl
-                            }views/documento/detalles_version.php`,
+                            url: `views/documento/detalles_version.php`,
                             title: 'Detalles de la versión ' + item.version,
                             params: {
                                 versionId: item.id

@@ -44,7 +44,7 @@ function opciones($idserie_version, $estado, $currentVersion, $anexo)
     $li = '';
     if ($estado != 2) {
 
-        $route = "{$ruta_db_superior}views/trd/serie/grilla_trd.php?";
+        $route = "{$ruta_db_superior}views/serie/grilla_trd.php?";
 
         $routeTrd = $route . http_build_query([
             'id' => $idserie_version,
@@ -77,7 +77,7 @@ HTML;
         }
     } else {
 
-        $routeTrd = "{$ruta_db_superior}views/trd/serie_temp/grilla_trd_temp.php?id={$idserie_version}";
+        $routeTrd = "{$ruta_db_superior}views/serie_temp/grilla_trd_temp.php?id={$idserie_version}";
 
         $li = <<<HTML
         <a href="#" id="deleteVersion" class="dropdown-item">

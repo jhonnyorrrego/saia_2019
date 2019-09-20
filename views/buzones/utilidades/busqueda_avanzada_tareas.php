@@ -8,7 +8,7 @@
 
         $(document).on('click', '#table .task_info', function() {
             let options = {
-                url: `${baseUrl}views/tareas/crear.php`,
+                url: `views/tareas/crear.php`,
                 params: {
                     id: $(this).data('task')
                 },
@@ -21,4 +21,4 @@
             top.topModal(options);
         });
     });
-</script> 
+</script>

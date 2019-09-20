@@ -12,7 +12,7 @@ $(function () {
 
         $('#btn_add').on('click', function () {
             top.topModal({
-                url: `views/trd/serie/adicionar.php`,
+                url: `views/serie/adicionar.php`,
                 params: {
                     sourceTemp: 1
                 },
@@ -46,7 +46,7 @@ $(function () {
             name[3] = 'Tipo documental';
 
             top.topModal({
-                url: `views/trd/serie_temp/editar.php`,
+                url: `views/serie_temp/editar.php`,
                 size: 'modal-xl',
                 title: 'Editar ' + name[type],
                 params: {
