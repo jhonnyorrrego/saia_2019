@@ -28,11 +28,11 @@ $ag[$Expediente->agrupador]='checked';
 
 $fecExtIni='';
 if($Expediente->fecha_extrema_i){
-    $fecExtIni= DateController::convertDate($Expediente->fecha_extrema_i, 'Y-m-d H:i:s', 'Y-m-d');
+    $fecExtIni= DateController::convertDate($Expediente->fecha_extrema_i, 'Y-m-d');
 }
 $fecExtFin='';
 if ($Expediente->fecha_extrema_f) {
-    $fecExtFin = DateController::convertDate($Expediente->fecha_extrema_f, 'Y-m-d H:i:s', 'Y-m-d');
+    $fecExtFin = DateController::convertDate($Expediente->fecha_extrema_f, 'Y-m-d');
 }
 $params =[
     'agrupador'=> intval($Expediente->agrupador),

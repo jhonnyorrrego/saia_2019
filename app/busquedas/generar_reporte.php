@@ -173,18 +173,6 @@ $QueryBuilder = Model::getQueryBuilder()
     ->from($tablas)
     ->where($condicion);
 
-
-$ordenar_consulta = "";
-
-if ($busqueda["agrupado_por"]) {
-    $QueryBuilder->groupBy($busqueda["agrupado_por"]);
-}
-
-if ($busqueda["ordenado_por"]) {
-    $sord = $busqueda["direccion"] ? $busqueda["direccion"] : ' DESC ';
-    $QueryBuilder->orderBy($busqueda["ordenado_por"], $sord);
-}
-
 if (!$_REQUEST["total"]) {
     $sql = $QueryBuilder->getSQL();
 
@@ -205,6 +193,15 @@ $response = (object) [
 ];
 
 if ($response->total) {
+    if ($busqueda["agrupado_por"]) {
+        $QueryBuilder->groupBy($busqueda["agrupado_por"]);
+    }
+
+    if ($busqueda["ordenado_por"]) {
+        $sord = $busqueda["direccion"] ? $busqueda["direccion"] : ' DESC ';
+        $QueryBuilder->orderBy($busqueda["ordenado_por"], $sord);
+    }
+
     $result = $QueryBuilder
         ->setFirstResult($start)
         ->setMaxResults($end)

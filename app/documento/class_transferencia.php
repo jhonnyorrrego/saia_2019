@@ -397,7 +397,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
 
 function aprobar($iddoc = 0, $opcion = 0)
 {
-
     $aprobar_posterior = 0;
     if (isset($_REQUEST["iddoc"]) && $_REQUEST["iddoc"]) {
         $iddoc = $_REQUEST["iddoc"];
@@ -415,9 +414,6 @@ function aprobar($iddoc = 0, $opcion = 0)
         $registro_anterior = busca_filtro_tabla("A.*", "buzon_entrada A", "A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<" . $registro_actual[0]["idtransferencia"] . " and A.archivo_idarchivo=" . $iddoc . " and origen=" . $_SESSION["usuario_actual"], "A.idtransferencia desc");
         $terminado = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.nombre='POR_APROBAR' and A.activo=1", "A.idtransferencia");
         if ($registro_actual["numcampos"] > 0 && $registro_anterior["numcampos"] == 0) {
-            $destino = $registro_actual[0]["destino"];
-            $origen = $registro_actual[0]["origen"];
-
             if (($terminado["numcampos"] == $registro_actual["numcampos"]) || ($terminado["numcampos"] == 1 && $terminado[0]["destino"] == $_SESSION["usuario_actual"])) {
                 $aprobar_posterior = 1;
                 $estado = "APROBADO";
@@ -425,7 +421,6 @@ function aprobar($iddoc = 0, $opcion = 0)
             } else {
                 $estado = "REVISADO";
             }
-            $campos = "archivo_idarchivo,nombre,origen,fecha,destino,tipo,tipo_origen,tipo_destino,ruta_idruta";
 
             for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
                 $registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia");
@@ -494,10 +489,10 @@ function aprobar($iddoc = 0, $opcion = 0)
             }
 
             if ($aprobar_posterior == 1) {
-                $Documento = new Documento($iddoc);
                 $Serie = new Serie($tipo_radicado[0]["serie"]);
 
-                contador($tipo_radicado[0]["nombre"], $Documento->getPK());
+                contador($tipo_radicado[0]["nombre"], $iddoc);
+                $Documento = new Documento($iddoc);
                 $Documento->setAttributes([
                     "estado" => 'APROBADO',
                     "fecha" => date('Y-m-d H:i:s'),

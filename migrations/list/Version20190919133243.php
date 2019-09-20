@@ -31,14 +31,15 @@ final class Version20190919133243 extends AbstractMigration
         foreach ($tables as $Table) {
             $columnName = "id" . $Table->getName();
             if ($Table->hasColumn($columnName) && !$Table->hasPrimaryKey()) {
-                $Table->setPrimaryKey([$columnName]);
-                $Table->changeColumn($columnName, [
+               /* $Table->changeColumn($columnName, [
                     'autoincrement' => true,
-                    'length' => 11
-                ]);
+                    'length' => 11,
+                    'notnull' => true
+                ]);*/
                 $Column = $Table->getColumn($columnName);
-                $Type = Type::getType('integer');
-                $Column->settype($Type);
+                $Table->setPrimaryKey([$columnName]);
+                //$Type = Type::getType('integer');
+                //$Column->settype($Type);
             }
         }
     }

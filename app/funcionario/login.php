@@ -21,6 +21,7 @@ $Response = (object) [
 
 try {
     $sessionUserId = SessionController::hasActiveSession();
+
     if (
         isset($_REQUEST['user'], $_REQUEST['password']) &&
         !$sessionUserId
@@ -37,7 +38,7 @@ try {
 
         foreach ($roles as $key => $VfuncionarioDc) {
             $finalDate = $VfuncionarioDc->getDateAttribute('fecha_final', 'Y-m-d');
-            $finalDate = DateTime::createFromFormat('Y-m-d', $finalDate);
+            $finalDate = new DateTime($finalDate);
 
             if (
                 $VfuncionarioDc->estado == 1 &&

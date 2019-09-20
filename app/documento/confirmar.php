@@ -89,6 +89,7 @@ try {
 
     $Response->success = 1;
 } catch (\Throwable $th) {
+    echo '<pre>';var_dump($th);echo '</pre>';exit;
     $Response->message = $th->getMessage();
 }
 
