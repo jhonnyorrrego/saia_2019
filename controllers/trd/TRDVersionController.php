@@ -10,15 +10,18 @@ class TRDVersionController
     protected $documentaryTypes;
     protected $trdData;
     protected $clasificationData;
-    protected $idSerieVersion;
 
-    function __construct($idSerieVersion)
+    protected $SerieVersion;
+    protected $serieTable;
+    protected $depSerieTable;
+
+    function __construct(SerieVersion $SerieVersion)
     {
         $this->dependencies = [];
         $this->series = [];
         $this->subSeries = [];
         $this->documentaryTypes = [];
-        $this->idSerieVersion = $idSerieVersion;
+        $this->SerieVersion = $SerieVersion;
 
         $this->generateVersion();
     }
@@ -33,7 +36,8 @@ class TRDVersionController
      */
     public function generateVersion()
     {
-        $this->findDependencies();
+        $this->setValuesTable()
+            ->findDependencies();
 
         foreach ($this->dependencies as $Dependencia) {
 
@@ -68,6 +72,26 @@ class TRDVersionController
                 }
             }
         }
+    }
+
+    /**
+     * setea las variables de las tablas,
+     * campos que se utilizan en la generacion de la TRD
+     *
+     * @return TRDVersionController
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    private function setValuesTable()
+    {
+        if ($this->SerieVersion->estado == 2) {
+            $this->depSerieTable = 'serie_dependencia_temp';
+            $this->serieTable = 'serie_temp';
+        } else {
+            $this->depSerieTable = 'serie_dependencia';
+            $this->serieTable = 'serie';
+        }
+        return $this;
     }
 
     /**
@@ -106,13 +130,13 @@ class TRDVersionController
                 a.dis_seleccion,
                 a.dis_microfilma'
             )
-            ->from('serie', 'a')
-            ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
+            ->from($this->serieTable, 'a')
+            ->innerJoin('a', $this->depSerieTable, 'b', 'b.fk_serie = a.idserie')
             ->where('a.tipo = 1')
             ->andWhere('b.fk_dependencia = :iddependencia')
             ->andWhere('a.fk_serie_version = :idserie_version')
             ->setParameter(':iddependencia', $dependencieId, Type::INTEGER)
-            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
+            ->setParameter(':idserie_version', $this->SerieVersion->getPK(), Type::INTEGER);
 
         $this->series = Serie::findByQueryBuilder($QueryBuilder);
     }
@@ -141,15 +165,15 @@ class TRDVersionController
                 a.dis_seleccion,
                 a.dis_microfilma'
             )
-            ->from('serie', 'a')
-            ->innerJoin('a', 'dependencia_serie', 'b', 'b.fk_serie = a.idserie')
+            ->from($this->serieTable, 'a')
+            ->innerJoin('a', $this->depSerieTable, 'b', 'b.fk_serie = a.idserie')
             ->where('a.tipo = 2')
             ->andWhere('b.fk_dependencia =:iddependencia')
             ->andWhere('a.cod_padre =:idserie')
             ->andWhere('a.fk_serie_version=:idserie_version')
             ->setParameter(':iddependencia', $dependencieId, Type::INTEGER)
             ->setParameter(':idserie', $serieId, Type::INTEGER)
-            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
+            ->setParameter(':idserie_version', $this->SerieVersion->getPK(), Type::INTEGER);
 
         $this->subSeries = Serie::findByQueryBuilder($QueryBuilder);
     }
@@ -171,12 +195,12 @@ class TRDVersionController
                 a.sop_papel,
                 a.sop_electronico'
             )
-            ->from('serie', 'a')
+            ->from($this->serieTable, 'a')
             ->where('a.tipo = 3')
             ->andWhere('a.cod_padre =:idserie')
             ->andWhere('a.fk_serie_version=:idserie_version')
             ->setParameter(':idserie', $serieId, Type::INTEGER)
-            ->setParameter(':idserie_version', $this->idSerieVersion, Type::INTEGER);
+            ->setParameter(':idserie_version', $this->SerieVersion->getPK(), Type::INTEGER);
 
         $this->documentaryTypes = Serie::findByQueryBuilder($QueryBuilder);
     }
@@ -272,10 +296,10 @@ class TRDVersionController
      */
     public function saveCache()
     {
-        $rutaClasi = self::getRouteFileTemporal('json_clasificacion');
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion', $this->SerieVersion->estado);
         file_put_contents($rutaClasi, $this->getClasificationData());
 
-        $rutaTrd = self::getRouteFileTemporal('json_trd');
+        $rutaTrd = self::getRouteFileTemporal('json_trd', $this->SerieVersion->estado);
         file_put_contents($rutaTrd, $this->getTrdData());
     }
 
@@ -284,11 +308,12 @@ class TRDVersionController
      * temporales generados
      *
      * @param string $field : json_trd, json_clasificacion
+     * @param int $estadoVersion : Estado de la tabla serie version
      * @return string
      * @author Andres Agudelo <andres.agudelo@cerok.com>
      * @date 2019
      */
-    public static function getRouteFileTemporal($field)
+    public static function getRouteFileTemporal(string $field, int $estadoVersion): string
     {
         global $ruta_db_superior;
 
@@ -300,11 +325,17 @@ class TRDVersionController
             }
         }
 
-        if ($field == 'json_clasificacion') {
-            $fileName = "/currentVersionClasificacion.txt";
-        } else {
-            $fileName = "/currentVersionTRD.txt";
+        switch ($estadoVersion) {
+            case 2: //Borrador
+                $fileName = '/tempVersionTRD.txt';
+                break;
+
+            default:
+                $fileName = ($field == 'json_clasificacion') ?
+                    '/currentVersionClasificacion.txt' : '/currentVersionTRD.txt';
+                break;
         }
+
         return $dir . $fileName;
     }
     /**
@@ -315,12 +346,12 @@ class TRDVersionController
      * @author Andres Agudelo <andres.agudelo@cerok.com>
      * @date 2019
      */
-    public static function removeTemporalFile()
+    public static function removeTemporalFile(int $estadoVersion)
     {
-        $rutaClasi = self::getRouteFileTemporal('json_clasificacion');
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion', $estadoVersion);
         unlink($rutaClasi);
 
-        $rutaTrd = self::getRouteFileTemporal('json_trd');
+        $rutaTrd = self::getRouteFileTemporal('json_trd', $estadoVersion);
         unlink($rutaTrd);
     }
 }

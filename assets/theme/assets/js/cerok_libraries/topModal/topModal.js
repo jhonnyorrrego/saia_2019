@@ -115,7 +115,7 @@ function topModal(options) {
     }
 
     if (options.url) {
-        modalBody.load(options.url, options.params, function (
+        modalBody.load(Session.getBaseUrl() + options.url, options.params, function (
             response,
             status,
             xhr

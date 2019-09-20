@@ -220,7 +220,7 @@ $(function () {
         .on('click', '#crear_tarea', function () {
             let route = $(this).data('url');
             top.topModal({
-                url: `${baseUrl + route}`,
+                url: `${route}`,
                 title: $(this).text(),
                 centerAlign: false,
                 size: 'modal-lg',
@@ -236,7 +236,7 @@ $(function () {
         .on('click', '#etiquetar,#asignar_responsable', function () {
             let route = $(this).data('url');
             top.topModal({
-                url: `${baseUrl + route}`,
+                url: `${route}`,
                 title: $(this).text(),
                 centerAlign: false,
                 params: {
@@ -282,7 +282,7 @@ $(function () {
         .on('click', '#privacidad', function () {
             let route = $(this).data('url');
             top.topModal({
-                url: baseUrl + route,
+                url: route,
                 title: $(this).text(),
                 size: 'modal-lg',
                 params: {
@@ -470,7 +470,7 @@ $(function () {
 
     function seeManagers() {
         top.topModal({
-            url: baseUrl + fabActions.managers.button.data.route,
+            url: fabActions.managers.button.data.route,
             params: {
                 documentId: documentId,
                 number: number
@@ -732,7 +732,7 @@ $(function () {
 
     function returnDocument() {
         top.topModal({
-            url: `${baseUrl}views/documento/devolver.php`,
+            url: `views/documento/devolver.php`,
             params: {
                 documentId: documentId
             },

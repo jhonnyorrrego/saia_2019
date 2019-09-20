@@ -89,7 +89,7 @@
 
         $(document).on('click', '#share_document', function() {
             top.topModal({
-                url: `${baseUrl}views/documento/transferir.php`,
+                url: `views/documento/transferir.php`,
                 title: 'Reenviar'
             })
         });
@@ -97,7 +97,7 @@
         $(document).on('click', '#mark_document', function() {
             let selections = $('#table').data('selections');
             top.topModal({
-                url: `${baseUrl}views/documento/etiquetar.php`,
+                url: `views/documento/etiquetar.php`,
                 title: 'Etiquetas',
                 size: 'modal-sm',
                 params: {
@@ -110,7 +110,7 @@
         $(document).on('click', '#clasif_expediente', function() {
             let selections = $('#table').data('selections');
             top.topModal({
-                url: `${baseUrl}views/expediente/clasificar_expediente.php`,
+                url: `views/expediente/clasificar_expediente.php`,
                 title: 'Clasificar documento a un expediente',
                 size: 'modal-xl',
                 params: {
@@ -216,4 +216,4 @@
         })();
 
     });
-</script> 
+</script>

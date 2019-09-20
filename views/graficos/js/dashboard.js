@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let params = $('#graph_script').data('params');
     $('#graph_script').removeAttr('data-params');
     let graphs = [];
@@ -27,7 +27,7 @@ $(function() {
                 token: localStorage.getItem('token'),
                 screen: params.screen
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     graphs = response.data;
                     findGraphs(Object.keys(graphs));
@@ -51,7 +51,7 @@ $(function() {
                     token: localStorage.getItem('token'),
                     graph: element
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         paintGraph(response.data);
                     } else {
@@ -93,11 +93,11 @@ $(function() {
         graph.setOption(data.json);
     }
 
-    window.seeReport = function(i, ga) {
+    window.seeReport = function (i, ga) {
         findComponent(ga, openPanel);
     };
 
-    window.showFilters = function(i, ga) {
+    window.showFilters = function (i, ga) {
         findComponent(ga, openModal);
     };
 
@@ -112,7 +112,7 @@ $(function() {
                 token: localStorage.getItem('token'),
                 graphName: graphName
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     callback(response.data, graph);
                 } else {
@@ -142,7 +142,7 @@ $(function() {
 
     function openModal(component, graph) {
         top.topModal({
-            url: params.baseUrl + graph.searchRoute,
+            url: graph.searchRoute,
             params: {
                 idbusqueda_componente: component.idbusqueda_componente
             },
@@ -158,7 +158,7 @@ $(function() {
                     class: 'btn btn-danger'
                 }
             },
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 if (data.exito) {
                     let parts = data.filtro.split('=');
                     graph.filterId = parts[1];
@@ -178,7 +178,7 @@ $(function() {
                 graph: graph.id,
                 filterId: graph.filterId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     paintGraph(response.data);
                 } else {

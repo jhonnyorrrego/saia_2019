@@ -44,7 +44,7 @@ $(function () {
         }
 
         topModal({
-            url: `${baseUrl}views/buzones/${file}`,
+            url: `views/buzones/${file}`,
             size: 'modal-lg',
             title: 'Búsqueda avanzada',
             centerAlign: false,

@@ -82,7 +82,7 @@ $(function () {
 
     $('#btn_search').on('click', function () {
         top.topModal({
-            url: baseUrl + $(this).data('url'),
+            url: $(this).data('url'),
             size: 'modal-xl',
             title: 'Búsqueda',
             buttons: {
@@ -106,7 +106,7 @@ $(function () {
 
     $('#btn_add').on('click', function () {
         top.topModal({
-            url: baseUrl + $(this).data('url'),
+            url: $(this).data('url'),
             size: 'modal-xl',
             title: 'Crear',
             onSuccess: function (data) {

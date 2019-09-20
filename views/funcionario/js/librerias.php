@@ -45,7 +45,7 @@
 
         function edit(userId) {
             top.topModal({
-                url: `${baseUrl}views/funcionario/adicionar.php`,
+                url: `views/funcionario/adicionar.php`,
                 params: {
                     userId: userId
                 },
@@ -70,7 +70,7 @@
 
         function addRole(userId) {
             top.topModal({
-                url: `${baseUrl}views/dependencia_cargo/listado.php`,
+                url: `views/dependencia_cargo/listado.php`,
                 params: {
                     userId: userId
                 },
@@ -82,7 +82,7 @@
 
         function addFunction(userId) {
             top.topModal({
-                url: `${baseUrl}views/funciones/listado_funcionario.php`,
+                url: `views/funciones/listado_funcionario.php`,
                 params: {
                     userId: userId
                 },

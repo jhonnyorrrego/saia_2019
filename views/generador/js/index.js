@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     let params = $('#script_generador_pantalla').data('params');
     let step = 1;
 
@@ -19,7 +19,7 @@ $(document).ready(function() {
         }
     })();
 
-    $('#guardar').on('click', function() {
+    $('#guardar').on('click', function () {
         if (step == 1) {
             saveFormat();
         } else if (step == 3) {
@@ -29,7 +29,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#generar').on('click', function() {
+    $('#generar').on('click', function () {
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -54,7 +54,7 @@ $(document).ready(function() {
                     });
                 }
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -67,17 +67,17 @@ $(document).ready(function() {
                     });
                 }
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.log(xhr);
             }
         });
     });
 
-    $('.nav li').click(function() {
+    $('.nav li').click(function () {
         return !$(this).hasClass('disabled');
     });
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $(e.relatedTarget).css({
             color: '#666',
             background: '#eee',
@@ -120,7 +120,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#etiqueta_formato').change(function() {
+    $('#etiqueta_formato').change(function () {
         if (!params.formatId) {
             if ($(this).val()) {
                 var nombre = normalizar($(this).val());
@@ -129,7 +129,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#tipo_registro').change(function() {
+    $('#tipo_registro').change(function () {
         switch ($(this).val()) {
             case '1':
                 $('#item').val('0');
@@ -162,12 +162,12 @@ $(document).ready(function() {
 
     $(document)
         .off('click', '.funcionesPropias')
-        .on('click', '.funcionesPropias', function() {
+        .on('click', '.funcionesPropias', function () {
             var funcion = $(this).data('name');
             CKEDITOR.instances['editor_mostrar'].insertText(`{*${funcion}*}`);
         });
 
-    $('.select_header_footer').on('change', function() {
+    $('.select_header_footer').on('change', function () {
         let type = $(this).data('type');
         if (type) {
             $.post(
@@ -179,7 +179,7 @@ $(document).ready(function() {
                     type: type,
                     identificator: $(this).val()
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         top.notification({
                             type: 'success',
@@ -202,7 +202,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.delete_header_footer').on('click', function() {
+    $('.delete_header_footer').on('click', function () {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -218,7 +218,7 @@ $(document).ready(function() {
                 formatId: params.formatId,
                 type: type
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     if (type == 'header') {
                         $('#header_content').empty();
@@ -243,7 +243,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.edit_header_footer').on('click', function() {
+    $('.edit_header_footer').on('click', function () {
         let type = $(this).data('type');
         let identificator =
             type == 'header'
@@ -252,7 +252,7 @@ $(document).ready(function() {
 
         if (identificator) {
             top.topModal({
-                url: `${params.baseUrl}views/generador/editor_encabezado.php`,
+                url: `views/generador/editor_encabezado.php`,
                 params: {
                     identificator: identificator
                 },
@@ -268,7 +268,7 @@ $(document).ready(function() {
                         class: 'btn btn-danger'
                     }
                 },
-                onSuccess: function(data) {
+                onSuccess: function (data) {
                     createHeaderFooterSelect();
                     top.closeTopModal();
                 }
@@ -281,10 +281,10 @@ $(document).ready(function() {
         }
     });
 
-    $('.add_header_footer').on('click', function() {
+    $('.add_header_footer').on('click', function () {
         let type = $(this).data('type');
         top.topModal({
-            url: `${params.baseUrl}views/generador/crear_encabezado_pie.php`,
+            url: `views/generador/crear_encabezado_pie.php`,
             size: 'modal-xl',
             title: 'Crear contenido',
             params: { idformato: params.formatId, type: type },
@@ -298,7 +298,7 @@ $(document).ready(function() {
                     class: 'btn btn-danger'
                 }
             },
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 createHeaderFooterSelect();
                 top.closeTopModal();
             }
@@ -306,8 +306,8 @@ $(document).ready(function() {
     });
 
     $('#serie_idserie')
-        .change(function() {
-            $('.codigoSerie').each(function() {
+        .change(function () {
+            $('.codigoSerie').each(function () {
                 if ($(this).val() == $('#serie_idserie').val()) {
                     $('#codigoSerieInput').val($(this).attr('codigo'));
                 }
@@ -325,7 +325,7 @@ $(document).ready(function() {
                 token: localStorage.getItem('token'),
                 formatId: params.formatId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     $('#select_header,#select_footer').empty();
                     response.data.headers.forEach(item => {
@@ -363,7 +363,7 @@ $(document).ready(function() {
                     token: localStorage.getItem('token'),
                     identificator: $('#select_header').val()
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         $('#header_content').html(response.data.content);
                     } else {
@@ -387,7 +387,7 @@ $(document).ready(function() {
                     token: localStorage.getItem('token'),
                     identificator: $('#select_footer').val()
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         $('#footer_content').html(response.data.content);
                     } else {
@@ -416,7 +416,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 url: `${params.baseUrl}app/generador/guardar_formato.php`,
                 data: data,
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         top.notification({
                             type: 'success',
@@ -460,7 +460,7 @@ $(document).ready(function() {
                 content: content,
                 formatId: params.formatId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -488,7 +488,7 @@ $(document).ready(function() {
                 token: localStorage.getItem('token'),
                 formatId: params.formatId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     $('#preview_container').html(response.data);
                 } else {
@@ -510,7 +510,7 @@ $(document).ready(function() {
                 token: localStorage.getItem('token'),
                 formatId: params.formatId
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     createFunctionList(response.data);
                 } else {

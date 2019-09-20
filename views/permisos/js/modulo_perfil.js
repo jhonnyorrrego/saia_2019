@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
 
     (function init() {
@@ -29,7 +29,7 @@ $(function() {
             nodata: true, // Display a 'no data' status node if result is empty
             mode: 'hide' // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
         },
-        renderColumns: function(event, data) {
+        renderColumns: function (event, data) {
             var node = data.node,
                 $tdList = $(node.tr).find('>td');
 
@@ -44,15 +44,15 @@ $(function() {
     });
 
     let tree = $('#treegrid').fancytree('getTree');
-    $('#search').keyup(function(e) {
+    $('#search').keyup(function (e) {
         tree.filterNodes.call(tree, $(this).val());
     });
 
-    $(document).on('click', ':checkbox', function() {
+    $(document).on('click', ':checkbox', function () {
         addPermission($(this).data('id'), $(this).is(':checked'));
     });
 
-    $('#profile').on('select2:select', function() {
+    $('#profile').on('select2:select', function () {
         $('#treegrid').fancytree('option', 'source', {
             url: `${baseUrl}app/arbol/arbol_modulos.php`,
             data: {
@@ -61,9 +61,9 @@ $(function() {
         });
     });
 
-    $('#profile_settings').on('click', function() {
+    $('#profile_settings').on('click', function () {
         top.topModal({
-            url: `${baseUrl}views/permisos/perfiles.php`,
+            url: `views/permisos/perfiles.php`,
             title: 'Perfiles',
             buttons: {
                 cancel: {
@@ -71,7 +71,7 @@ $(function() {
                     class: 'btn btn-danger'
                 }
             },
-            afterHide: function(event) {
+            afterHide: function (event) {
                 findProfileOptions();
             }
         });
@@ -88,7 +88,7 @@ $(function() {
                     add: add ? 1 : 0,
                     profile: $('#profile').val()
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         top.notification({
                             type: 'success',
@@ -120,7 +120,7 @@ $(function() {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token')
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         $('#profile').append(
