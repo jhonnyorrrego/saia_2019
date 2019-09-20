@@ -120,10 +120,9 @@ abstract class Model
      * @param string $format formato requerido
      * @return string
      */
-    public function getDateAttribute(string $attribute, $format = 'd/m/Y H:i a')
+    public function getDateAttribute(string $attribute, $format = null)
     {
-        return $this->$attribute ?
-            DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format) : null;
+        return $this->$attribute ? DateController::convertDate($this->$attribute, $format) : null;
     }
 
     /**

@@ -787,10 +787,10 @@ function contador($counter, $documentId)
     switch (MOTOR) {
         case 'MySql':
         case 'Oracle':
-            $sql = "CALL sp_asignar_radicado({$documentId}, {$Contador->getPK()}, {$userCode})";
+            $sql = "CALL sp_asignar_radicado({$documentId}, {$Contador->getPK()})";
             break;
         case 'SqlServer':
-            $sql = "EXEC sp_asignar_radicado @iddoc={$documentId}, @tipo={{$Contador->getPK()}}, @funcionario={$userCode}";
+            $sql = "EXEC sp_asignar_radicado @iddoc={$documentId}, @idcontador={$Contador->getPK()}";
             break;
         default:
             throw new Exception("Motor indefinido", 1);

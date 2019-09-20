@@ -20,7 +20,7 @@ final class Version20190918232806 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $this->connection->update('modulo', [
-            'etiqueta' => 'pruiebá'
+            'etiqueta' => 'CAD'
         ], [
             'idmodulo' => 1
         ]);

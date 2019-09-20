@@ -20,13 +20,16 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $initialDate = $_REQUEST['initialDate'];
-    $finalDate = $_REQUEST['finalDate'];
-    $tareas = Tarea::findBetweenDates($_REQUEST['key'], $initialDate, $finalDate, $_REQUEST['serachtype']);
+    $tareas = Tarea::findBetweenDates(
+        $_REQUEST['key'],
+        new DateTime($_REQUEST['initialDate']),
+        new DateTime($_REQUEST['finalDate']),
+        $_REQUEST['serachtype']
+    );
 
-    if(count($tareas)){
+    if (count($tareas)) {
         $data = [];
-        foreach($tareas as $Tarea){
+        foreach ($tareas as $Tarea) {
             $data[] = [
                 'id' => $Tarea->getPK(),
                 'title' => $Tarea->getName(),
@@ -36,7 +39,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             ];
         }
         $Response->data = $data;
-    }else{
+    } else {
         $Response->message = "sin tareas";
         $Response->success = 0;
     }

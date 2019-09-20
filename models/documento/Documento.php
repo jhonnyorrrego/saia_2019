@@ -57,7 +57,6 @@ class Documento extends Model
     {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
-            'iddocumento',
             'numero',
             'serie',
             'fecha',

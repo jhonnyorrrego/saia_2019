@@ -12,7 +12,6 @@ class Modulo extends Model
     protected $cod_padre;
     protected $orden;
 
-
     function __construct($id = null)
     {
         return parent::__construct($id);
