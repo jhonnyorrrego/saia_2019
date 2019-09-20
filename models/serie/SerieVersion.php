@@ -11,6 +11,8 @@ class SerieVersion extends Model
     protected $anexos;
     protected $json_clasificacion;
     protected $json_trd;
+    protected $estado;
+    protected $vigente;
 
     protected $dbAttributes;
 
@@ -31,7 +33,8 @@ class SerieVersion extends Model
                 'anexos',
                 'json_clasificacion',
                 'json_trd',
-                'estado'
+                'estado',
+                'vigente'
             ]
         ];
     }
@@ -45,11 +48,10 @@ class SerieVersion extends Model
      */
     private static function getSQLCurrentVersion(): Doctrine\DBAL\Query\QueryBuilder
     {
-        $subConsulta = "(SELECT MAX(version) FROM serie_version WHERE estado=1)";
         return self::getQueryBuilder()
             ->select('*')
             ->from('serie_version')
-            ->where("version={$subConsulta}");
+            ->where("vigente=1");
     }
 
     /**
@@ -64,6 +66,26 @@ class SerieVersion extends Model
         $data = self::findByQueryBuilder(
             self::getSQLCurrentVersion()
         );
+
+        return !empty($data) ? $data[0] : false;
+    }
+
+
+    /**
+     * obtiene una instancia de la version temporal
+     *
+     * @return SerieVersion|false
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function getTempVersion()
+    {
+        $sql = self::getQueryBuilder()
+            ->select('*')
+            ->from('serie_version')
+            ->where("estado=2");
+
+        $data = self::findByQueryBuilder($sql);
 
         return !empty($data) ? $data[0] : false;
     }

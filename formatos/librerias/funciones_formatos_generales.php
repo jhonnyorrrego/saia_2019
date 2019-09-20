@@ -124,13 +124,30 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
             }
         }
 
-        $sql = "insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio,idenlace_nodo,fk_ruta_documento) values('" . $ruta[$i + 1]["funcionario"] . "','" . $ruta[$i]["funcionario"] . "','$iddoc','POR_APROBAR'," . $ruta[$i]["tipo"] . "," . $ruta[$i + 1]["tipo"] . ",$i," . $ruta[$i]["tipo_firma"] . ",'" . @$ruta[$i]["paso_actividad"] . "',{$fk_ruta_documento})";
-        phpmkr_query($sql);
-        $idruta = phpmkr_insert_id();
-        $fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s');
+        $idruta = Ruta::newRecord([
+            'destino' => $ruta[$i + 1]["funcionario"],
+            'origen' =>  $ruta[$i]["funcionario"],
+            'documento_iddocumento' => $iddoc,
+            'condicion_transferencia' => 'POR_APROBAR',
+            'tipo_origen' =>  $ruta[$i]["tipo"],
+            'tipo_destino' =>  $ruta[$i + 1]["tipo"],
+            'orden' => $i,
+            'obligatorio' => $ruta[$i]["tipo_firma"],
+            'idenlace_nodo' =>  $ruta[$i]["paso_actividad"] ?? null,
+            'fk_ruta_documento' => $fk_ruta_documento
+        ]);
 
-        $sql = "insert into buzon_entrada(origen,destino,archivo_idarchivo,activo,tipo_origen,tipo_destino,ruta_idruta,nombre,fecha) values('" . $funcionario2 . "','" . $funcionario1 . "','$iddoc',1," . $ruta[$i + 1]["tipo"] . "," . $ruta[$i]["tipo"] . ",$idruta,'POR_APROBAR'," . $fecha . ")";
-        phpmkr_query($sql);
+        BuzonEntrada::newRecord([
+            'origen' =>  $funcionario2,
+            'destino' => $funcionario1,
+            'archivo_idarchivo' => $iddoc,
+            'activo' => 1,
+            'tipo_origen' => $ruta[$i + 1]["tipo"],
+            'tipo_destino' =>  $ruta[$i]["tipo"],
+            'ruta_idruta' => $idruta,
+            'nombre' => 'POR_APROBAR',
+            'fecha' => date("Y-m-d H:i:s"),
+        ]);
     }
 }
 

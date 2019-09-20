@@ -132,7 +132,7 @@ function check_banderas($bandera, $chequear = true)
 function cargarCampos($categoria)
 {
 
-    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', 'estado=1 AND categoria="' . $categoria . '"', '');
+    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', "estado=1 AND categoria='{$categoria}'", '');    
     echo "<h5>" . $categoria . "</h5>";
     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
         $etiqueta = $listadoComponentes[$i]["etiqueta"];
@@ -157,6 +157,8 @@ function cargarCampos($categoria)
     <?= ckeditor() ?>
     <?= select2() ?>
     <link href="<?= $ruta_db_superior ?>views/generador/css/index.css" rel="stylesheet" />
+    <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
+
 </head>
 
 <body>
@@ -459,24 +461,26 @@ function cargarCampos($categoria)
                                             <ul id="contenedorComponentes" class="sortable boxy px-4" style="margin-left: 1em;">
                                                 <h6 style="text-align:center;position:absolute;top:160px;left:270px;opacity:0.6"><i class="fa fa-dropbox" style="font-size:200%;"></i> Arrastre los componentes aquí</h6>
                                                 <?php
-                                                $fields = $Formato->getProcessFields();
+                                                if ($Formato) {
+                                                    $fields = $Formato->getProcessFields();
 
-                                                foreach ($fields as $CamposFormato) {
-                                                    $PantallaComponente = PantallaComponente::findByAttributes([
-                                                        'etiqueta_html' => $CamposFormato->etiqueta_html
-                                                    ]);
+                                                    foreach ($fields as $CamposFormato) {
+                                                        $PantallaComponente = PantallaComponente::findByAttributes([
+                                                            'etiqueta_html' => $CamposFormato->etiqueta_html
+                                                        ]);
 
-                                                    echo "<li 
-                                                        class='agregado'
-                                                        idpantalla_campo='{$CamposFormato->getPK()}'
-                                                        idpantalla_componente='{$PantallaComponente->getPK()}'
-                                                        data-position='{$CamposFormato->orden}' >
-                                                            <i class='fa {$PantallaComponente->clase} mr-3'></i>
-                                                            <div id='c_{$CamposFormato->getPK()}' class='d-inline' >{$CamposFormato->etiqueta}</div>
-                                                            <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'>
-                                                                <i class='fa fa-trash eliminar'></i>
-                                                            </div>
-                                                    </li>";
+                                                        echo "<li 
+                                                            class='agregado'
+                                                            idpantalla_campo='{$CamposFormato->getPK()}'
+                                                            idpantalla_componente='{$PantallaComponente->getPK()}'
+                                                            data-position='{$CamposFormato->orden}' >
+                                                                <i class='fa {$PantallaComponente->clase} mr-3'></i>
+                                                                <div id='c_{$CamposFormato->getPK()}' class='d-inline' >{$CamposFormato->etiqueta}</div>
+                                                                <div class='eliminar' style='position:absolute;right:24px;top:20px;font-size:150%;cursor:pointer;' title='Eliminar componente'>
+                                                                    <i class='fa fa-trash eliminar'></i>
+                                                                </div>
+                                                        </li>";
+                                                    }
                                                 }
                                                 ?>
                                             </ul>
@@ -567,7 +571,6 @@ function cargarCampos($categoria)
     <script src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/coordinates.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/funciones_arbol.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
 </body>

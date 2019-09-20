@@ -437,7 +437,8 @@ function expiration($date, $documentId)
  */
 function temporality($date)
 {
-    $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+    $date = DateController::convertDate($date, 'Y-m-d H:i:s');
+    $date = new DateTime($date);
     $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
     $diference = strtotime("now") - $timeFromDate;
 

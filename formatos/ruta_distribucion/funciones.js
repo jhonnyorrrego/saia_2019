@@ -4,7 +4,7 @@ $(function () {
     console.log(params);
     $(document).off("click", "#addmessage").on("click", "#addmessage", function () {
         top.topModal({
-            url: baseUrl + "formatos/funcionarios_ruta/adicionar_funcionarios_ruta.php",
+            url: "formatos/funcionarios_ruta/adicionar_funcionarios_ruta.php",
             params: {
                 pantalla: 'padre',
                 idpadre: params.documentId,
@@ -32,7 +32,7 @@ $(function () {
 
     $(document).off("click", "#adddependence").on("click", "#adddependence", function () {
         top.topModal({
-            url: baseUrl + "formatos/dependencias_ruta/adicionar_dependencias_ruta.php",
+            url: "formatos/dependencias_ruta/adicionar_dependencias_ruta.php",
             params: {
                 pantalla: 'padre',
                 idpadre: params.documentId,
@@ -41,9 +41,9 @@ $(function () {
             size: 'modal-lg',
             title: 'Adicionar Dependencias a la Ruta',
             buttons: {},
-            onSuccess: function (data) { 
+            onSuccess: function (data) {
                 $.ajax({
-                    type:'POST',
+                    type: 'POST',
                     url: baseUrl + "formatos/ruta_distribucion/funciones_item.php",
                     dataType: "html",
                     data: {
@@ -54,7 +54,7 @@ $(function () {
                         $("#dependenciaDistribucion").removeClass("hide");
                         $("#dependenciaDistribucion").append(dataItem);
                     }
-                });                
+                });
             }
         });
     });

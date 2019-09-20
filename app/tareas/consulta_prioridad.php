@@ -23,7 +23,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $data = TareaPrioridad::findHistoryByTask($_REQUEST['task']);
 
     foreach($data as $item){
-        $date = DateController::convertDate($item['fecha'], 'Y-m-d H:i:s', 'd/m/Y H:i a');
+        $date = DateController::convertDate($item['fecha']);
         $Response->data[] = [
             'id' => $item['idtarea_prioridad'],
             'date' => $date,

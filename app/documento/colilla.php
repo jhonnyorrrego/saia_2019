@@ -275,7 +275,7 @@ function validar_confirmacion_salida($consecutivo, $enlace, $enlace2)
             $web_empresa = "";
             $nombre_empresa = "EMPRESA";
             $logo_empresa = "";
-            $datos_fecha = DateController::convertDate($datos[0]['fecha_oracle'], "Y-m-d H:i:s", "Y-m-d H:i");
+            $datos_fecha = DateController::convertDate($datos[0]['fecha_oracle'], "Y-m-d H:i:s");
             $info_fec = explode(" ", $datos_fecha);
             $fecha = date_parse($info_fec[0]);
             $datos_numero = $datos[0]['numero'];

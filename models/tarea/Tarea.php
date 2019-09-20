@@ -215,14 +215,14 @@ class Tarea extends LogModel
             ->join('a', 'tarea_funcionario', 'b', 'a.idtarea = b.fk_tarea')
             ->where('a.estado = 1')
             ->andWhere('b.estado = 1')
-            ->andWhere('b.fk_funcionario :userId')
+            ->andWhere('b.fk_funcionario = :userId')
             ->andWhere('b.tipo = :type')
             ->andWhere('a.fecha_inicial >= :initialDate')
-            ->andWhere('a.fecha_final >= :finalDate')
+            ->andWhere('a.fecha_final <= :finalDate')
             ->setParameter(':userId', $userId, \Doctrine\DBAL\Types\Type::INTEGER)
             ->setParameter(':type', $type, \Doctrine\DBAL\Types\Type::INTEGER)
-            ->setParameter(':initialDate', new DateTime($initialDate), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->setParameter(':finalDate', new DateTime($finalDate), \Doctrine\DBAL\Types\Type::DATETIME);
+            ->setParameter(':initialDate', $initialDate, \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(':finalDate', $finalDate, \Doctrine\DBAL\Types\Type::DATETIME);
 
         return self::findByQueryBuilder($QueryBuilder);
     }

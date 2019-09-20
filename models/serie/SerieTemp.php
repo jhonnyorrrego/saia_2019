@@ -19,8 +19,11 @@ class SerieTemp extends Model
     protected $dis_conservacion;
     protected $dis_seleccion;
     protected $dis_microfilma;
+    protected $fk_serie_version;
 
     protected $dbAttributes;
+
+    use TSerie;
 
     function __construct($id = null)
     {
@@ -32,6 +35,7 @@ class SerieTemp extends Model
         $this->dbAttributes = (object) [
             'safe' => [
                 'cod_padre',
+                'cod_arbol',
                 'nombre',
                 'codigo',
                 'tipo',
@@ -45,8 +49,14 @@ class SerieTemp extends Model
                 'dis_conservacion',
                 'dis_seleccion',
                 'dis_microfilma',
+                'fk_serie_version'
             ],
             'primary' => 'idserie'
         ];
+    }
+
+    public function afterCreate()
+    {
+        return $this->updateCodArbol();
     }
 }

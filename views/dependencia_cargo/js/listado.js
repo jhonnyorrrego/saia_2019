@@ -1,10 +1,10 @@
-$(function() {
+$(function () {
     let params = $('#role_script').data('params');
     $('#role_script').removeAttr('data-params');
 
     $(document)
         .off('click', '.edit_role, #add_role')
-        .on('click', '.edit_role, #add_role', function() {
+        .on('click', '.edit_role, #add_role', function () {
             showRoleForm($(this).data('id'));
         });
 
@@ -19,7 +19,7 @@ $(function() {
             queryParamsType: 'other',
             pagination: true,
             pageSize: 10,
-            queryParams: function(queryParams) {
+            queryParams: function (queryParams) {
                 return $.extend({}, queryParams, {
                     userId: params.userId,
                     key: localStorage.getItem('key'),
@@ -37,10 +37,10 @@ $(function() {
                     field: 'options',
                     title: '',
                     align: 'center',
-                    formatter: function(value, row, index, field) {
+                    formatter: function (value, row, index, field) {
                         return `<span class="cursor f-20 edit_role" data-id="${
                             row.id
-                        }" title="Editar">
+                            }" title="Editar">
                             <i class="fa fa-edit"></i>
                         </span>`;
                     }
@@ -51,7 +51,7 @@ $(function() {
 
     function showRoleForm(roleId = 0) {
         top.topModal({
-            url: `${params.baseUrl}views/dependencia_cargo/adicionar.php`,
+            url: `views/dependencia_cargo/adicionar.php`,
             params: {
                 userId: params.userId,
                 roleId: roleId

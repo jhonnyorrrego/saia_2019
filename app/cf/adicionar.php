@@ -42,7 +42,7 @@ try {
                 if (in_array(strtolower($column), array_keys($_REQUEST))) {
                     if (strpos(strtolower($type), 'date') === true) {
                         $dateFields[] = $column;
-                        $_REQUEST[$column] = DateController::convertDate($_REQUEST[$key], "Y-m-d", "Y-m-d");
+                        $_REQUEST[$column] = $_REQUEST[$key];
                     } else if ($type == \Doctrine\DBAL\Types\Type::STRING) {
                         $_REQUEST[$column] = "" . $_REQUEST[$column] . "";
                         $fields[] = $column;

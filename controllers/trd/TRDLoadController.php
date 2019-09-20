@@ -20,7 +20,7 @@ class TRDLoadController
     public $fila;
     private $row;
 
-    use TRDTrait;
+    use TTRD;
 
     public function __construct(string $url, int $fk_serie_version)
     {
@@ -233,7 +233,8 @@ class TRDLoadController
                 'cod_padre' => 0,
                 'nombre' => $this->row['serie'],
                 'codigo' => $this->row['cod_serie'],
-                'tipo' => 1
+                'tipo' => 1,
+                'fk_serie_version' => $this->fk_serie_version
             ];
 
             if ($sinSubserie) {
@@ -254,7 +255,7 @@ class TRDLoadController
                 $this->errorException("Error al insertar la serie");
             }
         }
-        $this->insertDependenciaSerie($idserie, 1, $sinSubserie);
+        $this->inserTSerieDependencia($idserie, 1, $sinSubserie);
 
         return $idserie;
     }
@@ -276,6 +277,7 @@ class TRDLoadController
                 'nombre' => $this->row['subserie'],
                 'codigo' => $this->row['cod_subserie'],
                 'tipo' => 2,
+                'fk_serie_version' => $this->fk_serie_version,
                 'retencion_gestion' => $this->row['ret_gestion'],
                 'retencion_central' => $this->row['ret_central'],
                 'procedimiento' => $this->row['procedimiento'],
@@ -291,11 +293,11 @@ class TRDLoadController
                 $this->errorException("Error al insertar la Subserie");
             }
         }
-        $this->insertDependenciaSerie($idsubserie, 2);
+        $this->inserTSerieDependencia($idsubserie, 2);
         return $idsubserie;
     }
 
-    private function insertDependenciaSerie($idserie, $tipo, $sinSubserie = false)
+    private function inserTSerieDependencia($idserie, $tipo, $sinSubserie = false)
     {
         if ($tipo == 1 && $sinSubserie) { //Serie
 
@@ -311,9 +313,9 @@ class TRDLoadController
             }
         }
 
-        $existDepSerie = DependenciaSerieTemp::getQueryBuilder()
-            ->select('count(iddependencia_serie) as cant')
-            ->from('dependencia_serie_temp')
+        $existDepSerie = SerieDependenciaTemp::getQueryBuilder()
+            ->select('count(idserie_dependencia) as cant')
+            ->from('serie_dependencia_temp')
             ->where('fk_serie=:idserie')
             ->andWhere('fk_dependencia=:iddependencia')
             ->setParameters(
@@ -334,7 +336,7 @@ class TRDLoadController
                 'fk_dependencia' => $this->row['iddependencia']
             ];
 
-            if (!DependenciaSerieTemp::newRecord($attributes)) {
+            if (!SerieDependenciaTemp::newRecord($attributes)) {
                 $this->errorException("Error al vincular la serie con la dependencia");
             }
         } else {
@@ -352,6 +354,7 @@ class TRDLoadController
             'nombre' => $this->row['tipo'],
             'codigo' => 0,
             'tipo' => 3,
+            'fk_serie_version' => $this->fk_serie_version,
             'dias_respuesta' => 0,
             'sop_papel' => $this->row['sop_papel'],
             'sop_electronico' => $this->row['sop_electronico']
@@ -366,7 +369,7 @@ class TRDLoadController
     private function validateSerieSubserie($data = array(), $tipo = 1)
     {
 
-        $existSerie = $this->validateDependenciaSerie(
+        $existSerie = $this->validateSerieDependencia(
             $tipo,
             $data['cod_serie'],
             $this->row['iddependencia'],
@@ -400,49 +403,6 @@ class TRDLoadController
     public static function truncate()
     {
         SerieTemp::truncateTable('serie_temp');
-        DependenciaSerieTemp::truncateTable('dependencia_serie_temp');
+        SerieDependenciaTemp::truncateTable('serie_dependencia_temp');
     }
-
-    /*protected function saveSerie()
-    {
-        $sql = SerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('serie_temp')
-            ->orderBy('idserie', 'ASC');
-
-        $data = SerieTemp::findByQueryBuilder($sql);
-
-        $ids = [0 => 0];
-        foreach ($data as $SerieTemp) {
-            $attributesSerie = $SerieTemp->getAttributes();
-            $attributesSerie['estado'] = 1;
-            $attributesSerie['cod_arbol'] = 0;
-            $attributesSerie['fk_serie_version'] = $this->fk_serie_version;
-            $attributesSerie['cod_padre'] = array_search($attributesSerie['cod_padre'], $ids);
-
-            if ($id = Serie::newRecord($attributesSerie)) {
-                $ids[$id] = $SerieTemp->getPK();
-            } else {
-                $this->errorException("Error al guardar la serie temporal ID:{$SerieTemp->getPK()}");
-            }
-        }
-        unset($this->fila);
-
-        $sql = DependenciaSerieTemp::getQueryBuilder()
-            ->select('*')
-            ->from('dependencia_serie_temp')
-            ->orderBy('iddependencia_serie', 'ASC');
-        $data = DependenciaSerieTemp::findByQueryBuilder($sql);
-
-        foreach ($data as $DependenciaSerie) {
-
-            $attributesDep = $DependenciaSerie->getAttributes();
-            $attributesDep['fk_serie'] = array_search($attributesDep['fk_serie'], $ids);
-
-            if (!DependenciaSerie::newRecord($attributesDep)) {
-                $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$DependenciaSerie->getPK()}");
-            }
-        }
-        return $this;
-    }*/
 }

@@ -15,7 +15,7 @@
 
         function edit(userId) {
             top.topModal({
-                url: `${baseUrl}views/remitente/adicionar.php`,
+                url: `views/remitente/adicionar.php`,
                 params: {
                     userId: userId
                 },

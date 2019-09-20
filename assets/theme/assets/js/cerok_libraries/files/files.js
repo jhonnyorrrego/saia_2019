@@ -69,8 +69,8 @@ class Files {
     createDropzone() {
         if (!this.options.dropzone.init) {
             let instance = this;
-            instance.options.dropzone.init = function() {
-                this.on('success', function(file, response) {
+            instance.options.dropzone.init = function () {
+                this.on('success', function (file, response) {
                     response = JSON.parse(response);
 
                     if (response.success) {
@@ -108,7 +108,7 @@ class Files {
     createEvents() {
         let instance = this;
 
-        $('#upload_file').on('click', function() {
+        $('#upload_file').on('click', function () {
             if (instance._loadedFiles.length) {
                 instance.save($('#file_description').val());
             } else {
@@ -119,12 +119,12 @@ class Files {
             }
         });
 
-        this.getStopButton().on('click', function() {
+        this.getStopButton().on('click', function () {
             instance.reset();
         });
 
         $(document).off('click', '.show_options');
-        $(document).on('click', '.show_options', function() {
+        $(document).on('click', '.show_options', function () {
             let parentNode = $(this).parent();
             $.post(
                 `${instance.options.baseUrl}app/permisos/permiso_funcionario.php`,
@@ -134,7 +134,7 @@ class Files {
                         instance.options.sourceReference || 'TIPO_ANEXO',
                     typeId: $(this).data('id')
                 },
-                function(response) {
+                function (response) {
                     if (response.success) {
                         if (!response.data.edit) {
                             parentNode.find('[data-type="upload"]').hide();
@@ -176,7 +176,7 @@ class Files {
         $(document).on(
             'click',
             '.file_option:not(".show_options")',
-            function() {
+            function () {
                 switch ($(this).data('type')) {
                     case 'upload':
                         instance.upload($(this).data('id'));
@@ -201,7 +201,7 @@ class Files {
 
         instance
             .getTable()
-            .on('expand-row.bs.table', function(event, index, row, $detail) {
+            .on('expand-row.bs.table', function (event, index, row, $detail) {
                 if (row.version > 1) {
                     instance.expand(row, $detail);
                 } else {
@@ -213,7 +213,7 @@ class Files {
 
         instance
             .getTable()
-            .on('click-cell.bs.table', function(
+            .on('click-cell.bs.table', function (
                 event,
                 field,
                 value,
@@ -315,7 +315,7 @@ class Files {
         return {
             classes: 'table table-sm table-hover mt-0',
             theadClasses: 'thead-light',
-            queryParams: function(queryParams) {
+            queryParams: function (queryParams) {
                 queryParams.sortOrder = 'desc';
                 queryParams.fileId = row.id;
                 queryParams.key = localStorage.getItem('key');
@@ -359,7 +359,7 @@ class Files {
                 url: '',
                 sidePagination: 'server',
                 queryParamsType: 'other',
-                queryParams: function(queryParams) {
+                queryParams: function (queryParams) {
                     queryParams.key = localStorage.getItem('key');
                     return queryParams;
                 },
@@ -385,7 +385,7 @@ class Files {
                 ],
                 detailView: true
             },
-            save: function(description, files) {
+            save: function (description, files) {
                 console.log(arguments);
             }
         };
@@ -460,7 +460,7 @@ class Files {
             buttons: [
                 [
                     '<button><b>Si</b></button>',
-                    function(instance, toast) {
+                    function (instance, toast) {
                         if (filesInstance.options.delete(key)) {
                             instance.hide(
                                 { transitionOut: 'fadeOut' },
@@ -474,7 +474,7 @@ class Files {
                 ],
                 [
                     '<button>NO</button>',
-                    function(instance, toast) {
+                    function (instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
@@ -488,7 +488,7 @@ class Files {
 
     access(fileId) {
         top.topModal({
-            url: `${this.options.baseUrl}views/permisos/asignar.php`,
+            url: `views/permisos/asignar.php`,
             title: 'Permisos',
             params: {
                 type: this.options.sourceReference,
@@ -511,7 +511,7 @@ class Files {
         let row = data.find(f => f.id == fileId);
 
         top.topModal({
-            url: `${this.options.baseUrl}views/anexos/editar.php`,
+            url: `views/anexos/editar.php`,
             size: 'modal-sm',
             title: 'Permisos',
             params: {

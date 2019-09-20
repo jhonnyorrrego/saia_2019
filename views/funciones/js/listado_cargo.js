@@ -1,16 +1,16 @@
-$(function() {
+$(function () {
     let params = $('#position_function_script').data('params');
     $('#position_function_script').removeAttr('data-params');
 
     $(document)
         .off('click', '#add_function')
-        .on('click', '#add_function', function() {
+        .on('click', '#add_function', function () {
             showForm();
         });
 
     $(document)
         .off('click', '#function_table :radio')
-        .on('click', '#function_table :radio', function() {
+        .on('click', '#function_table :radio', function () {
             changeState($(this).data('id'), $(this).val());
         });
 
@@ -25,7 +25,7 @@ $(function() {
             queryParamsType: 'other',
             pagination: true,
             pageSize: 10,
-            queryParams: function(queryParams) {
+            queryParams: function (queryParams) {
                 return $.extend({}, queryParams, {
                     position: params.position,
                     key: localStorage.getItem('key'),
@@ -40,17 +40,17 @@ $(function() {
                     field: 'options',
                     title: 'Estado',
                     align: 'center',
-                    formatter: function(value, row, index, field) {
+                    formatter: function (value, row, index, field) {
                         return `<div class="radio radio-success mt-0 mb-2">
                             <input id="active${index}" type="radio" name="name${index}" value="1" 
                                 data-id="${row.id}" ${
                             row.state == 1 ? 'checked' : ''
-                        }>
+                            }>
                             <label for="active${index}">Activo</label>
                             <input id="inactive${index}" type="radio" name="name${index}" value="0" 
                                 data-id="${row.id}" ${
                             row.state == 0 ? 'checked' : ''
-                        }>
+                            }>
                             <label for="inactive${index}">Inactivo</label>
                         </div>`;
                     }
@@ -59,7 +59,7 @@ $(function() {
                     field: 'options',
                     title: '',
                     align: 'center',
-                    formatter: function(value, row, index, field) {
+                    formatter: function (value, row, index, field) {
                         return `<div class="dropdown">
                             <button class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-ellipsis-v"></i>
@@ -79,13 +79,13 @@ $(function() {
 
     function showForm() {
         top.topModal({
-            url: `${params.baseUrl}views/funciones/vincular_cargo.php`,
+            url: `views/funciones/vincular_cargo.php`,
             params: {
                 position: params.position
             },
             size: 'modal-xl',
             title: 'Vincular función',
-            onSuccess: function() {
+            onSuccess: function () {
                 $('#function_table').bootstrapTable('refresh');
             }
         });
@@ -100,7 +100,7 @@ $(function() {
                 relation: relation,
                 state: state
             },
-            function(response) {
+            function (response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
