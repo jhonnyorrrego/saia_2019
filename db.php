@@ -208,43 +208,6 @@ function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = 
 }
 
 /**
- * ejecuta una busqueda sobre la base de datos
- * con un limite
- *
- * @param string $campos
- * @param string $tabla
- * @param string $filtro
- * @param string $orden
- * @param string $inicio registro inicial
- * @param string $registros cantidad de registros a consultar
- * @param string $conn
- * @return void
- */
-function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $start, $end, $conn = null)
-{
-    $QueryBuilder = Model::getQueryBuilder()
-        ->select($campos ? $campos : '*')
-        ->from($tabla);
-
-    if ($filtro) {
-        $QueryBuilder->where($filtro);
-    }
-
-    if ($orden) {
-        $QueryBuilder->add('orderBy', $orden);
-    }
-
-    $response = $QueryBuilder
-        ->setFirstResult($start)
-        ->setMaxResults($end)
-        ->execute()
-        ->fetchAll();
-
-    $response['numcampos'] = count($response);
-    return $response;
-}
-
-/**
  * recorta un string
  *
  * @param string $string
@@ -779,7 +742,6 @@ function redirecciona($location)
  */
 function contador($counter, $documentId)
 {
-    $userCode = SessionController::getValue('usuario_actual');
     $Contador = Contador::findByAttributes([
         'nombre' => $counter
     ]);
@@ -823,57 +785,6 @@ function muestra_contador($cad)
     }
 }
 
-/*
-<Clase>
-<Nombre>busca_cargo_funcionario
-<Parametros>$tipo: filtro de la busqueda
-            $dato:
-            $dependencia:
-            $conn: instancia sql
-<Responsabilidades>Funcion  que retorna el origen completo de un funcionario incluyendo los codigos de dependencia y cargo
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
-{
-    $datorig = array();
-    $datorig["numcampos"] = 0;
-    $filtro = "";
-    if ($tipo == 'nit' || $tipo == 2) {
-        $filtro = "A.nit='" . $dato . "'";
-    } else if ($tipo == 'id' || $tipo == 1) {
-        $filtro = "A.funcionario_codigo=" . $dato;
-    } else if ($tipo == 'login' || $tipo == 3) {
-        $filtro = "A.login='" . $dato . "'";
-    }
-    if ($tipo == 'nit' || $tipo == 'id' || $tipo == 'login' || $tipo == 1 || $tipo == 2 || $tipo == 3) {
-        $temp = busca_filtro_tabla("*", "funcionario A", $filtro, "");
-        if ($temp["numcampos"] == 0)
-            error("Datos del Funcionario Origen de Dependencia no Existe");
-        else {
-            $dorig = $temp[0]['idfuncionario'];
-            $datorig = busca_filtro_tabla("d.*,c.*,f.*,f.estado AS estado_f,d.estado AS estado_d", "dependencia_cargo d, cargo c, funcionario f", "d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='" . $dorig . "'", "f.estado ASC");
-        }
-    } else if ($tipo == "cargo" || $tipo == 4) {
-        $datorig = busca_filtro_tabla("A.iddependencia_cargo", "dependencia_cargo A", "A.cargo_idcargo=$dato AND A.dependencia_iddependencia=" . $dependencia, "A.estado");
-        if ($datorig["numcampos"])
-            $datorig = busca_cargo_funcionario(5, $datorig[0]["iddependencia_cargo"], "");
-        else alerta(codifica_encabezado("No existe nadie en ésta dependencia con el cargo especificado"));
-    } else if ($tipo == 'iddependencia_cargo' || $tipo == 5) {
-        $datorig = busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d", "dependencia_cargo d,funcionario f,cargo c", "dependencia_cargo d,funcionario f,cargo", "c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=" . $dato, "f.estado");
-    } else {
-        $datorig[0]['iddependencia_cargo'] = $dato;
-    }
-    if ($temp["numcampos"]) {
-        $datorig[0] = array_merge((array) $datorig[0], (array) $temp[0]);
-    }
-
-    return $datorig;
-}
-
 /**
  * genera una alerta javascript
  *
@@ -884,10 +795,6 @@ function busca_cargo_funcionario($tipo, $dato, $dependencia, $conn)
  */
 function alerta($message, $type = 'success', $duration = 3000)
 {
-    if ($_REQUEST["llamado_ajax"]) {
-        return $message;
-    }
-
     echo '<script type="text/javascript">
         top.notification({
             message: "' . $message . '",
@@ -960,27 +867,6 @@ function crear_destino($directory)
     return $directory;
 }
 
-function ruta_almacenamiento($tipo, $raiz = 1)
-{
-    $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-    $ruta_db_superior = $ruta = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta . "db.php")) {
-            $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-        }
-        $ruta .= "../";
-        $max_salida--;
-    }
-
-    if ($raiz) {
-        $ruta_raiz = $ruta_db_superior;
-    } else {
-        $ruta_raiz = '';
-    }
-    $path = StorageUtils::get_storage_path($tipo, true);
-    return $ruta_raiz . $path;
-}
-
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
 {
 
@@ -1000,61 +886,139 @@ function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
     return $retorno;
 }
 
-/*Manipulacion de Imagenes*/
-/*
-<Clase>
-<Nombre>cambia_tam
-<Parametros>$nombreorig: nombre de la imagen
-            $nombredest: nombre de la nueva imagen
-            $nwidth: ancho del a nueva imagen
-            $nheight: alto de la nueva imagen
-            $tipo:
-<Responsabilidades>cambiar el tamaño de la imagen, generando una nueva de las dimensiones deseadas
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function cambia_tam($nombreorig, $nombredest, $nwidth, $nheight, $tipo = '', $binario = false)
+/**
+ * crea la nueva ruta de radicacion para un documento
+ *
+ * @param array $ruta2 [
+ *    [
+ *        funcionario: funcionario_codigo, iddependencia_cargo
+ *        tipo_firma: 1 => firma , 0 => no firma
+ *        tipo => 1 => funcionario_codigo, 5 => iddependencia_cargo
+ *    ]
+ * ]
+ * @param integer $iddoc iddocumento
+ * @param integer $firma1
+ * @return void
+ * @date 2019
+ */
+function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
 {
-    $ext = 'jpg';
-    // Se obtienen las nuevas dimensiones
-    list($width, $height) = getimagesize($nombreorig);
-    if ($nwidth && ($width < $height)) {
-        $nwidth = ($nheight / $height) * $width;
-    } else {
-        $nheight = ($nwidth / $width) * $height;
+    if ($ruta2) {
+        if ($ruta2[0]['tipo'] == 5) {
+            $VfuncionarioDc = VfuncionarioDc::findByRole($ruta2[0]['funcionario']);
+            $userId = $VfuncionarioDc->funcionario_codigo;
+        } else {
+            $userId = $ruta2[0]['funcionario'];
+        }
     }
-    $image_p = imagecreatetruecolor($nwidth, $nheight);
-    imagecolorallocate($image_p, 255, 255, 255);
-    if ($ext == 'gif') {
-        $image = imagecreatefromgif($nombreorig); ///nombre del archivo origen
-        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
-        imagegif($image_p, $nombredest); ///nombre del destino
-        imagedestroy($image_p);
-        imagedestroy($image);
 
-        if ($binario) {
-            $im = file_get_contents($nombreorig);
-            return $im;
-        } else {
-            return $nombredest;
-        }
+    if (!$ruta2 || $userId != SessionController::getValue('usuario_actual')) {
+        $ruta = [];
+        array_push($ruta, [
+            "funcionario" => SessionController::getValue('usuario_actual'),
+            "tipo_firma" => $firma1,
+            "tipo" => 1
+        ]);
+        $ruta = array_merge($ruta, $ruta2);
     } else {
-        $image = imagecreatefromjpeg($nombreorig);
-        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
-        imagejpeg($image_p, $nombredest, 80); ///nombre del destino
-        imagedestroy($image_p);
-        imagedestroy($image);
-        if ($binario) {
-            $im = file_get_contents($nombreorig);
-            return $im;
-        } else {
-            return $nombredest;
-        }
+        $ruta = $ruta2; // :'(
     }
-    imagedestroy($image_p);
-    imagedestroy($image);
-    return null;
+
+    RutaDocumento::inactiveByType($iddoc, RutaDocumento::TIPO_RADICACION);
+
+    //nueva relacion de ruta con el documento
+    $fk_ruta_documento = RutaDocumento::newRecord([
+        'fk_documento' => $iddoc,
+        'tipo' => RutaDocumento::TIPO_RADICACION,
+        'estado' => 1,
+        'tipo_flujo' => RutaDocumento::FLUJO_SERIE
+    ]);
+
+    $radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "");
+    array_push($ruta, array(
+        "funcionario" => $radicador[0]["funcionario_codigo"],
+        "tipo_firma" => 0,
+        "tipo" => 1
+    ));
+    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=CONCAT('ELIMINA_',nombre) where archivo_idarchivo='" . $iddoc . "' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+    phpmkr_query("UPDATE buzon_salida SET nombre=CONCAT('ELIMINA_',nombre) WHERE archivo_idarchivo='" . $iddoc . "' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')");
+
+    for ($i = 0; $i < count($ruta) - 1; $i++) {
+        if (!isset($ruta[$i]["tipo_firma"])) {
+            $ruta[$i]["tipo_firma"] = 1;
+        }
+        if (!isset($ruta[$i]["tipo"])) {
+            $ruta[$i]["tipo"] = 1;
+        }
+        if (!isset($ruta[$i + 1]["tipo"])) {
+            $ruta[$i + 1]["tipo"] = 1;
+        }
+
+        if ($ruta[$i]["tipo"] == 5) {
+            $func_codigo1 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i]["funcionario"], "");
+            $funcionario1 = $func_codigo1[0]['funcionario_codigo'];
+        } else {
+            $funcionario1 = $ruta[$i]["funcionario"];
+        }
+
+        $retorno1 = obtener_reemplazo($funcionario1, 1);
+        if ($retorno1['exito']) {
+            $funcionario1 = $retorno1['funcionario_codigo'][0];
+            if ($ruta[$i]["tipo"] == 5) {
+                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno1['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i]["funcionario"], "");
+                if ($equiv["numcampos"]) {
+                    $ruta[$i]["funcionario"] = $equiv[0]["llave_entidad_destino"];
+                } else {
+                    $ruta[$i]["tipo"] = 1;
+                    $ruta[$i]["funcionario"] = $funcionario1;
+                }
+            }
+        }
+
+        if ($ruta[$i + 1]["tipo"] == 5) {
+            $func_codigo2 = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i + 1]["funcionario"], "");
+            $funcionario2 = $func_codigo2[0]['funcionario_codigo'];
+        } else {
+            $funcionario2 = $ruta[$i + 1]["funcionario"];
+        }
+
+        $retorno2 = obtener_reemplazo($funcionario2, 1);
+        if ($retorno2['exito']) {
+            $funcionario2 = $retorno2['funcionario_codigo'][0];
+            if ($ruta[$i + 1]["tipo"] == 5) {
+                $equiv = busca_filtro_tabla("llave_entidad_destino", "reemplazo_equivalencia", "fk_idreemplazo_saia=" . $retorno2['idreemplazo'][0] . " and entidad_identidad=5 and llave_entidad_origen=" . $ruta[$i + 1]["funcionario"], "");
+                if ($equiv["numcampos"]) {
+                    $ruta[$i + 1]["funcionario"] = $equiv[0]["llave_entidad_destino"];
+                } else {
+                    $ruta[$i + 1]["tipo"] = 1;
+                    $ruta[$i + 1]["funcionario"] = $funcionario2;
+                }
+            }
+        }
+
+        $idruta = Ruta::newRecord([
+            'destino' => $ruta[$i + 1]["funcionario"],
+            'origen' =>  $ruta[$i]["funcionario"],
+            'documento_iddocumento' => $iddoc,
+            'condicion_transferencia' => 'POR_APROBAR',
+            'tipo_origen' =>  $ruta[$i]["tipo"],
+            'tipo_destino' =>  $ruta[$i + 1]["tipo"],
+            'orden' => $i,
+            'obligatorio' => $ruta[$i]["tipo_firma"],
+            'idenlace_nodo' =>  $ruta[$i]["paso_actividad"] ?? null,
+            'fk_ruta_documento' => $fk_ruta_documento
+        ]);
+
+        BuzonEntrada::newRecord([
+            'origen' =>  $funcionario2,
+            'destino' => $funcionario1,
+            'archivo_idarchivo' => $iddoc,
+            'activo' => 1,
+            'tipo_origen' => $ruta[$i + 1]["tipo"],
+            'tipo_destino' =>  $ruta[$i]["tipo"],
+            'ruta_idruta' => $idruta,
+            'nombre' => 'POR_APROBAR',
+            'fecha' => date("Y-m-d H:i:s"),
+        ]);
+    }
 }

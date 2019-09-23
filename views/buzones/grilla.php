@@ -26,7 +26,7 @@ $component = Model::getQueryBuilder()
     ->from('busqueda', 'a')
     ->innerJoin('a', 'busqueda_componente', 'b', 'a.idbusqueda = b.busqueda_idbusqueda')
     ->where('b.idbusqueda_componente= :component')
-    ->setParameter(':component', $_REQUEST['idbusqueda_componente'], 'integer')
+    ->setParameter(':component', $_REQUEST['idbusqueda_componente'], \Doctrine\DBAL\Types\Type::INTEGER)
     ->execute()->fetch();
 
 $params = json_encode(array_merge($_REQUEST, [

@@ -342,7 +342,7 @@ class ComponentFormGeneratorController
                         });
                     </script>
                 </div>
-            </div>';
+            </div>
 HTML;
     }
 

@@ -39,7 +39,7 @@ $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . 
                 <table class="table table-hover table-bordered">
                     <tr>
                         <td class="text-center">
-                            <b><?= strtoupper($proceso[0]['nombre']) ?></b>
+                            <b><?= $proceso[0]['nombre'] ?></b>
                         </td>
                     </tr>
                     <?php foreach ($formats as $Formato) :
