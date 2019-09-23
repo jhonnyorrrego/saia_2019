@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'formatos/despacho_ingresados/funciones.php';
 
 try {
     JwtController::check($_REQUEST["token"], $_REQUEST["key"]);    
@@ -48,7 +49,18 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <table align=\"center\" border=\"1\" cellspacing=\"0\" style=\"position:relative; top:0px; width:100%\">\r\n <tbody>\r\n <tr>\r\n <td style=\"width:30%\"><strong>Auxiliar de mensajer&iacute;a: </strong>{*mensajero_entrega_interna*}</td>\r\n <td style=\"width:50%\"><strong>Tipo de Mensajer&iacute;a: </strong>{*tipo_mensajero*}</td>\r\n <td style=\"width:20%\"><strong>Recorrido: </strong>{*tipo_recorrido*}</td>\r\n </tr>\r\n </tbody>\r\n </table>\r\n <p>{*mostrar_seleccionados_entrega*}</p>\r\n 
+                                <table align="\&quot;\&quot;center\&quot;\&quot;" border="\&quot;1\&quot;" cellspacing="\&quot;\&quot;0\&quot;\&quot;" style="\&quot;position:relative">
+	<tbody>
+		<tr>
+			<td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
+			<td><strong>Tipo de Mensajer&iacute;a: </strong><?= mostrar_valor_campo('tipo_mensajero', 353, $_REQUEST['iddoc']) ?></td>
+			<td><strong>Recorrido: </strong><?= mostrar_valor_campo('tipo_recorrido', 353, $_REQUEST['iddoc']) ?></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><?php mostrar_seleccionados_entrega(353, $_REQUEST['iddoc']) ?></p>
+
                             </div>
                         </div>
                         <?php include_once $ruta_db_superior . "formatos/librerias/footer_nuevo.php" ?>
