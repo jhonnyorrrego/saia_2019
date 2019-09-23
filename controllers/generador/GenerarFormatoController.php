@@ -288,6 +288,7 @@ CODE;
         //configuro los campos de nucleo
         $this->configDefaultFields();
         $fields = $this->Formato->getFields();
+        $systemFields = $this->Formato->getSystemFields();
 
         if ($fields) {
             if ($this->Table->hasColumn('_id')) {
@@ -298,7 +299,7 @@ CODE;
                 $flags = explode(',', $CamposFormato->banderas);
                 $options = [
                     'length' => $CamposFormato->logitud,
-                    'notnull' => $CamposFormato->obligatoriedad,
+                    'notnull' => in_array($CamposFormato->nombre, $systemFields),
                     'default' => $CamposFormato->predeterminado,
                     'autoincrement' => in_array('ai', $flags)
                 ];

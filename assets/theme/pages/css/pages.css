@@ -8214,6 +8214,10 @@ body.rtl .checkbox label::after {
   transition: background-color 0.2s ease;
 }
 
+.form-group-default.required.date:after{
+  right: 70px;
+}
+
 .form-group-default.required:after {
   color: #f55753;
   content: "*";
