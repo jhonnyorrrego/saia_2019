@@ -1,1 +1,0 @@
-<?php include_once('../../assets/librerias.php'); ?><?php echo(jquery()); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../app/documento/class_transferencia.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?><tr><td></td></tr><?php include_once('../../formatos/librerias/footer_nuevo.php'); ?>
