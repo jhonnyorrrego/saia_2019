@@ -787,7 +787,6 @@ function cambiar_estado($idformato, $iddoc)
 
 function post_aprobar_rad_entrada($idformato, $iddoc)
 {
-    print_r("post_aprobar_rad_entrada!!!!!! ");
     global $conn, $ruta_db_superior;
     $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "");
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
@@ -835,7 +834,6 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
 //posterior al adicionar - editar
 function ingresar_item_destino_radicacion($idformato, $iddoc)
 {
-    print_r("llega a ingresar_item_destino_radicacion !!!!!");
     global $conn, $ruta_db_superior;
     $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "");
 

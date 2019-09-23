@@ -396,7 +396,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         'titulo' => 'Documento transferido.'
     ]);
     llama_funcion_accion($idarchivo, $idformato, "transferir", "POSTERIOR");
-    print_r($datos['']);
     if ($anexos == 1) {
         return $idtransferencia;
     } else {

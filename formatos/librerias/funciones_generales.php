@@ -1042,7 +1042,6 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = null)
 
             if (!$iddoc) {
                 $resultado = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "");
-                // print_r($resultado);
                 $nombres = explode(" ", $resultado[0]["nombres"]);
                 $apellidos = explode(" ", $resultado[0]["apellidos"]);
                 // $iniciales=@$nombres[0][0]."".@$nombres[1][0]."".$apellidos[0][0]."".$apellidos[1][0];
@@ -1752,7 +1751,6 @@ function digitalizar_formato($idformato, $iddoc)
                     $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "");
                 else
                     $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "");
-                // print_r($valor);
                 if ($valor["numcampos"]) {
                     if ($tipo) {
                         echo ($valor[0][0]);
@@ -2395,7 +2393,6 @@ function digitalizar_formato($idformato, $iddoc)
                         $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "");
                         if ($documento_papa["numcampos"]) {
                             $doc = buscar_papa_formato_campo($papa[0]['idformato'], $documento_papa[0]["documento_iddocumento"], $nombre_tabla, $campo);
-                            // print_r($doc);
                         } else {
                             return (0);
                         }
@@ -2638,11 +2635,8 @@ function digitalizar_formato($idformato, $iddoc)
         {
 
             $formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "");
-            // print_r($formato);
             if ($formato["numcampos"]) {
                 $documento = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "");
-                // print_r($documento);
-                // echo($nombre_tabla."<---->".$formato[0]["nombre_tabla"]."<br />");
                 if ($formato[0]["nombre_tabla"] == $nombre_tabla && $documento["numcampos"]) {
                     return ($documento[0]['documento_iddocumento']);
                 } elseif ($formato[0]["cod_padre"] != '' && $formato[0]["cod_padre"] != 0) {
@@ -2651,7 +2645,6 @@ function digitalizar_formato($idformato, $iddoc)
                         $documento_papa = busca_filtro_tabla("", $papa[0]["nombre_tabla"], "id" . $papa[0]["nombre_tabla"] . "=" . $documento[0][$papa[0]["nombre_tabla"]], "");
                         if ($documento_papa["numcampos"]) {
                             $doc = buscar_papa_formato($papa[0]['idformato'], $documento_papa[0]["documento_iddocumento"], $nombre_tabla);
-                            // print_r($doc);
                         } else {
                             return (0);
                         }
