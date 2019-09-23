@@ -568,17 +568,26 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
     } else {
         $tipo = "I";
     }
-    if ($datos["numcampos"]) {
+    if ($datos) {
         $numero_radicado = $datos[0]['fecha_radicacion_entrada'] . "-" . $documento[0]['numero'] . "-" . $tipo;
     }
     if (!empty($datos[0]["serie_idserie"])) {
         $tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "");
     }
-    $anexos = busca_filtro_tabla("etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "");
+    $anexos = Model::getQueryBuilder()
+        ->select("etiqueta")
+        ->from("anexos")
+        ->where("documento_iddocumento=:iddoc")
+        ->setParameter(":iddoc", $iddoc)
+        ->execute()
+        ->fetchAll();
+
     $nombre_anexos = '';
     $fecha_radicacion = $documento[0]['fecha'];
 
-    for ($i = 0; $i < $anexos['numcampos']; $i++) {
+    $countAnexos = count($anexos);
+
+    for ($i = 0; $i < $countAnexos; $i++) {
         $nombre_anexos .= $anexos[$i]['etiqueta'];
         if ($i < $anexos['numcampos'] - 1) {
             $nombre_anexos .= ', ';
@@ -715,8 +724,17 @@ function obtener_informacion_proveedor($idformato, $iddoc)
 {
     global $conn, $datos;
     if ($datos[0]['tipo_origen'] == 1 && $datos[0]["persona_natural"]) {
-        $info = busca_filtro_tabla("", "datos_ejecutor B, ejecutor C", "B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=" . $datos[0]["persona_natural"], "");
-        if ($info["numcampos"]) {
+
+        $info = Model::getQueryBuilder()
+            ->select("*")
+            ->from("datos_ejecutor", "a")
+            ->join('a', 'ejecutor', 'b', 'a.ejecutor_idejecutor = b.idejecutor')
+            ->where("a.iddatos_ejecutor=:iddoc")
+            ->setParameter(":iddoc", $datos[0]["persona_natural"])
+            ->execute()
+            ->fetchAll();
+
+        if ($info) {
             $texto = array();
             $texto[] = "<b>Nombre:</b> " . $info[0]["nombre"];
             $texto[] = "<b>Identificaci&oacute;n:</b> " . $info[0]["identificacion"];
@@ -982,5 +1000,4 @@ function radicacion_entrada_fab_buttons()
     $datos = array_merge($datos, $datos2);
     return $datos;
 }
-
 ?>

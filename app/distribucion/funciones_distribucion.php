@@ -393,7 +393,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
     return $array_tipo_radicado[$tipo_origen];
 }
 
-function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion, $origen)
+function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
 { //Ruta
 
     if ($estado_recogida == 'estado_recogida') {
@@ -423,6 +423,10 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
     if ($tipo_destino == 2 && $estado_recogida) { //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
         $nombre_ruta_distribucion = 'Distribuci&oacute;n Externa';
     }
+
+    $DependenciaCargo = VfuncionarioDc::findByAttributes([
+        'iddependencia_cargo' => $iddependencia_cargo
+    ]);
 
     if ($tipo_destino == 1 && $origen) {
         $rutaDistribucion = Model::getQueryBuilder()

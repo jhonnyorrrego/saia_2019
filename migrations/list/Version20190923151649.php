@@ -10,27 +10,27 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190920230547 extends AbstractMigration
+final class Version20190923151649 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Borrando funciones_formato_enlace que generan conflicto y no son necesarios';
     }
 
     public function up(Schema $schema): void
     {
-        $this->connection->update('busqueda', [
-            'ruta_libreria' => 'app/trd/serie_version/funciones_reporte.php',
-            'ruta_libreria_pantalla' => 'views/serie_version/js/acciones_reporte.php',
-            'campos' => 'version,tipo,descripcion,nombre,anexos,estado,vigente'
-        ], [
-            'nombre' => 'versiones_trd'
+        $this->connection->delete('funciones_formato_enlace', [
+            'idfunciones_formato_enlace' => '556'
+        ]);
+
+        $this->connection->delete('funciones_formato', [
+            'idfunciones_formato' => '598'
         ]);
 
         $this->connection->update('modulo', [
-            'enlace' => 'views/serie_version/cargar_trd.php'
+            'etiqueta' => 'CAD',
         ], [
-            'nombre' => 'nueva_trd'
+            'nombre' => 'agrupador_radicacion'
         ]);
     }
 
