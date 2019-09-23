@@ -10,8 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
-include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
+include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 
 $idft = $_REQUEST['idft'];
 $estado = $_REQUEST['estado'];
@@ -33,4 +32,4 @@ if ($retorno['exito']) {
 	actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion, $idft, $estado);
 }
 
-echo(json_encode($retorno));
+echo (json_encode($retorno));

@@ -17,7 +17,7 @@ function mostrar_codigo_qr_encabezado($idformato, $iddoc)
 
 function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $height = 80)
 {
-	
+
 
 	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "");
 	$img = '';
@@ -53,16 +53,15 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $heigh
 	} else {
 		echo $img;
 	}
-
 }
 
 function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 {
-	global $conn, $ruta_db_superior;
-	include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+	global $ruta_db_superior;
+
 	include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 	include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	
+
 	$retorno = array(
 		"exito" => 0,
 		"msn" => ""
@@ -97,14 +96,16 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 			);
 
 			$sql_documento_qr = Model::getQueryBuilder()->insert("documento_verificacion")
-			->values(
-				['documento_iddocumento' => $iddoc,
-				 'funcionario_idfuncionario' => $idfunc,
-				 'fecha' => ':fecha',
-				 'ruta_qr' => ':ruta']
+				->values(
+					[
+						'documento_iddocumento' => $iddoc,
+						'funcionario_idfuncionario' => $idfunc,
+						'fecha' => ':fecha',
+						'ruta_qr' => ':ruta'
+					]
 
-			)->setParameter(':fecha',DateTime::createFromFormat('Y-m-d', date("Y-m-d")),'datetime')
-			->setParameter(':ruta', json_encode($ruta_qr))->execute();
+				)->setParameter(':fecha', DateTime::createFromFormat('Y-m-d', date("Y-m-d")), 'datetime')
+				->setParameter(':ruta', json_encode($ruta_qr))->execute();
 
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "QR generado con exito";
@@ -148,7 +149,7 @@ function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L
 }
 
 function generar_qr_datos($filename, $datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L')
-{//utilizado en expediente y cajas => rotulos
+{ //utilizado en expediente y cajas => rotulos
 	global $ruta_db_superior;
 	$retorno = array(
 		"exito" => 0,
@@ -171,7 +172,6 @@ function generar_qr_datos($filename, $datos, $matrixPointSize = 2, $errorCorrect
 			$retorno["ruta_qr"] = json_encode($ruta_qr);
 			$retorno["exito"] = 1;
 		}
-
 	} else {
 		$retorno["msn"] = "Falta los datos del QR";
 	}

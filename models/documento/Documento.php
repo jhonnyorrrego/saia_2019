@@ -44,6 +44,7 @@ class Documento extends Model
     protected $Funcionario; //ejecutor
     protected $Serie;
     protected $Formato;
+    protected $ft; //datos de la ft
 
     function __construct($id = null)
     {
@@ -190,6 +191,23 @@ class Documento extends Model
         }
 
         return $this->Formato;
+    }
+
+    /**
+     * busca el registro de la ft relacionada
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
+    public function getFt()
+    {
+        return Model::getQueryBuilder()
+            ->select('*')
+            ->from($this->getFormat()->nombre_tabla)
+            ->where('documento_iddocumento = :documentId')
+            ->setParameter(':documentId', $_REQUEST['iddoc'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetch();
     }
 
     /**

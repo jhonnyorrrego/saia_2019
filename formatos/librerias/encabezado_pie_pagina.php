@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 $incluidos = array();
 
 function imagen_firma_faltante()
@@ -237,7 +236,7 @@ function logo_empresa($idformato, $iddoc = 0, $tipo = null, $width = null)
 
 function logo_encabezado()
 {
-    
+
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo_comunicaciones'", "");
     if ($logo["numcampos"]) {;
         if ($_REQUEST['plantilla'] == "carta" || $_REQUEST['plantilla'] == "memorando" || $_REQUEST['plantilla'] == "circular_mf") {
@@ -256,7 +255,7 @@ function logo_encabezado()
  */
 function nombre_empresa()
 {
-    
+
 
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "");
 
@@ -265,7 +264,7 @@ function nombre_empresa()
 
 function estilo_formato($idformato, $iddoc, $pagina)
 {
-    
+
     $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "");
     $doc = $_REQUEST["iddoc"];
     $plantilla = busca_filtro_tabla("lower(plantilla) as plantilla", "documento B", "iddocumento=" . $doc, "");
@@ -289,7 +288,7 @@ function estilo_formato($idformato, $iddoc, $pagina)
  */
 function nombre_formato($idformato, $iddoc = 0, $tipo = 0)
 {
-    
+
 
     $formato = busca_filtro_tabla("etiqueta", "formato", "idformato={$idformato}", "");
     $texto = strtoupper($formato[0]['etiqueta']);
@@ -304,8 +303,8 @@ function nombre_formato($idformato, $iddoc = 0, $tipo = 0)
 
 function codigo_calidad($idformato, $iddoc, $tipo)
 {
-    
-    
+
+
     $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "");
     $valor = busca_filtro_tabla("codigo_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
     if ($tipo)
@@ -316,8 +315,8 @@ function codigo_calidad($idformato, $iddoc, $tipo)
 
 function nombre_calidad($idformato, $iddoc, $tipo)
 {
-    
-    
+
+
     $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "");
     $valor = busca_filtro_tabla("nombre_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
     if ($tipo)
@@ -328,7 +327,7 @@ function nombre_calidad($idformato, $iddoc, $tipo)
 
 function mostrar_datos_radicaion($idformato, $iddoc)
 {
-    
+
     //echo(bootstrap());
     $datos_radicacion = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "");
     $nombre_empresa = busca_filtro_tabla("valor", "configuracion", "LOWER(nombre) LIKE'nombre'", "");
@@ -348,7 +347,7 @@ function mostrar_datos_radicaion($idformato, $iddoc)
 
 function pie_pagina_carta($idformato, $iddoc)
 {
-    
+
     return ('<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/imagenes/pie_pagina_carta.jpg" />');
 }
 
@@ -368,7 +367,7 @@ function recorrido($idformato, $iddoc)
 
 function fecha_planilla($idformato, $iddoc)
 {
-    
+
     $fecha_planilla = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d H:i:s") . " as fecha", "documento", "iddocumento=" . $iddoc, "");
     return ($fecha_planilla[0]['fecha']);
 }
@@ -395,7 +394,7 @@ function mostrar_num_pagina($idformato, $iddoc)
 
 function nombre_formato_gh($idformato, $iddoc, $tipo)
 {
-    
+
     $formato = busca_filtro_tabla("etiqueta", "formato", "idformato=$idformato", "");
     if ($tipo) {
         return (ucwords(substr($formato[0][0], 2)));

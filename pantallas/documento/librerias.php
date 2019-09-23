@@ -15,7 +15,6 @@ include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
-include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
 function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
 {

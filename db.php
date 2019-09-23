@@ -1022,3 +1022,536 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
         ]);
     }
 }
+
+
+/**
+ * realiza la transferencia de un documento
+ *
+ * @param int $idformato si se van buscar en un documento los destinos
+ * @param int $iddoc identificador del documento a transferir
+ * @param string $destinos lista de funcionarios 
+ * @param int $tipo tipo de destinos. 1: roles, 2: se busca en el formato, 3: funcionario_codigo
+ * @param string $notas nota de transferencia
+ * @param string $nombre nombre de transferencia
+ * @return void
+ */
+function transferencia_automatica(
+    $idformato = null,
+    $iddoc,
+    $destinos,
+    $tipo,
+    $notas = "",
+    $nombre = "TRANSFERIDO"
+) {
+    $adicionales = array();
+
+    if ($tipo == "1") { // cuando es una lista de funcionarios fijos (roles)
+        $vector = explode("@", $destinos);
+    } elseif ($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
+        $vector = explode("@", $destinos);
+    } elseif ($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
+        $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato = " . $idformato, "");
+        $dato = busca_filtro_tabla($destinos, $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
+
+        if ($dato['numcampos']) {
+            $vector = explode(",", $dato[0][0]);
+        } else {
+            $vector = [];
+        }
+    }
+
+    if ($notas) {
+        $adicionales["notas"] = "'" . $notas . "'";
+        $datos["ver_notas"] = 1;
+    }
+
+    foreach ($vector as $fila) {
+        if (!strpos($fila, "#")) {
+            if ($tipo == 3) {
+                $lista = array(
+                    $fila
+                );
+            } else {
+                if ($fila) {
+                    $codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "");
+                    $lista = array(
+                        $codigos[0]["funcionario_codigo"]
+                    );
+                }
+            }
+        } else {
+            $lista = buscar_funcionarios(str_replace("#", "", $fila));
+        }
+
+        $datos["tipo_destino"] = "1";
+        $datos["archivo_idarchivo"] = $iddoc;
+        $datos["origen"] = $_SESSION["usuario_actual"];
+        $datos["nombre"] = $nombre;
+        $datos["tipo"] = "";
+        $datos["tipo_origen"] = "1";
+        transferir_archivo_prueba($datos, $lista, $adicionales);
+    }
+}
+
+/*
+ * <Clase>
+ * <Nombre>componente_ejecutor</Nombre>
+ * <Parametros>$idcampo:id del campo;$iddoc:id del documento</Parametros>
+ * <Responsabilidades>Presenta el formulario para llenar los datos de un ejecutor, segun los parametros enviados. se usa en las pantallas de adicionar y editar del formato en cuestion<Responsabilidades>
+ * <Notas>
+ * Se usa cuando un formato tiene un campo de etiqueta html 'Remitente'(ejecutor)
+ * el valor en el campo debe ser de la forma:
+ * tipo@a1,a2@b1,b2,b3@nombre_funcion
+ * tipo:unico o multiple
+ * a1,a2:nombres de los campos con autocompletar, pueden ser: nombre, identificacion o ambos
+ * b1,b2,b3:nombres de los otros campos del formulario. los permitidos son:(identificacion,direccion,telefono,email,cargo,empresa,ciudad,titulo)
+ * nombre_funcion: nombre de la funci�n que se va a llamar al momento de mostrar los datos en pantalla, si se deja vac�o se toma por defecto mostrar_valor_campo
+ * Ej: multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad (usado en la carta)
+ * </Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+
+function componente_ejecutor($idcampo, $iddoc)
+{
+    $adicionales = "";
+    $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "");
+    $formato = busca_filtro_tabla("", "formato", "idformato=" . $campo[0]["formato_idformato"], "");
+    if ($iddoc != "")
+        $adicionales = "&iddoc=$iddoc";
+    if ($campo[0]["valor"] != "")
+        $parametros = explode("@", $campo[0]["valor"]);
+    else
+        $parametros = array(
+            "multiple",
+            "nombre,identificacion",
+            "cargo,empresa,direccion,telefono,email,titulo,ciudad"
+        );
+
+    $campos = explode(",", $parametros[2]);
+    echo '<iframe border=0 frameborder="0" style="background: #FFFFFF;" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" ></iframe>
+    <script>
+        $( document ).ready(function() {               
+            $(window).resize(function(){
+                document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
+                document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
+            });
+        });
+    </script>';
+}
+
+/*
+ * <Clase>
+ * <Nombre>genera_campo_listados_editar</Nombre>
+ * <Parametros>$idformato:id del formato;$idcampo:id del campo;$iddoc:id del documento</Parametros>
+ * <Responsabilidades>Maneja el adicionar y el editar de los campos tipo radiobutton, select y checkbox de los formatos<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+
+function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $buscar = 0)
+{
+    $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=" . $idcampo, "");
+    $sql = trim($campo[0]["valor"]);
+    $sql = str_replace('', '', $sql);
+    $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
+    $llenado = "";
+    // ***************** validaciones ******************
+    $labelRequired = '';
+    $valor = null;
+    $required = '';
+    if ($campo[0]["obligatoriedad"]) {
+        $obligatorio[] = "class='required'";
+        $labelRequired = '<label id="' . $campo[0]["nombre"] . '-error" class="error" for="' . $campo[0]["nombre"] . '" style="display: none;"></label>';
+        $required = 'required';
+    }
+
+    $caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "");
+    for ($i = 0; $i < $caracteristicas["numcampos"]; $i++)
+        $obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
+
+    if (is_array($obligatorio) && count($obligatorio) > 0) {
+        $obligatorio = implode(" ", $obligatorio);
+    }
+    // *************************************************
+
+    $listado0 = array();
+    if ($accion == "SELECT") {
+        $datos = ejecuta_filtro_tabla($campo[0]["valor"]);
+        if ($datos["numcampos"]) {
+            for ($i = 0; $i < $datos["numcampos"]; $i++) {
+                array_push($listado0, html_entity_decode($datos[$i][0] . "," . $datos[$i][1]));
+            }
+            $llenado = implode(";", $listado0);
+        }
+        // else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo[0]["etiqueta"]);
+    } else {
+        $llenado = json_decode($campo[0]["opciones"], true);
+    }
+    $tipo = $campo[0]["etiqueta_html"];
+    $nombre = $campo[0]["nombre"];
+
+    $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "");
+    if ($buscar) {
+        $default = "";
+    } elseif ($iddoc != null) {
+        if ($tabla[0]["item"]) {
+            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "");
+        } else {
+            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "");
+        }
+        $default = $valor[0][0];
+    } else {
+        $default = $campo[0]["predeterminado"];
+    }
+
+    $texto = "";
+    $listado3 = array();
+    if ($llenado != "" && $llenado != "Null") {
+        $listado1 = $llenado;
+        $cont1 = count($listado1);
+
+        for ($i = 0; $i < $cont1; $i++) {
+            $listado2 = $listado1[$i];
+
+            array_push($listado3, $listado2);
+        }
+    }
+    $cont3 = count($listado3);
+    switch ($tipo) {
+        case "radio":
+            $texto .= '<div class="radio radio-success">';
+            for ($j = 0; $j < $cont3; $j++) {
+
+                $texto .= '<input ' . $required . ' type="' . $tipo . '" ';
+                if ($buscar) {
+                    $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . $llenado[$j]['llave'] . '" class="radio"';
+                } else {
+                    $texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . $llenado[$j]['llave'] . '"';
+                }
+                if (($llenado[$j]['llave']) == $default) {
+                    $texto .= ' checked ';
+                }
+                if ($j == 0) {
+                    $texto .= $obligatorio;
+                }
+                $texto .= ' aria-required="true"><label class="" for="' . $nombre . $j . '">' . $llenado[$j]['item'] . '</label>';
+            }
+            $texto .= "</div>";
+            break;
+        case "checkbox":
+            $texto .= '<div class="checkbox check-success">';
+
+            $lista_default = explode(',', $default);
+            for ($j = 0; $j < $cont3; $j++) {
+                $texto .= '<input type="checkbox" ';
+
+                if ($j == 0 && $obligatorio) {
+                    $required = "required";
+                } else {
+                    $required = "";
+                }
+
+                $texto .= ' class="' . $required . ' checkbox" name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . $llenado[$j]['llave'] . '"';
+                if (in_array(($llenado[$j]['item']), $lista_default)) {
+                    $texto .= ' checked ';
+                }
+                $texto .= '><label for="' . $nombre . $j . '">' . strip_tags($llenado[$j]['item']) . "</label><br>";
+            }
+            $texto .= "</div>";
+
+            // $texto .= "<tr><td colspan='$columnas'><label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
+            break;
+        case "select":
+
+            $texto = ' <div class="form-group ">';
+            if ($buscar) {
+                $texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width">
+	  		  <option value="" selected >Por favor seleccione...</option>';
+            } else {
+                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" >
+              <option value="" selected >Por favor seleccione...</option>';
+            }
+            for ($j = 0; $j < $cont3; $j++) {
+                $texto .= '<option value="' . $llenado[$j]['llave'] . '"';
+                if (($llenado[$j]['llave']) == $default) {
+                    $texto .= ' selected ';
+                }
+                $texto .= '>' . $llenado[$j]['item'] . '</option>';
+            }
+            $texto .= '</select>';
+            $texto .= '
+                     <script>
+                    $(document).ready(function() {
+
+                        $("#' . $nombre . '").select2();
+                        $("#' . $nombre . '").addClass("full-width");
+                    });
+                    </script>
+                     ';
+            break;
+        case "dependientes":
+            $campo[0]["valor"] = html_entity_decode($campo[0]["valor"]);
+            $parametros = explode("|", $campo[0]["valor"]);
+            /*
+             * parametros:
+             * nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
+             * (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)
+             */
+            $idcampo = $campo[0]["idcampos_formato"];
+            // dibujo el primer select
+            $select = explode(";", $parametros[0]);
+            $datos_padre = ejecuta_filtro_tabla($select[1]);
+            if (count($parametros) > 2) {
+                $select2 = explode(";", $parametros[1]);
+                $hijo = $select2[0] . $idcampo;
+            } else
+                $hijo = $nombre;
+
+            $texto .= "<table width='100%'><tr><td width='20%'> " . ucfirst($select[0]) . "</td><td>
+      <select name='" . $select[0] . "$idcampo' id='" . $select[0] . "$idcampo' idcomponente='" . $idcampo . "' pos='0' hijo='$hijo'><option value='' selected>Seleccionar...</option>";
+            for ($i = 0; $i < $datos_padre["numcampos"]; $i++) {
+                $texto .= "<option value='" . $datos_padre[$i]["id"] . "'>" . $datos_padre[$i]["nombre"] . "</option>";
+            }
+            $texto .= "</select></td></tr>";
+
+            for ($i = 1; $i < count($parametros); $i++) {
+                $select = explode(";", $parametros[$i]);
+                // si es el ultimo select
+                if ($i == (count($parametros) - 1)) {
+                    $nombre2 = $nombre;
+                    $hijo = "";
+                } elseif ($i == (count($parametros) - 2)) { // si es el penultimo
+                    $nombre2 = $select[0] . $idcampo;
+                    $hijo = " hijo='" . $nombre . "' ";
+                } else { // si es un select intermedio
+                    $nombre2 = $select[0] . $idcampo;
+                    $select3 = explode(";", $parametros[$i + 1]);
+                    $hijo = " hijo='" . $select3[0] . $idcampo . "' ";
+                }
+
+                $texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $campo[0]["idcampos_formato"] . "' ";
+
+                if ($i == (count($parametros) - 1)) { // si es el ultimo select
+                    $texto .= $obligatorio;
+                }
+                $texto .= " $hijo >";
+                if ($default && $i == (count($parametros) - 1)) {
+                    preg_match("/(\w+) as id/", strtolower($select[1]), $llave);
+                    $cuerpo = substr($select[1], 0, strpos($select[1], "where"));
+                    // preg_match("/(.+) where/", strtolower($select[1]), $cuerpo);
+                    $valor = ejecuta_filtro_tabla($cuerpo . " where " . $llave[1] . "=" . $default);
+                    $texto .= "<option value='$default' selected>" . $valor[0]["nombre"] . "</option>";
+                } else
+                    $texto .= "<option value='' selected>Seleccionar...</option>";
+                $texto .= "</select></td></tr>";
+            }
+            $texto .= "</table>";
+            break;
+    }
+    echo $texto;
+}
+
+/*
+ * <Clase>
+ * <Nombre>mes
+ * <Parametros>mes:numero que identifica el mes
+ * <Responsabilidades>devuelve una cadena con el nombre del mes
+ * <Excepciones>
+ * <Salida>
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
+
+function digitalizar_formato($idformato, $iddoc)
+{
+    echo '<div class="form-group" id="tr_digitalizacion">
+            <label class = "etiqueta_campo" title = "">DESEA DIGITALIZAR?</label>
+            <div class = "row">
+                <div class = "col-3 px-1">
+                    <div class = "radio radio-success">
+                        <input  class = "form-check-input" name="digitalizacion" type="radio" id="digitaliza_si" value="1" checked>
+                        <label class = "etiqueta_selector" for = "digitaliza_si">Si</label>
+                        <input class = "form-check-input" id="digitaliza_no" name="digitalizacion" type="radio" value="0" >
+                        <label class = "etiqueta_selector" for = "digitaliza_no">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>';
+}
+
+function mes($mes)
+{
+    switch ($mes) {
+        case 1:
+            return "enero";
+        case 2:
+            return "febrero";
+        case 3:
+            return "marzo";
+        case 4:
+            return "abril";
+        case 5:
+            return "mayo";
+        case 6:
+            return "junio";
+        case 7:
+            return "julio";
+        case 8:
+            return "agosto";
+        case 9:
+            return "septiembre";
+        case 10:
+            return "octubre";
+        case 11:
+            return "noviembre";
+        case 12:
+            return "diciembre";
+    }
+}
+
+/**
+ * muestra el valor almacenado de un formato
+ *
+ * @param string $campo nombre del campos_formato
+ * @param integer $idformato
+ * @param integer $iddoc
+ * @param integer $tipo
+ * @return void
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019
+ */
+function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
+{
+    $retorno = "";
+    $Documento = new Documento($iddoc);
+    $CamposFormato = CamposFormato::findByAttributes([
+        'nombre' => $campo
+    ]);
+    $ft = $Documento->getFt();
+    $fieldValue = $ft[$CamposFormato->nombre];
+
+    if ($CamposFormato) {
+        if ($CamposFormato->etiqueta_html == "arbol_fancytree") {
+            $retorno = mostrar_seleccionados_ft($idformato, $CamposFormato->getPK(), $Documento->getPK(), 1);
+        } elseif ($CamposFormato->etiqueta_html == "archivo") {
+            $files = Anexos::findAllByAttributes([
+                'estado' => 1,
+                'documento_iddocumento' => $Documento->getPK(),
+                'campos_formato' => $CamposFormato->getPK(),
+            ]);
+
+            foreach ($files as $Anexos) {
+                $retorno .= $Anexos->etiqueta . "\n";
+            }
+        } elseif ($CamposFormato->etiqueta_html == 'textarea_cke') {
+            $retorno = $fieldValue;
+        } elseif ($CamposFormato->etiqueta_html == "moneda") {
+            $retorno = "$ {fieldValue}";
+        } elseif ($CamposFormato->etiqueta_html == "ejecutor") {
+            throw new Exception("pendiente desarrollar para los ejecutores", 1);
+        }
+    }
+
+    return $retorno;
+}
+
+/*
+ * <Clase>
+ * <Nombre>generar_ruta_documento</Nombre>
+ * <Parametros>$iddoc:id del documento</Parametros>
+ * <Responsabilidades>
+ * Se encarga de generar la ruta de un documento de manera automatica.
+ * <Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+
+function generar_ruta_documento($idformato, $iddoc)
+{
+
+    $diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $iddoc, '', conn);
+    if ($diagram_instance["numcampos"]) {
+        $listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "");
+        $ruta = array();
+        // pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
+        for ($i = 0; $i < $listado_pasos["numcampos"]; $i++) {
+            array_push($ruta, array(
+                "funcionario" => -1,
+                "tipo_firma" => 1,
+                "paso_actividad" => $listado_pasos[$i]["idpaso_actividad"]
+            ));
+        }
+        if (count($ruta)) {
+            insertar_ruta($ruta, $iddoc, 0);
+        }
+    } else {
+        generar_ruta_documento_fija_formato($idformato, $iddoc);
+    }
+}
+
+function generar_ruta_documento_fija_formato($idformato, $iddoc)
+{
+    global $conn, $ruta_db_superior;
+    include_once($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
+    $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $idformato, "orden");
+    $rut = array();
+    for ($i = 0; $i < $dato["numcampos"]; $i++) {
+        $funcionario = "";
+        if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 1) {
+            $funcionario = $dato[$i]["llave"];
+        } else if ($dato[$i]["entidad"] == 2 && $dato[$i]["tipo_campo"] == 1) {
+            $cargo = busca_filtro_tabla("", "cargo a, dependencia_cargo b, funcionario c", "idcargo=" . $dato[$i]["llave"] . " and cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and b.estado=1", "");
+            $funcionario = $cargo[0]["funcionario_codigo"];
+        } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 1) {
+            $funcionario_temp = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $dato[$i]["llave"], "");
+            if ($funcionario_temp["numcampos"]) {
+                if ($funcionario_temp[0]["estado_dc"] && $funcionario_temp[0]["estado"]) {
+                    $funcionario = $funcionario_temp[0]["funcionario_codigo"];
+                } else {
+                    $funcionario_temp2 = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia=" . $funcionario_temp[0]["iddependencia"] . " AND idcargo=" . $funcionario_temp[0]["idcargo"] . " AND estado_dc=1 AND estado=1", "");
+                    if ($funcionario_temp2["numcampos"]) {
+                        $funcionario = $funcionario_temp2[0]["funcionario_codigo"];
+                    }
+                }
+            }
+        } else if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 2) {
+            $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+            $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
+            $funcionario = $datos[0][$formato[0]["nom_campo"]];
+        } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 2) {
+            $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+            $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
+            $funcionario_codigo = busca_filtro_tabla("B.funcionario_codigo", "dependencia_cargo A, funcionario B", "A.iddependencia_cargo=" . $datos[0][$formato[0]["nom_campo"]] . " AND A.funcionario_idfuncionario=B.idfuncionario", "");
+            $funcionario = $funcionario_codigo[0]["funcionario_codigo"];
+        } else if ($dato[$i]["tipo_campo"] == 3) {
+            include_once($ruta_db_superior . $dato[$i]["ruta"]);
+            $funcionario = call_user_func_array($dato[$i]["funcion"], array(
+                $idformato,
+                $iddoc
+            ));
+        }
+        if ($i == 0 && $funcionario == usuario_actual("funcionario_codigo"))
+            continue;
+        if ($funcionario != '') {
+            array_push($rut, array(
+                "funcionario" => $funcionario,
+                "tipo_firma" => $dato[$i]["firma"]
+            ));
+        }
+    }
+    if ($dato["numcampos"])
+        insertar_ruta($rut, $iddoc);
+    return;
+}

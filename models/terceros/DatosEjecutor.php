@@ -2,7 +2,6 @@
 
 class DatosEjecutor extends Model
 {
-
     protected $tabla = 'datos_ejecutor';
     protected $iddatos_ejecutor;
     protected $ejecutor_idejecutor;
@@ -15,6 +14,9 @@ class DatosEjecutor extends Model
     protected $fecha;
     protected $email;
     protected $codigo;
+
+    //relations
+    protected $Ejecutor;
 
     function __construct($id = null)
     {
@@ -39,5 +41,21 @@ class DatosEjecutor extends Model
             "table" => "datos_ejecutor",
             "primary" => "iddatos_ejecutor"
         ];
+    }
+
+    /**
+     * obtiene la instancia del Ejecutor relacionado
+     *
+     * @return Ejecutor
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
+    public function getUser()
+    {
+        if (!$this->Ejecutor) {
+            $this->Ejecutor = $this->getRelationFk('Ejecutor', 'ejecutor_idejecutor');
+        }
+
+        return $this->Ejecutor;
     }
 }

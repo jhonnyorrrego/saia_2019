@@ -10,7 +10,6 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "assets/librerias.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior . "calendario/calendario.php");
 echo (librerias_html5());
 echo (jquery());

@@ -152,7 +152,7 @@ class CamposFormato extends Model
             'banderas' => 'i',
             'acciones' => 'a,e',
             'etiqueta_html' => 'funcion',
-            'valor' => '{*buscar_dependencia*}',
+            'valor' => '',
             'orden' => 1
         ]);
     }
