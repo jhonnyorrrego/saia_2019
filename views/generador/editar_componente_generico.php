@@ -185,7 +185,13 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                         }
                     }
                 }
-            };
+            }; <<
+            << << < HEAD
+                ===
+                === =
+
+                >>>
+                >>> > 42363 a8ff886fcd53274440435165a8503b8c422
             $('#editar_pantalla_campo').alpaca(opciones_form);
 
             $('#btn-cerrar').on('click', function() {

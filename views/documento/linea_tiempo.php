@@ -3,23 +3,23 @@
     </div>
 </div>
 <script>
-    $(function(){
+    $(function() {
         let baseUrl = $('script[data-baseurl]').data('baseurl');
         let documentId = "<?= $_REQUEST['documentId'] ?>";
 
-        if(typeof TimeLine == 'undefined'){
-            $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/timeLine/timeLine.js`, function(){
+        if (typeof TimeLine == 'undefined') {
+            $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/timeLine/timeLine.js`, function() {
                 init();
             });
-        }else{
+        } else {
             init();
         }
 
-        function init(){
+        function init() {
             let options = {
                 selector: '#linea',
                 baseUrl: baseUrl,
-                source: function(callback){
+                source: function(callback) {
                     let data = new Array();
                     $.ajax({
                         url: `${this.baseUrl}app/documento/trazabilidad.php`,
@@ -30,10 +30,10 @@
                             key: localStorage.getItem('key'),
                             documentId: documentId
                         },
-                        success: function(response){
-                            if(response.success){
+                        success: function(response) {
+                            if (response.success) {
                                 data = response.data;
-                            }else{
+                            } else {
                                 top.notification({
                                     message: response.message,
                                     type: 'error',
@@ -45,9 +45,9 @@
 
                     return data;
                 },
-                iconClick: function(item){
+                iconClick: function(item) {
                     let options = {
-                        url: this.baseUrl + item.url,
+                        url: item.url,
                         title: item.title
                     };
                     top.topModal(options);

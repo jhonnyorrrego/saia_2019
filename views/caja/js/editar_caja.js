@@ -8,7 +8,7 @@ $(document).ready(function () {
     }
 
     var options = {
-        url: `${params.baseUrl}views/caja/informacion.php`,
+        url: `views/caja/informacion.php`,
         params: {
             idcaja: $("#idcaja").val()
         },
@@ -30,7 +30,7 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             $("#acualizarCaja").attr('disabled', true);
-            
+
             $.ajax({
                 type: 'POST',
                 async: false,

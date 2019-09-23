@@ -15,7 +15,7 @@ $idcaja = $_REQUEST['idcaja'];
 if (!$idcaja) {
     return;
 }
-$Caja=new Caja($idcaja);
+$Caja = new Caja($idcaja);
 
 $params = [
     'idcaja' => $idcaja,
@@ -27,7 +27,7 @@ $params = [
     <div class="col-12">
         <div>
             <i data-table="tableInfoCaja" class="fa fa-plus-square inf"></i> Información
-            <?php if($Caja->isResponsable()): ?>
+            <?php if ($Caja->isResponsable()) : ?>
                 <div class="float-right">
                     <button class="btn btn-info" id="editCaja"><i class="fa fa-edit"></i></button>
                 </div>
@@ -57,7 +57,7 @@ $params = [
             <tr>
                 <td>Responsable:</td>
                 <td>
-                    <?= $Caja->getResponsable() ?><br/>
+                    <?= $Caja->getResponsable() ?><br />
                 </td>
             </tr>
             <tr>
@@ -95,43 +95,43 @@ $params = [
             </tr>
         </table>
 
-            <div>
-                <i data-table="tableInfoContenido" class="fa fa-minus-square inf"></i> Información de contenido
-            </div>
+        <div>
+            <i data-table="tableInfoContenido" class="fa fa-minus-square inf"></i> Información de contenido
+        </div>
 
-            <table class="table" id="tableInfoContenido">
-                <tr>
-                    <td>No de expedientes:</td>
-                    <td><?= $Caja->countExpediente() ?></td>
-                </tr>
-            </table>
+        <table class="table" id="tableInfoContenido">
+            <tr>
+                <td>No de expedientes:</td>
+                <td><?= $Caja->countExpediente() ?></td>
+            </tr>
+        </table>
 
     </div>
 </div>
 
-<script id="scriptDetalleCaja" data-params='<?=json_encode($params)?>'>
-    $(document).ready(function (){
+<script id="scriptDetalleCaja" data-params='<?= json_encode($params) ?>'>
+    $(document).ready(function() {
         var params2 = $("#scriptDetalleCaja").data("params");
-        
-        $(".inf").click(function (e) {
-            let table=$(this).data("table"); 
-            let icon=$(this).hasClass("fa-plus-square");
-            if(icon){
+
+        $(".inf").click(function(e) {
+            let table = $(this).data("table");
+            let icon = $(this).hasClass("fa-plus-square");
+            if (icon) {
                 $(this).removeClass("fa-plus-square").addClass("fa-minus-square");
-                $("#"+table).show();
-            }else{
+                $("#" + table).show();
+            } else {
                 $(this).removeClass("fa-minus-square").addClass("fa-plus-square");
-                $("#"+table).hide();
-            }                  
+                $("#" + table).hide();
+            }
         });
         $(".inf").trigger("click");
 
-        $("#editCaja").click(function (e) {
+        $("#editCaja").click(function(e) {
             let options = {
-                url: `${params2.baseUrl}views/caja/editar_caja.php`,
+                url: `views/caja/editar_caja.php`,
                 params: {
-                    idcaja:params2.idcaja
-                }, 
+                    idcaja: params2.idcaja
+                },
                 size: "modal-lg",
                 title: "EDITAR CAJA",
                 centerAlign: false,

@@ -77,7 +77,7 @@ $(function() {
 
     function modalTask(params) {
         let options = {
-            url: `${baseUrl}views/tareas/crear.php`,
+            url: `views/tareas/crear.php`,
             params: params,
             title: 'Tarea o Recordatorio',
             centerAlign: false,

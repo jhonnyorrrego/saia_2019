@@ -12,6 +12,7 @@ $(function () {
 
         $('#btn_add').on('click', function () {
             top.topModal({
+<<<<<<< HEAD:views/trd/serie_temp/js/grilla_trd_temp.js
                 url: `views/trd/serie/adicionar.php`,
                 params: {
                     sourceTemp: 1
@@ -19,6 +20,15 @@ $(function () {
                 size: 'modal-xl',
                 title: 'Crear',
                 onSuccess: function () {
+=======
+                url: `views/serie/adicionar.php`,
+                size: 'modal-xl',
+                title: 'Crear',
+                params: {
+                    sourceTemp: 0
+                },
+                onSuccess: function (data) {
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie/js/grilla_trd.js
                     top.closeTopModal();
                     refreshTable();
                 },
@@ -46,7 +56,11 @@ $(function () {
             name[3] = 'Tipo documental';
 
             top.topModal({
+<<<<<<< HEAD:views/trd/serie_temp/js/grilla_trd_temp.js
                 url: `views/trd/serie_temp/editar.php`,
+=======
+                url: `views/serie/editar.php`,
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie/js/grilla_trd.js
                 size: 'modal-xl',
                 title: 'Editar ' + name[type],
                 params: {
@@ -72,14 +86,22 @@ $(function () {
     }
 
     function createTable() {
+<<<<<<< HEAD:views/trd/serie_temp/js/grilla_trd_temp.js
         $('#trd_table_temp').bootstrapTable({
+=======
+        $('#trd_table').bootstrapTable({
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie/js/grilla_trd.js
             url: `${params.baseUrl}app/trd/serie_version/reporte_trd.php`,
             queryParams: function (queryParams) {
                 queryParams = $.extend(queryParams, {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
                     id: params.id,
+<<<<<<< HEAD:views/trd/serie_temp/js/grilla_trd_temp.js
                     type: 'json_trd',
+=======
+                    type: params.type,
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie/js/grilla_trd.js
                     generateTRD: () => {
                         return $("#generateTRD").val();
                     }
@@ -87,6 +109,12 @@ $(function () {
                 return queryParams;
             },
             responseHandler: function (response) {
+<<<<<<< HEAD:views/trd/serie_temp/js/grilla_trd_temp.js
+=======
+                $("#generateTRD").val(0);
+
+                if (params.currentVersion == 1 && params.type == 'json_trd') {
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie/js/grilla_trd.js
 
                 $("#generateTRD").val(0);
 
@@ -145,6 +173,17 @@ $(function () {
         $('#btn_refresh').on('click', function () {
             refreshTable();
         });
+
+        $(".keep-open").before("<div class='refresh-table btn-group'><button class='btn btn-secondary' title='Actualizar' id='btn_refresh'><i class='fa fa-refresh'></i></button></div>");
+
+        $('#btn_refresh').on('click', function () {
+            refreshTable();
+        });
+    }
+
+    function refreshTable() {
+        $("#generateTRD").val(1);
+        $('#trd_table').bootstrapTable("refresh");
     }
 
     function refreshTable() {

@@ -52,7 +52,11 @@ $params = json_encode([
             </div>
         </div>
     </div>
+<<<<<<< HEAD:views/trd/serie/grilla_trd.php
+    <script src="<?= $ruta_db_superior ?>views/trd/serie/js/grilla_trd.js" id="trd_report_script" data-params='<?= $params ?>'></script>
+=======
     <script src="<?= $ruta_db_superior ?>views/serie_temp/js/grilla_trd_temp.js" id="scriptGrillaTrdTemp" data-params='<?= $params ?>'></script>
+>>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/grilla_trd_temp.php
 </body>
 
 </html>

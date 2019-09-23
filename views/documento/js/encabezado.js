@@ -29,7 +29,7 @@ $(function () {
         .off('click', '#show_comments,#discutir_documento')
         .on('click', '#show_comments,#discutir_documento', function () {
             let options = {
-                url: `${baseUrl}views/documento/comentarios.php`,
+                url: `views/documento/comentarios.php`,
                 params: {
                     documentId: documentId
                 },
@@ -108,7 +108,7 @@ $(function () {
 
     $('#show_tree').on('click', function () {
         let options = {
-            url: `${baseUrl}views/arbol/proceso_formato.php`,
+            url: `views/arbol/proceso_formato.php`,
             params: {
                 documentId: documentId
             },
@@ -143,7 +143,7 @@ $(function () {
 
     $('#show_versions').on('click', function () {
         let options = {
-            url: `${baseUrl}views/documento/lista_versiones.php`,
+            url: `views/documento/lista_versiones.php`,
             params: {
                 documentId: documentId
             },
@@ -375,7 +375,7 @@ $(function () {
 
     function transferModal(title, type, userInfo) {
         let options = {
-            url: `${baseUrl}views/documento/reenviar.php`,
+            url: `views/documento/reenviar.php`,
             params: {
                 documentId: documentId,
                 userInfo: userInfo,
