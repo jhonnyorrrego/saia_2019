@@ -1001,5 +1001,4 @@ function radicacion_entrada_fab_buttons()
     $datos = array_merge($datos, $datos2);
     return $datos;
 }
-
 ?>

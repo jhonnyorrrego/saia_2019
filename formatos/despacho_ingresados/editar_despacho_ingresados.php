@@ -60,7 +60,8 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                    <input type="hidden" name="tipo_mensajero" value="<?= mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc']) ?>">
+                    <?php buscar_dependencia(353, $_REQUEST['iddoc']) ?>
+<input type="hidden" name="tipo_mensajero" value="<?= mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc']) ?>">
         <div class='form-group form-group-default ' id='group_anexo'>
             <label title=''>ANEXO</label>
             <div class="" id="dropzone_anexo"></div>
@@ -141,17 +142,17 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
         </script>
 <input type="hidden" name="iddestino_radicacion" value="<?= mostrar_valor_campo('iddestino_radicacion',353,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="estado_documento" value="<?= mostrar_valor_campo('estado_documento',353,$_REQUEST['iddoc']) ?>">
-<input type="hidden" name="dependencia" value="<?= mostrar_valor_campo('dependencia',353,$_REQUEST['iddoc']) ?>">
 <div class="form-group  " id="tr_tipo_recorrido">
                         <label title="">RECORRIDO DEL DIA</label><?php genera_campo_listados_editar(353,5087,$_REQUEST['iddoc']) ?><br></div>
 <input type="hidden" name="docs_seleccionados" value="<?= mostrar_valor_campo('docs_seleccionados',353,$_REQUEST['iddoc']) ?>">
-<input type="hidden" name="mensajero" value="<?= mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="idft_despacho_ingresados" value="<?= mostrar_valor_campo('idft_despacho_ingresados',353,$_REQUEST['iddoc']) ?>">
-<input type="hidden" name="fecha_entrega" value="<?= mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc']) ?>">
-<div class='form-group col-12 ' id='tr_ventanilla'><label title=''>VENTANILLA<span>*</span></label><?php genera_campo_listados_editar(353,8319,$_REQUEST['iddoc']) ?> </div>
+<input type="hidden" name="mensajero" value="<?= mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="documento_iddocumento" value="<?= mostrar_valor_campo('documento_iddocumento',353,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="encabezado" value="<?= mostrar_valor_campo('encabezado',353,$_REQUEST['iddoc']) ?>">
+<input type="hidden" name="fecha_entrega" value="<?= mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc']) ?>">
+<div class='form-group col-12 ' id='tr_ventanilla'><label title=''>VENTANILLA<span>*</span></label><?php genera_campo_listados_editar(353,8319,$_REQUEST['iddoc']) ?> </div>
 <input type="hidden" name="firma" value="<?= mostrar_valor_campo('firma',353,$_REQUEST['iddoc']) ?>">
+<?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
 
 <input type='hidden' name='campo_descripcion' value='4080'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>

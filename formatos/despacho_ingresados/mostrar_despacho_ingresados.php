@@ -24,7 +24,7 @@ try {
 if(
     !$_REQUEST['mostrar_pdf'] && !$_REQUEST['actualizar_pdf'] && (
         ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
-        0 == 1
+        0 == 0
     )
 ): ?>
     <!DOCTYPE html>
@@ -49,7 +49,7 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <table align="\&quot;\&quot;center\&quot;\&quot;" border="\&quot;1\&quot;" cellspacing="\&quot;\&quot;0\&quot;\&quot;" style="\&quot;position:relative">
+                                <table align="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\&quot;center\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" border="\&quot;\\\&quot;\\\\\\\&quot;1\\\\\\\&quot;\\\&quot;\&quot;" cellspacing="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\&quot;0\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" style="\&quot;\\\&quot;\\\\\\\&quot;position:relative\\\&quot;\&quot;">
 	<tbody>
 		<tr>
 			<td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
