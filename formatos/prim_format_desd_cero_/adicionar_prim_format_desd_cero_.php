@@ -12,11 +12,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 include_once $ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
 include_once $ruta_db_superior . 'formatos/prim_format_desd_cero_/funciones.php';
+
+$Formato = new Formato(453);
+
+if(isset($_REQUEST['iddoc'])){
+    $Documento = new Documento($_REQUEST['iddoc']);
+    $ft = $Documento->getFt();
+}
 
 llama_funcion_accion(null,453 ,'ingresar','ANTERIOR');
 ?>
@@ -50,7 +56,7 @@ llama_funcion_accion(null,453 ,'ingresar','ANTERIOR');
         <div class='card card-default'>
             <div class='card-body'>
                 <h5 class='text-black w-100 text-center'>
-                    Primer Formato desde Ceros 
+                    Primer Formato desde Ceros df
                 </h5>
                 <form 
                     name='formulario_formatos' 
@@ -60,16 +66,76 @@ llama_funcion_accion(null,453 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                    <input type="hidden" name="idft_prim_format_desd_cero_" value="">
-<input type="hidden" name="encabezado" value="1">
-<input type="hidden" name="firma" value="1">
-<div class='form-group form-group-default required col-12 '  id='tr_campo_texto_484281000'>
-            <label title=''>TEXTO EN UNA LíNEA<span>*</span></label>
-            <input class='form-control required' type='text' id='campo_texto_484281000' name='campo_texto_484281000' value='' />
-        </div>
-<?php buscar_dependencia(453, $_REQUEST['iddoc']) ?>
+                    <input type='hidden' name='idft_prim_format_desd_cero_' value=''>
+<input type='hidden' name='encabezado' value='1'>
+<input type='hidden' name='firma' value='1'>
+        <?php
+        $selected = isset($ft) ? $ft['dependencia'] : '';
+        $query = Model::getQueryBuilder();
+        $roles = $query
+            ->select("dependencia as nombre, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', ':initialDate'),
+                $query->expr()->gte('fecha_final', ':finalDate')
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':initialDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(':finalDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->execute()->fetchAll();
+    
+        $total = count($roles);
 
-<input type='hidden' name='campo_descripcion' value='8778'>
+        echo "<div class='form-group' id='group_dependencie'>";
+    
+        if ($total > 1) {
+            echo "<select class='full-width' name='dependencia' id='dependencia' required>";
+            foreach ($roles as $row) {
+                echo "<option value='{$row["iddependencia_cargo"]}'>
+                    {$row["nombre"]} - ({$row["cargo"]})
+                </option>";
+            }
+    
+            echo "</select>
+                <script>
+                    $('#dependencia').select2();
+                    $('#dependencia').val({$selected});
+                    $('#dependencia').trigger('change');
+                </script>
+            ";
+        } else if ($total == 1) {
+            echo "<input class='required' type='hidden' value='{$roles[0]['iddependencia_cargo']}' id='dependencia' name='dependencia'>
+                <label class ='form-control'>{$roles[0]["nombre"]} - ({$roles[0]["cargo"]})</label>";
+        } else {
+            throw new Exception("Error al buscar la dependencia", 1);
+        }
+        
+        echo "</div>";
+        ?>
+<div class='form-group form-group-default  col-12 '  id='group_campo_texto_2132512480'>
+            <label title=''>PRUEBA DE FECHA HOY</label>
+            <input class='form-control ' type='text' id='campo_texto_2132512480' name='campo_texto_2132512480' value='' />
+        </div>
+<div class='form-group form-group-default input-group required date' id='group_datetime_440210615'>
+<div class="form-input-group">
+<label for='datetime_440210615' title=''>FECHA Y HORA 2<span>*</span></label>
+<label id="datetime_440210615-error" class="error" for="datetime_440210615" style="display: none;"></label>
+<input type="text" class="form-control"  id="datetime_440210615"  required name="datetime_440210615" />
+<script type="text/javascript">
+                $(function () {
+                    var configuracion={"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                    $("#datetime_440210615").datetimepicker(configuracion);
+                    $("#content_container").height($(window).height());
+                });
+            </script>
+</div>
+<div class='input-group-append'>
+            <span class='input-group-text'><i class='fa fa-calendar'></i></span>
+        </div>
+</div>
+<input type='hidden' name='hidden_1172466648' value=''>
+
+<input type='hidden' name='campo_descripcion' value='8803'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
 <input type='hidden' id='tipo_radicado' name='tipo_radicado' value='radicacion_entrada'>
 <input type='hidden' name='formatId' value='453'>

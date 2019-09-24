@@ -61,14 +61,23 @@ class Imprime_Pdf
 
 	function __construct($iddocumento)
 	{
-		
+
 		if ($iddocumento == "url") {
 			$this->tipo_salida = "FI";
 			$this->imprimir_plantilla = 1;
 			$this->documento[0]["iddocumento"] = "url";
 		} else if ($iddocumento) {
-			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $iddocumento, "");
-			if (!$this->documento["numcampos"]) {
+			$this->documento = Model::getQueryBuilder()
+				->select('*', 'fecha as fecha1')
+				->from('documento')
+				->where("iddocumento= :documento")
+				->setParameter(':documento', $iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
+				->execute()
+				->fetchAll();
+
+			$this->documento[0]["fecha1"] = DateController::convertDate($this->documento[0]["fecha1"], 'Y-m-d');
+
+			if (!$this->documento) {
 				die("documento no encontrado.");
 			}
 			$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "");
@@ -247,7 +256,13 @@ class Imprime_Pdf
 		$this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
 
 		if (!$this->documento && $_REQUEST["iddoc_pag"]) {
-			$this->documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "");
+			$this->documento = Model::getQueryBuilder()
+				->select('*', 'fecha as fecha1')
+				->from('documento')
+				->where("iddocumento= :documento")
+				->setParameter(':documento', $_REQUEST["iddoc_pag"], \Doctrine\DBAL\Types\Type::INTEGER)
+				->execute()
+				->fetchAll();
 		}
 
 		//
@@ -265,7 +280,7 @@ class Imprime_Pdf
 			$cad_etiquetas .= ',' . implode(",", $letiquetas);
 		}*/
 		$this->pdf->SetKeywords("SAIA" . $cad_etiquetas);
-		$this->pdf->SetSubject(codifica_encabezado(strip_tags($this->documento[0]["descripcion"])));
+		$this->pdf->SetSubject(strip_tags($this->documento[0]["descripcion"]));
 		//
 		if ($this->mostrar_encabezado) {
 			$this->configurar_encabezado();
@@ -364,7 +379,7 @@ class Imprime_Pdf
 
 	public function configurar_encabezado()
 	{
-		
+
 		/*Marca de agua, no sirve para PDFA/
 		   /*if ($this -> documento[0]["estado"] == "ACTIVO") {
 		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_borrador.png');
@@ -395,7 +410,7 @@ class Imprime_Pdf
 
 	public function imprimir_paginas()
 	{
-		
+
 		if ($this->idpaginas != "") {
 			$paginas = busca_filtro_tabla("ruta", "pagina", "consecutivo in(" . $this->idpaginas . ")", "");
 		} else {
@@ -430,7 +445,7 @@ class Imprime_Pdf
 
 	public function extraer_contenido($iddocumento, $vista = 0)
 	{
-		
+
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
@@ -509,7 +524,7 @@ class Imprime_Pdf
 
 	public function vincular_anexos()
 	{
-		
+
 		$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "");
 		if ($anexos["numcampos"]) {
 			for ($i = 0; $i < $anexos["numcampos"]; $i++) {

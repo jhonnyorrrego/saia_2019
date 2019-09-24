@@ -96,7 +96,8 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             echo "</select>
                 <script>
                     $('#dependencia').select2();
-                    $('#dependencia').val({$selected}).trigger('change');
+                    $('#dependencia').val({$selected});
+                    $('#dependencia').trigger('change');
                 </script>
             ";
         } else if ($total == 1) {
@@ -108,14 +109,11 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         
         echo "</div>";
         ?>
-<div class="form-group" id="tr_fecha_ruta_distribuc">
-<label for="fecha_ruta_distribuc">FECHA Y HORA</label>
+<div class='form-group form-group-default input-group required date' id='group_fecha_ruta_distribuc'>
+<div class="form-input-group">
+<label for='fecha_ruta_distribuc' title=''>FECHA Y HORA<span>*</span></label>
 <label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
-<div class="input-group date">
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
-<div class="input-group-append">
-<span class="input-group-text"><i class="fa fa-calendar"></i></span>
-</div>
 <script type="text/javascript">
                 $(function () {
                     var configuracion={"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
@@ -124,13 +122,20 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                 });
             </script>
 </div>
+<div class='input-group-append'>
+            <span class='input-group-text'><i class='fa fa-calendar'></i></span>
+        </div>
 </div>
-<div class='form-group form-group-default required col-12 '  id='tr_nombre_ruta'>
+<div class='form-group form-group-default required col-12 '  id='group_nombre_ruta'>
             <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
             <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='' />
         </div>
-<div class='form-group col-12 ' id='tr_asignar_mensajeros'><label title=''>MENSAJEROS DE LA RUTA<span>*</span></label><?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?> </div>
-<div class="form-group required" id="tr_asignar_dependencias">
+            <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
+                <label title="">MENSAJEROS DE LA RUTA<span>*</span></label>
+                <?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?>
+                <label id='asignar_mensajeros-error' class='error' for='asignar_mensajeros' style='display: none;'></label>
+            </div>
+<div class="form-group required" id="group_asignar_dependencias">
                                     <label title="">DEPENDENCIAS DE LA RUTA<span>*</span></label><?php $origen_4998 = array(
                                 "url" => "app/arbol/arbol_dependencia.php",
                                 "ruta_db_superior" => $ruta_db_superior,);$origen_4998["params"]["checkbox"]="radio";$opciones_arbol_4998 = array(
@@ -141,16 +146,16 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                             );
                             $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
                             echo $arbol_4998->generar_html();?></div>
-<input type="hidden" name="serie_idserie" value="1">
-<input type="hidden" name="estado_documento" value="">
-<input type="hidden" name="firma" value="1">
-<div class='form-group form-group-default  col-12 '  id='tr_descripcion_ruta'>
+<input class='required' type='hidden' name='serie_idserie' value='1'>
+<input class='' type='hidden' name='estado_documento' value=''>
+<input class='required' type='hidden' name='firma' value='1'>
+<div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
             <label title=''>DESCRIPCIóN RUTA</label>
             <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='' />
         </div>
-<input type="hidden" name="encabezado" value="1">
-<input type="hidden" name="documento_iddocumento" value="">
-<input type="hidden" name="idft_ruta_distribucion" value="">
+<input class='required' type='hidden' name='encabezado' value='1'>
+<input class='required' type='hidden' name='documento_iddocumento' value=''>
+<input class='required' type='hidden' name='idft_ruta_distribucion' value=''>
 
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
