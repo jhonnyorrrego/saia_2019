@@ -551,7 +551,7 @@ $(document).ready(function() {
             },
             content:
                 '<iframe src="' +
-                `${params.baseUrl}views/generador/editar_componente_generico.php?idpantalla_campos=${idpantalla_campo}&idpantalla_componente=${idpantalla_componente}` +
+                `${params.baseUrl}views/generador/editar_componente_generico.php?fieldId=${idpantalla_campo}&idpantalla_componente=${idpantalla_componente}` +
                 '" style="width: 100%; height: 100%; border:none;"></iframe>',
             callback: function() {
                 idPanel = this.getAttribute('id');

@@ -25,6 +25,9 @@ class CamposFormato extends Model
     protected $opciones;
     protected $banderas;
 
+    //relations
+    protected $Formato;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -64,6 +67,22 @@ class CamposFormato extends Model
             'safe' => $safeDbAttributes,
             'date' => []
         ];
+    }
+
+    /**
+     * obtiene la instancia del formato relacionado
+     *
+     * @return Formato|null
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function getFormat()
+    {
+        if (!$this->Formato) {
+            $this->Formato = $this->getRelationFk('Formato', 'formato_idformato');
+        }
+
+        return $this->Formato;
     }
 
     /**

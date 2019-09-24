@@ -119,8 +119,17 @@ class ComponentFormGeneratorController
         return $texto;
     }
 
+    /**
+     * genera la etiqueta del componente
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
     public function getLabel()
-    { }
+    {
+        return strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+    }
 
     /**
      * define la clase para los componentes obligatorios
@@ -320,13 +329,9 @@ PHP;
      */
     public function generatePassword()
     {
-        $requiredClass = $this->getRequiredClass();
-        $value = $this->getComponentValue();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
-
-        return  "<div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
-            <input class='form-control {$requiredClass}' type='password' name='{$this->CamposFormato->nombre}' value='{$value}'>
+        return  "<div class='form-group form-group-default {$this->getRequiredClass()}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
+            <input class='form-control {$this->getRequiredClass()}' type='password' name='{$this->CamposFormato->nombre}' value='{$this->getComponentValue()}'>
         </div>";
     }
 
@@ -339,22 +344,17 @@ PHP;
      */
     public function generateTextArea()
     {
-        $valor = $this->getComponentValue();
-        $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
-        $idcampo_cke = $this->CamposFormato->nombre;
-
         return <<<HTML
-            <div class="form-group form-group-default {$requiredClass}" id="group_{$this->CamposFormato->nombre}">
+            <div class="form-group form-group-default {$this->getRequiredClass()}" id="group_{$this->CamposFormato->nombre}">
                 <label title="{$this->CamposFormato->ayuda}">
-                    {$label}
+                    {$this->getLabel()}
                 </label>
                 <div class="celda_transparente">
-                    <textarea name="{$this->CamposFormato->nombre}" id="{$idcampo_cke}" rows="3" class="form-control {$requiredClass}">
-                        {$valor}
+                    <textarea name="{$this->CamposFormato->nombre}" id="{$this->CamposFormato->nombre}" rows="3" class="form-control {$this->getRequiredClass()}">
+                        {$this->getComponentValue()}
                     </textarea>
                     <script>
-                        CKEDITOR.replace("{$idcampo_cke}", {
+                        CKEDITOR.replace("{$this->CamposFormato->nombre}", {
                             removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
                         });
                     </script>
@@ -372,9 +372,6 @@ HTML;
      */
     public function generateFancy()
     {
-        $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
-
         $idcampo_ft = $this->CamposFormato->getPK();
         $params_ft = json_decode($this->CamposFormato->valor, true);
         $opc_ft = "";
@@ -385,8 +382,8 @@ HTML;
             $param_url .= '"' . $key . '" => "' . $value . '",';
         }
 
-        $texto = '<div class="form-group ' . $requiredClass . '" id="group_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . $label . '</label><?php $origen_' . $idcampo_ft . ' = array(
+        $texto = '<div class="form-group ' . $this->getRequiredClass() . '" id="group_' . $this->CamposFormato->nombre . '">
+                                    <label title="' . $this->CamposFormato->ayuda . '">' . $this->getLabel() . '</label><?php $origen_' . $idcampo_ft . ' = array(
                                 "url" => "' . $params_ft["url"] . '",
                                 "ruta_db_superior" => $ruta_db_superior,';
         if (!empty($param_url)) {
@@ -442,35 +439,28 @@ HTML;
      */
     public function generateDate()
     {
-        $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
         $campo = $this->CamposFormato->getAttributes();
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
 
         $nombre_selector = $campo["nombre"];
-        $labelRequired = '';
-        $required = '';
         if ($campo["obligatoriedad"]) {
-            $obliga = "*";
             $labelRequired = '<label id="' . $campo["nombre"] . '-error" class="error" for="' . $campo["nombre"] . '" style="display: none;"></label>';
-            $required = 'required';
         } else {
-            $obliga = "";
+            $labelRequired = '';
         }
-        $texto[] = "<div class='form-group form-group-default input-group {$requiredClass} date' id='group_{$campo['nombre']}'>";
+
+        $texto[] = "<div class='form-group form-group-default input-group {$this->getRequiredClass()} date' id='group_{$campo['nombre']}'>";
         $texto[] = '<div class="form-input-group">';
-        $texto[] = "<label for='{$campo["nombre"]}' title='{$this->CamposFormato->ayuda}'>{$label}</label>";
+        $texto[] = "<label for='{$campo["nombre"]}' title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>";
         $texto[] = $labelRequired;
-        $texto[] = '<input type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';
+        $texto[] = '<input type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $this->getRequiredClass() . ' name="' . $campo["nombre"] . '" />';
         if (!empty($campo["opciones"])) {
             $opciones = json_decode($campo["opciones"], true);
 
             $ini = "";
             $fin = "";
-            $ancho = "";
             if (isset($opciones["tipo"]) && $opciones["tipo"] == "datetime") {
-                //$formato_fecha="L LT";
                 $formato_fecha = "YYYY-MM-DD HH:mm:ss";
             }
             $fecha_por_defecto = '';
@@ -610,24 +600,17 @@ HTML;
     private function generateInteger($campo, $moneda = false)
     {
         $campo = $campo->getAttributes();
-        $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
         $value = $this->getComponentValue();
         $options = json_decode($this->CamposFormato->opciones);
-
-        if ($campo["obligatoriedad"]) {
-            $obligatorio = " required ";
-        } else {
-            $obligatorio = "";
-        }
         $aux2 = [];
         $texto = array();
+
         if (!empty($campo["opciones"])) {
             $opciones = json_decode($campo["opciones"], true);
             $estilo = json_decode($campo["estilo"], true);
 
             $ini = "";
-            $fin = ""; //anteriormente estaba en 1000
+            $fin = "";
             $decimales = 0;
             $incremento = 1;
             $tam = 100;
@@ -689,9 +672,6 @@ HTML;
             }
             if (is_numeric($parametros[2]))
                 $aux2[] = 'step="' . $parametros[2] . '"';
-            if (is_numeric($parametros[3]) && $parametros[3]) {
-                $aux[] = 'lock:true';
-            }
         }
 
         $adicionales = '';
@@ -700,15 +680,15 @@ HTML;
         }
         $pre = "";
         $post = "";
-        $texto[] = "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}' id='group_{$campo["nombre"]}'>";
-        $texto[] = "<label title='{$campo['ayuda']}' for='{$campo["nombre"]}'>{$campo["etiqueta"]}</label>";
+        $texto[] = "<div class='form-group form-group-default {$this->getRequiredClass()} col-12 {$options->clase}' id='group_{$campo["nombre"]}'>";
+        $texto[] = "<label title='{$campo['ayuda']}' for='{$campo["nombre"]}'>{$this->getLabel()}</label>";
         if ($moneda) {
             $pre = "<div class='input-group'><div class='input-group-prepend'><div class='input-group-text'>$</div></div>";
             $post = "</div>";
             $ancho = "";
         }
         $texto[] = $pre;
-        $texto[] = "<input class='form-control' {$adicionales} {$requiredClass} type='number' id='{$this->CamposFormato->nombre}' name='{$campo["nombre"]}'  value='{$value}'>";
+        $texto[] = "<input class='form-control' {$adicionales} {$this->getRequiredClass()} type='number' id='{$this->CamposFormato->nombre}' name='{$campo["nombre"]}'  value='{$value}'>";
         $texto[] = "</div>";
         $texto[] = $post;
         return implode("\n", $texto);
