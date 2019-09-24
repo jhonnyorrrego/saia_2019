@@ -818,13 +818,30 @@ HTML;
             $labelRequired = '';
         }
 
-        return <<<HTML
-            <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
-                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
-                {$labelRequired}
-            </div>
-HTML;
+        $text = "
+        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <div class='radio radio-success'>
+        ";
+
+        $options = $this->CamposFormato->getRadioOptions();
+        foreach ($options as $key => $CampoOpciones) {
+            $text .= "<input 
+                {$requiredClass}
+                type='{$this->CamposFormato->etiqueta_html}'
+                name='{$this->CamposFormato->nombre}'
+                id='{$this->CamposFormato->nombre}{$key}'
+                value='{$this->CamposFormato->getPK()}'
+                aria-required='true'>
+                <label for='{$this->CamposFormato->nombre}{$key}'>
+                    {$CampoOpciones->valor}
+                </label>";
+        }
+
+        $text .= "</div>
+            {$labelRequired}
+        </div>";
+        return $text;
     }
 
     /**

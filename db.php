@@ -1167,7 +1167,6 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
 
     if ($CamposFormato->obligatoriedad) {
         $obligatorio[] = "class='required'";
-        $labelRequired = '<label id="' . $CamposFormato->nombre . '-error" class="error" for="' . $CamposFormato->nombre . '" style="display: none;"></label>';
         $required = 'required';
     }
 
@@ -1270,64 +1269,6 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                     });
                     </script>
                      ';
-            break;
-        case "dependientes":
-            $CamposFormato->valor = html_entity_decode($CamposFormato->valor);
-            $parametros = explode("|", $CamposFormato->valor);
-            /*
-             * parametros:
-             * nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
-             * (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)
-             */
-            $idcampo = $CamposFormato->getPK();
-            // dibujo el primer select
-            $select = explode(";", $parametros[0]);
-            $datos_padre = ejecuta_filtro_tabla($select[1]);
-            if (count($parametros) > 2) {
-                $select2 = explode(";", $parametros[1]);
-                $hijo = $select2[0] . $idcampo;
-            } else
-                $hijo = $nombre;
-
-            $texto .= "<table width='100%'><tr><td width='20%'> " . ucfirst($select[0]) . "</td><td>
-      <select name='" . $select[0] . "$idcampo' id='" . $select[0] . "$idcampo' idcomponente='" . $idcampo . "' pos='0' hijo='$hijo'><option value='' selected>Seleccionar...</option>";
-            for ($i = 0; $i < $datos_padre["numcampos"]; $i++) {
-                $texto .= "<option value='" . $datos_padre[$i]["id"] . "'>" . $datos_padre[$i]["nombre"] . "</option>";
-            }
-            $texto .= "</select></td></tr>";
-
-            for ($i = 1; $i < count($parametros); $i++) {
-                $select = explode(";", $parametros[$i]);
-                // si es el ultimo select
-                if ($i == (count($parametros) - 1)) {
-                    $nombre2 = $nombre;
-                    $hijo = "";
-                } elseif ($i == (count($parametros) - 2)) { // si es el penultimo
-                    $nombre2 = $select[0] . $idcampo;
-                    $hijo = " hijo='" . $nombre . "' ";
-                } else { // si es un select intermedio
-                    $nombre2 = $select[0] . $idcampo;
-                    $select3 = explode(";", $parametros[$i + 1]);
-                    $hijo = " hijo='" . $select3[0] . $idcampo . "' ";
-                }
-
-                $texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $idcampo . "' ";
-
-                if ($i == (count($parametros) - 1)) { // si es el ultimo select
-                    $texto .= $obligatorio;
-                }
-                $texto .= " $hijo >";
-                if ($default && $i == (count($parametros) - 1)) {
-                    preg_match("/(\w+) as id/", strtolower($select[1]), $llave);
-                    $cuerpo = substr($select[1], 0, strpos($select[1], "where"));
-                    // preg_match("/(.+) where/", strtolower($select[1]), $cuerpo);
-                    $valor = ejecuta_filtro_tabla($cuerpo . " where " . $llave[1] . "=" . $default);
-                    $texto .= "<option value='$default' selected>" . $valor[0]["nombre"] . "</option>";
-                } else
-                    $texto .= "<option value='' selected>Seleccionar...</option>";
-                $texto .= "</select></td></tr>";
-            }
-            $texto .= "</table>";
             break;
     }
     echo $texto;

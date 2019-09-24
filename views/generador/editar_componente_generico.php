@@ -52,10 +52,7 @@ function obtener_valores_campo($CamposFormato, $opciones_defecto)
         'select',
         'checkbox'
     ])) {
-        $options = CampoOpciones::findAllByAttributes([
-            'fk_campos_formato' => $CamposFormato->getPK(),
-            'estado' => 1
-        ]);
+        $options = $CamposFormato->getRadioOptions();
 
         foreach ($options as $CampoOpciones) {
             $response["fs_opciones"][] = [

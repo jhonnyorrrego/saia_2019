@@ -27,6 +27,7 @@ class CamposFormato extends Model
 
     //relations
     protected $Formato;
+    protected $campoOpciones;
 
     function __construct($id = null)
     {
@@ -83,6 +84,33 @@ class CamposFormato extends Model
         }
 
         return $this->Formato;
+    }
+
+    /**
+     * obteiene las opciones almacenadas en campo_opciones
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function getRadioOptions()
+    {
+        if (in_array($this->etiqueta_html, [
+            'radio',
+            'select',
+            'checkbox'
+        ])) {
+            if (!$this->campoOpciones) {
+                $this->campoOpciones = CampoOpciones::findAllByAttributes([
+                    'fk_campos_formato' => $this->getPK(),
+                    'estado' => 1
+                ]);
+            }
+
+            return $this->campoOpciones;
+        } else {
+            throw new Exception("El componente debe ser de tipo radio,checkbox o select", 1);
+        }
     }
 
     /**

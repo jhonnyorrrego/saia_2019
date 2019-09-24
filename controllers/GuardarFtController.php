@@ -174,6 +174,14 @@ class GuardarFtController
         foreach ($fields as $CamposFormato) {
             $field = $CamposFormato->nombre;
 
+            if (in_array($CamposFormato->etiqueta_html, [
+                'radio',
+                'checkbox',
+                'select'
+            ])) {
+                $data[$field] = $CamposFormato->getPK();
+            }
+
             if ($data[$field]) {
                 $flags = explode(',', $CamposFormato->banderas);
 
