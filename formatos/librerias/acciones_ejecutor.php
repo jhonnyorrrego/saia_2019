@@ -103,7 +103,7 @@ foreach ($campos as $key => $valor) {
           if ($_REQUEST["tipo"] == "unico") {
             ?>
             <div id="datos_ejecutor">
-              <div class="row">
+              <div class="row mx-0">
                 <div class="pl-3 pl-md-0">
                   <span id="actualizar" class="label label-success" style="cursor:pointer">Guardar datos</span>
                 </div>
@@ -520,7 +520,7 @@ if (@$_REQUEST['funcion']) {
 
 function campoCiudad($ciudad = null, $campo)
 {
-  
+
   if (!$ciudad) {
     $ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "");
     if ($ciudad_conf["numcampos"]) {

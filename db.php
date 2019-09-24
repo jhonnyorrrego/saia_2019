@@ -1158,58 +1158,40 @@ function componente_ejecutor($idcampo, $iddoc)
 
 function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $buscar = 0)
 {
-    $campo = busca_filtro_tabla("*", "campos_formato", "idcampos_formato=" . $idcampo, "");
-    $sql = trim($campo[0]["valor"]);
-    $sql = str_replace('', '', $sql);
+    $CamposFormato = new CamposFormato($idcampo);
+    $sql = trim($CamposFormato->valor);
     $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
     $llenado = "";
-    // ***************** validaciones ******************
-    $labelRequired = '';
     $valor = null;
     $required = '';
-    if ($campo[0]["obligatoriedad"]) {
+
+    if ($CamposFormato->obligatoriedad) {
         $obligatorio[] = "class='required'";
-        $labelRequired = '<label id="' . $campo[0]["nombre"] . '-error" class="error" for="' . $campo[0]["nombre"] . '" style="display: none;"></label>';
+        $labelRequired = '<label id="' . $CamposFormato->nombre . '-error" class="error" for="' . $CamposFormato->nombre . '" style="display: none;"></label>';
         $required = 'required';
     }
 
-    $caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "");
-    for ($i = 0; $i < $caracteristicas["numcampos"]; $i++)
-        $obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
-
-    if (is_array($obligatorio) && count($obligatorio) > 0) {
-        $obligatorio = implode(" ", $obligatorio);
-    }
-    // *************************************************
-
-    $listado0 = array();
     if ($accion == "SELECT") {
-        $datos = ejecuta_filtro_tabla($campo[0]["valor"]);
-        if ($datos["numcampos"]) {
-            for ($i = 0; $i < $datos["numcampos"]; $i++) {
-                array_push($listado0, html_entity_decode($datos[$i][0] . "," . $datos[$i][1]));
-            }
-            $llenado = implode(";", $listado0);
-        }
-        // else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo[0]["etiqueta"]);
+        throw new Exception("error al ejecutar la busqueda", 1);
     } else {
-        $llenado = json_decode($campo[0]["opciones"], true);
+        $llenado = json_decode($CamposFormato->opciones, true);
     }
-    $tipo = $campo[0]["etiqueta_html"];
-    $nombre = $campo[0]["nombre"];
+
+    $tipo = $CamposFormato->etiqueta_html;
+    $nombre = $CamposFormato->nombre;
 
     $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "");
     if ($buscar) {
         $default = "";
     } elseif ($iddoc != null) {
         if ($tabla[0]["item"]) {
-            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "");
+            $valor = busca_filtro_tabla($CamposFormato->nombre, $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "");
         } else {
-            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "");
+            $valor = busca_filtro_tabla($CamposFormato->nombre, $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "");
         }
         $default = $valor[0][0];
     } else {
-        $default = $campo[0]["predeterminado"];
+        $default = $CamposFormato->predeterminado;
     }
 
     $texto = "";
@@ -1263,22 +1245,14 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                 if (in_array(($llenado[$j]['item']), $lista_default)) {
                     $texto .= ' checked ';
                 }
-                $texto .= '><label for="' . $nombre . $j . '">' . strip_tags($llenado[$j]['item']) . "</label><br>";
+                $texto .= '><label for="' . $nombre . $j . '">' . strip_tags($llenado[$j]['item']) . "</label>";
             }
             $texto .= "</div>";
-
-            // $texto .= "<tr><td colspan='$columnas'><label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
             break;
         case "select":
-
             $texto = ' <div class="form-group ">';
-            if ($buscar) {
-                $texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width">
-	  		  <option value="" selected >Por favor seleccione...</option>';
-            } else {
-                $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" >
+            $texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . '>
               <option value="" selected >Por favor seleccione...</option>';
-            }
             for ($j = 0; $j < $cont3; $j++) {
                 $texto .= '<option value="' . $llenado[$j]['llave'] . '"';
                 if (($llenado[$j]['llave']) == $default) {
@@ -1298,14 +1272,14 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                      ';
             break;
         case "dependientes":
-            $campo[0]["valor"] = html_entity_decode($campo[0]["valor"]);
-            $parametros = explode("|", $campo[0]["valor"]);
+            $CamposFormato->valor = html_entity_decode($CamposFormato->valor);
+            $parametros = explode("|", $CamposFormato->valor);
             /*
              * parametros:
              * nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
              * (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)
              */
-            $idcampo = $campo[0]["idcampos_formato"];
+            $idcampo = $CamposFormato->getPK();
             // dibujo el primer select
             $select = explode(";", $parametros[0]);
             $datos_padre = ejecuta_filtro_tabla($select[1]);
@@ -1337,7 +1311,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
                     $hijo = " hijo='" . $select3[0] . $idcampo . "' ";
                 }
 
-                $texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $campo[0]["idcampos_formato"] . "' ";
+                $texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $idcampo . "' ";
 
                 if ($i == (count($parametros) - 1)) { // si es el ultimo select
                     $texto .= $obligatorio;

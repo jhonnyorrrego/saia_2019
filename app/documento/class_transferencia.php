@@ -287,8 +287,6 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
                         $VfuncionarioDc->getPK()
                     );
                 } else if ($datos["nombre"] == "POR_APROBAR") {
-
-
                     $fk_ruta_documento = RutaDocumento::newRecord([
                         'tipo' => RutaDocumento::TIPO_RADICACION,
                         'estado' => 1,
@@ -878,14 +876,4 @@ function ejecutoradd($sKey)
     }
 
     return true;
-}
-
-if (!empty($_REQUEST["funcion"])) {
-    $funcion = str_replace(["'", "\\"], "", strtolower($_REQUEST["funcion"]));
-    if (!empty($_REQUEST["parametros"])) {
-        $params = preg_split("/;/", $_REQUEST["parametros"]);
-        call_user_func_array($funcion, $params);
-    } else {
-        $funcion();
-    }
 }

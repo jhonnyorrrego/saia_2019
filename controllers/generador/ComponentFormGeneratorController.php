@@ -61,11 +61,6 @@ class ComponentFormGeneratorController
         $this->CamposFormato = $CamposFormato;
         $this->scope = $scope;
 
-        $texto = '';
-        $obliga = $this->getRequiredIcon();
-        $obligatorio = $this->getRequiredClass();
-        $valor = $this->getComponentValue();
-
         switch ($this->CamposFormato->etiqueta_html) {
             case "funcion":
                 $texto = $this->generateFunction();
@@ -93,95 +88,22 @@ class ComponentFormGeneratorController
                 $texto .= $this->generateDate();
                 break;
             case "radio":
-                /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
-                $classRadios = '';
-                if ($this->CamposFormato->obligatoriedad) {
-                    $classRadios = 'required';
-                    $labelRequired = '<label id="' . $this->CamposFormato->nombre . '-error" class="error" for="' . $this->CamposFormato->nombre . '" style="display: none;"></label>';
-                }
-                /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
-                $texto .= '<div class="form-group  ' . $classRadios . '" id="tr_' . $this->CamposFormato->nombre . '">
-                        <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga .   '</label>';
-                $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>{$labelRequired}<br></div>";
-                break;
-            case "link":
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>';
-                $texto .= '<textarea form-control cols="40" rows="3" name="' . $this->CamposFormato->nombre . '" id="' . $this->CamposFormato->nombre . '">' . $valor . '</textarea></div>';
+                $texto .= $this->generateRadio();
                 break;
             case "checkbox":
-                if ($this->CamposFormato->obligatoriedad) {
-                    $labelRequired = '<label id="' . $this->CamposFormato->nombre . '[]-error" class="error" for="' . $this->CamposFormato->nombre . '[]" style="display: none;"></label>';
-                } else {
-                    $labelRequired = "";
-                }
-
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>';
-                $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>{$labelRequired}<br></div>";
+                $texto .= $this->generateCheckbox();
                 break;
             case "select":
                 $texto = $this->generateSelect();
-                break;
-            case "dependientes":
-                /* parametros:
-                            nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
-                            (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=) */
-                $parametros = explode("|", $this->CamposFormato->valor);
-                if (count($parametros) < 2) {
-                    throw new Exception("Por favor verifique los parametros de configuracion de su select dependiente " . $this->CamposFormato->etiqueta, 1);
-                } else {
-                    $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                        <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>';
-                    $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?></div>";
-                }
                 break;
             case "archivo":
                 $texto = $this->generateFile();
                 break;
             case "hidden":
-                $texto .= '<input type="hidden" name="' . $this->CamposFormato->nombre . '" value="' . $valor . '">';
-                break;
-            case "autocompletar":
-                /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
-                            ej: nombres,apellidos;idfuncionario;funcionario
-                            */
-                $parametros = json_decode($this->CamposFormato->valor);
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>';
-                if ($this->CamposFormato->obligatoriedad == 1) {
-                    $obligatorio = "required";
-                }
-
-                $adicional = "";
-                if ($this->scope == self::SCOPE_EDIT) {
-                    $adicional = " data-data='<?php echo(mostrar_autocompletar('{$this->CamposFormato->nombre}', $this->Formato->getPK(), $" . "_REQUEST['iddoc'])); ?>'";
-                }
-                $texto .= '<input type="text" class="form-control" name="' . $this->CamposFormato->nombre . '" id="' . $this->CamposFormato->nombre . '" value=""' . $adicional . $obligatorio . '></div>';
-                $texto .= $this->generateAutocomplete($this->CamposFormato->nombre, $parametros);
-                break;
-            case "etiqueta":
-                $texto .= '<div class="card-body" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <h5><center>' . $valor . '</center></h5><input type="hidden" name="' . $this->CamposFormato->nombre . '" value="' . $valor . '">
-                                    </div>';
+                $texto .= $this->generateHidden();
                 break;
             case "ejecutor":
-                if ($this->scope == self::SCOPE_EDIT) {
-                    $valor = "<?php echo(mostrar_valor_campo('" . $this->CamposFormato->nombre . "',{$this->Formato->getPK()},\$_REQUEST['iddoc'])); ?>";
-                } else
-                    $valor = $this->CamposFormato->predeterminado;
-
-                $texto .= '<div class="form-group" id="tr_' . $this->CamposFormato->nombre . '">
-                                    <label title="' . $this->CamposFormato->ayuda . '">' . strtoupper($this->CamposFormato->etiqueta) . $obliga . '</label>
-                                    <input type="hidden" name="' . $this->CamposFormato->nombre . '" id="' . $this->CamposFormato->nombre . '" value="' . $valor . '"><?php componente_ejecutor("' . $this->CamposFormato->getPK() . '",@$_REQUEST["iddoc"]); ?' . '>';
-                $texto .= '</div>';
-                break;
-            case "detalle":
-                $padre = busca_filtro_tabla("nombre_tabla", "formato A", "idformato=" . $this->CamposFormato->valor, "");
-                if ($padre["numcampos"] && $this->scope == self::SCOPE_ADD) {
-                    $texto .= '<?php if($_REQUEST["padre"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["padre"]; ?' . '>">' . '<?php } ?' . '>';
-                    $texto .= '<?php if($_REQUEST["anterior"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["anterior"]; ?' . '>">' . '<?php }  else {listar_select_padres(' . $padre[0]["nombre_tabla"] . ');} ?' . '>';
-                }
+                throw new Exception("Pendiente por definir componente de terceros", 1);
                 break;
             case "moneda":
                 $texto .= $this->generateInteger($this->CamposFormato, true);
@@ -189,12 +111,16 @@ class ComponentFormGeneratorController
             case "spin":
                 $texto .= $this->generateInteger($this->CamposFormato);
                 break;
-            default: // text
+            default:
                 $texto .= $this->generateText();
                 break;
         }
+
         return $texto;
     }
+
+    public function getLabel()
+    { }
 
     /**
      * define la clase para los componentes obligatorios
@@ -238,6 +164,21 @@ class ComponentFormGeneratorController
         }
 
         return $valor;
+    }
+
+    /**
+     * genera un componente tipo hidden
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
+    public function generateHidden()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $value = $this->getComponentValue();
+
+        return "<input class='{$requiredClass}' type='hidden' name='{$this->CamposFormato->nombre}' value='{$value}'>";
     }
 
     /**
@@ -308,7 +249,8 @@ class ComponentFormGeneratorController
             echo "</select>
                 <script>
                     $('#dependencia').select2();
-                    $('#dependencia').val({\$selected}).trigger('change');
+                    $('#dependencia').val({\$selected});
+                    $('#dependencia').trigger('change');
                 </script>
             ";
         } else if (\$total == 1) {
@@ -332,9 +274,11 @@ PHP;
      */
     public function generateLabel()
     {
-        return '<div id="tr_' . $this->CamposFormato->nombre . '">
-        <h5 title="' . $this->CamposFormato->ayuda . '" id="' . $this->CamposFormato->nombre . '"><label >' . strtoupper($this->CamposFormato->valor) . '</label></h5>
-        </div>';
+        return "<div id='group_{$this->CamposFormato->nombre}'>
+            <h5 title='{$this->CamposFormato->ayuda}'>
+                <label>{$this->CamposFormato->valor}</label>
+            </h5>
+        </div>";
     }
 
     /**
@@ -346,9 +290,11 @@ PHP;
      */
     public function generateParagraph()
     {
-        return "<p id='{$this->CamposFormato->nombre}' title='{$this->CamposFormato->ayuda}'>
-            {$this->CamposFormato->valor}
-        </p>";
+        return "<div id='group_{$this->CamposFormato->nombre}'>
+            <p title='{$this->CamposFormato->ayuda}'>
+                {$this->CamposFormato->valor}
+            </p>
+        </div>";
     }
 
     /**
@@ -360,7 +306,9 @@ PHP;
      */
     public function generateHr()
     {
-        return "<hr class='border' id='{$this->CamposFormato->nombre}'>";
+        return "<div id='group_{$this->CamposFormato->nombre}'>
+            <hr class='border'>
+        </div>";
     }
 
     /**
@@ -376,7 +324,7 @@ PHP;
         $value = $this->getComponentValue();
         $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
 
-        return  "<div class='form-group form-group-default {$requiredClass}' id='tr_{$this->CamposFormato->nombre}'>
+        return  "<div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
             <input class='form-control {$requiredClass}' type='password' name='{$this->CamposFormato->nombre}' value='{$value}'>
         </div>";
@@ -397,7 +345,7 @@ PHP;
         $idcampo_cke = $this->CamposFormato->nombre;
 
         return <<<HTML
-            <div class="form-group" id="tr_{$this->CamposFormato->nombre}">
+            <div class="form-group form-group-default {$requiredClass}" id="group_{$this->CamposFormato->nombre}">
                 <label title="{$this->CamposFormato->ayuda}">
                     {$label}
                 </label>
@@ -437,7 +385,7 @@ HTML;
             $param_url .= '"' . $key . '" => "' . $value . '",';
         }
 
-        $texto = '<div class="form-group ' . $requiredClass . '" id="tr_' . $this->CamposFormato->nombre . '">
+        $texto = '<div class="form-group ' . $requiredClass . '" id="group_' . $this->CamposFormato->nombre . '">
                                     <label title="' . $this->CamposFormato->ayuda . '">' . $label . '</label><?php $origen_' . $idcampo_ft . ' = array(
                                 "url" => "' . $params_ft["url"] . '",
                                 "ruta_db_superior" => $ruta_db_superior,';
@@ -486,107 +434,6 @@ HTML;
     }
 
     /**
-     * genera el html del componente tipo anexo
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-11
-     */
-    public function generateFile()
-    {
-        $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
-        $identificator = "dropzone_{$this->CamposFormato->nombre}";
-
-        if ($this->scope == self::SCOPE_EDIT) {
-            $editFunction = <<<JS
-                $.post('<?= \$ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
-                    token: localStorage.getItem('token'),
-                    key: localStorage.getItem('key'),
-                    fieldId: {$this->CamposFormato->getPK()},
-                    documentId: <?= \$_REQUEST['iddoc'] ?>
-                }, function(response){
-                    if(response.success){
-                        response.data.forEach(mockFile => {
-                            {$identificator}.removeAllFiles();
-                            {$identificator}.emit('addedfile', mockFile);
-                            {$identificator}.emit('thumbnail', mockFile, '<?= \$ruta_db_superior ?>' + mockFile.route);
-                            {$identificator}.emit('complete', mockFile);
-
-                            loaded{$identificator}.push(mockFile.route);
-                        });                        
-                        $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
-                        {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;                        
-                    }
-                }, 'json');
-JS;
-        }
-
-        return <<<HTML
-        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
-            <div class="" id="dropzone_{$this->CamposFormato->nombre}"></div>
-            <input type="hidden" class="{$requiredClass}" name="{$this->CamposFormato->nombre}">
-        </div>
-        <script>
-            $(function(){
-                let options = {$this->CamposFormato->opciones}
-                let loaded{$identificator} = [];
-                $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
-                let {$identificator} = new Dropzone('#{$identificator}', {
-                    url: '<?= \$ruta_db_superior ?>app/temporal/cargar_anexos.php',
-                    dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
-                    maxFilesize: options.longitud,
-                    maxFiles: options.cantidad,
-                    acceptedFiles: options.tipos,
-                    addRemoveLinks: true,
-                    dictRemoveFile: 'Eliminar',
-                    dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
-                    dictMaxFilesExceeded: `Máximo \${options.cantidad} archivos`,
-                    params: {
-                        token: localStorage.getItem('token'),
-                        key: localStorage.getItem('key'),
-                        dir: '{$this->Formato->nombre}'
-                    },
-                    paramName: 'file',
-                    init : function() {
-                        {$editFunction}
-
-                        this.on('success', function(file, response) {
-                            response = JSON.parse(response);
-
-                            if (response.success) {
-                                response.data.forEach(e => {
-                                    loaded{$identificator}.push(e);
-                                });
-                                $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','))
-                            } else {
-                                top.notification({
-                                    type: 'error',
-                                    message: response.message
-                                });
-                            }
-                        });
-
-                        this.on('removedfile', function(file) {
-                            if(file.route){ //si elimina un anexo cargado antes
-                                var index = loaded{$identificator}.findIndex(route => route == file.route);
-                            }else{//si elimina un anexo recien cargado
-                                var index = loaded{$identificator}.findIndex(route => file.status == 'success' && route.indexOf(file.upload.filename) != -1);                                
-                            }
-                           
-                            loaded{$identificator} = loaded{$identificator}.filter((e,i) => i != index);
-                            $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
-                            {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;
-                        });
-                    }
-                });
-            });
-        </script>
-HTML;
-    }
-
-    /**
      * genera un componente tipo fecha
      *
      * @return string
@@ -595,6 +442,8 @@ HTML;
      */
     public function generateDate()
     {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
         $campo = $this->CamposFormato->getAttributes();
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
@@ -609,14 +458,11 @@ HTML;
         } else {
             $obliga = "";
         }
-        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label for="' . $campo["nombre"] . '">' . strtoupper($campo["etiqueta"]) . '</label>';
+        $texto[] = "<div class='form-group form-group-default input-group {$requiredClass} date' id='group_{$campo['nombre']}'>";
+        $texto[] = '<div class="form-input-group">';
+        $texto[] = "<label for='{$campo["nombre"]}' title='{$this->CamposFormato->ayuda}'>{$label}</label>";
         $texto[] = $labelRequired;
-        $texto[] = '<div class="input-group date">';
         $texto[] = '<input type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';
-        $texto[] = '<div class="input-group-append">';
-        $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
-
         if (!empty($campo["opciones"])) {
             $opciones = json_decode($campo["opciones"], true);
 
@@ -732,8 +578,6 @@ HTML;
         $opciones_fecha["format"] = $formato_fecha;
         $opciones_fecha["locale"] = "es";
         $opciones_fecha["useCurrent"] = true;
-
-        $texto[] = "</div>";
         $opciones_json = json_encode($opciones_fecha, JSON_NUMERIC_CHECK);
         $texto[] = '<script type="text/javascript">
                 $(function () {
@@ -743,6 +587,9 @@ HTML;
                 });
             </script>';
         $texto[] = "</div>";
+        $texto[] = "<div class='input-group-append'>
+            <span class='input-group-text'><i class='fa fa-calendar'></i></span>
+        </div>";
         $texto[] = "</div>";
 
         return implode("\n", $texto);
@@ -779,7 +626,7 @@ HTML;
             $opciones = json_decode($campo["opciones"], true);
             $estilo = json_decode($campo["estilo"], true);
 
-            $ini = 0;
+            $ini = "";
             $fin = ""; //anteriormente estaba en 1000
             $decimales = 0;
             $incremento = 1;
@@ -823,8 +670,13 @@ HTML;
                     $incremento = pow(10, -$decimales);
                 }
             }
-            $aux2[] = 'min="' . $ini . '"';
-            $aux2[] = 'max="' . $fin . '"';
+            if ($ini) {
+                $aux2[] = 'min="' . $ini . '"';
+            }
+
+            if ($fin) {
+                $aux2[] = 'max="' . $fin . '"';
+            }
             $aux2[] = 'step=' . $incremento;
             $ancho = ' col-md-' . $tam . ' col-lg-' . $tam . ' col-xl-' . $tam . '';
         } else if (!empty($value)) {
@@ -848,7 +700,7 @@ HTML;
         }
         $pre = "";
         $post = "";
-        $texto[] = "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}' id='tr_{$campo["nombre"]}'>";
+        $texto[] = "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}' id='group_{$campo["nombre"]}'>";
         $texto[] = "<label title='{$campo['ayuda']}' for='{$campo["nombre"]}'>{$campo["etiqueta"]}</label>";
         if ($moneda) {
             $pre = "<div class='input-group'><div class='input-group-prepend'><div class='input-group-text'>$</div></div>";
@@ -860,73 +712,6 @@ HTML;
         $texto[] = "</div>";
         $texto[] = $post;
         return implode("\n", $texto);
-    }
-
-    /**
-     * genera un componente tipo autocompletar
-     *
-     * @param string $nombre
-     * @param object $parametros
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-11
-     */
-    private function generateAutocomplete($nombre, $parametros)
-    {
-
-        /* {"tipo":"multiple","url":"../../autocompletar.php","campoid":"funcionario_codigo","campotexto":["nombres","apellidos"],"tablas":["funcionario"],"condicion":"estado=1","orden":""} */
-        if ($parametros->tipo == "simple") {
-            $tipo = "1";
-        } else {
-            $tipo = "null";
-        }
-
-        $consulta = array(
-            "campoid" => $parametros->campoid,
-            "campotexto" => $parametros->campotexto,
-            "tablas" => $parametros->tablas,
-            "condicion" => $parametros->condicion,
-            "orden" => $parametros->orden
-        );
-
-        $consulta64 = base64_encode(json_encode($consulta));
-
-        $selector = "[name='$nombre']";
-
-        $campo = '
-            <script>
-            $(document).ready(function(){
-        $("' . $selector . '").selectize({
-            valueField: "value",
-            labelField: "text",
-            searchField: "text",
-        persist: false,
-        createOnBlur: true,
-        create: false,
-        maxItems: ' . $tipo . ',
-        load: function(query, callback) {
-                if (!query.length) return callback();
-                $.ajax({
-                    url: "' . $parametros->url . '",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        consulta: "' . $consulta64 . '",
-                        valor: query,
-                    },
-                    error: function() {
-                        callback();
-                    },
-                    success: function(res) {
-                        callback(res);
-                    }
-                });
-            }
-        });
-            });';
-        $campo .= '</script>';
-
-        return ($campo);
     }
 
     /**
@@ -1001,7 +786,7 @@ HTML;
         $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
         $value = $this->getComponentValue();
         $options = json_decode($this->CamposFormato->opciones);
-        return "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}'  id='tr_{$this->CamposFormato->nombre}'>
+        return "<div class='form-group form-group-default {$requiredClass} col-12 {$options->clase}'  id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
             <input class='form-control {$requiredClass}' type='text' id='{$this->CamposFormato->nombre}' name='{$this->CamposFormato->nombre}' value='{$value}' />
         </div>";
@@ -1017,12 +802,176 @@ HTML;
 
     public function generateSelect()
     {
-
+        $requiredClass = $this->getRequiredClass();
         $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
-        $options = json_decode($this->CamposFormato->opciones);
-        $texto = "<div class='form-group col-12 {$options->clase}' id='tr_{$this->CamposFormato->nombre}'><label title='{$this->CamposFormato->ayuda}'>{$label}</label>";
-        $texto .= "<?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?> </div>";
 
-        return $texto;
+        if ($this->CamposFormato->obligatoriedad) {
+            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
+        } else {
+            $labelRequired = '';
+        }
+
+        return <<<HTML
+            <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
+                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
+                {$labelRequired}
+            </div>
+HTML;
+    }
+
+    /**
+     * genera el componente tipo radio
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
+    public function generateRadio()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+
+        if ($this->CamposFormato->obligatoriedad) {
+            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
+        } else {
+            $labelRequired = '';
+        }
+
+        return <<<HTML
+            <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
+                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
+                {$labelRequired}
+            </div>
+HTML;
+    }
+
+    /**
+     * genera el componente tipo radio
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-23
+     */
+    public function generateCheckbox()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+
+        if ($this->CamposFormato->obligatoriedad) {
+            $labelRequired = "<label id='{$this->CamposFormato->nombre}[]-error' class='error' for='{$this->CamposFormato->nombre}[]' style='display: none;'></label>";
+        } else {
+            $labelRequired = '';
+        }
+
+        return <<<HTML
+            <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
+                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
+                {$labelRequired}
+            </div>
+HTML;
+    }
+
+    /**
+     * genera el html del componente tipo anexo
+     *
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-11
+     */
+    public function generateFile()
+    {
+        $requiredClass = $this->getRequiredClass();
+        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        $identificator = "dropzone_{$this->CamposFormato->nombre}";
+
+        if ($this->scope == self::SCOPE_EDIT) {
+            $editFunction = <<<JS
+                $.post('<?= \$ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key'),
+                    fieldId: {$this->CamposFormato->getPK()},
+                    documentId: <?= \$_REQUEST['iddoc'] ?>
+                }, function(response){
+                    if(response.success){
+                        response.data.forEach(mockFile => {
+                            {$identificator}.removeAllFiles();
+                            {$identificator}.emit('addedfile', mockFile);
+                            {$identificator}.emit('thumbnail', mockFile, '<?= \$ruta_db_superior ?>' + mockFile.route);
+                            {$identificator}.emit('complete', mockFile);
+
+                            loaded{$identificator}.push(mockFile.route);
+                        });                        
+                        $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
+                        {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;                        
+                    }
+                }, 'json');
+JS;
+        }
+
+        return <<<HTML
+        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <div class="" id="dropzone_{$this->CamposFormato->nombre}"></div>
+            <input type="hidden" class="{$requiredClass}" name="{$this->CamposFormato->nombre}">
+        </div>
+        <script>
+            $(function(){
+                let options = {$this->CamposFormato->opciones}
+                let loaded{$identificator} = [];
+                $("#dropzone_{$this->CamposFormato->nombre}").addClass('dropzone');
+                let {$identificator} = new Dropzone('#{$identificator}', {
+                    url: '<?= \$ruta_db_superior ?>app/temporal/cargar_anexos.php',
+                    dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+                    maxFilesize: options.longitud,
+                    maxFiles: options.cantidad,
+                    acceptedFiles: options.tipos,
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Eliminar',
+                    dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+                    dictMaxFilesExceeded: `Máximo \${options.cantidad} archivos`,
+                    params: {
+                        token: localStorage.getItem('token'),
+                        key: localStorage.getItem('key'),
+                        dir: '{$this->Formato->nombre}'
+                    },
+                    paramName: 'file',
+                    init : function() {
+                        {$editFunction}
+
+                        this.on('success', function(file, response) {
+                            response = JSON.parse(response);
+
+                            if (response.success) {
+                                response.data.forEach(e => {
+                                    loaded{$identificator}.push(e);
+                                });
+                                $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','))
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        });
+
+                        this.on('removedfile', function(file) {
+                            if(file.route){ //si elimina un anexo cargado antes
+                                var index = loaded{$identificator}.findIndex(route => route == file.route);
+                            }else{//si elimina un anexo recien cargado
+                                var index = loaded{$identificator}.findIndex(route => file.status == 'success' && route.indexOf(file.upload.filename) != -1);                                
+                            }
+                           
+                            loaded{$identificator} = loaded{$identificator}.filter((e,i) => i != index);
+                            $("[name='{$this->CamposFormato->nombre}']").val(loaded{$identificator}.join(','));
+                            {$identificator}.options.maxFiles = options.cantidad - loaded{$identificator}.length;
+                        });
+                    }
+                });
+            });
+        </script>
+HTML;
     }
 }

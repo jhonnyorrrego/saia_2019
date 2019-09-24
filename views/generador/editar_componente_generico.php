@@ -121,43 +121,42 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
             var nombre_componente = "<?= $nombre_componente ?>";
             var con_numeros = ["archivo", "moneda", "spin"];
             var opciones_form = <?= $opciones_str ?>;
-            console.log(opciones_form)
-
             var rutaSuperior = "<?= $ruta_db_superior ?>";
             var idpantalla_campo = <?= $idpantalla_campos ?>;
-            opciones_form["onSubmit"] = function(errors, values) {
-                if (errors) {
-                    console.log(errors);
-                    $('#res').html('<p>Error al validar</p>');
-                } else {
-                    console.log(JSON.stringify(values.fs_valor));
-                    console.log(JSON.stringify(values.fs_acciones));
-                }
-            };
-            opciones_form["view"] = {
-                "id": "jqueryui-create",
-                "locale": "es_ES",
-                "messages": {
-                    "es_ES": {
-                        "stringNotANumber": "Escriba sólo números"
+            var newOptions = {
+                onSubmit: function(errors, values) {
+                    if (errors) {
+                        $('#res').html('<p>Error al validar</p>');
                     }
+                },
+                "view": {
+                    "id": "jqueryui-create",
+                    "locale": "es_ES",
+                    "messages": {
+                        "es_ES": {
+                            "stringNotANumber": "Escriba sólo números"
+                        }
+                    }
+                },
+                "postRender": function() {
+                    $(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
+                    $(".alpaca-field-radio").find("label").css("display", "block");
+                    if (con_numeros.includes(nombre_componente)) {
+                        $("input[type='number'][data-min]").each(function() {
+                            var valor = $(this).data("min");
+                            $(this).attr("min", valor);
+                        });
+                        $("input[type='number'][data-max]").each(function() {
+                            var valor = $(this).data("max");
+                            $(this).attr("max", valor);
+                        });
+                    }
+
+                    configurarPanel();
                 }
-            };
-            opciones_form["postRender"] = function() {
-                $(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
-                $(".alpaca-field-radio").find("label").css("display", "block");
-                if (con_numeros.includes(nombre_componente)) {
-                    $("input[type='number'][data-min]").each(function() {
-                        var valor = $(this).data("min");
-                        $(this).attr("min", valor);
-                    });
-                    $("input[type='number'][data-max]").each(function() {
-                        var valor = $(this).data("max");
-                        $(this).attr("max", valor);
-                    });
-                }
-            };
-            opciones_form["options"]['form'] = {
+            }
+
+            opciones_form.options.form = {
                 buttons: {
                     cancel: {
                         "styles": "btn btn-danger d-none",
@@ -187,14 +186,27 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                 }
             };
 
-            $('#editar_pantalla_campo').alpaca(opciones_form);
+            $('#editar_pantalla_campo').alpaca(Object.assign({},
+                opciones_form,
+                newOptions
+            ));
 
             $('#btn-cerrar').on('click', function() {
-
                 var panel = $('.jsPanel-standard', parent.document).get(0);
                 jsPanel.close(panel);
-
             });
+
+            $(document)
+                .off('click', '.alpaca-array-actionbar-action,.alpaca-array-toolbar-action')
+                .on('click', '.alpaca-array-actionbar-action,.alpaca-array-toolbar-action', function() {
+                    var margen = 0.9;
+                    if ($(this).attr('data-alpaca-array-actionbar-action') == 'remove') {
+                        margen = 0.98;
+                    }
+                    if ($('.jsPanel-standard', parent.document).height() < (window.screen.height * margen)) {
+                        configurarPanel();
+                    }
+                });
 
             function configurarPanel() {
                 var panel = $('.jsPanel-standard', parent.document).get(0);
@@ -209,22 +221,9 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
                 $('#btnCancelar', '#editar_pantalla_campo').addClass('d-inline');
                 $('#btnGuardar', '#editar_pantalla_campo').removeClass('d-none');
                 $('#btnGuardar', '#editar_pantalla_campo').addClass('d-inline');
-
             }
-            setTimeout('configurarPanel()', 300);
-
-            $(document).on('click', '.alpaca-array-actionbar-action,.alpaca-array-toolbar-action', function() {
-                var margen = 0.9;
-                if ($(this).attr('data-alpaca-array-actionbar-action') == 'remove') {
-                    margen = 0.98;
-                }
-                if ($('.jsPanel-standard', parent.document).height() < (window.screen.height * margen)) {
-                    configurarPanel();
-                }
-            });
 
             function funcion_enviar(datos, idpantalla_campo) {
-
                 var evitar_html = ["datetime", "textarea_cke"];
 
                 $.ajax({

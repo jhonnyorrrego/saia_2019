@@ -285,7 +285,6 @@ function estilo_formato($idformato, $iddoc, $pagina)
  */
 function nombre_formato($idformato, $iddoc = 0, $tipo = 0)
 {
-
     $formato = busca_filtro_tabla("etiqueta", "formato", "idformato={$idformato}", "");
     $texto = $formato[0]['etiqueta'];
     $texto = mb_strtoupper($texto, 'utf-8');
@@ -298,8 +297,7 @@ function nombre_formato($idformato, $iddoc = 0, $tipo = 0)
 
 function codigo_calidad($idformato, $iddoc, $tipo)
 {
-
-    $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "");
+    $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato={$idformato}", "");
     $valor = busca_filtro_tabla("codigo_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
     if ($tipo)
         return ($valor[0][0]);
@@ -341,7 +339,6 @@ function mostrar_datos_radicaion($idformato, $iddoc)
 
 function pie_pagina_carta($idformato, $iddoc)
 {
-
     return ('<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/imagenes/pie_pagina_carta.jpg" />');
 }
 
