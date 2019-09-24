@@ -184,7 +184,7 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
     return $datorig;
 }
 
-function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = null)
+function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
 {
 
     $idtransferencia = array();
@@ -535,7 +535,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                         $datos["archivo_idarchivo"] = $respuestas[$i]["origen"];
                         $destino_respuesta[0] = $origen_respuesta[0]["origen"];
                         $destino_respuesta[0] = $_SESSION["usuario_actual"];
-                        transferir_archivo_prueba($datos, $destino_respuesta, "", "");
+                        transferir_archivo($datos, $destino_respuesta, "", "");
                     }
                 }
 

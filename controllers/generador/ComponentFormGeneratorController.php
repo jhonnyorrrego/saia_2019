@@ -184,10 +184,8 @@ class ComponentFormGeneratorController
      */
     public function generateHidden()
     {
-        $requiredClass = $this->getRequiredClass();
         $value = $this->getComponentValue();
-
-        return "<input class='{$requiredClass}' type='hidden' name='{$this->CamposFormato->nombre}' value='{$value}'>";
+        return "<input type='hidden' name='{$this->CamposFormato->nombre}' value='{$value}'>";
     }
 
     /**
@@ -441,6 +439,7 @@ HTML;
     {
         $campo = $this->CamposFormato->getAttributes();
         $formato_fecha = "YYYY-MM-DD";
+        $formato_fecha_time = "Y-m-d";
         $texto = array();
 
         $nombre_selector = $campo["nombre"];
@@ -462,6 +461,7 @@ HTML;
             $fin = "";
             if (isset($opciones["tipo"]) && $opciones["tipo"] == "datetime") {
                 $formato_fecha = "YYYY-MM-DD HH:mm:ss";
+                $formato_fecha_time = "Y-m-d H:i:s";
             }
             $fecha_por_defecto = '';
             $opciones_fecha = array();
@@ -576,6 +576,14 @@ HTML;
                     $("#content_container").height($(window).height());
                 });
             </script>';
+        $opciones_campo = json_decode($campo["opciones"], true);
+        if ($opciones_campo['hoy'] == 'true') {
+            $texto[] = '<script type="text/javascript">
+            $(function () {
+                $("#' . $nombre_selector . '").val("' . date($formato_fecha_time, time()) . '");
+            });
+            </script>';
+        }
         $texto[] = "</div>";
         $texto[] = "<div class='input-group-append'>
             <span class='input-group-text'><i class='fa fa-calendar'></i></span>

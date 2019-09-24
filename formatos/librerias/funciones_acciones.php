@@ -235,3 +235,8 @@ function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, 
 		ejecutar_acciones_formato($iddoc, $idformato, $listado_acciones);
 	}
 }
+
+function fecha_formato($iddoc = NULL, $idformato = NULL)
+{
+	//  
+}

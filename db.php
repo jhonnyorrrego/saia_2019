@@ -1089,7 +1089,7 @@ function transferencia_automatica(
         $datos["nombre"] = $nombre;
         $datos["tipo"] = "";
         $datos["tipo_origen"] = "1";
-        transferir_archivo_prueba($datos, $lista, $adicionales);
+        transferir_archivo($datos, $lista, $adicionales);
     }
 }
 
@@ -1352,7 +1352,6 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
     ]);
     $ft = $Documento->getFt();
     $fieldValue = $ft[$CamposFormato->nombre];
-
     if ($CamposFormato) {
         if ($CamposFormato->etiqueta_html == "arbol_fancytree") {
             $retorno = mostrar_seleccionados_ft($idformato, $CamposFormato->getPK(), $Documento->getPK(), 1);
@@ -1366,7 +1365,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
             foreach ($files as $Anexos) {
                 $retorno .= $Anexos->etiqueta . "\n";
             }
-        } elseif ($CamposFormato->etiqueta_html == 'textarea_cke') {
+        } elseif (($CamposFormato->etiqueta_html == 'textarea_cke') || ($CamposFormato->etiqueta_html == 'hidden') || ($CamposFormato->etiqueta_html == 'radio')) {
             $retorno = $fieldValue;
         } elseif ($CamposFormato->etiqueta_html == "moneda") {
             $retorno = "$ {fieldValue}";
@@ -1374,7 +1373,6 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
             throw new Exception("pendiente desarrollar para los ejecutores", 1);
         }
     }
-
     return $retorno;
 }
 

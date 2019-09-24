@@ -184,7 +184,7 @@ function formato_dependencia($doc, $tipo)
     $retorno = "";
     $plantilla = busca_filtro_tabla("lower(plantilla) as plantilla", "documento B", "iddocumento=" . $doc, "");
     $tabla = busca_filtro_tabla('nombre_tabla', 'formato', "nombre like '" . strtolower($plantilla[0]["plantilla"]) . "'", '');
-    $dep = busca_filtro_tabla("A.*", "dependencia A,dependencia_cargo C," . $tabla[0]["nombre_tabla"] . " B", "C.dependencia_iddependencia=A.iddependencia and B.dependencia=C.iddependencia_cargo and B.documento_iddocumento=$doc", "");
+    $dep = busca_filtro_tabla("A.*", "dependencia A,dependencia_cargo C," . $tabla[0]["nombre_tabla"] . " B", "C.dependencia_iddependencia=A.iddependencia and B.dependencia=C.iddependencia_cargo and B.documento_iddocumento=" . $doc, "");
 
     if ($dep["numcampos"]) {
         if ($tipo == "logo") {
@@ -255,10 +255,7 @@ function logo_encabezado()
  */
 function nombre_empresa()
 {
-
-
     $logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "");
-
     return $logo['numcampos'] ? $logo[0]["valor"] : "";
 }
 
@@ -300,7 +297,7 @@ function nombre_formato($idformato, $iddoc = 0, $tipo = 0)
 
 function codigo_calidad($idformato, $iddoc, $tipo)
 {
-    $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "");
+    $formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato={$idformato}", "");
     $valor = busca_filtro_tabla("codigo_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
     if ($tipo)
         return ($valor[0][0]);

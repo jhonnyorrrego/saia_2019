@@ -424,23 +424,6 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         $nombre_ruta_distribucion = 'Distribuci&oacute;n Externa';
     }
 
-    $DependenciaCargo = VfuncionarioDc::findByAttributes([
-        'iddependencia_cargo' => $iddependencia_cargo
-    ]);
-
-    if ($tipo_destino == 1 && $origen) {
-        $rutaDistribucion = Model::getQueryBuilder()
-            ->select('a.idft_ruta_distribucion')
-            ->from('ft_ruta_distribucion', 'a')
-            ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
-            ->innerjoin('a', 'ft_dependencias_ruta', 'c', 'a.idft_ruta_distribucion=c.ft_ruta_distribucion')
-            ->where("b.estado='APROBADO' and c.estado_dependencia=1")
-            ->andWhere('c.dependencia_asignada = :dependencia')
-            ->setParameter(':dependencia', $DependenciaCargo->iddependencia, \Doctrine\DBAL\Types\Type::INTEGER)
-            ->execute()
-            ->fetchAll();
-    }
-
     return $nombre_ruta_distribucion . "<select id='opciones_acciones_distribucion2' class='[data-init-plugin='select2'] pull-left btn btn-xs'><option>123</option></select>";
 }
 

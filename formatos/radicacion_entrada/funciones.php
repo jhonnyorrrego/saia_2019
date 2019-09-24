@@ -330,7 +330,6 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 tipo_destino($("input:radio[name=tipo_destino]:checked").val());
             }, 5000);
 
-
             $('[name="tipo_origen"]').click(function() {
                 tipo_origen($(this).val());
             });

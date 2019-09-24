@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . 'formatos/despacho_ingresados/funciones.php';
+include_once $ruta_db_superior . 'formatos/hacie_una_pru_form_nue/funciones.php';
 
 try {
     JwtController::check($_REQUEST["token"], $_REQUEST["key"]);    
@@ -49,19 +49,30 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <table align="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;center\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" border="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;1\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" cellspacing="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" style="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;position:relative\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;">
+                                <p>{*mostrar_estado_proceso*}</p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px">
 	<tbody>
 		<tr>
-			<td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
-			<td><strong>Tipo de Mensajer&iacute;a: </strong><?= mostrar_valor_campo('tipo_mensajero', 353, $_REQUEST['iddoc']) ?></td>
-			<td><strong>Recorrido: </strong>{*obtener_tipo_recorrido*}</td>
+			<td>una</td>
+			<td>prueba</td>
+		</tr>
+		<tr>
+			<td>de&nbsp;</td>
+			<td>creacion&nbsp;</td>
+		</tr>
+		<tr>
+			<td>de&nbsp;&nbsp;</td>
+			<td>formato</td>
 		</tr>
 	</tbody>
 </table>
 
-<p>{*obtener_tipo_recorrido*}</p>
+<p>{*creador_documento*}</p>
 
-<p><?php mostrar_seleccionados_entrega(353, $_REQUEST['iddoc']) ?></p>
+<p>&nbsp;</p>
+
+<p>{*fecha_aprobacion*}</p>
 
                             </div>
                         </div>

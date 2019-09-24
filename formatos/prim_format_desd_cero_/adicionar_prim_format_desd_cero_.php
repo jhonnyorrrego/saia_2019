@@ -15,16 +15,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 include_once $ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
-include_once $ruta_db_superior . 'formatos/ruta_distribucion/funciones.php';
+include_once $ruta_db_superior . 'formatos/prim_format_desd_cero_/funciones.php';
 
-$Formato = new Formato(404);
+$Formato = new Formato(453);
 
 if(isset($_REQUEST['iddoc'])){
     $Documento = new Documento($_REQUEST['iddoc']);
     $ft = $Documento->getFt();
 }
 
-llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
+llama_funcion_accion(null,453 ,'ingresar','ANTERIOR');
 ?>
 <!DOCTYPE html>
 <html>
@@ -56,7 +56,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         <div class='card card-default'>
             <div class='card-body'>
                 <h5 class='text-black w-100 text-center'>
-                    Rutas de Distribución
+                    Primer Formato desde Ceros df
                 </h5>
                 <form 
                     name='formulario_formatos' 
@@ -66,7 +66,10 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                            <?php
+                    <input type='hidden' name='idft_prim_format_desd_cero_' value=''>
+<input type='hidden' name='encabezado' value='1'>
+<input type='hidden' name='firma' value='1'>
+        <?php
         $selected = isset($ft) ? $ft['dependencia'] : '';
         $query = Model::getQueryBuilder();
         $roles = $query
@@ -109,15 +112,19 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         
         echo "</div>";
         ?>
-<div class='form-group form-group-default input-group required date' id='group_fecha_ruta_distribuc'>
+<div class='form-group form-group-default  col-12 '  id='group_campo_texto_2132512480'>
+            <label title=''>PRUEBA DE FECHA HOY</label>
+            <input class='form-control ' type='text' id='campo_texto_2132512480' name='campo_texto_2132512480' value='' />
+        </div>
+<div class='form-group form-group-default input-group required date' id='group_datetime_440210615'>
 <div class="form-input-group">
-<label for='fecha_ruta_distribuc' title=''>FECHA Y HORA<span>*</span></label>
-<label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
-<input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
+<label for='datetime_440210615' title=''>FECHA Y HORA 2<span>*</span></label>
+<label id="datetime_440210615-error" class="error" for="datetime_440210615" style="display: none;"></label>
+<input type="text" class="form-control"  id="datetime_440210615"  required name="datetime_440210615" />
 <script type="text/javascript">
                 $(function () {
                     var configuracion={"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
-                    $("#fecha_ruta_distribuc").datetimepicker(configuracion);
+                    $("#datetime_440210615").datetimepicker(configuracion);
                     $("#content_container").height($(window).height());
                 });
             </script>
@@ -126,43 +133,14 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             <span class='input-group-text'><i class='fa fa-calendar'></i></span>
         </div>
 </div>
-<div class='form-group form-group-default required col-12 '  id='group_nombre_ruta'>
-            <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
-            <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='' />
-        </div>
-            <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
-                <label title="">MENSAJEROS DE LA RUTA<span>*</span></label>
-                <?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?>
-                <label id='asignar_mensajeros-error' class='error' for='asignar_mensajeros' style='display: none;'></label>
-            </div>
-<div class="form-group required" id="group_asignar_dependencias">
-                                    <label title="">DEPENDENCIAS DE LA RUTA<span>*</span></label><?php $origen_4998 = array(
-                                "url" => "app/arbol/arbol_dependencia.php",
-                                "ruta_db_superior" => $ruta_db_superior,);$origen_4998["params"]["checkbox"]="radio";$opciones_arbol_4998 = array(
-                                "keyboard" => true,"selectMode" => 1,"seleccionarClick" => 1,"obligatorio" => 1,
-                            );
-                            $extensiones_4998 = array(
-                                "filter" => array()
-                            );
-                            $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
-                            echo $arbol_4998->generar_html();?></div>
-<input class='required' type='hidden' name='serie_idserie' value='1'>
-<input class='' type='hidden' name='estado_documento' value=''>
-<input class='required' type='hidden' name='firma' value='1'>
-<div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
-            <label title=''>DESCRIPCIóN RUTA</label>
-            <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='' />
-        </div>
-<input class='required' type='hidden' name='encabezado' value='1'>
-<input class='required' type='hidden' name='documento_iddocumento' value=''>
-<input class='required' type='hidden' name='idft_ruta_distribucion' value=''>
+<input type='hidden' name='hidden_1172466648' value=''>
 
-<input type='hidden' name='campo_descripcion' value='4987'>
+<input type='hidden' name='campo_descripcion' value='8803'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
-<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
-<input type='hidden' name='formatId' value='404'>
-<input type='hidden' name='tabla' value='ft_ruta_distribucion'>
-<input type='hidden' name='formato' value='ruta_distribucion'>
+<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='radicacion_entrada'>
+<input type='hidden' name='formatId' value='453'>
+<input type='hidden' name='tabla' value='ft_prim_format_desd_cero_'>
+<input type='hidden' name='formato' value='prim_format_desd_cero_'>
 <input type='hidden' name='token'>
 <input type='hidden' name='key'>
 <div class='form-group px-0 pt-3'><button class='btn btn-complete' id='continuar' >Continuar</button></div>
@@ -170,9 +148,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             </div>
         </div>
     </div>
-    <?php fecha_formato(404,$_REQUEST['iddoc'] ?? null) ?>
-<?php add_edit_ruta_dist(404,$_REQUEST['iddoc'] ?? null) ?>
-
+    
     <script>
         $(function() {
             $("[name='token']").val(localStorage.getItem('token'));
