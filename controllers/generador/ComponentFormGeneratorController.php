@@ -780,32 +780,42 @@ HTML;
         </div>";
     }
 
-
-    /* Genera el campo tipo Select con sus respectivos atributos, se realizo cambio de ancho del campo de estilo a opciones
-              tipo clase y sus tamaño pequeño "col-md-3", mediano "col-md-6" y grande ""col-md-3""
+    /**
+     * genera un componente tipo select
      *
-     * @author Julian Otalvaro <julian.otalvaro@cerok.com> - jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-18
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
      */
-
     public function generateSelect()
     {
         $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
 
-        if ($this->CamposFormato->obligatoriedad) {
-            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
-        } else {
-            $labelRequired = '';
+        $text = "
+        <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
+            <div class='form-group'>
+            <select name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' $requiredClass>
+            <option value=''>Por favor seleccione...</option>
+        ";
+
+        $options = $this->CamposFormato->getRadioOptions();
+        foreach ($options as $key => $CampoOpciones) {
+            $text .= "<option value='{$CampoOpciones->getPK()}'>
+                {$CampoOpciones->valor}
+            </option>";
         }
 
-        return <<<HTML
-            <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
-                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
-                {$labelRequired}
+        $text .= "</select>
+                <script>
+                $(document).ready(function() {
+                    $('#{$this->CamposFormato->nombre}').select2();
+                    $('#{$this->CamposFormato->nombre}').addClass('full-width');
+                });
+                </script>
             </div>
-HTML;
+        </div>";
+        return $text;
     }
 
     /**
@@ -818,7 +828,6 @@ HTML;
     public function generateRadio()
     {
         $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
 
         if ($this->CamposFormato->obligatoriedad) {
             $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
@@ -828,7 +837,7 @@ HTML;
 
         $text = "
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-            <label title='{$this->CamposFormato->ayuda}'>{$label}</label>
+            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
             <div class='radio radio-success'>
         ";
 
@@ -836,10 +845,10 @@ HTML;
         foreach ($options as $key => $CampoOpciones) {
             $text .= "<input 
                 {$requiredClass}
-                type='{$this->CamposFormato->etiqueta_html}'
+                type='radio'
                 name='{$this->CamposFormato->nombre}'
                 id='{$this->CamposFormato->nombre}{$key}'
-                value='{$this->CamposFormato->getPK()}'
+                value='{$CampoOpciones->getPK()}'
                 aria-required='true'>
                 <label for='{$this->CamposFormato->nombre}{$key}'>
                     {$CampoOpciones->valor}
@@ -862,7 +871,6 @@ HTML;
     public function generateCheckbox()
     {
         $requiredClass = $this->getRequiredClass();
-        $label = strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
 
         if ($this->CamposFormato->obligatoriedad) {
             $labelRequired = "<label id='{$this->CamposFormato->nombre}[]-error' class='error' for='{$this->CamposFormato->nombre}[]' style='display: none;'></label>";
@@ -870,13 +878,30 @@ HTML;
             $labelRequired = '';
         }
 
-        return <<<HTML
-            <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-                <label title="{$this->CamposFormato->ayuda}">{$label}</label>
-                <?php genera_campo_listados_editar({$this->Formato->getPK()},{$this->CamposFormato->getPK()},\$_REQUEST['iddoc']) ?>
-                {$labelRequired}
-            </div>
-HTML;
+        $text = "
+        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
+            <div class='checkbox check-success'>
+        ";
+
+        $options = $this->CamposFormato->getRadioOptions();
+        foreach ($options as $key => $CampoOpciones) {
+            $text .= "<input 
+                {$requiredClass}
+                type='checkbox'
+                name='{$this->CamposFormato->nombre}[]'
+                id='{$this->CamposFormato->nombre}{$key}'
+                value='{$CampoOpciones->getPK()}'
+                aria-required='true'>
+                <label for='{$this->CamposFormato->nombre}{$key}'>
+                    {$CampoOpciones->valor}
+                </label>";
+        }
+
+        $text .= "</div>
+            {$labelRequired}
+        </div>";
+        return $text;
     }
 
     /**

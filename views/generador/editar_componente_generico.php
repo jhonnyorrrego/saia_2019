@@ -26,6 +26,7 @@ $CamposFormato = new CamposFormato($fieldId);
 $actions = explode(',', $CamposFormato->acciones);
 $values = json_decode($CamposFormato->valor, true);
 $schema = json_decode($PantallaComponente->opciones_propias, true);
+
 $valores = [
     "fs_etiqueta" => $CamposFormato->etiqueta,
     "fs_obligatoriedad" => $CamposFormato->obligatoriedad,

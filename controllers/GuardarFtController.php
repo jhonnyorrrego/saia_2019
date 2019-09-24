@@ -179,6 +179,7 @@ class GuardarFtController
                 'checkbox',
                 'select'
             ])) {
+                $this->saveRadioSelected($data[$field], $CamposFormato->getPK());
                 $data[$field] = $CamposFormato->getPK();
             }
 
@@ -310,6 +311,38 @@ class GuardarFtController
                 'fecha' => date('Y-m-d H:i:s'),
                 'estado' => 1,
                 'fk_funcionario' => SessionController::getValue('idfuncionario')
+            ]);
+        }
+    }
+
+    /**
+     * almacena las opciones seleccionadas
+     * de los campos radio, select y checkbox
+     *
+     * @param array $data
+     * @param integer $fieldId
+     * @return void
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function saveRadioSelected($data, $fieldId)
+    {
+        $data = is_string($data) ? [$data] : $data;
+
+        CampoSeleccionados::executeDelete([
+            'fk_documento' => $this->Documento->getPk(),
+            'fk_campos_formato' => $fieldId,
+        ]);
+
+        foreach ($data as $optionId) {
+            $CampoOpciones = new CampoOpciones($optionId);
+
+            CampoSeleccionados::newRecord([
+                'fk_documento' => $this->Documento->getPK(),
+                'fk_campos_formato' => $fieldId,
+                'fk_campo_opciones' => $CampoOpciones->getPK(),
+                'llave' => $CampoOpciones->llave,
+                'valor' => $CampoOpciones->valor,
             ]);
         }
     }
