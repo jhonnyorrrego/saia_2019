@@ -54,22 +54,4 @@ class Ejecutor extends Model
 
         return $this->DatosEjecutor;
     }
-
-    public function setDatosEjecutor($datosEjecutor)
-    {
-        $this->datosEjecutor = $datosEjecutor;
-    }
-
-    public function getDatosEjecutor()
-    {
-        return $this->datosEjecutor;
-    }
-
-    public function consultarDatos()
-    {
-        $posibles = DatosEjecutor::findByEjecutor($this->getPK());
-        if ($posibles) {
-            $this->setDatosEjecutor($posibles[0]);
-        }
-    }
 }

@@ -8,13 +8,13 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias/funciones_generales.php");
+include_once($ruta_db_superior . "db.php");
 
-include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
-function lista_destinos($idformato, $iddoc = NULL) {
-	
+function lista_destinos($idformato, $iddoc = NULL)
+{
+
 	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "");
 	$resultado = busca_filtro_tabla("destino," . fecha_db_obtener("fecha_" . $datos[0]["nombre"], "Y-m-d"), $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
 
@@ -40,18 +40,18 @@ function lista_destinos($idformato, $iddoc = NULL) {
 	foreach ($lista as $value) {
 		$des = explode(',', $value);
 		if (sizeof($des) > 1) {
-			echo('' . $des[0] . '<br />');
-			echo($des[1]);
+			echo ('' . $des[0] . '<br />');
+			echo ($des[1]);
 		} else {
-			echo('' . $des[0] . '');
+			echo ('' . $des[0] . '');
 		}
-		echo('<br />');
+		echo ('<br />');
 	}
-
 }
 
-function jerarquia_destinos($lista, $fecha) {
-	
+function jerarquia_destinos($lista, $fecha)
+{
+
 	$hijo = "";
 	$list = implode(",", $lista);
 	$cargos = busca_filtro_tabla("funcionario_codigo,nombres,apellidos,nombre", "cargo,dependencia_cargo,funcionario", "cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and funcionario_codigo in ($list) and (fecha_inicial <= " . fecha_db_almacenar($fecha, "Y-m-d") . " and fecha_final >= " . fecha_db_almacenar($fecha, "Y-m-d") . ")", "GROUP by funcionario_codigo order by codigo_cargo ASC");
@@ -64,31 +64,34 @@ function jerarquia_destinos($lista, $fecha) {
 	return (true);
 }
 
-function mostrar_origen($idformato, $iddoc = NULL) {
-	
+function mostrar_origen($idformato, $iddoc = NULL)
+{
+
 	$formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "");
 	$resultado = busca_filtro_tabla("dependencia," . fecha_db_obtener("b.fecha", "Y-m-d") . " as fecha", $formato[0]["nombre_tabla"] . ",documento b", "documento_iddocumento=iddocumento and documento_iddocumento=$iddoc", "");
 	$origen = explode(',', $resultado[0]["dependencia"]);
 	for ($i = 0; $i < count($origen); $i++) {
 		$dependencia = busca_filtro_tabla("C.nombre,D.nombres,D.apellidos", "dependencia_cargo A, cargo B, dependencia C,funcionario D", "A.iddependencia_cargo=" . $origen[$i] . " AND D.idfuncionario=A.funcionario_idfuncionario AND B.idcargo=A.cargo_idcargo AND A.dependencia_iddependencia=C.iddependencia AND A.estado=1", "");
-		echo('' . $dependencia[0]["nombre"] . "<br />");
+		echo ('' . $dependencia[0]["nombre"] . "<br />");
 	}
-
 }
 
-function mostrar_copias_memo($idformato, $iddoc = NULL) {
-	
+function mostrar_copias_memo($idformato, $iddoc = NULL)
+{
+
 	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "");
 	$inf_memorando = busca_filtro_tabla("copia", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "");
-	if ($inf_memorando[0]["copia"] <> "") {echo '<span>Copia: ';
+	if ($inf_memorando[0]["copia"] <> "") {
+		echo '<span>Copia: ';
 		$destinos = explode(",", $inf_memorando[0]["copia"]);
 		$destinos = array_unique($destinos);
 		sort($destinos);
 		$lista = array();
-		for ($i = 0; $i < count($destinos); $i++) {//si el destino es una dependencia
-			if (strpos($destinos[$i], "#") > 0) {$resultado = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("#", "", $destinos[$i]), "");
+		for ($i = 0; $i < count($destinos); $i++) { //si el destino es una dependencia
+			if (strpos($destinos[$i], "#") > 0) {
+				$resultado = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("#", "", $destinos[$i]), "");
 				$lista[] = ucwords($resultado[0]["nombre"]);
-			} else//si el destino es un funcionario
+			} else //si el destino es un funcionario
 			{
 				$resultado = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre", "funcionario,cargo c,dependencia_cargo dc", "dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=" . $destinos[$i], "");
 				$lista[] = ucwords(strtolower($resultado[0]["nombres"] . " " . $resultado[0]["apellidos"]));
@@ -99,8 +102,9 @@ function mostrar_copias_memo($idformato, $iddoc = NULL) {
 	}
 }
 
-function nomenclatura($idformato, $iddoc = NULL) {
-	
+function nomenclatura($idformato, $iddoc = NULL)
+{
+
 	$datos = busca_filtro_tabla("dependencia,fecha", "ft_memorando, documento", "iddocumento=documento_iddocumento and documento_iddocumento=$iddoc", "");
 
 	$resultado = busca_filtro_tabla("c.nombre,c.iddependencia ", "dependencia c,dependencia_cargo dc", "c.iddependencia =dc.dependencia_iddependencia  and dc.iddependencia_cargo=" . $datos[0]["dependencia"], "");
@@ -113,7 +117,6 @@ function nomenclatura($idformato, $iddoc = NULL) {
 	} else {
 
 		$nueva = $nueva_fecha["month"];
-
 	}
 
 	if ($resultado[0]["iddependencia"] == 4) {
@@ -129,132 +132,131 @@ function nomenclatura($idformato, $iddoc = NULL) {
 	if ($resultado[0]["iddependencia"] == 7) {
 		$texto = "GMC-" . $nueva_fecha["day"] . $nueva . $nueva_fecha["year"];
 	}
-	echo($texto);
+	echo ($texto);
 }
 
-function organizar_imagenes($idformato, $iddoc) {
-	
+function organizar_imagenes($idformato, $iddoc)
+{
+
 	registrar_imagenes_documento($idformato, $iddoc, 'contenido');
 }
 
 
 function mostrar_imagenes_escaneadas_memo($idformato)
-{ 
-  
-  $formato = busca_filtro_tabla("","formato","idformato=".$idformato." and detalle=1",""); 
-  if(isset($_REQUEST["anterior"]) && $_REQUEST["anterior"]!="" && $formato["numcampos"] == 0)
-  { 
-   $doc = $_REQUEST["anterior"];
-   $doc_anterior = busca_filtro_tabla("descripcion,numero","documento","iddocumento=$doc","");
-   echo "<b>Se est&aacute; dando respuesta al documento: </b>&nbsp;&nbsp;".$doc_anterior[0]["numero"]." ".$doc_anterior[0]["descripcion"]."<br /><br />";  
-   //Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
-   $imagenes=busca_filtro_tabla("consecutivo,imagen,ruta,pagina","pagina","id_documento=".$doc,""); 
-    $codigo="";
-    if($imagenes<>"")
-       { 
-        echo '<div id="mainContainer">
-              <div id="content">';                 
-         for($i=0; $i<$imagenes["numcampos"]; $i++)
-          { ?>                
-          		<a href="#" onclick="displayImage('<?php echo "../../".$imagenes[$i]["ruta"]?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"]?>.','');return false"><img src="<?php echo "../../".$imagenes[$i]["imagen"]?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <?php
-           if($imagenes[$i]["pagina"]==(round($imagenes[$i]["pagina"]/8)*8))
-            echo "<br><br>";
-          }
-          echo "</div></div>";
-       }
-   echo "<HR>";
- }
-else if($_REQUEST["iddoc"]){
-	$doc = $_REQUEST["iddoc"];
-    $doc_anterior = busca_filtro_tabla("descripcion,numero","documento","iddocumento=$doc","");
-     
-   //Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
-    $imagenes=busca_filtro_tabla("consecutivo,imagen,ruta,pagina","pagina","id_documento=".$doc,""); 
-    $codigo="";
-    if($imagenes["numcampos"] > 0)
-       {
-       	echo "<b>Documentos escaneados<br /><br />"; 
-        echo '<div id="mainContainer">
-              <div id="content">';                 
-         for($i=0; $i<$imagenes["numcampos"]; $i++)
-          { ?>                
-          		<a href="#" onclick="displayImage('<?php echo "../../".$imagenes[$i]["ruta"]?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"]?>.','');return false"><img src="<?php echo "../../".$imagenes[$i]["imagen"]?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <?php
-           if($imagenes[$i]["pagina"]==(round($imagenes[$i]["pagina"]/8)*8))
-            echo "<br><br>";
-          }
-          echo "</div></div>";
-		  echo "<HR>";
-       }
-   
-}
- return true;  
-}
+{
 
+	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato . " and detalle=1", "");
+	if (isset($_REQUEST["anterior"]) && $_REQUEST["anterior"] != "" && $formato["numcampos"] == 0) {
+		$doc = $_REQUEST["anterior"];
+		$doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=$doc", "");
+		echo "<b>Se est&aacute; dando respuesta al documento: </b>&nbsp;&nbsp;" . $doc_anterior[0]["numero"] . " " . $doc_anterior[0]["descripcion"] . "<br /><br />";
+		//Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
+		$imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "");
+		$codigo = "";
+		if ($imagenes <> "") {
+			echo '<div id="mainContainer">
+              <div id="content">';
+			for ($i = 0; $i < $imagenes["numcampos"]; $i++) { ?>
+				<a href="#" onclick="displayImage('<?php echo "../../" . $imagenes[$i]["ruta"] ?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"] ?>.','');return false"><img src="<?php echo "../../" . $imagenes[$i]["imagen"] ?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<?php
+							if ($imagenes[$i]["pagina"] == (round($imagenes[$i]["pagina"] / 8) * 8))
+								echo "<br><br>";
+						}
+						echo "</div></div>";
+					}
+					echo "<HR>";
+				} else if ($_REQUEST["iddoc"]) {
+					$doc = $_REQUEST["iddoc"];
+					$doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=$doc", "");
 
-function mostrar_anexos($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-		$html="Anexos: ";
-		$nombre_tabla=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"");
-		$anexos_fis=busca_filtro_tabla("anexos_fisicos",$nombre_tabla[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"");
-		if($anexos_fis['numcampos']){
-			if($anexos_fis[0]['anexos_fisicos']!=''){
-				$html.=$anexos_fis[0]['anexos_fisicos'].", ";
+					//Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
+					$imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "");
+					$codigo = "";
+					if ($imagenes["numcampos"] > 0) {
+						echo "<b>Documentos escaneados<br /><br />";
+						echo '<div id="mainContainer">
+              <div id="content">';
+						for ($i = 0; $i < $imagenes["numcampos"]; $i++) { ?>
+				<a href="#" onclick="displayImage('<?php echo "../../" . $imagenes[$i]["ruta"] ?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"] ?>.','');return false"><img src="<?php echo "../../" . $imagenes[$i]["imagen"] ?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<?php
+					if ($imagenes[$i]["pagina"] == (round($imagenes[$i]["pagina"] / 8) * 8))
+						echo "<br><br>";
+				}
+				echo "</div></div>";
+				echo "<HR>";
 			}
 		}
-	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"");
-		for($i=0;$i<$anex['numcampos'];$i++){
-			if($_REQUEST["tipo"]==5)
-				$html.= '<a title="Descargar" href="anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
+		return true;
+	}
+
+
+	function mostrar_anexos($idformato, $iddoc)
+	{
+		global $conn, $ruta_db_superior;
+		$html = "Anexos: ";
+		$nombre_tabla = busca_filtro_tabla("b.nombre_tabla", "documento a, formato b", "lower(a.plantilla)=b.nombre AND a.iddocumento=" . $iddoc, "");
+		$anexos_fis = busca_filtro_tabla("anexos_fisicos", $nombre_tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "");
+		if ($anexos_fis['numcampos']) {
+			if ($anexos_fis[0]['anexos_fisicos'] != '') {
+				$html .= $anexos_fis[0]['anexos_fisicos'] . ", ";
+			}
+		}
+		$anex = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "");
+		for ($i = 0; $i < $anex['numcampos']; $i++) {
+			if ($_REQUEST["tipo"] == 5)
+				$html .= '<a title="Descargar" href="anexosdigitales/parsea_accion_archivo.php?idanexo=' . $anex[$i]['idanexos'] . '&amp;accion=descargar" border="0px">' . $anex[$i]['etiqueta'] . '</a> &nbsp;';
 			else
-				$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
+				$html .= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo=' . $anex[$i]['idanexos'] . '&amp;accion=descargar" border="0px">' . $anex[$i]['etiqueta'] . '</a> &nbsp;';
 		}
-		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
-			echo $html."<br/><br/>";
+		if ($anexos_fis[0]['anexos_fisicos'] != '' || $anex['numcampos'] > 0) {
+			echo $html . "<br/><br/>";
 		}
+	}
+
+	function mostrar_iniciales($idformato, $iddoc)
+	{
+
+
+		$datos = busca_filtro_tabla("B.nombres, B.apellidos", "documento A, funcionario B", "A.ejecutor=B.funcionario_codigo AND A.iddocumento=" . $iddoc, "");
+
+		$apellido = explode(' ', $datos[0]['apellidos']);
+		$cadena = $datos[0]['nombres'] . " " . $apellido[0];
+
+		echo ($cadena);
+	}
+
+	//---------------------------------mostrar qr------------------------------//
+	function parsear_arbol_expediente_serie_memorando()
+	{
+		global $conn, $ruta_db_superior;
+		?>
+	<script>
+		$(document).ready(function() {
+			tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
+		});
+
+		function parsear_expediente_serie(nodeId) {
+			var idexpediente_idserie = nodeId.split('.');
+			$('[name="serie_idserie"]').val(idexpediente_idserie[0]);
+			$('[name="expediente_serie"]').val(idexpediente_idserie[1]);
+			var seleccionados = tree_serie_idserie.getAllChecked();
+			var vector_seleccionados = seleccionados.split(',');
+			for (i = 0; i < vector_seleccionados.length; i++) {
+				if (vector_seleccionados[i] != nodeId) {
+					tree_serie_idserie.setCheck(vector_seleccionados[i], 0);
+				}
+			}
+		}
+	</script>
+<?php
 }
 
-function mostrar_iniciales($idformato,$iddoc){
-	
 
-	$datos=busca_filtro_tabla("B.nombres, B.apellidos","documento A, funcionario B","A.ejecutor=B.funcionario_codigo AND A.iddocumento=".$iddoc,"");
-
-  $apellido = explode(' ', $datos[0]['apellidos']);
-	$cadena= $datos[0]['nombres']." ".$apellido[0];
-
-	echo ($cadena);
-}
-
-//---------------------------------mostrar qr------------------------------//
-function parsear_arbol_expediente_serie_memorando(){
-    global $conn,$ruta_db_superior;
-    ?>
-    <script>
-        $(document).ready(function(){
-             tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
-        });
-        function parsear_expediente_serie(nodeId){
-            var idexpediente_idserie = nodeId.split('.');
-            $('[name="serie_idserie"]').val(idexpediente_idserie[0]);
-            $('[name="expediente_serie"]').val(idexpediente_idserie[1]);
-            var seleccionados=tree_serie_idserie.getAllChecked();
-            var vector_seleccionados=seleccionados.split(',');
-            for(i=0;i<vector_seleccionados.length;i++){
-            	if(vector_seleccionados[i]!=nodeId){
-            		tree_serie_idserie.setCheck(vector_seleccionados[i],0 );
-            	}
-            }
-        }
-    </script>
-    <?php  
-}
-
-
-function vincular_expediente_serie_memorando($idformato, $iddoc) {//POSTERIOR AL APROBAR
+function vincular_expediente_serie_memorando($idformato, $iddoc)
+{ //POSTERIOR AL APROBAR
 	global $conn, $ruta_db_superior;
 	$datos = busca_filtro_tabla("expediente_serie,documento_iddocumento", "ft_memorando", "documento_iddocumento=" . $iddoc, "");
-	if($datos["numcampos"] && !empty($datos[0][0])){
+	if ($datos["numcampos"] && !empty($datos[0][0])) {
 		$vinculado = busca_filtro_tabla("", "expediente_doc", "documento_iddocumento=" . $datos[0]['documento_iddocumento'] . " AND expediente_idexpediente=" . $datos[0]['expediente_serie'], "");
 		if (!$vinculado['numcampos']) {
 			$sql = "INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (" . $datos[0]['expediente_serie'] . "," . $datos[0]['documento_iddocumento'] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s') . ")";
@@ -263,8 +265,9 @@ function vincular_expediente_serie_memorando($idformato, $iddoc) {//POSTERIOR AL
 	}
 }
 
-function formato_radicado_interno($idformato, $iddoc, $retorno = 0) {//MOSTRAR
-	
+function formato_radicado_interno($idformato, $iddoc, $retorno = 0)
+{ //MOSTRAR
+
 	$formato = busca_filtro_tabla("", "formato A", "A.idformato=" . $idformato, "");
 	$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*, B.*", "documento A, " . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND A.iddocumento=" . $iddoc, "");
 	$dep = busca_filtro_tabla("B.codigo,B.codigo_arbol", "dependencia_cargo A, dependencia B", "A.iddependencia_cargo=" . $datos_documento[0]["dependencia"] . " AND A.dependencia_iddependencia=B.iddependencia", "");
@@ -321,7 +324,7 @@ function formato_radicado_interno($idformato, $iddoc, $retorno = 0) {//MOSTRAR
 	if ($retorno == 1) {
 		return ($cadena);
 	}
-	echo($cadena);
+	echo ($cadena);
 }
 
 ?>

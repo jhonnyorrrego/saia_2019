@@ -8,45 +8,47 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior . "db.php");
 
 /*ADICIONAR*/
-function add_resp_pqrsf($idformato, $iddoc) {
-	
-	$ok=0;
+function add_resp_pqrsf($idformato, $iddoc)
+{
+
+	$ok = 0;
 	if ($_REQUEST["anterior"]) {
 		$datos_papa = busca_filtro_tabla("d.numero,ft.email,ft.nombre,ft.documento,ft.telefono", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $_REQUEST["anterior"], "");
-		if($datos_papa["numcampos"]){
-			$eje=busca_filtro_tabla("iddatos_ejecutor","vejecutor","lower(nombre) like '".$datos_papa[0]["nombre"]."' and lower(email) like '".$datos_papa[0]["email"]."' ","");
-			if($eje["numcampos"]){
-				$ok=$eje[0]["iddatos_ejecutor"];
+		if ($datos_papa["numcampos"]) {
+			$eje = busca_filtro_tabla("iddatos_ejecutor", "vejecutor", "lower(nombre) like '" . $datos_papa[0]["nombre"] . "' and lower(email) like '" . $datos_papa[0]["email"] . "' ", "");
+			if ($eje["numcampos"]) {
+				$ok = $eje[0]["iddatos_ejecutor"];
 			}
 			?>
 			<script type="text/javascript">
-				$(document).ready(function (){
-					$("#asunto").val("Respuesta Solicitud PQRSF No <?php echo $datos_papa[0]["numero"];?>");
+				$(document).ready(function() {
+					$("#asunto").val("Respuesta Solicitud PQRSF No <?php echo $datos_papa[0]["numero"]; ?>");
 					$("#destinos").after('<a href="#" onclick="cagar_info_pqrsf()">Cargar Datos PQRSF</a>');
-			    var destino=parseInt(<?php echo $ok?>);
-			    if(destino!=0 && isNaN(destino)!=true){
-				    document.getElementById("frame_destinos").src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=destinos&tabla=ft_respuesta_pqrsf&campos_auto=nombre,identificacion&amp;tipo=unico&campos=email&destinos=<?php echo $ok;?>";
-				    $("#destinos").val(<?php echo $ok;?>);	    	
-			    }
+					var destino = parseInt(<?php echo $ok ?>);
+					if (destino != 0 && isNaN(destino) != true) {
+						document.getElementById("frame_destinos").src = "../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=destinos&tabla=ft_respuesta_pqrsf&campos_auto=nombre,identificacion&amp;tipo=unico&campos=email&destinos=<?php echo $ok; ?>";
+						$("#destinos").val(<?php echo $ok; ?>);
+					}
 				});
-				function cagar_info_pqrsf(){
-		     $('#frame_destinos').contents().find('#nombre_ejecutor').attr("value","<?php echo($datos_papa[0]['nombre'])?>");
-		     $('#frame_destinos').contents().find('#identificacion_ejecutor').attr("value","<?php echo($datos_papa[0]['documento'])?>");
-		     $('#frame_destinos').contents().find('#telefono_ejecutor').attr("value","<?php echo($datos_papa[0]['telefono'])?>");
-		     $('#frame_destinos').contents().find('#email_ejecutor').attr("value","<?php echo($datos_papa[0]['email'])?>");
+
+				function cagar_info_pqrsf() {
+					$('#frame_destinos').contents().find('#nombre_ejecutor').attr("value", "<?php echo ($datos_papa[0]['nombre']) ?>");
+					$('#frame_destinos').contents().find('#identificacion_ejecutor').attr("value", "<?php echo ($datos_papa[0]['documento']) ?>");
+					$('#frame_destinos').contents().find('#telefono_ejecutor').attr("value", "<?php echo ($datos_papa[0]['telefono']) ?>");
+					$('#frame_destinos').contents().find('#email_ejecutor').attr("value", "<?php echo ($datos_papa[0]['email']) ?>");
 				}
 			</script>
-			<?php
+<?php
 		}
 	}
 }
 
 /*POSTERIOR APROBAR*/
-function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webservice
+function post_aprob_resp_pqrsf($idformato, $iddoc)
+{ //es llamada desde el webservice
 	global $conn, $ruta_db_superior;
 	distribucion_res_pqrsf($idformato, $iddoc);
 	transferencia_automatica($idformato, $iddoc, "copiainterna", 2, "", $nombre = "COPIA");
@@ -119,7 +121,8 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 	}
 }
 
-function distribucion_res_pqrsf($idformato, $iddoc) {
+function distribucion_res_pqrsf($idformato, $iddoc)
+{
 	global $conn, $ruta_db_superior;
 	$datos = busca_filtro_tabla("tipo_mensajeria,requiere_recogida", "ft_respuesta_pqrsf", "documento_iddocumento=" . $iddoc, "");
 	if ($datos["numcampos"]) {
@@ -133,7 +136,7 @@ function distribucion_res_pqrsf($idformato, $iddoc) {
 			$estado_distribucion = 3;
 		}
 
-		include_once ($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
+		include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
 		pre_ingresar_distribucion($iddoc, 'dependencia', 1, 'destinos', 2, $estado_distribucion, $estado_recogida);
 		//INT -EXT
 	}

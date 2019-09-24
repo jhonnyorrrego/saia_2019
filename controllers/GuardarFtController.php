@@ -119,7 +119,7 @@ class GuardarFtController
             ];
 
             $destination[] = SessionController::getValue('usuario_actual');
-            transferir_archivo_prueba($datos, $destination, "", "");
+            transferir_archivo($datos, $destination, "", "");
             llama_funcion_accion($data["anterior"], $this->formatId, "responder", "POSTERIOR");
         }
 
@@ -132,7 +132,7 @@ class GuardarFtController
             "tipo" => ""
         ];
 
-        transferir_archivo_prueba($datos, [SessionController::getValue('usuario_actual')], "", "");
+        transferir_archivo($datos, [SessionController::getValue('usuario_actual')], "", "");
 
         $datos = [
             "archivo_idarchivo" => $this->Documento->getPK(),
@@ -141,7 +141,7 @@ class GuardarFtController
             "tipo" => ""
         ];
 
-        transferir_archivo_prueba($datos, [SessionController::getValue('usuario_actual')], "", "");
+        transferir_archivo($datos, [SessionController::getValue('usuario_actual')], "", "");
 
         $banderas = explode(",", $this->Formato->banderas);
         if (in_array("e", $banderas)) {

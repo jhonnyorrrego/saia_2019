@@ -8,13 +8,13 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
-include_once ($ruta_db_superior . "assets/librerias.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "assets/librerias.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
-function mostrar_datos_factura($idformato, $iddoc) {
-    
+function mostrar_datos_factura($idformato, $iddoc)
+{
+
     $texto = "";
     $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "");
     if ($factura["numcampos"]) {
@@ -37,8 +37,9 @@ function mostrar_datos_factura($idformato, $iddoc) {
     echo $texto;
 }
 
-function mostrar_detalle_factura($idformato, $iddoc) {
-    
+function mostrar_detalle_factura($idformato, $iddoc)
+{
+
     $texto = "";
     $factura = busca_filtro_tabla("", "ft_factura_electronica", "documento_iddocumento = $iddoc", "");
     if ($factura["numcampos"]) {
@@ -54,7 +55,7 @@ function mostrar_detalle_factura($idformato, $iddoc) {
             $lineas[] = '<th style="text-align: center;">Total</th>';
             $lineas[] = '</tr></thead>';
             $lineas[] = '<tbody>';
-            for($i = 0; $i < $items["numcampos"]; $i++) {
+            for ($i = 0; $i < $items["numcampos"]; $i++) {
                 $lineas[] = '<tr>';
                 $lineas[] = "<td>{$items[$i]['descripcion']}</td>";
                 $vu = number_format($items[$i]['valor_unitario'], 0);

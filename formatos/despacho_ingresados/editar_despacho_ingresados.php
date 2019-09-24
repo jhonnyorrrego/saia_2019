@@ -12,11 +12,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 include_once $ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
 include_once $ruta_db_superior . 'formatos/despacho_ingresados/funciones.php';
+
+$Formato = new Formato(353);
+
+if(isset($_REQUEST['iddoc'])){
+    $Documento = new Documento($_REQUEST['iddoc']);
+    $ft = $Documento->getFt();
+}
 
 llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
 ?>
@@ -60,7 +66,48 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                    <?php buscar_dependencia(353, $_REQUEST['iddoc']) ?>
+                            <?php
+        $selected = isset($ft) ? $ft['dependencia'] : '';
+        $query = Model::getQueryBuilder();
+        $roles = $query
+            ->select("dependencia as nombre, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', ':initialDate'),
+                $query->expr()->gte('fecha_final', ':finalDate')
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':initialDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(':finalDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->execute()->fetchAll();
+    
+        $total = count($roles);
+
+        echo "<div class='form-group' id='group_dependencie'>";
+    
+        if ($total > 1) {
+            echo "<select class='full-width' name='dependencia' id='dependencia' required>";
+            foreach ($roles as $row) {
+                echo "<option value='{$row["iddependencia_cargo"]}'>
+                    {$row["nombre"]} - ({$row["cargo"]})
+                </option>";
+            }
+    
+            echo "</select>
+                <script>
+                    $('#dependencia').select2();
+                    $('#dependencia').val({$selected}).trigger('change');
+                </script>
+            ";
+        } else if ($total == 1) {
+            echo "<input class='required' type='hidden' value='{$roles[0]['iddependencia_cargo']}' id='dependencia' name='dependencia'>
+                <label class ='form-control'>{$roles[0]["nombre"]} - ({$roles[0]["cargo"]})</label>";
+        } else {
+            throw new Exception("Error al buscar la dependencia", 1);
+        }
+        
+        echo "</div>";
+        ?>
 <input type="hidden" name="tipo_mensajero" value="<?= mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc']) ?>">
         <div class='form-group form-group-default ' id='group_anexo'>
             <label title=''>ANEXO</label>

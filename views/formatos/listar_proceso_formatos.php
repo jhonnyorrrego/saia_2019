@@ -48,7 +48,7 @@ if (count($request)) {
 					$ok = PermisoController::moduleAccess("crear_" . $cuantos_formatos[$j]['nombre']);
 
 					if ($ok) {
-						$url = $ruta_db_superior . 'pantallas/formato/listar_formatos.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
+						$url = $ruta_db_superior . 'views/formatos/listado_categoria.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
 						$mostrar = 1;
 					}
 				}

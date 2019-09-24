@@ -12,9 +12,8 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => "",
     'success' => 0
@@ -89,7 +88,10 @@ try {
 
     $Response->success = 1;
 } catch (\Throwable $th) {
-    echo '<pre>';var_dump($th);echo '</pre>';exit;
+    echo '<pre>';
+    var_dump($th);
+    echo '</pre>';
+    exit;
     $Response->message = $th->getMessage();
 }
 

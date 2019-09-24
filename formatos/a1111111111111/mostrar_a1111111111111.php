@@ -49,7 +49,15 @@ if(
                         </div>
                         <div id="pag_content-0" class="page_content">
                             <div id="page_overflow">
-                                <p>asd</p>
+                                <p><?= mostrar_valor_campo('campo_texto_7124825', 455, $_REQUEST['iddoc']) ?></p>
+
+<p><?= mostrar_valor_campo('archivo_1869306737', 455, $_REQUEST['iddoc']) ?></p>
+
+<p><?= mostrar_valor_campo('campo_texto_1434206007', 455, $_REQUEST['iddoc']) ?></p>
+
+<p><?= mostrar_valor_campo('select_882476386', 455, $_REQUEST['iddoc']) ?></p>
+
+<p><?= mostrar_valor_campo('radio_2139529154', 455, $_REQUEST['iddoc']) ?></p>
 
                             </div>
                         </div>

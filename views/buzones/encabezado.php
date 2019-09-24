@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "db.php";
-include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 
 $datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "");
@@ -21,7 +20,8 @@ if ($datos_busqueda[0]["ruta_libreria"]) {
     array_walk($librerias, "incluir_librerias_busqueda");
 }
 
-function incluir_librerias_busqueda($elemento, $indice){
+function incluir_librerias_busqueda($elemento, $indice)
+{
     global $ruta_db_superior;
     include_once $ruta_db_superior . $elemento;
 }
@@ -33,14 +33,14 @@ function incluir_librerias_busqueda($elemento, $indice){
         } else {
             $datos_busqueda[0]["busqueda_avanzada"] .= "?";
         }
-        
+
         $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
         ?>
         <div class="btn-group">
             <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta'] ?>" title="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta'] ?>" conector="iframe" enlace="<?= $datos_busqueda[0]['busqueda_avanzada'] ?>">B&uacute;squeda &nbsp;</button>
         </div>
     <?php } ?>
-    
+
     <div class="btn-group">
         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
             Seleccionados &nbsp;<span class="caret"></span>
@@ -58,13 +58,12 @@ function incluir_librerias_busqueda($elemento, $indice){
             </li>
             <?php if ($datos_busqueda[0]["acciones_seleccionados"]) {
                 echo '<li class="nav-header">Acciones</li>';
-                
+
                 $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
                 $cantidad = count($acciones);
                 for ($i = 0; $i < $cantidad; $i++) {
                     echo $acciones[$i]();
                 }
-
             } ?>
         </ul>
     </div>
@@ -106,24 +105,24 @@ function incluir_librerias_busqueda($elemento, $indice){
                 </li>
             </ul>
             <script>
-                $(document).ready(function(){
-                    $('[name="filtro_indicadores"]').click(function(){
+                $(document).ready(function() {
+                    $('[name="filtro_indicadores"]').click(function() {
                         var valor = $(this).attr('valor');
-                        window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo ($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores='+valor+'';
+                        window.location = 'consulta_busqueda_documento.php?idbusqueda_componente=<?php echo ($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores=' + valor + '';
                     });
                 });
             </script>
 
         </div>
         <?php if ($_REQUEST['filtro_indicadores']) {
-            $vector_indicadores = array(0 => '<span class="icon-flag"></span>', 1 => '<span class="icon-flag-rojo"></span>', 2 => '<span class="icon-flag-morado"></span>', 3 => '<span class="icon-flag-naranja"></span>', 4 => '<span class="icon-flag-amarillo"></span>', 5 => '<span class="icon-flag-verde"></span>');
-        ?>
+                $vector_indicadores = array(0 => '<span class="icon-flag"></span>', 1 => '<span class="icon-flag-rojo"></span>', 2 => '<span class="icon-flag-morado"></span>', 3 => '<span class="icon-flag-naranja"></span>', 4 => '<span class="icon-flag-amarillo"></span>', 5 => '<span class="icon-flag-verde"></span>');
+                ?>
             <div class="btn-group">
                 <button class="btn btn-mini" disabled>
                     <?php echo ($vector_indicadores[intval($_REQUEST['filtro_indicadores'])]); ?>
                 </button>
             </div>
-        <?php }?>
+        <?php } ?>
     <?php } ?>
 
     <?php if ($datos_busqueda[0]["enlace_adicionar"]) { ?>
@@ -141,5 +140,5 @@ function incluir_librerias_busqueda($elemento, $indice){
         if (function_exists(exportar_excel)) {
             echo (exportar_excel());
         }
-    }?>
+    } ?>
 </div>

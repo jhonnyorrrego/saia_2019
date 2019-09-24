@@ -41,7 +41,7 @@ try {
         ->setMaxResults($end)
         ->execute()->fetchAll();
 
-    $total = $roles = Model::getQueryBuilder()
+    $total = Model::getQueryBuilder()
         ->select(['count(*) as total'])
         ->from('dependencia_cargo', 'a')
         ->join('a', 'dependencia', 'b', 'a.dependencia_iddependencia = b.iddependencia')

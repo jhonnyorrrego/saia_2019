@@ -10,7 +10,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 include_once $ruta_db_superior . "app/qr/librerias.php";
 include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
 
@@ -330,7 +329,6 @@ function tipo_radicado_radicacion($idformato, $iddoc)
                 tipo_origen($("input:radio[name=tipo_origen]:checked").val());
                 tipo_destino($("input:radio[name=tipo_destino]:checked").val());
             }, 5000);
-
 
             $('[name="tipo_origen"]').click(function() {
                 tipo_origen($(this).val());

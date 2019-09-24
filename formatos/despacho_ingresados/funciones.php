@@ -12,20 +12,24 @@ include_once($ruta_db_superior . "core/autoload.php");
 
 function campos_ocultos_entrega($idformato, $iddoc)
 {
-    global $conn, $ruta_db_superior;
     $valores = trim($_REQUEST['iddistribucion'], ',');
     $vector_mensajero = explode('-', $_REQUEST['mensajero']);
     $mensajero = trim($vector_mensajero[0], ',');
     $tipo_mensajero = $vector_mensajero[1];
     $hoy = date("Y-m-d");
-    $ventanillas = busca_filtro_tabla("idcf_ventanilla,nombre", "cf_ventanilla", "estado=1", "idcf_ventanilla ASC", $conn);
-
+    $ventanillas = Model::getQueryBuilder()
+        ->select('idcf_ventanilla', 'nombre')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->orderBy('idcf_ventanilla', 'ASC')
+        ->execute()->fetchAll();
+    $countVentanillas = count($ventanillas);
     $opciones_ventanilla = "";
-    for ($i = 0; $i < $ventanillas['numcampos']; $i++) {
+    for ($i = 0; $i < $countVentanillas; $i++) {
         $opciones_ventanilla .= "<option value=" . $ventanillas[$i]['idcf_ventanilla'] . ">" . $ventanillas[$i]['nombre'] . "</option>";
     }
-
     ?>
+
     <script>
         $(document).ready(function() {
             var valores = '<?php echo $valores; ?>';
@@ -59,27 +63,54 @@ function campos_ocultos_entrega($idformato, $iddoc)
 
 function mensajero_entrega_interna($idformato, $iddoc)
 {
-    global $conn;
-    $documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+    $documentos2 = Model::getQueryBuilder()
+        ->select('*')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento= :documento')
+        ->setParameter(':documento', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
     if ($documentos2[0]['tipo_mensajero'] == 'e') {
-        $empresa_transportadora = busca_filtro_tabla("nombre", "cf_empresa_trans", "idcf_empresa_trans=" . $documentos2[0]['mensajero'], "", $conn);
+        $empresa_transportadora = Model::getQueryBuilder()
+            ->select('nombre')
+            ->from('cf_empresa_trans')
+            ->where('idcf_empresa_trans = :mensajero')
+            ->setParameter(':mensajero', $documentos2[0]['mensajero'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
         $cadena_nombre = $empresa_transportadora[0]['nombre'];
     } else {
-        $funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
+        $funcionario = Model::getQueryBuilder()
+            ->select('*')
+            ->from('vfuncionario_dc')
+            ->where('iddependencia_cargo = :mensajero')
+            ->setParameter(':mensajero', $documentos2[0]['mensajero'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
         $cadena_nombre = $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'];
     }
-    return (ucwords(strtolower($cadena_nombre)));
+    //print_r($cadena_nombre);
+    echo (ucwords(strtolower($cadena_nombre)));
 }
 
 function ruta_entrega_interna($idformato, $iddoc)
 {
-    global $conn;
-    $datos = busca_filtro_tabla("idft_ruta_dist", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-    if ($datos["numcampos"] && $datos[0]["idft_ruta_dist"] != "") {
-        $ruta = busca_filtro_tabla("nombre_ruta", "ft_ruta_distribucion", "idft_ruta_distribucion in (" . $datos[0]["idft_ruta_dist"] . ")", "", $conn);
-        if ($ruta["numcampos"]) {
+    $datos = Model::getQueryBuilder()
+        ->select('idft_ruta_dist')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :documento')
+        ->setParameter(':documento', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    if ($datos && $datos[0]["idft_ruta_dist"] != "") {
+        $ruta = Model::getQueryBuilder()
+            ->select('nombre_ruta')
+            ->from('ft_ruta_distribucion')
+            ->where('idft_ruta_distribucion in (:ruta)')
+            ->setParameter(':ruta', $datos[0]["idft_ruta_dist"], \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+            ->execute()->fetchAll();
+
+        if ($ruta) {
             $nomb = extrae_campo($ruta, "nombre_ruta");
-            return ("<br/>" . implode(", ", $nomb));
+            echo ("<br/>" . implode(", ", $nomb));
         }
     }
 }
@@ -97,14 +128,7 @@ function mostrar_seleccionados_entrega($idformato, $iddoc)
             $cadena_items_seleccionados .= ',';
         }
     }
-    $registros = Model::getQueryBuilder()
-        ->select('a.fecha_creacion', 'b.descripcion', 'a.tipo_origen', 'a.estado_recogida', 'a.numero_distribucion', 'a.origen', 'a.destino', 'a.tipo_destino')
-        ->from('distribucion', 'a')
-        ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
-        ->where('a.iddistribucion in (:list)')
-        ->setParameter(':list', $cadena_items_seleccionados, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
-        ->execute()->fetchAll();
-    print_r($registros);
+    $registros = busca_filtro_tabla("a.fecha_creacion,b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.origen,a.tipo_origen,a.destino,a.tipo_destino", "distribucion a,documento b", "a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(" . $cadena_items_seleccionados . ")", "", $conn);
     $texto .= reporte_entradas2($idformato, $iddoc);
     echo ($texto);
 }
@@ -134,14 +158,9 @@ function generar_pdf_entrega($idformato, $iddoc)
 
 function reporte_entradas2($idformato, $iddoc)
 {
-    global $conn, $registros, $ruta_db_superior;
+    global $registros, $ruta_db_superior;
 
     include_once($ruta_db_superior . "distribucion/funciones_distribucion.php");
-
-    $documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-    $funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
-
-    $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 
     $texto = '<table style="width:100%;border-collapse:collapse;" border="1">';
     $texto .= '<thead><tr>';
@@ -155,11 +174,9 @@ function reporte_entradas2($idformato, $iddoc)
     $texto .= '<td style="text-align:center;"><b>OBSERVACIONES</b></td>';
     $texto .= '</tr></thead>';
 
-    $countRegistros = count($registros);
-
-    for ($i = 0; $i < $countRegistros; $i++) {
+    for ($i = 0; $i < $registros["numcampos"]; $i++) {
         $texto .= '<tr>';
-        $texto .= '<td style="height:100px;text-align:center;">' . $registros[$i]["fecha_creacion"] . '</td>';
+        $texto .= '<td style="height:100px;text-align:center;"><p>' . DateController::convertDate($registros[$i]["fecha_creacion"], 'h:s a') . '</p><p>' . DateController::convertDate($registros[$i]["fecha_creacion"], 'd-m-y') . '</p></td>';
         $texto .= '<td style="text-align:center;">' . $registros[$i]["numero_distribucion"] . '</td>';
         $texto .= '<td style="text-align:center;">' . mostrar_tipo_radicado_distribucion($registros[$i]["tipo_origen"]) . '</td>';
         $texto .= '<td style="text-align:left;">' . retornar_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '</td>';
@@ -170,7 +187,7 @@ function reporte_entradas2($idformato, $iddoc)
         $texto .= '</tr>';
     }
     $texto .= '</table>';
-    return ($texto);
+    echo ($texto);
 }
 
 function mostrar_tipo_radicado_distribucion($tipo_origen)
@@ -206,4 +223,13 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
         $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['nombre'];
     }
     return $ubicacion;
+}
+
+function obtener_tipo_recorrido($idformato, $iddoc)
+{
+    $resultado = "Matutino";
+    if ('2' == 2) {
+        $resultado = "Vespertina";
+    }
+    echo $resultado;
 }

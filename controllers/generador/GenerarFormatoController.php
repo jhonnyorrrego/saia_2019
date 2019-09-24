@@ -554,11 +554,17 @@ while (\$max_salida > 0) {
 }
 
 include_once \$ruta_db_superior . 'assets/librerias.php';
-include_once \$ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 include_once \$ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
 include_once \$ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 include_once \$ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
 include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php';
+
+\$Formato = new Formato({$this->formatId});
+
+if(isset(\$_REQUEST['iddoc'])){
+    \$Documento = new Documento(\$_REQUEST['iddoc']);
+    \$ft = \$Documento->getFt();
+}
 
 llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
 ?>

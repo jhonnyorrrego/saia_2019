@@ -100,7 +100,7 @@ function generar_pdf_despacho($idformato, $iddoc)
 			$datos["tipo"] = "";
 			$datos["nombre"] = "DISTRIBUCION";
 			$otros["notas"] = "'Consecutivo despacho: " . $seleccionado[0]["numero"] . "<br/>Responsable o mensajero: " . $funcionario[0]['nombres'] . " " . $funcionario[0]['apellidos'] . "'";
-			transferir_archivo_prueba($datos, array($documento_mns[0]["ejecutor"]), $otros);
+			transferir_archivo($datos, array($documento_mns[0]["ejecutor"]), $otros);
 		}
 	}
 	if ($j == $i) {

@@ -12,11 +12,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 include_once $ruta_db_superior . 'formatos/librerias/funciones_acciones.php';
 include_once $ruta_db_superior . 'app/arbol/crear_arbol_ft.php';
 include_once $ruta_db_superior . 'anexosdigitales/funciones_archivo.php';
 include_once $ruta_db_superior . 'formatos/ruta_distribucion/funciones.php';
+
+$Formato = new Formato(404);
+
+if(isset($_REQUEST['iddoc'])){
+    $Documento = new Documento($_REQUEST['iddoc']);
+    $ft = $Documento->getFt();
+}
 
 llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 ?>
@@ -60,7 +66,48 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                     method='post' 
                     action='<?= $ruta_db_superior ?>app/documento/guardar_ft.php' 
                     enctype='multipart/form-data'>
-                    <?php buscar_dependencia(404, $_REQUEST['iddoc']) ?>
+                            <?php
+        $selected = isset($ft) ? $ft['dependencia'] : '';
+        $query = Model::getQueryBuilder();
+        $roles = $query
+            ->select("dependencia as nombre, iddependencia_cargo, cargo")
+            ->from("vfuncionario_dc")
+            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
+            ->andWhere(
+                $query->expr()->lte('fecha_inicial', ':initialDate'),
+                $query->expr()->gte('fecha_final', ':finalDate')
+            )->setParameter(":login", SessionController::getLogin())
+            ->setParameter(':initialDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->setParameter(':finalDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
+            ->execute()->fetchAll();
+    
+        $total = count($roles);
+
+        echo "<div class='form-group' id='group_dependencie'>";
+    
+        if ($total > 1) {
+            echo "<select class='full-width' name='dependencia' id='dependencia' required>";
+            foreach ($roles as $row) {
+                echo "<option value='{$row["iddependencia_cargo"]}'>
+                    {$row["nombre"]} - ({$row["cargo"]})
+                </option>";
+            }
+    
+            echo "</select>
+                <script>
+                    $('#dependencia').select2();
+                    $('#dependencia').val({$selected}).trigger('change');
+                </script>
+            ";
+        } else if ($total == 1) {
+            echo "<input class='required' type='hidden' value='{$roles[0]['iddependencia_cargo']}' id='dependencia' name='dependencia'>
+                <label class ='form-control'>{$roles[0]["nombre"]} - ({$roles[0]["cargo"]})</label>";
+        } else {
+            throw new Exception("Error al buscar la dependencia", 1);
+        }
+        
+        echo "</div>";
+        ?>
 <div class="form-group" id="tr_fecha_ruta_distribuc">
 <label for="fecha_ruta_distribuc">FECHA Y HORA</label>
 <label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
@@ -82,10 +129,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
             <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='<?= mostrar_valor_campo('nombre_ruta',404,$_REQUEST['iddoc']) ?>' />
         </div>
-<div class='form-group form-group-default  col-12 '  id='tr_descripcion_ruta'>
-            <label title=''>DESCRIPCIóN RUTA</label>
-            <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= mostrar_valor_campo('descripcion_ruta',404,$_REQUEST['iddoc']) ?>' />
-        </div>
+<div class='form-group col-12 ' id='tr_asignar_mensajeros'><label title=''>MENSAJEROS DE LA RUTA<span>*</span></label><?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?> </div>
 <div class="form-group required" id="tr_asignar_dependencias">
                                     <label title="">DEPENDENCIAS DE LA RUTA<span>*</span></label><?php $origen_4998 = array(
                                 "url" => "app/arbol/arbol_dependencia.php",
@@ -98,8 +142,11 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                             $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
                             echo $arbol_4998->generar_html();?></div>
 <input type="hidden" name="firma" value="<?= mostrar_valor_campo('firma',404,$_REQUEST['iddoc']) ?>">
+<div class='form-group form-group-default  col-12 '  id='tr_descripcion_ruta'>
+            <label title=''>DESCRIPCIóN RUTA</label>
+            <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= mostrar_valor_campo('descripcion_ruta',404,$_REQUEST['iddoc']) ?>' />
+        </div>
 <input type="hidden" name="encabezado" value="<?= mostrar_valor_campo('encabezado',404,$_REQUEST['iddoc']) ?>">
-<div class='form-group col-12 ' id='tr_asignar_mensajeros'><label title=''>MENSAJEROS DE LA RUTA<span>*</span></label><?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?> </div>
 <input type="hidden" name="documento_iddocumento" value="<?= mostrar_valor_campo('documento_iddocumento',404,$_REQUEST['iddoc']) ?>">
 <input type="hidden" name="idft_ruta_distribucion" value="<?= mostrar_valor_campo('idft_ruta_distribucion',404,$_REQUEST['iddoc']) ?>">
 

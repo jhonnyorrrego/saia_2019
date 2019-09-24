@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "assets/librerias.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 echo (jquery());
 /*ADICIONAR*/
 function limpiarString($texto)
@@ -330,7 +329,7 @@ function despachar_documento($iddoc)
             $datos["tipo"] = "";
             $datos["nombre"] = "DISTRIBUCION";
             $otros["notas"] = "Se despacho el documento por correo electronico";
-            transferir_archivo_prueba($datos, $ejecutores, $otros);
+            transferir_archivo($datos, $ejecutores, $otros);
         }
     } else {
         alerta("No se puede realizar el despacho");

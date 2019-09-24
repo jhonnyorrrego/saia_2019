@@ -21,7 +21,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 {
 	global $conn, $ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "");
-	$formato_ruta =$formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
+	$formato_ruta = $formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
 	$tipo_almacenamiento = new SaiaStorage("archivos");
 	$ruta = $formato_ruta . "/anexos";
 	foreach ($anexos as $key => $value) {
@@ -142,13 +142,13 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 		$j = 0;
 		for ($i = 0; $i < count($iddoc); $i++) {
 			if ($iddoc[$i]) {
-				$info_doc = busca_filtro_tabla("d.estado," . fecha_db_obtener("d.fecha", "Y-m") . " as fecha,d.ejecutor,d.plantilla", "documento d", "d.iddocumento=" . $iddoc[$i], "");
+				$info_doc = busca_filtro_tabla("d.estado,d.fecha,d.ejecutor,d.plantilla", "documento d", "d.iddocumento=" . $iddoc[$i], "");
 				$idformato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($info_doc[0]['plantilla']) . "'", "");
 				if ($iddoc[$i] && sizeof($info_anexo['anexos'])) {
 					$datos_anexo = array();
 					$datos_anexo['funcionario_codigo'] = usuario_actual('funcionario_codigo');
 					$datos_anexo['iddocumento'] = $iddoc[$i];
-					$datos_anexo["fecha"] = $info_doc[0]['fecha'];
+					$datos_anexo["fecha"] = DateController::convertDate($info_doc[0]['fecha'], 'Y-m');
 					$datos_anexo["estado"] = $info_doc[0]['estado'];
 					$datos_anexo["idformato"] = $idformato[0]["idformato"];
 					$info = cargar_anexos_documento_despacho($datos_anexo, $info_anexo['anexos']);
@@ -160,7 +160,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 				$datos["tipo"] = "";
 				$datos["nombre"] = "DISTRIBUCION";
 				$otros["notas"] = "'Soporte de entrega'";
-				transferir_archivo_prueba($datos, array($documento_mns[0]["ejecutor"]), $otros);
+				transferir_archivo($datos, array($documento_mns[0]["ejecutor"]), $otros);
 				$j++;
 			}
 		}
