@@ -1,6 +1,6 @@
 <?php
 
-class RadioGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
+class SelectGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
 {
     public function __construct($Formato, $CamposFormato, $scope)
     {
@@ -18,16 +18,12 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
     {
         $requiredClass = $this->getRequiredClass();
 
-        if ($this->CamposFormato->obligatoriedad) {
-            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
-        } else {
-            $labelRequired = '';
-        }
-
         $text = "
-        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+        <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-            <div class='radio radio-success'>
+            <div class='form-group'>
+            <select name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' $requiredClass>
+            <option value=''>Por favor seleccione...</option>
         ";
 
         $options = $this->CamposFormato->getRadioOptions();
@@ -37,20 +33,19 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
         }
 
         foreach ($options as $key => $CampoOpciones) {
-            $text .= "<input 
-                {$requiredClass}
-                type='radio'
-                name='{$this->CamposFormato->nombre}'
-                id='{$this->CamposFormato->nombre}{$key}'
-                value='{$CampoOpciones->getPK()}'
-                aria-required='true'>
-                <label for='{$this->CamposFormato->nombre}{$key}'>
-                    {$CampoOpciones->valor}
-                </label>";
+            $text .= "<option value='{$CampoOpciones->getPK()}'>
+                {$CampoOpciones->valor}
+            </option>";
         }
 
-        $text .= "</div>
-            {$labelRequired}
+        $text .= "</select>
+                <script>
+                $(document).ready(function() {
+                    $('#{$this->CamposFormato->nombre}').select2();
+                    $('#{$this->CamposFormato->nombre}').addClass('full-width');
+                });
+                </script>
+            </div>
         </div>";
 
         return $text;
@@ -80,7 +75,9 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
                         function (response) {
                             if (response.success) {
                                 if(response.data){
-                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data+"']").prop('checked', true);
+                                    $("[name='{$this->CamposFormato->nombre}']")
+                                        .val(response.data)
+                                        .trigger('change');
                                 }
                             } else {
                                 top.notification({

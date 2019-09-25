@@ -1,6 +1,6 @@
 <?php
 
-class RadioGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
+class CheckboxGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
 {
     public function __construct($Formato, $CamposFormato, $scope)
     {
@@ -19,7 +19,7 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
         $requiredClass = $this->getRequiredClass();
 
         if ($this->CamposFormato->obligatoriedad) {
-            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
+            $labelRequired = "<label id='{$this->CamposFormato->nombre}[]-error' class='error' for='{$this->CamposFormato->nombre}[]' style='display: none;'></label>";
         } else {
             $labelRequired = '';
         }
@@ -27,7 +27,7 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
         $text = "
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-            <div class='radio radio-success'>
+            <div class='checkbox check-success'>
         ";
 
         $options = $this->CamposFormato->getRadioOptions();
@@ -39,8 +39,8 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
         foreach ($options as $key => $CampoOpciones) {
             $text .= "<input 
                 {$requiredClass}
-                type='radio'
-                name='{$this->CamposFormato->nombre}'
+                type='checkbox'
+                name='{$this->CamposFormato->nombre}[]'
                 id='{$this->CamposFormato->nombre}{$key}'
                 value='{$CampoOpciones->getPK()}'
                 aria-required='true'>
@@ -80,7 +80,9 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
                         function (response) {
                             if (response.success) {
                                 if(response.data){
-                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data+"']").prop('checked', true);
+                                    response.data.forEach(i => {
+                                        $("[name='{$this->CamposFormato->nombre}[]'][value='"+i+"']").prop('checked', true);
+                                    });
                                 }
                             } else {
                                 top.notification({
@@ -94,7 +96,6 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
                 });
             </script>
 JAVASCRIPT;
-
         return $text;
     }
 

@@ -16,6 +16,10 @@ class LabelGeneratorController extends ComponentFormGeneratorController implemen
      */
     public function generateAditionComponent()
     {
+        if (!$this->CamposFormato->valor) {
+            throw new Exception("Debe indicar el texto de {$this->CamposFormato->etiqueta}", 1);
+        }
+
         return "<div id='group_{$this->CamposFormato->nombre}'>
             <h5 title='{$this->CamposFormato->ayuda}'>
                 <label>{$this->CamposFormato->valor}</label>

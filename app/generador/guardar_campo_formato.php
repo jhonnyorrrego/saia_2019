@@ -36,6 +36,12 @@ try {
     $opciones["nombre"] = strval($opciones["nombre"]) . "_" . rand();
     $opciones["formato_idformato"] = $_REQUEST['idFormato'];
 
+    foreach ($opciones as $key => $item) {
+        if (is_array($item)) {
+            $opciones[$key] = json_encode($item);
+        }
+    }
+
     $total = CamposFormato::countRecords(['formato_idformato' => $_REQUEST['idFormato']]);
     $pk = CamposFormato::newRecord($opciones + ['orden' => $total]);
 

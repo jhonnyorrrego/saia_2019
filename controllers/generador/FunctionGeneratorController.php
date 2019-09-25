@@ -27,6 +27,10 @@ class FunctionGeneratorController extends ComponentFormGeneratorController imple
                     break;
             }
         } else {
+            if (!$this->CamposFormato->valor) {
+                throw new Exception("Debe definir la funcion en el campo {$this->CamposFormato->etiqueta}", 1);
+            }
+
             $function = str_replace(['{*', '*}'], '', $this->CamposFormato->valor);
             $response = "<?php {$function}({$this->Formato->getPK()}, \$_REQUEST['iddoc']) ?>";
         }

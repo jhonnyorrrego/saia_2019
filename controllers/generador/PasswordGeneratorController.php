@@ -1,6 +1,6 @@
 <?php
 
-class ParagraphGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
+class PasswordGeneratorController extends ComponentFormGeneratorController implements IComponentGenerator
 {
     public function __construct($Formato, $CamposFormato, $scope)
     {
@@ -16,14 +16,9 @@ class ParagraphGeneratorController extends ComponentFormGeneratorController impl
      */
     public function generateAditionComponent()
     {
-        if (!$this->CamposFormato->valor) {
-            throw new Exception("Debe indicar el texto de {$this->CamposFormato->etiqueta}", 1);
-        }
-
-        return "<div id='group_{$this->CamposFormato->nombre}'>
-            <h5 title='{$this->CamposFormato->ayuda}'>
-                <label>{$this->CamposFormato->valor}</label>
-            </h5>
+        return "<div class='form-group form-group-default {$this->getRequiredClass()}' id='group_{$this->CamposFormato->nombre}'>
+            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
+            <input class='form-control {$this->getRequiredClass()}' type='password' name='{$this->CamposFormato->nombre}' value='{$this->getComponentValue()}'>
         </div>";
     }
 
