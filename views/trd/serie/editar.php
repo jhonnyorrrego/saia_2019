@@ -11,11 +11,9 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "assets/librerias.php";
 
-$params = json_encode([
-    'baseUrl' => $ruta_db_superior,
-    'idserie' => $_REQUEST['idserie'],
-    'iddependencia' => $_REQUEST['iddependencia']
-]);
+$_REQUEST['baseUrl'] = $ruta_db_superior;
+
+$params = json_encode($_REQUEST);
 ?>
 <!doctype html>
 <html lang="es">
@@ -24,15 +22,28 @@ $params = json_encode([
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>TRD</title>
+    <link href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages-icons.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <div class="container-fluid">
 
-        <div class="card card-default mb-0">
-            <div class="card-body py-2">
-                <form id="trd_form" autocomplete='off'>
+        <div class="card card-default" id="card-editar">
 
+            <div class="card-header">
+                <div class="card-title">EDITAR INFORMACIÓN</div>
+                <div class="card-controls">
+                    <ul>
+                        <li>
+                            <a href="#" class="card-collapse" data-toggle="collapse"><i class="card-icon card-icon-collapse"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <form id="trd_form" autocomplete='off'>
                     <p>Los campos con <span class="bold" style="font-size:15px;color:red">*</span> son obligatorios</p>
 
                     <div id="viewContentForm"></div>
@@ -40,12 +51,38 @@ $params = json_encode([
                     <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
                     <input name="iddependencia" id="iddependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
                 </form>
+
+            </div>
+        </div>
+
+
+        <div class="card card-default" id="card-eliminar">
+
+            <div class="card-header">
+                <div class="card-title" style="color:red">ELIMINAR</div>
+                <div class="card-controls">
+                    <ul>
+                        <li>
+                            <a href="#" class="card-collapse" data-toggle="collapse"><i class="card-icon card-icon-collapse"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form id="trd_form_eliminar">
+                    <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
+                </form>
+
+                <p class="card-text text-right">
+                    <button type="button" id="btn_close" class="btn btn-danger">ELIMINAR</button>
+                </p>
             </div>
         </div>
     </div>
     <?= select2() ?>
     <?= validate() ?>
-    <script id="editar_script" src="<?= $ruta_db_superior ?>views/trd/serie/js/editar.js" data-params='<?= $params ?>'>
+    <script id="editar_script" src="<?= $ruta_db_superior ?>views/serie/js/editar.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

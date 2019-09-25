@@ -14,6 +14,9 @@ class SerieDependencia extends Model
     function __construct($id = null)
     {
         parent::__construct($id);
+
+        $this->classSerieDependencia = 'SerieDependencia';
+        $this->classSerie = 'Serie';
     }
 
     protected function defineAttributes()

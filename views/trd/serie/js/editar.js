@@ -1,14 +1,17 @@
-$(function () {
+$(function() {
     let params = $('#editar_script').data('params');
     $('#editar_script').removeAttr('data-params');
+
+    $('#card-editar').card();
+    $('#card-eliminar').card();
+    $('#card-eliminar .card-collapse').click();
 
     (function init() {
         loadData();
 
-        $('#btn_success').on('click', function () {
+        $('#btn_success').on('click', function() {
             $('#trd_form').trigger('submit');
         });
-
     })();
 
     function loadData() {
@@ -18,10 +21,11 @@ $(function () {
             data: {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token'),
-                idserie: params.idserie
+                idserie: params.idserie,
+                className: params.sourceTemp ? 'SerieTemp' : 'Serie'
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     viewTemplate(response.data, response.data.tipo);
                 }
@@ -60,7 +64,7 @@ $(function () {
             <label>Nombre:</label>
             <input name="nombre" id="nombre" type="text" value="${data.nombre}" class="form-control required">
         </div>`;
-        $("#viewContentForm").append(template);
+        $('#viewContentForm').append(template);
     }
 
     function viewSubserieForm(data) {
@@ -110,27 +114,26 @@ $(function () {
             </div>
         </div>`;
 
-        $("#viewContentForm").append(template);
-        $("#retencion_gestion").rules("add", {
+        $('#viewContentForm').append(template);
+        $('#retencion_gestion').rules('add', {
             required: true,
             number: true
         });
 
-        $("#retencion_central").rules("add", {
+        $('#retencion_central').rules('add', {
             required: true,
             number: true
         });
 
-        $("[name='disposicion']").change(function () {
+        $("[name='disposicion']").change(function() {
             if ($(this).val() == 'S' || $(this).val() == 'CT') {
-                $("#divMicrofilma").show()
+                $('#divMicrofilma').show();
             } else {
-                $("#dis_microfilma").prop('checked', false);
-                $("#divMicrofilma").hide()
+                $('#dis_microfilma').prop('checked', false);
+                $('#divMicrofilma').hide();
             }
         });
         $("[name='disposicion']:checked").trigger('change');
-
     }
 
     function viewTipoForm(data) {
@@ -156,15 +159,14 @@ $(function () {
             </div>
         </div>`;
 
-        $("#viewContentForm").append(template);
-        $("#dias_respuesta").rules("add", {
+        $('#viewContentForm').append(template);
+        $('#dias_respuesta').rules('add', {
             required: true,
             number: true
         });
     }
 
     function viewSerieRetencionForm(data) {
-
         let template = ` <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
@@ -210,53 +212,48 @@ $(function () {
             </div>
         </div>`;
 
-        $("#viewContentForm").append(template);
-        $("#retencion_gestion").rules("add", {
+        $('#viewContentForm').append(template);
+        $('#retencion_gestion').rules('add', {
             required: true,
             number: true
         });
 
-        $("#retencion_central").rules("add", {
+        $('#retencion_central').rules('add', {
             required: true,
             number: true
         });
 
-        $("[name='disposicion']").change(function () {
+        $("[name='disposicion']").change(function() {
             if ($(this).val() == 'S' || $(this).val() == 'CT') {
-                $("#divMicrofilma").show()
+                $('#divMicrofilma').show();
             } else {
-                $("#dis_microfilma").prop('checked', false);
-                $("#divMicrofilma").hide()
+                $('#dis_microfilma').prop('checked', false);
+                $('#divMicrofilma').hide();
             }
         });
         $("[name='disposicion']:checked").trigger('change');
-
     }
-
 });
-
 
 $('#trd_form').validate({
     ignore: [],
-    errorPlacement: function (error, element) {
+    errorPlacement: function(error, element) {
         let node = element[0];
         if (node.type == 'radio') {
             let id = node.dataset.key;
-            if (node.dataset.type == "subserie") {
-                error.insertAfter("#divMicrofilmaSubserie-" + id);
+            if (node.dataset.type == 'subserie') {
+                error.insertAfter('#divMicrofilmaSubserie-' + id);
             } else {
-                error.insertAfter("#divMicrofilmaSerie-" + id);
+                error.insertAfter('#divMicrofilmaSerie-' + id);
             }
-
         } else if (node.type == 'checkbox') {
-            let id = node.dataset.key
-            error.insertAfter("#divSoporte-" + id);
+            let id = node.dataset.key;
+            error.insertAfter('#divSoporte-' + id);
         } else {
             error.insertAfter(element);
         }
     },
-    submitHandler: function (form) {
-
+    submitHandler: function(form) {
         let params = $('#editar_script').data('params');
         let data = $('#trd_form').serialize();
         data =
@@ -272,7 +269,7 @@ $('#trd_form').validate({
             url: `${params.baseUrl}app/trd/serie/editar.php`,
             data,
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     top.notification({
                         message: 'Datos actualizados!',

@@ -2,6 +2,8 @@ $(function () {
     let params = $('#scriptGrillaTrdTemp').data('params');
     $('#scriptGrillaTrdTemp').removeAttr('data-params');
 
+    console.log(params);
+
     (function init() {
         createTable();
         modalAddEdit();
@@ -47,13 +49,8 @@ $(function () {
 
         $(document).on('click', '.edit-serie', function () {
 
-            let type = $(this).data('type');
-            let id = $(this).data('id');
-            let iddep = $(this).data('iddep');
-            let name = [];
-            name[1] = 'Serie';
-            name[2] = 'Subserie';
-            name[3] = 'Tipo documental';
+            let parameters = $(this)[0].dataset;
+            parameters.sourceTemp = 1;
 
             top.topModal({
 <<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
@@ -62,11 +59,8 @@ $(function () {
                 url: `views/serie_temp/editar.php`,
 >>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
                 size: 'modal-xl',
-                title: 'Editar ' + name[type],
-                params: {
-                    idserie: id,
-                    iddependencia: iddep,
-                },
+                title: 'Actualizar',
+                params: parameters,
                 onSuccess: function () {
                     top.closeTopModal();
                     refreshTable();
@@ -192,6 +186,16 @@ $(function () {
     }
 
     function templateOptions(data) {
+
+        let onlyType = 1;
+        let btnSubserie = '';
+        if (data.idsubserie) {
+            onlyType = 0;
+            btnSubserie = `<a href="#" target="_self" data-type="2" data-idserie="${data.idsubserie}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                <i class="fa fa-edit"></i> Editar Subserie
+            </a>`;
+        }
+
         let template = `<div class="dropdown f-20">
             <button class="btn mx-1" 
                 type="button" 
@@ -202,15 +206,15 @@ $(function () {
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+                <a href="#" target="_self" data-type="1" data-idserie="${data.idserie}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
                     <i class="fa fa-edit"></i> Editar Serie
                 </a>
-                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-                <i class="fa fa-edit"></i> Editar Subserie
-            </a>
-            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-            <i class="fa fa-edit"></i> Editar Tipo documental
-        </a>
+                
+                ${btnSubserie}
+
+                <a href="#" target="_self" data-type="3" data-idserie="${data.idtipo}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                    <i class="fa fa-edit"></i> Editar Tipo documental
+                </a>
             </div>
         </div>`;
         return template;

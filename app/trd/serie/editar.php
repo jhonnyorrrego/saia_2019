@@ -48,14 +48,16 @@ try {
         if ($Serie->codigo != $data['codigo']) {
 
             if ($Serie->cod_padre) {
-                $existSerie = $Serie->validateSerieDependencia(
+                $existSerie = HelperSerie::validateSerieDependencia(
+                    'serie',
                     $Serie->tipo,
                     $data['codigo'],
                     $data['iddependencia'],
                     $Serie->cod_padre
                 );
             } else {
-                $existSerie = $Serie->validateSerieDependencia(
+                $existSerie = HelperSerie::validateSerieDependencia(
+                    'serie',
                     $Serie->tipo,
                     $data['codigo'],
                     $data['iddependencia']

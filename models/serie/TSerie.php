@@ -4,6 +4,9 @@ use \Doctrine\DBAL\Types\Type;
 
 trait TSerie
 {
+    public $classSerieDependencia;
+    public $classSerie;
+
     /**
      * Actualiza el cod_arbol despues de crear la serie
      * Este metodo omite serie_log 
@@ -68,7 +71,8 @@ trait TSerie
             $QueryBuilder->andWhere('tipo=:tipo')
                 ->setParameter(':tipo', $tipo, Type::INTEGER);
         }
-        $data = $QueryBuilder->execute()->fetch();;
+
+        $data = $QueryBuilder->execute()->fetch();
 
         return $data['cant'] ? true : false;
     }
@@ -90,5 +94,28 @@ trait TSerie
             $this->seriePadre = null;
         }
         return $this->seriePadre;
+    }
+
+    /**
+     * retorna las instancias o el id de serie_dependencia 
+     * vinculadas a la serie
+     *
+     * @param int $instance : 1, retorna las instancias; 0, retorna solo los ids
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getSerieDependenciaFk(int $instance = 1)
+    {
+        if ($instance) {
+            $data = $this->classSerieDependencia::findAllByAttributes(
+                ['fk_serie' => $this->getPK()]
+            );
+        } else {
+            $data = $this->classSerieDependencia::findColumn(
+                'idserie_dependencia',
+                ['fk_serie' => $this->getPK()]
+            );
+        }
+        return $data;
     }
 }

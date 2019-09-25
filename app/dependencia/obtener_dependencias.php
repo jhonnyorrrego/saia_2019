@@ -27,6 +27,7 @@ try {
         ->select('iddependencia,codigo,nombre')
         ->from('dependencia')
         ->where('estado=1')
+        ->orderBy('nombre', 'ASC')
         ->execute()->fetchAll();
 
     $Response->success = 1;

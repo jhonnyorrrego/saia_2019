@@ -348,10 +348,10 @@ class TRDVersionController
      */
     public static function removeTemporalFile(int $estadoVersion)
     {
-        $rutaClasi = self::getRouteFileTemporal('json_clasificacion', $estadoVersion);
-        unlink($rutaClasi);
-
         $rutaTrd = self::getRouteFileTemporal('json_trd', $estadoVersion);
         unlink($rutaTrd);
+
+        $rutaClasi = self::getRouteFileTemporal('json_clasificacion', $estadoVersion);
+        unlink($rutaClasi);
     }
 }

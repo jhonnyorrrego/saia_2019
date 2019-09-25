@@ -24,14 +24,19 @@ try {
 
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['idserie']) {
+    if (!$idserie = $_REQUEST['idserie']) {
         throw new Exception('Serie invalida', 1);
     }
 
-    $Serie = new Serie($_REQUEST['idserie']);
-    $data = [];
-    $data['idserie'] = (int) $Serie->getPK();
-    $data['tipo'] = (int) $Serie->tipo;
+    if (!$_REQUEST['className']) {
+        throw new Exception('Serie invalida', 1);
+    }
+
+    $Serie = new $_REQUEST['className']($idserie);
+    $data = [
+        'idserie' => (int) $idserie,
+        'tipo' => (int) $Serie->tipo
+    ];
 
     switch ($Serie->tipo) {
         case 1:

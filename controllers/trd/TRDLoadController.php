@@ -20,8 +20,6 @@ class TRDLoadController
     public $fila;
     private $row;
 
-    use TTRD;
-
     public function __construct(string $url, int $fk_serie_version)
     {
         $this->urlEXcel = $url;
@@ -220,6 +218,10 @@ class TRDLoadController
 
     private function insertSerie()
     {
+        if (empty($this->row['serie'])) {
+            $this->errorException("Por favor ingrese el nombre de la serie");
+        }
+
         $data = [
             'serie' => $this->row['serie'],
             'cod_serie' => $this->row['cod_serie']
@@ -262,6 +264,10 @@ class TRDLoadController
 
     private function insertSubserie()
     {
+        if (empty($this->row['subserie'])) {
+            $this->errorException("Por favor ingrese el nombre de la subserie");
+        }
+
         $data = [
             'idseriePadre' => $this->row['idserie'],
             'serie' => $this->row['subserie'],
@@ -309,7 +315,7 @@ class TRDLoadController
                 ->execute()->fetch();
 
             if ($existSubserie['cant']) {
-                $this->errorException("La serie de la Fila: {$this->fila} NO tiene codigo de subserie, esta debe tener debido a que ya ha sido vinculado a otras subseries");
+                $this->errorException("NO tiene codigo de subserie, esta debe tener debido a que ya ha sido vinculado a otras subseries");
             }
         }
 
@@ -366,10 +372,11 @@ class TRDLoadController
         return $id;
     }
 
-    private function validateSerieSubserie($data = array(), $tipo = 1)
+    private function validateSerieSubserie($data = array(), int $tipo = 1)
     {
 
-        $existSerie = $this->validateSerieDependencia(
+        $existSerie = HelperSerie::validateSerieDependencia(
+            'serie_temp',
             $tipo,
             $data['cod_serie'],
             $this->row['iddependencia'],
@@ -378,7 +385,7 @@ class TRDLoadController
 
         if ($existSerie) {
             if ($existSerie['nombre'] != trim($data['serie'])) {
-                $this->errorException("La serie/subserie con codigo {$data['cod_serie']} ya se encuentra asignado con otro nombre a esta dependencia");
+                $this->errorException("La serie/subserie con codigo {$data['cod_serie']} ya existe");
             } else {
                 if ($tipo == 1) {
                     return $existSerie['idserie'];

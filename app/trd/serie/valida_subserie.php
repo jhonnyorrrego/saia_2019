@@ -16,6 +16,7 @@ include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) [
     'onlyType' => 0,
+    'data' => []
 ];
 
 try {
@@ -31,7 +32,24 @@ try {
 
     $Serie = new $_REQUEST['className']($_REQUEST['idserie']);
     if (!$Serie->hasChild(2)) {
+
         $Response->onlyType = 1;
+        $Instances = $Serie->getSerieDependenciaFk();
+        if ($Instances) {
+
+            if (count($Instances) == 1) {
+                $Dependencia = $Instances[0]->getDependenciaFk();
+                $Response->data = [
+                    'iddependencia' => $Dependencia->getPK(),
+                    'codigo' => $Dependencia->codigo,
+                    'nombre' => $Dependencia->nombre
+                ];
+            } else {
+                throw new Exception("Error, la serie esta vinculada a dos dependencia", 1);
+            }
+        } else {
+            throw new Exception("Error al consultar la dependencia de la serie", 1);
+        }
     }
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
