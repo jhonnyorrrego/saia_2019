@@ -80,7 +80,7 @@ if (isset($_REQUEST['aprobar'])) {
 			<select name="accion" id="accion" required="true">
 				<option value="">Seleccione...</option>
 				<?php
-				$datos_padre = busca_filtro_tabla("b.funcionario_codigo,clasificacion_fact", "ft_item_facturas a,vfuncionario_dc b", "a.responsable=b.iddependencia_cargo and a.ft_radicacion_facturas=" . $_REQUEST['idft'] . " and b.funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$datos_padre = busca_filtro_tabla("b.funcionario_codigo,clasificacion_fact", "ft_item_facturas a,vfuncionario_dc b", "a.responsable=b.iddependencia_cargo and a.ft_radicacion_facturas=" . $_REQUEST['idft'] . " and b.funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 
 				$datos_clasificacion = busca_filtro_tabla("clasificacion_fact", "ft_item_facturas a", "ft_radicacion_facturas=" . $_REQUEST['idft'], "");
 
@@ -96,36 +96,36 @@ if (isset($_REQUEST['aprobar'])) {
 				}
 				$dato_recibido = busca_filtro_tabla("tipo_recibido", "ft_item_recibidos", "ft_radicacion_facturas=" . $_REQUEST['idft'], "idft_item_recibidos desc");
 
-				$cargo_contabilidad = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Contabilidad' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_contabilidad = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Contabilidad' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 				if ($cargo_contabilidad['numcampos']) {
 					echo '<option value="presupuesto">Para aprobacion de presupuesto</option>
 	 	<option value="tesoreria">Para aprobacion de tesoreria</option>';
 				}
 
-				$cargo_presupuesto = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Presupuesto' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_presupuesto = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Presupuesto' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 
 				if ($cargo_presupuesto['numcampos']) {
 					echo '<option value="contabilidad">Para aprobacion de contabilidad</option>';
 				}
 
-				$cargo_tesoreria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_tesoreria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 
 				if ($cargo_tesoreria['numcampos']) {
 					echo '<option value="pagada">Pagada</option>';
 				}
 
-				$cargo_juridica = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Juridica' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_juridica = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Juridica' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 
 				if ($cargo_juridica['numcampos']) {
 					echo '<option value="contabilidad">Para aprobacion de contabilidad</option>';
 				}
 
-				$cargo_clasificador = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and lower(cargo) like 'clasificador factura' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_clasificador = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and lower(cargo) like 'clasificador factura' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 				if ($cargo_clasificador['numcampos']) {
 					echo '<option value="contabilidad">Para aprobacion de contabilidad</option>';
 				}
 
-				$cargo_aprobacion_compras = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador presupuesto' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+				$cargo_aprobacion_compras = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador presupuesto' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 				if ($cargo_aprobacion_compras['numcampos']) { //Nuevo cargo Clasificador factura
 					echo '<option value="aprobacion_compras">Para aprobación de Compras</option>';
 				}

@@ -644,64 +644,27 @@ function sincronizar_carpetas($tipo)
 
 function vincular_anexo_documento($iddoc, $ruta_origen, $etiqueta = '')
 {
-    global $conn, $ruta_db_superior;
-    include_once($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
-    $ruta_destino = selecciona_ruta_anexos2($iddoc, 'archivos');
-    $nombre_extension = basename($ruta_db_superior . $ruta_origen);
-
+    $Documento = new Documento($iddoc);
+    $ruta_destino = $Documento->getStorageRoute() . "/anexos/";
+    $nombre_extension = basename($ruta_origen);
     $vector_nombre_extension = explode('.', $nombre_extension);
-    $extension = $vector_nombre_extension[(count($vector_nombre_extension) - 1)];
+    $extension = $vector_nombre_extension[end($vector_nombre_extension)];
     $nombre_temporal = uniqid() . "." . $extension;
-    /*mkdir($ruta_db_superior . $ruta_destino, 0777);
-	$tmpVar = 1;
-	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
-		$tmpVar++;
-	}*/
-    //$nombre_temporal = $tmpVar . '_' . $nombre_temporal;
-
     $almacenamiento = new SaiaStorage("archivos");
-    $resultado = $almacenamiento->copiar_contenido_externo($ruta_origen, $ruta_destino . $nombre_temporal);
+    $almacenamiento->copiar_contenido_externo($ruta_origen, $ruta_destino . $nombre_temporal);
 
-    //copy($ruta_db_superior . $ruta_origen, $ruta_destino . $nombre_temporal);
-    $data_sql = array();
-    $data_sql['documento_iddocumento'] = $iddoc;
-    //$data_sql['ruta'] = $ruta_destino . $nombre_temporal;
-    $arr_ruta = array("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $ruta_destino . $nombre_temporal);
-    $data_sql['ruta'] = json_encode($arr_ruta);
-    $data_sql['etiqueta'] = $etiqueta;
-    $data_sql['tipo'] = $extension;
+    $pk = Anexos::newRecord([
+        'documento_iddocumento' => $iddoc,
+        'ruta' => json_encode([
+            "servidor" => $almacenamiento->get_ruta_servidor(),
+            "ruta" => $ruta_destino . $nombre_temporal
+        ]),
+        'etiqueta' => $etiqueta,
+        'tipo' => $extension,
+        'fecha_anexo' => date('Y-m-d H:i:s')
+    ]);
 
-    $datos_documento = busca_filtro_tabla("a.formato_idformato,b.idcampos_formato", "documento a LEFT JOIN campos_formato b ON a.formato_idformato=b.formato_idformato", "b.etiqueta_html='archivo' AND a.iddocumento=" . $iddoc, "");
-    $data_sql['formato'] = null;
-    $data_sql['campos_formato'] = null;
-    if ($datos_documento['numcampos']) {
-        $data_sql['formato'] = $datos_documento[0]['formato_idformato'];
-        $data_sql['campos_formato'] = $datos_documento[0]['idcampos_formato'];
-    }
-    $tabla = "anexos";
-    $strsql = "INSERT INTO " . $tabla . " (fecha_anexo,"; //fecha_anexo
-    $strsql .= implode(",", array_keys($data_sql));
-    $strsql .= ") VALUES (" . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'";    //fecha_anexo
-    $strsql .= implode("','", array_values($data_sql));
-    $strsql .= "')";
-    phpmkr_query($strsql);
-    $idanexo = phpmkr_insert_id();
-    $data_sql = array();
-    $data_sql['anexos_idanexos'] = $idanexo;
-    $data_sql['idpropietario'] = SessionController::getValue('idfuncionario');
-    $data_sql['caracteristica_propio'] = 'lem';
-    $data_sql['caracteristica_total'] = '1';
-
-    $tabla = "permiso_anexo";
-    $strsql = "INSERT INTO " . $tabla . " (";
-    $strsql .= implode(",", array_keys($data_sql));
-    $strsql .= ") VALUES ('";
-    $strsql .= implode("','", array_values($data_sql));
-    $strsql .= "')";
-    $sql1 = $strsql;
-    phpmkr_query($sql1);
-
-    return $idanexo;
+    return $pk;
 }
 
 /**
@@ -774,7 +737,6 @@ function contador($counter, $documentId)
  */
 function muestra_contador($cad)
 {
-    global  $conn;
     $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "");
     if ($cuenta["numcampos"]) {
         $consecutivo = $cuenta[0]["consecutivo"];
@@ -826,24 +788,25 @@ function volver($back = "1")
  * obtiene un attributo del 
  * usuario logueado
  *
- * @param string $campo
+ * @param string $field
  * @return void
  */
-function usuario_actual($campo)
+function usuario_actual($field)
 {
-    if (!SessionController::getLogin()) {
+    $login = SessionController::getLogin();
+
+    if (!$login) {
         SessionController::logout("Su sesión ha expirado, por favor ingrese de nuevo.");
     } else {
-        $login = SessionController::getLogin();
-        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario", "login='" . $login . "'");
-        if ($dato["numcampos"]) {
-            if ($dato[0]["estado"] == 1) {
-                return $dato[0][$campo];
-            } else {
-                SessionController::logout("El funcionario se encuentra inactivo", $login);
-            }
+        $Funcionario = Funcionario::findByAttributes([
+            'login' => $login,
+            'estado' => 1
+        ], [$field]);
+
+        if ($Funcionario) {
+            return $Funcionario->$field;
         } else {
-            SessionController::logout("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+            SessionController::logout("El funcionario se encuentra inactivo", $login);
         }
     }
 }
@@ -869,8 +832,6 @@ function crear_destino($directory)
 
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
 {
-
-    //$fun_codigo= funcionario_codigo del usuario a consultar
     $retorno = array();
     $retorno['exito'] = 0;
     if ($tipo) {
@@ -1093,114 +1054,6 @@ function transferencia_automatica(
     }
 }
 
-/*
- * <Clase>
- * <Nombre>componente_ejecutor</Nombre>
- * <Parametros>$idcampo:id del campo;$iddoc:id del documento</Parametros>
- * <Responsabilidades>Presenta el formulario para llenar los datos de un ejecutor, segun los parametros enviados. se usa en las pantallas de adicionar y editar del formato en cuestion<Responsabilidades>
- * <Notas>
- * Se usa cuando un formato tiene un campo de etiqueta html 'Remitente'(ejecutor)
- * el valor en el campo debe ser de la forma:
- * tipo@a1,a2@b1,b2,b3@nombre_funcion
- * tipo:unico o multiple
- * a1,a2:nombres de los campos con autocompletar, pueden ser: nombre, identificacion o ambos
- * b1,b2,b3:nombres de los otros campos del formulario. los permitidos son:(identificacion,direccion,telefono,email,cargo,empresa,ciudad,titulo)
- * nombre_funcion: nombre de la funci�n que se va a llamar al momento de mostrar los datos en pantalla, si se deja vac�o se toma por defecto mostrar_valor_campo
- * Ej: multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad (usado en la carta)
- * </Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-
-function componente_ejecutor($idcampo, $iddoc)
-{
-    $adicionales = "";
-    $campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "");
-    $formato = busca_filtro_tabla("", "formato", "idformato=" . $campo[0]["formato_idformato"], "");
-    if ($iddoc != "")
-        $adicionales = "&iddoc=$iddoc";
-    if ($campo[0]["valor"] != "")
-        $parametros = explode("@", $campo[0]["valor"]);
-    else
-        $parametros = array(
-            "multiple",
-            "nombre,identificacion",
-            "cargo,empresa,direccion,telefono,email,titulo,ciudad"
-        );
-
-    $campos = explode(",", $parametros[2]);
-    echo '<iframe border=0 frameborder="0" style="background: #FFFFFF;" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" ></iframe>
-    <script>
-        $( document ).ready(function() {               
-            $(window).resize(function(){
-                document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = "100px";
-                document.getElementById("frame_' . $campo[0]["nombre"] . '").style.height = $("#frame_' . $campo[0]["nombre"] . '").contents().height() + "px";
-            });
-        });
-    </script>';
-}
-
-/*
- * <Clase>
- * <Nombre>mes
- * <Parametros>mes:numero que identifica el mes
- * <Responsabilidades>devuelve una cadena con el nombre del mes
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
-
-function digitalizar_formato($idformato, $iddoc)
-{
-    echo '<div class="form-group" id="tr_digitalizacion">
-            <label class = "etiqueta_campo" title = "">DESEA DIGITALIZAR?</label>
-            <div class = "row">
-                <div class = "col-3 px-1">
-                    <div class = "radio radio-success">
-                        <input  class = "form-check-input" name="digitalizacion" type="radio" id="digitaliza_si" value="1" checked>
-                        <label class = "etiqueta_selector" for = "digitaliza_si">Si</label>
-                        <input class = "form-check-input" id="digitaliza_no" name="digitalizacion" type="radio" value="0" >
-                        <label class = "etiqueta_selector" for = "digitaliza_no">No</label>
-                    </div>
-                </div>
-            </div>
-        </div>';
-}
-
-function mes($mes)
-{
-    switch ($mes) {
-        case 1:
-            return "enero";
-        case 2:
-            return "febrero";
-        case 3:
-            return "marzo";
-        case 4:
-            return "abril";
-        case 5:
-            return "mayo";
-        case 6:
-            return "junio";
-        case 7:
-            return "julio";
-        case 8:
-            return "agosto";
-        case 9:
-            return "septiembre";
-        case 10:
-            return "octubre";
-        case 11:
-            return "noviembre";
-        case 12:
-            return "diciembre";
-    }
-}
-
 /**
  * muestra el valor almacenado de un formato
  *
@@ -1324,7 +1177,7 @@ function generar_ruta_documento_fija_formato($idformato, $iddoc)
                 $iddoc
             ));
         }
-        if ($i == 0 && $funcionario == usuario_actual("funcionario_codigo"))
+        if ($i == 0 && $funcionario == SessionController::getValue('usuario_actual'))
             continue;
         if ($funcionario != '') {
             array_push($rut, array(

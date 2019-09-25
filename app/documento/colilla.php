@@ -17,7 +17,7 @@ include_once $ruta_db_superior . "app/qr/librerias.php";
 
 function generar_ingreso_formato($nombre_formato)
 {
-    
+
     $retorno = array("exito" => 0);
 
     $nombre_radicado = $nombre_formato;
@@ -41,7 +41,7 @@ function generar_ingreso_formato($nombre_formato)
                 return $retorno;
             }
         }
-        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . usuario_actual("idfuncionario") . " AND estado_dc=1", "");
+        $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . SessionController::getValue('idfuncionario') . " AND estado_dc=1", "");
         if ($dependencia["numcampos"]) {
             for ($i = 0; $i < $formato["numcampos"]; $i++) {
                 if (strtolower($formato[$i]["tipo_dato"]) == 'date') {
@@ -111,7 +111,7 @@ function generar_ingreso_formato($nombre_formato)
 
 function validar_confirmacion_salida($consecutivo, $enlace, $enlace2)
 {
-    
+
     $enlace_redireccion = $enlace;
     $enlace = str_replace("|", "&", $enlace);
     ?>
@@ -124,7 +124,7 @@ function validar_confirmacion_salida($consecutivo, $enlace, $enlace2)
 
     function validar_confirmacion()
     {
-        
+
         $cantidad = busca_filtro_tabla("", "configuracion a", "a.nombre='cantidad_confirmacion'", "");
         $por_ingresar = busca_filtro_tabla("count(*) as cant", "documento a", "lower(a.estado)='iniciado' AND a.tipo_radicado=1", "");
 

@@ -8,11 +8,11 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "assets/librerias.php");
-echo(bootstrap());
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "assets/librerias.php");
+echo (bootstrap());
 
-$idfun = usuario_actual("idfuncionario");
+$idfun = SessionController::getValue('idfuncionario');
 if (isset($_POST["ok"]) && isset($_POST["fecha_pago"]) && isset($_POST["iddoc"])) {
 	$update = "UPDATE ft_facturas_obras SET fecha_pago=" . fecha_db_almacenar($_POST["fecha_pago"], "Y-m-d H:i:s") . ",func_fecha_pago=" . $idfun . ",fecha_accion_pago=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE documento_iddocumento=" . $_POST["iddoc"];
 	phpmkr_query($update) or die("Error al actualizar, comuniquese con el administrador");
@@ -20,7 +20,7 @@ if (isset($_POST["ok"]) && isset($_POST["fecha_pago"]) && isset($_POST["iddoc"])
 	<script>
 		window.parent.hs.close();
 	</script>
-	<?php
+<?php
 }
 ?>
 
@@ -33,15 +33,15 @@ if (isset($_POST["ok"]) && isset($_POST["fecha_pago"]) && isset($_POST["iddoc"])
 		</thead>
 		<tr>
 			<td>
-			<input type="date" name="fecha_pago" placeholder="YYYY-MM-DD" maxlength="10">
+				<input type="date" name="fecha_pago" placeholder="YYYY-MM-DD" maxlength="10">
 			</td>
 		</tr>
 		<tr>
 			<td style="text-align: center">
-			<input type="hidden" name="iddoc" value="<?php echo $_REQUEST["iddoc"]; ?>" />
-			<input type="hidden" name="idformato" value="<?php echo $_REQUEST["idformato"]; ?>" />
-			<input type="hidden" name="ok" value="1"/>
-			<input class="btn btn-mini" type="submit" value="Guardar" />
+				<input type="hidden" name="iddoc" value="<?php echo $_REQUEST["iddoc"]; ?>" />
+				<input type="hidden" name="idformato" value="<?php echo $_REQUEST["idformato"]; ?>" />
+				<input type="hidden" name="ok" value="1" />
+				<input class="btn btn-mini" type="submit" value="Guardar" />
 			</td>
 		</tr>
 	</table>

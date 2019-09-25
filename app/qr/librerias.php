@@ -79,7 +79,9 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0)
 		$cadena = "id=" . $iddoc;
 		$codificada = CriptoController::encrypt_blowfish($cadena);
 		$datos_qr = RUTA_INFO_QR . "info_qr.php?key_cripto=" . $codificada;
-		$formato_ruta = DocumentoController::getDocumentRoute($iddoc);
+
+		$Documento = new Documento($iddoc);
+		$formato_ruta = $Documento->getStorageRoute();
 		$almacenamiento = new SaiaStorage(RUTA_QR);
 
 		$ruta = $formato_ruta . '/qr/';

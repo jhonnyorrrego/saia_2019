@@ -24,7 +24,7 @@ $lista_series_funcionario = '';
 $lista_dependencias_total = array();
 $lista_dependencias = array();
 if(@$_REQUEST['funcionario']) {
-	$idfuncionario = usuario_actual("idfuncionario");
+	$idfuncionario = SessionController::getValue('idfuncionario');
 	$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
 	$lista_dependencias_total = array_merge((array) $lista_dependencias_total, (array) $datos_admin_funcionario["dependencias"]);
 	// busca_dependencias_papas($datos_admin_funcionario["dependencias"]);
@@ -182,4 +182,3 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 	}
 	return $objetoJson;
 }
-?>

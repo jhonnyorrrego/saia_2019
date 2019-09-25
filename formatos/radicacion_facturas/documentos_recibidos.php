@@ -15,7 +15,7 @@ echo (librerias_arboles());
 echo (jquery());
 
 if (isset($_REQUEST['aprobar'])) {
-	$insert = "insert into ft_item_recibidos (ft_radicacion_facturas,fecha_recibida,tipo_recibido,observaciones_reci,creador_recibida) values (" . $_REQUEST['idft'] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $_REQUEST['tipo_recibido'] . "','" . $_REQUEST['observaciones'] . "','" . usuario_actual('funcionario_codigo') . "')";
+	$insert = "insert into ft_item_recibidos (ft_radicacion_facturas,fecha_recibida,tipo_recibido,observaciones_reci,creador_recibida) values (" . $_REQUEST['idft'] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $_REQUEST['tipo_recibido'] . "','" . $_REQUEST['observaciones'] . "','" . SessionController::getValue('usuario_actual') . "')";
 	phpmkr_query($insert);
 
 	if ($_REQUEST['tipo_recibido'] == 2 || $_REQUEST['tipo_recibido'] == 3) {
