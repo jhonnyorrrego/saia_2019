@@ -47,7 +47,7 @@ if ($_REQUEST['guardar'] == 1) {
             <div class="control-group">
                 <div class="controls">
                     <input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
-                    <input type="hidden" name="funcionario" value="<?php echo (usuario_actual("funcionario_codigo")); ?>">
+                    <input type="hidden" name="funcionario" value="<?= SessionController::getValue('usuario_actual') ?>">
                     <input type="hidden" name="idft" value="<?php echo ($_REQUEST['idft']) ?>">
                     <input type="hidden" name="guardar" value="1">
                 </div>

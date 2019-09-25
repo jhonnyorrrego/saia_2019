@@ -2,6 +2,8 @@ $(function () {
     let params = $('#scriptGrillaTrdTemp').data('params');
     $('#scriptGrillaTrdTemp').removeAttr('data-params');
 
+    console.log(params);
+
     (function init() {
         createTable();
         modalAddEdit();
@@ -12,15 +14,6 @@ $(function () {
 
         $('#btn_add').on('click', function () {
             top.topModal({
-<<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
-                url: `views/trd/serie/adicionar.php`,
-                size: 'modal-xl',
-                title: 'Crear',
-                params: {
-                    sourceTemp: 0
-                },
-                onSuccess: function (data) {
-=======
                 url: `views/serie/adicionar.php`,
                 params: {
                     sourceTemp: 1
@@ -28,7 +21,6 @@ $(function () {
                 size: 'modal-xl',
                 title: 'Crear',
                 onSuccess: function () {
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
                     top.closeTopModal();
                     refreshTable();
                 },
@@ -47,26 +39,14 @@ $(function () {
 
         $(document).on('click', '.edit-serie', function () {
 
-            let type = $(this).data('type');
-            let id = $(this).data('id');
-            let iddep = $(this).data('iddep');
-            let name = [];
-            name[1] = 'Serie';
-            name[2] = 'Subserie';
-            name[3] = 'Tipo documental';
+            let parameters = $(this)[0].dataset;
+            parameters.sourceTemp = 1;
 
             top.topModal({
-<<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
-                url: `views/trd/serie/editar.php`,
-=======
                 url: `views/serie_temp/editar.php`,
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
                 size: 'modal-xl',
-                title: 'Editar ' + name[type],
-                params: {
-                    idserie: id,
-                    iddependencia: iddep,
-                },
+                title: 'Actualizar',
+                params: parameters,
                 onSuccess: function () {
                     top.closeTopModal();
                     refreshTable();
@@ -86,22 +66,14 @@ $(function () {
     }
 
     function createTable() {
-<<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
-        $('#trd_table').bootstrapTable({
-=======
         $('#trd_table_temp').bootstrapTable({
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
             url: `${params.baseUrl}app/trd/serie_version/reporte_trd.php`,
             queryParams: function (queryParams) {
                 queryParams = $.extend(queryParams, {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
                     id: params.id,
-<<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
-                    type: params.type,
-=======
                     type: 'json_trd',
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
                     generateTRD: () => {
                         return $("#generateTRD").val();
                     }
@@ -109,12 +81,6 @@ $(function () {
                 return queryParams;
             },
             responseHandler: function (response) {
-<<<<<<< HEAD:views/trd/serie/js/grilla_trd.js
-                $("#generateTRD").val(0);
-
-                if (params.currentVersion == 1 && params.type == 'json_trd') {
-=======
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/trd/serie/js/grilla_trd_temp.js
 
                 $("#generateTRD").val(0);
 
@@ -173,17 +139,6 @@ $(function () {
         $('#btn_refresh').on('click', function () {
             refreshTable();
         });
-
-        $(".keep-open").before("<div class='refresh-table btn-group'><button class='btn btn-secondary' title='Actualizar' id='btn_refresh'><i class='fa fa-refresh'></i></button></div>");
-
-        $('#btn_refresh').on('click', function () {
-            refreshTable();
-        });
-    }
-
-    function refreshTable() {
-        $("#generateTRD").val(1);
-        $('#trd_table').bootstrapTable("refresh");
     }
 
     function refreshTable() {
@@ -192,6 +147,16 @@ $(function () {
     }
 
     function templateOptions(data) {
+
+        let onlyType = 1;
+        let btnSubserie = '';
+        if (data.idsubserie) {
+            onlyType = 0;
+            btnSubserie = `<a href="#" target="_self" data-type="2" data-idserie="${data.idsubserie}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                <i class="fa fa-edit"></i> Editar Subserie
+            </a>`;
+        }
+
         let template = `<div class="dropdown f-20">
             <button class="btn mx-1" 
                 type="button" 
@@ -202,15 +167,15 @@ $(function () {
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+                <a href="#" target="_self" data-type="1" data-idserie="${data.idserie}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
                     <i class="fa fa-edit"></i> Editar Serie
                 </a>
-                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-                <i class="fa fa-edit"></i> Editar Subserie
-            </a>
-            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-            <i class="fa fa-edit"></i> Editar Tipo documental
-        </a>
+                
+                ${btnSubserie}
+
+                <a href="#" target="_self" data-type="3" data-idserie="${data.idtipo}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                    <i class="fa fa-edit"></i> Editar Tipo documental
+                </a>
             </div>
         </div>`;
         return template;

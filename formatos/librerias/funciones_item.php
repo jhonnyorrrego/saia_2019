@@ -14,7 +14,8 @@ if (isset($_REQUEST["accion"])) {
 	$_REQUEST["accion"]();
 }
 
-function editar() {
+function editar()
+{
 	global $conn, $ruta_db_superior;
 	$lista_campos = listar_campos_tabla();
 	for ($i = 0; $i < count($lista_campos); $i++) {
@@ -48,7 +49,7 @@ function editar() {
 	}
 
 	if ($_REQUEST["anterior_editar"]) {
-		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+		include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_editar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["item"]);
@@ -59,7 +60,7 @@ function editar() {
 	phpmkr_query($sql);
 
 	if ($_REQUEST["posterior_editar"]) {
-		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+		include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["posterior_editar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["item"]);
@@ -72,11 +73,12 @@ function editar() {
 	redirecciona($ruta_db_superior . 'formatos/' . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
 
-function eliminar_item() {
+function eliminar_item()
+{
 	global $conn, $ruta_db_superior;
 	$formato = busca_filtro_tabla("idformato,nombre,ruta_mostrar,ruta_adicionar", "formato", "nombre_tabla like '" . $_REQUEST["tabla"] . "'", "");
 	if ($_REQUEST["anterior_eliminar"]) {
-		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+		include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_eliminar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], $_REQUEST["id"]);
@@ -84,7 +86,7 @@ function eliminar_item() {
 	}
 	phpmkr_query("delete from " . $_REQUEST["tabla"] . " where id" . $_REQUEST["tabla"] . "=" . $_REQUEST["id"]);
 	if ($_REQUEST["posterior_eliminar"]) {
-		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+		include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["posterior_eliminar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], 0);
@@ -112,7 +114,8 @@ function eliminar_item() {
      </script>";
 }
 
-function guardar_item() {
+function guardar_item()
+{
 	global $conn, $ruta_db_superior;
 
 	$lista_campos = listar_campos_tabla();
@@ -147,7 +150,7 @@ function guardar_item() {
 	}
 
 	if ($_REQUEST["anterior_adicionar"]) {
-		include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+		include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 		$funciones = explode(",", $_REQUEST["anterior_adicionar"]);
 		foreach ($funciones as $funcion) {
 			$funcion($formato[0]['idformato'], 0);
@@ -164,7 +167,7 @@ function guardar_item() {
 			}
 		}
 		if ($_REQUEST["posterior_adicionar"]) {
-			include_once ($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
+			include_once($ruta_db_superior . 'formatos/' . $formato[0]['nombre'] . "/funciones.php");
 			$funciones = explode(",", $_REQUEST["posterior_adicionar"]);
 			foreach ($funciones as $funcion) {
 				$funcion($formato[0]['idformato'], $insertado);
@@ -175,10 +178,10 @@ function guardar_item() {
 		$superior = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $padre[0]["cod_padre"], "");
 		$doc_padre = busca_filtro_tabla("documento_iddocumento", $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $_REQUEST["padre"], "");
 
-		if ($_REQUEST["opcion_item"] <> "adicionar") { 
-			echo(json_encode([
-				"success" => 1, 
-				"message" => "Creación Exitosa", 
+		if ($_REQUEST["opcion_item"] <> "adicionar") {
+			echo (json_encode([
+				"success" => 1,
+				"message" => "Creación Exitosa",
 				"id" => $insertado
 			]));
 			//echo(json_encode(["refresca"=>2]));
@@ -200,24 +203,25 @@ function guardar_item() {
              </script>";*/
 		}
 		if ($_REQUEST["opcion_item"] == "adicionar") {
-			echo(json_encode([
-					"success" => 1, 
-					"message" => "Creación Exitosa", 
-					"id" => $insertado,
-					"refresh" => 1
-				]));
+			echo (json_encode([
+				"success" => 1,
+				"message" => "Creación Exitosa",
+				"id" => $insertado,
+				"refresh" => 1
+			]));
 			//die();
 			//redirecciona($ruta_db_superior . 'formatos/' . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 		}
-	}else{
-		echo(json_encode([
-				"success" => 1, 
-				"message" => "No fue posible crear el item", 
+	} else {
+		echo (json_encode([
+			"success" => 1,
+			"message" => "No fue posible crear el item",
 		]));
 	}
 }
 
-function crear_pretexto_item($asunto, $contenido) {
+function crear_pretexto_item($asunto, $contenido)
+{
 	global $conn, $ruta_db_superior;
 	$campos = "asunto";
 	$valores = "'" . $asunto . "'";
@@ -226,7 +230,7 @@ function crear_pretexto_item($asunto, $contenido) {
 	$idpretexto = phpmkr_insert_id();
 	guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
 	// Guardo la relacion de la plantilla con el suaurio
-	$idfuncionario = usuario_actual("idfuncionario");
+	$idfuncionario = SessionController::getValue('idfuncionario');
 	$campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
 	$valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
 	$sql = "INSERT INTO " . "entidad_pretexto" . "(" . $campos . ") VALUES (" . $valores . ") ";

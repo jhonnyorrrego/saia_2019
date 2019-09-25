@@ -45,7 +45,7 @@ $params = json_encode([
     </div>
     <?= select2() ?>
     <?= validate() ?>
-    <script id="editar_script" src="<?= $ruta_db_superior ?>views/trd/serie/js/editar.js" data-params='<?= $params ?>'>
+    <script id="editar_script" src="<?= $ruta_db_superior ?>views/serie/js/editar.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

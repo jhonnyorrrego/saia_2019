@@ -203,7 +203,7 @@ function serie_documental_radicacion($idformato, $iddoc)
 
     $dependencia_maestra = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=0 OR cod_padre IS NULL", "");
 
-    $dependencia_actual = busca_filtro_tabla("iddependencia", "vfuncionario_dc", "estado_dep=1 AND estado_dc=1 AND funcionario_codigo=" . usuario_actual("funcionario_codigo"), "");
+    $dependencia_actual = busca_filtro_tabla("iddependencia", "vfuncionario_dc", "estado_dep=1 AND estado_dc=1 AND funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
     $dependencia_principal = buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
     $primeros_hijos = busca_filtro_tabla("iddependencia", "dependencia", "cod_padre=" . $dependencia_principal, "");
 
@@ -317,7 +317,7 @@ function buscar_dependencias_principal($iddependencia)
 function tipo_radicado_radicacion($idformato, $iddoc)
 { //en el adicionar
     global $conn, $ruta_db_superior;
-    $funcionario_codigo = usuario_actual('funcionario_codigo');
+    $funcionario_codigo = SessionController::getValue('usuario_actual');
     $cargo = busca_filtro_tabla("iddependencia,iddependencia_cargo", "vfuncionario_dc a", "estado_dc=1 AND a.funcionario_codigo=" . $funcionario_codigo, "");
     $lista_iddependencia_cargo = implode(',', (extrae_campo($cargo, 'iddependencia_cargo')));
     $dependencia_principal = buscar_dependencias_principal($cargo[0]["iddependencia"]);

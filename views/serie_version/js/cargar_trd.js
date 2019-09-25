@@ -135,19 +135,13 @@ $('#loadTRDForm').validate({
             });
 
         let optionsDefaults = {
-<<<<<<< HEAD:views/trd/serie_version/js/cargar_trd.js
-            url: `${params.baseUrl}views/trd/serie_version/progress.php`,
-=======
             url: `views/serie_version/progress.php`,
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie_version/js/cargar_trd.js
             size: 'modal-lg',
             buttons: {},
             backdrop: 'static',
             keyboard: false,
             title: 'Cargando .....'
         };
-        /*console.log(optionsDefaults)
-        return false;*/
 
         $.ajax({
             type: 'POST',

@@ -317,7 +317,8 @@ class Imprime_Pdf
 
 		if (!$_REQUEST['url']) {
 			if ($this->documento[0]["iddocumento"]) {
-				$formato_ruta = DocumentoController::getDocumentRoute($this->documento[0]["iddocumento"]);
+				$Documento = new Documento($this->documento[0]["iddocumento"]);
+				$formato_ruta = $Documento->getStorageRoute();
 			}
 		} else {
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;

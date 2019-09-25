@@ -11,8 +11,10 @@ while ($max_salida > 0) {
 error_reporting(E_ALL | E_STRICT);
 
 require $ruta_db_superior . 'vendor/autoload.php';
+
 use Sirius\Upload\Handler as UploadHandler;
-include_once ($ruta_db_superior . "db.php");
+
+include_once($ruta_db_superior . "db.php");
 
 if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
     $idformato = $_REQUEST['idformato'];
@@ -26,17 +28,17 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
 
         $extensiones = '';
         $max_tamanio = '';
-        $usuario = usuario_actual("login");
+        $usuario = SessionController::getLogin();
         if ($configuracion['numcampos']) {
             for ($i = 0; $i < $configuracion['numcampos']; $i++) {
                 switch ($configuracion[$i]['nombre']) {
-                    case 'extensiones_upload' :
+                    case 'extensiones_upload':
                         $extensiones = $configuracion[$i]['valor'];
                         break;
-                    case 'tamanio_maximo_upload' :
+                    case 'tamanio_maximo_upload':
                         $max_tamanio = $configuracion[$i]['valor'];
                         break;
-                    case 'ruta_temporal' :
+                    case 'ruta_temporal':
                         $ruta_temporal = "{$configuracion[$i]['valor']}_{$usuario}/";
                         break;
                 }
@@ -57,12 +59,12 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
         $uploadHandler = new UploadHandler($ruta_db_superior . $ruta_temporal);
 
         // set up the validation rules
-        $uploadHandler -> addRule('extension', ['allowed' => $extensiones], "{label} debe ser un formato valido ($extensiones)", $_REQUEST["nombre_campo"]);
+        $uploadHandler->addRule('extension', ['allowed' => $extensiones], "{label} debe ser un formato valido ($extensiones)", $_REQUEST["nombre_campo"]);
         //$uploadHandler -> addRule('size', ['max' => "5M"], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
 
-        $result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
+        $result = $uploadHandler->process($_FILES[$_REQUEST["nombre_campo"]]);
         $resp = array();
-        if ($result -> isValid()) {
+        if ($result->isValid()) {
             if ($result instanceof Sirius\Upload\Result\Collection) {
                 $archivos = array();
                 foreach ($result as $key => $file) {
@@ -87,19 +89,21 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
     }
 }
 
-function unwrap_file($file) {
+function unwrap_file($file)
+{
     $resp = array();
-    $resp["name"] = $file -> __get("name");
-    $resp["type"] = $file -> __get("type");
-    $resp["size"] = $file -> __get("size");
-    $resp["error"] = $file -> __get("error");
-    $resp["tmp_name"] = $file -> __get("tmp_name");
-    $resp["original_name"] = $file -> __get("original_name");
+    $resp["name"] = $file->__get("name");
+    $resp["type"] = $file->__get("type");
+    $resp["size"] = $file->__get("size");
+    $resp["error"] = $file->__get("error");
+    $resp["tmp_name"] = $file->__get("tmp_name");
+    $resp["original_name"] = $file->__get("original_name");
     return $resp;
 }
 
-function guardar($file, $uuid, $ruta_temporal) {
-    
+function guardar($file, $uuid, $ruta_temporal)
+{
+
     $campos = array(
         "uuid" => "'" . $uuid . "'",
         "ruta" => "'" . $ruta_temporal . $file["name"] . "'",
@@ -108,7 +112,7 @@ function guardar($file, $uuid, $ruta_temporal) {
         "idformato" => $file["idformato"],
         "idcampos_formato" => $file["idcampo_formato"],
         "fecha_anexo" => fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s'),
-        "funcionario_idfuncionario" => usuario_actual('idfuncionario')
+        "funcionario_idfuncionario" => SessionController::getValue('idfuncionario')
     );
     $sql2 = "INSERT INTO anexos_tmp(" . implode(", ", array_keys($campos)) . ") values (" . implode(", ", array_values($campos)) . ")";
     phpmkr_query($sql2) or die($sql2);
@@ -117,7 +121,8 @@ function guardar($file, $uuid, $ruta_temporal) {
     return $file;
 }
 
-function eliminar_temporal($idformato, $campo_formato, $archivo) {
+function eliminar_temporal($idformato, $campo_formato, $archivo)
+{
     global $conn, $ruta_db_superior;
     if (empty($archivo)) {
         die("No se envio identificador");
@@ -133,4 +138,3 @@ function eliminar_temporal($idformato, $campo_formato, $archivo) {
         die("No se encontro archivo con identificador: $archivo");
     }
 }
-?>

@@ -28,14 +28,14 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	header('Content-type: application/json');
 	$configuracion = Configuracion::findByNames(['extensiones_upload', 'tamanio_maximo_upload', 'ruta_temporal']);
 
-	$usuario = usuario_actual("login");
+	$usuario = SessionController::getLogin();
 	$extensiones = 'jpg,png,jpeg';
 	foreach ($configuracion as $fila) {
-	    switch ($fila->nombre) {
-			case 'tamanio_maximo_upload' :
-			    $max_tamanio = $fila->valor;
+		switch ($fila->nombre) {
+			case 'tamanio_maximo_upload':
+				$max_tamanio = $fila->valor;
 				break;
-			case 'ruta_temporal' :
+			case 'ruta_temporal':
 				$ruta_temporal = "{$fila->valor}_{$usuario}/";
 				break;
 		}
@@ -47,14 +47,14 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	$uploadHandler = new UploadHandler($ruta_db_superior . $ruta_temporal);
 
 	// set up the validation rules
-	$uploadHandler -> addRule('extension', ['allowed' => $extensiones], "{label} debe ser un formato valido ($extensiones)", $_REQUEST["nombre_campo"]);
-	$uploadHandler -> addRule('size', ['max' => $max_tamanio], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
+	$uploadHandler->addRule('extension', ['allowed' => $extensiones], "{label} debe ser un formato valido ($extensiones)", $_REQUEST["nombre_campo"]);
+	$uploadHandler->addRule('size', ['max' => $max_tamanio], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
 	// $uploadHandler->addRule('imageratio', ['ratio' => 1], '{label} should be a sqare image', $_REQUEST["nombre_campo"]);
 
-	$result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
+	$result = $uploadHandler->process($_FILES[$_REQUEST["nombre_campo"]]);
 	//print_r($result);
 	$resp = array();
-	if ($result -> isValid()) {
+	if ($result->isValid()) {
 		if ($result instanceof Sirius\Upload\Result\Collection) {
 			$archivos = array();
 			foreach ($result as $file) {
@@ -69,31 +69,34 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 			$resp[$uuid] = $info;
 		}
 	} else {
-	    var_dump($result->getMessages()); die("KAPUT");
+		var_dump($result->getMessages());
+		die("KAPUT");
 	}
 	echo json_encode($resp);
 }
 
-function unwrap_file($file) {
+function unwrap_file($file)
+{
 	$resp = array();
-	$resp["name"] = $file -> __get("name");
-	$resp["type"] = $file -> __get("type");
-	$resp["size"] = $file -> __get("size");
-	$resp["error"] = $file -> __get("error");
-	$resp["tmp_name"] = $file -> __get("tmp_name");
-	$resp["original_name"] = $file -> __get("original_name");
+	$resp["name"] = $file->__get("name");
+	$resp["type"] = $file->__get("type");
+	$resp["size"] = $file->__get("size");
+	$resp["error"] = $file->__get("error");
+	$resp["tmp_name"] = $file->__get("tmp_name");
+	$resp["original_name"] = $file->__get("original_name");
 	return $resp;
 }
 
-function guardar($file, $uuid, $ruta_temporal) {
-	
+function guardar($file, $uuid, $ruta_temporal)
+{
+
 	$campos = array(
 		"uuid" => "'" . $uuid . "'",
 		"ruta" => "'" . $ruta_temporal . $file["name"] . "'",
 		"etiqueta" => "'" . $file["original_name"] . "'",
 		"tipo" => "'" . $file["type"] . "'",
 		"fecha_anexo" => fecha_db_almacenar(date("Y-m-d H:i:s"), 'Y-m-d H:i:s'),
-		"funcionario_idfuncionario" => usuario_actual('idfuncionario')
+		"funcionario_idfuncionario" => SessionController::getValue('idfuncionario')
 	);
 
 	$sql2 = "INSERT INTO anexos_tmp(" . implode(", ", array_keys($campos)) . ") values (" . implode(", ", array_values($campos)) . ")";
@@ -105,7 +108,8 @@ function guardar($file, $uuid, $ruta_temporal) {
 	return $file;
 }
 
-function eliminar_temporal($archivo) {
+function eliminar_temporal($archivo)
+{
 	global $conn, $ruta_db_superior;
 	if (empty($archivo)) {
 		die("No se envio identificador");
@@ -121,4 +125,3 @@ function eliminar_temporal($archivo) {
 		die("No se encontro archivo con identificador: $archivo");
 	}
 }
-?>

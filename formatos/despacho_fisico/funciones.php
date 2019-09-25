@@ -72,7 +72,7 @@ function generar_pdf_despacho($idformato, $iddoc)
 	global $conn, $ruta_db_superior;
 	$seleccionado = busca_filtro_tabla("", "ft_despacho_fisico,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
 	if ($seleccionado[0]['mensajero'] == 0 || $seleccionado[0]['mensajero'] == '') {
-		$sql1_mensajero = "UPDATE ft_despacho_fisico SET mensajero='" . usuario_actual('idfuncionario') . "' where idft_despacho_fisico=" . $seleccionado[0]['idft_despacho_fisico'];
+		$sql1_mensajero = "UPDATE ft_despacho_fisico SET mensajero='" . SessionController::getValue('idfuncionario') . "' where idft_despacho_fisico=" . $seleccionado[0]['idft_despacho_fisico'];
 		phpmkr_query($sql1_mensajero);
 		$seleccionado = busca_filtro_tabla("", "ft_despacho_fisico,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
 	}
@@ -92,7 +92,7 @@ function generar_pdf_despacho($idformato, $iddoc)
 				$j++;
 			}
 			$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "idfuncionario=" . $mensajero, "", $conn);
-			$datos["origen"] = usuario_actual("funcionario_codigo");
+			$datos["origen"] = SessionController::getValue('usuario_actual');
 			$datos["archivo_idarchivo"] = $documentos[$i];
 			$datos["tipo_destino"] = 1;
 			$datos["ver_notas"] = 1;

@@ -596,7 +596,7 @@ function retornar_origen_destino_distribucion($tipo, $valor)
 function condicion_adicional_distribucion()
 {
     $condicion_adicional = "";
-    $funcionario_codigo_usuario_actual = usuario_actual('funcionario_codigo');
+    $funcionario_codigo_usuario_actual = SessionController::getValue('usuario_actual');
     $es_mensajero = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "lower(cargo)='mensajero' AND funcionario_codigo='" . $funcionario_codigo_usuario_actual . "' AND estado_dc=1", "");
     $administrador_mensajeria = validar_administrador_mensajeria();
     //CONDICION VENTANILLA
@@ -778,7 +778,7 @@ function validar_administrador_mensajeria($funcionario_codigo = 0)
 {
     $funcionario_codigo_usuario_actual = $funcionario_codigo;
     if (!$funcionario_codigo_usuario_actual) {
-        $funcionario_codigo_usuario_actual = usuario_actual('funcionario_codigo');
+        $funcionario_codigo_usuario_actual = SessionController::getValue('usuario_actual');
     }
     $cargo_administrador_mensajeria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", " lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "");
     $administrador_mensajeria = 0;

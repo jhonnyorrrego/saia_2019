@@ -109,7 +109,7 @@ function nombre_plantilla($plantilla, $iddoc = null)
 function filtro_funcionario($funcionario)
 {
     if ($funcionario == 'funcionario') {
-        $retorno = " AND B.llave_entidad='" . usuario_actual("funcionario_codigo") . "'";
+        $retorno = " AND B.llave_entidad='" . SessionController::getValue('usuario_actual') . "'";
     } else {
         $retorno = " AND B.llave_entidad='" . $funcionario . "'";
     }

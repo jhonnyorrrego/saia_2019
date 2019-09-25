@@ -64,7 +64,7 @@ class Imprime_Pdf
 
 	function __construct($iddocumento)
 	{
-		
+
 		if ($iddocumento == "url") {
 			$this->tipo_salida = "FI";
 			$this->imprimir_plantilla = 1;
@@ -227,7 +227,7 @@ class Imprime_Pdf
 	public function imprimir()
 	{
 		global $ruta_db_superior;
-		
+
 		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
 
 		$this->pdf->margenes = $this->margenes;
@@ -297,7 +297,8 @@ class Imprime_Pdf
 
 		if (!$_REQUEST['url']) {
 			if ($this->documento[0]["iddocumento"]) {
-				$formato_ruta = DocumentoController::getDocumentRoute($this->documento[0]["iddocumento"]);
+				$Documento = new Documento($this->documento[0]["iddocumento"]);
+				$formato_ruta = $Documento->getStorageRoute();
 			}
 		} else {
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;
@@ -347,7 +348,7 @@ class Imprime_Pdf
 
 	public function configurar_encabezado()
 	{
-		
+
 		$this->pdf->marca_agua = 0;
 		if ($this->documento[0]["estado"] == "ACTIVO" || $this->documento[0]["estado"] == "ANULADO") {
 			$this->pdf->marca_agua = 1;
@@ -380,7 +381,7 @@ class Imprime_Pdf
 
 	public function imprimir_paginas()
 	{
-		
+
 		if ($this->idpaginas != "") {
 			$paginas = busca_filtro_tabla("ruta", "pagina", "consecutivo in(" . $this->idpaginas . ")", "");
 		} else {
@@ -415,7 +416,7 @@ class Imprime_Pdf
 
 	public function extraer_contenido($iddocumento, $vista = 0)
 	{
-		
+
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
@@ -478,7 +479,7 @@ class Imprime_Pdf
 
 	public function vincular_anexos()
 	{
-		
+
 		$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $this->documento[0]["iddocumento"], "");
 		if ($anexos["numcampos"]) {
 			for ($i = 0; $i < $anexos["numcampos"]; $i++) {

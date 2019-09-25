@@ -149,7 +149,7 @@ function fecha_programa($fecha, $idft)
 function val_factura($valor)
 {
 
-	$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "(cargo like 'Aprobador Contabilidad' or cargo like 'Aprobador Tesoreria' or cargo like 'Aprobador Juridica' or cargo like 'Aprobador Presupuesto' or cargo like 'Clasificador factura' or login like 'mavega') and estado=1 and estado_dc=1 and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+	$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "(cargo like 'Aprobador Contabilidad' or cargo like 'Aprobador Tesoreria' or cargo like 'Aprobador Juridica' or cargo like 'Aprobador Presupuesto' or cargo like 'Clasificador factura' or login like 'mavega') and estado=1 and estado_dc=1 and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 	if ($funcionario['numcampos'] && is_numeric($valor)) {
 		return ("$" . number_format($valor));
 	}
@@ -158,7 +158,7 @@ function check_factura($iddoc, $idft)
 {
 
 	$item_accion = busca_filtro_tabla("accion", "ft_item_aprobaciones", "ft_radicacion_facturas=" . $idft, "idft_item_aprobaciones desc");
-	$cargo_tesoreria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=" . usuario_actual('funcionario_codigo'), "");
+	$cargo_tesoreria = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "estado=1 and estado_dc=1 and cargo like 'Aprobador Tesoreria' and funcionario_codigo=" . SessionController::getValue('usuario_actual'), "");
 
 	if ($item_accion[0]['accion'] == 'tesoreria' && $cargo_tesoreria['numcampos']) {
 		return ("<input type='checkbox' name='iddoc_fact' class='iddoc_fact' id='iddoc_fact' value='" . $iddoc . "'>");

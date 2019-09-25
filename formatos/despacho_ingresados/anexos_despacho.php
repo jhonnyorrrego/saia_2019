@@ -19,9 +19,11 @@ echo (jquery());
 echo (librerias_notificaciones());
 function cargar_anexos_documento_despacho($datos_documento, $anexos)
 {
-	global $conn, $ruta_db_superior;
+	global $conn;
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "");
-	$formato_ruta = $formato_ruta = DocumentoController::getDocumentRoute($datos_documento["iddocumento"]);
+
+	$Documento = new Documento($datos_documento["iddocumento"]);
+	$formato_ruta = $Documento->getStorageRoute();
 	$tipo_almacenamiento = new SaiaStorage("archivos");
 	$ruta = $formato_ruta . "/anexos";
 	foreach ($anexos as $key => $value) {
@@ -146,7 +148,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 				$idformato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($info_doc[0]['plantilla']) . "'", "");
 				if ($iddoc[$i] && sizeof($info_anexo['anexos'])) {
 					$datos_anexo = array();
-					$datos_anexo['funcionario_codigo'] = usuario_actual('funcionario_codigo');
+					$datos_anexo['funcionario_codigo'] = SessionController::getValue('usuario_actual');
 					$datos_anexo['iddocumento'] = $iddoc[$i];
 					$datos_anexo["fecha"] = DateController::convertDate($info_doc[0]['fecha'], 'Y-m');
 					$datos_anexo["estado"] = $info_doc[0]['estado'];
@@ -154,7 +156,7 @@ function cargar_anexos_documento_despacho($datos_documento, $anexos)
 					$info = cargar_anexos_documento_despacho($datos_anexo, $info_anexo['anexos']);
 				}
 				$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=" . $iddoc[$i], "");
-				$datos["origen"] = usuario_actual("funcionario_codigo");
+				$datos["origen"] = SessionController::getValue('usuario_actual');
 				$datos["archivo_idarchivo"] = $iddoc[$i];
 				$datos["tipo_destino"] = 1;
 				$datos["tipo"] = "";

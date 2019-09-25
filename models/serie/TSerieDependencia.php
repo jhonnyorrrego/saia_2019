@@ -4,6 +4,19 @@ use \Doctrine\DBAL\Types\Type;
 
 trait TSerieDependencia
 {
+    public $classSerieDependencia;
+    public $classSerie;
+
+    /**
+     * retorna la instancia de la dependencia
+     *
+     * @return Dependencia
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getDependenciaFk(): Dependencia
+    {
+        return new Dependencia($this->fk_dependencia);
+    }
 
     public static function getDataSerieDependencia(...$params)
     {

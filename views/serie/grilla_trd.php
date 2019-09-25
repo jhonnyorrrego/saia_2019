@@ -16,7 +16,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
-    'id' => $_REQUEST['id']
+    'id' => $_REQUEST['id'],
+    'type' => $_REQUEST['type'],
+    'currentVersion' => $_REQUEST['currentVersion']
 ]);
 ?>
 
@@ -42,17 +44,17 @@ $params = json_encode([
         <div class="row">
             <div class="col-12">
                 <div id="toolbar">
-                    <button class="btn btn-secondary" title="Adicionar" id="btn_add">
+                    <button class="btn btn-secondary" title="Adicionar" style="display:none" id="btn_add">
                         <i class="fa fa-plus"></i>
                         <span class="d-none d-sm-inline">Adicionar</span>
                     </button>
                     <input type="hidden" value="0" id="generateTRD">
                 </div>
-                <table id="trd_table_temp"></table>
+                <table id="trd_table"></table>
             </div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior ?>views/trd/serie_temp/js/grilla_trd_temp.js" id="scriptGrillaTrdTemp" data-params='<?= $params ?>'></script>
+    <script src="<?= $ruta_db_superior ?>views/serie/js/grilla_trd.js" id="trd_report_script" data-params='<?= $params ?>'></script>
 </body>
 
 </html>

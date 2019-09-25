@@ -79,11 +79,7 @@ $params = json_encode([
     </div>
     <?= dropzone() ?>
     <?= validate() ?>
-<<<<<<< HEAD:views/trd/serie_version/cargar_trd.php
-    <script id="scriptCargarTrd" src="<?= $ruta_db_superior ?>views/trd/serie_version/js/cargar_trd.js" data-params='<?= $params ?>'>
-=======
     <script id="scriptCargarTrd" src="<?= $ruta_db_superior ?>views/serie_version/js/cargar_trd.js" data-params='<?= $params ?>'>
->>>>>>> 42363a8ff886fcd53274440435165a8503b8c422:views/serie_version/cargar_trd.php
     </script>
 </body>
 

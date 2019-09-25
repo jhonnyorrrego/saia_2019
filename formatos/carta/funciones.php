@@ -23,7 +23,7 @@ function link_editar_funcion($idformato, $iddoc)
 	$aprobado = busca_filtro_tabla("", "buzon_salida", "lower(nombre) like 'aprobado' and archivo_idarchivo=" . $iddoc, "", $conn);
 
 	if ($_REQUEST["tipo"] <> 5) {
-		$usuario = usuario_actual("funcionario_codigo");
+		$usuario = SessionController::getValue('usuario_actual');
 		$texto = "<a href='editar_carta.php?iddoc=" . $iddoc . "&idformato=" . $idformato . "'><img width='16' height='16' src='../../botones/comentarios/editar_documento.png'></a>";
 		if ($usuario == $firmante[0][0] && $aprobado["numcampos"] == 0) {
 			echo ($texto);

@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-$usuario=usuario_actual('idfuncionario');
+$usuario=SessionController::getValue('idfuncionario');
 $fecha=date('Y-m-d');
 $accion=@$_REQUEST["accion"];
 $id=@$_REQUEST["idft_distribucion_fisica"];
@@ -23,4 +23,3 @@ else if($accion==2){
 }
 phpmkr_query($sql1);
 echo("Fecha:".$fecha."<br />Por:".usuario_actual("nombres")." ".usuario_actual("apellidos"));
-?>

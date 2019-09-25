@@ -193,7 +193,7 @@ function finalizar_entrega_personal()
     $retorno = array('exito' => 0);
     if (@$_REQUEST['iddistribucion']) {
         $vector_iddistribucion = explode(',', $_REQUEST['iddistribucion']);
-        $finaliza_rol = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND idfuncionario=" . usuario_actual('idfuncionario'), "");
+        $finaliza_rol = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND idfuncionario=" . SessionController::getValue('idfuncionario'), "");
         $finaliza_fecha = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 
         for ($i = 0; $i < count($vector_iddistribucion); $i++) {
@@ -210,4 +210,3 @@ if (@$_REQUEST['ejecutar_accion']) {
     $retorno = $_REQUEST['ejecutar_accion']();
     echo(json_encode($retorno));
 }
-?>
