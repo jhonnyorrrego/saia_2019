@@ -24,8 +24,8 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['dependencia']) {
-        throw new Exception('Dependencia invalida', 1);
+    if (empty($_REQUEST['serie']) || !$_REQUEST['tableName']) {
+        throw new Exception("Error Processing Request", 1);
     }
 
     $conn = Connection::getInstance();

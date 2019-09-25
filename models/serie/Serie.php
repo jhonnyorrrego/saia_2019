@@ -1,7 +1,5 @@
 <?php
 
-use Doctrine\DBAL\Types\Type;
-
 class Serie extends LogModel
 {
     protected $idserie;
@@ -34,6 +32,9 @@ class Serie extends LogModel
     function __construct($id = null)
     {
         parent::__construct($id);
+
+        $this->classSerieDependencia = 'SerieDependencia';
+        $this->classSerie = 'Serie';
     }
 
     protected function defineAttributes()

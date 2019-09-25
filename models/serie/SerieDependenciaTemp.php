@@ -5,6 +5,7 @@ class SerieDependenciaTemp extends Model
     protected $idserie_dependencia;
     protected $fk_serie;
     protected $fk_dependencia;
+    protected $estado;
 
     protected $dbAttributes;
 
@@ -13,6 +14,9 @@ class SerieDependenciaTemp extends Model
     function __construct($id = null)
     {
         parent::__construct($id);
+
+        $this->classSerieDependencia = 'SerieDependenciaTemp';
+        $this->classSerie = 'SerieTemp';
     }
 
     protected function defineAttributes()
@@ -20,7 +24,8 @@ class SerieDependenciaTemp extends Model
         $this->dbAttributes = (object) [
             'safe' => [
                 'fk_serie',
-                'fk_dependencia'
+                'fk_dependencia',
+                'estado'
             ],
             'primary' => 'idserie_dependencia'
         ];
