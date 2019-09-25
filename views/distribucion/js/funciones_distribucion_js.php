@@ -14,15 +14,14 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 function opciones_acciones_distribucion($datos)
 {
-
-
     $cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "");
     $nombre_componente = $cnombre_componente[0]['nombre'];
 
-    $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-xs'>";
+    $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-lg'>";
     $cadena_acciones .= "<option value=''>Acciones...</option>";
+    $cadena_acciones .= "<option value=''>Recepcionar </option>";
 
-    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pordistribuir') {
+    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pendientes') {
         $cadena_acciones .= "<option value='boton_generar_planilla'>Generar Planilla</option>";
     }
 
@@ -36,14 +35,10 @@ function opciones_acciones_distribucion($datos)
     if ($nombre_componente == 'reporte_planilla_distribucion') {
         $cadena_acciones .= "<option value='boton_confirmar_recepcion_iten_planilla'>Confirmar Recepcion</option>";
     }
-    if ($nombre_componente != 'reporte_distribucion_general_finalizado') {
-        $cadena_acciones .= "<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
-    }
-    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pordistribuir') {
-        $cadena_acciones .= "<optgroup id='asignar_mensajero_g' label='Asignar mensajero'>";
-        $cadena_acciones .= select_mensajero_distribucion();
-        $cadena_acciones .= "</optgroup>";
-    }
+
+    $cadena_acciones .= "<option value='boton_entre_sedes'>Despachar entre sedes</option>";
+    $cadena_acciones .= "<option value='boton_finalizar_sin_planilla'>Finalizar sin planilla</option>";
+
     $cadena_acciones .= "</select>";
 
     return $cadena_acciones;
@@ -51,8 +46,6 @@ function opciones_acciones_distribucion($datos)
 
 function select_mensajero_distribucion()
 {
-
-
     $select = "";
     $array_concat = array(
         "nombres",
@@ -148,7 +141,6 @@ echo select2();
                     });
                     return false;
                 }
-
                 var idruta_dist = [];
                 var mensajeroDistribucion = [];
 
@@ -307,7 +299,6 @@ echo select2();
                         }
                     });
                 }
-
             }
 
             if (valor == 'seleccionar_todos_accion_distribucion') {
@@ -317,51 +308,6 @@ echo select2();
                 $("input[name=btSelectItem]").attr('checked', false);
             }
 
-
-            var elemento = e.params.data.element;
-            if ($(elemento).hasClass("select_mensajeros_ditribucion")) {
-                var mensajero = $(this).val();
-                registros_seleccionados = top.window.gridSelection();
-                if (registros_seleccionados.length === 0) {
-                    top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
-                        type: "warning",
-                        duration: "3500"
-                    });
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        dataType: 'json',
-                        data: {
-                            mensajero: mensajero,
-                            iddistribucion: registros_seleccionados,
-                            ejecutar_accion: 'cambiar_mensajero_distribucion'
-                        },
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
-                        success: function(data) {
-                            if (data.exito) {
-                                var seleccionados = $("#table").bootstrapTable("getSelections");
-                                seleccionados.forEach(function(valor, indice, array) {
-                                    $("#select_mensajeros_ditribucion_" + valor["id"]).html($('[value="' + mensajero + '"]').html());
-                                    $("#select_mensajeros_ditribucion_" + valor["id"]).attr('valor', mensajero);
-                                });
-                                top.notification({
-                                    message: 'Mensajero asignado exitosamente',
-                                    type: "success",
-                                    duration: 4000
-                                });
-                            } else {
-                                top.notification({
-                                    message: data.msn,
-                                    type: "error",
-                                    duration: 4000
-                                });
-                            }
-                        }
-                    });
-                }
-
-            }
             //FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
 
             if (valor == 'boton_confirmar_recepcion_iten_planilla') {
@@ -405,16 +351,20 @@ echo select2();
             $(this).val('');
         }); //FIN IF opciones_acciones_distribucion
 
-        /////////////  Listener para listar mensajeros de la ruta //////////////////
-        $(document).on('click', '.select2-selection__rendered,.select2-results__options', function() {
+        /**
+         *  Listener que cambia las opciones de los mensajeros con su respectiva ruta cada vez que cambia el select
+         *  Con un ajax llamamos cargar_mensajeros.php que nos retorna los array con el nombre del mensajero (data) y su id (code).
+         *  @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+         *  @date 2019-09-25 
+         */
+
+        $(document).on('change', '.selRuta', function(e) {
             var id = $(this).attr('id');
-            var value = $(this).val();
-            id = id.split('select2-ruta').join('');
-            id = id.split('-container').join('');
-            id = id.split('-results').join('');
+            id = id.split('ruta').join('');
+            var value = $('#ruta' + id).val();
 
             $.ajax({
-                url: `../../app/distribucion/cargar_mensajeros.php`,
+                url: '<?= $ruta_db_superior ?>app/distribucion/cargar_mensajeros.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -427,17 +377,14 @@ echo select2();
                     var totalMensajeros = respuesta.data.length;
                     var count = 0;
                     respuesta.data.forEach(function() {
-                        $('#selMensajeros' + id).append("<option>" + respuesta.data[count] + "</option>");
+                        $('#selMensajeros' + id).append("<option value=" + respuesta.code[count] + " >" + respuesta.data[count] + "</option>");
                         count++;
                     });
-
                 }
             });
-
         });
         ///////////////////////////////////////////////////////////////////////////////
     }); //FIN IF documento.ready
 </script>
-
 <?php
 ?>

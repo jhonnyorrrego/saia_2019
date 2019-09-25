@@ -393,12 +393,36 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
     return $array_tipo_radicado[$tipo_origen];
 }
 
-function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
-{ //Ruta
-
+/**
+ * Esta funcion crea los select para el reporte por distribuir de los items de acuerdo a la dependencia del destino
+ *
+ * @param [integer] $iddistribucion Identificador de la ruta de distribucion
+ * @return string Este contiene un select con las opciones de las rutas de distribución de acuerdo a la dependencia del destino
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
+function mostrar_nombre_ruta_distribucion($iddistribucion)
+{
+    $rutasDistribucion = obtenerRuta($iddistribucion);
+    $opciones = "<select id='ruta{$iddistribucion}' class='selRuta' data-id='{$iddistribucion}' style='width:150px'>";
+    foreach ($rutasDistribucion as $ruta) {
+        $opciones .= "<option value='{$ruta["idft_ruta_distribucion"]}'>{$ruta['nombre_ruta']}</option>";
+    }
+    $opciones .= "</select> <script> $('#ruta{$iddistribucion}').select2();</script>";
+    return $opciones;
+}
+/**
+ * Esta funcion busca las rutas que se encuentran en la dependencia del destino
+ *
+ * @param [integer] $iddistribucion Identificador de la ruta de distribucion
+ * @return array Este contiene un array con las rutas de distribución de acuerdo a la dependencia del destino
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
+function obtenerRuta($iddistribucion)
+{
     $Distribucion = new Distribucion($iddistribucion);
     $destino = $Distribucion->destino;
-
     $query = Model::getQueryBuilder();
     $roles = $query
         ->select("iddependencia")
@@ -406,7 +430,6 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         ->where("estado_dc = 1 and tipo_cargo = 1 and iddependencia_cargo = :destino")
         ->setParameter(":destino", $destino)
         ->execute()->fetchAll();
-
     $query = Model::getQueryBuilder();
     $rutasDistribucion = $query
         ->select("idft_ruta_distribucion", "nombre_ruta")
@@ -414,20 +437,37 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         ->where("asignar_dependencias= :dependencia")
         ->setParameter(":dependencia", $roles[0]['iddependencia'], \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
-    $opciones = "<select id='ruta" . $iddistribucion . "' class='selRuta' data-id='" . $iddistribucion . "' style='width:150px'>";
-    foreach ($rutasDistribucion as $key => $ruta) {
-        $opciones .= "<option value='" . $ruta["idft_ruta_distribucion"] . "'>" . $ruta["nombre_ruta"] . "</option>";
-    }
-    $opciones .= "</select> <script> $('#ruta" . $iddistribucion . "').select2();</script>";
-    return $opciones;
+    return $rutasDistribucion;
 }
 
+/**
+ * Esta función crea un select en la columna mensajeros del reporte por distribuir 
+ *
+ * @param [integer] $iddistribucion
+ * @return string Este contiene un select con sus respectivas opciones de acuerdo a la ruta de distribución
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
 function select_mensajeros_ruta_distribucion($iddistribucion)
-{ //Mensajero
-    $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "");
-    $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
+{
+    $rutasDistribucion = obtenerRuta($iddistribucion);
+    $ruta = $rutasDistribucion[0]['idft_ruta_distribucion'];
+    $html = "<select id='selMensajeros{$iddistribucion}' class='selMensajeros' style='width:150px' >";
+    $query = Model::getQueryBuilder();
+    $mensajeros = $query
+        ->select("mensajero_ruta")
+        ->from("ft_funcionarios_ruta")
+        ->where("estado_mensajero= 1")
+        ->andWhere("ft_ruta_distribucion = :ruta")
+        ->setParameter(":ruta", $ruta, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
 
-    return "<select id='selMensajeros" . $iddistribucion . "' class='selMensajeros' style='width:150px' ></select><script> $('#selMensajeros" . $iddistribucion . "').select2();</script>";
+    foreach ($mensajeros as $key => $ruta) {
+        $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
+        $html .= "<option value='{$mensajeros[$key]["idfuncionario"]}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+    }
+    $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
+    return $html;
 }
 
 function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion, $diligencia)
