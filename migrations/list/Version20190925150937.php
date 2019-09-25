@@ -14,7 +14,7 @@ final class Version20190925150937 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Cambiando el nombre a los reportes de distribución';
     }
 
     public function up(Schema $schema): void
@@ -77,7 +77,7 @@ final class Version20190925150937 extends AbstractMigration
         $this->connection->update(
             'modulo',
             [
-                'enlace' => 'views/dashboard/kaiten_dashboard.php?panels=[{"kConnector": "iframe","url": "views/buzones/listado_componentes.php?searchId=109"}]',
+                'enlace' => 'views/dashboard/kaiten_dashboard.php?panels=[{"kConnector": "iframe","url": "views/buzones/listado_componentes.php?searchId=109"}]'
             ],
             [
                 'nombre' => 'reporte_distribucion_documentos'
