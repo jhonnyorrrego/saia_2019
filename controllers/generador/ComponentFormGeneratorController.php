@@ -42,81 +42,11 @@ class ComponentFormGeneratorController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-11
      */
-    public function __construct($Formato)
+    public function __construct($Formato, $CamposFormato, $scope)
     {
         $this->Formato = $Formato;
-    }
-
-    /**
-     * genera el html de un componente
-     *
-     * @param CamposFormato $CamposFormato
-     * @param string $scope momento de la generacion add - edit
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-11
-     */
-    public function generate($CamposFormato, $scope)
-    {
         $this->CamposFormato = $CamposFormato;
         $this->scope = $scope;
-
-        switch ($this->CamposFormato->etiqueta_html) {
-            case "funcion":
-                $texto = $this->generateFunction();
-                break;
-            case "etiqueta":
-            case "etiqueta_titulo":
-                $texto = $this->generateLabel();
-                break;
-            case "etiqueta_parrafo":
-                $texto = $this->generateParagraph();
-                break;
-            case "etiqueta_linea":
-                $texto = $this->generateHr();
-                break;
-            case "password":
-                $texto = $this->generatePassword();
-                break;
-            case "textarea_cke":
-                $texto = $this->generateTextArea();
-                break;
-            case "arbol_fancytree":
-                $texto = $this->generateFancy();
-                break;
-            case "fecha":
-                $texto .= $this->generateDate();
-                break;
-            case "radio":
-                $texto .= $this->generateRadio();
-                break;
-            case "checkbox":
-                $texto .= $this->generateCheckbox();
-                break;
-            case "select":
-                $texto = $this->generateSelect();
-                break;
-            case "archivo":
-                $texto = $this->generateFile();
-                break;
-            case "hidden":
-                $texto .= $this->generateHidden();
-                break;
-            case "ejecutor":
-                throw new Exception("Pendiente por definir componente de terceros", 1);
-                break;
-            case "moneda":
-                $texto .= $this->generateInteger($this->CamposFormato, true);
-                break;
-            case "spin":
-                $texto .= $this->generateInteger($this->CamposFormato);
-                break;
-            default:
-                $texto .= $this->generateText();
-                break;
-        }
-
-        return $texto;
     }
 
     /**
@@ -175,148 +105,19 @@ class ComponentFormGeneratorController
         return $valor;
     }
 
-    /**
-     * genera un componente tipo hidden
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-23
-     */
-    public function generateHidden()
-    {
-        $value = $this->getComponentValue();
-        return "<input type='hidden' name='{$this->CamposFormato->nombre}' value='{$value}'>";
-    }
 
-    /**
-     * genera un string llamando la funcion
-     * del campo valor pasandole idformato e iddocumento
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-12
-     */
-    public function generateFunction()
-    {
-        if (in_array($this->CamposFormato->nombre, $this->Formato->getSystemFields())) {
-            switch ($this->CamposFormato->nombre) {
-                case 'dependencia':
-                    $response = $this->generateDependencie();
-                    break;
 
-                default:
-                    throw new Exception("se debe definir el componente de nucleo {$this->CamposFormato->nombre}", 1);
-                    break;
-            }
-        } else {
-            $function = str_replace(['{*', '*}'], '', $this->CamposFormato->valor);
-            $response = "<?php {$function}({$this->Formato->getPK()}, \$_REQUEST['iddoc']) ?>";
-        }
 
-        return $response;
-    }
 
-    /**
-     * genera el campo dependencia que pertenece a nucleo
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-23
-     */
-    public function generateDependencie()
-    {
-        return <<<PHP
-        <?php
-        \$selected = isset(\$ft) ? \$ft['dependencia'] : '';
-        \$query = Model::getQueryBuilder();
-        \$roles = \$query
-            ->select("dependencia as nombre, iddependencia_cargo, cargo")
-            ->from("vfuncionario_dc")
-            ->where("estado_dc = 1 and tipo_cargo = 1 and login = :login")
-            ->andWhere(
-                \$query->expr()->lte('fecha_inicial', ':initialDate'),
-                \$query->expr()->gte('fecha_final', ':finalDate')
-            )->setParameter(":login", SessionController::getLogin())
-            ->setParameter(':initialDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->setParameter(':finalDate', new DateTime(), \Doctrine\DBAL\Types\Type::DATETIME)
-            ->execute()->fetchAll();
-    
-        \$total = count(\$roles);
 
-        echo "<div class='form-group' id='group_dependencie'>";
-    
-        if (\$total > 1) {
-            echo "<select class='full-width' name='dependencia' id='dependencia' required>";
-            foreach (\$roles as \$row) {
-                echo "<option value='{\$row["iddependencia_cargo"]}'>
-                    {\$row["nombre"]} - ({\$row["cargo"]})
-                </option>";
-            }
-    
-            echo "</select>
-                <script>
-                    $('#dependencia').select2();
-                    $('#dependencia').val({\$selected});
-                    $('#dependencia').trigger('change');
-                </script>
-            ";
-        } else if (\$total == 1) {
-            echo "<input class='required' type='hidden' value='{\$roles[0]['iddependencia_cargo']}' id='dependencia' name='dependencia'>
-                <label class ='form-control'>{\$roles[0]["nombre"]} - ({\$roles[0]["cargo"]})</label>";
-        } else {
-            throw new Exception("Error al buscar la dependencia", 1);
-        }
-        
-        echo "</div>";
-        ?>
-PHP;
-    }
 
-    /**
-     * genera un componente tipo titulo
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-11
-     */
-    public function generateLabel()
-    {
-        return "<div id='group_{$this->CamposFormato->nombre}'>
-            <h5 title='{$this->CamposFormato->ayuda}'>
-                <label>{$this->CamposFormato->valor}</label>
-            </h5>
-        </div>";
-    }
 
-    /**
-     * genera un componente tipo parrafo
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-12
-     */
-    public function generateParagraph()
-    {
-        return "<div id='group_{$this->CamposFormato->nombre}'>
-            <p title='{$this->CamposFormato->ayuda}'>
-                {$this->CamposFormato->valor}
-            </p>
-        </div>";
-    }
 
-    /**
-     * genera un componente tipo hr
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-12
-     */
-    public function generateHr()
-    {
-        return "<div id='group_{$this->CamposFormato->nombre}'>
-            <hr class='border'>
-        </div>";
-    }
+
+
+
+
+
 
     /**
      * genera un componente tipo contrasena
@@ -702,65 +503,6 @@ HTML;
         return implode("\n", $texto);
     }
 
-    /**
-     * genera los campos obligatorios de nucleo
-     *
-     * @param array $descriptions lista de idcampos_formato para la descripcion
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-12
-     */
-    public function generateSystemFields($descriptions)
-    {
-        $response = [];
-        $value = implode(',', $descriptions);
-
-        if ($this->Formato->detalle) {
-            $response[] = "<input type='hidden' name='padre' value='<?= \$_REQUEST['padre'] ?>'>";
-            $response[] = "<input type='hidden' name='anterior' value='<?= \$_REQUEST['anterior'] ?>'>";
-        }
-
-        $response[] = "<input type='hidden' name='campo_descripcion' value='{$value}'>";
-        $response[] = "<input type='hidden' name='iddoc' value='<?= \$_REQUEST['iddoc'] ?? null ?>'>";
-        $response[] = "<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='{$this->Formato->getCounter()->nombre}'>";
-        $response[] = "<input type='hidden' name='formatId' value='{$this->Formato->getPK()}'>";
-        $response[] = "<input type='hidden' name='tabla' value='{$this->Formato->nombre_tabla}'>";
-        $response[] = "<input type='hidden' name='formato' value='{$this->Formato->nombre}'>";
-        $response[] = "<input type='hidden' name='token'>";
-        $response[] = "<input type='hidden' name='key'>";
-        $response[] = "<div class='form-group px-0 pt-3'><button class='btn btn-complete' id='continuar' >Continuar</button></div>";
-
-        return implode("\n", $response);
-    }
-
-    /**
-     * en caso de ser un formato tipo item
-     * y el ambito es adicionar genera el campo accion
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-12
-     */
-    public function generateItemAction()
-    {
-        if ($this->Formato->item && $this->scope == self::SCOPE_ADD) {
-            $response = '
-            <div "form-group">
-                <label>ACCION A SEGUIR LUEGO DE GUARDAR</label>
-                <div class="radio radio-success">
-                    <input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">
-                    <label for="opcion_item1">Adicionar otro</label>
-                    <input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>
-                    <label for="opcion_item">Terminar</label>
-                </div>
-            </div>';
-        } else {
-            $response = '';
-        }
-
-        return $response;
-    }
-
     /* Genera el campo tipo texto con sus respectivos atributos, se realizo cambio de ancho del campo de estilo a opciones
               tipo clase y sus tamaño pequeño "col-md-3", mediano "col-md-6" y grande ""col-md-3""
      *
@@ -859,81 +601,6 @@ JAVASCRIPT;
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-23
      */
-    public function generateRadio()
-    {
-        $requiredClass = $this->getRequiredClass();
-
-        if ($this->CamposFormato->obligatoriedad) {
-            $labelRequired = "<label id='{$this->CamposFormato->nombre}-error' class='error' for='{$this->CamposFormato->nombre}' style='display: none;'></label>";
-        } else {
-            $labelRequired = '';
-        }
-
-        $text = "
-        <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
-            <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-            <div class='radio radio-success'>
-        ";
-
-        $options = $this->CamposFormato->getRadioOptions();
-        foreach ($options as $key => $CampoOpciones) {
-            $text .= "<input 
-                {$requiredClass}
-                type='radio'
-                name='{$this->CamposFormato->nombre}'
-                id='{$this->CamposFormato->nombre}{$key}'
-                value='{$CampoOpciones->getPK()}'
-                aria-required='true'>
-                <label for='{$this->CamposFormato->nombre}{$key}'>
-                    {$CampoOpciones->valor}
-                </label>";
-        }
-
-        $text .= "</div>
-            {$labelRequired}
-        </div>";
-
-        if ($this->scope == self::SCOPE_EDIT) {
-            $text .= <<<JAVASCRIPT
-            <script>
-                $(function(){
-                    $.post(
-                        '<?= \$ruta_db_superior ?>app/documento/consulta_seleccionado.php',
-                        {
-                            key: localStorage.getItem('key'),
-                            token: localStorage.getItem('token'),
-                            fieldId: {$this->CamposFormato->getPK()},
-                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
-                        },
-                        function (response) {
-                            if (response.success) {
-                                if(response.data){
-                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data+"']").prop('checked', true);
-                                }
-                            } else {
-                                top.notification({
-                                    type: 'error',
-                                    message: response.message
-                                });
-                            }
-                        },
-                        'json'
-                    );
-                });
-            </script>
-JAVASCRIPT;
-        }
-
-        return $text;
-    }
-
-    /**
-     * genera el componente tipo radio
-     *
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-23
-     */
     public function generateCheckbox()
     {
         $requiredClass = $this->getRequiredClass();
@@ -1001,6 +668,140 @@ JAVASCRIPT;
 JAVASCRIPT;
         }
         return $text;
+    }
+
+    /**
+     * genera los campos obligatorios de nucleo
+     *
+     * @param Formato $Formato
+     * @param array $descriptions lista de idcampos_formato para la descripcion
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public static function generateSystemFields($Formato, $descriptions)
+    {
+        $response = [];
+        $value = implode(',', $descriptions);
+
+        if ($Formato->detalle) {
+            $response[] = "<input type='hidden' name='padre' value='<?= \$_REQUEST['padre'] ?>'>";
+            $response[] = "<input type='hidden' name='anterior' value='<?= \$_REQUEST['anterior'] ?>'>";
+        }
+
+        $response[] = "<input type='hidden' name='campo_descripcion' value='{$value}'>";
+        $response[] = "<input type='hidden' name='iddoc' value='<?= \$_REQUEST['iddoc'] ?? null ?>'>";
+        $response[] = "<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='{$Formato->getCounter()->nombre}'>";
+        $response[] = "<input type='hidden' name='formatId' value='{$Formato->getPK()}'>";
+        $response[] = "<input type='hidden' name='tabla' value='{$Formato->nombre_tabla}'>";
+        $response[] = "<input type='hidden' name='formato' value='{$Formato->nombre}'>";
+        $response[] = "<input type='hidden' name='token'>";
+        $response[] = "<input type='hidden' name='key'>";
+        $response[] = "<div class='form-group px-0 pt-3'><button class='btn btn-complete' id='continuar' >Continuar</button></div>";
+
+        return implode("\n", $response);
+    }
+
+    /**
+     * en caso de ser un formato tipo item
+     * y el ambito es adicionar genera el campo accion
+     *
+     * @param Formato $Formato
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-12
+     */
+    public static function generateItemAction($Formato)
+    {
+        if ($Formato->item) {
+            $response = '
+            <div "form-group">
+                <label>ACCION A SEGUIR LUEGO DE GUARDAR</label>
+                <div class="radio radio-success">
+                    <input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">
+                    <label for="opcion_item1">Adicionar otro</label>
+                    <input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>
+                    <label for="opcion_item">Terminar</label>
+                </div>
+            </div>';
+        } else {
+            $response = '';
+        }
+
+        return $response;
+    }
+
+    /**
+     * genera el html de un componente
+     *
+     * @param Foramto $Foramto
+     * @param CamposFormato $CamposFormato
+     * @param string $scope momento de la generacion add - edit
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-11
+     */
+    public static function generate($Formato, $CamposFormato, $scope)
+    {
+        switch ($CamposFormato->etiqueta_html) {
+            case "funcion":
+                $class = FunctionGeneratorController::class;
+                break;
+            case "etiqueta_titulo":
+                $class = LabelGeneratorController::class;
+                break;
+            case "etiqueta_parrafo":
+                $class = ParagraphGeneratorController::class;
+                break;
+            case "etiqueta_linea":
+                $class = LineGeneratorController::class;
+                break;
+            case "password":
+                //$texto = $this->generatePassword();
+                break;
+            case "textarea_cke":
+                //$texto = $this->generateTextArea();
+                break;
+            case "arbol_fancytree":
+                //$texto = $this->generateFancy();
+                break;
+            case "fecha":
+                //$texto .= $this->generateDate();
+                break;
+            case "radio":
+                $class = RadioGeneratorController::class;
+                break;
+            case "checkbox":
+                //$texto .= $this->generateCheckbox();
+                break;
+            case "select":
+                //$texto = $this->generateSelect();
+                break;
+            case "archivo":
+                //$texto = $this->generateFile();
+                break;
+            case "hidden":
+                $class = HiddenGeneratorController::class;
+                //$texto .= $this->generateHidden();
+                break;
+            case "ejecutor":
+                throw new Exception("Pendiente por definir componente de terceros", 1);
+                break;
+            case "moneda":
+                //$texto .= $this->generateInteger($this->CamposFormato, true);
+                break;
+            case "spin":
+                //$texto .= $this->generateInteger($this->CamposFormato);
+                break;
+            default:
+                //$texto .= $this->generateText();
+                break;
+        }
+
+        $Generator = new $class($Formato, $CamposFormato, $scope);
+
+        return ($scope == self::SCOPE_ADD) ?
+            $Generator->generateAditionComponent() : $Generator->generateEditionComponente();
     }
 
     /**

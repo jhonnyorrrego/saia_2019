@@ -99,16 +99,6 @@ class GenerarFormatoController
     protected $directory;
 
     /**
-     * almacena la Instancia del controlador
-     * que genera los componentes
-     *
-     * @var ComponentFormGeneratorController
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-11
-     */
-    protected $ComponentFormGeneratorController;
-
-    /**
      * inicia el proceso de generacion
      *
      * @param integer $formatId identificador del formato
@@ -514,9 +504,6 @@ CODE;
         $componentScope = $scope == self::SCOPE_ADD ?
             ComponentFormGeneratorController::SCOPE_ADD : ComponentFormGeneratorController::SCOPE_EDIT;
         $fields = $this->Formato->getFields();
-        $this->ComponentFormGeneratorController = new ComponentFormGeneratorController(
-            $this->Formato
-        );
 
         foreach ($fields as $CamposFormato) {
             $actions = explode(',', $CamposFormato->acciones);
@@ -529,15 +516,22 @@ CODE;
                 continue;
             }
 
-            $form[] = $this->ComponentFormGeneratorController->generate($CamposFormato, $componentScope);
+            $form[] = ComponentFormGeneratorController::generate(
+                $this->Formato,
+                $CamposFormato,
+                $componentScope
+            );
         }
 
         if (!$descriptions) {
             throw new Exception("Recuerde asignar el campo que sera almacenado como descripcion del documento", 1);
         }
 
-        $form[] = $this->ComponentFormGeneratorController->generateItemAction();
-        $form[] = $this->ComponentFormGeneratorController->generateSystemFields($descriptions);
+        if ($componentScope == ComponentFormGeneratorController::SCOPE_ADD) {
+            $form[] = ComponentFormGeneratorController::generateItemAction($this->Formato);
+        }
+
+        $form[] = ComponentFormGeneratorController::generateSystemFields($this->Formato, $descriptions);
 
         $text = implode("\n", $form);
         $content = <<<CONTENT

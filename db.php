@@ -984,7 +984,6 @@ function insertar_ruta($ruta2, $iddoc, $firma1 = 1)
     }
 }
 
-
 /**
  * realiza la transferencia de un documento
  *
