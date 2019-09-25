@@ -623,6 +623,19 @@ llama_funcion_accion(null,{$this->formatId} ,'ingresar','ANTERIOR');
             $("#continuar").click(function() {
                 $("#formulario_formatos").validate({
                     ignore: [],
+                    errorPlacement: function (error, element) {
+                        let node = element[0];
+
+                        if (
+                            node.tagName == 'SELECT' &&
+                            node.className.indexOf('select2') !== false
+                        ) {
+                            error.addClass('pl-3');
+                            element.next().append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
                     submitHandler: function(form) {
                         $("#continuar").hide();
                         $("#continuar").after(

@@ -25,6 +25,10 @@ class CamposFormato extends Model
     protected $opciones;
     protected $banderas;
 
+    //relations
+    protected $Formato;
+    protected $campoOpciones;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -64,6 +68,49 @@ class CamposFormato extends Model
             'safe' => $safeDbAttributes,
             'date' => []
         ];
+    }
+
+    /**
+     * obtiene la instancia del formato relacionado
+     *
+     * @return Formato|null
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function getFormat()
+    {
+        if (!$this->Formato) {
+            $this->Formato = $this->getRelationFk('Formato', 'formato_idformato');
+        }
+
+        return $this->Formato;
+    }
+
+    /**
+     * obteiene las opciones almacenadas en campo_opciones
+     *
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function getRadioOptions()
+    {
+        if (in_array($this->etiqueta_html, [
+            'radio',
+            'select',
+            'checkbox'
+        ])) {
+            if (!$this->campoOpciones) {
+                $this->campoOpciones = CampoOpciones::findAllByAttributes([
+                    'fk_campos_formato' => $this->getPK(),
+                    'estado' => 1
+                ]);
+            }
+
+            return $this->campoOpciones;
+        } else {
+            throw new Exception("El componente debe ser de tipo radio,checkbox o select", 1);
+        }
     }
 
     /**

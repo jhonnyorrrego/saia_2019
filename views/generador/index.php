@@ -132,7 +132,7 @@ function check_banderas($bandera, $chequear = true)
 function cargarCampos($categoria)
 {
 
-    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', "estado=1 AND categoria='{$categoria}'", '');    
+    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', "estado=1 AND categoria='{$categoria}'", '');
     echo "<h5>" . $categoria . "</h5>";
     for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
         $etiqueta = $listadoComponentes[$i]["etiqueta"];
