@@ -396,35 +396,30 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
 function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
 { //Ruta
 
-    if ($estado_recogida == 'estado_recogida') {
-        $estado_recogida = 0;
-    }
-    if ($ruta_origen == 'ruta_origen') {
-        $ruta_origen = 0;
-    }
-    if ($ruta_destino == 'ruta_destino') {
-        $ruta_destino = 0;
-    }
+    $Distribucion = new Distribucion($iddistribucion);
+    $destino = $Distribucion->destino;
 
-    $idft_ruta_distribucion = $ruta_destino;
-    //ENTREGA
-    if ($tipo_origen == 1 && !$estado_recogida) { //RECOGIDA
-        $idft_ruta_distribucion = $ruta_origen;
-    }
+    $query = Model::getQueryBuilder();
+    $roles = $query
+        ->select("iddependencia")
+        ->from("vfuncionario_dc")
+        ->where("estado_dc = 1 and tipo_cargo = 1 and iddependencia_cargo = :destino")
+        ->setParameter(":destino", $destino)
+        ->execute()->fetchAll();
 
-    $nombre_ruta_distribucion = 'Sin definir';
-    if ($idft_ruta_distribucion) {
-        $ruta_distribucion = busca_filtro_tabla("nombre_ruta", "ft_ruta_distribucion", "idft_ruta_distribucion=" . $idft_ruta_distribucion, "");
-        if ($ruta_distribucion['numcampos']) {
-            $nombre_ruta_distribucion = $ruta_distribucion[0]['nombre_ruta'] . '<input type="hidden" id="idruta_dist_' . $iddistribucion . '" value="' . $idft_ruta_distribucion . '"/>';
-        }
+    $query = Model::getQueryBuilder();
+    $rutasDistribucion = $query
+        ->select("idft_ruta_distribucion", "nombre_ruta")
+        ->from("ft_ruta_distribucion")
+        ->where("asignar_dependencias= :dependencia")
+        ->setParameter(":dependencia", $roles[0]['iddependencia'], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+    $opciones = "<select id='ruta" . $iddistribucion . "' class='selRuta' data-id='" . $iddistribucion . "' style='width:150px'>";
+    foreach ($rutasDistribucion as $key => $ruta) {
+        $opciones .= "<option value='" . $ruta["idft_ruta_distribucion"] . "'>" . $ruta["nombre_ruta"] . "</option>";
     }
-
-    if ($tipo_destino == 2 && $estado_recogida) { //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
-        $nombre_ruta_distribucion = 'Distribuci&oacute;n Externa';
-    }
-
-    return $nombre_ruta_distribucion . "<select id='opciones_acciones_distribucion2' class='[data-init-plugin='select2'] pull-left btn btn-xs'><option>123</option></select>";
+    $opciones .= "</select> <script> $('#ruta" . $iddistribucion . "').select2();</script>";
+    return $opciones;
 }
 
 function select_mensajeros_ruta_distribucion($iddistribucion)
@@ -432,16 +427,7 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
     $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "");
     $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
 
-    switch ($diligencia) {
-        case 'RECOGIDA':
-            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['mensajero_origen'], $datos_distribucion[0]['mensajero_destino'], 0, $iddistribucion, $diligencia);
-            break;
-        case 'ENTREGA':
-            $select_mensajeros = generar_select_mensajeros_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['tipo_destino'], $datos_distribucion[0]['ruta_destino'], $datos_distribucion[0]['mensajero_destino'], $datos_distribucion[0]['mensajero_empresad'], $iddistribucion, $diligencia);
-            break;
-    } //fin switch
-
-    return $select_mensajeros;
+    return "<select id='selMensajeros" . $iddistribucion . "' class='selMensajeros' style='width:150px' ></select><script> $('#selMensajeros" . $iddistribucion . "').select2();</script>";
 }
 
 function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion, $diligencia)
