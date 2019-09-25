@@ -22,9 +22,13 @@ if (empty($_REQUEST['formatId'])) {
     throw new Exception("Se debe indicar el formato", 1);
 }
 
-$formatId = $_REQUEST['formatId'];
-$GuardarFtController = new GuardarFtController($formatId);
-$documentId = $GuardarFtController->create($_REQUEST);
+$GuardarFtController = new GuardarFtController($_REQUEST['formatId']);
+
+if ($_REQUEST['iddoc']) {
+    $documentId = $GuardarFtController->edit($_REQUEST);
+} else {
+    $documentId = $GuardarFtController->create($_REQUEST);
+}
 
 $params = http_build_query([
     'documentId' => $documentId

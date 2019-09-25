@@ -151,6 +151,21 @@ class GuardarFtController
     }
 
     /**
+     * ejecuta el editar del documento
+     *
+     * @param array $data
+     * @return integer
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-24
+     */
+    public function edit($data)
+    {
+        $this->Documento = new Documento($data['iddoc']);
+        $this->saveFormat($data, true);
+        return $this->Documento->getPK();
+    }
+
+    /**
      * guarda la informacion en la ft
      *
      * @param integer $tipo
@@ -241,19 +256,17 @@ class GuardarFtController
         } else { // editar
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "editar", "ANTERIOR");
 
-            $QueryBuilder->where('documento_iddocumento = :documentId');
-            $QueryBuilder->setParameter(':documentId', $this->Documento->getPK());
-
-            if (!$QueryBuilder->execute()) {
-                throw new Exception("Error al actualizar el documento", 1);
-            }
+            $QueryBuilder
+                ->update($this->Formato->nombre_tabla)
+                ->where('documento_iddocumento = :documentId')
+                ->setParameter(':documentId', $this->Documento->getPK())
+                ->execute();
 
             DocumentoRastro::newRecord([
                 'fk_documento' => $this->Documento->getPK(),
                 'accion' => DocumentoRastro::ACCION_EDICION,
                 'titulo' => 'Edición del documento'
             ]);
-
 
             $Ruta = Ruta::findByAttributes([
                 'tipo' => 'ACTIVO',

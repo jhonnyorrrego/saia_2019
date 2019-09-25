@@ -815,6 +815,40 @@ HTML;
                 </script>
             </div>
         </div>";
+
+        if ($this->scope == self::SCOPE_EDIT) {
+            $text .= <<<JAVASCRIPT
+            <script>
+                $(function(){
+                    $.post(
+                        '<?= \$ruta_db_superior ?>app/documento/consulta_seleccionado.php',
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            fieldId: {$this->CamposFormato->getPK()},
+                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
+                        },
+                        function (response) {
+                            if (response.success) {
+                                if(response.data){
+                                    $("[name='{$this->CamposFormato->nombre}']")
+                                        .val(response.data)
+                                        .trigger('change');
+                                }
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
+                });
+            </script>
+JAVASCRIPT;
+        }
+
         return $text;
     }
 
@@ -858,6 +892,38 @@ HTML;
         $text .= "</div>
             {$labelRequired}
         </div>";
+
+        if ($this->scope == self::SCOPE_EDIT) {
+            $text .= <<<JAVASCRIPT
+            <script>
+                $(function(){
+                    $.post(
+                        '<?= \$ruta_db_superior ?>app/documento/consulta_seleccionado.php',
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            fieldId: {$this->CamposFormato->getPK()},
+                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
+                        },
+                        function (response) {
+                            if (response.success) {
+                                if(response.data){
+                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data+"']").prop('checked', true);
+                                }
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
+                });
+            </script>
+JAVASCRIPT;
+        }
+
         return $text;
     }
 
@@ -901,6 +967,39 @@ HTML;
         $text .= "</div>
             {$labelRequired}
         </div>";
+
+        if ($this->scope == self::SCOPE_EDIT) {
+            $text .= <<<JAVASCRIPT
+            <script>
+                $(function(){
+                    $.post(
+                        '<?= \$ruta_db_superior ?>app/documento/consulta_seleccionado.php',
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            fieldId: {$this->CamposFormato->getPK()},
+                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
+                        },
+                        function (response) {
+                            if (response.success) {
+                                if(response.data){
+                                    response.data.forEach(i => {
+                                        $("[name='{$this->CamposFormato->nombre}[]'][value='"+i+"']").prop('checked', true);
+                                    });
+                                }
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
+                });
+            </script>
+JAVASCRIPT;
+        }
         return $text;
     }
 
