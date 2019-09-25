@@ -14,7 +14,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 function opciones_acciones_distribucion($datos)
 {
-    
+
 
     $cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "");
     $nombre_componente = $cnombre_componente[0]['nombre'];
@@ -51,7 +51,7 @@ function opciones_acciones_distribucion($datos)
 
 function select_mensajero_distribucion()
 {
-    
+
 
     $select = "";
     $array_concat = array(
@@ -405,7 +405,37 @@ echo select2();
             $(this).val('');
         }); //FIN IF opciones_acciones_distribucion
 
+        /////////////  Listener para listar mensajeros de la ruta //////////////////
+        $(document).on('click', '.select2-selection__rendered,.select2-results__options', function() {
+            var id = $(this).attr('id');
+            var value = $(this).val();
+            id = id.split('select2-ruta').join('');
+            id = id.split('-container').join('');
+            id = id.split('-results').join('');
 
+            $.ajax({
+                url: `../../app/distribucion/cargar_mensajeros.php`,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    token: localStorage.getItem('token'),
+                    key: localStorage.getItem('key'),
+                    ruta: $('#ruta' + id).val()
+                },
+                success: function(respuesta) {
+                    $('#selMensajeros' + id).empty();
+                    var totalMensajeros = respuesta.data.length;
+                    var count = 0;
+                    respuesta.data.forEach(function() {
+                        $('#selMensajeros' + id).append("<option>" + respuesta.data[count] + "</option>");
+                        count++;
+                    });
+
+                }
+            });
+
+        });
+        ///////////////////////////////////////////////////////////////////////////////
     }); //FIN IF documento.ready
 </script>
 

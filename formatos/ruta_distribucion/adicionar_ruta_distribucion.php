@@ -121,6 +121,11 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                     $("#content_container").height($(window).height());
                 });
             </script>
+<script type="text/javascript">
+            $(function () {
+                $("#fecha_ruta_distribuc").val("2019-09-24");
+            });
+            </script>
 </div>
 <div class='input-group-append'>
             <span class='input-group-text'><i class='fa fa-calendar'></i></span>
@@ -146,16 +151,16 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                             );
                             $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
                             echo $arbol_4998->generar_html();?></div>
-<input class='required' type='hidden' name='serie_idserie' value='1'>
-<input class='' type='hidden' name='estado_documento' value=''>
-<input class='required' type='hidden' name='firma' value='1'>
+<input type='hidden' name='serie_idserie' value='1'>
+<input type='hidden' name='estado_documento' value=''>
+<input type='hidden' name='firma' value='1'>
 <div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
             <label title=''>DESCRIPCIóN RUTA</label>
             <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='' />
         </div>
-<input class='required' type='hidden' name='encabezado' value='1'>
-<input class='required' type='hidden' name='documento_iddocumento' value=''>
-<input class='required' type='hidden' name='idft_ruta_distribucion' value=''>
+<input type='hidden' name='encabezado' value='1'>
+<input type='hidden' name='documento_iddocumento' value=''>
+<input type='hidden' name='idft_ruta_distribucion' value=''>
 
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>

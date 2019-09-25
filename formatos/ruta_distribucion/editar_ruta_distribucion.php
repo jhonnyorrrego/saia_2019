@@ -121,6 +121,11 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                     $("#content_container").height($(window).height());
                 });
             </script>
+<script type="text/javascript">
+            $(function () {
+                $("#fecha_ruta_distribuc").val("2019-09-24");
+            });
+            </script>
 </div>
 <div class='input-group-append'>
             <span class='input-group-text'><i class='fa fa-calendar'></i></span>
@@ -146,14 +151,14 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                             );
                             $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
                             echo $arbol_4998->generar_html();?></div>
-<input class='required' type='hidden' name='firma' value='<?= mostrar_valor_campo('firma',404,$_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='firma' value='<?= mostrar_valor_campo('firma',404,$_REQUEST['iddoc']) ?>'>
 <div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
             <label title=''>DESCRIPCIóN RUTA</label>
             <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= mostrar_valor_campo('descripcion_ruta',404,$_REQUEST['iddoc']) ?>' />
         </div>
-<input class='required' type='hidden' name='encabezado' value='<?= mostrar_valor_campo('encabezado',404,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='documento_iddocumento' value='<?= mostrar_valor_campo('documento_iddocumento',404,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='idft_ruta_distribucion' value='<?= mostrar_valor_campo('idft_ruta_distribucion',404,$_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='encabezado' value='<?= mostrar_valor_campo('encabezado',404,$_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='documento_iddocumento' value='<?= mostrar_valor_campo('documento_iddocumento',404,$_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='idft_ruta_distribucion' value='<?= mostrar_valor_campo('idft_ruta_distribucion',404,$_REQUEST['iddoc']) ?>'>
 
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>

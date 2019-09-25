@@ -1190,3 +1190,83 @@ function generar_ruta_documento_fija_formato($idformato, $iddoc)
         insertar_ruta($rut, $iddoc);
     return;
 }
+
+
+
+////////////////// Una funcion que estaba en funciones generales  y que se necesita para la funcion  mostrar_valor_campo  con tipo fancytree//////////////////////////////////////////////
+
+function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
+{
+    global $conn;
+    $campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+    if ($iddoc != null) {
+        $opciones = array();
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $opciones = json_decode($campo[0]["valor"], true);
+        }
+        $tipo_arbol = null;
+        $output_array = array();
+        if (preg_match('/arbol_([^.]+)/', $opciones["url"], $output_array)) {
+            if (count($output_array) > 1) {
+                $tipo_arbol = $output_array[1];
+            }
+        }
+        $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
+        if ($tabla[0]["item"]) {
+            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
+        } else {
+            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
+        }
+        $vector = explode(",", str_replace("#", "d", $valor[0][0]));
+        $vector = array_unique($vector);
+        sort($vector);
+        $nombres = array();
+        foreach ($vector as $fila) {
+            switch ($tipo_arbol) {
+                case "funcionario":
+                    //Funcionarios
+                    if ($fila) {
+                        $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+                        if ($datos["numcampos"]) {
+                            $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+                        }
+                    }
+                    break;
+                case "serie":
+                    //Series
+                    $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
+                    if ($datos["numcampos"]) {
+                        $nombres[] = ucwords($datos[0][0]);
+                    }
+                    break;
+                case "dependencia":
+                    //Dependencia
+                    $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
+                    if ($datos["numcampos"]) {
+                        $nombres[] = ucwords($datos[0][0]);
+                    }
+                    break;
+
+                case "cargo":
+                    // cargo
+                    $datos = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $fila, "", $conn);
+                    if ($datos["numcampos"]) {
+                        $nombres[] = ucwords($datos[0][0]);
+                    }
+                    break;
+                    //roles
+            }
+        }
+    }
+    if (count($nombres)) {
+        $nombres = implode(", ", $nombres);
+    } else {
+        $nombres = "";
+    }
+
+    if ($tipo) {
+        return ($nombres);
+    } else {
+        echo ($nombres);
+    }
+}
