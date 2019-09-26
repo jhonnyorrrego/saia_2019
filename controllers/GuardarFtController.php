@@ -137,6 +137,7 @@ class GuardarFtController
         $datos = [
             "archivo_idarchivo" => $this->Documento->getPK(),
             "nombre" => "POR_APROBAR",
+            "tipo_destino" => 1,
             "activo" => "1",
             "tipo" => ""
         ];

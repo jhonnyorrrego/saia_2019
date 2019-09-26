@@ -151,8 +151,6 @@ function parsear_cadena_temporal($key, $valor, $contador_campos)
 {
 	$key = str_replace("bqsaia_", "", $key);
 	$valor = str_replace("@", "%", $valor);
-	// Cuando quieren buscar una cadena con @ no estaba buscando, esto soluciona el problema
-	$valor = parsear_cadena_tildes($valor);
 	$req_condicion_llave = $_REQUEST["bksaiacondicion_" . $key];
 	$cadena = parsear_consulta($key, $valor, $req_condicion_llave);
 	$enlace = @$_REQUEST["bqsaiaenlace_" . $key];
@@ -316,17 +314,17 @@ function campos_especiales()
 					$where = array();
 					for ($j = 0; $j < $cuantos; $j++) {
 						if ($varios[$j] != '') {
-							$where[] = "lower(a.nombre) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios[$j]))) . "%'";
+							$where[] = "lower(a.nombre) like '%" . str_replace(" ", "%", strtolower($varios[$j])) . "%'";
 						}
 					}
 					for ($j = 0; $j < $cuantos2; $j++) {
 						if ($varios2[$j] != '') {
-							$where[] = "lower(a.identificacion) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios2[$j]))) . "%'";
+							$where[] = "lower(a.identificacion) like '%" . str_replace(" ", "%", strtolower($varios2[$j])) . "%'";
 						}
 					}
 					for ($j = 0; $j < $cuantos3; $j++) {
 						if ($varios3[$j] != '') {
-							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios3[$j]))) . "%'";
+							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower($varios3[$j])) . "%'";
 						}
 					}
 					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "");
@@ -488,7 +486,6 @@ function parsear_subconsulta($key, $valor, $contador_campos)
 {
 	$key = str_replace("subsaia_", "", $key);
 	$key_aux = $key;
-	$valor = parsear_cadena_tildes($valor);
 	$req_condicion_llave = $_REQUEST["subcondicion_" . $key];
 	$cadena = parsear_consulta($key, $valor, $req_condicion_llave);
 	$enlace = @$_REQUEST["subsaiaenlace_" . $key_aux];
@@ -513,7 +510,6 @@ function parsear_subconsulta($key, $valor, $contador_campos)
 
 function parsear_consulta($key, $valor, $req_condicion_llave)
 {
-	$valor = parsear_cadena_tildes($valor);
 	$fin = strpos($key, "__");
 	if ($fin) {
 		$key = substr($key, 0, $fin);
@@ -818,90 +814,4 @@ function procesar_filtro_like_general($key, $valor, $condicion)
 		$cadena = "($cadena)";
 	}
 	return $cadena;
-}
-
-function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1)
-{
-	$sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
-	$stmt = OCIParse($conn->connection, $sql) or print_r(OCIError($stmt));
-	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
-	OCIFetchInto($stmt, $row, OCI_ASSOC);
-
-	if (!count($row)) {
-		oci_rollback($conn->connection);
-		oci_free_statement($stmt);
-		$clob_blob = 'clob';
-		if ($tipo == 'archivo') {
-			$clob_blob = 'blob';
-		}
-		$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
-		$conn->query($up_clob);
-		$stmt = OCIParse($conn->connection, $sql) or print_r(OCIError($stmt));
-
-		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
-		OCIFetchInto($stmt, $row, OCI_ASSOC);
-	}
-	if (FALSE === $row) {
-		OCIRollback($conn->connection);
-		alerta("No se pudo modificar el campo.");
-		$resultado = FALSE;
-	} else {
-		if ($row[strtoupper($campo)]->size() > 0) {
-			$contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
-		} else {
-			$contenido_actual = "";
-		}
-		if ($contenido_actual != $contenido) {
-			if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
-				oci_rollback($conn->connection);
-				alerta("No se pudo modificar el campo.");
-				$resultado = FALSE;
-			} else {
-				if (!$row[strtoupper($campo)]->save(trim($contenido))) {
-					oci_rollback($conn->connection);
-					$resultado = FALSE;
-				} else {
-					oci_commit($conn->connection);
-				}
-				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-			}
-		}
-		oci_free_statement($stmt);
-		$row[strtoupper($campo)]->free();
-	}
-}
-
-function parsear_cadena_tildes($cadena)
-{
-	$texto = ($cadena);
-	$buscar = array(
-		'á',
-		'é',
-		'í',
-		'ó',
-		'ú',
-		'ñ',
-		'Á',
-		'É',
-		'Í',
-		'Ó',
-		'Ú',
-		'Ñ'
-	);
-	$reemplazar = array(
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%',
-		'%'
-	);
-	$texto = str_replace($buscar, $reemplazar, $texto);
-	return $texto;
 }
