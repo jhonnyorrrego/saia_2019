@@ -51,6 +51,6 @@ class LabelGeneratorController extends ComponentFormGeneratorController implemen
      */
     public function showValue($CamposFormato, $documentId)
     {
-        return parent::showValue($CamposFormato, $documentId);
+        return $CamposFormato->valor;
     }
 }

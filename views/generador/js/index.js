@@ -290,8 +290,7 @@ $(document).ready(function() {
                 }
             }
 
-            findFunctions();
-            //////////////////////////////////////////// Duplicar componente cuando se arrastra al listado creado /////////////////////////////////////////////////////
+            // Duplicar componente cuando se arrastra al listado creado
 
             function clonarComponente(actual, nuevo) {
                 document.getElementById('itemsComponentes').appendChild(nuevo);
@@ -411,7 +410,6 @@ $(document).ready(function() {
         if (params.formatId) {
             setFormatData();
             createHeaderFooterSelect();
-            findFunctions();
 
             var list = document.getElementById('contenedorComponentes');
             DragDrop.makeListContainer(list);
@@ -773,6 +771,8 @@ $(document).ready(function() {
         event
     ) {
         event.stopPropagation();
+
+        let _this = $(this);
         top.confirm({
             id: 'question',
             type: 'error',
@@ -789,24 +789,22 @@ $(document).ready(function() {
                             type: 'POST',
                             dataType: 'json',
                             data: {
-                                componente: $(this)
+                                componente: _this
                                     .parents('.agregado')
                                     .attr('idpantalla_campo'),
                                 token: localStorage.getItem('token'),
                                 key: localStorage.getItem('key')
                             },
                             success: function(respuesta) {
-                                if (
-                                    $(this)
-                                        .parents('.agregado')
-                                        .remove()
-                                ) {
+                                if (_this.parents('.agregado').remove()) {
                                     instance.hide(
                                         { transitionOut: 'fadeOut' },
                                         toast,
                                         'button'
                                     );
                                 }
+
+                                findFunctions();
                             }
                         });
                     },
@@ -1036,13 +1034,15 @@ $(document).ready(function() {
     }
 
     function createFunctionList(data) {
-        $('#funcion_list').append(
-            $('<h5>', {
-                class: 'bg-master-light pl-4',
-                id: 'tituloListado',
-                text: 'Funciones de núcleo'
-            })
-        );
+        $('#funcion_list')
+            .empty()
+            .append(
+                $('<h5>', {
+                    class: 'bg-master-light pl-4',
+                    id: 'tituloListado',
+                    text: 'Funciones de núcleo'
+                })
+            );
         data.functions.forEach(f => {
             $('#funcion_list').append(
                 $('<li>', {
@@ -1167,6 +1167,8 @@ $(document).ready(function() {
                     for (var i = 0; i < items.length; i++) {
                         DragDrop.makeItemDragable(items[i]);
                     }
+
+                    findFunctions();
                 }
             },
             'json'

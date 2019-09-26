@@ -276,7 +276,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
             $tabla .= '
                 <tr>
                 <td style="width:15%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-                <td style="width:20%;"> ' . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . '</td>
+                <td style="width:20%;"> ' . 'tipo_origen' . '</td>
 				<td style="width:20%" id="estado_item_' . $distribuciones[$i]['iddistribucion'] . '">' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . ' </td>	
 				<td style="width:20%;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 

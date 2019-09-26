@@ -7,7 +7,6 @@ class ComponentFormGeneratorController
         "etiqueta_titulo" => LabelGeneratorController::class,
         "etiqueta_parrafo" => ParagraphGeneratorController::class,
         "etiqueta_linea" => LineGeneratorController::class,
-        "password" => PasswordGeneratorController::class,
         "textarea_cke" => TextareaGeneratorController::class,
         "arbol_fancytree" => TreeGeneratorController::class,
         "fecha" => DateGeneratorController::class,
@@ -19,7 +18,7 @@ class ComponentFormGeneratorController
         "ejecutor" => ExternalUserGeneratorController::class,
         "moneda" => CoinGeneratorController::class,
         "spin" => NumberGeneratorController::class,
-        "other" => TextGeneratorController::class,
+        "text" => TextGeneratorController::class,
     ];
     const SCOPE_ADD = 1;
     const SCOPE_EDIT = 2;
@@ -118,7 +117,7 @@ class ComponentFormGeneratorController
         if ($this->scope == self::SCOPE_ADD) {
             $valor = $this->CamposFormato->predeterminado;
         } else {
-            $valor = "<?= mostrar_valor_campo('{$this->CamposFormato->nombre}',{$this->Formato->getPK()},\$_REQUEST['iddoc']) ?>";
+            $valor = "<?= ComponentFormGeneratorController::callShowValue({$this->CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>";
         }
 
         return $valor;
@@ -136,16 +135,9 @@ class ComponentFormGeneratorController
      */
     public function showValue($CamposFormato, $documentId)
     {
-        $Formato = $CamposFormato->getFormat();
+        $ft = (new Documento($documentId))->getFt();
 
-        $ft = Model::getQueryBuilder()
-            ->select($CamposFormato->nombre)
-            ->from($Formato->nombre_tabla)
-            ->where('documento_iddocumento = :documentId')
-            ->setParameter('documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
-            ->execute()->fetch();
-
-        return $ft[$CamposFormato->nombre] ?? '';
+        return $ft[$CamposFormato->nombre] ? $ft[$CamposFormato->nombre] : '';
     }
 
     /**
@@ -239,7 +231,7 @@ class ComponentFormGeneratorController
      */
     public static function getGeneratorFromField($tag)
     {
-        $type = in_array($tag, array_keys(self::GENERATORS)) ? $tag : 'other';
+        $type = in_array($tag, array_keys(self::GENERATORS)) ? $tag : 'text';
 
         return self::GENERATORS[$type];
     }

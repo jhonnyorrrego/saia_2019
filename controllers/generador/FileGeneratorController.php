@@ -127,7 +127,7 @@ HTML;
                             token: localStorage.getItem('token'),
                             key: localStorage.getItem('key'),
                             fieldId: {$this->CamposFormato->getPK()},
-                            documentId: <?= \$_REQUEST['iddoc'] ?>
+                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
                         }, function(response){
                             if(response.success){
                                 response.data.forEach(mockFile => {
@@ -189,6 +189,12 @@ HTML;
      */
     public function showValue($CamposFormato, $documentId)
     {
-        return parent::showValue($CamposFormato, $documentId);
+        $files = Anexos::findColumn('etiqueta', [
+            'documento_iddocumento' => $documentId,
+            'campos_formato' => $CamposFormato->getPK(),
+            'estado' => 1
+        ]);
+
+        return implode(", ", $files);
     }
 }

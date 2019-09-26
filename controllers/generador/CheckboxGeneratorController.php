@@ -111,6 +111,11 @@ JAVASCRIPT;
      */
     public function showValue($CamposFormato, $documentId)
     {
-        return parent::showValue($CamposFormato, $documentId);
+        $value = CampoSeleccionados::findColumn('valor', [
+            'fk_documento' => $documentId,
+            'fk_campos_formato' => $CamposFormato->getPk()
+        ]);
+
+        return implode(", ", $value);
     }
 }

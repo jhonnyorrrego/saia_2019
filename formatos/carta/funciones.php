@@ -468,13 +468,24 @@ function mostrar_datos_radicacion($idformato, $iddoc)
 
 function mostrar_anexos_externa($idformato, $iddoc)
 {
-	$fisicos = mostrar_valor_campo('anexos_fisicos', $idformato, $iddoc, 1);
-	$digitales = mostrar_valor_campo('anexos_digitales', $idformato, $iddoc, 1);
-	if ($fisicos != "" || $digitales != "") {
+	$CamposFormato = CamposFormato::findByAttributes([
+		'formato_idformato' => $idformato,
+		'nombre' => 'anexos_fisicos'
+	]);
+	$fisicos = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+
+	$CamposFormato = CamposFormato::findByAttributes([
+		'formato_idformato' => $idformato,
+		'nombre' => 'anexos_digitales'
+	]);
+	$digitales = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+
+	if ($fisicos || $digitales) {
 		$digitales = preg_replace("%(<div.*?>)(.*?)(<\/div.*?>)%is", "", $digitales);
 		echo "Anexos: " . $fisicos . " " . strip_tags($digitales, '<a>') . "<br/><br/>";
 	}
 }
+
 function mostrar_copias_comunicacion_ext($idformato, $iddoc)
 {
 	global $conn;

@@ -51,6 +51,6 @@ class ParagraphGeneratorController extends ComponentFormGeneratorController impl
      */
     public function showValue($CamposFormato, $documentId)
     {
-        return parent::showValue($CamposFormato, $documentId);
+        return $CamposFormato->valor;
     }
 }

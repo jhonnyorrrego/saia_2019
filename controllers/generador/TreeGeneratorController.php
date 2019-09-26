@@ -98,6 +98,40 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
      */
     public function showValue($CamposFormato, $documentId)
     {
-        return parent::showValue($CamposFormato, $documentId);
+        $value = parent::showValue($CamposFormato, $documentId);
+        $opciones = json_decode($CamposFormato->valor, true);
+
+        $vector = explode(",", str_replace("#", "d", $value));
+        $vector = sort(array_unique($vector));
+        $nombres = [];
+
+        foreach ($vector as $fila) {
+            switch ($opciones['url']) {
+                case "funcionario":
+                    $Funcionario = Funcionario::findByAttributes([
+                        'funcionario_codigo' => $fila
+                    ]);
+                    $nombres[] = $Funcionario->getName();
+                    break;
+                case "serie":
+                    //Series
+                    $Serie = new Serie($fila);
+                    $nombres[] = $Serie->nombre;
+                    break;
+                case "dependencia":
+                    //Dependencia
+                    $Dependencia = new Dependencia($fila);
+                    $nombres[] = $Dependencia->nombre;
+                    break;
+
+                case "cargo":
+                    // cargo
+                    $Cargo = new Cargo($fila);
+                    $nombres[] = $Cargo->nombre;
+                    break;
+            }
+        }
+
+        return implode(", ", $nombres);
     }
 }
