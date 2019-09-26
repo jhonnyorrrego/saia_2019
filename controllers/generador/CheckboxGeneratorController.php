@@ -103,12 +103,19 @@ JAVASCRIPT;
      * muestra el valor almacenado en un documento
      * de un componente especifico
      *
-     * @param integer $fieldId
+     * @param CamposFormato $CamposFormato
      * @param integer $documentId
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-25
+     * @date 2019-09-26
      */
-    public function showValue($fieldId, $documentId)
-    { }
+    public function showValue($CamposFormato, $documentId)
+    {
+        $value = CampoSeleccionados::findColumn('valor', [
+            'fk_documento' => $documentId,
+            'fk_campos_formato' => $CamposFormato->getPk()
+        ]);
+
+        return implode(", ", $value);
+    }
 }

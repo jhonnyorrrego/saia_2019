@@ -179,12 +179,11 @@ function usuario_aprobador_documento($idformato, $iddoc, $retorno = 0)
 function asunto_documento($idformato, $iddoc, $retorno = 0)
 {
 
-	$tablaFt = busca_filtro_tabla("nombre_tabla", "formato", "idformato={$idformato}", "");
-	$consultaCampos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato={$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')", "");
+	$consultaCampos = busca_filtro_tabla("idcampos_formato", "campos_formato", "formato_idformato={$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')", "");
 	$html = '';
 	if ($consultaCampos['numcampos']) {
 		for ($i = 0; $i < $consultaCampos['numcampos']; $i++) {
-			$html .= mostrar_valor_campo($consultaCampos[$i]["nombre"], $idformato, $iddoc, 1) . '<br>';
+			$html .= ComponentFormGeneratorController::callShowValue($consultaCampos[$i]["idcampos_formato"], $iddoc);
 		}
 	}
 	if ($retorno) {

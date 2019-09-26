@@ -1053,50 +1053,6 @@ function transferencia_automatica(
     }
 }
 
-/**
- * muestra el valor almacenado de un formato
- *
- * @param string $campo nombre del campos_formato
- * @param integer $idformato
- * @param integer $iddoc
- * @param integer $tipo
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019
- */
-function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = null)
-{
-    $retorno = "";
-    $Documento = new Documento($iddoc);
-    $CamposFormato = CamposFormato::findByAttributes([
-        'nombre' => $campo
-    ]);
-    $ft = $Documento->getFt();
-    $fieldValue = $ft[$CamposFormato->nombre];
-    if ($CamposFormato) {
-        if ($CamposFormato->etiqueta_html == "arbol_fancytree") {
-            $retorno = mostrar_seleccionados_ft($idformato, $CamposFormato->getPK(), $Documento->getPK(), 1);
-        } elseif ($CamposFormato->etiqueta_html == "archivo") {
-            $files = Anexos::findAllByAttributes([
-                'estado' => 1,
-                'documento_iddocumento' => $Documento->getPK(),
-                'campos_formato' => $CamposFormato->getPK(),
-            ]);
-
-            foreach ($files as $Anexos) {
-                $retorno .= $Anexos->etiqueta . "\n";
-            }
-        } elseif (($CamposFormato->etiqueta_html == 'textarea_cke') || ($CamposFormato->etiqueta_html == 'hidden') || ($CamposFormato->etiqueta_html == 'radio')) {
-            $retorno = $fieldValue;
-        } elseif ($CamposFormato->etiqueta_html == "moneda") {
-            $retorno = "$ {fieldValue}";
-        } elseif ($CamposFormato->etiqueta_html == "ejecutor") {
-            throw new Exception("pendiente desarrollar para los ejecutores", 1);
-        }
-    }
-    return $retorno;
-}
-
 /*
  * <Clase>
  * <Nombre>generar_ruta_documento</Nombre>
@@ -1137,7 +1093,7 @@ function generar_ruta_documento($idformato, $iddoc)
 
 function generar_ruta_documento_fija_formato($idformato, $iddoc)
 {
-    global $conn, $ruta_db_superior;
+    global $ruta_db_superior;
     include_once($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
     $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $idformato, "orden");
     $rut = array();
@@ -1188,84 +1144,4 @@ function generar_ruta_documento_fija_formato($idformato, $iddoc)
     if ($dato["numcampos"])
         insertar_ruta($rut, $iddoc);
     return;
-}
-
-
-
-////////////////// Una funcion que estaba en funciones generales  y que se necesita para la funcion  mostrar_valor_campo  con tipo fancytree//////////////////////////////////////////////
-
-function mostrar_seleccionados_ft($idformato, $idcampo, $iddoc, $tipo = 0)
-{
-    global $conn;
-    $campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
-    if ($iddoc != null) {
-        $opciones = array();
-        if (json_last_error() === JSON_ERROR_NONE) {
-            $opciones = json_decode($campo[0]["valor"], true);
-        }
-        $tipo_arbol = null;
-        $output_array = array();
-        if (preg_match('/arbol_([^.]+)/', $opciones["url"], $output_array)) {
-            if (count($output_array) > 1) {
-                $tipo_arbol = $output_array[1];
-            }
-        }
-        $tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
-        if ($tabla[0]["item"]) {
-            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
-        } else {
-            $valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
-        }
-        $vector = explode(",", str_replace("#", "d", $valor[0][0]));
-        $vector = array_unique($vector);
-        sort($vector);
-        $nombres = array();
-        foreach ($vector as $fila) {
-            switch ($tipo_arbol) {
-                case "funcionario":
-                    //Funcionarios
-                    if ($fila) {
-                        $datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
-                        if ($datos["numcampos"]) {
-                            $nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
-                        }
-                    }
-                    break;
-                case "serie":
-                    //Series
-                    $datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
-                    if ($datos["numcampos"]) {
-                        $nombres[] = ucwords($datos[0][0]);
-                    }
-                    break;
-                case "dependencia":
-                    //Dependencia
-                    $datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
-                    if ($datos["numcampos"]) {
-                        $nombres[] = ucwords($datos[0][0]);
-                    }
-                    break;
-
-                case "cargo":
-                    // cargo
-                    $datos = busca_filtro_tabla("nombre", "cargo", "idcargo=" . $fila, "", $conn);
-                    if ($datos["numcampos"]) {
-                        $nombres[] = ucwords($datos[0][0]);
-                    }
-                    break;
-                    //roles
-            }
-        }
-    }
-    if (count($nombres)) {
-        $nombres = implode(", ", $nombres);
-    } else {
-        $nombres = "";
-    }
-
-    if ($tipo) {
-        return ($nombres);
-    } else {
-        echo ($nombres);
-    }
 }

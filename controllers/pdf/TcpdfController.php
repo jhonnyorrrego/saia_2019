@@ -255,10 +255,10 @@ class Imprime_Pdf
 		$this->pdf->SetKeywords("SAIA" . $cad_etiquetas);
 		$this->pdf->SetSubject(codifica_encabezado(strip_tags($this->documento[0]["descripcion"])));
 
-		$campos_pdfa = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "");
+		$campos_pdfa = busca_filtro_tabla("idcampos_formato,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "");
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
-				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this->formato[0]['idformato'], $this->documento[0]["iddocumento"], 1));
+				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], ComponentFormGeneratorController::callShowValue($campos_pdfa[$i]['idcampos_formato'], $this->documento[0]["iddocumento"]));
 			}
 		}
 		//

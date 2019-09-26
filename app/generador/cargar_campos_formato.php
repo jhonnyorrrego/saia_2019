@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) [
-    'data' => new stdClass(),
+    'data' => '',
     'message' => '',
     'success' => 0
 ];
@@ -23,29 +23,32 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $Response->data = '';
-    
-
-    function cargarCampos($categoria)
-    {
-        $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', "estado=1 AND categoria='{$categoria}'", '');
-        $listado = '';
-        $listado .= "<h5>" . $categoria . "</h5>";
-        for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
-            $etiqueta = $listadoComponentes[$i]["etiqueta"];
-            $listado .= "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}'><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i><div id='c_' class='d-inline'>{$etiqueta}</div></li>";
-        }
-        return $listado;
-    }
-
     $Response->data .= cargarCampos('Elementos de diseño');
     $Response->data .= cargarCampos('Campos del formato');
     $Response->data .= cargarCampos('Campos avanzados');
-
     $Response->success = 1;
-    $Response->message = "Campos actualizados";
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
+
+function cargarCampos($categoria)
+{
+    $components = PantallaComponente::findAllByAttributes([
+        'estado' => 1,
+        'categoria' => $categoria
+    ]);
+
+    $listado = '';
+    $listado .= "<h5>{$categoria}</h5>";
+
+    foreach ($components as $PantallaComponente) {
+        $listado .= "<li class='panel' idpantalla_componente='{$PantallaComponente->getPK()}'>
+            <i class='{$PantallaComponente->clase} mr-3'></i>
+            <div id='c_' class='d-inline'>{$PantallaComponente->etiqueta}</div>
+        </li>";
+    }
+
+    return $listado;
+}

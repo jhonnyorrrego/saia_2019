@@ -41,7 +41,9 @@ var filesToCache = [
     'assets/theme/assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js',
     'assets/theme/assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css',
     'node_modules/jquery-validation/dist/jquery.validate.min.js',
-    'node_modules/jquery-validation/dist/localization/messages_es.min.js'
+    'node_modules/jquery-validation/dist/localization/messages_es.min.js',
+    'node_modules/jspanel4/dist/jspanel.min.css',
+    'node_modules/jspanel4/dist/jspanel.min.js'
 ];
 
 /// Hay que incluir a easy ---> assets/theme/assets/plugins/jquery/jquery-easy.js

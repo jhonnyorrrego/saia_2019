@@ -239,11 +239,11 @@ class Documento extends Model
         if ($fields) {
             $description = '';
 
-            foreach ($fields as $key => $CamposFormato) {
+            foreach ($fields as $CamposFormato) {
                 $actions = explode(',', $CamposFormato->acciones);
 
                 if (in_array('p', $actions)) {
-                    $value = mostrar_valor_campo($CamposFormato->nombre, $this->getFormat()->getPK(), $this->getPK(), 1);
+                    $value = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $this->getPK());
                     $description .= "{$CamposFormato->etiqueta}: {$value}<br>";
                 }
             }

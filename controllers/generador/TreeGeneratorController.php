@@ -18,10 +18,6 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
     {
         $idcampo_ft = $this->CamposFormato->getPK();
         $params_ft = json_decode($this->CamposFormato->valor, true);
-        echo '<pre>';
-        var_dump($this->CamposFormato->valor);
-        echo '</pre>';
-        exit;
         $opc_ft = "";
         $param_url = "";
         $parts = parse_url($params_ft["url"]);
@@ -94,12 +90,48 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
      * muestra el valor almacenado en un documento
      * de un componente especifico
      *
-     * @param integer $fieldId
+     * @param CamposFormato $CamposFormato
      * @param integer $documentId
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-25
+     * @date 2019-09-26
      */
-    public function showValue($fieldId, $documentId)
-    { }
+    public function showValue($CamposFormato, $documentId)
+    {
+        $value = parent::showValue($CamposFormato, $documentId);
+        $opciones = json_decode($CamposFormato->valor, true);
+
+        $vector = explode(",", str_replace("#", "d", $value));
+        $vector = sort(array_unique($vector));
+        $nombres = [];
+
+        foreach ($vector as $fila) {
+            switch ($opciones['url']) {
+                case "funcionario":
+                    $Funcionario = Funcionario::findByAttributes([
+                        'funcionario_codigo' => $fila
+                    ]);
+                    $nombres[] = $Funcionario->getName();
+                    break;
+                case "serie":
+                    //Series
+                    $Serie = new Serie($fila);
+                    $nombres[] = $Serie->nombre;
+                    break;
+                case "dependencia":
+                    //Dependencia
+                    $Dependencia = new Dependencia($fila);
+                    $nombres[] = $Dependencia->nombre;
+                    break;
+
+                case "cargo":
+                    // cargo
+                    $Cargo = new Cargo($fila);
+                    $nombres[] = $Cargo->nombre;
+                    break;
+            }
+        }
+
+        return implode(", ", $nombres);
+    }
 }

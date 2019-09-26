@@ -35,7 +35,6 @@ try {
 
     $Formato = new Formato($_REQUEST['formatId']);
     $processFields = $Formato->getProcessFields();
-    $imagen = "fa-user";
 
     $fields = [];
     foreach ($processFields as $CamposFormato) {

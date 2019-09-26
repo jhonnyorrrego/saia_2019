@@ -2,6 +2,24 @@
 
 class ComponentFormGeneratorController
 {
+    const GENERATORS = [
+        "funcion" => FunctionGeneratorController::class,
+        "etiqueta_titulo" => LabelGeneratorController::class,
+        "etiqueta_parrafo" => ParagraphGeneratorController::class,
+        "etiqueta_linea" => LineGeneratorController::class,
+        "textarea_cke" => TextareaGeneratorController::class,
+        "arbol_fancytree" => TreeGeneratorController::class,
+        "fecha" => DateGeneratorController::class,
+        "radio" => RadioGeneratorController::class,
+        "checkbox" => CheckboxGeneratorController::class,
+        "select" => SelectGeneratorController::class,
+        "archivo" => FileGeneratorController::class,
+        "hidden" => HiddenGeneratorController::class,
+        "ejecutor" => ExternalUserGeneratorController::class,
+        "moneda" => CoinGeneratorController::class,
+        "spin" => NumberGeneratorController::class,
+        "text" => TextGeneratorController::class,
+    ];
     const SCOPE_ADD = 1;
     const SCOPE_EDIT = 2;
 
@@ -99,10 +117,27 @@ class ComponentFormGeneratorController
         if ($this->scope == self::SCOPE_ADD) {
             $valor = $this->CamposFormato->predeterminado;
         } else {
-            $valor = "<?= mostrar_valor_campo('{$this->CamposFormato->nombre}',{$this->Formato->getPK()},\$_REQUEST['iddoc']) ?>";
+            $valor = "<?= ComponentFormGeneratorController::callShowValue({$this->CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>";
         }
 
         return $valor;
+    }
+
+    /**
+     * muestra el valor almacenado en un documento
+     * de un componente especifico
+     *
+     * @param CamposFormato $CamposFormato
+     * @param integer $documentId
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-26
+     */
+    public function showValue($CamposFormato, $documentId)
+    {
+        $ft = (new Documento($documentId))->getFt();
+
+        return $ft[$CamposFormato->nombre] ? $ft[$CamposFormato->nombre] : '';
     }
 
     /**
@@ -178,63 +213,43 @@ class ComponentFormGeneratorController
      */
     public static function generate($Formato, $CamposFormato, $scope)
     {
-        switch ($CamposFormato->etiqueta_html) {
-            case "funcion":
-                $class = FunctionGeneratorController::class;
-                break;
-            case "etiqueta_titulo":
-                $class = LabelGeneratorController::class;
-                break;
-            case "etiqueta_parrafo":
-                $class = ParagraphGeneratorController::class;
-                break;
-            case "etiqueta_linea":
-                $class = LineGeneratorController::class;
-                break;
-            case "password":
-                $class = PasswordGeneratorController::class;
-                break;
-            case "textarea_cke":
-                $class = TextareaGeneratorController::class;
-                break;
-            case "arbol_fancytree":
-                $class = TreeGeneratorController::class;
-                break;
-            case "fecha":
-                $class = DateGeneratorController::class;
-                break;
-            case "radio":
-                $class = RadioGeneratorController::class;
-                break;
-            case "checkbox":
-                $class = CheckboxGeneratorController::class;
-                break;
-            case "select":
-                $class = SelectGeneratorController::class;
-                break;
-            case "archivo":
-                $class = FileGeneratorController::class;
-                break;
-            case "hidden":
-                $class = HiddenGeneratorController::class;
-                break;
-            case "ejecutor":
-                $class = ExternalUserGeneratorController::class;
-                break;
-            case "moneda":
-                $class = CoinGeneratorController::class;
-                break;
-            case "spin":
-                $class = NumberGeneratorController::class;
-                break;
-            default:
-                $class = TextGeneratorController::class;
-                break;
-        }
-
+        $class = self::getGeneratorFromField($CamposFormato->etiqueta_html);
         $Generator = new $class($Formato, $CamposFormato, $scope);
 
         return ($scope == self::SCOPE_ADD) ?
             $Generator->generateAditionComponent() : $Generator->generateEditionComponente();
+    }
+
+    /**
+     * obtiene la clase encargada de generar el componente
+     * basado en la etiqueta_html de campos_formato
+     *
+     * @param string $tag etiqueta_html del campos_formato
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-26
+     */
+    public static function getGeneratorFromField($tag)
+    {
+        $type = in_array($tag, array_keys(self::GENERATORS)) ? $tag : 'text';
+
+        return self::GENERATORS[$type];
+    }
+
+    /**
+     * ejecuta el metodo showValue de un generador de componente
+     * basado en su idcampos_formato
+     *
+     * @param integer $fieldId
+     * @param integer $documentId
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-26
+     */
+    public static function callShowValue($fieldId, $documentId)
+    {
+        $CamposFormato = new CamposFormato($fieldId);
+        $class = self::getGeneratorFromField($CamposFormato->etiqueta_html);
+        return $class::showValue($CamposFormato, $documentId);
     }
 }

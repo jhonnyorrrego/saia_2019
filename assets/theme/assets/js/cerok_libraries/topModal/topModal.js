@@ -196,11 +196,11 @@ function topJsPanel(options) {
             .jQuery('script[data-baseurl]', window.top.document)
             .data('baseurl');
         top.jQuery.get(
-            `${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.css`,
+            `${baseUrl}node_modules/jspanel4/dist/jspanel.min.css`,
             function(r) {
                 $('head').append($('<style>').html(r));
                 top.jQuery.getScript(
-                    `${baseUrl}assets/theme/assets/plugins/jspanel4/jspanel.min.js`,
+                    `${baseUrl}node_modules/jspanel4/dist/jspanel.min.js`,
                     function() {
                         showJsPanel(options);
                     }

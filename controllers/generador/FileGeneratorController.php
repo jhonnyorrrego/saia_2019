@@ -127,7 +127,7 @@ HTML;
                             token: localStorage.getItem('token'),
                             key: localStorage.getItem('key'),
                             fieldId: {$this->CamposFormato->getPK()},
-                            documentId: <?= \$_REQUEST['iddoc'] ?>
+                            documentId: "<?= \$_REQUEST['iddoc'] ?>"
                         }, function(response){
                             if(response.success){
                                 response.data.forEach(mockFile => {
@@ -181,12 +181,20 @@ HTML;
      * muestra el valor almacenado en un documento
      * de un componente especifico
      *
-     * @param integer $fieldId
+     * @param CamposFormato $CamposFormato
      * @param integer $documentId
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-25
+     * @date 2019-09-26
      */
-    public function showValue($fieldId, $documentId)
-    { }
+    public function showValue($CamposFormato, $documentId)
+    {
+        $files = Anexos::findColumn('etiqueta', [
+            'documento_iddocumento' => $documentId,
+            'campos_formato' => $CamposFormato->getPK(),
+            'estado' => 1
+        ]);
+
+        return implode(", ", $files);
+    }
 }

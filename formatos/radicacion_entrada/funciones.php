@@ -640,7 +640,11 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                 <table style="width: 100%;margin-top: 2%;margin-bottom: 2%;border-collapse: collapse;" border="0" cellspacing="0">
                 <thead>';
     if ($datos[0]['tipo_origen'] == 1) {
-        $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
+        $CamposFormato = CamposFormato::findByAttributes([
+            'formato_idformato' => $idformato,
+            'nombre' => 'empresa_transportado'
+        ]);
+        $empresa_transportadora = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
         $tabla .= "<tr>
                         <td class='pr-0' style='width: 20%; border:none;'>
                             <strong>NO. DE DOCUMENTO:</strong> 
@@ -701,18 +705,25 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
     } else {
         $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
+
+        $CamposFormato = CamposFormato::findByAttributes([
+            'formato_idformato' => $idformato,
+            'nombre' => 'tipo_origen'
+        ]);
+        $tipo_origen = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+
         $tabla .= "
-                            <tr>
-                            <td style='width: 50%; border:none;'>
-                                <div><b>TIPO DE ORIGEN:</b> " . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</div>
-                                <div><b>REQUIERE SERVICIO DE ENTREGA?:</b> " . $entrega . "</div>
-                                <div><b>ANEXOS DIGITALES:</b> " . $nombre_anexos . "</div>
-                            </td>
-                            <td style='width: 50%; border:none;' class='pl-0'>
-                                <div><b>REQUIERE SERVICIO DE RECOGIDA?:</b> " . $recogida . "</div>
-                                <div><b>ANEXOS F&Iacute;SICOS:</b> " . $datos[0]['descripcion_anexos'] . "</div>
-                            </td>
-                        </tr>";
+            <tr>
+            <td style='width: 50%; border:none;'>
+                <div><b>TIPO DE ORIGEN:</b> " . $tipo_origen . "</div>
+                <div><b>REQUIERE SERVICIO DE ENTREGA?:</b> " . $entrega . "</div>
+                <div><b>ANEXOS DIGITALES:</b> " . $nombre_anexos . "</div>
+            </td>
+            <td style='width: 50%; border:none;' class='pl-0'>
+                <div><b>REQUIERE SERVICIO DE RECOGIDA?:</b> " . $recogida . "</div>
+                <div><b>ANEXOS F&Iacute;SICOS:</b> " . $datos[0]['descripcion_anexos'] . "</div>
+            </td>
+        </tr>";
     }
 
     $tabla .= '</div></div></thead></table></div></div>';
@@ -766,10 +777,15 @@ function mostrar_item_destino_radicacion($idformato, $iddoc)
 
 function mostrar_copia_electronica($idformato, $iddoc)
 {
-    global $conn, $datos;
+    global $datos;
     $tabla = "";
     if ($datos[0]['tipo_destino'] == 2) { //INTERNO
-        $info = mostrar_valor_campo('copia_a', $idformato, $iddoc, 1);
+        $CamposFormato = CamposFormato::findByAttributes([
+            'formato_idformato' => $idformato,
+            'nombre' => 'copia_a'
+        ]);
+        $info = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+
         if ($info) {
             $tabla = '<style>
         .table.table-condensed thead tr td {
