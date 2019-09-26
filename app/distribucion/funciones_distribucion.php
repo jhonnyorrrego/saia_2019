@@ -250,7 +250,6 @@ function accionFinalizarDistribucion($iddoc)
 
 function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0)
 {
-    global $conn, $ruta_db_superior;
     $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
     $tabla = '';
     if ($distribuciones['numcampos']) {
@@ -306,7 +305,6 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 
 function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 {
-    global $conn, $ruta_db_superior;
     $html = '';
     if (!$js && $iddistribucion) {
 
@@ -350,9 +348,32 @@ function ver_documento_distribucion($iddocumento, $tipo_origen)
         1 => 'I',
         2 => 'E'
     );
-    $cadena_mostrar = $numero . '_' . $array_tipo_origen[$tipo_origen];
+    $cadena_mostrar = $numero . ' - ' . $array_tipo_origen[$tipo_origen];
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $cadena_mostrar . '</button></center></div>';
     return $enlace_documento;
+}
+
+/**
+ * Ver_numero_registro - Esta funcion retorna el numero de registro de una distribución
+ *
+ * @param [integer] $iddocumento
+ * @param [integer] $tipo_origen
+ * @param [date] $fecha
+ * @return string Retorna el numero que toma en cuenta la fecha, el numero de item y el tipo de origen
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-26
+ */
+function ver_numero_registro($iddocumento, $tipo_origen, $fecha)
+{
+    $Documento = new Documento($iddocumento);
+    $numero = $Documento->numero;
+    $array_tipo_origen = array(
+        1 => 'I',
+        2 => 'E'
+    );
+    $fecha = DateController::convertDate($fecha, 'Y-m-d');
+    $numeroRegistro = "{$fecha}-{$numero}-{$array_tipo_origen[$tipo_origen]}";
+    return $numeroRegistro;
 }
 
 function ver_documento_planilla($iddocumento, $numero)
@@ -393,12 +414,36 @@ function mostrar_tipo_radicado_distribucion($tipo_origen)
     return $array_tipo_radicado[$tipo_origen];
 }
 
-function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_origen, $ruta_destino, $tipo_destino, $iddistribucion)
-{ //Ruta
-
+/**
+ * Esta funcion crea los select para el reporte por distribuir de los items de acuerdo a la dependencia del destino
+ *
+ * @param [integer] $iddistribucion Identificador de la ruta de distribucion
+ * @return string Este contiene un select con las opciones de las rutas de distribución de acuerdo a la dependencia del destino
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
+function mostrar_nombre_ruta_distribucion($iddistribucion)
+{
+    $rutasDistribucion = obtenerRuta($iddistribucion);
+    $opciones = "<select id='ruta{$iddistribucion}' class='selRuta' data-id='{$iddistribucion}' style='width:150px'>";
+    foreach ($rutasDistribucion as $ruta) {
+        $opciones .= "<option value='{$ruta["idft_ruta_distribucion"]}'>{$ruta['nombre_ruta']}</option>";
+    }
+    $opciones .= "</select> <script> $('#ruta{$iddistribucion}').select2();</script>";
+    return $opciones;
+}
+/**
+ * Esta funcion busca las rutas que se encuentran en la dependencia del destino
+ *
+ * @param [integer] $iddistribucion Identificador de la ruta de distribucion
+ * @return array Este contiene un array con las rutas de distribución de acuerdo a la dependencia del destino
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
+function obtenerRuta($iddistribucion)
+{
     $Distribucion = new Distribucion($iddistribucion);
     $destino = $Distribucion->destino;
-
     $query = Model::getQueryBuilder();
     $roles = $query
         ->select("iddependencia")
@@ -406,7 +451,6 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         ->where("estado_dc = 1 and tipo_cargo = 1 and iddependencia_cargo = :destino")
         ->setParameter(":destino", $destino)
         ->execute()->fetchAll();
-
     $query = Model::getQueryBuilder();
     $rutasDistribucion = $query
         ->select("idft_ruta_distribucion", "nombre_ruta")
@@ -414,20 +458,36 @@ function mostrar_nombre_ruta_distribucion($tipo_origen, $estado_recogida, $ruta_
         ->where("asignar_dependencias= :dependencia")
         ->setParameter(":dependencia", $roles[0]['iddependencia'], \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
-    $opciones = "<select id='ruta" . $iddistribucion . "' class='selRuta' data-id='" . $iddistribucion . "' style='width:150px'>";
-    foreach ($rutasDistribucion as $key => $ruta) {
-        $opciones .= "<option value='" . $ruta["idft_ruta_distribucion"] . "'>" . $ruta["nombre_ruta"] . "</option>";
-    }
-    $opciones .= "</select> <script> $('#ruta" . $iddistribucion . "').select2();</script>";
-    return $opciones;
+    return $rutasDistribucion;
 }
 
+/**
+ * Esta función crea un select en la columna mensajeros del reporte por distribuir 
+ *
+ * @param [integer] $iddistribucion
+ * @return string Este contiene un select con sus respectivas opciones de acuerdo a la ruta de distribución
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25
+ */
 function select_mensajeros_ruta_distribucion($iddistribucion)
-{ //Mensajero
-    $datos_distribucion = busca_filtro_tabla("iddistribucion,tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad", "distribucion", "iddistribucion=" . $iddistribucion, "");
-    $diligencia = mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'], $datos_distribucion[0]['estado_recogida']);
-
-    return "<select id='selMensajeros" . $iddistribucion . "' class='selMensajeros' style='width:150px' ></select><script> $('#selMensajeros" . $iddistribucion . "').select2();</script>";
+{
+    $rutasDistribucion = obtenerRuta($iddistribucion);
+    $ruta = $rutasDistribucion[0]['idft_ruta_distribucion'];
+    $html = "<select id='selMensajeros{$iddistribucion}' class='selMensajeros' style='width:150px' >";
+    $query = Model::getQueryBuilder();
+    $mensajeros = $query
+        ->select("mensajero_ruta")
+        ->from("ft_funcionarios_ruta")
+        ->where("estado_mensajero= 1")
+        ->andWhere("ft_ruta_distribucion = :ruta")
+        ->setParameter(":ruta", $ruta, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+    foreach ($mensajeros as $key => $ruta) {
+        $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
+        $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+    }
+    $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
+    return $html;
 }
 
 function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $mensajero_origen, $mensajero_destino, $empresa_transportadora, $iddistribucion, $diligencia)
@@ -750,7 +810,7 @@ function validar_administrador_mensajeria($funcionario_codigo = 0)
 
 function condicion_por_ingresar_ventanilla_distribucion()
 {
-    global $conn, $ruta_db_superior;
+    global $ruta_db_superior;
     include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
     $administrador_mensajeria = validar_administrador_mensajeria();
     $ventanilla_radicacion_usuario_actual = usuario_actual('ventanilla_radicacion');
@@ -773,4 +833,17 @@ function obtener_radicado($idDocumento)
     $radicado = $Documento->numero;
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $idDocumento . '" conector="iframe" titulo="No Registro ' . $radicado . '"><center><button class="btn btn-complete">' . $radicado . '</button></center></div>';
     return $enlace_documento;
+}
+
+/**
+ * Retorna la fecha en el reporte de distribución formateado
+ *
+ * @param [date] $fecha
+ * @return date retorna la fecha sin hora
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-26
+ */
+function fecha_distribucion($fecha)
+{
+    return DateController::convertDate($fecha, 'Y-m-d');
 }

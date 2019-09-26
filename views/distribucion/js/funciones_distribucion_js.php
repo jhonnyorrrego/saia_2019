@@ -14,15 +14,14 @@ include_once $ruta_db_superior . "assets/librerias.php";
 
 function opciones_acciones_distribucion($datos)
 {
-
-
     $cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "");
     $nombre_componente = $cnombre_componente[0]['nombre'];
 
-    $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-xs'>";
+    $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-lg'>";
     $cadena_acciones .= "<option value=''>Acciones...</option>";
+    $cadena_acciones .= "<option value=''>Recepcionar </option>";
 
-    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pordistribuir') {
+    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pendientes') {
         $cadena_acciones .= "<option value='boton_generar_planilla'>Generar Planilla</option>";
     }
 
@@ -36,97 +35,17 @@ function opciones_acciones_distribucion($datos)
     if ($nombre_componente == 'reporte_planilla_distribucion') {
         $cadena_acciones .= "<option value='boton_confirmar_recepcion_iten_planilla'>Confirmar Recepcion</option>";
     }
-    if ($nombre_componente != 'reporte_distribucion_general_finalizado') {
-        $cadena_acciones .= "<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
-    }
-    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pordistribuir') {
-        $cadena_acciones .= "<optgroup id='asignar_mensajero_g' label='Asignar mensajero'>";
-        $cadena_acciones .= select_mensajero_distribucion();
-        $cadena_acciones .= "</optgroup>";
-    }
+
+    $cadena_acciones .= "<option value='boton_entre_sedes'>Despachar entre sedes</option>";
+    $cadena_acciones .= "<option value='boton_finalizar_sin_planilla'>Finalizar sin planilla</option>";
+
     $cadena_acciones .= "</select>";
 
     return $cadena_acciones;
 }
 
-function select_mensajero_distribucion()
-{
-
-
-    $select = "";
-    $array_concat = array(
-        "nombres",
-        "' '",
-        "apellidos"
-    );
-
-    $datos = Model::getQueryBuilder()
-        ->select(["iddependencia_cargo", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre"])
-        ->from("vfuncionario_dc")
-        ->where("lower(cargo)='mensajero'")
-        ->andWhere("estado_dc=1")
-        ->execute()->fetchAll();
-
-    //if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
-    $vector_variable_busqueda = explode('|', @$_REQUEST['variable_busqueda']);
-    $vector_mensajero_tipo = explode('-', $vector_variable_busqueda[1]);
-    $filtrar_mensajero = @$vector_variable_busqueda[1];
-
-    for ($i = 0, $total = count($datos); $i < $total; $i++) {
-        $selected = '';
-        if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'i') {
-            if ($filtrar_mensajero) {
-                if ($filtrar_mensajero == $datos[$i]['iddependencia_cargo'] . "-i") {
-                    $selected = 'selected';
-                }
-            }
-        }
-        $select .= "<option class='select_mensajeros_ditribucion' value='" . $datos[$i]['iddependencia_cargo'] . "-i' " . $selected . ">" . $datos[$i]['nombre'] . "&nbsp;-&nbsp;Mensajero</option>";
-    }
-
-    $mensajeros_externos = Model::getQueryBuilder()
-        ->select(["iddependencia_cargo", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre"])
-        ->from("vfuncionario_dc")
-        ->where("lower(cargo) like :cargo")
-        ->andWhere("estado_dc=1")
-        ->setParameter(':cargo', 'mensajer%extern%')
-        ->execute()->fetchAll();
-
-    for ($i = 0, $total = count($mensajeros_externos); $i < $total; $i++) {
-        $selected = '';
-        if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'i') {
-            if ($filtrar_mensajero) {
-                if ($filtrar_mensajero == $mensajeros_externos[$i]['iddependencia_cargo'] . "-i") {
-                    $selected = 'selected';
-                }
-            }
-        }
-        $select .= "<option class='select_mensajeros_ditribucion' value='" . $mensajeros_externos[$i]['iddependencia_cargo'] . "-i' " . $selected . ">" . $mensajeros_externos[$i]['nombre'] . "&nbsp;-&nbsp;Mensajero Externo</option>";
-    }
-
-    $empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1", "");
-    for ($i = 0; $i < $empresas_transportadoras['numcampos']; $i++) {
-        $selected = '';
-        if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'e') {
-            if ($filtrar_mensajero) {
-                if ($filtrar_mensajero == $empresas_transportadoras[$i]['id'] . "-e") {
-                    $selected = 'selected';
-                }
-            }
-        }
-        $select .= "<option class='select_mensajeros_ditribucion' value='" . $empresas_transportadoras[$i]['id'] . "-e' " . $selected . ">" . $empresas_transportadoras[$i]['nombre'] . "&nbsp;-&nbsp;Empresa Transportadora</option>";
-    }
-
-    return $select;
-}
-
-function opciones_acciones_ruta_distribucion($datos)
-{
-    $botonAdicionar = '<div class="kenlace_saia" enlace="formatos/ruta_distribucion/adicionar_ruta_distribucion.php" conector="iframe" titulo="Crear ruta"><center><button class="btn btn-secondary"><i class="fa fa-plus"></i><span class="d-sm-inline"> Adicionar</span></button></center></div>';
-    return $botonAdicionar;
-}
-
 echo select2();
+
 ?>
 
 <script>
@@ -136,7 +55,7 @@ echo select2();
         //Acción - class= accion_distribucion - select id: opciones_acciones_distribucion
         $("#opciones_acciones_distribucion").on("select2:select", function(e) {
             var valor = e.params.data.id;
-
+            var seleccionado = false;
             if (valor == 'boton_generar_planilla') {
 
                 registros_seleccionados = top.window.gridSelection();
@@ -146,32 +65,38 @@ echo select2();
                         type: "error",
                         duration: "3500"
                     });
-                    return false;
+
+                } else {
+                    seleccionado = true;
                 }
+                if (seleccionado) {
+                    var idruta_dist = [];
+                    var mensajeroDistribucion = [];
 
-                var idruta_dist = [];
-                var mensajeroDistribucion = [];
+                    try {
+                        registros_seleccionados.forEach(function(item, index, array) {
+                            idruta_dist.push($('#ruta' + item).val());
+                            mensajeroDistribucion.push($('#selMensajeros' + item).val());
+                        });
 
-                try {
-                    registros_seleccionados.forEach(function(item, index, array) {
-
-                        idruta = $('#idruta_dist_' + item).val();
-                        if ($.inArray(idruta, idruta_dist) == -1) {
-                            idruta_dist.push(idruta);
-                        }
-
-                        if (!$('#select_mensajeros_ditribucion_' + item).attr('valor')) {
-                            top.notification({
-                                message: "No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado",
-                                type: "error",
-                                duration: "4500"
-                            });
-                            throw "error";
-                        } else {
-
-                            mensajero = $('#select_mensajeros_ditribucion_' + item).attr('valor');
-                            if (mensajeroDistribucion.length != 0) {
-                                if (mensajeroDistribucion.indexOf(mensajero) == -1) {
+                        var count = 0;
+                        idruta_dist.forEach(function(element) {
+                            if (count != 0) {
+                                if (idruta_dist[count - 1] != idruta_dist[count]) {
+                                    top.notification({
+                                        message: "No puede seleccionar distribuciones con diferentes rutas",
+                                        type: "error",
+                                        duration: "3500"
+                                    });
+                                    throw "error";
+                                }
+                            }
+                            count++;
+                        });
+                        count = 0;
+                        mensajeroDistribucion.forEach(function(element) {
+                            if (count != 0) {
+                                if (mensajeroDistribucion[count - 1] != mensajeroDistribucion[count]) {
                                     top.notification({
                                         message: "No puede seleccionar distribuciones con diferentes mensajeros",
                                         type: "error",
@@ -179,16 +104,16 @@ echo select2();
                                     });
                                     throw "error";
                                 }
-                            } else {
-                                mensajeroDistribucion.push(mensajero);
                             }
-                        }
-                    });
-                    $("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idruta_dist=" + idruta_dist.join(",") + "&iddistribucion=" + registros_seleccionados + "&mensajero=" + mensajero + "' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
-                    $("#ir_adicionar_documento").trigger("click");
-                    $("#ir_adicionar_documento").remove();
+                            count++;
+                        });
 
-                } catch (e) {}
+                        $("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idruta_dist=" + idruta_dist[0] + "&iddistribucion=" + registros_seleccionados + "&mensajero=" + mensajeroDistribucion[0] + "' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
+                        $("#ir_adicionar_documento").trigger("click");
+                        $("#ir_adicionar_documento").remove();
+
+                    } catch (e) {}
+                }
             }
 
             if (valor == 'boton_finalizar_entrega') {
@@ -307,7 +232,6 @@ echo select2();
                         }
                     });
                 }
-
             }
 
             if (valor == 'seleccionar_todos_accion_distribucion') {
@@ -317,51 +241,6 @@ echo select2();
                 $("input[name=btSelectItem]").attr('checked', false);
             }
 
-
-            var elemento = e.params.data.element;
-            if ($(elemento).hasClass("select_mensajeros_ditribucion")) {
-                var mensajero = $(this).val();
-                registros_seleccionados = top.window.gridSelection();
-                if (registros_seleccionados.length === 0) {
-                    top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
-                        type: "warning",
-                        duration: "3500"
-                    });
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        dataType: 'json',
-                        data: {
-                            mensajero: mensajero,
-                            iddistribucion: registros_seleccionados,
-                            ejecutar_accion: 'cambiar_mensajero_distribucion'
-                        },
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
-                        success: function(data) {
-                            if (data.exito) {
-                                var seleccionados = $("#table").bootstrapTable("getSelections");
-                                seleccionados.forEach(function(valor, indice, array) {
-                                    $("#select_mensajeros_ditribucion_" + valor["id"]).html($('[value="' + mensajero + '"]').html());
-                                    $("#select_mensajeros_ditribucion_" + valor["id"]).attr('valor', mensajero);
-                                });
-                                top.notification({
-                                    message: 'Mensajero asignado exitosamente',
-                                    type: "success",
-                                    duration: 4000
-                                });
-                            } else {
-                                top.notification({
-                                    message: data.msn,
-                                    type: "error",
-                                    duration: 4000
-                                });
-                            }
-                        }
-                    });
-                }
-
-            }
             //FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
 
             if (valor == 'boton_confirmar_recepcion_iten_planilla') {
@@ -402,19 +281,71 @@ echo select2();
                     });
                 }
             } //fin if boton_confirmar_recepcion_distribucion
+
+            if (valor == 'boton_entre_sedes') {
+
+                registros_seleccionados = top.window.gridSelection();
+                seleccionado = false;
+
+                if (registros_seleccionados.length == 0) {
+                    top.notification({
+                        message: "No ha seleccionado alguna distribuci&oacute;n",
+                        type: "error",
+                        duration: "3500"
+                    });
+
+                } else {
+                    seleccionado = true;
+                }
+
+                if (seleccionado) {
+
+                    var count = 1;
+                    var registrosSeleccionados = "";
+                    registros_seleccionados.forEach(function() {
+                        registrosSeleccionados = `${registrosSeleccionados}reg${count}=${registros_seleccionados[count-1]}&`;
+                        count++;
+                    });
+
+                    top.topModal({
+                        url: `views/distribucion/despachar_entre_sedes.php?${registrosSeleccionados}`,
+                        size: 'modal-xl',
+                        title: 'Despachar entre sedes',
+                        buttons: {
+                            success: {
+                                label: 'Guardar',
+                                class: 'btn btn-complete'
+                            },
+                            cancel: {
+                                label: 'Cerrar',
+                                class: 'btn btn-danger'
+                            }
+                        },
+                        onSuccess: function(data) {
+                            top.closeTopModal();
+                        }
+                    });
+                }
+            } // Fin if boton_entre_sedes
+
+
             $(this).val('');
         }); //FIN IF opciones_acciones_distribucion
 
-        /////////////  Listener para listar mensajeros de la ruta //////////////////
-        $(document).on('click', '.select2-selection__rendered,.select2-results__options', function() {
+        /**
+         *  Listener que cambia las opciones de los mensajeros con su respectiva ruta cada vez que cambia el select de la ruta
+         *  Con un ajax llamamos cargar_mensajeros.php que nos retorna los array con el nombre del mensajero (data) y su id (code).
+         *  @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+         *  @date 2019-09-25 
+         */
+
+        $(document).on('change', '.selRuta', function(e) {
             var id = $(this).attr('id');
-            var value = $(this).val();
-            id = id.split('select2-ruta').join('');
-            id = id.split('-container').join('');
-            id = id.split('-results').join('');
+            id = id.split('ruta').join('');
+            var value = $('#ruta' + id).val();
 
             $.ajax({
-                url: `../../app/distribucion/cargar_mensajeros.php`,
+                url: '<?= $ruta_db_superior ?>app/distribucion/cargar_mensajeros.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -427,17 +358,21 @@ echo select2();
                     var totalMensajeros = respuesta.data.length;
                     var count = 0;
                     respuesta.data.forEach(function() {
-                        $('#selMensajeros' + id).append("<option>" + respuesta.data[count] + "</option>");
+                        $('#selMensajeros' + id).append("<option value=" + respuesta.code[count] + " >" + respuesta.data[count] + "</option>");
                         count++;
                     });
-
                 }
             });
-
         });
         ///////////////////////////////////////////////////////////////////////////////
     }); //FIN IF documento.ready
 </script>
-
 <?php
+
+function opciones_acciones_ruta_distribucion()
+{
+    $botonAdicionar = '<div class="kenlace_saia" enlace="formatos/ruta_distribucion/adicionar_ruta_distribucion.php" conector="iframe" titulo="Crear ruta"><center><button class="btn btn-secondary"><i class="fa fa-plus"></i><span class="d-sm-inline"> Adicionar</span></button></center></div>';
+    return $botonAdicionar;
+}
+
 ?>

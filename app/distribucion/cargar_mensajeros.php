@@ -20,10 +20,18 @@ $Response = (object) [
     'success' => 0
 ];
 
+/**
+ * Retorna un json con array data (Nombre de los mensajeros) code(id de los mensajeros de la ruta que llega con el $_REQUEST['ruta'] desde el ajax
+ * @return string  con el formato Json
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-25 
+ */
+
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     $Response->data = [];
+    $Response->code = [];
     $query = Model::getQueryBuilder();
     $mensajeros = $query
         ->select("mensajero_ruta")
@@ -36,10 +44,11 @@ try {
     foreach ($mensajeros as $key => $ruta) {
         $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
         $Response->data[] = $VfuncionarioDc->nombres . ' ' . $VfuncionarioDc->apellidos;
+        $Response->code[] = $mensajeros[$key]["mensajero_ruta"];
     }
 
     $Response->success = 1;
-    $Response->message = "Campos actualizados";
+    $Response->message = "Mensajeros cargados exitosamente";
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
 }
