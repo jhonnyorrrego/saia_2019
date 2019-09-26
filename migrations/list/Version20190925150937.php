@@ -21,7 +21,7 @@ final class Version20190925150937 extends AbstractMigration
     {
         $value = <<<INFO
             [{"title":"N&uacute;mero","field":"{*ver_documento_distribucion@iddocumento,tipo_origen*}","align":"center"},{"title":"Fecha de registro","field":"{*fecha*}","align":"center"},{"title":"No. Distribuci&oacute;n","field":"{*numero_distribucion*}","align":"center"},{"title":"Ventanilla","field":"{*ventanilla*}","align":"left"},{"title":"Estado","field":"{*ver_estado_distribucion@estado_distribucion*}","align":"center"},{"title":"Diligencia","field":"{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}","align":"center"},{"title":"Ruta","field":"{*mostrar_nombre_ruta_distribucion@iddistribucion*}","align":"left"},{"title":"Mensajero","field":"{*select_mensajeros_ruta_distribucion@iddistribucion*}","align":"left"},{"title":"Planilla Asociada","field":"{*mostrar_planilla_diligencia_distribucion@iddistribucion*}","align":"center"},{"title":"Origen","field":"{*mostrar_origen_distribucion@tipo_origen,origen*}","align":"left"},{"title":"Destino","field":"{*mostrar_destino_distribucion@tipo_destino,destino*}","align":"left"},{"title":"Fecha de Radicaci&oacute;n","field":"{*fecha*}","align":"center"},{"title":"Asunto","field":"{*descripcion*}","align":"left"}]
-        INFO;
+INFO;
 
         $this->connection->update('busqueda_componente', [
             'info' => $value
