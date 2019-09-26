@@ -231,14 +231,8 @@ echo bootstrap();
         function guardar_adicionar($accion, $datos)
         {
             global $ruta_db_superior, $conn;
-
-
             $sql1 = "insert into contenidos_carrusel(" . implode(",", array_keys($datos)) . ") values(" . implode(",", array_values($datos)) . ")";
             phpmkr_query($sql1);
-            $id = phpmkr_insert_id();
-            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto");
-
-            guardar_archivos($id, $_REQUEST["form_uuid"]);
             redirecciona($ruta_db_superior . "carrusel/sliderconfig.php");
         }
 
@@ -256,7 +250,6 @@ echo bootstrap();
             $sql1 = "update contenidos_carrusel set " . implode(",", $fields) . " where idcontenidos_carrusel=" . $id;
 
             phpmkr_query($sql1);
-            guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto");
 
             if ($accion == "guardar_editar" && @$_REQUEST["borrar_imagen"]) {
                 $contenido = busca_filtro_tabla("imagen", "contenidos_carrusel", "idcontenidos_carrusel=$id", "");

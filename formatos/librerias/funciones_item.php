@@ -219,21 +219,3 @@ function guardar_item()
 		]));
 	}
 }
-
-function crear_pretexto_item($asunto, $contenido)
-{
-	global $conn, $ruta_db_superior;
-	$campos = "asunto";
-	$valores = "'" . $asunto . "'";
-	$sql = "INSERT INTO " . "pretexto" . "(" . $campos . ") VALUES (" . $valores . ")";
-	phpmkr_query($sql);
-	$idpretexto = phpmkr_insert_id();
-	guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto");
-	// Guardo la relacion de la plantilla con el suaurio
-	$idfuncionario = SessionController::getValue('idfuncionario');
-	$campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
-	$valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
-	$sql = "INSERT INTO " . "entidad_pretexto" . "(" . $campos . ") VALUES (" . $valores . ") ";
-	phpmkr_query($sql);
-	return;
-}

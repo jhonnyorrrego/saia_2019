@@ -210,28 +210,16 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
         $origen = $_SESSION["usuario_actual"];
     }
 
-    $doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "");
-    $idformato = $doc[0]["idformato"];
-    if (empty($idformato)) {
-        print_r($doc);
-        die();
-    }
+    $Documento = new Documento($idarchivo);
+    $Formato = $Documento->getFormat();
+    $idformato = $Formato->getPK();
+
     llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
 
-    //Cuando ingresan demasiado texto en las notas
-    $texto_notas = "";
-    if (in_array("notas", array_keys($adicionales))) {
-        $cant_texto = strlen($adicionales["notas"]);
-        if ($cant_texto > 3000) {
-            $texto_notas = $adicionales["notas"];
-            unset($adicionales["notas"]);
-        }
-    }
-
-    if ($destino != "" && $origen != "") {
+    if ($destino && $origen) {
         if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
             $tipo_destino = 1;
-            $datos_origen = "";
+
             if ($datos["tipo_destino"] == "5" && count($destino) == 1) {
                 $datos_destino = busca_cargofuncionario(5, $destino[0], "");
                 if ($datos_destino != "") {
@@ -249,8 +237,7 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
             }
 
             foreach ($destino as $user) {
-                if ($user == null) {
-
+                if (!$user) {
                     continue;
                 }
 
@@ -275,10 +262,6 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
 
                     $idbuzon_s = $cadena;
                     $idtransferencia[] = $idbuzon_s;
-
-                    if ($texto_notas != "") {
-                        guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', 0);
-                    }
 
                     $VfuncionarioDc = VfuncionarioDc::getUserFromEntity(1, $user);
                     Acceso::addSeePermission(
@@ -345,16 +328,12 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
                     'origen' => $user
                 ];
 
-
                 if ($adicionales) {
                     $buzonEntrada = array_merge($buzonEntrada, $adicionales);
                 }
 
-                $idInsertadoEntrada1 = BuzonEntrada::newRecord($buzonEntrada);
-                if ($texto_notas != "") {
-                    $idbuzon_e = $idInsertadoEntrada1;
-                    guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', 0);
-                }
+                BuzonEntrada::newRecord($buzonEntrada);
+
                 procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
             }
         } else {
@@ -367,9 +346,9 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
                 'nombre' => $datos["nombre"],
                 'fecha' => date("Y-m-d H:i:s"),
                 'destino' => $origen,
-                'origen' => $destino,
-                'tipo_origen' => '1',
-                'tipo_destino' => $tipo_destino,
+                'origen' => $destino[0],
+                'tipo_origen' => 1,
+                'tipo_destino' => 1,
                 'activo' => $datos['activo'],
                 'ver_notas' => $ver_notas
             ];
@@ -378,12 +357,7 @@ function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
                 $buzonEntrada = array_merge($buzonEntrada, $adicionales);
             }
 
-            $idInsertadoEntrada2 = BuzonEntrada::newRecord($buzonEntrada);
-
-            if ($texto_notas != "") {
-                $idbuzon_e = $idInsertadoEntrada2;
-                guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', 0);
-            }
+            BuzonEntrada::newRecord($buzonEntrada);
         }
     }
 
