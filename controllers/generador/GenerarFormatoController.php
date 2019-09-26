@@ -409,6 +409,7 @@ while (\$max_salida > 0) {
 }
 
 include_once \$ruta_db_superior . 'core/autoload.php';
+include_once \$ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php';
 include_once \$ruta_db_superior . 'formatos/{$this->Formato->nombre}/funciones.php';
 
 try {
@@ -708,7 +709,7 @@ CONTENT;
             $search = "{*{$CamposFormato->nombre}*}";
             $baseContent = str_replace(
                 $search,
-                "<?= mostrar_valor_campo('{$CamposFormato->nombre}', {$this->formatId}, \$_REQUEST['iddoc']) ?>",
+                "<?= ComponentFormGeneratorController::callShowValue({$CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>",
                 $baseContent
             );
         }

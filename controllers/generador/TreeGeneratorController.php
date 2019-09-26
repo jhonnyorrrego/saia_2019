@@ -18,10 +18,6 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
     {
         $idcampo_ft = $this->CamposFormato->getPK();
         $params_ft = json_decode($this->CamposFormato->valor, true);
-        echo '<pre>';
-        var_dump($this->CamposFormato->valor);
-        echo '</pre>';
-        exit;
         $opc_ft = "";
         $param_url = "";
         $parts = parse_url($params_ft["url"]);
@@ -94,12 +90,14 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
      * muestra el valor almacenado en un documento
      * de un componente especifico
      *
-     * @param integer $fieldId
+     * @param CamposFormato $CamposFormato
      * @param integer $documentId
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-25
+     * @date 2019-09-26
      */
-    public function showValue($fieldId, $documentId)
-    { }
+    public function showValue($CamposFormato, $documentId)
+    {
+        return parent::showValue($CamposFormato, $documentId);
+    }
 }

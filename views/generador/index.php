@@ -129,16 +129,6 @@ function check_banderas($bandera, $chequear = true)
     }
 }
 
-function cargarCampos($categoria)
-{
-
-    $listadoComponentes = busca_filtro_tabla('etiqueta,idpantalla_componente,clase', 'pantalla_componente', "estado=1 AND categoria='{$categoria}'", '');
-    echo "<h5>" . $categoria . "</h5>";
-    for ($i = 0; $i < $listadoComponentes["numcampos"]; $i++) {
-        $etiqueta = $listadoComponentes[$i]["etiqueta"];
-        echo "<li class='panel' idpantalla_componente='{$listadoComponentes[$i]["idpantalla_componente"]}'><i class='{$listadoComponentes[$i]["clase"]} mr-3'></i><div id='c_' class='d-inline'>{$etiqueta}</div></li>";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -280,7 +270,7 @@ function cargarCampos($categoria)
                                                         <select name="tipo_registro" id="tipo_registro" data-toggle="tooltip">
                                                             <option value="">Por favor seleccione</option>
                                                             <option value="1" id="tipo_registro_1">Documento oficial (PDF)</option>
-                                                            <option value="2" id="tipo_registro_2">Registro de apoyo</option>
+                                                            <option value="2" id="tipo_registro_2" selected>Registro de apoyo</option>
                                                             <option value="3" id="tipo_registro_3">Registro del tipo Item</option>
                                                         </select>
                                                     </div>
@@ -486,11 +476,7 @@ function cargarCampos($categoria)
                                             </ul>
                                         </div>
                                         <div class="col-3" style="position:relative;display:inline-block;vertical-align:top">
-                                            <ul id="itemsComponentes" class="sortable boxier listContainer pl-2">
-                                                <?= cargarCampos('Elementos de diseño') ?>
-                                                <?= cargarCampos('Campos del formato') ?>
-                                                <?= cargarCampos('Campos avanzados') ?>
-                                            </ul>
+                                            <ul id="itemsComponentes" class="sortable boxier listContainer pl-2"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -572,7 +558,6 @@ function cargarCampos($categoria)
     <script src="<?= $ruta_db_superior ?>views/generador/js/coordinates.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/dragdrop.js"></script>
 </body>
 
 </html>

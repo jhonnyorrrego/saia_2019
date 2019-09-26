@@ -32,17 +32,4 @@ class LineGeneratorController extends ComponentFormGeneratorController implement
     {
         return $this->generateAditionComponent();
     }
-
-    /**
-     * muestra el valor almacenado en un documento
-     * de un componente especifico
-     *
-     * @param integer $fieldId
-     * @param integer $documentId
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-25
-     */
-    public function showValue($fieldId, $documentId)
-    { }
 }
