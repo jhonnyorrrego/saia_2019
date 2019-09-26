@@ -250,7 +250,6 @@ function accionFinalizarDistribucion($iddoc)
 
 function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0)
 {
-    global $conn, $ruta_db_superior;
     $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
     $tabla = '';
     if ($distribuciones['numcampos']) {
@@ -306,7 +305,6 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 
 function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0)
 {
-    global $conn, $ruta_db_superior;
     $html = '';
     if (!$js && $iddistribucion) {
 
@@ -350,9 +348,32 @@ function ver_documento_distribucion($iddocumento, $tipo_origen)
         1 => 'I',
         2 => 'E'
     );
-    $cadena_mostrar = $numero . '_' . $array_tipo_origen[$tipo_origen];
+    $cadena_mostrar = $numero . ' - ' . $array_tipo_origen[$tipo_origen];
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $cadena_mostrar . '</button></center></div>';
     return $enlace_documento;
+}
+
+/**
+ * Ver_numero_registro - Esta funcion retorna el numero de registro de una distribución
+ *
+ * @param [integer] $iddocumento
+ * @param [integer] $tipo_origen
+ * @param [date] $fecha
+ * @return string Retorna el numero que toma en cuenta la fecha, el numero de item y el tipo de origen
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-26
+ */
+function ver_numero_registro($iddocumento, $tipo_origen, $fecha)
+{
+    $Documento = new Documento($iddocumento);
+    $numero = $Documento->numero;
+    $array_tipo_origen = array(
+        1 => 'I',
+        2 => 'E'
+    );
+    $fecha = DateController::convertDate($fecha, 'Y-m-d');
+    $numeroRegistro = "{$fecha}-{$numero}-{$array_tipo_origen[$tipo_origen]}";
+    return $numeroRegistro;
 }
 
 function ver_documento_planilla($iddocumento, $numero)
@@ -461,10 +482,9 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
         ->andWhere("ft_ruta_distribucion = :ruta")
         ->setParameter(":ruta", $ruta, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
-
     foreach ($mensajeros as $key => $ruta) {
         $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
-        $html .= "<option value='{$mensajeros[$key]["idfuncionario"]}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+        $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
     }
     $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
     return $html;
@@ -790,7 +810,7 @@ function validar_administrador_mensajeria($funcionario_codigo = 0)
 
 function condicion_por_ingresar_ventanilla_distribucion()
 {
-    global $conn, $ruta_db_superior;
+    global $ruta_db_superior;
     include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
     $administrador_mensajeria = validar_administrador_mensajeria();
     $ventanilla_radicacion_usuario_actual = usuario_actual('ventanilla_radicacion');
@@ -813,4 +833,17 @@ function obtener_radicado($idDocumento)
     $radicado = $Documento->numero;
     $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $idDocumento . '" conector="iframe" titulo="No Registro ' . $radicado . '"><center><button class="btn btn-complete">' . $radicado . '</button></center></div>';
     return $enlace_documento;
+}
+
+/**
+ * Retorna la fecha en el reporte de distribución formateado
+ *
+ * @param [date] $fecha
+ * @return date retorna la fecha sin hora
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-26
+ */
+function fecha_distribucion($fecha)
+{
+    return DateController::convertDate($fecha, 'Y-m-d');
 }
