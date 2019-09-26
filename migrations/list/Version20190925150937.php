@@ -43,7 +43,7 @@ final class Version20190925150937 extends AbstractMigration
         $this->connection->update(
             'busqueda_componente',
             [
-                'etiqueta' => 'En distribución',
+                'etiqueta' => 'En distribución'
             ],
             [
                 'nombre' => 'reporte_distribucion_general_endistribucion'
@@ -53,7 +53,7 @@ final class Version20190925150937 extends AbstractMigration
         $this->connection->update(
             'busqueda_componente',
             [
-                'etiqueta' => 'Finalizado',
+                'etiqueta' => 'Finalizado'
             ],
             [
                 'nombre' => 'reporte_distribucion_general_finalizado'
