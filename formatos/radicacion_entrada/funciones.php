@@ -819,11 +819,11 @@ function cambiar_estado($idformato, $iddoc)
 
 function post_aprobar_rad_entrada($idformato, $iddoc)
 {
-    global $conn, $ruta_db_superior;
+    global $ruta_db_superior;
     $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "");
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
-    // echo($insert);die();
     phpmkr_query($insert);
+
     if ($_REQUEST["radicacion_rapida"] == 1) {
         $sql1 = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);

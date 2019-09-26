@@ -33,20 +33,28 @@ try {
     $Response->data = [];
     $Response->code = [];
     $query = Model::getQueryBuilder();
-    $mensajeros = $query
-        ->select("mensajero_ruta")
-        ->from("ft_funcionarios_ruta")
-        ->where("estado_mensajero= 1")
-        ->andWhere("ft_ruta_distribucion = :ruta")
-        ->setParameter(":ruta", $_REQUEST['ruta'], \Doctrine\DBAL\Types\Type::INTEGER)
-        ->execute()->fetchAll();
-
+    $mensajeros = '';
+    if (isset($_REQUEST['ruta'])) {
+        $mensajeros = $query
+            ->select("mensajero_ruta")
+            ->from("ft_funcionarios_ruta")
+            ->where("estado_mensajero= 1")
+            ->andWhere("ft_ruta_distribucion = :ruta")
+            ->setParameter(":ruta", $_REQUEST['ruta'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
+    } else {
+        $mensajeros = $query
+            ->select("mensajero_ruta")
+            ->from("ft_funcionarios_ruta")
+            ->where("estado_mensajero= 1")
+            ->execute()->fetchAll();
+    }
     foreach ($mensajeros as $key => $ruta) {
         $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
         $Response->data[] = $VfuncionarioDc->nombres . ' ' . $VfuncionarioDc->apellidos;
         $Response->code[] = $mensajeros[$key]["mensajero_ruta"];
     }
-
+    $Response->data = json_encode($Response->data);
     $Response->success = 1;
     $Response->message = "Mensajeros cargados exitosamente";
 } catch (Throwable $th) {
