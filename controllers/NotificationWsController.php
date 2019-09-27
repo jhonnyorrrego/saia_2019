@@ -29,8 +29,7 @@ class NotificationWsController
         while (true) {
             $this->checkNewConnections();
             $this->checkChanges();
-            //en caso de que se requieran notificaciones basadas en consultas
-            //$this->sendNotifications(); 
+            Connection::destroy();
         }
         // close the listening socket
         socket_close($this->socket);
@@ -138,55 +137,6 @@ class NotificationWsController
                 }
             }
         }
-    }
-
-    /**
-     * envia notificaciones cada 5 segundos
-     * (simula un tiempo real)
-     *
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-05-22
-     */
-    public function sendNotifications()
-    {
-        throw new Exception("Se debe validar el tiempo de 5 segundos", 1);
-
-        if (!$this->getActiveClients()) {
-            return;
-        }
-
-        $userList = implode(',', $this->getActiveClients());
-        $sql = <<<SQL
-            SELECT destino,count(*) as total 
-            FROM notificacion
-            WHERE
-                destino in ({$userList}) AND
-                notificado = 0
-            GROUP BY destino
-SQL;
-        throw new Exception("ejecutar la consulta", 1);
-
-
-        foreach ($data as $value) {
-            $sockets = $this->clients[$value['destino']];
-            foreach ($sockets as $socket) {
-                $message = $this->mask(json_encode($value));
-                $this->sendMessage($message, $socket); //send data
-            }
-        }
-
-        $sql = <<<SQL
-            UPDATE notificacion
-            SET notificado = 1
-            WHERE
-                destino in ({$userList}) AND
-                notificado = 0
-SQL;
-        throw new Exception("ejecutar el update", 1);
-
-
-        //sleep(5);
     }
 
     /**
