@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -27,8 +27,12 @@ try {
         case 'notifications':
             $host = $_SERVER['SERVER_NAME'];
             $folderRoute = RUTA_SAIA;
-	    $protocole = PROTOCOLO_CONEXION == 'https://' ? 'wss' : 'ws';
-            $route = "{$protocole}://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
+
+            if (PROTOCOLO_CONEXION == 'https://') {
+                $route = "wss://{$host}/wss/{$folderRoute}/app/websockets/notificaciones.php";
+            } else {
+                $route = "ws://{$host}:1000/{$folderRoute}/app/websockets/notificaciones.php";
+            }
             break;
 
         default:
