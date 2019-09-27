@@ -93,14 +93,15 @@ abstract class GraficoController
     {
         $sql = $this->getSql();
         $query = Connection::getInstance()->executeQuery($sql)->fetchAll();
-        $stats = [];
         $field = $this->Grafico->columna;
         $modelName = $this->Grafico->modelo;
 
+        $stats = [];
+
         $Instance = new $modelName();
         foreach ($query as $record) {
-            $label = $Instance->getValueLabel($field, $record[0]);
-            $stats[$label] = $record[1];
+            $label = $Instance->getValueLabel($field, reset($record));
+            $stats[$label] = end($record);
         }
 
         return $stats;
