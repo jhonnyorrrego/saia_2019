@@ -186,7 +186,6 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
 
 function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
 {
-
     $idtransferencia = array();
     sort($destino);
 

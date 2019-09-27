@@ -53,7 +53,6 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
 
 function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
 {
-    global $conn, $ruta_db_superior;
     /*
      * $iddoc = iddocumento de la tabla documento
      * $datos
@@ -127,6 +126,8 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             $iddependencia_cargo_mensajero_destino = obtener_mensajero_ruta_distribucion($idft_ruta_distribucion_destino);
         }
 
+        $Documento = new Documento($iddoc);
+
         $nuevaDistribucion = $Distribucion = new Distribucion();
         $camposDistribucion = [
             'origen' => $datos['origen'],
@@ -141,8 +142,9 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             'estado_distribucion' => $estado_distribucion,
             'estado_recogida' => $estado_recogida,
             'documento_iddocumento' => $iddoc,
-            'fecha_creacion' => date('Y-m-d H:i:s')
-
+            'fecha_creacion' => date('Y-m-d H:i:s'),
+            'sede_origen' => $Documento->ventanilla_radicacion,
+            'sede_destino' => $Documento->ventanilla_radicacion
         ];
 
         if ($iddistribucion) {

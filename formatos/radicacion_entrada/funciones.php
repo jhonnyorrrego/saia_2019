@@ -536,6 +536,7 @@ function llenar_datos_funcion($idformato, $iddoc)
 {
     global $conn, $datos;
     $datos = busca_filtro_tabla("ft.*,d.estado,d.tipo_radicado", "ft_radicacion_entrada ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "");
+
     if ($datos[0]["estado"] == 'INICIADO') {
         $sql = "UPDATE ft_radicacion_entrada SET tipo_origen=" . $datos[0]['tipo_radicado'] . " WHERE documento_iddocumento=" . $iddoc;
         phpmkr_query($sql);
@@ -822,8 +823,6 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
     global $ruta_db_superior;
     $ventanilla = busca_filtro_tabla("ventanilla_radicacion", "documento", "iddocumento=" . $iddoc, "");
     $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $iddoc . "', '" . $ventanilla[0]['ventanilla_radicacion'] . "'," . SessionController::getValue('idfuncionario') . ")";
-    phpmkr_query($insert);
-
     if ($_REQUEST["radicacion_rapida"] == 1) {
         $sql1 = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
@@ -887,6 +886,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
      * El $estado_recogida corresponde a si se necesita una acción de recogida en este caso se debe enviar el valor (1) para cuando es si y el valor de (0) cuando es no 
      */
     if ($datos['numcampos']) {
+
         //por defecto se maneja que si se necesita entrega (1)
         $estado_distribucion = 1;
         //Cuando no se necesita entrega (3)
