@@ -186,7 +186,6 @@ function busca_cargofuncionario($tipo, $dato, $dependencia)
 
 function transferir_archivo($datos, $destino, $adicionales, $anexos = null)
 {
-
     $idtransferencia = array();
     sort($destino);
 
@@ -493,6 +492,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                 ]);
 
                 $respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "");
+
                 if ($respuestas["numcampos"] > 0) {
                     $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "");
                     $datos["origen"] = $origen_respuesta[0]["origen"];

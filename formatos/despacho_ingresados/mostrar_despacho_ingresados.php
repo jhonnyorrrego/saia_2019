@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
+include_once $ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'formatos/despacho_ingresados/funciones.php';
 
 try {
@@ -53,7 +54,7 @@ if(
 	<tbody>
 		<tr>
 			<td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
-			<td><strong>Tipo de Mensajer&iacute;a: </strong><?= mostrar_valor_campo('tipo_mensajero', 353, $_REQUEST['iddoc']) ?></td>
+			<td><strong>Tipo de Mensajer&iacute;a: </strong><?= ComponentFormGeneratorController::callShowValue(5189, $_REQUEST['iddoc']) ?></td>
 			<td><strong>Recorrido: </strong>{*obtener_tipo_recorrido*}</td>
 		</tr>
 	</tbody>

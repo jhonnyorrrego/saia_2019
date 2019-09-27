@@ -79,13 +79,8 @@ function mensajero_entrega_interna($idformato, $iddoc)
             ->execute()->fetchAll();
         $cadena_nombre = $empresa_transportadora[0]['nombre'];
     } else {
-        $funcionario = Model::getQueryBuilder()
-            ->select('*')
-            ->from('vfuncionario_dc')
-            ->where('iddependencia_cargo = :mensajero')
-            ->setParameter(':mensajero', $documentos2[0]['mensajero'], \Doctrine\DBAL\Types\Type::INTEGER)
-            ->execute()->fetchAll();
-        $cadena_nombre = $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'];
+        $Funcionario = new Funcionario($documentos2[0]['mensajero']);
+        $cadena_nombre = $Funcionario->nombres . ' ' . $Funcionario->apellidos;
     }
     //print_r($cadena_nombre);
     echo (ucwords(strtolower($cadena_nombre)));

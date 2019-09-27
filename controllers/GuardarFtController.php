@@ -195,8 +195,7 @@ class GuardarFtController
                 'checkbox',
                 'select'
             ])) {
-                $this->saveRadioSelected($data[$field], $CamposFormato->getPK());
-                $data[$field] = $CamposFormato->getPK();
+                $data[$field] = $this->saveRadioSelected($data[$field], $CamposFormato->getPK());
             }
 
             if ($data[$field]) {

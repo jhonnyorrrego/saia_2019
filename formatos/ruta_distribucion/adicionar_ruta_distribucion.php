@@ -114,18 +114,13 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <label for='fecha_ruta_distribuc' title=''>FECHA Y HORA<span>*</span></label>
 <label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
-<script type="text/javascript">
-                $(function () {
-                    var configuracion={"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
-                    $("#fecha_ruta_distribuc").datetimepicker(configuracion);
-                    $("#content_container").height($(window).height());
-                });
-            </script>
-<script type="text/javascript">
+<script type='text/javascript'>
             $(function () {
-                $("#fecha_ruta_distribuc").val("2019-09-24");
+                var configuracion={"defaultDate":"2019-09-27","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                $('#fecha_ruta_distribuc').datetimepicker(configuracion);
+                $('#content_container').height($(window).height());
             });
-            </script>
+        </script>
 </div>
 <div class='input-group-append'>
             <span class='input-group-text'><i class='fa fa-calendar'></i></span>
@@ -135,11 +130,23 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
             <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='' />
         </div>
-            <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
-                <label title="">MENSAJEROS DE LA RUTA<span>*</span></label>
-                <?php genera_campo_listados_editar(404,8336,$_REQUEST['iddoc']) ?>
-                <label id='asignar_mensajeros-error' class='error' for='asignar_mensajeros' style='display: none;'></label>
+
+        <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
+            <label title=''>MENSAJEROS DE LA RUTA<span>*</span></label>
+            <div class='form-group'>
+            <select name='asignar_mensajeros' id='asignar_mensajeros' required>
+            <option value=''>Por favor seleccione...</option>
+        <option value='15'>
+                1
+            </option></select>
+                <script>
+                $(document).ready(function() {
+                    $('#asignar_mensajeros').select2();
+                    $('#asignar_mensajeros').addClass('full-width');
+                });
+                </script>
             </div>
+        </div>
 <div class="form-group required" id="group_asignar_dependencias">
                                     <label title="">DEPENDENCIAS DE LA RUTA<span>*</span></label><?php $origen_4998 = array(
                                 "url" => "app/arbol/arbol_dependencia.php",
@@ -186,6 +193,19 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             $("#continuar").click(function() {
                 $("#formulario_formatos").validate({
                     ignore: [],
+                    errorPlacement: function (error, element) {
+                        let node = element[0];
+
+                        if (
+                            node.tagName == 'SELECT' &&
+                            node.className.indexOf('select2') !== false
+                        ) {
+                            error.addClass('pl-3');
+                            element.next().append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
                     submitHandler: function(form) {
                         $("#continuar").hide();
                         $("#continuar").after(
