@@ -27,12 +27,12 @@ final class Version20190926205922 extends AbstractMigration
         }
         if (!$distribucion->hasColumn('sede_origen')) {
             $distribucion->addColumn('sede_origen', 'integer', [
-                'default' => 0
+                'default' => 1
             ]);
         }
         if (!$distribucion->hasColumn('sede_destino')) {
             $distribucion->addColumn('sede_destino', 'integer', [
-                'default' => 0
+                'default' => 1
             ]);
         }
     }

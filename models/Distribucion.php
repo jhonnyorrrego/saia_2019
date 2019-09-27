@@ -16,6 +16,9 @@ class Distribucion extends Model
     protected $estado_recogida;
     protected $documento_iddocumento;
     protected $fecha_creacion;
+    protected $entre_sedes;
+    protected $sede_origen;
+    protected $sede_destino;
 
 
 
@@ -26,22 +29,25 @@ class Distribucion extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'iddistribucion',
                 'origen',
-				'tipo_origen',
-				'ruta_origen',
-				'mensajero_origen',			
-				'destino',
-				'tipo_destino',
-				'ruta_destino',
-				'mensajero_destino',		
-				'numero_distribucion',
-				'estado_distribucion',
-				'estado_recogida',	
-				'documento_iddocumento',
-				'fecha_creacion'
+                'tipo_origen',
+                'ruta_origen',
+                'mensajero_origen',
+                'destino',
+                'tipo_destino',
+                'ruta_destino',
+                'mensajero_destino',
+                'numero_distribucion',
+                'estado_distribucion',
+                'estado_recogida',
+                'documento_iddocumento',
+                'fecha_creacion',
+                'entre_sedes',
+                'sede_origen',
+                'sede_destino'
             ],
             'date' => [
                 'fecha_creacion'

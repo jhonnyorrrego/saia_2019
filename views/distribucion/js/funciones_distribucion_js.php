@@ -56,6 +56,7 @@ echo select2();
         $("#opciones_acciones_distribucion").on("select2:select", function(e) {
             var valor = e.params.data.id;
             var seleccionado = false;
+
             if (valor == 'boton_generar_planilla') {
 
                 registros_seleccionados = top.window.gridSelection();
@@ -114,8 +115,9 @@ echo select2();
 
                     } catch (e) {}
                 }
-            }
+            } /// Fin boton generar planilla
 
+            ///// Clic en boton finalizar entrega
             if (valor == 'boton_finalizar_entrega') {
 
                 var registros_seleccionados = "";
@@ -232,7 +234,7 @@ echo select2();
                         }
                     });
                 }
-            }
+            } ///// Fin boton_finalizar_entrega_personal 
 
             if (valor == 'seleccionar_todos_accion_distribucion') {
                 $("input[name=btSelectItem]").attr('checked', true);
@@ -300,15 +302,19 @@ echo select2();
 
                 if (seleccionado) {
 
-                    var count = 1;
+                    var count = 0;
                     var registrosSeleccionados = "";
                     registros_seleccionados.forEach(function() {
-                        registrosSeleccionados = `${registrosSeleccionados}reg${count}=${registros_seleccionados[count-1]}&`;
+                        if (count != 0) {
+                            registrosSeleccionados = `${registrosSeleccionados},${registros_seleccionados[count]}`;
+                        } else {
+                            registrosSeleccionados = registros_seleccionados[count];
+                        }
                         count++;
                     });
 
                     top.topModal({
-                        url: `views/distribucion/despachar_entre_sedes.php?${registrosSeleccionados}`,
+                        url: `views/distribucion/despachar_entre_sedes.php?registros=${registrosSeleccionados}`,
                         size: 'modal-xl',
                         title: 'Despachar entre sedes',
                         buttons: {
@@ -321,8 +327,14 @@ echo select2();
                                 class: 'btn btn-danger'
                             }
                         },
-                        onSuccess: function(data) {
+                        onSuccess: function() {
                             top.closeTopModal();
+                            $("#table").bootstrapTable("refresh");
+                            top.notification({
+                                message: "Se ha guardado correctamente",
+                                type: "success",
+                                duration: "3500"
+                            });
                         }
                     });
                 }
@@ -357,8 +369,9 @@ echo select2();
                     $('#selMensajeros' + id).empty();
                     var totalMensajeros = respuesta.data.length;
                     var count = 0;
-                    respuesta.data.forEach(function() {
-                        $('#selMensajeros' + id).append("<option value=" + respuesta.code[count] + " >" + respuesta.data[count] + "</option>");
+                    var mensajeros = JSON.parse(respuesta.data);
+                    mensajeros.forEach(function() {
+                        $('#selMensajeros' + id).append("<option value=" + mensajeros[count].id + " >" + mensajeros[count].nombre + "</option>");
                         count++;
                     });
                 }

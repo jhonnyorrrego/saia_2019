@@ -109,7 +109,7 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
         
         echo "</div>";
         ?>
-<input class='' type='hidden' name='tipo_mensajero' value='<?= mostrar_valor_campo('tipo_mensajero',353,$_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='tipo_mensajero' value='<?= ComponentFormGeneratorController::callShowValue(5189, $_REQUEST['iddoc']) ?>'>
         <div class='form-group form-group-default ' id='group_anexo'>
             <label title=''>ANEXO</label>
             <div class="" id="dropzone_anexo"></div>
@@ -137,25 +137,25 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                     },
                     paramName: 'file',
                     init : function() {
-                                        $.post('<?= $ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
-                    token: localStorage.getItem('token'),
-                    key: localStorage.getItem('key'),
-                    fieldId: 5018,
-                    documentId: <?= $_REQUEST['iddoc'] ?>
-                }, function(response){
-                    if(response.success){
-                        response.data.forEach(mockFile => {
-                            dropzone_anexo.removeAllFiles();
-                            dropzone_anexo.emit('addedfile', mockFile);
-                            dropzone_anexo.emit('thumbnail', mockFile, '<?= $ruta_db_superior ?>' + mockFile.route);
-                            dropzone_anexo.emit('complete', mockFile);
+                        $.post('<?= $ruta_db_superior ?>app/anexos/consultar_anexos_campo.php', {
+                            token: localStorage.getItem('token'),
+                            key: localStorage.getItem('key'),
+                            fieldId: 5018,
+                            documentId: "<?= $_REQUEST['iddoc'] ?>"
+                        }, function(response){
+                            if(response.success){
+                                response.data.forEach(mockFile => {
+                                    dropzone_anexo.removeAllFiles();
+                                    dropzone_anexo.emit('addedfile', mockFile);
+                                    dropzone_anexo.emit('thumbnail', mockFile, '<?= $ruta_db_superior ?>' + mockFile.route);
+                                    dropzone_anexo.emit('complete', mockFile);
 
-                            loadeddropzone_anexo.push(mockFile.route);
-                        });                        
-                        $("[name='anexo']").val(loadeddropzone_anexo.join(','));
-                        dropzone_anexo.options.maxFiles = options.cantidad - loadeddropzone_anexo.length;                        
-                    }
-                }, 'json');
+                                    loadeddropzone_anexo.push(mockFile.route);
+                                });                        
+                                $("[name='anexo']").val(loadeddropzone_anexo.join(','));
+                                dropzone_anexo.options.maxFiles = options.cantidad - loadeddropzone_anexo.length;                        
+                            }
+                        }, 'json');
 
                         this.on('success', function(file, response) {
                             response = JSON.parse(response);
@@ -188,27 +188,110 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                 });
             });
         </script>
-<input class='required' type='hidden' name='iddestino_radicacion' value='<?= mostrar_valor_campo('iddestino_radicacion',353,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='estado_documento' value='<?= mostrar_valor_campo('estado_documento',353,$_REQUEST['iddoc']) ?>'>
-            <div class='form-group form-group-default ' id='group_tipo_recorrido'>
-                <label title="">RECORRIDO DEL DIA</label>
-                <?php genera_campo_listados_editar(353,5087,$_REQUEST['iddoc']) ?>
-                
-            </div>
-<input class='' type='hidden' name='docs_seleccionados' value='<?= mostrar_valor_campo('docs_seleccionados',353,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='idft_despacho_ingresados' value='<?= mostrar_valor_campo('idft_despacho_ingresados',353,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='mensajero' value='<?= mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='documento_iddocumento' value='<?= mostrar_valor_campo('documento_iddocumento',353,$_REQUEST['iddoc']) ?>'>
-<input class='required' type='hidden' name='encabezado' value='<?= mostrar_valor_campo('encabezado',353,$_REQUEST['iddoc']) ?>'>
-<input class='' type='hidden' name='fecha_entrega' value='<?= mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc']) ?>'>
-            <div class='form-group form-group-default form-group-default-select2 required' id='group_ventanilla'>
-                <label title="">VENTANILLA<span>*</span></label>
-                <?php genera_campo_listados_editar(353,8319,$_REQUEST['iddoc']) ?>
-                <label id='ventanilla-error' class='error' for='ventanilla' style='display: none;'></label>
-            </div>
-<input class='required' type='hidden' name='firma' value='<?= mostrar_valor_campo('firma',353,$_REQUEST['iddoc']) ?>'>
-<?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
+<input type='hidden' name='iddestino_radicacion' value='<?= ComponentFormGeneratorController::callShowValue(5013, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='estado_documento' value='<?= ComponentFormGeneratorController::callShowValue(4830, $_REQUEST['iddoc']) ?>'>
 
+        <div class='form-group form-group-default required' id='group_tipo_recorrido'>
+            <label title=''>RECORRIDO DEL DIA<span>*</span></label>
+            <div class='radio radio-success'>
+        <input 
+                required
+                type='radio'
+                name='tipo_recorrido'
+                id='tipo_recorrido0'
+                value='16'
+                aria-required='true'>
+                <label for='tipo_recorrido0'>
+                    Matutino
+                </label><input 
+                required
+                type='radio'
+                name='tipo_recorrido'
+                id='tipo_recorrido1'
+                value='17'
+                aria-required='true'>
+                <label for='tipo_recorrido1'>
+                    Vespertino
+                </label></div>
+            <label id='tipo_recorrido-error' class='error' for='tipo_recorrido' style='display: none;'></label>
+        </div>            <script>
+                $(function(){
+                    $.post(
+                        '<?= $ruta_db_superior ?>app/documento/consulta_seleccionado.php',
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            fieldId: 5087,
+                            documentId: "<?= $_REQUEST['iddoc'] ?>"
+                        },
+                        function (response) {
+                            if (response.success) {
+                                if(response.data){
+                                    $("[name='tipo_recorrido'][value='"+response.data+"']").prop('checked', true);
+                                }
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
+                });
+            </script>
+<input type='hidden' name='docs_seleccionados' value='<?= ComponentFormGeneratorController::callShowValue(5088, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='idft_despacho_ingresados' value='<?= ComponentFormGeneratorController::callShowValue(4075, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='mensajero' value='<?= ComponentFormGeneratorController::callShowValue(4074, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(4076, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(4078, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='fecha_entrega' value='<?= ComponentFormGeneratorController::callShowValue(4080, $_REQUEST['iddoc']) ?>'>
+
+        <div class='form-group form-group-default form-group-default-select2 required' id='group_ventanilla'>
+            <label title=''>VENTANILLA<span>*</span></label>
+            <div class='form-group'>
+            <select name='ventanilla' id='ventanilla' required>
+            <option value=''>Por favor seleccione...</option>
+        <option value='18'>
+                1
+            </option></select>
+                <script>
+                $(document).ready(function() {
+                    $('#ventanilla').select2();
+                    $('#ventanilla').addClass('full-width');
+                });
+                </script>
+            </div>
+        </div>            <script>
+                $(function(){
+                    $.post(
+                        '<?= $ruta_db_superior ?>app/documento/consulta_seleccionado.php',
+                        {
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token'),
+                            fieldId: 8319,
+                            documentId: "<?= $_REQUEST['iddoc'] ?>"
+                        },
+                        function (response) {
+                            if (response.success) {
+                                if(response.data){
+                                    $("[name='ventanilla']")
+                                        .val(response.data)
+                                        .trigger('change');
+                                }
+                            } else {
+                                top.notification({
+                                    type: 'error',
+                                    message: response.message
+                                });
+                            }
+                        },
+                        'json'
+                    );
+                });
+            </script>
+<input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(4079, $_REQUEST['iddoc']) ?>'>
+<?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
 <input type='hidden' name='campo_descripcion' value='4080'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
 <input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
@@ -231,6 +314,19 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
             $("#continuar").click(function() {
                 $("#formulario_formatos").validate({
                     ignore: [],
+                    errorPlacement: function (error, element) {
+                        let node = element[0];
+
+                        if (
+                            node.tagName == 'SELECT' &&
+                            node.className.indexOf('select2') !== false
+                        ) {
+                            error.addClass('pl-3');
+                            element.next().append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    },
                     submitHandler: function(form) {
                         $("#continuar").hide();
                         $("#continuar").after(

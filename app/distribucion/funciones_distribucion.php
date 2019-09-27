@@ -430,6 +430,11 @@ function mostrar_nombre_ruta_distribucion($iddistribucion)
         $opciones .= "<option value='{$ruta["idft_ruta_distribucion"]}'>{$ruta['nombre_ruta']}</option>";
     }
     $opciones .= "</select> <script> $('#ruta{$iddistribucion}').select2();</script>";
+
+    $Distribucion = new Distribucion($iddistribucion);
+    if ($Distribucion->entre_sedes == 1) {
+        $opciones = '';
+    }
     return $opciones;
 }
 /**
@@ -449,7 +454,7 @@ function obtenerRuta($iddistribucion)
         ->select("iddependencia")
         ->from("vfuncionario_dc")
         ->where("estado_dc = 1 and tipo_cargo = 1 and iddependencia_cargo = :destino")
-        ->setParameter(":destino", $destino)
+        ->setParameter(":destino", $destino, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
     $query = Model::getQueryBuilder();
     $rutasDistribucion = $query
@@ -487,6 +492,12 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
         $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
     }
     $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
+
+    $Distribucion = new Distribucion($iddistribucion);
+    if ($Distribucion->entre_sedes == 1) {
+        $VfuncionarioDc = new VfuncionarioDc($Distribucion->mensajero_destino);
+        $html = "{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}";
+    }
     return $html;
 }
 
@@ -524,7 +535,7 @@ function generar_select_mensajeros_distribucion($tipo_origen, $tipo_destino, $me
                 ->select(["iddependencia_cargo as id", "CONCAT(nombres, CONCAT(' ', apellidos)) as nombre", "cargo"])
                 ->from("vfuncionario_dc")
                 ->where("iddependencia_cargo = :iddep")
-                ->setParameter(':iddep', $mensajero_destino)
+                ->setParameter(':iddep', $mensajero_destino, \Doctrine\DBAL\Types\Type::INTEGER)
                 ->execute()->fetchAll();
 
             if ($mensajeros_externos[0]['cargo'] == "Mensajero") {
@@ -846,4 +857,53 @@ function obtener_radicado($idDocumento)
 function fecha_distribucion($fecha)
 {
     return DateController::convertDate($fecha, 'Y-m-d');
+}
+
+/**
+ * Retorna la sede de origen del documento en el reporte de distribución 
+ *
+ * @param [integer] $iddistribucion
+ * @return string retorna el nombre de la sede de origen
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-27
+ */
+function obtener_sede_origen($iddistribucion)
+{
+    $Distribucion = new Distribucion($iddistribucion);
+    $sedeOrigen = $Distribucion->sede_origen;
+    $query = Model::getQueryBuilder();
+    $nombreSedeOrigen = $query
+        ->select('nombre')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $sedeOrigen, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    return $nombreSedeOrigen[0]['nombre'];
+}
+
+
+/**
+ * Retorna la sede de destino del documento en el reporte de distribución 
+ *
+ * @param [integer] $iddistribucion
+ * @return string retorna el nombre de la sede de destino
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-09-27
+ */
+function obtener_sede_destino($iddistribucion)
+{
+    $Distribucion = new Distribucion($iddistribucion);
+    $sedeDestino = $Distribucion->sede_destino;
+    $query = Model::getQueryBuilder();
+    $nombreSedeDestino = $query
+        ->select('nombre')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $sedeDestino, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    return $nombreSedeDestino[0]['nombre'];
 }

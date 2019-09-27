@@ -23,8 +23,17 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
+    /**
+     * Con este php llamado desde el ajax se cargan las sedes de la organización
+     * 
+     * @param $_REQUEST[''] En el request solo llega el token y key para validar la sesión    
+     * @return string en formato json se envian los nombres y los id de las sedes.
+     * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+     * @date 2019-09-26
+     */
+
     $data = Model::getQueryBuilder()
-        ->select('nombre')
+        ->select('nombre', 'idcf_ventanilla')
         ->from('cf_ventanilla')
         ->execute()
         ->fetchAll();
@@ -32,7 +41,7 @@ try {
     $sedes = array();
 
     foreach ($data as $key => $cf_ventanilla) {
-        array_push($sedes, ["nombre" => $cf_ventanilla['nombre']]);
+        array_push($sedes, ["nombre" => $cf_ventanilla['nombre'], "id" => $cf_ventanilla['idcf_ventanilla']]);
     }
 
     $Response->data = json_encode($sedes);

@@ -20,9 +20,13 @@ $Response = (object) [
     'success' => 0
 ];
 
+
 /**
- * Retorna un json con array data (Nombre de los mensajeros) code(id de los mensajeros de la ruta que llega con el $_REQUEST['ruta'] desde el ajax
- * @return string  con el formato Json
+ * Con este php llamado desde el ajax se cargan los mensajeros de la organización
+ * 
+ * @param $_REQUEST[''] En el request solo llega el token y key para validar la sesión    
+ * @return string en formato json se envian los nombres y los id de las sedes.
+ * @return string  con el formato Json Retorna un json con array data (Nombre de los mensajeros) code(id de los mensajeros de la ruta que llega con el $_REQUEST['ruta'] desde el ajax
  * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
  * @date 2019-09-25 
  */
@@ -49,12 +53,13 @@ try {
             ->where("estado_mensajero= 1")
             ->execute()->fetchAll();
     }
+    $mensajerosSedes = array();
+
     foreach ($mensajeros as $key => $ruta) {
         $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
-        $Response->data[] = $VfuncionarioDc->nombres . ' ' . $VfuncionarioDc->apellidos;
-        $Response->code[] = $mensajeros[$key]["mensajero_ruta"];
+        array_push($mensajerosSedes, ['id' => $mensajeros[$key]["mensajero_ruta"], 'nombre' => $VfuncionarioDc->nombres . ' ' . $VfuncionarioDc->apellidos]);
     }
-    $Response->data = json_encode($Response->data);
+    $Response->data = json_encode($mensajerosSedes);
     $Response->success = 1;
     $Response->message = "Mensajeros cargados exitosamente";
 } catch (Throwable $th) {

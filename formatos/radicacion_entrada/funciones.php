@@ -828,12 +828,12 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
         $sql1 = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
         phpmkr_query($sql1);
     } else {
+
         ingresar_item_destino_radicacion($idformato, $iddoc);
         actualizar_campos_documento($idformato, $iddoc);
 
         $Documento = new Documento($iddoc);
         $Documento->refreshDescription();
-
         $datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "");
         if ($datos[0]['tipo_destino'] == 2) { //INTERNO
             transferencia_automatica($idformato, $iddoc, "destino", 2);
