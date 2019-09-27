@@ -7,6 +7,83 @@ trait TSerie
     public $classSerieDependencia;
     public $classSerie;
 
+
+    /**
+     * Valida si una serie quedaria huerfana si no existiera una serie
+     * Util para el mover y eliminar
+     *
+     * @return boolean
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public function willBeOrphan(): bool
+    {
+        if ($this->tipo != 1) {
+
+            $query = $this->getQueryBuilder()
+                ->select('idserie')
+                ->from($this->getTable())
+                ->where('tipo=:tipo')
+                ->andWhere('cod_padre=:cod_padre')
+                ->andWhere('idserie <> :idserie')
+                ->setParameters(
+                    [
+                        ':tipo' => $this->tipo,
+                        ':cod_padre' => $this->cod_padre,
+                        ':idserie' => $this->getPK()
+                    ],
+                    [
+                        ':tipo', Type::INTEGER,
+                        ':cod_padre', Type::INTEGER,
+                        ':idserie', Type::INTEGER
+                    ]
+                );
+            return $query->execute()->fetch() ? false : true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retorna un array con los hijos directos de la 
+     * serie
+     *
+     * @return array
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public function getDirectChildren(): array
+    {
+        $queryBuilder = $this->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTable())
+            ->where('cod_padre = :idserie')
+            ->orderBy('tipo', 'ASC')
+            ->setParameter(':idserie', $this->getPK(), Type::INTEGER);
+
+        return self::findByQueryBuilder($queryBuilder);
+    }
+
+    /**
+     * Retorna array con todos los hijos
+     * de la serie
+     *
+     * @return array
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public function getAllChildren(): array
+    {
+        $queryBuilder = $this->getQueryBuilder()
+            ->select('*')
+            ->from($this->getTable())
+            ->where('cod_arbol like :cod_arbol')
+            ->orderBy('tipo', 'ASC')
+            ->setParameter(':cod_arbol', $this->cod_arbol . '.%', Type::STRING);
+
+        return self::findByQueryBuilder($queryBuilder);
+    }
+
     /**
      * Actualiza el cod_arbol despues de crear la serie
      * Este metodo omite serie_log 
@@ -44,7 +121,7 @@ trait TSerie
             ->from($this->getTable(), 's')
             ->innerJoin('s', $this->getTable(), 'sp', 's.cod_padre=sp.idserie')
             ->where('s.idserie=:idserie')
-            ->setParameter(':idserie', $this->idserie, 'integer')
+            ->setParameter(':idserie', $this->idserie, Type::INTEGER)
             ->execute()->fetch();
 
         return $data['cod_arbol'] ?? false;
@@ -117,5 +194,23 @@ trait TSerie
             );
         }
         return $data;
+    }
+
+    /**
+     * Obtiene la etiqueta del tipo de serie
+     *
+     * @param integer $tipo
+     * @return string
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function getLabelTipo(int $tipo): string
+    {
+        $array = [
+            1 => 'Serie',
+            2 => 'Subserie',
+            3 => 'Tipo documental'
+        ];
+        return $array[$tipo];
     }
 }

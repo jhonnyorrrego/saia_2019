@@ -63,8 +63,38 @@ class SerieTemp extends Model
         ];
     }
 
+    /**
+     * evento de base de datos
+     * se ejecuta despues de crear un nuevo registro
+     * @return void
+     */
     public function afterCreate()
     {
         return $this->updateCodArbol();
+    }
+
+    /**
+     * evento de base de datos
+     * se ejecuta antes de eliminar un registro
+     * @return boolean
+     */
+    public function beforeDelete(): bool
+    {
+        if ($this->tipo != 3) {
+            if ($Instances = SerieDependenciaTemp::findAllByAttributes(
+                ['fk_serie' => $this->getPK()]
+            )) {
+                foreach ($Instances as $SerieDepTemp) {
+                    $SerieDepTemp->delete();
+                }
+            }
+
+            if ($Instances = $this->getDirectChildren()) {
+                foreach ($Instances as $SerieTemp) {
+                    $SerieTemp->delete();
+                }
+            }
+        }
+        return true;
     }
 }

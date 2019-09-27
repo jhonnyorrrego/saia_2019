@@ -168,7 +168,7 @@
                             );
 
                             let optionsDefaults = {
-                                url: `${params.baseUrl}views/serie_version/progress.php`,
+                                url: `views/serie_version/progress.php`,
                                 size: 'modal-lg',
                                 buttons: {},
                                 backdrop: 'static',

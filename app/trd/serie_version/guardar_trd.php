@@ -51,7 +51,8 @@ try {
                         $TRDVersionController->getClasificationData()
                     )
                 ]);
-                if ($CurrentVersion->update()) {
+
+                if (!$CurrentVersion->update()) {
                     throw new Exception("Error al actualizar el estado de la version actual", 1);
                 }
             }

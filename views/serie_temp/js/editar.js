@@ -13,7 +13,79 @@ $(function () {
             $('#trd_form').trigger('submit');
         });
 
+        $('#btn_delete').on('click', function () {
+            deleteSerie();
+        });
+
     })();
+
+    function deleteSerie() {
+        top.confirm({
+            id: 'error',
+            type: 'error',
+            message: '¿Está seguro de eliminar el registro?',
+            position: 'center',
+            timeout: 0,
+            overlay: true,
+            overlayClose: true,
+            closeOnEscape: true,
+            closeOnClick: true,
+            buttons: [
+                [
+                    '<button><b>SI</b></button>',
+                    function (instance, toast) {
+
+                        instance.hide({
+                            transitionOut: 'fadeOut'
+                        },
+                            toast,
+                            'button'
+                        );
+
+                        $.ajax({
+                            type: 'POST',
+                            url: `${params.baseUrl}app/trd/serie_temp/eliminar.php`,
+                            data: {
+                                key: localStorage.getItem('key'),
+                                token: localStorage.getItem('token'),
+                                idserie: params.idserie
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+
+                                if (response.success) {
+
+                                    top.notification({
+                                        message: 'Registro Eliminado!',
+                                        type: 'success'
+                                    });
+                                    top.successModalEvent();
+                                } else {
+                                    top.notification({
+                                        message: response.message,
+                                        type: 'error'
+                                    });
+                                }
+                            }
+                        });
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function (instance, toast) {
+                        instance.hide({
+                            transitionOut: 'fadeOut'
+                        },
+                            toast,
+                            'button'
+                        );
+                    },
+                    true
+                ]
+            ]
+        });
+    }
 
     function loadData() {
         $.ajax({
@@ -23,12 +95,19 @@ $(function () {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token'),
                 idserie: params.idserie,
-                className: (params.sourceTemp) ? 'SerieTemp' : 'Serie'
+                iddependencia: params.iddependencia,
+                onlyType: params.onlytype,
+                className: 'SerieTemp'
             },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     viewTemplate(response.data, response.data.tipo);
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'error'
+                    });
                 }
             }
         });
@@ -71,6 +150,14 @@ $(function () {
     function viewSubserieForm(data) {
         let template = `
         <div class="form-group form-group-default required">
+            <label>Dependencia de la subserie:</label>
+            <select class="full-width required" name="dependencia" id="dependencia">
+                <option value="">Seleccione ...</option>
+            </select>
+            <input type="hidden" value="${data.idserie_dependencia}" name="idserie_dependencia" id="idserie_dependencia" >
+        </div>
+
+        <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
         </div>
@@ -135,7 +222,8 @@ $(function () {
             }
         });
         $("[name='disposicion']:checked").trigger('change');
-
+        $('#dependencia').select2();
+        loadOptionsDependencia(data.iddependencia);
     }
 
     function viewTipoForm(data) {
@@ -170,7 +258,16 @@ $(function () {
 
     function viewSerieRetencionForm(data) {
 
-        let template = ` <div class="form-group form-group-default required">
+        let template = `
+        <div class="form-group form-group-default required">
+            <label>Dependencia de la serie:</label>
+            <select class="full-width required" name="dependencia" id="dependencia">
+                <option value="">Seleccione ...</option>
+            </select>
+            <input type="hidden" value="${data.idserie_dependencia}" name="idserie_dependencia" id="idserie_dependencia" >
+        </div>
+
+    <div class="form-group form-group-default required">
             <label>Código:</label>
             <input name="codigo" id="codigo" type="text" value="${data.codigo}" class="form-control required">
         </div>
@@ -236,6 +333,33 @@ $(function () {
         });
         $("[name='disposicion']:checked").trigger('change');
 
+        $('#dependencia').select2();
+        loadOptionsDependencia(data.iddependencia);
+    }
+
+    function loadOptionsDependencia(idselected) {
+        $.ajax({
+            type: 'POST',
+            url: `${params.baseUrl}app/dependencia/obtener_dependencias.php`,
+            data: {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token')
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    response.data.forEach(element => {
+                        $('#dependencia').append(
+                            $('<option>', {
+                                value: element.iddependencia,
+                                text: element.codigo + ' - ' + element.nombre,
+                                selected: (element.iddependencia == idselected) ? true : false
+                            })
+                        );
+                    });
+                }
+            }
+        });
     }
 
 });
@@ -245,7 +369,12 @@ $('#trd_form').validate({
     ignore: [],
     errorPlacement: function (error, element) {
         let node = element[0];
-        if (node.type == 'radio') {
+        if (
+            node.tagName == 'SELECT' &&
+            node.className.indexOf('select2') !== false
+        ) {
+            element.next().append(error);
+        } else if (node.type == 'radio') {
             let id = node.dataset.key;
             if (node.dataset.type == "subserie") {
                 error.insertAfter("#divMicrofilmaSubserie-" + id);
@@ -274,7 +403,7 @@ $('#trd_form').validate({
 
         $.ajax({
             type: 'POST',
-            url: `${params.baseUrl}app/trd/serie/editar.php`,
+            url: `${params.baseUrl}app/trd/serie_temp/editar.php`,
             data,
             dataType: 'json',
             success: function (response) {

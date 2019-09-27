@@ -24,26 +24,47 @@ try {
 
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
+    if (!($class = $_REQUEST['className']) || !isset($_REQUEST['onlyType'])) {
+        throw new Exception("Error Processing Request", 1);
+    }
+
     if (!$idserie = $_REQUEST['idserie']) {
         throw new Exception('Serie invalida', 1);
     }
 
-    if (!$_REQUEST['className']) {
-        throw new Exception('Serie invalida', 1);
+    if (!$iddep = $_REQUEST['iddependencia']) {
+        throw new Exception('Dependencia invalida', 1);
     }
 
-    $Serie = new $_REQUEST['className']($idserie);
+    $Serie = new $class($idserie);
     $data = [
         'idserie' => (int) $idserie,
-        'tipo' => (int) $Serie->tipo
+        'tipo' => (int) $Serie->tipo,
+        'iddependencia' => (int) $iddep
     ];
 
     switch ($Serie->tipo) {
         case 1:
             $data['nombre'] = $Serie->nombre;
             $data['codigo'] = $Serie->codigo;
+            $childrenSub = $Serie->hasChild(2);
 
-            if (!$Serie->hasChild(2)) {
+            if ($childrenSub && $_REQUEST['onlyType'] == 1) {
+                throw new Exception("Error al consultar la información", 1);
+                //Los datos de la TRD json NO coninciden con los almacenados en la DB
+            }
+
+            if (!$childrenSub) {
+
+                if ($idSerieDep = $Serie->classSerieDependencia::findByAttributes([
+                    'fk_serie' => $idserie,
+                    'fk_dependencia' => $iddep
+                ])) {
+                    $data['idserie_dependencia'] = $idSerieDep->getPK();
+                } else {
+                    throw new Exception("Error al consultar la dependencia vinculada", 1);
+                }
+
                 $data['tipo'] = 4;
                 $data['gestion'] = $Serie->retencion_gestion;
                 $data['central'] = $Serie->retencion_central;
@@ -56,6 +77,15 @@ try {
             break;
 
         case 2:
+            if ($idSerieDep = $Serie->classSerieDependencia::findByAttributes([
+                'fk_serie' => $idserie,
+                'fk_dependencia' => $iddep
+            ])) {
+                $data['idserie_dependencia'] = $idSerieDep->getPK();
+            } else {
+                throw new Exception("Error al consultar la dependencia vinculada", 1);
+            }
+
             $data['nombre'] = $Serie->nombre;
             $data['codigo'] = $Serie->codigo;
             $data['gestion'] = $Serie->retencion_gestion;
@@ -74,7 +104,9 @@ try {
             $data['sop_el'] = $Serie->sop_electronico ? 'checked' : '';
             break;
     }
+
     $Response->data = $data;
+
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

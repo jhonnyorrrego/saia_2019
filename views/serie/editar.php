@@ -11,11 +11,8 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "assets/librerias.php";
 
-$params = json_encode([
-    'baseUrl' => $ruta_db_superior,
-    'idserie' => $_REQUEST['idserie'],
-    'iddependencia' => $_REQUEST['iddependencia']
-]);
+$_REQUEST['baseUrl'] = $ruta_db_superior;
+$params = json_encode($_REQUEST);
 ?>
 <!doctype html>
 <html lang="es">
@@ -38,12 +35,14 @@ $params = json_encode([
                     <div id="viewContentForm"></div>
 
                     <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
-                    <input name="iddependencia" id="iddependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
+                    <input name="old_dependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
+                    <input name="onlytype" type="hidden" value="<?= $_REQUEST['onlytype']; ?>" class="form-control required">
+
                 </form>
             </div>
         </div>
+
     </div>
-    <?= select2() ?>
     <?= validate() ?>
     <script id="editar_script" src="<?= $ruta_db_superior ?>views/serie/js/editar.js" data-params='<?= $params ?>'>
     </script>

@@ -30,4 +30,9 @@ class SerieDependencia extends Model
             'primary' => 'idserie_dependencia'
         ];
     }
+
+    public function beforeDelete()
+    {
+        throw new Exception("La acción de eliminar NO esta permitida en las series", 1);
+    }
 }
