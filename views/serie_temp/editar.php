@@ -12,7 +12,6 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "assets/librerias.php";
 
 $_REQUEST['baseUrl'] = $ruta_db_superior;
-
 $params = json_encode($_REQUEST);
 ?>
 <!doctype html>
@@ -49,7 +48,8 @@ $params = json_encode($_REQUEST);
                     <div id="viewContentForm"></div>
 
                     <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
-                    <input name="iddependencia" id="iddependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
+                    <input name="old_dependencia" type="hidden" value="<?= $_REQUEST['iddependencia']; ?>" class="form-control required">
+                    <input name="onlytype" type="hidden" value="<?= $_REQUEST['onlytype']; ?>" class="form-control required">
                 </form>
 
             </div>
@@ -70,19 +70,19 @@ $params = json_encode($_REQUEST);
             </div>
 
             <div class="card-body">
-                <form id="trd_form_eliminar">
-                    <input name="idserie" id="idserie" type="hidden" value="<?= $_REQUEST['idserie']; ?>" class="form-control required">
-                </form>
-
+                <p>Tenga en cuenta que al eliminar el registro se eliminarán tambien los registros asociados a este,
+                    como las subseries, los tipos documentales y las relaciones que ellas tengan.
+                    Esta acción es irreversible.
+                </p>
                 <p class="card-text text-right">
-                    <button type="button" id="btn_close" class="btn btn-danger">ELIMINAR</button>
+                    <button type="button" id="btn_delete" class="btn btn-danger">ELIMINAR</button>
                 </p>
             </div>
         </div>
     </div>
     <?= select2() ?>
     <?= validate() ?>
-    <script id="editar_script" src="<?= $ruta_db_superior ?>views/serie/js/editar.js" data-params='<?= $params ?>'>
+    <script id="editar_script" src="<?= $ruta_db_superior ?>views/serie_temp/js/editar.js" data-params='<?= $params ?>'>
     </script>
 </body>
 

@@ -293,8 +293,8 @@ abstract class Model
      */
     public static function findByAttributes(
         array $conditions,
-        $fields = [],
-        $order = ''
+        array $fields = [],
+        string $order = ''
     ) {
         $data = self::findAllByAttributes($conditions, $fields, $order, 0, 1);
         return $data ? $data[0] : null;
@@ -313,10 +313,10 @@ abstract class Model
      */
     public static function findAllByAttributes(
         array $conditions,
-        $fields = [],
-        $order = '',
-        $offset = 0,
-        $limit = 0
+        array $fields = [],
+        string $order = '',
+        int $offset = 0,
+        int $limit = 0
     ) {
         $class = get_called_class();
         $records = (new $class)->getData($conditions, $fields, $order, $offset, $limit);
@@ -336,8 +336,8 @@ abstract class Model
      */
     public static function findColumn(
         string $field,
-        $conditions = [],
-        $order = ''
+        array $conditions = [],
+        string $order = ''
     ) {
         $class = get_called_class();
         $records = (new $class)->getData($conditions, [$field], $order);

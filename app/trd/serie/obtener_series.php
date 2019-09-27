@@ -34,29 +34,11 @@ try {
     }
 
     if ($tipo == 1) {
-
-        $Response->data = Model::getQueryBuilder()
-            ->select('idserie,codigo,nombre')
-            ->from($table)
-            ->where('estado=1 and cod_padre=0')
-            ->orderBy('nombre', 'ASC')
-            ->execute()->fetchAll();
+        $Response->data = HelperSerie::getAllSerie($table);
     } else {
         /* SE DEBE PERMITIR LISTAR TODAS LAS RELACIONES SIN IMPORTAR EL ESTADO
         DE LA LLAVE (serie_dependencia) */
-        $tableDep = $tabla == 'serie' ? 'serie_dependencia' : 'serie_dependencia_temp';
-
-        $Response->data = Model::getQueryBuilder()
-            ->select('s.idserie,s.codigo,s.nombre,d.iddependencia,
-            d.nombre as nombre_dep,d.codigo as codigo_dep,
-            idserie_dependencia as id,sd.estado')
-            ->from($table, 's')
-            ->innerJoin('s', $tableDep, 'sd', 's.idserie=sd.fk_serie')
-            ->innerJoin('sd', 'dependencia', 'd', 'sd.fk_dependencia=d.iddependencia')
-            ->where('s.estado=1 and s.cod_padre=:cod_padre')
-            ->orderBy('s.nombre', 'ASC')
-            ->setParameter(':cod_padre', $_REQUEST['idserie'], Type::INTEGER)
-            ->execute()->fetchAll();
+        $Response->data = HelperSerie::getAllSerieDependencia($table, $_REQUEST['idserie']);
     }
 
     $Response->success = 1;

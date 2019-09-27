@@ -86,4 +86,9 @@ class Serie extends LogModel
             parent::afterCreate() &&
             $this->updateCodArbol();
     }
+
+    public function beforeDelete()
+    {
+        throw new Exception("La acción de eliminar NO esta permitida en las series", 1);
+    }
 }

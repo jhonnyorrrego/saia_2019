@@ -2,8 +2,6 @@ $(function () {
     let params = $('#scriptGrillaTrdTemp').data('params');
     $('#scriptGrillaTrdTemp').removeAttr('data-params');
 
-    console.log(params);
-
     (function init() {
         createTable();
         modalAddEdit();
@@ -40,7 +38,6 @@ $(function () {
         $(document).on('click', '.edit-serie', function () {
 
             let parameters = $(this)[0].dataset;
-            parameters.sourceTemp = 1;
 
             top.topModal({
                 url: `views/serie_temp/editar.php`,
@@ -152,7 +149,7 @@ $(function () {
         let btnSubserie = '';
         if (data.idsubserie) {
             onlyType = 0;
-            btnSubserie = `<a href="#" target="_self" data-type="2" data-idserie="${data.idsubserie}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+            btnSubserie = `<a href="#" target="_self" data-type="2" data-idserie="${data.idsubserie}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
                 <i class="fa fa-edit"></i> Editar Subserie
             </a>`;
         }
