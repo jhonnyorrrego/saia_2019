@@ -23,8 +23,17 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['idserie']) {
+
+    if (!$idserie = $_REQUEST['idserie']) {
         throw new Exception('Serie invalida', 1);
+    }
+
+    if (!$_REQUEST['old_dependencia']) {
+        throw new Exception('Dependencia invalida', 1);
+    }
+
+    if (!isset($_REQUEST['onlytype'])) {
+        throw new Exception("Error Processing Request", 1);
     }
 
     $data = $_REQUEST;
@@ -42,7 +51,7 @@ try {
             ? 1 : 0;
     }
 
-    $Serie = new Serie($_REQUEST['idserie']);
+    $Serie = new Serie($idserie);
     $error = 0;
     if ($Serie->tipo != 3) {
         if ($Serie->codigo != $data['codigo']) {
@@ -52,7 +61,7 @@ try {
                     'serie',
                     $Serie->tipo,
                     $data['codigo'],
-                    $data['iddependencia'],
+                    $data['old_dependencia'],
                     $Serie->cod_padre
                 );
             } else {
@@ -60,7 +69,7 @@ try {
                     'serie',
                     $Serie->tipo,
                     $data['codigo'],
-                    $data['iddependencia']
+                    $data['old_dependencia']
                 );
             }
 

@@ -42,22 +42,13 @@ $(function () {
 
         $(document).on('click', '.edit-serie', function () {
 
-            let type = $(this).data('type');
-            let id = $(this).data('id');
-            let iddep = $(this).data('iddep');
-            let name = [];
-            name[1] = 'Serie';
-            name[2] = 'Subserie';
-            name[3] = 'Tipo documental';
+            let parameters = $(this)[0].dataset;
 
             top.topModal({
                 url: `views/serie/editar.php`,
                 size: 'modal-xl',
-                title: 'Editar ' + name[type],
-                params: {
-                    idserie: id,
-                    iddependencia: iddep,
-                },
+                title: 'Actualizar',
+                params: parameters,
                 onSuccess: function () {
                     top.closeTopModal();
                     refreshTable();
@@ -84,7 +75,7 @@ $(function () {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
                     id: params.id,
-                    type: params.type,
+                    type: 'json_trd',
                     generateTRD: () => {
                         return $("#generateTRD").val();
                     }
@@ -161,6 +152,16 @@ $(function () {
     }
 
     function templateOptions(data) {
+
+        let onlyType = 1;
+        let btnSubserie = '';
+        if (data.idsubserie) {
+            onlyType = 0;
+            btnSubserie = `<a href="#" target="_self" data-type="2" data-idserie="${data.idsubserie}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                <i class="fa fa-edit"></i> Editar Subserie
+            </a>`;
+        }
+
         let template = `<div class="dropdown f-20">
             <button class="btn mx-1" 
                 type="button" 
@@ -171,15 +172,15 @@ $(function () {
                 <i class="fa fa-ellipsis-v"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
-                <a href="#" target="_self" data-type="1" data-id="${data.idserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
+                <a href="#" target="_self" data-type="1" data-idserie="${data.idserie}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
                     <i class="fa fa-edit"></i> Editar Serie
                 </a>
-                <a href="#" target="_self" data-type="2" data-id="${data.idsubserie}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-                <i class="fa fa-edit"></i> Editar Subserie
-            </a>
-            <a href="#" target="_self" data-type="3" data-id="${data.idtipo}" data-iddep="${data.iddependencia}" class="dropdown-item edit-serie">
-            <i class="fa fa-edit"></i> Editar Tipo documental
-        </a>
+                
+                ${btnSubserie}
+
+                <a href="#" target="_self" data-type="3" data-idserie="${data.idtipo}" data-onlytype="${onlyType}" data-iddependencia="${data.iddependencia}" class="dropdown-item edit-serie">
+                    <i class="fa fa-edit"></i> Editar Tipo documental
+                </a>
             </div>
         </div>`;
         return template;

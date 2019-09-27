@@ -18,12 +18,20 @@ $(function () {
             data: {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token'),
-                idserie: params.idserie
+                idserie: params.idserie,
+                iddependencia: params.iddependencia,
+                onlyType: params.onlytype,
+                className: 'Serie'
             },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     viewTemplate(response.data, response.data.tipo);
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'error'
+                    });
                 }
             }
         });

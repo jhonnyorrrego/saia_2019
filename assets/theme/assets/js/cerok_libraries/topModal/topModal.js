@@ -46,9 +46,8 @@ var topJsPanelDefaults = {
 };
 
 function topModal(options) {
-    console.log(options)
     if (typeof window.modalClone == 'undefined') {
-        window.modalClone = $('#dinamic_modal', window.top.document).clone();
+        window.modalClone = $('#dinamic_modal', window.top.document).prop('outerHTML');
     }
 
     if (
@@ -155,12 +154,8 @@ function setEvents(options, modal) {
 
         if (!window.modalOptions.keep) {
             $('#dinamic_modal', window.top.document).modal('hide');
-            $('#modal_body', window.top.document).empty();
 
-            console.log($('#dinamic_modal', window.top.document))
             $('#dinamic_modal', window.top.document).remove();
-            console.log($('#dinamic_modal', window.top.document))
-
             $("[data-target='#dinamic_modal']", window.top.document).after(
                 window.modalClone
             );

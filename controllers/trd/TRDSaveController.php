@@ -51,6 +51,8 @@ class TRDSaveController
                 $this->errorException("Error al guardar la vinculacion Dependencia/Serie ID:{$SerieDependencia->getPK()}");
             }
         }
+        TRDVersionController::removeTemporalFile(1);
+        TRDVersionController::removeTemporalFile(2);
     }
 
     private function validateRow($idVersion)
