@@ -104,13 +104,14 @@ JAVASCRIPT;
      *
      * @param CamposFormato $CamposFormato
      * @param integer $documentId
+     * @param string $field campo a mostrar. llave,valor
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public function showValue($CamposFormato, $documentId)
+    public function showValue($CamposFormato, $documentId, $field = 'valor')
     {
-        $value = CampoSeleccionados::findColumn('valor', [
+        $value = CampoSeleccionados::findColumn($field, [
             'fk_documento' => $documentId,
             'fk_campos_formato' => $CamposFormato->getPk()
         ]);
