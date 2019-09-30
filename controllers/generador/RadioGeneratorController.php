@@ -109,7 +109,7 @@ JAVASCRIPT;
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public function showValue($CamposFormato, $documentId, $field = 'valor')
+    public static function showValue($CamposFormato, $documentId, $field = 'valor')
     {
         $value = CampoSeleccionados::findColumn($field, [
             'fk_documento' => $documentId,

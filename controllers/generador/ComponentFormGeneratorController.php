@@ -117,27 +117,14 @@ class ComponentFormGeneratorController
         if ($this->scope == self::SCOPE_ADD) {
             $valor = $this->CamposFormato->predeterminado;
         } else {
-            $valor = "<?= ComponentFormGeneratorController::callShowValue({$this->CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>";
+            $valor = "<?= ComponentFormGeneratorController::callShowValue(
+                {$this->Formato->getPK()},
+                {$this->CamposFormato->getPK()},
+                \$_REQUEST['iddoc']
+            ) ?>";
         }
 
         return $valor;
-    }
-
-    /**
-     * muestra el valor almacenado en un documento
-     * de un componente especifico
-     *
-     * @param CamposFormato $CamposFormato
-     * @param integer $documentId
-     * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-09-26
-     */
-    public function showValue($CamposFormato, $documentId)
-    {
-        $ft = (new Documento($documentId))->getFt();
-
-        return $ft[$CamposFormato->nombre] ? $ft[$CamposFormato->nombre] : '';
     }
 
     /**
@@ -240,16 +227,42 @@ class ComponentFormGeneratorController
      * ejecuta el metodo showValue de un generador de componente
      * basado en su idcampos_formato
      *
-     * @param integer $fieldId
+     * @param integer $formatId
+     * @param integer $documentId
+     * @param integer $field nombre del campo a mostrar
+     * @return string
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-09-26
+     */
+    public static function callShowValue($formatId, $documentId, $field)
+    {
+        $CamposFormato = CamposFormato::findByAttributes([
+            'formato_idformato' => $formatId,
+            'nombre' => $field
+        ]);
+
+        if (!$CamposFormato) {
+            throw new Exception("no existe el campo {$field}", 1);
+        }
+
+        $class = self::getGeneratorFromField($CamposFormato->etiqueta_html);
+        return $class::showValue($CamposFormato, $documentId);
+    }
+
+    /**
+     * muestra el valor almacenado en un documento
+     * de un componente especifico
+     *
+     * @param CamposFormato $CamposFormato
      * @param integer $documentId
      * @return string
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public static function callShowValue($fieldId, $documentId)
+    public static function showValue($CamposFormato, $documentId)
     {
-        $CamposFormato = new CamposFormato($fieldId);
-        $class = self::getGeneratorFromField($CamposFormato->etiqueta_html);
-        return $class::showValue($CamposFormato, $documentId);
+        $ft = (new Documento($documentId))->getFt();
+
+        return $ft[$CamposFormato->nombre] ? $ft[$CamposFormato->nombre] : '';
     }
 }

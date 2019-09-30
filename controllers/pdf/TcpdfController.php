@@ -258,7 +258,7 @@ class Imprime_Pdf
 		$campos_pdfa = busca_filtro_tabla("idcampos_formato,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this->formato[0]['idformato'], "");
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
-				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], ComponentFormGeneratorController::callShowValue($campos_pdfa[$i]['idcampos_formato'], $this->documento[0]["iddocumento"]));
+				$this->pdf->SetExtraMetadata($campos_pdfa[$i]['etiqueta'], ComponentFormGeneratorController::callShowValue($this->formato[0]['idformato'], $campos_pdfa[$i]['idcampos_formato'], $this->documento[0]["iddocumento"]));
 			}
 		}
 		//

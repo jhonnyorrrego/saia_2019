@@ -709,7 +709,7 @@ CONTENT;
             $search = "{*{$CamposFormato->nombre}*}";
             $baseContent = str_replace(
                 $search,
-                "<?= ComponentFormGeneratorController::callShowValue({$CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>",
+                "<?= ComponentFormGeneratorController::callShowValue({$this->Formato->getPK()},{$CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>",
                 $baseContent
             );
         }

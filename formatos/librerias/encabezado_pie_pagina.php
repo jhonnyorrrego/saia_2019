@@ -29,7 +29,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1)
             $nombre = str_replace("*}", "", str_replace("{*", "", $campos1[$i]));
             $compara = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato . " and nombre like '" . $nombre . "'", "");
             if ($compara["numcampos"]) {
-                $texto = str_replace($campos1[$i], ComponentFormGeneratorController::callShowValue($compara[0]['idcampos_formato'], $_REQUEST["iddoc"]), $texto);
+                $texto = str_replace($campos1[$i], ComponentFormGeneratorController::callShowValue($idformato, $compara[0]['idcampos_formato'], $_REQUEST["iddoc"]), $texto);
             }
         }
         $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A,funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk and A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and B.formato_idformato=" . $idformato, "");
@@ -358,7 +358,7 @@ function recorrido($idformato, $iddoc)
         'nombre' => 'tipo_recorrido'
     ]);
 
-    return ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+    return ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
 }
 
 function fecha_planilla($idformato, $iddoc)

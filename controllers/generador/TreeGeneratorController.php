@@ -96,7 +96,7 @@ class TreeGeneratorController extends ComponentFormGeneratorController implement
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public function showValue($CamposFormato, $documentId)
+    public static function showValue($CamposFormato, $documentId)
     {
         $value = parent::showValue($CamposFormato, $documentId);
         $opciones = json_decode($CamposFormato->valor, true);

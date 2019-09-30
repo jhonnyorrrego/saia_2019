@@ -60,7 +60,7 @@ class FunctionGeneratorController extends ComponentFormGeneratorController imple
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public function showValue($CamposFormato, $documentId)
+    public static function showValue($CamposFormato, $documentId)
     {
         return parent::showValue($CamposFormato, $documentId);
     }

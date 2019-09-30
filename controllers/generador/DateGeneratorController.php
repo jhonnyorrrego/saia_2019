@@ -92,7 +92,7 @@ class DateGeneratorController extends ComponentFormGeneratorController implement
         if ($this->scope == self::SCOPE_ADD && $opciones['hoy'] == 'true') {
             $fecha_por_defecto = date(DateController::DEFAULT_FORMAT);
         } else if ($this->scope == self::SCOPE_EDIT) {
-            $fecha_por_defecto = "<?= ComponentFormGeneratorController::callShowValue({$this->CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>";
+            $fecha_por_defecto = "<?= ComponentFormGeneratorController::callShowValue({$this->Formato->getPK()},{$this->CamposFormato->getPK()}, \$_REQUEST['iddoc']) ?>";
         }
 
         if ($opciones['tipo'] == 'datetime') {
@@ -153,7 +153,7 @@ class DateGeneratorController extends ComponentFormGeneratorController implement
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-09-26
      */
-    public function showValue($CamposFormato, $documentId)
+    public static function showValue($CamposFormato, $documentId)
     {
         $date = parent::showValue($CamposFormato, $documentId);
         return DateController::convertDate($date);

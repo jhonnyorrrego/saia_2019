@@ -645,7 +645,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'empresa_transportado'
         ]);
-        $empresa_transportadora = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+        $empresa_transportadora = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
         $tabla .= "<tr>
                         <td class='pr-0' style='width: 20%; border:none;'>
                             <strong>NO. DE DOCUMENTO:</strong> 
@@ -711,7 +711,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'tipo_origen'
         ]);
-        $tipo_origen = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+        $tipo_origen = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
 
         $tabla .= "
             <tr>
@@ -785,7 +785,7 @@ function mostrar_copia_electronica($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'copia_a'
         ]);
-        $info = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+        $info = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
 
         if ($info) {
             $tabla = '<style>

@@ -472,13 +472,13 @@ function mostrar_anexos_externa($idformato, $iddoc)
 		'formato_idformato' => $idformato,
 		'nombre' => 'anexos_fisicos'
 	]);
-	$fisicos = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+	$fisicos = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
 
 	$CamposFormato = CamposFormato::findByAttributes([
 		'formato_idformato' => $idformato,
 		'nombre' => 'anexos_digitales'
 	]);
-	$digitales = ComponentFormGeneratorController::callShowValue($CamposFormato->getPK(), $iddoc);
+	$digitales = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
 
 	if ($fisicos || $digitales) {
 		$digitales = preg_replace("%(<div.*?>)(.*?)(<\/div.*?>)%is", "", $digitales);
