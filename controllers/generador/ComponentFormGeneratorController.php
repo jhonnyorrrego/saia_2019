@@ -119,8 +119,8 @@ class ComponentFormGeneratorController
         } else {
             $valor = "<?= ComponentFormGeneratorController::callShowValue(
                 {$this->Formato->getPK()},
-                {$this->CamposFormato->getPK()},
-                \$_REQUEST['iddoc']
+                \$_REQUEST['iddoc'],
+                {$this->CamposFormato->nombre}
             ) ?>";
         }
 
