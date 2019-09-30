@@ -23,7 +23,13 @@ echo jquery();
   <h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5><br>
   <?php
   if (!isset($_REQUEST["accion"])) {
-    $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "", "nombre");
+    //$carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "", "nombre");
+    $query = Model::getQueryBuilder();
+    $carrusel = $query
+      ->select("*")
+      ->from("carrusel")
+      ->orderBy("nombre", "ASC")
+      ->execute()->fetchAll();
     ?>
     <ul class="nav nav-tabs">
       <li class="active"><a href='sliderconfig.php'>Inicio</a></li>
@@ -31,7 +37,7 @@ echo jquery();
       <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a></li>
     </ul>
     <?php
-      if (!$carrusel["numcampos"])
+      if (!$carrusel)
         echo "No se encontraron registros.";
       else {
         echo "<table width='100%'  class='table table-bordered table-striped'>
@@ -40,15 +46,26 @@ echo jquery();
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE PUBLICACION</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE CADUCIDAD</td>
          <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDOS</td></tr>";
-        for ($i = 0; $i < $carrusel["numcampos"]; $i++) {
-          $contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"] . " and '" . date("Y-m-d") . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . date("Y-m-d") . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden");
+        $countCarrusel = count($carrusel);
+        for ($i = 0; $i < $countCarrusel; $i++) {
+          //$contenidos = busca_filtro_tabla("", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"] . " and '" . date("Y-m-d") . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . date("Y-m-d") . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "orden");
+          $query = Model::getQueryBuilder();
+          $contenidos = $query
+            ->select("*")
+            ->from("contenidos_carrusel")
+            ->where("carrusel_idcarrusel = :idcarrusel")
+            ->andWhere(date("Y-m-d") . " <= fecha_fin")
+            ->andWhere(date("Y-m-d") . " >= fecha_inicio")
+            ->setParameter(":idcarrusel", $carrusel[$i]["idcarrusel"], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->orderBy("orden", "ASC")
+            ->execute()->fetchAll();
           echo "<tr><td>
              <a href='sliderconfig.php?accion=editar&id=" . $carrusel[$i]["idcarrusel"] . "'>Editar
              </a></td>
              <td>
              <a href='#' onclick='if(confirm(\"Desea borrar el carrusel y todos sus contenidos?\")) window.location=\"sliderconfig.php?accion=eliminar&id=" . $carrusel[$i]["idcarrusel"] . "\"'>Eliminar
              </a></td>";
-          if ($contenidos['numcampos']) {
+          if ($contenidos) {
             echo ("<td>
 			 			<a target='_blank' href='mostrar_todos.php?idcarrusel=" . $carrusel[$i]["idcarrusel"] . "'>Ver</a>
 			 		</td>");
@@ -56,20 +73,36 @@ echo jquery();
             echo ("<td></td>");
           }
           echo "<td>" . $carrusel[$i]["nombre"] . "</td>";
-          echo "<td>" . $carrusel[$i]["fecha_inicio"] . "</td>";
-          echo "<td>" . $carrusel[$i]["fecha_fin"] . "</td>";
+          echo "<td>" . DateController::convertDate($carrusel[$i]["fecha_inicio"], 'Y-m-d') . "</td>";
+          echo "<td>" . DateController::convertDate($carrusel[$i]["fecha_fin"], 'Y-m-d') . "</td>";
           echo "<td><table width=100% class='table table-bordered table-striped'><tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. INICIO</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. FINAL</td><td colspan=2 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td></tr>";
-          $contenidos = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"], "orden");
-          for ($j = 0; $j < $contenidos["numcampos"]; $j++)
+          //$contenidos = busca_filtro_tabla("contenidos_carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "contenidos_carrusel", "carrusel_idcarrusel=" . $carrusel[$i]["idcarrusel"], "orden");
+          $query = Model::getQueryBuilder();
+          $contenidos = $query
+            ->select("*")
+            ->from("contenidos_carrusel")
+            ->where("carrusel_idcarrusel = :idcarrusel")
+            ->setParameter(":idcarrusel", $carrusel[$i]["idcarrusel"], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->orderBy("orden", "ASC")
+            ->execute()->fetchAll();
+          $countContenidos = count($contenidos);
+          for ($j = 0; $j < $countContenidos; $j++)
             echo "<tr><td>" . $contenidos[$j]["nombre"] . "</td><td>" . $contenidos[$j]["fecha_inicio"] . "</td><td>" . $contenidos[$j]["fecha_fin"] . "</td><td><a href='contenidoconfig.php?accion=editar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Editar</a></td><td><a href='contenidoconfig.php?accion=eliminar&id=" . $contenidos[$j]["idcontenidos_carrusel"] . "'>Eliminar</a></td></tr>";
           echo "</table></td></tr>";
         }
         echo "</table>";
       }
     } elseif ($_REQUEST["accion"] == "adicionar" || $_REQUEST["accion"] == "editar") {
-      if (isset($_REQUEST["id"]) && $_REQUEST["id"])
-        $carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "idcarrusel=" . $_REQUEST["id"], "");
-      else
+      if (isset($_REQUEST["id"]) && $_REQUEST["id"]) {
+        //$carrusel = busca_filtro_tabla("carrusel.*," . fecha_db_obtener('fecha_inicio', 'Y-m-d') . " as fecha_inicio," . fecha_db_obtener('fecha_fin', 'Y-m-d') . " as fecha_fin", "carrusel", "idcarrusel=" . $_REQUEST["id"], "");
+        $query = Model::getQueryBuilder();
+        $carrusel = $query
+          ->select("*")
+          ->from("carrusel")
+          ->where("idcarrusel = :idcarrusel")
+          ->setParameter(":idcarrusel", $_REQUEST["id"], \Doctrine\DBAL\Types\Type::INTEGER)
+          ->execute()->fetchAll();
+      } else
         $carrusel[0] = array("autoplay" => "1", "delay" => "3000", "easing" => "easeInOutExpo", "animationtime" => "600");
 
       include_once("../calendario/calendario.php");
@@ -171,8 +204,8 @@ echo jquery();
     $campos = array("autoplay", "delay", "easing", "animationtime", "nombre");
     $nombres[] = "fecha_inicio";
     $nombres[] = "fecha_fin";
-    $valores[] = fecha_db_almacenar($_REQUEST["fecha_inicio"], "Y-m-d");
-    $valores[] = fecha_db_almacenar($_REQUEST["fecha_fin"], "Y-m-d");
+    $valores[] = dateController::convertDate($_REQUEST["fecha_inicio"], "Y-m-d");
+    $valores[] = dateController::convertDate($_REQUEST["fecha_fin"], "Y-m-d");
     foreach ($campos as $fila) {
       $valores[] = "'" . $_REQUEST[$fila] . "'";
       $nombres[] = $fila;
@@ -183,8 +216,8 @@ echo jquery();
     header("location: sliderconfig.php");
   } elseif ($_REQUEST["accion"] == "guardar_editar") {
     $campos = array("autoplay", "delay", "easing", "animationtime", "nombre");
-    $valores[] = "fecha_inicio=" . fecha_db_almacenar($_REQUEST["fecha_inicio"], "Y-m-d");
-    $valores[] = "fecha_fin=" . fecha_db_almacenar($_REQUEST["fecha_fin"], "Y-m-d");
+    $valores[] = "fecha_inicio=" . DateController::convertDate($_REQUEST["fecha_inicio"], "Y-m-d");
+    $valores[] = "fecha_fin=" . DateController::convertDate($_REQUEST["fecha_fin"], "Y-m-d");
     foreach ($campos as $fila) {
       $valores[] = $fila . "='" . $_REQUEST[$fila] . "'";
     }
