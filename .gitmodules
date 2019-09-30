@@ -1,0 +1,3 @@
+[submodule "views/expediente"]
+	path = views/expediente
+	url = git@laboratorio.netsaia.com:cerok/FrontendExpedientes.git
