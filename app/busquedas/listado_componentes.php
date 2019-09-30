@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0
@@ -29,7 +29,7 @@ try {
 
     $components = BusquedaComponente::findAllByAttributes([
         'busqueda_idbusqueda' => $_REQUEST['searchId']
-    ], null, 'orden');
+    ], [], 'orden');
 
     if (!$components) {
         throw new Exception("No se encontraron resultados", 1);

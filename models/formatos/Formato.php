@@ -234,7 +234,7 @@ class Formato extends Model
         if (!$this->camposFormato) {
             $this->camposFormato = CamposFormato::findAllByAttributes([
                 'formato_idformato' => $this->getPK()
-            ], null, 'orden asc');
+            ], [], 'orden asc');
         }
 
         return $this->camposFormato;
@@ -303,7 +303,7 @@ class Formato extends Model
 
         $fields = CamposFormato::findAllByAttributes([
             'formato_idformato' => $this->getPK()
-        ], null, 'orden asc');
+        ], [], 'orden asc');
 
         $data = [];
         foreach ($fields as $CamposFormato) {

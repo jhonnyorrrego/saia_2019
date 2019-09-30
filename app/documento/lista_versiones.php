@@ -29,7 +29,7 @@ try {
 
     $records = VersionDocumento::findAllByAttributes([
         'documento_iddocumento' => $_REQUEST['documentId']
-    ], null, 'idversion_documento desc');
+    ], [], 'idversion_documento desc');
 
     foreach ($records as $key => $VersionDocumento) {
         $date = DateController::convertDate($VersionDocumento->fecha);

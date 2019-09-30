@@ -31,7 +31,7 @@ function buscar_modulos($id, $checkedOptions = [])
 	$data = [];
 	$modules = Modulo::findAllByAttributes([
 		'cod_padre' => $id
-	], null, 'etiqueta ASC');
+	], [], 'etiqueta ASC');
 
 	foreach ($modules as $Modulo) {
 		$moduleId = $Modulo->getPK();

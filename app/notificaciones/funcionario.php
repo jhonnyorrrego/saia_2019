@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -31,7 +31,7 @@ try {
 
     $notifications = Notificacion::findAllByAttributes([
         'destino' => $_REQUEST['userId'],
-    ], null, 'fecha desc', $_REQUEST['offset'], $limit);
+    ], [], 'fecha desc', $_REQUEST['offset'], $limit);
 
     $data = [];
     foreach ($notifications as $key => $Notificacion) {

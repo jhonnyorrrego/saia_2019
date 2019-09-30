@@ -35,7 +35,6 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
     $nombre_tabla = $datos_plantilla[0]['nombre_tabla'];
     $datos_documento = busca_filtro_tabla($campo_origen . "," . $campo_destino, $nombre_tabla, "documento_iddocumento=" . $iddoc, "");
     if ($datos_documento['numcampos']) {
-
         $lista_destinos = explode(',', $datos_documento[0][$campo_destino]);
         for ($i = 0; $i < count($lista_destinos); $i++) {
             $datos_distribucion = array();

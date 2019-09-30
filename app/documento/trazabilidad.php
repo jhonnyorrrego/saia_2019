@@ -29,7 +29,7 @@ try {
 
     $records = DocumentoRastro::findAllByAttributes([
         'fk_documento' => $_REQUEST['documentId']
-    ], null, 'fecha desc');
+    ], [], 'fecha desc');
 
     $data = [];
     foreach ($records as $DocumentoRastro) {

@@ -459,7 +459,7 @@ function check_banderas($bandera, $chequear = true)
                                                             'etiqueta_html' => $CamposFormato->etiqueta_html
                                                         ]);
 
-                                                        echo "<li 
+                                                        echo "<li
                                                             class='agregado'
                                                             idpantalla_campo='{$CamposFormato->getPK()}'
                                                             idpantalla_componente='{$PantallaComponente->getPK()}'
