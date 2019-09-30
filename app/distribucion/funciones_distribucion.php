@@ -235,7 +235,6 @@ function buscar_dependencias_hijas_distribucion($iddependencia)
     return $lista_hijas;
 }
 
-
 function accionFinalizarDistribucion($iddoc)
 {
     $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");

@@ -56,10 +56,10 @@ echo select2();
         $("#opciones_acciones_distribucion").on("select2:select", function(e) {
             var valor = e.params.data.id;
             var seleccionado = false;
+            var registros_seleccionados = top.window.gridSelection();
 
             if (valor == 'boton_generar_planilla') {
 
-                registros_seleccionados = top.window.gridSelection();
                 if (registros_seleccionados.length == 0) {
                     top.notification({
                         message: "No ha seleccionado alguna distribuci&oacute;n",
@@ -195,8 +195,75 @@ echo select2();
                     });
                 }
 
-            } //fin if boton_confirmar_recepcion_distribucion
+            } //fin if boton_confirmar_recepcion_distribucion           
 
+            if (valor == 'boton_finalizar_sin_planilla') {
+
+                top.confirm({
+                    id: 'question',
+                    type: 'error',
+                    title: 'Finalizar sin planilla!',
+                    message: '¿Está seguro de finalizar sin planilla?',
+                    position: 'center',
+                    timeout: 0,
+                    buttons: [
+                        [
+                            '<button><b>Si</b></button>',
+                            function(instance, toast) {
+                                if (registros_seleccionados.length == 0) {
+                                    top.notification({
+                                        message: "No ha seleccionado ninguna distribuci&oacute;n",
+                                        type: "warning",
+                                        duration: "3500"
+                                    });
+                                } else {
+                                    var registros = "";
+                                    registros_seleccionados.forEach(function(item) {
+                                        registros += item + ",";
+                                    });
+                                    registros = registros.substring(0, registros.length - 1);
+                                    $.ajax({
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
+                                        data: {
+                                            iddistribucion: registros,
+                                            ejecutar_accion: 'finalizar_distribucion'
+                                        },
+                                        success: function(datos) {
+                                            top.notification({
+                                                message: "Distribuciones finalizadas satisfactoriamente!",
+                                                type: "success",
+                                                duration: "3500"
+                                            });
+                                            window.location.reload();
+                                        }
+                                    });
+                                }
+                                instance.hide({
+                                        transitionOut: 'fadeOut'
+                                    },
+                                    toast,
+                                    'button'
+                                );
+                            },
+                            true
+                        ],
+                        [
+                            '<button>NO</button>',
+                            function(instance, toast) {
+                                instance.hide({
+                                        transitionOut: 'fadeOut'
+                                    },
+                                    toast,
+                                    'button'
+                                );
+                            }
+                        ]
+                    ]
+                });
+            }
+            /*
             if (valor == 'boton_finalizar_entrega_personal') {
 
                 var registros_seleccionados = "";
@@ -235,7 +302,7 @@ echo select2();
                     });
                 }
             } ///// Fin boton_finalizar_entrega_personal 
-
+            /*/
             if (valor == 'seleccionar_todos_accion_distribucion') {
                 $("input[name=btSelectItem]").attr('checked', true);
             }
