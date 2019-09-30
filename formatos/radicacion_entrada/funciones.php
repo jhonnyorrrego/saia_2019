@@ -894,8 +894,6 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
             $estado_distribucion = 3;
         }
 
-       
-
         //caso 1: Origen Externo y destino Interno
         if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {
             pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);

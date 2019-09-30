@@ -41,7 +41,7 @@ class Grafico extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_busqueda_componente',
                 'fk_pantalla_grafico',
@@ -88,7 +88,7 @@ class Grafico extends Model
     {
         return CaracterizacionGrafico::findByAttributes([
             'fk_grafico' => $this->getPK()
-        ], null, 'orden');
+        ], [], 'orden');
     }
 
     /**
