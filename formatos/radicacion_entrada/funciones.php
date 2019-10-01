@@ -892,12 +892,10 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         $estado_distribucion = 1;
         //Cuando no se necesita entrega (3)
 
-        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'tipo_mensajeria']);
+        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'requiere_recogida']);
         $tipo_mensajeria = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
 
-        $tipo_mensajeria = "Si";
-
-        if ($datos[0]['tipo_mensajeria'] == 'Si') {
+        if ($tipo_mensajeria == 3) {
             $estado_distribucion = 3;
         }
 
@@ -1029,4 +1027,5 @@ function radicacion_entrada_fab_buttons()
     $datos = array_merge($datos, $datos2);
     return $datos;
 }
+
 ?>

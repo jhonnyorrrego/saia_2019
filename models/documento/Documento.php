@@ -206,7 +206,7 @@ class Documento extends Model
             ->select('*')
             ->from($this->getFormat()->nombre_tabla)
             ->where('documento_iddocumento = :documentId')
-            ->setParameter(':documentId', $_REQUEST['iddoc'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':documentId', $this->getPK(), \Doctrine\DBAL\Types\Type::INTEGER)
             ->execute()->fetch();
     }
 
