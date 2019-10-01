@@ -243,7 +243,7 @@ class Documento extends Model
                 $actions = explode(',', $CamposFormato->acciones);
 
                 if (in_array('p', $actions)) {
-                    $value = ComponentFormGeneratorController::callShowValue($this->getFormat()->getPK(), $CamposFormato->getPK(), $this->getPK());
+                    $value = ComponentFormGeneratorController::callShowValue($this->getFormat()->getPK(), $this->getPK(), $CamposFormato->nombre);
                     $description .= "{$CamposFormato->etiqueta}: {$value}<br>";
                 }
             }

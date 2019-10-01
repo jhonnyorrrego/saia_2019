@@ -183,7 +183,7 @@ function asunto_documento($idformato, $iddoc, $retorno = 0)
 	$html = '';
 	if ($consultaCampos['numcampos']) {
 		for ($i = 0; $i < $consultaCampos['numcampos']; $i++) {
-			$html .= ComponentFormGeneratorController::callShowValue($idformato, $consultaCampos[$i]["idcampos_formato"], $iddoc);
+			$html .= ComponentFormGeneratorController::callShowValue($idformato, $iddoc, $consultaCampos[$i]["nombre"]);
 		}
 	}
 	if ($retorno) {
