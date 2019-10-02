@@ -206,7 +206,7 @@ class Documento extends Model
             ->select('*')
             ->from($this->getFormat()->nombre_tabla)
             ->where('documento_iddocumento = :documentId')
-            ->setParameter(':documentId', $_REQUEST['iddoc'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':documentId', $this->getPK(), \Doctrine\DBAL\Types\Type::INTEGER)
             ->execute()->fetch();
     }
 
@@ -243,7 +243,7 @@ class Documento extends Model
                 $actions = explode(',', $CamposFormato->acciones);
 
                 if (in_array('p', $actions)) {
-                    $value = ComponentFormGeneratorController::callShowValue($this->getFormat()->getPK(), $CamposFormato->getPK(), $this->getPK());
+                    $value = ComponentFormGeneratorController::callShowValue($this->getFormat()->getPK(), $this->getPK(), $CamposFormato->nombre);
                     $description .= "{$CamposFormato->etiqueta}: {$value}<br>";
                 }
             }

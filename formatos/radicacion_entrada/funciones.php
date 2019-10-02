@@ -645,7 +645,8 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'empresa_transportado'
         ]);
-        $empresa_transportadora = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
+
+        $empresa_transportadora = ComponentFormGeneratorController::callShowValue($idformato, $iddoc, $CamposFormato->nombre);
         $tabla .= "<tr>
                         <td class='pr-0' style='width: 20%; border:none;'>
                             <strong>NO. DE DOCUMENTO:</strong> 
@@ -711,7 +712,8 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'tipo_origen'
         ]);
-        $tipo_origen = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
+
+        $tipo_origen = ComponentFormGeneratorController::callShowValue($idformato, $iddoc, $CamposFormato->nombre);
 
         $tabla .= "
             <tr>
@@ -785,8 +787,7 @@ function mostrar_copia_electronica($idformato, $iddoc)
             'formato_idformato' => $idformato,
             'nombre' => 'copia_a'
         ]);
-        $info = ComponentFormGeneratorController::callShowValue($idformato, $CamposFormato->getPK(), $iddoc);
-
+        $info = ComponentFormGeneratorController::callShowValue($idformato, $iddoc, $CamposFormato->nombre);
         if ($info) {
             $tabla = '<style>
         .table.table-condensed thead tr td {
@@ -890,17 +891,27 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         //por defecto se maneja que si se necesita entrega (1)
         $estado_distribucion = 1;
         //Cuando no se necesita entrega (3)
-        if ($datos[0]['tipo_mensajeria'] == 3) {
+
+        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'requiere_recogida']);
+        $tipo_mensajeria = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
+
+        if ($tipo_mensajeria == 3) {
             $estado_distribucion = 3;
         }
 
+        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'tipo_origen']);
+        $tipo_origen = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
+
+        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'tipo_destino']);
+        $tipo_destino = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
+
         //caso 1: Origen Externo y destino Interno
-        if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {
+        if ($tipo_origen == 1 && $tipo_destino == 2) {
             pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);
         }
 
         //caso 2: Origen Interno y destino Interno
-        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 2) {
+        if ($tipo_origen == 2 && $tipo_destino == 2) {
             //Cuando si se necesita entrega y no se requiere recogida
             if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, 0, 1);
@@ -910,7 +921,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         }
 
         //caso 3: Origen Interno y destino Externo
-        if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 1) {
+        if ($tipo_origen == 2 && $tipo_destino == 1) {
             //si no se necesita entrega y tampoco se necesita recogida
             if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, 0, 1);
@@ -1016,4 +1027,5 @@ function radicacion_entrada_fab_buttons()
     $datos = array_merge($datos, $datos2);
     return $datos;
 }
+
 ?>
