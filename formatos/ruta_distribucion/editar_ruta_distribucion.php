@@ -128,7 +128,11 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 </div>
 <div class='form-group form-group-default required col-12 '  id='group_nombre_ruta'>
             <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
-            <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='<?= ComponentFormGeneratorController::callShowValue(4987, $_REQUEST['iddoc']) ?>' />
+            <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                nombre_ruta
+            ) ?>' />
         </div>
 
         <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
@@ -185,14 +189,34 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                             );
                             $arbol_4998 = new ArbolFt("asignar_dependencias", $origen_4998, $opciones_arbol_4998, $extensiones_4998);
                             echo $arbol_4998->generar_html();?></div>
-<input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(4993, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                firma
+            ) ?>'>
 <div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
             <label title=''>DESCRIPCIóN RUTA</label>
-            <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= ComponentFormGeneratorController::callShowValue(4988, $_REQUEST['iddoc']) ?>' />
+            <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                descripcion_ruta
+            ) ?>' />
         </div>
-<input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(4992, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(4990, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='idft_ruta_distribucion' value='<?= ComponentFormGeneratorController::callShowValue(4989, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                encabezado
+            ) ?>'>
+<input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                documento_iddocumento
+            ) ?>'>
+<input type='hidden' name='idft_ruta_distribucion' value='<?= ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                idft_ruta_distribucion
+            ) ?>'>
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
 <input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>

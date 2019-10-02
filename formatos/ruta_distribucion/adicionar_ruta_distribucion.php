@@ -116,7 +116,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
 <script type='text/javascript'>
             $(function () {
-                var configuracion={"defaultDate":"2019-09-27","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"2019-10-02","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
                 $('#fecha_ruta_distribuc').datetimepicker(configuracion);
                 $('#content_container').height($(window).height());
             });

@@ -34,6 +34,7 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "");
     $nombre_tabla = $datos_plantilla[0]['nombre_tabla'];
     $datos_documento = busca_filtro_tabla($campo_origen . "," . $campo_destino, $nombre_tabla, "documento_iddocumento=" . $iddoc, "");
+
     if ($datos_documento['numcampos']) {
         $lista_destinos = explode(',', $datos_documento[0][$campo_destino]);
         for ($i = 0; $i < count($lista_destinos); $i++) {
@@ -235,7 +236,6 @@ function buscar_dependencias_hijas_distribucion($iddependencia)
     return $lista_hijas;
 }
 
-
 function accionFinalizarDistribucion($iddoc)
 {
     $distribuciones = busca_filtro_tabla("iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "");
@@ -385,10 +385,10 @@ function ver_estado_distribucion($estado_distribucion)
 { //Estado
     $array_estado_distribucion = array(
         'estado_distribucion' => 'Pendiente',
-        0 => 'Pendiente',
+        0 => 'Por recepcionar',
         1 => 'Pendiente por distribuir',
         2 => 'En distribuci&oacute;n',
-        3 => 'Confirmado'
+        3 => 'Recepcionado'
     );
     return $array_estado_distribucion[$estado_distribucion];
 }
@@ -868,6 +868,7 @@ function fecha_distribucion($fecha)
  * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
  * @date 2019-09-27
  */
+
 function obtener_sede_origen($iddistribucion)
 {
     $Distribucion = new Distribucion($iddistribucion);
@@ -907,4 +908,24 @@ function obtener_sede_destino($iddistribucion)
         ->execute()->fetchAll();
 
     return $nombreSedeDestino[0]['nombre'];
+}
+
+/**
+ * Esta funcion obtiene el asunto desde  ft_radicacion_entrada para que el asunto llegue limpio sin 'ASUNTO:' ya que para el reporte de distribución es redundante incluirlo.
+ *
+ * @param [integer] $iddoc Id del documento
+ * @return string Retorna el texto que contiene el asunto del documento. este se encuentra en descripcion  en las tablas ft_radicacion_entrada y documento.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-01
+ */
+function obtener_asunto($iddoc)
+{
+    $query = Model::getQueryBuilder();
+    $ft_radicacion_entrada = $query
+        ->select('descripcion')
+        ->from('ft_radicacion_entrada')
+        ->where('documento_iddocumento = :doc')
+        ->setParameter(':doc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+    return $ft_radicacion_entrada[0]['descripcion'];
 }
