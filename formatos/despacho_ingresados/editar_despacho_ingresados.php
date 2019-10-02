@@ -109,7 +109,11 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
         
         echo "</div>";
         ?>
-<input type='hidden' name='tipo_mensajero' value='<?= ComponentFormGeneratorController::callShowValue(5189, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='tipo_mensajero' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                tipo_mensajero
+            ) ?>'>
         <div class='form-group form-group-default ' id='group_anexo'>
             <label title=''>ANEXO</label>
             <div class="" id="dropzone_anexo"></div>
@@ -188,8 +192,16 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                 });
             });
         </script>
-<input type='hidden' name='iddestino_radicacion' value='<?= ComponentFormGeneratorController::callShowValue(5013, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='estado_documento' value='<?= ComponentFormGeneratorController::callShowValue(4830, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='iddestino_radicacion' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                iddestino_radicacion
+            ) ?>'>
+<input type='hidden' name='estado_documento' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                estado_documento
+            ) ?>'>
 
         <div class='form-group form-group-default required' id='group_tipo_recorrido'>
             <label title=''>RECORRIDO DEL DIA<span>*</span></label>
@@ -240,57 +252,41 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                     );
                 });
             </script>
-<input type='hidden' name='docs_seleccionados' value='<?= ComponentFormGeneratorController::callShowValue(5088, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='idft_despacho_ingresados' value='<?= ComponentFormGeneratorController::callShowValue(4075, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='mensajero' value='<?= ComponentFormGeneratorController::callShowValue(4074, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(4076, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(4078, $_REQUEST['iddoc']) ?>'>
-<input type='hidden' name='fecha_entrega' value='<?= ComponentFormGeneratorController::callShowValue(4080, $_REQUEST['iddoc']) ?>'>
-
-        <div class='form-group form-group-default form-group-default-select2 required' id='group_ventanilla'>
-            <label title=''>VENTANILLA<span>*</span></label>
-            <div class='form-group'>
-            <select name='ventanilla' id='ventanilla' required>
-            <option value=''>Por favor seleccione...</option>
-        <option value='18'>
-                1
-            </option></select>
-                <script>
-                $(document).ready(function() {
-                    $('#ventanilla').select2();
-                    $('#ventanilla').addClass('full-width');
-                });
-                </script>
-            </div>
-        </div>            <script>
-                $(function(){
-                    $.post(
-                        '<?= $ruta_db_superior ?>app/documento/consulta_seleccionado.php',
-                        {
-                            key: localStorage.getItem('key'),
-                            token: localStorage.getItem('token'),
-                            fieldId: 8319,
-                            documentId: "<?= $_REQUEST['iddoc'] ?>"
-                        },
-                        function (response) {
-                            if (response.success) {
-                                if(response.data){
-                                    $("[name='ventanilla']")
-                                        .val(response.data)
-                                        .trigger('change');
-                                }
-                            } else {
-                                top.notification({
-                                    type: 'error',
-                                    message: response.message
-                                });
-                            }
-                        },
-                        'json'
-                    );
-                });
-            </script>
-<input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(4079, $_REQUEST['iddoc']) ?>'>
+<input type='hidden' name='docs_seleccionados' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                docs_seleccionados
+            ) ?>'>
+<input type='hidden' name='idft_despacho_ingresados' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                idft_despacho_ingresados
+            ) ?>'>
+<input type='hidden' name='mensajero' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                mensajero
+            ) ?>'>
+<input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                documento_iddocumento
+            ) ?>'>
+<input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                encabezado
+            ) ?>'>
+<input type='hidden' name='fecha_entrega' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                fecha_entrega
+            ) ?>'>
+<input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(
+                353,
+                $_REQUEST['iddoc'],
+                firma
+            ) ?>'>
 <?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
 <input type='hidden' name='campo_descripcion' value='4080'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
