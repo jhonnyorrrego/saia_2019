@@ -258,7 +258,7 @@ $('#user_form').validate({
             required: 'Campo requerido',
             minlength: 'Ingrese minimo 8 caracteres'
         },
-        perfil: {
+        'perfil[]': {
             required: 'Campo requerido'
         },
         ventanilla_radicacion: {

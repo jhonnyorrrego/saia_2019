@@ -95,9 +95,9 @@ $params = json_encode([
                             <option value="">Seleccione...</option>
                         </select>
                     </div>
-                    <div class="form-group form-group-default form-group-default-select2">
+                    <div class="form-group form-group-default form-group-default-select2 required">
                         <label class="">Ventanilla radicación</label>
-                        <select class=" full-width" data-init-plugin="select2" id="window_radication" name="ventanilla_radicacion" multiple>
+                        <select class="full-width" data-init-plugin="select2" id="window_radication" name="ventanilla_radicacion" multiple>
                         </select>
                     </div>
 

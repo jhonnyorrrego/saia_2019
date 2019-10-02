@@ -15,11 +15,11 @@ include_once $ruta_db_superior . "core/autoload.php";
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 } catch (\Throwable $th) {
-    //die("invalid access");
+    die("invalid access");
 }
 
-$page = (int) $_REQUEST['pageNumber'] ?? 1;
-$end = (int) $_REQUEST['pageSize'] ?? 30;
+$page = $_REQUEST['pageNumber'] ?? 1;
+$end = $_REQUEST['pageSize'] ?? 30;
 $start = ($page - 1) * $end;
 
 $busqueda = Model::getQueryBuilder()
