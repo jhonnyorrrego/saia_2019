@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -40,7 +40,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         if ($_REQUEST['id']) {
             $Response->message = "Datos actualizados";
         } else {
-            $Response->message = "Area creada";
+            $Response->message = "Dependencia Creada correctamente";
+            $Response->data->notificationType = $Dependencia->estado ? 'success' : 'warning';
         }
     } else {
         $Response->message = "Error al guardar";

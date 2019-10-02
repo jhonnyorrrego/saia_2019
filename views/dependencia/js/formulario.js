@@ -57,7 +57,11 @@ $(function() {
             }
         }
 
-        createTree(data.cod_padre, [data.key]);
+        if (+data.cod_padre) {
+            createTree(data.cod_padre, [data.key]);
+        } else {
+            $('#areas_tree').hide();
+        }
     }
 
     function createTree(parentId, unSelectables = []) {
@@ -190,7 +194,7 @@ $('#area_form').validate({
                 if (response.success) {
                     top.notification({
                         message: response.message,
-                        type: 'success'
+                        type: response.data.notificationType || 'success'
                     });
                     top.successModalEvent();
                 } else {
