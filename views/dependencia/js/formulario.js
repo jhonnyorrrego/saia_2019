@@ -184,6 +184,7 @@ $('#area_form').validate({
             '&' +
             $.param({
                 key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
                 id: params.id
             });
 

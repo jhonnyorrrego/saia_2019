@@ -27,7 +27,7 @@ class CheckboxGeneratorController extends ComponentFormGeneratorController imple
         $text = "
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-            <div class='checkbox check-success'>
+            <div class='checkbox check-success input-group'>
         ";
 
         $options = $this->CamposFormato->getRadioOptions();
@@ -44,7 +44,7 @@ class CheckboxGeneratorController extends ComponentFormGeneratorController imple
                 id='{$this->CamposFormato->nombre}{$key}'
                 value='{$CampoOpciones->getPK()}'
                 aria-required='true'>
-                <label for='{$this->CamposFormato->nombre}{$key}'>
+                <label for='{$this->CamposFormato->nombre}{$key}' class='mr-3'>
                     {$CampoOpciones->valor}
                 </label>";
         }
@@ -79,8 +79,30 @@ class CheckboxGeneratorController extends ComponentFormGeneratorController imple
                         },
                         function (response) {
                             if (response.success) {
-                                if(response.data){
-                                    response.data.forEach(i => {
+                                if(response.data.selected.length){
+                                    if(response.data.inactive.length){
+                                        var node = $("[name='{$this->CamposFormato->nombre}[]']").parent();
+
+                                        response.data.inactive.forEach(i => {
+                                            var key = $("[name='{$this->CamposFormato->nombre}[]']").length;
+                                            node.append(
+                                                $("<input>", {
+                                                    type : 'checkbox',
+                                                    name : '{$this->CamposFormato->nombre}[]',
+                                                    id : "{$this->CamposFormato->nombre}"+key,
+                                                    value: i.id,
+                                                    "aria-required": 'true'
+                                                }),
+                                                $("<label>", {
+                                                    for: "{$this->CamposFormato->nombre}"+key,
+                                                    class: "mr-3",
+                                                    text: i.label
+                                                })
+                                            )
+                                        });
+                                    }
+                                    
+                                    response.data.selected.forEach(i => {
                                         $("[name='{$this->CamposFormato->nombre}[]'][value='"+i+"']").prop('checked', true);
                                     });
                                 }

@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'core/autoload.php';
 
 $Response = (object) [
-    'data' => [],
+    'data' => new stdClass(),
     'message' => '',
     'success' => 0
 ];
@@ -36,7 +36,16 @@ try {
         'fk_campos_formato' => $_REQUEST['fieldId']
     ]);
 
-    $Response->data = $selected;
+    $inactive = Model::getQueryBuilder()
+        ->select('idcampo_opciones as id, valor as label')
+        ->from('campo_opciones')
+        ->where('idcampo_opciones in (:list)')
+        ->andWhere('estado = 0')
+        ->setParameter('list', $selected, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+        ->execute()->fetchAll();
+
+    $Response->data->inactive = $inactive;
+    $Response->data->selected = $selected;
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
