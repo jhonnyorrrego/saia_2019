@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
+include_once $ruta_db_superior . 'app/documento/librerias.php';
 
 function getTransfer($transferId)
 {
