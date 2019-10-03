@@ -695,11 +695,11 @@ abstract class Model
                 }
 
                 if ($individualValue) {
-                    $QueryBuilder->$method($attribute, ":{$attribute}");
+                    $QueryBuilder->$method($attribute, ":{$attribute}_{$method}");
                 } else {
-                    $QueryBuilder->$method("{$attribute} = :{$attribute}");
+                    $QueryBuilder->$method("{$attribute} = :{$attribute}_{$method}");
                 }
-                $QueryBuilder->setParameter(":{$attribute}", $value, $type);
+                $QueryBuilder->setParameter(":{$attribute}_{$method}", $value, $type);
             }
         }
 

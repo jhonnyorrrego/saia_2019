@@ -13,8 +13,8 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$dbRoute='';
-$Response = (object)[
+$dbRoute = '';
+$Response = (object) [
     'data' => [],
     'message' => '',
     'success' => 0
@@ -23,11 +23,11 @@ $Response = (object)[
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    
+
     $userId = $_REQUEST['userId'];
     unset($_REQUEST['key'], $_REQUEST['userId'], $_REQUEST['token']);
-      
-    if(!empty($_REQUEST['firma'])){
+
+    if (!empty($_REQUEST['firma'])) {
         $fileRoute = $_REQUEST['firma'];
         $fileParts = explode('.', $fileRoute);
         $fileName = 'firmas/' . $_REQUEST['nit'] . '.' . end($fileParts);
@@ -36,12 +36,20 @@ try {
     }
     unset($_REQUEST['firma']);
 
+    $Funcionario = Funcionario::findByAttributes([
+        'nit' => $_REQUEST['nit']
+    ]);
+
+    if ($Funcionario && $Funcionario->getPK() != $userId) {
+        throw new Exception("Ya existe un funcionario con identificación {$_REQUEST['nit']}", 1);
+    }
+
     $Funcionario = new Funcionario($userId);
 
-    if($Funcionario->login != $_REQUEST['login']){
+    if ($Funcionario->login != $_REQUEST['login']) {
         $exist = Funcionario::countRecords(['login' => $_REQUEST['login']]);
 
-        if($exist){
+        if ($exist) {
             throw new Exception("Ya existe un usuario {$_REQUEST['login']}", 1);
         }
     }

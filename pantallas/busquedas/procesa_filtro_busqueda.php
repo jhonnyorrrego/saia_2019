@@ -151,6 +151,8 @@ function parsear_cadena_temporal($key, $valor, $contador_campos)
 {
 	$key = str_replace("bqsaia_", "", $key);
 	$valor = str_replace("@", "%", $valor);
+	// Cuando quieren buscar una cadena con @ no estaba buscando, esto soluciona el problema
+	$valor = parsear_cadena_tildes($valor);
 	$req_condicion_llave = $_REQUEST["bksaiacondicion_" . $key];
 	$cadena = parsear_consulta($key, $valor, $req_condicion_llave);
 	$enlace = @$_REQUEST["bqsaiaenlace_" . $key];
@@ -235,25 +237,24 @@ function valor_dato($campo, $valor)
 
 function filtros_adicionales()
 {
-
 	if (@$_REQUEST["filtro_adicional"]) {
 		$datos = $_REQUEST["filtro_adicional"];
 		$idbusqueda_componente = $_REQUEST["idbusqueda_componente"];
 		$usuario = $_SESSION["idfuncionario"];
-		$fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
 		$valores = explode("@", $datos);
-		if (MOTOR == "MySql") {
-			$tablas = stripslashes($valores[0]);
-			$where = stripslashes($valores[1]);
-		} else if (MOTOR == "Oracle") {
-			$tablas = str_replace("'", "''", $valores[0]);
-			$where = $valores[1];
-		} else {
-			$tablas = stripslashes($valores[0]);
-			$where = stripslashes($valores[1]);
-		}
-		$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
-		phpmkr_query($sql1);
+		$tablas = stripslashes($valores[0]);
+		$where = stripslashes($valores[1]);
+
+		$Connection = Connection::getInstance();
+		$Connection->createQueryBuilder()
+			->insert('busqueda_filtro')
+			->setValue('fk_busqueda_componente', $idbusqueda_componente)
+			->setValue('funcionario_idfuncionario', $usuario)
+			->setValue('fk_busqueda_componente', $tablas)
+			->setValue('fk_busqueda_componente', $where)
+			->execute();
+
+		return $Connection->lastInsertId();
 	}
 }
 
@@ -314,20 +315,20 @@ function campos_especiales()
 					$where = array();
 					for ($j = 0; $j < $cuantos; $j++) {
 						if ($varios[$j] != '') {
-							$where[] = "lower(a.nombre) like '%" . str_replace(" ", "%", strtolower($varios[$j])) . "%'";
+							$where[] = "lower(a.nombre) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios[$j]))) . "%'";
 						}
 					}
 					for ($j = 0; $j < $cuantos2; $j++) {
 						if ($varios2[$j] != '') {
-							$where[] = "lower(a.identificacion) like '%" . str_replace(" ", "%", strtolower($varios2[$j])) . "%'";
+							$where[] = "lower(a.identificacion) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios2[$j]))) . "%'";
 						}
 					}
 					for ($j = 0; $j < $cuantos3; $j++) {
 						if ($varios3[$j] != '') {
-							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower($varios3[$j])) . "%'";
+							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios3[$j]))) . "%'";
 						}
 					}
-					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "");
+					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "", $conn);
 
 					for ($k = 0; $k < $datos_ejecutor["numcampos"]; $k++) {
 						$cadena[] = "(" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%'')";
@@ -352,7 +353,7 @@ function realizar_consulta()
 {
 	global $conn, $ruta_db_superior;
 	$tablas = array();
-	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden");
+	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden", $conn);
 	if ($datos_busqueda[0]["tablas"] != '' && $datos_busqueda[0]["tablas_adicionales"] != '') {
 		$datos_busqueda[0]["tablas"] = $datos_busqueda[0]["tablas"] . "," . $datos_busqueda[0]["tablas_adicionales"];
 	}
@@ -381,11 +382,11 @@ function realizar_consulta()
 		// $ordenar_consulta.=" GROUP BY ".implode(",",$agrupacion);
 	}
 	$funciones_condicion = parsear_datos_plantilla_visual($condicion);
+	$variables_final = [];
 	if ($datos_busqueda[0]["ruta_libreria"]) {
 		$librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
 		array_walk($librerias, "incluir_librerias_busqueda");
 	}
-	$variables_final = [];
 	foreach ($funciones_condicion as $key => $valor) {
 		unset($valor_variables);
 		$valor_variables = array();
@@ -422,11 +423,11 @@ function realizar_consulta()
 
 function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
 {
-
+	global $conn;
 	$condicion_filtro = '';
-	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden");
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
 	if (!$datos_condicion["numcampos"]) {
-		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "");
+		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
 		$condicion = $datos_condicion[0]["codigo_where"];
 	} else {
 		if ($filtros != '') {
@@ -486,6 +487,7 @@ function parsear_subconsulta($key, $valor, $contador_campos)
 {
 	$key = str_replace("subsaia_", "", $key);
 	$key_aux = $key;
+	$valor = parsear_cadena_tildes($valor);
 	$req_condicion_llave = $_REQUEST["subcondicion_" . $key];
 	$cadena = parsear_consulta($key, $valor, $req_condicion_llave);
 	$enlace = @$_REQUEST["subsaiaenlace_" . $key_aux];
@@ -510,6 +512,7 @@ function parsear_subconsulta($key, $valor, $contador_campos)
 
 function parsear_consulta($key, $valor, $req_condicion_llave)
 {
+	$valor = parsear_cadena_tildes($valor);
 	$fin = strpos($key, "__");
 	if ($fin) {
 		$key = substr($key, 0, $fin);
@@ -585,6 +588,37 @@ function parsear_consulta($key, $valor, $req_condicion_llave)
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
 			}
 			break;
+
+		case 'like_comas':
+			$condicion = "|" . str_replace("like_comas", "like", $req_condicion_llave) . "|";
+			$str_quote1 = "'%,";
+			$str_quote2 = ",%'";
+			if (strpos($valor, ",") === false) {
+				$valor_ = $valor;
+				$escaped_val = strtolower(trim($valor));
+				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+				// $key se puede calcular fuera del switch
+				$cadena = "LOWER(CONCAT(',',CONCAT({$key},','))) {$condicion} " . str_replace(" ", "%", $valor);
+			} else {
+				$valores = explode(",", $valor);
+				$cant = count($valores);
+				for ($j = 0; $j < $cant; $j++) {
+					$valor_ = $valores[$j];
+					$escaped_val = strtolower(trim($valor_));
+					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+					// $key se puede calcular fuera del switch
+					$cadena .= "LOWER(CONCAT(',',CONCAT({$key},','))) {$condicion} " . str_replace(" ", "%", $valor);
+
+					if (($j + 1) < $cant) {
+						$cadena .= "|-|";
+					}
+				}
+				$cadena = "($cadena)";
+			}
+
+
+			break;
+
 		case 'like_total':
 			$condicion = "|" . str_replace("like_total", "like", $req_condicion_llave) . "|";
 			if (MOTOR == "MySql") {
@@ -814,4 +848,39 @@ function procesar_filtro_like_general($key, $valor, $condicion)
 		$cadena = "($cadena)";
 	}
 	return $cadena;
+}
+
+function parsear_cadena_tildes($cadena)
+{
+	$texto = ($cadena);
+	$buscar = array(
+		'á',
+		'é',
+		'í',
+		'ó',
+		'ú',
+		'ñ',
+		'Á',
+		'É',
+		'Í',
+		'Ó',
+		'Ú',
+		'Ñ'
+	);
+	$reemplazar = array(
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%',
+		'%'
+	);
+	$texto = str_replace($buscar, $reemplazar, $texto);
+	return $texto;
 }

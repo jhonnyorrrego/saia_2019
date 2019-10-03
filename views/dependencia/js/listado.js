@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     $('#table_container').height(
         $(window).height() - $('#table_container').offset().top - 20
@@ -41,21 +41,21 @@ $(function () {
             nodata: true, // Display a 'no data' status node if result is empty
             mode: 'hide' // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
         },
-        renderColumns: function (event, data) {
+        renderColumns: function(event, data) {
             var node = data.node,
                 $tdList = $(node.tr).find('>td');
 
             let image = !node.data.logo
                 ? ''
                 : $('<img>', {
-                    src: baseUrl + node.data.logo,
-                    width: '100'
-                });
+                      src: baseUrl + node.data.logo,
+                      width: '100'
+                  });
 
             $tdList.eq(0).text(node.data.codigo);
             $tdList.eq(1).html(image);
             $tdList.eq(3).text(node.data.sigla);
-            $tdList.eq(4).text(node.data.estado ? 'Activo' : 'Inactivo');
+            $tdList.eq(4).text(+node.data.estado ? 'Activo' : 'Inactivo');
             $tdList.eq(5).text(node.data.extension);
             $tdList.eq(6).text(node.data.ubicacion_dependencia);
             $tdList.eq(7).text(node.data.descripcion);
@@ -67,9 +67,7 @@ $(function () {
                     <a href="#" class="dropdown-item add" data-id="${node.key}">
                         <i class="fa fa-plus"></i> Nuevo
                     </a>
-                    <a href="#" class="dropdown-item edit" data-id="${
-                node.key
-                }">
+                    <a href="#" class="dropdown-item edit" data-id="${node.key}">
                         <i class="fa fa-edit"></i> Editar
                     </a>
                 </div>
@@ -78,11 +76,11 @@ $(function () {
     });
 
     let tree = $('#treegrid').fancytree('getTree');
-    $('#search').keyup(function (e) {
+    $('#search').keyup(function(e) {
         tree.filterNodes.call(tree, $(this).val());
     });
 
-    $(document).on('click', '.add,.edit', function () {
+    $(document).on('click', '.add,.edit', function() {
         var data = new Object();
 
         if ($(this).hasClass('add')) {
@@ -95,7 +93,7 @@ $(function () {
             url: `views/dependencia/formulario.php`,
             params: data,
             size: 'modal-lg',
-            title: 'Dependencia',
+            title: data.id ? 'Editar Dependencia' : 'Adicionar Dependencia',
             buttons: {
                 success: {
                     label: 'Guardar',
@@ -106,7 +104,7 @@ $(function () {
                     class: 'btn btn-danger'
                 }
             },
-            onSuccess: function () {
+            onSuccess: function() {
                 top.closeTopModal();
                 let tree = $('#treegrid').fancytree('getTree');
                 tree.reload();

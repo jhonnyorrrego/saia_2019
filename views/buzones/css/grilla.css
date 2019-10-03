@@ -47,12 +47,15 @@ select.btn {
 
 thead > tr > th {
     font-weight: bold !important;
-    color: #2c2c2c !important;
+    color: #626262 !important;
     background: #e9ecef;
     border-color: #dee2e6;
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 
 tbody > tr > td {
+    text-align: center;
+    text-transform: lowercase;
     font-size: 12;
+    color: #2c2c2c;
 }

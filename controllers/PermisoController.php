@@ -49,15 +49,16 @@ class PermisoController
     }
 
     /**
-     * Verificar si el usuario actual tiene permiso para realizar accion sobre tabla
+     * Verificar si el usuario actual tiene permiso
+     * sobre un modulo
      *
-     * @param string $tabla
+     * @param string $module
      * @param integer $accion
      * @return void
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-06-14
      */
-    function permiso_usuario($tabla, $accion)
+    function permiso_usuario($module, $accion)
     {
         if ($this->acceso_root() && $accion == 1) {
             return true;
@@ -71,16 +72,16 @@ class PermisoController
                 ->join('b', 'modulo', 'c', 'c.idmodulo = b.modulo_idmodulo')
                 ->where('a.login = :login')
                 ->andWhere('a.estado = 1')
-                ->andWhere('accion = :action')
+                ->andWhere('b.accion = :action')
                 ->andWhere('c.nombre = :module')
                 ->setParameter(':login', $this->login)
                 ->setParameter(':action', $accion)
-                ->setParameter(':login', $tabla)
+                ->setParameter(':module', $module)
                 ->execute()->fetch();
 
             return $total['total'] > 0;
-        } else if (!empty($tabla)) {
-            return $this->acceso_modulo_perfil($tabla);
+        } else if (!empty($module)) {
+            return $this->acceso_modulo_perfil($module);
         }
 
         return false;

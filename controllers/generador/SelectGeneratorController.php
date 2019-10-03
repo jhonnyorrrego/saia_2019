@@ -74,11 +74,22 @@ class SelectGeneratorController extends ComponentFormGeneratorController impleme
                         },
                         function (response) {
                             if (response.success) {
-                                if(response.data){
+                                if(response.data.selected.length){
+                                    if(response.data.inactive.length){
+                                        var item = response.data.inactive[0];
+                                                              
+                                        $('#{$this->CamposFormato->nombre}').append(
+                                            $("<option>", {
+                                                value: item.id,
+                                                text: item.label
+                                            })
+                                        );
+                                    }
                                     $("[name='{$this->CamposFormato->nombre}']")
-                                        .val(response.data)
+                                        .val(response.data.selected)
                                         .trigger('change');
                                 }
+
                             } else {
                                 top.notification({
                                     type: 'error',

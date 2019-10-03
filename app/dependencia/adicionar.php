@@ -1,25 +1,28 @@
 <?php
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
     if (is_file($ruta . 'db.php')) {
         $ruta_db_superior = $ruta;
+        break;
     }
 
     $ruta .= '../';
     $max_salida--;
 }
+
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) [
     'data' => new stdClass(),
-    'message' => "",
+    'message' => '',
     'success' => 0
-);
+];
 
-if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+try {
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
     $fileRoute = $_REQUEST['logo'];
     if ($fileRoute) {
         $fileParts = explode('.', $fileRoute);
@@ -28,25 +31,37 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $dbRoute = TemporalController::createFileDbRoute($fileName, 'configuracion', $content);
     }
 
-    unset($_REQUEST['key'], $_REQUEST['logo']);
+    if (!$_REQUEST['id'] && $_REQUEST['codigo']) {
+        $exists = Dependencia::countRecords(['codigo' => $_REQUEST['codigo']]);
+
+        if ($exists) {
+            throw new Exception("Ya existe una dependencia con codigo {$_REQUEST['codigo']}", 1);
+        }
+    }
 
     $Dependencia = new Dependencia($_REQUEST['id']);
     $Dependencia->setAttributes($_REQUEST);
     $Dependencia->logo = $dbRoute;
 
-    if ($Dependencia->save()) {
-        $Response->success = 1;
-
-        if ($_REQUEST['id']) {
-            $Response->message = "Datos actualizados";
-        } else {
-            $Response->message = "Area creada";
-        }
-    } else {
-        $Response->message = "Error al guardar";
+    if (!$Dependencia->save()) {
+        throw new Exception("Error al guardar", 1);
     }
-} else {
-    $Response->message = "Debe iniciar sesion";
+
+    if ($_REQUEST['id']) {
+        $Response->message = "Datos actualizados";
+    } else {
+        if ($Dependencia->estado) {
+            $Response->message = "Dependencia Creada correctamente";
+            $Response->data->notificationType = 'success';
+        } else {
+            $Response->message = "Dependencia Creada. Sin embargo debe activarla para que funcione correctamente";
+            $Response->data->notificationType = 'warning';
+        }
+    }
+
+    $Response->success = 1;
+} catch (Throwable $th) {
+    $Response->message = $th->getMessage();
 }
 
 echo json_encode($Response);
