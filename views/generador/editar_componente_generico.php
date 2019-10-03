@@ -29,7 +29,7 @@ $schema = json_decode($PantallaComponente->opciones_propias, true);
 
 $valores = [
     "fs_etiqueta" => $CamposFormato->etiqueta,
-    "fs_obligatoriedad" => $CamposFormato->obligatoriedad,
+    "fs_obligatoriedad" => $CamposFormato->obligatoriedad > 0,
     "fs_acciones" => in_array('p', $actions),
     "fs_valor" => is_array($values) ? $values : $CamposFormato->valor,
     "fs_ayuda" => $CamposFormato->ayuda

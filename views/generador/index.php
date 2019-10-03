@@ -554,7 +554,6 @@ function check_banderas($bandera, $chequear = true)
             </div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior ?>views/generador/js/editar_componente_generico.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/coordinates.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/drag.js"></script>
     <script src="<?= $ruta_db_superior ?>views/generador/js/index.js" data-params='<?= json_encode($params) ?>' id="script_generador_pantalla"></script>

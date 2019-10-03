@@ -55,7 +55,7 @@ $(function() {
             $tdList.eq(0).text(node.data.codigo);
             $tdList.eq(1).html(image);
             $tdList.eq(3).text(node.data.sigla);
-            $tdList.eq(4).text(node.data.estado ? 'Activo' : 'Inactivo');
+            $tdList.eq(4).text(+node.data.estado ? 'Activo' : 'Inactivo');
             $tdList.eq(5).text(node.data.extension);
             $tdList.eq(6).text(node.data.ubicacion_dependencia);
             $tdList.eq(7).text(node.data.descripcion);
