@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     $('#table_container').height(
         $(window).height() - $('#table_container').offset().top - 20
@@ -32,7 +32,7 @@ $(function () {
             nodata: true, // Display a 'no data' status node if result is empty
             mode: 'hide' // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
         },
-        renderColumns: function (event, data) {
+        renderColumns: function(event, data) {
             var node = data.node,
                 $tdList = $(node.tr).find('>td');
 
@@ -51,14 +51,10 @@ $(function () {
                     <a href="#" class="dropdown-item add" data-id="${node.key}">
                         <i class="fa fa-plus"></i> Nuevo
                     </a>
-                    <a href="#" class="dropdown-item edit" data-id="${
-                node.key
-                }">
+                    <a href="#" class="dropdown-item edit" data-id="${node.key}">
                         <i class="fa fa-edit"></i> Editar
                     </a>
-                    <a href="#" class="dropdown-item add_function" data-id="${
-                node.key
-                }">
+                    <a href="#" class="dropdown-item add_function" data-id="${node.key}">
                         <i class="fa fa-cogs"></i> Funciones
                     </a>
                 </div>
@@ -67,13 +63,13 @@ $(function () {
     });
 
     let tree = $('#treegrid').fancytree('getTree');
-    $('#search').keyup(function (e) {
+    $('#search').keyup(function(e) {
         tree.filterNodes.call(tree, $(this).val());
     });
 
     $(document)
         .off('click', '.add,.edit')
-        .on('click', '.add,.edit', function () {
+        .on('click', '.add,.edit', function() {
             var data = new Object();
 
             if ($(this).hasClass('add')) {
@@ -86,7 +82,7 @@ $(function () {
                 url: `views/cargo/formulario.php`,
                 params: data,
                 size: 'modal-lg',
-                title: 'Cargo',
+                title: +data.id ? 'Editar cargo' : 'Adicionar cargo',
                 buttons: {
                     success: {
                         label: 'Guardar',
@@ -97,7 +93,7 @@ $(function () {
                         class: 'btn btn-danger'
                     }
                 },
-                onSuccess: function () {
+                onSuccess: function() {
                     top.closeTopModal();
                     let tree = $('#treegrid').fancytree('getTree');
                     tree.reload();
@@ -107,7 +103,7 @@ $(function () {
 
     $(document)
         .off('click', '.add_function')
-        .on('click', '.add_function', function () {
+        .on('click', '.add_function', function() {
             top.topModal({
                 url: `views/funciones/listado_cargo.php`,
                 params: {

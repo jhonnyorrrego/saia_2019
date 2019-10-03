@@ -31,7 +31,7 @@ $params = json_encode([
         <div class="row pb-2">
             <div class="col-12">
                 <button class="btn btn-complete btn-sm float-right" id="add_function" title="Crear función">
-                    <span class="fa fa-plus"></span>
+                    Vincular funciones
                 </button>
             </div>
         </div>
