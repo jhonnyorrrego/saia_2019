@@ -33,7 +33,7 @@ for($i=0;$i<$ventanillas['numcampos'];$i++){
 			<div class="navbar-inner">
 				<ul class="nav pull-left">
 					<li>
-						<button type="button" class="btn btn-primary btn-mini" id="ksubmit_saia" enlace="<?php echo $ruta_db_superior; ?>pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">
+						<button type="button" class="btn btn-primary btn-mini" id="ksubmit_saia" enlace="<?php echo $ruta_db_superior; ?>app/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">
 							&nbsp;Buscar&nbsp;
 						</button>
 					</li>
