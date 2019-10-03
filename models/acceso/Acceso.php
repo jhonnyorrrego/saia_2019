@@ -1,10 +1,11 @@
 <?php
 
-class Acceso extends Model
+class Acceso extends LogModel
 {
     const TIPO_ANEXO = 1;
     const TIPO_ANEXOS = 2;
     const TIPO_DOCUMENTO = 3;
+    const TIPO_SERIE_DEPENDENCIA = 4; //PERMISO PARA LA LLAVE DE LA TRD
 
     const ACCION_VER = 1;
     const ACCION_EDITAR = 2;
@@ -18,7 +19,7 @@ class Acceso extends Model
     protected $accion;
     protected $fecha;
     protected $estado;
-    
+
 
     //relation
     protected $User;
@@ -45,7 +46,7 @@ class Acceso extends Model
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -151,5 +152,36 @@ class Acceso extends Model
             'accion' => Acceso::ACCION_VER,
             'fecha' => date('Y-m-d H:i:s')
         ]);
+    }
+
+    /**
+     * Crea un acceso si no existe
+     * retorna el idacceso
+     *
+     * @param integer $type
+     * @param integer $typeId
+     * @param integer $userId
+     * @param integer $action
+     * @return int
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function addIfNotExist(int $type, int $typeId, int $userId, int $action): int
+    {
+        if (!$idacceso = Acceso::findByAttributes([
+            'tipo_relacion' => $type,
+            'id_relacion' => $typeId,
+            'fk_funcionario' => $userId,
+            'accion' => $action
+        ])) {
+            $idacceso = Acceso::newRecord([
+                'tipo_relacion' => $typeId,
+                'id_relacion' => $typeId,
+                'fk_funcionario' => $userId,
+                'accion' => $action
+            ]);
+        }
+
+        return $idacceso;
     }
 }

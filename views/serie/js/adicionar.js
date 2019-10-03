@@ -186,6 +186,20 @@ $(function () {
                     <input type="hidden" name="${name}[idserie_dependencia]" id="serie_dependencia-${data.id}" >
                 </div>
 
+
+                <div class="form-group form-group-default" id="divPermisoSubserie-${data.id}" style="display:none">
+                    <label class="pl-1 mb-0 mt-1">¿ADICIONAR PERMISO A TODOS LOS FUNCIONARIOS DE LA DEPENDENCIA?</label>
+
+                    <div class="radio radio-success input-group my-0">
+                        <input type="radio" value="1" name="${name}[permiso]" id="SSubserie-${data.id}">
+                        <label for="SSubserie-${data.id}">SI</label>
+
+                        <input type="radio" value="0" name="${name}[permiso]" id="NSubserie-${data.id}" checked="true">
+                        <label for="NSubserie-${data.id}">NO</label>
+
+                    </div>
+                </div>
+
                 <div class="form-group form-group-default required" style="display:none">
                     <label>Código de la subserie:</label>
                     <input name="${name}[codigo]" id="codigo_subserie-${data.id}" type="text" class="form-control">
@@ -401,6 +415,7 @@ $(function () {
                         $('#' + fieldHiden[key]).parent().show();
                     }
                     $('#divDisposicionSubserie-' + idselector).show();
+                    $('#divPermisoSubserie-' + idselector).show();
 
                     $('#serie_dependencia-' + idselector).val('');
                 } else {
@@ -414,6 +429,7 @@ $(function () {
 
                     $('#ESubserie-' + idselector).rules('remove');
                     $('#divDisposicionSubserie-' + idselector).hide();
+                    $('#divPermisoSubserie-' + idselector).hide();
 
                 }
                 break;
@@ -452,6 +468,7 @@ $(function () {
                     }
                     $('#dependencia-' + idselector).parent().show();
                     $('#divDisposicionSerie-' + idselector).show();
+                    $('#divPermisoSerie-' + idselector).show();
 
                     if (idTipoTemp == 1) {
                         loadDataOptionsDep(idselector);
@@ -472,6 +489,7 @@ $(function () {
 
                     $('#ESerie-' + idselector).rules('remove');
                     $('#divDisposicionSerie-' + idselector).hide();
+                    $('#divPermisoSerie-' + idselector).hide();
                 }
                 break;
             default:

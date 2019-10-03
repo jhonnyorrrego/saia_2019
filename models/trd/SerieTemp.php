@@ -21,6 +21,7 @@ class SerieTemp extends Model
     protected $dis_conservacion;
     protected $dis_seleccion;
     protected $dis_microfilma;
+    protected $permiso;
 
     protected $fk_serie_version;
 
@@ -57,7 +58,8 @@ class SerieTemp extends Model
                 'dis_seleccion',
                 'dis_microfilma',
                 'fk_serie_version',
-                'estado'
+                'estado',
+                'permiso'
             ],
             'primary' => 'idserie'
         ];

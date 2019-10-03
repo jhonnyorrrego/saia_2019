@@ -42,7 +42,6 @@
 
         private function validateData(): array
         {
-
             if (empty($this->row['tipo']) && empty($this->row['subserie'])) {
                 $this->error("Por favor ingrese la subserie o el tipo documental");
             }
@@ -75,7 +74,8 @@
                         'dis_eliminacion' => ($this->row['disposicion'] == 'E') ? 1 : 0,
                         'dis_conservacion' => ($this->row['disposicion'] == 'CT') ? 1 : 0,
                         'dis_seleccion' => ($this->row['disposicion'] == 'S') ? 1 : 0,
-                        'dis_microfilma' => (empty($this->row['microfilma'])) ? 0 : 1
+                        'dis_microfilma' => (empty($this->row['microfilma'])) ? 0 : 1,
+                        'permiso' => (int) $this->row['permiso']
                     ];
 
                     $data = array_merge($data, $otherData);
@@ -164,7 +164,8 @@
                         'dis_eliminacion' => ($subserie['disposicion'] == 'E') ? 1 : 0,
                         'dis_conservacion' => ($subserie['disposicion'] == 'CT') ? 1 : 0,
                         'dis_seleccion' => ($subserie['disposicion'] == 'S') ? 1 : 0,
-                        'dis_microfilma' => (empty($subserie['microfilma'])) ? 0 : 1
+                        'dis_microfilma' => (empty($subserie['microfilma'])) ? 0 : 1,
+                        'permiso' => (int) $subserie['permiso']
                     ];
                     $sub['children']['tipo'] = $this->validateTipo($subserie['tipo']);
                     $dataSubserie[] = $sub;
@@ -247,6 +248,8 @@
                 unset($serie['children'], $serie['newSerie']);
 
                 $serie['fk_serie_version'] = $this->fk_serie_version;
+                $serie['cod_arbol'] = 0;
+
                 if (!$idserie = $this->classSerie::newRecord($serie)) {
                     $this->error("Error al guardar la serie");
                 }
@@ -291,6 +294,7 @@
 
                             $subserie['fk_serie_version'] = $this->fk_serie_version;
                             $subserie['cod_padre'] = $idserie;
+                            $subserie['cod_arbol'] = 0;
 
                             if (!$idsubserie = $this->classSerie::newRecord($subserie)) {
                                 $this->error('Error al guardar la subserie');
@@ -338,6 +342,7 @@
             foreach ($data as $tipo) {
 
                 $tipo['cod_padre'] = $idpadre;
+                $tipo['cod_arbol'] = 0;
                 $tipo['fk_serie_version'] = $this->fk_serie_version;
 
                 if (!$this->classSerie::newRecord($tipo)) {

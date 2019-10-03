@@ -233,6 +233,7 @@ class TRDLoadController
         if (!$idserie) {
             $attributes = [
                 'cod_padre' => 0,
+                'cod_arbol' => 0,
                 'nombre' => $this->row['serie'],
                 'codigo' => $this->row['cod_serie'],
                 'tipo' => 1,
@@ -280,6 +281,7 @@ class TRDLoadController
 
             $attributes = [
                 'cod_padre' => $this->row['idserie'],
+                'cod_arbol' => 0,
                 'nombre' => $this->row['subserie'],
                 'codigo' => $this->row['cod_subserie'],
                 'tipo' => 2,
@@ -363,7 +365,8 @@ class TRDLoadController
             'fk_serie_version' => $this->fk_serie_version,
             'dias_respuesta' => 0,
             'sop_papel' => $this->row['sop_papel'],
-            'sop_electronico' => $this->row['sop_electronico']
+            'sop_electronico' => $this->row['sop_electronico'],
+            'cod_arbol' => 0
         ];
 
         if (!$id = SerieTemp::newRecord($attributes)) {

@@ -75,7 +75,7 @@ $(function () {
                     key: localStorage.getItem('key'),
                     token: localStorage.getItem('token'),
                     id: params.id,
-                    type: 'json_trd',
+                    type: params.type,
                     generateTRD: () => {
                         return $("#generateTRD").val();
                     }
