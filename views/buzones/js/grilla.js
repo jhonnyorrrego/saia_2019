@@ -150,11 +150,7 @@ $(function() {
                             toast,
                             'button'
                         );
-<<<<<<< HEAD
                         window.refreshGrid();
-=======
-                        $('#table').bootstrapTable('refresh');
->>>>>>> 05cde45f8f3a84e9162b9364e77a848b2ecc0e01
                     },
                     true
                 ],
@@ -200,13 +196,7 @@ $(function() {
         return params;
     }
 
-<<<<<<< HEAD
     window.gridSelection = () => selections;
     window.removeSelections = () => (selections = []);
     window.refreshGrid = () => $table.bootstrapTable('refresh');
-=======
-    top.window.gridSelection = function() {
-        return selections;
-    };
->>>>>>> 05cde45f8f3a84e9162b9364e77a848b2ecc0e01
 });

@@ -51,7 +51,10 @@ try {
         }
     }
     $noRecepcionar = substr($noRecepcionar, 0, -1);
-    $Response->message = "Los items ({$noRecepcionar}) ya se encuentran recepcionados";
+    $Response->message = "";
+    if ($noRecepcionar != null) {
+        $Response->message = "Los items ({$noRecepcionar}) ya se encuentran recepcionados";
+    }
     $Response->success = $success;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();

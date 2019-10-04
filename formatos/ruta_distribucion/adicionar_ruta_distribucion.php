@@ -111,12 +111,12 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         ?>
 <div class='form-group form-group-default input-group required date' id='group_fecha_ruta_distribuc'>
 <div class="form-input-group">
-<label for='fecha_ruta_distribuc' title=''>FECHA Y HORA<span>*</span></label>
+<label for='fecha_ruta_distribuc' title=''>FECHA Y HORA</label>
 <label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
 <script type='text/javascript'>
             $(function () {
-                var configuracion={"defaultDate":"2019-10-04","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"2019-10-05","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
                 $('#fecha_ruta_distribuc').datetimepicker(configuracion);
                 $('#content_container').height($(window).height());
             });
@@ -127,12 +127,12 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         </div>
 </div>
 <div class='form-group form-group-default required col-12 '  id='group_nombre_ruta'>
-            <label title=''>NOMBRE DE LA RUTA<span>*</span></label>
+            <label title=''>NOMBRE DE LA RUTA</label>
             <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='' />
         </div>
 
         <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
-            <label title=''>MENSAJEROS DE LA RUTA<span>*</span></label>
+            <label title=''>MENSAJEROS DE LA RUTA</label>
             <div class='form-group'>
             <select name='asignar_mensajeros' id='asignar_mensajeros' required>
             <option value=''>Por favor seleccione...</option>
@@ -148,7 +148,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             </div>
         </div>
 <div class="form-group required" id="group_asignar_dependencias">
-                                    <label title="">DEPENDENCIAS DE LA RUTA<span>*</span></label><?php $origen_4998 = array(
+                                    <label title="">DEPENDENCIAS DE LA RUTA</label><?php $origen_4998 = array(
                                 "url" => "app/arbol/arbol_dependencia.php",
                                 "ruta_db_superior" => $ruta_db_superior,);$origen_4998["params"]["checkbox"]="radio";$opciones_arbol_4998 = array(
                                 "keyboard" => true,"selectMode" => 1,"seleccionarClick" => 1,"obligatorio" => 1,
