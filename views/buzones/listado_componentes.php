@@ -32,7 +32,8 @@ $params = json_encode([
     <?= theme() ?>
 </head>
 
-<body>
+<body style="overflow:scroll;
+-webkit-overflow-scrolling:touch;">
     <div class="container m-0 p-0 mw-100 mx-100 h-100">
         <div class="row mx-0 h-100">
             <div class="col-12 h-100">

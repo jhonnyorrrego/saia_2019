@@ -12,6 +12,8 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . "core/autoload.php";
 include_once $ruta_db_superior . "app/qr/librerias.php";
 include_once $ruta_db_superior . "app/distribucion/funciones_distribucion.php";
+include_once $ruta_db_superior . 'app/documento/class_transferencia.php';
+include_once $ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php';
 
 //Adicionar
 function mostrar_radicado_entrada($idformato, $iddoc)
@@ -866,8 +868,15 @@ function post_aprobar_rad_entrada($idformato, $iddoc)
 //posterior al adicionar - editar
 function ingresar_item_destino_radicacion($idformato, $iddoc)
 {
-    global $conn, $ruta_db_superior;
-    $datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "");
+    $query = Model::getQueryBuilder();
+    $datos = $query
+        ->select("a.tipo_origen", "a.tipo_destino", "a.tipo_mensajeria", "a.requiere_recogida")
+        ->from("ft_radicacion_entrada", 'a')
+        ->join('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+        ->where("lower(b.estado)<>'iniciado'")
+        ->andWhere("a.documento_iddocumento = :doc")
+        ->setParameter(":doc", $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
 
     /**
      * Para la radicacion de correspondencia los campos para la distribucion son: 
@@ -886,15 +895,19 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
      * El $estado_distribucion determina el buzon en donde esta el tramite 0,Pediente o entrega interna a ventanilla; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
      * El $estado_recogida corresponde a si se necesita una acción de recogida en este caso se debe enviar el valor (1) para cuando es si y el valor de (0) cuando es no 
      */
-    if ($datos['numcampos']) {
+    if ($datos) {
 
         //por defecto se maneja que si se necesita entrega (1)
         $estado_distribucion = 1;
-        //Cuando no se necesita entrega (3)
+
 
         $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'requiere_recogida']);
+        $requiere_recogida = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
+
+        $CamposFormato = CamposFormato::findByAttributes(['formato_idformato' => $idformato, 'nombre' => 'tipo_mensajeria']);
         $tipo_mensajeria = RadioGeneratorController::showValue($CamposFormato, $iddoc, 'llave');
 
+        //Cuando no se necesita entrega (3)
         if ($tipo_mensajeria == 3) {
             $estado_distribucion = 3;
         }
@@ -913,7 +926,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         //caso 2: Origen Interno y destino Interno
         if ($tipo_origen == 2 && $tipo_destino == 2) {
             //Cuando si se necesita entrega y no se requiere recogida
-            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
+            if ($tipo_mensajeria != 3 && !$requiere_recogida) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, 0, 1);
             } else {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, $estado_distribucion);
@@ -923,7 +936,7 @@ function ingresar_item_destino_radicacion($idformato, $iddoc)
         //caso 3: Origen Interno y destino Externo
         if ($tipo_origen == 2 && $tipo_destino == 1) {
             //si no se necesita entrega y tampoco se necesita recogida
-            if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {
+            if ($tipo_mensajeria != 3 && !$requiere_recogida) {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, 0, 1);
             } else {
                 pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, $estado_distribucion);

@@ -9,6 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "core/autoload.php");
+include_once($ruta_db_superior . "assets/librerias.php");
 
 function campos_ocultos_entrega($idformato, $iddoc)
 {
@@ -227,4 +228,28 @@ function obtener_tipo_recorrido($idformato, $iddoc)
         $resultado = "Vespertina";
     }
     echo $resultado;
+}
+
+/**
+ * Esta funcion refrezca la tabla del reporte de distribución 'Pendientes' cuando se genera planilla, de este modo los items cambian de estado a 'En distribución' y no pueden quedar en el mismo listado 
+ * de pendientes
+ * @return void
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-3
+ * @lastModification jhon sebastian valencia <jhon.valencia@cerok.com> 2019-10-3
+ */
+function post_generar_planilla()
+{
+    echo jquery();
+    echo <<<HTML
+    <script>
+        let panelIdentificator = $(".k-focus", parent.document).attr("id");
+        let panelPosition = parseInt(panelIdentificator.replace('kp', '')) - 1; 
+        let beforePanel = $("#kp" + panelPosition, parent.document);
+        let frameWindow = beforePanel.find('iframe')[0].contentWindow;
+        
+        frameWindow.removeSelections()
+        frameWindow.refreshGrid();        
+    </script>
+HTML;
 }
