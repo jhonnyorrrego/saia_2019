@@ -1,70 +1,59 @@
 <?php
 
-class Expediente extends Model
+
+use \Doctrine\DBAL\Types\Type;
+
+
+class Expediente extends LogModel
 {
     protected $idexpediente;
     protected $nombre;
-    protected $fecha;
+    protected $codigo;
     protected $descripcion;
-    protected $cod_padre;
-    protected $propietario;
-    protected $responsable;
-    protected $cod_arbol;
-    protected $codigo_numero;
-    protected $fondo;
-    protected $proceso;
-    protected $fecha_extrema_i;
-    protected $fecha_extrema_f;
-    protected $no_unidad_conservacion;
-    protected $no_folios;
-    protected $no_carpeta;
-    protected $soporte;
-    protected $frecuencia_consulta;
-    protected $ruta_qr;
-    protected $estado_archivo;
-    protected $estado_cierre;
-    protected $fecha_cierre;
-    protected $funcionario_cierre;
-    protected $notas_transf;
-    protected $tomo_padre;
-    protected $tomo_no;
-    protected $agrupador;
+    protected $fecha_creacion;
+
     protected $indice_uno;
     protected $indice_dos;
     protected $indice_tres;
+
+    protected $fecha_extrema_i;
+    protected $fecha_extrema_f;
     protected $consecutivo_inicial;
     protected $consecutivo_final;
-    protected $nucleo;
-    protected $estado;
-    protected $fk_expediente_eli;
-    protected $fk_caja;
-    protected $fk_serie;
-    protected $fk_dependencia;
-    protected $fk_entidad_serie;
 
-    protected $expedientePadre;
-    public $permiso;
+    protected $ruta_qr;
+    protected $estado_archivo;
+    protected $estado_cierre;
+
+    protected $tomo_padre;
+    protected $tomo_no;
+
+    protected $fk_propietario;
+    protected $fk_responsable;
+
+    protected $fk_serie_dependencia;
+    protected $fk_dependencia;
+    protected $fk_serie;
+    protected $fk_subserie;
+    protected $fk_caja;
+
+    protected $estado;
+
+    // public $permiso;
+    // protected $fondo;
+    // protected $proceso;    
+    // protected $no_unidad_conservacion;
+    // protected $no_folios;
+    // protected $no_carpeta;
+    // protected $soporte;
+    // protected $frecuencia_consulta;
+    // protected $fecha_cierre;
+    // protected $funcionario_cierre;
+    // protected $notas_transf;
 
     public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->massiveAssigned();
-    }
-
-    public function massiveAssigned()
-    {
-        if ($this->idexpediente) {
-            $this->permiso = [
-                'a' => false,
-                'l' => false,
-                'e' => false,
-                'c' => false,
-                'd' => false,
-                'v' => false
-            ];
-            $userId = SessionController::getValue('idfuncionario');
-            $this->setAccessUser($userId);
-        }
     }
 
 
@@ -72,71 +61,144 @@ class Expediente extends Model
     {
         $this->dbAttributes = (object) [
             'safe' => [
-                'fecha',
+                'idexpediente',
                 'nombre',
+                'codigo',
                 'descripcion',
-                'cod_padre',
-                'fk_caja',
-                'propietario',
-                'responsable',
-                'fk_serie',
-                'fk_dependencia',
-                'cod_arbol',
-                'codigo_numero',
-                'fondo',
-                'proceso',
-                'fecha_extrema_i',
-                'fecha_extrema_f',
-                'no_unidad_conservacion',
-                'no_folios',
-                'no_carpeta',
-                'soporte',
-                'frecuencia_consulta',
-                'ruta_qr',
-                'estado_archivo',
-                'estado_cierre',
-                'fecha_cierre',
-                'funcionario_cierre',
-                'notas_transf',
-                'tomo_padre',
-                'tomo_no',
-                'agrupador',
+                'fecha_creacion',
                 'indice_uno',
                 'indice_dos',
                 'indice_tres',
-                'consecutivo_inicial',
-                'consecutivo_final',
-                'fk_entidad_serie',
-                'nucleo',
-                'estado',
-                'fk_expediente_eli'
-            ],
-            'date' => [
-                'fecha',
                 'fecha_extrema_i',
                 'fecha_extrema_f',
-                'fecha_cierre'
+                'consecutivo_inicial',
+                'consecutivo_final',
+                'ruta_qr',
+                'estado_archivo',
+                'estado_cierre',
+                'tomo_padre',
+                'tomo_no',
+                'fk_propietario',
+                'fk_responsable',
+                'fk_serie_dependencia',
+                'fk_dependencia',
+                'fk_serie',
+                'fk_subserie',
+                'fk_caja',
+                'estado',
+            ],
+            'date' => [
+                'fecha_creacion',
+                'fecha_extrema_i',
+                'fecha_extrema_f'
             ]
         ];
     }
 
-    /**
-     * Se ejecuta despues de crear el expediente
-     * Actualiza el cod_arbol del expediente
-     *
-     * @return void
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
+
     protected function afterCreate()
     {
-        $cod_arbol = $this->idexpediente;
-        $padre = $this->getCodPadre();
-        if ($padre) {
-            $cod_arbol = $padre->cod_arbol . '.' . $this->idexpediente;
+        parent::afterCreate();
+
+        if (!$this->addPermissionResponsable()) {
+            throw new Exception("Error al otorgar permisos al responsable", 1);
         }
-        $this->cod_arbol = $cod_arbol;
-        return $this->update();
+
+        if (!$this->addPermission()) {
+            throw new Exception("Error al otorgar permisos sobre el expediente", 1);
+        }
     }
+
+    /**
+     * adiciona o actualiza el permiso 
+     * al reponsable del expediente
+     *
+     * @return boolean
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    protected function addPermissionResponsable(): bool
+    {
+        if ($ExpedientePermiso = ExpedientePermiso::findByAttributes([
+            'responsable' => 1,
+            'fk_expediente' => $this->getPK()
+        ])) {
+            $response = true;
+
+            if ($ExpedientePermiso->fk_funcionario != $this->fk_responsable) {
+                $ExpedientePermiso->setAttributes([
+                    'fk_funcionario' => $this->fk_responsable
+                ]);
+                $response = $ExpedientePermiso->update();
+            }
+        } else {
+            $response = ExpedientePermiso::newRecord([
+                'fk_funcionario' => $this->fk_responsable,
+                'fk_expediente' => $this->getPK(),
+                'responsable' => 1
+            ]);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Adiciona el permiso del expediente
+     * a los funcionarios
+     *
+     * @return boolean
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    protected function addPermission(): bool
+    {
+        $retorno = true;
+
+        $data = $this->getQueryBuilder()
+            ->select('DISTINCT fk_funcionario')
+            ->from('acceso')
+            ->where('estado=1')
+            ->andWhere('tipo_relacion=:tipo_relacion')
+            ->andWhere('id_relacion=:id_relacion')
+            ->andWhere('fk_funcionario<>:fk_funcionario')
+            ->setParameters([
+                ':tipo_relacion' => Acceso::TIPO_SERIE_DEPENDENCIA,
+                ':id_relacion' => $this->fk_serie_dependencia,
+                ':fk_funcionario' => $this->fk_responsable
+            ], [
+                ':tipo_relacion' => Type::INTEGER,
+                ':id_relacion' => Type::INTEGER,
+                ':fk_funcionario' => Type::INTEGER,
+            ])
+            ->execute()->fetchAll();
+
+        if ($data) {
+            foreach ($data as $row) {
+                if (!ExpedientePermiso::newRecord([
+                    'fk_funcionario' => $row['fk_funcionario'],
+                    'fk_expediente' => $this->getPK(),
+                    'resposable' => 0
+                ])) {
+                    $retorno = false;
+                    break;
+                }
+            }
+        }
+
+        return $retorno;
+    }
+
+
+
+
+
+
+
+
+    //
+
+
+
     /**
      * Se ejecuta posterior al eliminar un expediente
      * Elimina las documentos y el historial de cierre vinculadoa al expediente
@@ -284,23 +346,7 @@ class Expediente extends Model
         $data = $this->keyValueField('estado_cierre');
         return $data[$this->estado_cierre] ?? '';
     }
-    /**
-     * retorna la instancia del expediente padre
-     *
-     * @return void
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getCodPadre()
-    {
-        if ($this->cod_padre) {
-            if (!$this->expedientePadre) {
-                $this->expedientePadre = new self($this->cod_padre);
-            }
-        } else {
-            $this->expedientePadre = null;
-        }
-        return $this->expedientePadre;
-    }
+
     /**
      * Retorna el nombre del propietario
      *
@@ -395,21 +441,6 @@ class Expediente extends Model
     }
 
     /**
-     * Cuenta los expedientes que existen dentro de un expediente
-     *
-     * @param integer $tipoAg : identificador del agrupador (expediente,separador, serie, dependencia)
-     * @return integer
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function countExpediente(int $tipoAg = 0): int
-    {
-        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente
-        WHERE agrupador={$tipoAg} AND cod_padre={$this->idexpediente} AND estado=1";
-        //$response = //ejecuta la busqueda
-        return $response ? $response[0]['cant'] : 0;
-    }
-
-    /**
      * Cuenta los expedientes que existen dentro de una caja
      * incluye expedientes inferiores
      * 
@@ -459,25 +490,6 @@ class Expediente extends Model
     {
         $userId = SessionController::getValue('idfuncionario');
         return in_array($userId, [$this->propietario, $this->responsable]);
-    }
-
-    /**
-     * valida si un expediente tiene expedientes inferiores
-     *
-     * @param int $agrupador: si desea filtrar por un tipo de agrupador
-     * @return boolean
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function hasChild(int $agrupador = null): bool
-    {
-        $where = '';
-        if (!is_null($agrupador)) {
-            $where = " and agrupador={$agrupador}";
-        }
-        $sql = "SELECT count(idexpediente) as cant FROM expediente 
-        WHERE cod_arbol like '{$this->cod_arbol}.%' AND estado=1 {$where}";
-        //$cant = buscar con querybuilder
-        return ($cant[0]['cant']) ? true : false;
     }
 
     /**
@@ -735,4 +747,24 @@ class Expediente extends Model
 
         return $response[$campo];
     }
+
+
+
+
+    /*
+    public function massiveAssigned()
+    {
+        if ($this->idexpediente) {
+            $this->permiso = [
+                'a' => false,
+                'l' => false,
+                'e' => false,
+                'c' => false,
+                'd' => false,
+                'v' => false
+            ];
+            $userId = SessionController::getValue('idfuncionario');
+            $this->setAccessUser($userId);
+        }
+    }*/
 }
