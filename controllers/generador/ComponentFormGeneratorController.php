@@ -224,6 +224,38 @@ class ComponentFormGeneratorController
     }
 
     /**
+     * obtiene el schema de un componente basado
+     * en su etiqueta_html
+     *
+     * @param CamposFormato $CamposFormato
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-10-04
+     */
+    public static function getSchemaFromField($CamposFormato)
+    {
+        $generator = self::getGeneratorFromField($CamposFormato->etiqueta_html);
+        return $generator::getSchema($CamposFormato);
+    }
+
+    /**
+     * obtiene el schema del componente en pantalla_componente
+     *
+     * @param CamposFormato $CamposFormato
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-10-04
+     */
+    public static function getSchema($CamposFormato)
+    {
+        $PantallaComponente = PantallaComponente::findByAttributes([
+            'etiqueta_html' => $CamposFormato->etiqueta_html
+        ]);
+
+        return json_decode($PantallaComponente->opciones_propias, true);
+    }
+
+    /**
      * ejecuta el metodo showValue de un generador de componente
      * basado en su idcampos_formato
      *
