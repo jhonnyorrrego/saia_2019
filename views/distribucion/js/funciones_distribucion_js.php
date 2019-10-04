@@ -19,29 +19,21 @@ function opciones_acciones_distribucion($datos)
 
     $cadena_acciones = "<select id='opciones_acciones_distribucion' class='pull-left btn btn-lg'>";
     $cadena_acciones .= "<option value=''>Acciones...</option>";
+
     if ($nombre_componente == 'reporte_distribucion_general_pendientes') {
-        $cadena_acciones .= "<option value=''>Recepcionar </option>";
-    }
-    if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pendientes') {
+        $cadena_acciones .= "<option value='boton_recepcionar'>Recepcionar </option>";
         $cadena_acciones .= "<option value='boton_generar_planilla'>Generar Planilla</option>";
+        $cadena_acciones .= "<option value='boton_entre_sedes'>Despachar entre sedes</option>";
+        $cadena_acciones .= "<option value='boton_finalizar_sin_planilla'>Finalizar sin planilla</option>";
     }
 
     if ($nombre_componente == 'reporte_distribucion_general_endistribucion') {
-        $cadena_acciones .= "<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
+        $cadena_acciones .= "<option value='boton_finalizar_tramite'>Finalizar Tr&aacute;mite</option>";
     }
 
-    if ($nombre_componente == 'reporte_distribucion_general_sinrecogida') {
-        $cadena_acciones .= "<option value='boton_confirmar_recepcion_distribucion'>Confirmar Recepcion</option>";
-    }
     if ($nombre_componente == 'reporte_planilla_distribucion') {
         $cadena_acciones .= "<option value='boton_confirmar_recepcion_iten_planilla'>Confirmar Recepcion</option>";
     }
-
-    if ($nombre_componente == 'reporte_distribucion_general_pendientes') {
-        $cadena_acciones .= "<option value='boton_entre_sedes'>Despachar entre sedes</option>";
-    }
-
-    $cadena_acciones .= "<option value='boton_finalizar_sin_planilla'>Finalizar sin planilla</option>";
 
     $cadena_acciones .= "</select>";
 
@@ -49,7 +41,6 @@ function opciones_acciones_distribucion($datos)
 }
 
 echo select2();
-
 ?>
 
 <script>
@@ -60,13 +51,97 @@ echo select2();
         $("#opciones_acciones_distribucion").on("select2:select", function(e) {
             var valor = e.params.data.id;
             var seleccionado = false;
-            var registros_seleccionados = top.window.gridSelection();
+            var registros_seleccionados = window.gridSelection();
+            var registros = "";
+            registros_seleccionados.forEach(function(item) {
+                registros += item + ",";
+            });
+            registros = registros.substring(0, registros.length - 1);
 
-            if (valor == 'boton_generar_planilla') {
 
+            // Esta opcion se utiliza cuando no requiere recogida o se espera desde otra sede y el documento se encuentra en estado por recepcionar. 
+            // cambiando su estado  'por distribuir '
+
+            if (valor == 'boton_recepcionar') {
                 if (registros_seleccionados.length == 0) {
                     top.notification({
-                        message: "No ha seleccionado alguna distribuci&oacute;n",
+                        message: "No ha seleccionado ninguna distribución",
+                        type: "error",
+                        duration: "3500"
+                    });
+                } else {
+                    top.confirm({
+                        id: 'question',
+                        type: 'error',
+                        title: 'Recepcionar',
+                        message: '¿Está seguro de recepcionar?',
+                        position: 'center',
+                        timeout: 0,
+                        buttons: [
+                            [
+                                '<button><b>Si</b></button>',
+                                function(instance, toast) {
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/recepcionar.php',
+                                        data: {
+                                            token: localStorage.getItem('token'),
+                                            key: localStorage.getItem('key'),
+                                            iddistribucion: registros
+                                        },
+                                        success: function(datos) {
+                                            if (datos.success == 2) {
+                                                top.notification({
+                                                    message: "Items recepcionados satisfactoriamente!",
+                                                    type: "success",
+                                                    duration: "3500"
+                                                });
+                                            }
+                                            if (datos.message != '') {
+                                                top.notification({
+                                                    message: datos.message,
+                                                    type: "error",
+                                                    duration: "3500"
+                                                });
+                                            }
+                                            window.location.reload();
+                                        }
+                                    });
+
+                                    instance.hide({
+                                            transitionOut: 'fadeOut'
+                                        },
+                                        toast,
+                                        'button'
+                                    );
+                                },
+                                true
+                            ],
+                            [
+                                '<button>NO</button>',
+                                function(instance, toast) {
+                                    instance.hide({
+                                            transitionOut: 'fadeOut'
+                                        },
+                                        toast,
+                                        'button'
+                                    );
+                                }
+                            ]
+                        ]
+                    });
+                }
+            } // Fin Recepcionar
+
+            //// Esta  opción se ejecuta cuando se seleccionan los item que se van a despachar  a sus destinos con su respectiva Ruta y mensajero.
+            //// En el caso de que el documento requiera recogida se genera planilla para que el mensajero lo recoja
+
+            if (valor == 'boton_generar_planilla') {
+                if (registros_seleccionados.length == 0) {
+                    top.notification({
+                        message: "No ha seleccionado ninguna distribución",
                         type: "error",
                         duration: "3500"
                     });
@@ -79,11 +154,22 @@ echo select2();
                     var mensajeroDistribucion = [];
 
                     try {
+                        // verifica si los items tienen ruta o mensajero asignado para proceder con la generacion de planilla de distribucion
                         registros_seleccionados.forEach(function(item, index, array) {
-                            idruta_dist.push($('#ruta' + item).val());
-                            mensajeroDistribucion.push($('#selMensajeros' + item).val());
+                            if (($('#selMensajeros' + item).val() != null) && ($('#selMensajeros' + item).val() != null)) {
+                                idruta_dist.push($('#ruta' + item).val());
+                                mensajeroDistribucion.push($('#selMensajeros' + item).val());
+                            } else {
+                                top.notification({
+                                    message: "Uno de los items no tienen mensajero asignado",
+                                    type: "error",
+                                    duration: "3500"
+                                });
+                                throw "error";
+                            }
                         });
-
+                        // Compara las rutas si son iguales para generar la planilla, comienza a comparar desde el segundo ciclo porque compara la posicion anterior 
+                        // con la actual hasta terminar todos los items de distribucion.
                         var count = 0;
                         idruta_dist.forEach(function(element) {
                             if (count != 0) {
@@ -98,9 +184,12 @@ echo select2();
                             }
                             count++;
                         });
+                        // Compara los mensajeros si son iguales para generar la planilla, comienza a comparar desde el segundo ciclo porque compara la posicion anterior 
+                        // con la actual hasta terminar todos los items de distribucion.
                         count = 0;
                         mensajeroDistribucion.forEach(function(element) {
-                            if (count != 0) {
+
+                            if (count) {
                                 if (mensajeroDistribucion[count - 1] != mensajeroDistribucion[count]) {
                                     top.notification({
                                         message: "No puede seleccionar distribuciones con diferentes mensajeros",
@@ -113,99 +202,116 @@ echo select2();
                             count++;
                         });
 
-                        $("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idruta_dist=" + idruta_dist[0] + "&iddistribucion=" + registros_seleccionados + "&mensajero=" + mensajeroDistribucion[0] + "' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
-                        $("#ir_adicionar_documento").trigger("click");
-                        $("#ir_adicionar_documento").remove();
+                        // cosulta si los items ya se encuentran recepcionados
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '<?= $ruta_db_superior ?>app/distribucion/validar_distribucion.php',
+                            data: {
+                                token: localStorage.getItem('token'),
+                                key: localStorage.getItem('key'),
+                                iddistribucion: registros
+                            },
+                            success: function(datos) {
+                                if (datos.data == 2) {
+                                    top.notification({
+                                        message: "No es posible generar planilla a documentos sin recepcionar",
+                                        type: "error",
+                                        duration: "3500"
+                                    });
+                                } else {
 
+                                    //definicion de parametros para ventana kaiten, adicionar planilla_distribucion
+                                    let params = $.param({
+                                        idruta_dist: idruta_dist[0],
+                                        mensajero: mensajeroDistribucion[0]
+                                    });
+                                    let configuration = {
+                                        kConnector: 'iframe',
+                                        url: `formatos/despacho_ingresados/adicionar_despacho_ingresados.php?iddistribucion=${registros}&${params}`,
+                                        kTitle: "Generar Planilla Mensajero",
+                                        kWidth: "100%"
+                                    };
+                                    //abre la ventana
+                                    parent.window.crear_pantalla_busqueda(configuration, true);
+                                }
+                            }
+                        });
                     } catch (e) {}
                 }
-            } /// Fin boton generar planilla
+            } // Fin boton generar planilla
 
-            ///// Clic en boton finalizar entrega
-            if (valor == 'boton_finalizar_entrega') {
+            // Aquí ejecuta la accion entre sedes abriendo la modal para su configuración
+            if (valor == 'boton_entre_sedes') {
 
-                var registros_seleccionados = "";
-                $("input[name=btSelectItem]").each(function() {
-                    var checkbox = $(this);
-                    if (checkbox.is(':checked') === true) {
-                        var iddistribucion = $(this).val();
-                        registros_seleccionados += iddistribucion + ",";
-                    }
-                });
+                seleccionado = false;
 
-                registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
-                if (registros_seleccionados == "") {
+                if (registros_seleccionados.length == 0) {
                     top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
-                        type: "warning",
+                        message: "No ha seleccionado ninguna distribución",
+                        type: "error",
                         duration: "3500"
                     });
+
                 } else {
+                    seleccionado = true;
+                }
+
+                if (seleccionado) {
+                    // cosulta si los items ya se encuentran recepcionados
                     $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
+                        url: '<?= $ruta_db_superior ?>app/distribucion/validar_distribucion.php',
                         data: {
-                            iddistribucion: registros_seleccionados,
-                            ejecutar_accion: 'finalizar_distribucion'
+                            token: localStorage.getItem('token'),
+                            key: localStorage.getItem('key'),
+                            iddistribucion: registros
                         },
                         success: function(datos) {
-                            top.notification({
-                                message: "Distribuciones finalizadas satisfactoriamente!",
-                                type: "success",
-                                duration: "3500"
-                            });
-                            window.location.reload();
+                            if (datos.data == 2) {
+                                top.notification({
+                                    message: "No es posible la opción entre sedes a documentos sin recepcionar",
+                                    type: "error",
+                                    duration: "3500"
+                                });
+                            } else {
+                                top.topModal({
+                                    url: `views/distribucion/despachar_entre_sedes.php?registros=${registros}`,
+                                    size: 'modal-xl',
+                                    title: 'Despachar entre sedes',
+                                    buttons: {
+                                        success: {
+                                            label: 'Guardar',
+                                            class: 'btn btn-complete'
+                                        },
+                                        cancel: {
+                                            label: 'Cerrar',
+                                            class: 'btn btn-danger'
+                                        }
+                                    },
+                                    onSuccess: function() {
+                                        top.closeTopModal();
+                                        $("#table").bootstrapTable("refresh");
+                                        top.notification({
+                                            message: "Se ha guardado correctamente",
+                                            type: "success",
+                                            duration: "3500"
+                                        });
+                                    }
+                                });
+                            }
                         }
                     });
                 }
-            } //fin if boton_finalizar_entrega
+            } // Fin if boton_entre_sedes
 
-            if (valor == 'boton_confirmar_recepcion_distribucion') {
-
-                var registros_seleccionados = "";
-                $("input[name=btSelectItem]").each(function() {
-                    var checkbox = $(this);
-                    if (checkbox.is(':checked') === true) {
-                        var iddistribucion = $(this).val();
-                        registros_seleccionados += iddistribucion + ",";
-                    }
-                });
-
-                registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
-                if (registros_seleccionados == "") {
-                    top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
-                        type: "warning",
-                        duration: "3500"
-                    });
-                } else {
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
-                        data: {
-                            iddistribucion: registros_seleccionados,
-                            ejecutar_accion: 'confirmar_recepcion_distribucion'
-                        },
-                        success: function(datos) {
-                            top.notification({
-                                message: "Distribuciones confirmadas satisfactoriamente!",
-                                type: "success",
-                                duration: "3500"
-                            });
-                            window.location.reload();
-                        }
-                    });
-                }
-
-            } //fin if boton_confirmar_recepcion_distribucion           
-
+            //Esta función se utiliza cuando requieren terminar el proceso sin generar una planilla en el momento que se en encuentra en estado por distribuir.
             if (valor == 'boton_finalizar_sin_planilla') {
 
                 if (registros_seleccionados.length == 0) {
                     top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
+                        message: "No ha seleccionado ninguna distribución",
                         type: "error",
                         duration: "3500"
                     });
@@ -221,18 +327,14 @@ echo select2();
                             [
                                 '<button><b>Si</b></button>',
                                 function(instance, toast) {
-                                    var registros = "";
-                                    registros_seleccionados.forEach(function(item) {
-                                        registros += item + ",";
-                                    });
-                                    registros = registros.substring(0, registros.length - 1);
                                     $.ajax({
                                         type: 'POST',
                                         dataType: 'json',
-                                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
+                                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/finalizar_tramite.php',
                                         data: {
-                                            iddistribucion: registros,
-                                            ejecutar_accion: 'finalizar_distribucion'
+                                            token: localStorage.getItem('token'),
+                                            key: localStorage.getItem('key'),
+                                            iddistribucion: registros
                                         },
                                         success: function(datos) {
                                             top.notification({
@@ -267,38 +369,30 @@ echo select2();
                         ]
                     });
                 }
-            }
-            /*
-            if (valor == 'boton_finalizar_entrega_personal') {
+            } //  FIN boton_finalizar_sin_planilla
 
-                var registros_seleccionados = "";
-                $("input[name=btSelectItem]").each(function() {
-                    var checkbox = $(this);
-                    if (checkbox.is(':checked') === true) {
-                        var iddistribucion = $(this).val();
-                        registros_seleccionados += iddistribucion + ",";
-                    }
-                });
-
-                registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
+            // Clic en boton finalizar tramite, este se utiliza en el reporte 'En distribución' cuando el mensajero entrega el documento a su destino o en el caso de que 
+            // se encuentre en recogida cuando obtiene el documento del lugar o persona de origen.
+            if (valor == 'boton_finalizar_tramite') {
                 if (registros_seleccionados == "") {
                     top.notification({
-                        message: "No ha seleccionado ninguna distribuci&oacute;n",
-                        type: "warning",
+                        message: "No ha seleccionado ninguna distribución",
+                        type: "error",
                         duration: "3500"
                     });
                 } else {
                     $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
+                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/finalizar_tramite.php',
                         data: {
-                            iddistribucion: registros_seleccionados,
-                            ejecutar_accion: 'finalizar_entrega_personal'
+                            token: localStorage.getItem('token'),
+                            key: localStorage.getItem('key'),
+                            iddistribucion: registros
                         },
                         success: function(datos) {
                             top.notification({
-                                message: "Distribuciones Finalizadas satisfactoriamente!",
+                                message: "Distribuciones finalizadas satisfactoriamente!",
                                 type: "success",
                                 duration: "3500"
                             });
@@ -306,112 +400,14 @@ echo select2();
                         }
                     });
                 }
-            } ///// Fin boton_finalizar_entrega_personal 
-            /*/
+            } //fin if boton_finalizar_entrega    
+
             if (valor == 'seleccionar_todos_accion_distribucion') {
                 $("input[name=btSelectItem]").attr('checked', true);
             }
             if (valor == 'quitar_seleccionados_accion_distribucion') {
                 $("input[name=btSelectItem]").attr('checked', false);
             }
-
-            //FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
-
-            if (valor == 'boton_confirmar_recepcion_iten_planilla') {
-
-                var registros_seleccionados = "";
-                $("input[name=btSelectItem]").each(function() {
-                    var checkbox = $(this);
-                    if (checkbox.is(':checked') === true) {
-                        var iditem = $(this).val();
-                        registros_seleccionados += iditem + ",";
-                    }
-                });
-
-                registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
-                if (registros_seleccionados == "") {
-                    top.notification({
-                        message: "No ha seleccionado ningun item",
-                        type: "warning",
-                        duration: "3500"
-                    });
-                } else {
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        url: '<?php echo ($ruta_db_superior); ?>app/distribucion/ejecutar_acciones_distribucion.php',
-                        data: {
-                            ft_item_despacho_ingres: registros_seleccionados,
-                            ejecutar_accion: 'confirmar_recepcion_item_planilla'
-                        },
-                        success: function(datos) {
-                            top.notification({
-                                message: "Items confirmadas satisfactoriamente!",
-                                type: "success",
-                                duration: "3500"
-                            });
-                            window.location.reload();
-                        }
-                    });
-                }
-            } //fin if boton_confirmar_recepcion_distribucion
-
-            if (valor == 'boton_entre_sedes') {
-
-                registros_seleccionados = top.window.gridSelection();
-                seleccionado = false;
-
-                if (registros_seleccionados.length == 0) {
-                    top.notification({
-                        message: "No ha seleccionado alguna distribuci&oacute;n",
-                        type: "error",
-                        duration: "3500"
-                    });
-
-                } else {
-                    seleccionado = true;
-                }
-
-                if (seleccionado) {
-
-                    var count = 0;
-                    var registrosSeleccionados = "";
-                    registros_seleccionados.forEach(function() {
-                        if (count != 0) {
-                            registrosSeleccionados = `${registrosSeleccionados},${registros_seleccionados[count]}`;
-                        } else {
-                            registrosSeleccionados = registros_seleccionados[count];
-                        }
-                        count++;
-                    });
-
-                    top.topModal({
-                        url: `views/distribucion/despachar_entre_sedes.php?registros=${registrosSeleccionados}`,
-                        size: 'modal-xl',
-                        title: 'Despachar entre sedes',
-                        buttons: {
-                            success: {
-                                label: 'Guardar',
-                                class: 'btn btn-complete'
-                            },
-                            cancel: {
-                                label: 'Cerrar',
-                                class: 'btn btn-danger'
-                            }
-                        },
-                        onSuccess: function() {
-                            top.closeTopModal();
-                            $("#table").bootstrapTable("refresh");
-                            top.notification({
-                                message: "Se ha guardado correctamente",
-                                type: "success",
-                                duration: "3500"
-                            });
-                        }
-                    });
-                }
-            } // Fin if boton_entre_sedes
-
 
             $(this).val('');
         }); //FIN IF opciones_acciones_distribucion

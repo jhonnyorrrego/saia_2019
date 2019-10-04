@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     var params = $('#script_grid').data('params');
     var baseUrl = params.baseUrl;
     var $table = $('#table');
@@ -12,14 +12,14 @@ $(function () {
 
     $table.bootstrapTable({
         url: baseUrl + 'app/busquedas/generar_reporte.php',
-        queryParams: function (queryParams) {
+        queryParams: function(queryParams) {
             queryParams = $.extend(queryParams, request);
             return queryParams;
         },
-        responseHandler: function (response) {
+        responseHandler: function(response) {
             request.total = response.total;
 
-            $.each(response.rows, function (i, row) {
+            $.each(response.rows, function(i, row) {
                 row.state = $.inArray(row.id, selections) !== -1;
             });
             return response;
@@ -54,21 +54,22 @@ $(function () {
                     tableWidth: 'wrap'
                 }
             }
-        },
+        }
     });
-    $(".keep-open").before("<div class='refresh-table btn-group'><button class='btn btn-secondary' title='Actualizar' id='btn_refresh'><i class='fa fa-refresh'></i><span class='d-none d-sm-inline'></span></button></div>");
-
+    $('.keep-open').before(
+        "<div class='refresh-table btn-group'><button class='btn btn-secondary' title='Actualizar' id='btn_refresh'><i class='fa fa-refresh'></i><span class='d-none d-sm-inline'></span></button></div>"
+    );
 
     $table.on(
         'check.bs.table check-all.bs.table uncheck.bs.table uncheck-all.bs.table',
-        function (e, rowsAfter, rowsBefore) {
+        function(e, rowsAfter, rowsBefore) {
             var rows = rowsAfter;
 
             if (e.type == 'uncheck-all') {
                 rows = rowsBefore;
             }
 
-            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function (row) {
+            var ids = $.map(!$.isArray(rows) ? [rows] : rows, function(row) {
                 return row.id;
             });
 
@@ -80,7 +81,7 @@ $(function () {
         }
     );
 
-    $('#btn_search').on('click', function () {
+    $('#btn_search').on('click', function() {
         top.topModal({
             url: $(this).data('url'),
             size: 'modal-xl',
@@ -95,7 +96,7 @@ $(function () {
                     class: 'btn btn-danger'
                 }
             },
-            onSuccess: function (data) {
+            onSuccess: function(data) {
                 let params = getParams(data.url);
                 request.idbusqueda_filtro_temp = params.idbusqueda_filtro_temp;
                 $table.bootstrapTable('refresh');
@@ -104,12 +105,12 @@ $(function () {
         });
     });
 
-    $('#btn_add').on('click', function () {
+    $('#btn_add').on('click', function() {
         top.topModal({
             url: $(this).data('url'),
             size: 'modal-xl',
             title: 'Crear',
-            onSuccess: function (data) {
+            onSuccess: function(data) {
                 top.closeTopModal();
                 $table.bootstrapTable('refresh');
 
@@ -130,7 +131,7 @@ $(function () {
         });
     });
 
-    $('#btn_refresh').on('click', function () {
+    $('#btn_refresh').on('click', function() {
         top.confirm({
             id: 'question',
             type: 'warning',
@@ -144,19 +145,19 @@ $(function () {
             buttons: [
                 [
                     '<button><b>Si</b></button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
                             'button'
                         );
-                        $("#table").bootstrapTable("refresh");
+                        window.refreshGrid();
                     },
                     true
                 ],
                 [
                     '<button>NO</button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
@@ -196,7 +197,7 @@ $(function () {
         return params;
     }
 
-    top.window.gridSelection = function () {
-        return selections;
-    }
+    window.gridSelection = () => selections;
+    window.removeSelections = () => (selections = []);
+    window.refreshGrid = () => $table.bootstrapTable('refresh');
 });

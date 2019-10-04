@@ -29,6 +29,7 @@ include_once $ruta_db_superior . "core/autoload.php";
  * @param $estado_distribucion (int) Establece si si se necesita Entrega (1-si, 3-no)
  * @param $estado_recogida (int) Establece si se necesita recogida (1-si, 0-no)
  */
+
 function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
 {
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "");
@@ -377,9 +378,10 @@ function ver_numero_registro($iddocumento, $tipo_origen, $fecha)
     return $numeroRegistro;
 }
 
-function ver_documento_planilla($iddocumento, $numero)
+function ver_documento_planilla($iddocumento)
 {
-    return '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $numero . '</button></center></div>';
+    $Documento = new Documento($iddocumento);
+    return '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $Documento->numero . '"><center><button class="btn btn-complete">' . $Documento->numero . '</button></center></div>';
 }
 function ver_estado_distribucion($estado_distribucion)
 { //Estado
@@ -388,7 +390,7 @@ function ver_estado_distribucion($estado_distribucion)
         0 => 'Por recepcionar',
         1 => 'Pendiente por distribuir',
         2 => 'En distribuci&oacute;n',
-        3 => 'Recepcionado'
+        3 => 'Finalizado'
     );
     return $array_estado_distribucion[$estado_distribucion];
 }
@@ -928,4 +930,69 @@ function obtener_asunto($iddoc)
         ->setParameter(':doc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
     return $ft_radicacion_entrada[0]['descripcion'];
+}
+
+/**
+ * Esta funcion retorna el nombre de la ventanilla donde se radica un documento
+ *
+ * @param [integer] $iddoc Identificador del documento
+ * @return string $nombreVentanilla este contiene el nombre de la ventanilla.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-4
+ */
+function obtener_ventanilla($iddoc)
+{
+    $nombreVentanilla = '';
+    $Documento = new Documento($iddoc);
+    $ventanilla = $Documento->ventanilla_radicacion;
+
+    $query = Model::getQueryBuilder();
+    $cf_ventanilla = $query
+        ->select('nombre')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $ventanilla, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $nombreVentanilla = $cf_ventanilla[0]['nombre'];
+
+    return $nombreVentanilla;
+}
+
+/**
+ * Esta funcion retorna el nombre y apellido del mensajero, se requiere el idfuncionario
+ *
+ * @param [integer] $idMensajero
+ * @return string retorna los nombres y apellidos del Mensajero
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
+ */
+function obtener_mensajero($idMensajero)
+{
+    $VfuncionarioDc = new VfuncionarioDc($idMensajero);
+    $nombreMensajero = "{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}";
+    return $nombreMensajero;
+}
+
+/**
+ * Retorna el nombre de recorrido en una planilla de distribucion (Matutino, Vespertina)
+ *
+ * @param [integer] $idft_despacho_ingresados
+ * @param [type] $iddoc
+ * @return void
+ */
+function obtener_tipo_recorrido($idft_despacho_ingresados)
+{
+    $resultado = "Matutino";
+    if ($resultado == 2) {
+        $resultado = "Vespertina";
+    }
+    return $resultado;
+}
+
+function obtener_distribucion($idft_despacho_ingresados)
+{
+
+    return '*';
 }

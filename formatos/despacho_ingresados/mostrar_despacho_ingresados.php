@@ -16,63 +16,65 @@ include_once $ruta_db_superior . 'core/autoload.php';
 include_once $ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php';
 include_once $ruta_db_superior . 'formatos/despacho_ingresados/funciones.php';
 
+
 try {
-    JwtController::check($_REQUEST["token"], $_REQUEST["key"]);    
+    JwtController::check($_REQUEST["token"], $_REQUEST["key"]);
 } catch (\Throwable $th) {
     die("invalid access");
 }
 
-if(
+if (
     !$_REQUEST['mostrar_pdf'] && !$_REQUEST['actualizar_pdf'] && (
         ($_REQUEST["tipo"] && $_REQUEST["tipo"] == 5) ||
-        0 == 1
-    )
-): ?>
+        0 == 1)
+) : ?>
     <!DOCTYPE html>
     <html>
-        <head>
-            <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-            <meta charset="utf-8" />
-            <meta name="viewport"
-                content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
-            <meta name="apple-mobile-web-app-capable" content="yes">
-            <meta name="apple-touch-fullscreen" content="yes">
-            <meta name="apple-mobile-web-app-status-bar-style" content="default">
-            <meta content="" name="description" />
-            <meta content="" name="Cero K" /> 
-        </head>
-        <body>
-            <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
-                <div id="documento" class="row p-0 m-0">
-                    <div id="pag-0" class="col-12 page_border bg-white">
-                        <div class="page_margin_top mb-0" id="doc_header">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta content="" name="description" />
+        <meta content="" name="Cero K" />
+    </head>
+
+    <body>
+        <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
+            <div id="documento" class="row p-0 m-0">
+                <div id="pag-0" class="col-12 page_border bg-white">
+                    <div class="page_margin_top mb-0" id="doc_header">
                         <?php include_once $ruta_db_superior . "formatos/librerias/header_nuevo.php" ?>
+                    </div>
+                    <div id="pag_content-0" class="page_content">
+                        <div id="page_overflow">
+                            <table align="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;center\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" border="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;1\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" cellspacing="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" style="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;position:relative\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
+                                        <td><strong>Tipo de Mensajer&iacute;a: </strong><?= ComponentFormGeneratorController::callShowValue(353, $_REQUEST['iddoc'], 'tipo_mensajero') ?></td>
+                                        <td><strong>Recorrido: </strong>{*obtener_tipo_recorrido*}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p>{*obtener_tipo_recorrido*}</p>
+
+                            <p><?php mostrar_seleccionados_entrega(353, $_REQUEST['iddoc']) ?></p>
+
                         </div>
-                        <div id="pag_content-0" class="page_content">
-                            <div id="page_overflow">
-                                <table align="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;center\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" border="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;1\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" cellspacing="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;0\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;" style="\&quot;\\\&quot;\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;position:relative\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\&quot;\\\\\\\\\\\\\\\&quot;\\\\\\\&quot;\\\&quot;\&quot;">
-	<tbody>
-		<tr>
-			<td><strong>Auxiliar de mensajer&iacute;a: </strong><?php mensajero_entrega_interna(353, $_REQUEST['iddoc']) ?></td>
-			<td><strong>Tipo de Mensajer&iacute;a: </strong><?= ComponentFormGeneratorController::callShowValue(353, $_REQUEST['iddoc'], 'tipo_mensajero') ?></td>
-			<td><strong>Recorrido: </strong>{*obtener_tipo_recorrido*}</td>
-		</tr>
-	</tbody>
-</table>
+                    </div>
+                    <?php include_once $ruta_db_superior . "formatos/librerias/footer_nuevo.php" ?>
+                </div> <!-- end page-n -->
+            </div> <!-- end #documento-->
+        </div> <!-- end .container -->
+    </body>
 
-<p>{*obtener_tipo_recorrido*}</p>
-
-<p><?php mostrar_seleccionados_entrega(353, $_REQUEST['iddoc']) ?></p>
-
-                            </div>
-                        </div>
-                        <?php include_once $ruta_db_superior . "formatos/librerias/footer_nuevo.php" ?>
-                    </div> <!-- end page-n -->
-                </div> <!-- end #documento-->
-            </div> <!-- end .container -->
-        </body>
     </html>
-<?php else:
+<?php else :
     $documentId = $_REQUEST["iddoc"];
     $Documento = new Documento($documentId);
     $Formato = $Documento->getFormat();
@@ -85,14 +87,14 @@ if(
         "ruta" => base64_encode($Documento->pdf)
     ];
 
-    if(($Formato->mostrar_pdf == 1 && !$Documento->pdf) || $_REQUEST["actualizar_pdf"]){
+    if (($Formato->mostrar_pdf == 1 && !$Documento->pdf) || $_REQUEST["actualizar_pdf"]) {
         $params["actualizar_pdf"] = 1;
-    }else if($Formato->mostrar_pdf == 2){
+    } else if ($Formato->mostrar_pdf == 2) {
         $params["pdf_word"] = 1;
     }
 
     $url = PROTOCOLO_CONEXION . RUTA_PDF . "/views/visor/pdfjs/viewer.php?";
-    $url.= http_build_query($params);
+    $url .= http_build_query($params);
 
     ?>
     <iframe width="100%" frameborder="0" onload="this.height = window.innerHeight - 20" src="<?= $url ?>"></iframe>

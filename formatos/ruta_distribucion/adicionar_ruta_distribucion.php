@@ -116,7 +116,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
 <script type='text/javascript'>
             $(function () {
-                var configuracion={"defaultDate":"2019-10-02","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"2019-10-04","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
                 $('#fecha_ruta_distribuc').datetimepicker(configuracion);
                 $('#content_container').height($(window).height());
             });
@@ -171,7 +171,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
-<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
+<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='radicacion_salida'>
 <input type='hidden' name='formatId' value='404'>
 <input type='hidden' name='tabla' value='ft_ruta_distribucion'>
 <input type='hidden' name='formato' value='ruta_distribucion'>

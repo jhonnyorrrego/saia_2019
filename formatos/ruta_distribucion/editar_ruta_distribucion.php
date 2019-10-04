@@ -219,7 +219,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             ) ?>'>
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
-<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
+<input type='hidden' id='tipo_radicado' name='tipo_radicado' value='radicacion_salida'>
 <input type='hidden' name='formatId' value='404'>
 <input type='hidden' name='tabla' value='ft_ruta_distribucion'>
 <input type='hidden' name='formato' value='ruta_distribucion'>

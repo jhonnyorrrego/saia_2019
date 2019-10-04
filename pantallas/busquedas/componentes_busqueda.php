@@ -15,7 +15,7 @@ include_once $ruta_db_superior . 'core/autoload.php';
 
 function acceso_modulo($idmodulo = 0)
 {
-    
+
     if ($idmodulo) {
         $modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "");
         return PermisoController::moduleAccess($modulo[0]["nombre"]);

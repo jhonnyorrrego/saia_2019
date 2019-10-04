@@ -238,6 +238,7 @@ class GuardarFtController
         }
 
         if (!$edit) { //adicionar
+
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "adicionar", "ANTERIOR");
 
             $QueryBuilder->insert($this->Formato->nombre_tabla);
@@ -250,7 +251,6 @@ class GuardarFtController
             if ($fieldFiles) {
                 $this->saveFiles($fieldFiles);
             }
-
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "adicionar", "POSTERIOR");
             generar_ruta_documento($this->formatId, $this->Documento->getPK());
         } else { // editar
