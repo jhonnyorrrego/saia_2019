@@ -66,6 +66,7 @@ if ($component['acciones_seleccionados']) {
     }
 }
 ?>
+<link rel="stylesheet" href="<?= $ruta_db_superior ?>views/buzones/css/grilla.css">
 <div class="container-fluid px-0">
     <div class="row mx-0" id="content">
         <div class="col-12">

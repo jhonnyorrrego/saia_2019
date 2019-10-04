@@ -76,7 +76,7 @@ class ComponentFormGeneratorController
      */
     public function getLabel()
     {
-        return strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        return strtoupper($this->CamposFormato->etiqueta);
     }
 
     /**
@@ -221,6 +221,38 @@ class ComponentFormGeneratorController
         $type = in_array($tag, array_keys(self::GENERATORS)) ? $tag : 'text';
 
         return self::GENERATORS[$type];
+    }
+
+    /**
+     * obtiene el schema de un componente basado
+     * en su etiqueta_html
+     *
+     * @param CamposFormato $CamposFormato
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-10-04
+     */
+    public static function getSchemaFromField($CamposFormato)
+    {
+        $generator = self::getGeneratorFromField($CamposFormato->etiqueta_html);
+        return $generator::getSchema($CamposFormato);
+    }
+
+    /**
+     * obtiene el schema del componente en pantalla_componente
+     *
+     * @param CamposFormato $CamposFormato
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019-10-04
+     */
+    public static function getSchema($CamposFormato)
+    {
+        $PantallaComponente = PantallaComponente::findByAttributes([
+            'etiqueta_html' => $CamposFormato->etiqueta_html
+        ]);
+
+        return json_decode($PantallaComponente->opciones_propias, true);
     }
 
     /**

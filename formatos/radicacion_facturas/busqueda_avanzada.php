@@ -28,7 +28,7 @@ if($_REQUEST['info_externo']){
     <div class="navbar-inner">                           
       <ul class="nav pull-left">                                         
         <li>          
-  	        <button type="button" class="btn btn-primary btn-mini" id="ksubmit_saia" enlace="<?php echo($ruta_db_superior); ?>pantallas/busquedas/procesa_filtro_busqueda.php<?php echo($adicional); ?>" titulo="Resultado">
+  	        <button type="button" class="btn btn-primary btn-mini" id="ksubmit_saia" enlace="<?php echo($ruta_db_superior); ?>app/busquedas/procesa_filtro_busqueda.php<?php echo($adicional); ?>" titulo="Resultado">
   	        	&nbsp;Buscar&nbsp;
   	        </button>
         </li>                 

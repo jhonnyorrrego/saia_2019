@@ -42,7 +42,7 @@ $(function() {
         }
 
         $.post(
-            `${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
+            `${baseUrl}app/busquedas/procesa_filtro_busqueda.php`,
             $('#find_document_form').serialize(),
             function(response) {
                 if (response.exito) {

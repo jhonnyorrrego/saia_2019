@@ -11,9 +11,10 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "core/autoload.php";
-include_once $ruta_db_superior . "pantallas/documento/librerias.php";
+include_once $ruta_db_superior . "app/documento/librerias.php";
 
-function responsable($userId){
+function responsable($userId)
+{
     $Funcionario = new Funcionario($userId);
     $img = roundedImage($Funcionario->getImage('foto_recorte'));
     $name = $Funcionario->getName();

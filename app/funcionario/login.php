@@ -32,7 +32,9 @@ try {
         }
 
         $roles = VfuncionarioDc::findAllByAttributes([
-            'login' => $_REQUEST["user"]
+            'login' => $_REQUEST["user"],
+            'estado' => 1,
+            'estado_dc' => 1
         ]);
         $today = new DateTime(date('Y-m-d'));
 
@@ -40,11 +42,7 @@ try {
             $finalDate = $VfuncionarioDc->getDateAttribute('fecha_final', 'Y-m-d');
             $finalDate = new DateTime($finalDate);
 
-            if (
-                $VfuncionarioDc->estado == 1 &&
-                $VfuncionarioDc->estado_dc == 1 &&
-                $finalDate >= new DateTime()
-            ) {
+            if ($finalDate >= new DateTime()) {
                 $active = $VfuncionarioDc;
                 break;
             }

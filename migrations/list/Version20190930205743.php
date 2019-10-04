@@ -21,7 +21,7 @@ final class Version20190930205743 extends AbstractMigration
     {
         $value = <<<WHERE
         a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion in (1,3) AND b.ejecutor=c.funcionario_codigo AND c.ventanilla_radicacion=d.idcf_ventanilla AND b.ventanilla_radicacion=e.idcf_ventanilla {*condicion_adicional_distribucion*}
-        WHERE;
+WHERE;
 
         $this->connection->update(
             'busqueda_condicion',

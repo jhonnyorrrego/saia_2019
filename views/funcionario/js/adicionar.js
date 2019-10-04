@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     let params = $('#user_script').data('params');
     let baseUrl = params.baseUrl;
     let myDropzone = null;
@@ -16,7 +16,7 @@ $(function () {
         changeModalTitle();
     })();
 
-    $('#btn_success').on('click', function () {
+    $('#btn_success').on('click', function() {
         $('#user_form').trigger('submit');
     });
 
@@ -38,8 +38,8 @@ $(function () {
                 dir: 'firma_funcionario'
             },
             paramName: 'file',
-            init: function () {
-                this.on('success', function (file, response) {
+            init: function() {
+                this.on('success', function(file, response) {
                     response = JSON.parse(response);
 
                     if (response.success) {
@@ -62,7 +62,7 @@ $(function () {
                 key: localStorage.getItem('key'),
                 token: localStorage.getItem('token')
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         $('#profile').append(
@@ -85,7 +85,7 @@ $(function () {
             {
                 key: localStorage.getItem('key')
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     response.data.forEach(element => {
                         $('#window_radication').append(
@@ -102,7 +102,7 @@ $(function () {
         );
     }
 
-    $('#password').keyup(function () {
+    $('#password').keyup(function() {
         checkStrength('#password_validation', $(this).val());
     });
 
@@ -115,7 +115,7 @@ $(function () {
                 type: 'edit',
                 userId: userId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     fillForm(response.data);
                 } else {
@@ -133,14 +133,18 @@ $(function () {
         for (let name in data) {
             switch (name) {
                 case 'perfil':
-                    $(`[name="perfil[]"]`)
-                        .val(data[name].split(','))
-                        .change();
+                    setTimeout(() => {
+                        $(`[name="perfil[]"]`)
+                            .val(data[name].split(','))
+                            .change();
+                    }, 500);
                     break;
                 case 'ventanilla_radicacion':
-                    $(`[name="ventanilla_radicacion[]"]`)
-                        .val(data[name].split(','))
-                        .change();
+                    setTimeout(() => {
+                        $(`[name="ventanilla_radicacion"]`)
+                            .val(data[name].split(','))
+                            .change();
+                    }, 500);
                     break;
                 case 'firma':
                     setImage(data[name]);
@@ -254,7 +258,7 @@ $('#user_form').validate({
             required: 'Campo requerido',
             minlength: 'Ingrese minimo 8 caracteres'
         },
-        perfil: {
+        'perfil[]': {
             required: 'Campo requerido'
         },
         ventanilla_radicacion: {
@@ -264,7 +268,7 @@ $('#user_form').validate({
             required: 'Debe indicar un nombre de usuario'
         }
     },
-    errorPlacement: function (error, element) {
+    errorPlacement: function(error, element) {
         let node = element[0];
 
         if (
@@ -277,7 +281,7 @@ $('#user_form').validate({
             error.insertAfter(element);
         }
     },
-    submitHandler: function (form) {
+    submitHandler: function(form) {
         let params = $('#user_script').data('params');
         let data = $('#user_form').serialize();
         data =
@@ -298,7 +302,7 @@ $('#user_form').validate({
         $.post(
             route,
             data,
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,

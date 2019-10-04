@@ -113,7 +113,7 @@ echo (bootstrap());
 					<input type="hidden" name="campos_especiales" id="campos_especiales" value="funcionario_evaluado@arbol">
 					<input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
 
-					<button type="button" class="btn btn-primary" id="ksubmit_saia" enlace="<?php echo $ruta_db_superior; ?>pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>
+					<button type="button" class="btn btn-primary" id="ksubmit_saia" enlace="<?php echo $ruta_db_superior; ?>app/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>
 					<input class="btn btn-danger" name="commit" type="reset" value="Cancelar">
 				</div>
 			</form>

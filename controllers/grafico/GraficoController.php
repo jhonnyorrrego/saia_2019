@@ -177,7 +177,7 @@ abstract class GraficoController
         if ($this->Grafico->fk_busqueda_componente) {
             $buttons['myReport'] = [
                 'title' => 'Ver reporte',
-                'icon' => 'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7',
+                'icon' => "image://" . PROTOCOLO_CONEXION . RUTA_PDF . "/assets/images/fa-eye.png",
                 'onclick' => 'seeReport'
             ];
         }
@@ -185,16 +185,12 @@ abstract class GraficoController
         if ($this->Grafico->busqueda) {
             $buttons['mySearch'] = [
                 'title' => 'Filtrar',
-                'icon' => 'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7',
+                'icon' => "image://" . PROTOCOLO_CONEXION . RUTA_PDF . "/assets/images/fa-filter.png",
                 'onclick' => 'showFilters'
             ];
         }
 
         $buttons = array_merge($buttons, [
-            'dataView' => [
-                'title' => 'Exportar',
-                'lang' => ['Datos', 'Cerrar', 'Cancelar']
-            ],
             'saveAsImage' => [
                 'pixelRatio' =>  2,
                 'title' => 'Descargar'

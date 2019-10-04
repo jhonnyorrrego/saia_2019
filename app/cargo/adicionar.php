@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 }
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -31,7 +31,13 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         if ($_REQUEST['id']) {
             $Response->message = "Datos actualizados";
         } else {
-            $Response->message = "Cargo creado";
+            if ($Dependencia->estado) {
+                $Response->message = "Cargo Creado correctamente";
+                $Response->data->notificationType = 'success';
+            } else {
+                $Response->message = "Cargo Creado. Sin embargo debe activarlo para que funcione correctamente";
+                $Response->data->notificationType = 'warning';
+            }
         }
     } else {
         $Response->message = "Error al guardar";

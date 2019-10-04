@@ -1,4 +1,4 @@
-.table thead tr th:first-child{
+.table thead tr th:first-child {
     padding-left: 0px !important;
 }
 
@@ -43,4 +43,19 @@ select.btn {
 .page-item.active .page-link {
     background-color: #48b0f7;
     border-color: #48b0f7;
+}
+
+thead > tr > th {
+    font-weight: bold !important;
+    color: #626262 !important;
+    background: #e9ecef;
+    border-color: #dee2e6;
+    font-size: 12px !important;
+}
+
+tbody > tr > td {
+    text-align: center;
+    text-transform: lowercase;
+    font-size: 12;
+    color: #2c2c2c;
 }

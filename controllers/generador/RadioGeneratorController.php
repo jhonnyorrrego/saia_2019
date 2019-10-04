@@ -27,7 +27,7 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
         $text = "
         <div class='form-group form-group-default {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-            <div class='radio radio-success'>
+            <div class='radio radio-success input-group'>
         ";
 
         $options = $this->CamposFormato->getRadioOptions();
@@ -44,7 +44,7 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
                 id='{$this->CamposFormato->nombre}{$key}'
                 value='{$CampoOpciones->getPK()}'
                 aria-required='true'>
-                <label for='{$this->CamposFormato->nombre}{$key}'>
+                <label for='{$this->CamposFormato->nombre}{$key}' class='mr-3'>
                     {$CampoOpciones->valor}
                 </label>";
         }
@@ -65,6 +65,7 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
      */
     public function generateEditionComponente()
     {
+        $requiredClass = $this->getRequiredClass();
         $text = $this->generateAditionComponent();
         $text .= <<<JAVASCRIPT
             <script>
@@ -79,8 +80,28 @@ class RadioGeneratorController extends ComponentFormGeneratorController implemen
                         },
                         function (response) {
                             if (response.success) {
-                                if(response.data){
-                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data+"']").prop('checked', true);
+                                if(response.data.selected.length){
+                                    if(response.data.inactive.length){
+                                        var node = $("[name='{$this->CamposFormato->nombre}']").parent();
+                                        var inactive = response.data.inactive[0];
+                                        var key = $("[name='{$this->CamposFormato->nombre}']").length;
+
+                                        node.append(
+                                            $("<input>", {
+                                                type : 'radio',
+                                                name : '{$this->CamposFormato->nombre}',
+                                                id : "{$this->CamposFormato->nombre}"+key,
+                                                value: inactive.id,
+                                                "aria-required": 'true'
+                                            }),
+                                            $("<label>", {
+                                                for: "{$this->CamposFormato->nombre}"+key,
+                                                class: "mr-3",
+                                                text: inactive.label
+                                            })
+                                        );
+                                    }
+                                    $("[name='{$this->CamposFormato->nombre}'][value='"+response.data.selected+"']").prop('checked', true);
                                 }
                             } else {
                                 top.notification({

@@ -10,11 +10,11 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "assets/librerias.php";
-if(empty($_REQUEST['id'])){
+if (empty($_REQUEST['id'])) {
     $_REQUEST['id'] = '';
 }
-if(empty($_REQUEST['parent'])){
-  $_REQUEST['parent'] = '';
+if (empty($_REQUEST['parent'])) {
+    $_REQUEST['parent'] = '';
 }
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
@@ -39,6 +39,7 @@ $params = json_encode([
             <div class="card-body py-2">
                 <form id="area_form">
                     <p>Los campos con <span class="text-danger">*</span> son obligatorios</p>
+                    <input type="hidden" name="tipo_cargo" value="1">
                     <div class="form-group form-group-default">
                         <label>Código:</label>
                         <input name="codigo_cargo" type="text" class="form-control">
@@ -52,13 +53,6 @@ $params = json_encode([
                             <div id="areas_tree">Cargo superior</div>
                             <input type="hidden" name="cod_padre">
                         </div>
-                    </div>
-                    <div class="form-group form-group-default form-group-default-select2 required">
-                        <label class="">Tipo</label>
-                        <select class="full-width" name="tipo_cargo" id="type_select">
-                            <option value="1">Administrativo</option>
-                            <option value="2">Funcional</option>
-                        </select>
                     </div>
                     <div class="form-group">
                         <label class="pl-1 mb-0 mt-1">Estado</label>
