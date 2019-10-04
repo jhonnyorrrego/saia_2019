@@ -112,10 +112,14 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
      */
     public function generateAditionComponent()
     {
+        $requiredClass = $this->getRequiredClass();
+        $options = json_decode($this->CamposFormato->opciones);
+        $multiple = $options->tipo == 'multiple' ? 'multiple="multiple"' : '';
+
         $content = <<<HTML
-            <div class="form-group form-group-default form-group-default-select2">
-                <label for="{$this->CamposFormato->nombre}">{$this->getLabel()}</label>
-                <select class="form-control" id="{$this->CamposFormato->nombre}" multiple="multiple"></select>
+            <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
+                <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
+                <select class="full-width" name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' {$requiredClass} {$multiple}></select>
             </div>
             <script>
                 $(function(){

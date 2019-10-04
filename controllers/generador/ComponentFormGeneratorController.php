@@ -76,7 +76,7 @@ class ComponentFormGeneratorController
      */
     public function getLabel()
     {
-        return strtoupper($this->CamposFormato->etiqueta) . $this->getRequiredIcon();
+        return strtoupper($this->CamposFormato->etiqueta);
     }
 
     /**
