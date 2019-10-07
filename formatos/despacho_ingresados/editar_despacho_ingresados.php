@@ -204,8 +204,8 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
             ) ?>'>
 
         <div class='form-group form-group-default required' id='group_tipo_recorrido'>
-            <label title=''>RECORRIDO DEL DIA<span>*</span></label>
-            <div class='radio radio-success'>
+            <label title=''>RECORRIDO DEL DIA</label>
+            <div class='radio radio-success input-group'>
         <input 
                 required
                 type='radio'
@@ -213,7 +213,7 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                 id='tipo_recorrido0'
                 value='16'
                 aria-required='true'>
-                <label for='tipo_recorrido0'>
+                <label for='tipo_recorrido0' class='mr-3'>
                     Matutino
                 </label><input 
                 required
@@ -222,7 +222,7 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                 id='tipo_recorrido1'
                 value='17'
                 aria-required='true'>
-                <label for='tipo_recorrido1'>
+                <label for='tipo_recorrido1' class='mr-3'>
                     Vespertino
                 </label></div>
             <label id='tipo_recorrido-error' class='error' for='tipo_recorrido' style='display: none;'></label>
@@ -238,8 +238,28 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                         },
                         function (response) {
                             if (response.success) {
-                                if(response.data){
-                                    $("[name='tipo_recorrido'][value='"+response.data+"']").prop('checked', true);
+                                if(response.data.selected.length){
+                                    if(response.data.inactive.length){
+                                        var node = $("[name='tipo_recorrido']").parent();
+                                        var inactive = response.data.inactive[0];
+                                        var key = $("[name='tipo_recorrido']").length;
+
+                                        node.append(
+                                            $("<input>", {
+                                                type : 'radio',
+                                                name : 'tipo_recorrido',
+                                                id : "tipo_recorrido"+key,
+                                                value: inactive.id,
+                                                "aria-required": 'true'
+                                            }),
+                                            $("<label>", {
+                                                for: "tipo_recorrido"+key,
+                                                class: "mr-3",
+                                                text: inactive.label
+                                            })
+                                        );
+                                    }
+                                    $("[name='tipo_recorrido'][value='"+response.data.selected+"']").prop('checked', true);
                                 }
                             } else {
                                 top.notification({

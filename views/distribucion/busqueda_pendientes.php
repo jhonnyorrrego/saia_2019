@@ -90,7 +90,7 @@ include_once $ruta_db_superior . "assets/librerias.php";
                 .defaultDate(null);
 
             $('#btn_success').on('click', function() {
-                $.post(`${baseUrl}pantallas/busquedas/procesa_filtro_busqueda.php`,
+                $.post(`${baseUrl}app/busquedas/procesa_filtro_busqueda.php`,
                     $("#kformulario_saia").serialize(),
                     function(data) {
                         if (data.exito) {

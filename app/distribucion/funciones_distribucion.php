@@ -29,6 +29,7 @@ include_once $ruta_db_superior . "core/autoload.php";
  * @param $estado_distribucion (int) Establece si si se necesita Entrega (1-si, 3-no)
  * @param $estado_recogida (int) Establece si se necesita recogida (1-si, 0-no)
  */
+
 function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_destino, $tipo_destino, $estado_distribucion = 1, $estado_recogida = 0)
 {
     $datos_plantilla = busca_filtro_tabla("b.nombre_tabla", "documento a,formato b", "lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=" . $iddoc, "");
@@ -50,6 +51,14 @@ function pre_ingresar_distribucion($iddoc, $campo_origen, $tipo_origen, $campo_d
         }
     }
 }
+
+/**
+ *  Funcion que adiciona item en distribucion luego de registrar una correspondencia, o generar una comunicacion externa
+ * @param integer $iddoc Identificacion del documento.
+ * @param array $datos contiene la informacion basica para realizar la distribucion.
+ * @param integer $iddistribucion  se utiliza para definir si es una distribucion nueva o modificacion de una existente.
+ * @lastModification Julian Otalvaro Osorio <julian.otalvaro@cerok.com 2019-10-07
+ */
 
 function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
 {
@@ -98,19 +107,20 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
 
     //--------------------------------------------------------
     //ORGANIZAR DESTINOS DEPENDENCIA - ROLES
-    $array_destinos = array();
+    $destinos = array();
     $es_dependencia = 0;
     if ($datos['destino'][(strlen($datos['destino']) - 1)] == '#') {
         $es_dependencia = 1;
     }
     if ($es_dependencia) {
-        $array_destinos = obtener_funcionarios_dependencia_destino($datos['destino']);
+        $destinos = obtener_funcionarios_dependencia_destino($datos['destino']);
     } else {
-        $array_destinos[] = $datos['destino'];
+        $destinos[] = $datos['destino'];
     }
 
-    $array_iddistribucion = array();
-    for ($j = 0; $j < count($array_destinos); $j++) {
+    $distribuciones = array();
+
+    for ($j = 0; $j < count($destinos); $j++) {
 
         //NUMERO DE DISTRIBUCION
         $numero_distribucion = obtener_numero_distribucion($iddoc);
@@ -118,7 +128,7 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
         //OBTENER RUTA_DESTINO
         $idft_ruta_distribucion_destino = 0;
         if ($datos['tipo_destino'] == 1) {
-            $idft_ruta_distribucion_destino = obtener_ruta_distribucion($array_destinos[$j]);
+            $idft_ruta_distribucion_destino = obtener_ruta_distribucion($destinos[$j]);
         }
         //OBTENER MENSAJERO_RUTA_DESTINO
         $iddependencia_cargo_mensajero_destino = 0;
@@ -128,13 +138,14 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
 
         $Documento = new Documento($iddoc);
 
-        $nuevaDistribucion = $Distribucion = new Distribucion();
+        $Distribucion = new Distribucion();
+
         $camposDistribucion = [
             'origen' => $datos['origen'],
             'tipo_origen' => $datos['tipo_origen'],
             'ruta_origen' => $idft_ruta_distribucion_origen,
             'mensajero_origen' => $iddependencia_cargo_mensajero_origen,
-            'destino' => $array_destinos[$j],
+            'destino' => $destinos[$j],
             'tipo_destino' => $datos['tipo_destino'],
             'ruta_destino' => $idft_ruta_distribucion_destino,
             'mensajero_destino' => $iddependencia_cargo_mensajero_destino,
@@ -144,18 +155,16 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             'documento_iddocumento' => $iddoc,
             'fecha_creacion' => date('Y-m-d H:i:s'),
             'sede_origen' => $Documento->ventanilla_radicacion,
-            'sede_destino' => $Documento->ventanilla_radicacion
+            'sede_destino' => 0
         ];
 
         if ($iddistribucion) {
             $camposDistribucion = array_merge($camposDistribucion, ["iddistribucion" => $iddistribucion]);
         }
-
-        $Distribucion->newRecord($camposDistribucion);
-
-        $array_iddistribucion[] = $nuevaDistribucion;
+        $Distribucion::newRecord($camposDistribucion);
+        $distribuciones[] = $Distribucion;
     }
-    return $array_iddistribucion;
+    return $distribuciones;
 }
 
 function obtener_ruta_distribucion($iddependencia_cargo)
@@ -377,9 +386,10 @@ function ver_numero_registro($iddocumento, $tipo_origen, $fecha)
     return $numeroRegistro;
 }
 
-function ver_documento_planilla($iddocumento, $numero)
+function ver_documento_planilla($iddocumento)
 {
-    return '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $numero . '</button></center></div>';
+    $Documento = new Documento($iddocumento);
+    return '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $Documento->numero . '"><center><button class="btn btn-complete">' . $Documento->numero . '</button></center></div>';
 }
 function ver_estado_distribucion($estado_distribucion)
 { //Estado
@@ -388,7 +398,7 @@ function ver_estado_distribucion($estado_distribucion)
         0 => 'Por recepcionar',
         1 => 'Pendiente por distribuir',
         2 => 'En distribuci&oacute;n',
-        3 => 'Recepcionado'
+        3 => 'Finalizado'
     );
     return $array_estado_distribucion[$estado_distribucion];
 }
@@ -492,12 +502,16 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
         $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
         $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
     }
-    $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
 
     $Distribucion = new Distribucion($iddistribucion);
     if ($Distribucion->entre_sedes == 1) {
         $VfuncionarioDc = new VfuncionarioDc($Distribucion->mensajero_destino);
-        $html = "{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}";
+        $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+    }
+
+    $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
+    if ($Distribucion->entre_sedes == 1) {
+        $html .= "<script> $('#selMensajeros{$iddistribucion}').attr('disabled','disabled');</script>";
     }
     return $html;
 }
@@ -929,3 +943,68 @@ function obtener_asunto($iddoc)
         ->execute()->fetchAll();
     return $ft_radicacion_entrada[0]['descripcion'];
 }
+
+/**
+ * Esta funcion retorna el nombre de la ventanilla donde se radica un documento
+ *
+ * @param [integer] $iddoc Identificador del documento
+ * @return string $nombreVentanilla este contiene el nombre de la ventanilla.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-4
+ */
+function obtener_ventanilla($iddoc)
+{
+    $nombreVentanilla = '';
+    $Documento = new Documento($iddoc);
+    $ventanilla = $Documento->ventanilla_radicacion;
+
+    $query = Model::getQueryBuilder();
+    $cf_ventanilla = $query
+        ->select('nombre')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $ventanilla, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $nombreVentanilla = $cf_ventanilla[0]['nombre'];
+
+    return $nombreVentanilla;
+}
+
+/**
+ * Esta funcion retorna el nombre y apellido del mensajero, se requiere el idfuncionario
+ *
+ * @param [integer] $idMensajero
+ * @return string retorna los nombres y apellidos del Mensajero
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
+ */
+function obtener_mensajero($idMensajero)
+{
+    $VfuncionarioDc = new VfuncionarioDc($idMensajero);
+    $nombreMensajero = "{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}";
+    return $nombreMensajero;
+}
+
+/**
+ * Retorna el nombre de recorrido en una planilla de distribucion (Matutino, Vespertina)
+ *
+ * @param [integer] $idft_despacho_ingresados
+ * @param [type] $iddoc
+ * @return void
+ */
+function obtener_tipo_recorrido($idft_despacho_ingresados)
+{
+    $resultado = "Matutino";
+    if ($resultado == 2) {
+        $resultado = "Vespertina";
+    }
+    return $resultado;
+}
+
+function obtener_distribucion($idft_despacho_ingresados)
+{
+    return '*';
+}
+

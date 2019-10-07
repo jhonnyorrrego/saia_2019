@@ -11,10 +11,17 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "assets/librerias.php";
 
+$userId = null;
+
+if (isset($_REQUEST['userId'])) {
+    $userId = $_REQUEST['userId'];
+}
+
 $params = json_encode([
     'baseUrl' => $ruta_db_superior,
-    'userId' => $_REQUEST['userId']
+    'userId' => $userId
 ]);
+
 ?>
 <!doctype html>
 <html lang="es">

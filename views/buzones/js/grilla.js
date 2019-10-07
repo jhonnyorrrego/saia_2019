@@ -150,7 +150,7 @@ $(function() {
                             toast,
                             'button'
                         );
-                        $('#table').bootstrapTable('refresh');
+                        window.refreshGrid();
                     },
                     true
                 ],
@@ -196,7 +196,7 @@ $(function() {
         return params;
     }
 
-    top.window.gridSelection = function() {
-        return selections;
-    };
+    window.gridSelection = () => selections;
+    window.removeSelections = () => (selections = []);
+    window.refreshGrid = () => $table.bootstrapTable('refresh');
 });

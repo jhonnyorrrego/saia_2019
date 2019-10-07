@@ -20,6 +20,7 @@ $Response = (object) [
 ];
 
 try {
+    $externalAccess = $_REQUEST['externalAccess'] ?? 0;
     $sessionUserId = SessionController::hasActiveSession();
 
     if (
@@ -53,7 +54,7 @@ try {
         }
 
         if ($active->clave == CriptoController::encrypt_md5($_REQUEST['password'])) {
-            $Response->data = access($active->getPK());
+            $Response->data = access($active->getPK(), $externalAccess);
             $Response->success = 1;
 
             FuncionarioController::saveAccess();
@@ -62,7 +63,7 @@ try {
             throw new Exception("Datos incorrectos", 1);
         }
     } else if (!empty($sessionUserId)) {
-        $Response->data = access($sessionUserId);
+        $Response->data = access($sessionUserId, $externalAccess);
         $Response->success = 1;
         FuncionarioController::saveAccess();
     } else {
@@ -74,7 +75,7 @@ try {
 
 echo json_encode($Response);
 
-function access($userId)
+function access($userId, $externalAccess)
 {
     global $ruta_db_superior;
 
@@ -90,7 +91,11 @@ function access($userId)
     $temporalRoute = $ruta_db_superior . $Funcionario->getTemporalRoute();
     TemporalController::cleanDirectory($temporalRoute);
 
-    $token = FuncionarioController::generateToken($Funcionario);
+    $token = FuncionarioController::generateToken(
+        $Funcionario,
+        null,
+        $externalAccess
+    );
     $SessionController->setValue('token', $token);
     $data = [
         'route' => 'views/dashboard/dashboard.php',

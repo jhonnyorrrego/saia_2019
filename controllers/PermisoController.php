@@ -49,45 +49,6 @@ class PermisoController
     }
 
     /**
-     * Verificar si el usuario actual tiene permiso
-     * sobre un modulo
-     *
-     * @param string $module
-     * @param integer $accion
-     * @return void
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @date 2019-06-14
-     */
-    function permiso_usuario($module, $accion)
-    {
-        if ($this->acceso_root() && $accion == 1) {
-            return true;
-        }
-
-        if (!empty($tabla) && !is_null($accion) && $this->login) {
-            $total = Model::getQueryBuilder()
-                ->select('count(*) as total')
-                ->from('funcionario', 'a')
-                ->join('a', 'permiso', 'b', 'a.idfuncionario = b.funcionario_idfuncionario')
-                ->join('b', 'modulo', 'c', 'c.idmodulo = b.modulo_idmodulo')
-                ->where('a.login = :login')
-                ->andWhere('a.estado = 1')
-                ->andWhere('b.accion = :action')
-                ->andWhere('c.nombre = :module')
-                ->setParameter(':login', $this->login)
-                ->setParameter(':action', $accion)
-                ->setParameter(':module', $module)
-                ->execute()->fetch();
-
-            return $total['total'] > 0;
-        } else if (!empty($module)) {
-            return $this->acceso_modulo_perfil($module);
-        }
-
-        return false;
-    }
-
-    /**
      * verifica si el usuario tiene permiso
      * sobre un modulo
      *
@@ -96,7 +57,7 @@ class PermisoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-06-14
      */
-    function acceso_modulo($nombre)
+    function userModuleAccess($nombre)
     {
         $total = Model::getQueryBuilder()
             ->select('count(*) as total')
@@ -122,7 +83,7 @@ class PermisoController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-06-14
      */
-    function acceso_modulo_perfil($nombre)
+    function profileModuleAccess($nombre)
     {
         if ($this->acceso_root()) {
             return true;
@@ -139,22 +100,21 @@ class PermisoController
             ->setParameter(':module', $nombre)
             ->execute()->fetch();
 
-        return $total['total'] ?
-            !$this->permiso_usuario($nombre, '0') : $this->acceso_modulo($nombre);
+        return !$total['total'] ? $this->userModuleAccess($nombre) : true;
     }
 
     /**
      * Retorna si tiene o no permiso sobre el modulo
      * 
-     * @param string $nombreModulo nombre del modulo
+     * @param string $module nombre del modulo
      * @return boolean
      * */
-    public static function moduleAccess(string $nombreModulo)
+    public static function moduleAccess(string $module)
     {
         if (!self::$instance) {
             self::$instance = new self;
         }
 
-        return (self::$instance)->acceso_modulo_perfil($nombreModulo);
+        return (self::$instance)->profileModuleAccess($module);
     }
 }

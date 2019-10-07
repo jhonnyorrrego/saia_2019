@@ -131,11 +131,10 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 function obtenerCamposVacios($camposModificados, $idpantalla_campos)
 {
     $CamposFormato = new CamposFormato($idpantalla_campos);
-    $PantallaComponente = PantallaComponente::findByAttributes(['etiqueta_html' => $CamposFormato->etiqueta_html, "estado" => 1], ['opciones_propias']);
-    $opciones_propias = json_decode($PantallaComponente->opciones_propias, true);
+    $schema = ComponentFormGeneratorController::getSchemaFromField($CamposFormato->etiqueta_html);
     ///////////////////////////// Campos que se encuentran en el esquema segun su  componente  y que deben ser modificados ////////////////////////////////
     $campos = array();
-    foreach ($opciones_propias['schema']['properties'] as $key => $i) {
+    foreach ($schema['schema']['properties'] as $key => $i) {
         array_push($campos, $key);
     }
     ///////////////////////////// Campos que fueron modificados  ////////////////////////////////
