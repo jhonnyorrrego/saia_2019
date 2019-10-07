@@ -32,7 +32,7 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
         ],
         [
             'name' => 'nombre',
-            'label' => 'Nombre',
+            'label' => 'Nombre Completo',
             'required' => true,
             'scope' => self::SCOPE_BOTH
         ],
@@ -49,8 +49,14 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
             'scope' => self::SCOPE_BOTH
         ],
         [
+            'name' => 'ciudad',
+            'label' => 'Ciudad',
+            'required' => false,
+            'scope' => self::SCOPE_BOTH
+        ],
+        [
             'name' => 'titulo',
-            'label' => 'Titulo',
+            'label' => 'Título',
             'required' => false,
             'scope' => self::SCOPE_NATURAL
         ],
@@ -77,12 +83,6 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
             'label' => 'Sede',
             'required' => false,
             'scope' => self::SCOPE_LEGAL
-        ],
-        [
-            'name' => 'ciudad',
-            'label' => 'Ciudad',
-            'required' => false,
-            'scope' => self::SCOPE_BOTH
         ],
         [
             'name' => 'cargo',
@@ -151,7 +151,7 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
                             top.topModal({
                                 url: 'views/tercero/formulario.php',
                                 params: {
-                                    fieldId : {$this->CamposFormato->getPK()}
+                                    fieldId : {$this->CamposFormato->getPK()},
                                 }, //parametros a enviar a url
                                 title: 'Tercero', //titulo
                                 buttons: {

@@ -22,7 +22,7 @@ class SelectGeneratorController extends ComponentFormGeneratorController impleme
         <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
             <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
             <div class='form-group'>
-            <select name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' $requiredClass>
+            <select class='full-width' name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' $requiredClass>
             <option value=''>Por favor seleccione...</option>
         ";
 
@@ -42,7 +42,6 @@ class SelectGeneratorController extends ComponentFormGeneratorController impleme
                 <script>
                 $(document).ready(function() {
                     $('#{$this->CamposFormato->nombre}').select2();
-                    $('#{$this->CamposFormato->nombre}').addClass('full-width');
                 });
                 </script>
             </div>
