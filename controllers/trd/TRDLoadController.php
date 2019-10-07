@@ -194,23 +194,19 @@ class TRDLoadController
         $existDep = Dependencia::getQueryBuilder()
             ->select('estado,iddependencia')
             ->from('dependencia')
-            ->where('codigo like :codigo_dep')
+            ->where('estado=1 and codigo like :codigo_dep')
             ->setParameter(':codigo_dep', $codDependencia)
             ->execute()->fetchAll();
 
         if ($existDep) {
             $cant = count($existDep);
             if ($cant == 1) {
-                if ($existDep[0]['estado'] == 1) {
-                    return $existDep[0]['iddependencia'];
-                } else {
-                    $this->errorException("La dependencia con codigo {$codDependencia} se encuentra inactiva");
-                }
+                return $existDep[0]['iddependencia'];
             } else {
                 $this->errorException("La dependencia con codigo {$codDependencia} existe {$cant} veces");
             }
         } else {
-            $this->errorException("La dependencia con codigo {$codDependencia} NO existe");
+            $this->errorException("La dependencia con codigo {$codDependencia} NO existe o se encuentra inactiva");
         }
         return false;
     }

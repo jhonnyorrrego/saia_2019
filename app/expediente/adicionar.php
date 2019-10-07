@@ -13,16 +13,17 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
-
+header('Access-Control-Allow-Origin: *');
 
 $Response = (object) [
-    'data' => new stdClass(),
     'message' => '',
     'success' => 0
 ];
 
 try {
-    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+    //JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    print_r($_REQUEST);
 
     if (empty($_REQUEST['nombre']) || !$_REQUEST['fk_serie_dependencia']) {
         throw new Exception("Error Processing Request", 1);
