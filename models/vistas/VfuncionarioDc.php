@@ -156,7 +156,9 @@ class VfuncionarioDc extends Funcionario
                     )
                 ) like :like
             ")
-            ->setParameter(':like', "%{$term}%");
+            ->setParameter(':like', "%{$term}%")
+            ->setFirstResult(0)
+            ->setMaxResults(20);
 
         return self::findByQueryBuilder($QueryBuilder);
     }

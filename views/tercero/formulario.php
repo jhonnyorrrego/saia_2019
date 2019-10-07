@@ -22,19 +22,22 @@ $params = json_encode([
 <div class="container">
     <div class="row">
         <div class="col-12" id="form_container">
-            <div class="row">
-                <div class="col-12" id="frequently"></div>
-            </div>
-            <div class="row pb-2">
-                <div class="col-12">
-                    <button class="btn btn-complete btn-sm" id="toggle_advanced">Mostrar opciones avanzadas</button>
+            <form id="external_user_form">
+                <div class="row">
+                    <div class="col-12" id="frequently"></div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12 d-none" id="advanced"></div>
-            </div>
+                <div class="row pb-2">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-complete btn-sm" id="toggle_advanced">Mostrar opciones avanzadas</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-none" id="advanced"></div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 <?= select2() ?>
+<?= validate() ?>
 <script id="external_script" src="<?= $ruta_db_superior ?>views/tercero/js/formulario.js" data-params='<?= $params ?>'></script>

@@ -1,10 +1,10 @@
 $(function() {
     let params = $('#external_script').data('params');
-    $('#external_script').removeAttr('data-params');
-
-    (function init() {
-        findFields();
-    })();
+    let scopes = {
+        natural: 1,
+        legal: 2,
+        both: 3
+    };
 
     $('#toggle_advanced').on('click', function() {
         $('#advanced').toggleClass('d-none');
@@ -16,21 +16,31 @@ $(function() {
         }
     });
 
-    $(document).on('change', "[name='tipo']", function() {
-        if ($(this).val() == 1) {
-            $('#name_container > label').text('NOMBRE COMPLETO');
-        } else {
-            $('#name_container > label').text('ORGANIZACIÓN');
-        }
-    });
+    $(document)
+        .off('change', "[name='tipo']")
+        .on('change', "[name='tipo']", function() {
+            $('div[data-scope]').hide();
+
+            if ($(this).val() == 1) {
+                $('#name_container > label').text('NOMBRE COMPLETO');
+                $(`
+                div[data-scope='${scopes.natural}'],
+                div[data-scope='${scopes.both}']`).show();
+            } else {
+                $(`
+                div[data-scope='${scopes.legal}'],
+                div[data-scope='${scopes.both}']`).show();
+                $('#name_container > label').text('ORGANIZACIÓN');
+            }
+        });
 
     $('#btn_success').on('click', function() {
-        alert('guardando');
-        top.successModalEvent({
-            id: 1,
-            text: 'nombre del nuevo tercero'
-        });
+        $('#external_user_form').trigger('submit');
     });
+
+    (function init() {
+        findFields();
+    })();
 
     function findFields() {
         $.post(
@@ -135,7 +145,7 @@ $(function() {
                 ajax: {
                     url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
                     dataType: 'json',
-                    delay: 150,
+                    delay: 200,
                     data: function(params) {
                         return {
                             term: params.term,
@@ -149,13 +159,18 @@ $(function() {
                 }
             });
         }
+
+        $(`[name='tipo'][value='${scopes.natural}']`)
+            .prop('checked', true)
+            .trigger('change');
     }
 
     function generateType(field) {
         let required = field.required ? 'required' : '';
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'type_container'
+            id: 'type_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -169,7 +184,6 @@ $(function() {
                     id: field.name + 1,
                     value: 1,
                     required: field.required,
-                    checked: true,
                     'aria-required': 'true'
                 }),
                 $('<label>', {
@@ -198,7 +212,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'name_container'
+            id: 'name_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -220,7 +235,8 @@ $(function() {
             class:
                 'form-group form-group-default form-group-default-select2 ' +
                 required,
-            id: 'identification_type_container'
+            id: 'identification_type_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -234,6 +250,10 @@ $(function() {
                     required: field.required,
                     class: 'full-width'
                 }).append(
+                    $('<option>', {
+                        value: '',
+                        text: 'Seleccione...'
+                    }),
                     $('<option>', {
                         value: 'CC',
                         text: 'CC'
@@ -256,7 +276,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'identification_container'
+            id: 'identification_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -278,7 +299,8 @@ $(function() {
             class:
                 'form-group form-group-default form-group-default-select2 ' +
                 required,
-            id: 'title_container'
+            id: 'title_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -292,6 +314,10 @@ $(function() {
                     required: field.required,
                     class: 'full-width'
                 }).append(
+                    $('<option>', {
+                        value: '',
+                        text: 'Seleccione...'
+                    }),
                     $('<option>', {
                         value: 'Señor',
                         text: 'Señor'
@@ -310,7 +336,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'address_container'
+            id: 'address_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -330,7 +357,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'phone_number_container'
+            id: 'phone_number_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -350,7 +378,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'email_container'
+            id: 'email_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -370,7 +399,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'franchise_container'
+            id: 'franchise_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -392,7 +422,8 @@ $(function() {
             class:
                 'form-group form-group-default form-group-default-select2 ' +
                 required,
-            id: 'city_container'
+            id: 'city_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -416,7 +447,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'position_container'
+            id: 'position_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -436,7 +468,8 @@ $(function() {
 
         return $('<div>', {
             class: 'form-group form-group-default ' + required,
-            id: 'company_container'
+            id: 'company_container',
+            'data-scope': field.scope
         }).append(
             $('<label>', {
                 text: field.label
@@ -448,6 +481,45 @@ $(function() {
                 id: field.name,
                 required: field.required
             })
+        );
+    }
+});
+
+$('#external_user_form').validate({
+    submitHandler: function() {
+        let params = $('#external_script').data('params');
+        let data = $('#external_user_form').serialize();
+        data =
+            data +
+            '&' +
+            $.param({
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: params.userId
+            });
+
+        $.post(
+            `${params.baseUrl}app/tercero/guardar.php`,
+            data,
+            function(response) {
+                if (response.success) {
+                    top.notification({
+                        message: response.message,
+                        type: 'success'
+                    });
+                    top.successModalEvent({
+                        id: response.data.userId,
+                        text: response.data.name
+                    });
+                } else {
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
+                }
+            },
+            'json'
         );
     }
 });

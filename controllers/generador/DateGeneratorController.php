@@ -89,26 +89,32 @@ class DateGeneratorController extends ComponentFormGeneratorController implement
             }
         }
 
+        if ($opciones['tipo'] == 'datetime') {
+            $format = 'Y-m-d H:i:s';
+        } else {
+            $format = 'Y-m-d';
+        }
+
         if ($this->scope == self::SCOPE_ADD && $opciones['hoy'] == 'true') {
-            $fecha_por_defecto = date(DateController::DEFAULT_FORMAT);
+            $opciones_fecha["defaultDate"] = date($format);
         } else if ($this->scope == self::SCOPE_EDIT) {
-            $fecha_por_defecto = "<?= ComponentFormGeneratorController::callShowValue({$this->Formato->getPK()}, \$_REQUEST['iddoc']),{$this->CamposFormato->nombre} ?>";
+            $texto[] = "<?php \$defaultValue = ComponentFormGeneratorController::callShowValue(
+                {$this->Formato->getPK()},
+                \$_REQUEST['iddoc'],
+                '{$this->CamposFormato->nombre}'
+            ) ?>";
+            $texto[] = "<?php \$defaultValue = DateController::convertDate(
+                \$defaultValue,
+                'Y-m-d H:i:s',
+                DateController::DEFAULT_FORMAT
+            ) ?>";
+            $opciones_fecha["defaultDate"] = "<?= \$defaultValue ?>";
         }
 
         if ($opciones['tipo'] == 'datetime') {
             $formato_fecha = 'YYYY-MM-DD HH:mm:ss';
         } else {
             $formato_fecha = 'YYYY-MM-DD';
-        }
-
-        if (!empty($fecha_por_defecto)) {
-            if ($opciones['tipo'] == 'datetime') {
-                $format = 'Y-m-d H:i:s';
-            } else {
-                $format = 'Y-m-d';
-            }
-
-            $opciones_fecha["defaultDate"] = DateController::convertDate($fecha_por_defecto, $format, DateController::DEFAULT_FORMAT);
         }
 
         $opciones_fecha["format"] = $formato_fecha;

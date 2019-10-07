@@ -39,13 +39,13 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
         [
             'name' => 'tipo_identificacion',
             'label' => 'Tipo de identificación',
-            'required' => true,
-            'scope' => self::SCOPE_BOTH
+            'required' => false,
+            'scope' => self::SCOPE_NATURAL
         ],
         [
             'name' => 'identificacion',
             'label' => 'Identificación',
-            'required' => true,
+            'required' => false,
             'scope' => self::SCOPE_BOTH
         ],
         [
@@ -119,7 +119,8 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
         $content = <<<HTML
             <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
                 <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-                <select class="full-width" name='{$this->CamposFormato->nombre}' id='{$this->CamposFormato->nombre}' {$requiredClass} {$multiple}></select>
+                <select class="full-width" id='{$this->CamposFormato->nombre}' {$requiredClass} {$multiple}></select>
+                <input type="hidden" name="{$this->CamposFormato->nombre}">
             </div>
             <script>
                 $(function(){
@@ -172,6 +173,9 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
                                 }
                             })
                         }
+                    }).on('change', function(){
+                        let value = $(this).val().join(',');
+                        $("[name='{$this->CamposFormato->nombre}']").val(value);
                     });
                 });
             </script>
@@ -189,7 +193,17 @@ HTML;
      */
     public function generateEditionComponente()
     {
-        return $this->generateAditionComponent();
+        $text = $this->generateAditionComponent();
+        $text .= <<<HTML
+            <script>
+                $(function(){
+                    var select = $("#{$this->CamposFormato->nombre}");
+                    var selected = "<?= \$ft['{$this->CamposFormato->nombre}'] ?>";
+                    console.log(selected);
+                });
+            </script>
+HTML;
+        return $text;
     }
 
     /**
