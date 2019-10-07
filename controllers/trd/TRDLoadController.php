@@ -194,23 +194,19 @@ class TRDLoadController
         $existDep = Dependencia::getQueryBuilder()
             ->select('estado,iddependencia')
             ->from('dependencia')
-            ->where('codigo like :codigo_dep')
+            ->where('estado=1 and codigo like :codigo_dep')
             ->setParameter(':codigo_dep', $codDependencia)
             ->execute()->fetchAll();
 
         if ($existDep) {
             $cant = count($existDep);
             if ($cant == 1) {
-                if ($existDep[0]['estado'] == 1) {
-                    return $existDep[0]['iddependencia'];
-                } else {
-                    $this->errorException("La dependencia con codigo {$codDependencia} se encuentra inactiva");
-                }
+                return $existDep[0]['iddependencia'];
             } else {
                 $this->errorException("La dependencia con codigo {$codDependencia} existe {$cant} veces");
             }
         } else {
-            $this->errorException("La dependencia con codigo {$codDependencia} NO existe");
+            $this->errorException("La dependencia con codigo {$codDependencia} NO existe o se encuentra inactiva");
         }
         return false;
     }
@@ -233,6 +229,7 @@ class TRDLoadController
         if (!$idserie) {
             $attributes = [
                 'cod_padre' => 0,
+                'cod_arbol' => 0,
                 'nombre' => $this->row['serie'],
                 'codigo' => $this->row['cod_serie'],
                 'tipo' => 1,
@@ -280,6 +277,7 @@ class TRDLoadController
 
             $attributes = [
                 'cod_padre' => $this->row['idserie'],
+                'cod_arbol' => 0,
                 'nombre' => $this->row['subserie'],
                 'codigo' => $this->row['cod_subserie'],
                 'tipo' => 2,
@@ -363,7 +361,8 @@ class TRDLoadController
             'fk_serie_version' => $this->fk_serie_version,
             'dias_respuesta' => 0,
             'sop_papel' => $this->row['sop_papel'],
-            'sop_electronico' => $this->row['sop_electronico']
+            'sop_electronico' => $this->row['sop_electronico'],
+            'cod_arbol' => 0
         ];
 
         if (!$id = SerieTemp::newRecord($attributes)) {

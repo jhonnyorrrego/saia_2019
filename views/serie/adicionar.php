@@ -49,6 +49,19 @@ $params = json_encode([
                         </select>
                     </div>
 
+                    <div class="form-group form-group-default" id="divPermisoSerie-0" style="display:none">
+                        <label class="pl-1 mb-0 mt-1">¿ADICIONAR PERMISO A TODOS LOS FUNCIONARIOS DE LA DEPENDENCIA?</label>
+
+                        <div class="radio radio-success input-group my-0">
+                            <input type="radio" value="1" name="serie[permiso]" id="SSerie-0">
+                            <label for="SSerie-0">SI</label>
+
+                            <input type="radio" value="0" name="serie[permiso]" id="NSerie-0" checked="true">
+                            <label for="NSerie-0">NO</label>
+                        </div>
+
+                    </div>
+
                     <div class="form-group form-group-default required" style="display:none">
                         <label>Código de la serie:</label>
                         <input name="serie[codigo]" id="codigo_serie-0" type="text" class="form-control">

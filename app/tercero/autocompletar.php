@@ -23,31 +23,26 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    $identificator = !empty($_REQUEST['identificator']) ? $_REQUEST['identificator'] : 'idfuncionario';
-    if (isset($_REQUEST['term'])) {
-        $roles = $_REQUEST['roles'] ?? 0;
+    $users = [];
 
-        if ($roles) {
-            $users = VfuncionarioDc::findAllByTerm($_REQUEST['term'], $identificator);
-        } else {
-            $users = Funcionario::findAllByTerm($_REQUEST['term'], $identificator);
-        }
+    if (isset($_REQUEST['term'])) {
+        $users = Tercero::findAllByTerm($_REQUEST['term']);
     } else if (!empty($_REQUEST['defaultUser'])) {
-        $users[] = new Funcionario($_REQUEST['defaultUser']);
-    } else if (!empty($_REQUEST['documentId'])) {
-        $users = Funcionario::findByDocumentTransfer($_REQUEST['documentId']);
+        $users[] = new Tercero($_REQUEST['defaultUser']);
     }
 
     if ($users) {
         $data = [];
 
-        foreach ($users as $Funcionario) {
-            $id = !empty($_REQUEST['identificator']) ?
-                $Funcionario->__get($identificator) : $Funcionario->getPK();
-
+        foreach ($users as $Tercero) {
+            $label = sprintf(
+                "%s - %s",
+                $Tercero->identificacion,
+                $Tercero->nombre,
+            );
             $data[] = [
-                'id' => $id,
-                'text' => $Funcionario->getName() . " / " . $Funcionario->getName() . " / " . $Funcionario->getName() . " / " . $Funcionario->getName() . " / "
+                'id' => $Tercero->getPK(),
+                'text' => $label
             ];
         }
 

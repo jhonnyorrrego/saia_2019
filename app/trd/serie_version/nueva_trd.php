@@ -25,7 +25,7 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['tipo']) {
+    if (!$tipo = $_REQUEST['tipo']) {
         throw new Exception('Debe indicar una acción', 1);
     }
 
@@ -35,22 +35,24 @@ try {
     $folder = "TRD/version_{$_REQUEST['version']}";
     $urlExcel = false;
 
-    if ($_REQUEST['tipo'] == 1) {
-        $urlExcel = $ruta_db_superior . $_REQUEST['file_trd'];
+    if ($tipo != 3) {
+        if ($tipo == 1) {
+            $urlExcel = $ruta_db_superior . $_REQUEST['file_trd'];
 
-        if (is_file($urlExcel)) {
-            $filename = basename($urlExcel);
-            $route = "{$folder}/trd_{$filename}";
+            if (is_file($urlExcel)) {
+                $filename = basename($urlExcel);
+                $route = "{$folder}/trd_{$filename}";
 
-            $content = file_get_contents($urlExcel);
-            $jsonDB = TemporalController::createFileDbRoute($route, "archivos", $content);
+                $content = file_get_contents($urlExcel);
+                $jsonDB = TemporalController::createFileDbRoute($route, "archivos", $content);
 
-            $dataAditional['archivo_trd'] = $jsonDB;
-        } else {
-            throw new Exception("No se pudo leer el archivo TRD", 1);
+                $dataAditional['archivo_trd'] = $jsonDB;
+            } else {
+                throw new Exception("No se pudo leer el archivo TRD", 1);
+            }
+        } else if (!SerieVersion::existCurrentVersion()) {
+            throw new Exception("No existe una TRD vigente, no se puede clonar", 1);
         }
-    } else if (!SerieVersion::existCurrentVersion()) {
-        throw new Exception("No existe una TRD vigente, no se puede clonar", 1);
     }
 
     if (!empty($_REQUEST['file_anexos'])) {
@@ -77,10 +79,11 @@ try {
 
     try {
         if ($idSerieVersion = SerieVersion::newRecord($attributes)) {
-            if ($_REQUEST['tipo'] == 1) {
+            $Response->message = "Datos Guardados!";
+
+            if ($tipo == 1) {
                 new TRDLoadController($urlExcel, $idSerieVersion);
-                $Response->message = "Datos Guardados!";
-            } else {
+            } else if ($tipo == 2) {
                 new TRDCloneController($idSerieVersion);
                 $Response->message = "Se ha copiado la TRD!";
             }

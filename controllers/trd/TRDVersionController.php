@@ -10,6 +10,7 @@ class TRDVersionController
     protected $documentaryTypes;
     protected $trdData;
     protected $clasificationData;
+    protected $idsClasifications;
 
     protected $SerieVersion;
     protected $serieTable;
@@ -225,10 +226,11 @@ class TRDVersionController
     ) {
         $reference = $subSerie ? $subSerie : $Serie;
 
+        $idsubserie = $subSerie ? $subSerie->getPK() : '';
         $this->trdData[] = [
             'iddependencia' => $Dependencia->getPK(),
             'idserie' => $Serie->getPK(),
-            'idsubserie' => $subSerie ? $subSerie->getPK() : '',
+            'idsubserie' => $idsubserie,
             'idtipo' => $documentaryType->getPK(),
             'dependencia' => $Dependencia->codigo,
             'serie' => $Serie->codigo,
@@ -246,18 +248,25 @@ class TRDVersionController
             'md' => $reference->dis_microfilma ? 'M/D' : '',
             'procedimiento' => $reference->procedimiento
         ];
-        $this->clasificationData[] = [
-            'iddependencia' => $Dependencia->getPK(),
-            'idserie' => $Serie->getPK(),
-            'idsubserie' => $subSerie ? $subSerie->getPK() : '',
-            'No' => count($this->clasificationData),
-            'SiglaDependencia' => $Dependencia->sigla,
-            'codigoDependencia' => $Dependencia->codigo,
-            'CodigoSerie' => $Serie->codigo,
-            'serieDocumental' => $Serie->nombre,
-            'subSerie' => $subSerie ? $subSerie->codigo : '',
-            'subSerieDocumental' => $subSerie ? $subSerie->nombre : ''
-        ];
+
+        $unico = "{$Dependencia->getPK()}.{$Serie->getPK()}.{$idsubserie}";
+        if (!in_array($unico, $this->idsClasifications)) {
+
+            $this->idsClasifications[] = $unico;
+
+            $this->clasificationData[] = [
+                'iddependencia' => $Dependencia->getPK(),
+                'idserie' => $Serie->getPK(),
+                'idsubserie' => $idsubserie,
+                'No' => count($this->clasificationData) + 1,
+                'SiglaDependencia' => $Dependencia->sigla,
+                'codigoDependencia' => $Dependencia->codigo,
+                'CodigoSerie' => $Serie->codigo,
+                'serieDocumental' => $Serie->nombre,
+                'subSerie' => $subSerie ? $subSerie->codigo : '',
+                'subSerieDocumental' => $subSerie ? $subSerie->nombre : ''
+            ];
+        }
     }
 
     /**
@@ -321,7 +330,7 @@ class TRDVersionController
 
         if (!file_exists($dir)) {
             if (!mkdir($dir, PERMISOS_CARPETAS, TRUE)) {
-                return false;
+                throw new Exception("Error al crear la carpeta temporal", 1);
             }
         }
 

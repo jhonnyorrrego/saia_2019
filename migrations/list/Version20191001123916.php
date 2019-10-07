@@ -144,7 +144,7 @@ CAMPOS;
         );
 
         $agrupado_por = <<<AGRUPADO
-       a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,	a.estado_distribucion,	a.estado_recogida,	a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,c.ventanilla_radicacion,d.nombre
+        a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,	a.estado_distribucion,	a.estado_recogida,	a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,c.ventanilla_radicacion,d.nombre
 AGRUPADO;
 
         $this->connection->update(

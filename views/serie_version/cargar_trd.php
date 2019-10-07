@@ -55,6 +55,8 @@ $params = json_encode([
                             <label class="d-block d-md-inline-block mb-0" for="cargar_trd">Cargar TRD</label>
                             <input type="radio" value="2" name="tipo" id="clonar_trd">
                             <label class="d-block d-md-inline-block mb-0" for="clonar_trd">Clonar TRD</label>
+                            <input type="radio" value="3" name="tipo" id="manual_trd">
+                            <label class="d-block d-md-inline-block mb-0" for="manual_trd">Carga Manual TRD</label>
                         </div>
                     </div>
 
@@ -65,7 +67,7 @@ $params = json_encode([
                     </div>
 
                     <div class="form-group form-group-default">
-                        <label>Anexo:</label>
+                        <label>Soporte:</label>
                         <div id="file_anexos"></div>
                         <input type="hidden" name="file_anexos">
                     </div>

@@ -59,8 +59,10 @@ try {
     if (!is_file($relativeRoute)) {
         throw new Exception("Error Processing Request", 1);
     }
+    if ($rows = json_decode(file_get_contents($relativeRoute))) {
+        $Response->rows = $rows;
+    }
 
-    $Response->rows = json_decode(file_get_contents($relativeRoute));
     $Response->success = 1;
 } catch (Throwable $th) {
     $Response->message = $th->getMessage();
