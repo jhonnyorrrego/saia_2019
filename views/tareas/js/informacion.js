@@ -63,8 +63,9 @@ $(function() {
             .format('YYYY-MM-DD HH:mm:ss');
 
         data = {
-            task: params.id || 0,
             key: localStorage.getItem('key'),
+            token: localStorage.getItem('token'),
+            task: params.id || 0,
             name: $('#name').val(),
             managers: $('#manager').val(),
             notification: $('#send_notification').is(':checked') ? 1 : 0,

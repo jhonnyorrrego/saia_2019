@@ -1,4 +1,5 @@
 <?php
+
 use Firebase\JWT\JWT;
 
 class JwtController
@@ -51,20 +52,20 @@ class JwtController
         );
 
         if ($decode->data->web_service) {
-            $access =
+            $fail =
                 empty($decode->aud) ||
                 $decode->data->id != $userId;
             $Funcionario = new Funcionario($decode->data->id);
             new SessionController($Funcionario);
         } else {
-            $access =
+            $fail =
                 $decode->aud !== self::Aud() ||
                 $decode->data->id != $userId ||
                 $decode->data->id != SessionController::hasActiveSession() ||
                 !LogAcceso::checkActiveToken($token);
         }
 
-        if ($access) {
+        if ($fail) {
             if ($logout) {
                 SessionController::logout("Debe iniciar sesión");
             } else {

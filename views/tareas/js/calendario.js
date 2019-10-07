@@ -101,6 +101,7 @@ $(function() {
                 initialDate: initialTime,
                 finalDate: finalTime,
                 key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
                 task: event.id
             },
             function(response) {
