@@ -154,9 +154,11 @@ echo select2();
                     var mensajeroDistribucion = [];
 
                     try {
+
                         // verifica si los items tienen ruta o mensajero asignado para proceder con la generacion de planilla de distribucion
                         registros_seleccionados.forEach(function(item, index, array) {
-                            if (($('#selMensajeros' + item).val() != null) && ($('#selMensajeros' + item).val() != null)) {
+                            console.log($('#selMensajeros' + item).val());
+                            if (($('#selMensajeros' + item).val() != "") && ($('#selMensajeros' + item).val() != null)) {
                                 idruta_dist.push($('#ruta' + item).val());
                                 mensajeroDistribucion.push($('#selMensajeros' + item).val());
                             } else {
