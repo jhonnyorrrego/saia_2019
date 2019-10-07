@@ -5,7 +5,7 @@ $(function() {
         legal: 2,
         both: 3
     };
-
+    console.log(params);
     $('#toggle_advanced').on('click', function() {
         $('#advanced').toggleClass('d-none');
 
@@ -163,6 +163,83 @@ $(function() {
         $(`[name='tipo'][value='${scopes.natural}']`)
             .prop('checked', true)
             .trigger('change');
+
+        if (+params.id) {
+            findData();
+        }
+    }
+
+    function findData() {
+        $.post(
+            `${params.baseUrl}app/tercero/consulta.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: params.id
+            },
+            function(response) {
+                if (response.success) {
+                    putValues(response.data);
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    }
+
+    function putValues(data) {
+        for (let name in data) {
+            if (!data[name]) {
+                continue;
+            }
+
+            switch (name) {
+                case 'tipo_identificacion':
+                    $(`[name="tipo_identificacion"]`)
+                        .val(data[name])
+                        .trigger('change');
+                    break;
+                case 'ciudad':
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
+                        data: {
+                            default: data[name],
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token')
+                        },
+                        success: function(response) {
+                            var option = new Option(
+                                response.data.text,
+                                response.data.id,
+                                true,
+                                true
+                            );
+                            $(`[name="ciudad"]`)
+                                .append(option)
+                                .trigger('change');
+                        }
+                    });
+                    break;
+                case 'tipo':
+                    $(`[name="tipo"][value="${data[name]}"]`)
+                        .attr('checked', true)
+                        .trigger('change');
+                    break;
+                default:
+                    let e = $(`[name="${name}"]`);
+
+                    if (e.length) {
+                        e.val(data[name]).trigger('change');
+                    }
+                    break;
+            }
+        }
     }
 
     function generateType(field) {

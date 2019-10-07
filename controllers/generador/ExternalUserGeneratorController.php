@@ -149,34 +149,55 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
                         if(data.showModal){
                             e.preventDefault();
 
-                            top.topModal({
-                                url: 'views/tercero/formulario.php',
-                                params: {
-                                    fieldId : {$this->CamposFormato->getPK()},
-                                }, //parametros a enviar a url
-                                title: 'Tercero', //titulo
-                                buttons: {
-                                    success: {
-                                        label: 'Enviar',
-                                        class: 'btn btn-complete'
-                                    },
-                                    cancel: {
-                                        label: 'Cerrar',
-                                        class: 'btn btn-danger'
-                                    }
-                                },
-                                onSuccess: function(data) {
-                                    select.select2('close');
-                                    var option = new Option(data.text, data.id, true, true);
-                                    select.append(option).trigger('change');
-                                    top.closeTopModal();
-                                }
-                            })
+                            openModal();
                         }
                     }).on('change', function(){
                         let value = $(this).val().join(',');
                         $("[name='{$this->CamposFormato->nombre}']").val(value);
                     });
+
+                    $(document)
+                        .off('click', '.select2-selection__choice')
+                        .on('click', '.select2-selection__choice', function (e){
+                            if($(e.target).hasClass('select2-selection__choice__remove')){
+                                return;
+                            }
+
+                            let title = $(this).attr('title');
+                            let item = select.select2('data').find(i => i.text == title);
+                            openModal(item, $(this));
+                        });
+
+                    function openModal(item = 0, selectedNode = null){
+                        top.topModal({
+                            url: 'views/tercero/formulario.php',
+                            params: {
+                                fieldId : {$this->CamposFormato->getPK()},
+                                id: item.id
+                            },
+                            title: 'Tercero',
+                            buttons: {
+                                success: {
+                                    label: 'Enviar',
+                                    class: 'btn btn-complete'
+                                },
+                                cancel: {
+                                    label: 'Cerrar',
+                                    class: 'btn btn-danger'
+                                }
+                            },
+                            onSuccess: function(data) {                                
+                                if(selectedNode){
+                                    selectedNode.find('span').trigger('click');
+                                }
+
+                                select.select2('close');
+                                var option = new Option(data.text, data.id, true, true);
+                                select.append(option).trigger('change');
+                                top.closeTopModal();
+                            }
+                        });
+                    }
                 });
             </script>
 HTML;
@@ -198,8 +219,28 @@ HTML;
             <script>
                 $(function(){
                     var select = $("#{$this->CamposFormato->nombre}");
-                    var selected = "<?= \$ft['{$this->CamposFormato->nombre}'] ?>";
-                    console.log(selected);
+                    var selected = "<?= \$ft['{$this->CamposFormato->nombre}'] ?>".split(',');
+                    
+                    selected.forEach(id => {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '<?= \$ruta_db_superior ?>app/tercero/autocompletar.php',
+                            data: {
+                                defaultUser: id,
+                                key: localStorage.getItem('key'),
+                                token: localStorage.getItem('token')
+                            },
+                            success: function(response) {
+                                response.data.forEach(u => {
+                                    var option = new Option(u.text, u.id, true, true);
+                                    select
+                                        .append(option)
+                                        .trigger('change');
+                                });
+                            }
+                        });
+                    })
                 });
             </script>
 HTML;
