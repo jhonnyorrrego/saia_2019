@@ -223,9 +223,18 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
 
 function obtener_tipo_recorrido($idformato, $iddoc)
 {
-    $resultado = "Matutino";
-    if ('2' == 2) {
-        $resultado = "Vespertina";
+    $resultado = 'Matutino';
+
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('tipo_recorrido')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    if ($planilla[0]['tipo_recorrido'] == 2) {
+        $resultado = 'Vespertino';
     }
     echo $resultado;
 }
@@ -240,6 +249,43 @@ function obtener_tipo_recorrido($idformato, $iddoc)
  */
 function post_generar_planilla()
 {
+    $iddestino_radicacion = explode(',', $_REQUEST['iddestino_radicacion']);
+    $Distribucion = new Distribucion($iddestino_radicacion[0]);
+
+    if ($Distribucion->entre_sedes) {
+        $idSedeDestino = $Distribucion->sede_destino;
+        $query = Model::getQueryBuilder();
+        $cf_ventanilla = $query
+            ->select('idfuncionario')
+            ->from('cf_ventanilla')
+            ->where('idcf_ventanilla = :id')
+            ->setParameter(':id', $idSedeDestino, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
+        $origenEntreSedes = $cf_ventanilla[0]['idfuncionario'];
+
+        foreach ($iddestino_radicacion as $iddestino) {
+            $Distribucion = new Distribucion($iddestino);
+            $camposDistribucion = [
+                'origen' => $origenEntreSedes,
+                'tipo_origen' => 1,
+                'ruta_origen' => $Distribucion->ruta_origen,
+                'mensajero_origen' => $Distribucion->mensajero_destino,
+                'destino' => $Distribucion->destino,
+                'tipo_destino' => $Distribucion->tipo_destino,
+                'ruta_destino' => $Distribucion->ruta_destino,
+                'mensajero_destino' => $Distribucion->mensajero_destino,
+                'numero_distribucion' => $Distribucion->numero_distribucion,
+                'estado_distribucion' => 0,
+                'estado_recogida' => $Distribucion->estado_recogida,
+                'documento_iddocumento' => $Distribucion->documento_iddocumento,
+                'fecha_creacion' => $Distribucion->fecha_creacion,
+                'sede_origen' => $Distribucion->sede_destino,
+                'sede_destino' => 0,
+                'entre_sedes' => 0
+            ];
+            $Distribucion::newRecord($camposDistribucion);
+        }
+    }
     echo jquery();
     echo <<<HTML
     <script>
@@ -252,4 +298,51 @@ function post_generar_planilla()
         frameWindow.refreshGrid();        
     </script>
 HTML;
+}
+
+/** Funcion para crear un hidden en el adicionar de la planilla de distribucion con el id de la sede destino.
+ *  si no se encuentra la opcion entre sedes el valor por defecto sera 0
+ * @param void
+ * @return string Un html con el componente hidden para guardar el valor del REQUEST.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-07
+ */
+function sede_destino()
+{
+    echo "<input type='hidden' name='sede_destino' value='{$_REQUEST['sede_destino']}'>";
+}
+
+/** Funcion que muestra la sede destino en el mostrar de la planilla de distribucion solo si esta tiene la opcion entre sedes
+ * @param $idformato Identificador del formato
+ * @param $iddoc Identificador del documento
+ * @return string Un html con el titulo 'Sede destino: ' y el nombre de la sede destino.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-07
+ */
+
+function mostrar_destino_entre_sedes($idformato, $iddoc)
+{
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('sede_destino')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $query = Model::getQueryBuilder();
+    $nombreSedeDestino = $query
+        ->select('nombre', 'idcf_ventanilla')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $planilla[0]['sede_destino'], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $retorno = "";
+    if ($planilla[0]['sede_destino'] != 0) {
+        $retorno = "<b>Sede destino:</b> {$nombreSedeDestino[0]['nombre']}";
+    }
+
+    echo $retorno;
 }

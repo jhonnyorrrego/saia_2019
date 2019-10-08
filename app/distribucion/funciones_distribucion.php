@@ -487,6 +487,8 @@ function obtenerRuta($iddistribucion)
  */
 function select_mensajeros_ruta_distribucion($iddistribucion)
 {
+    $Distribucion = new Distribucion($iddistribucion);
+
     $rutasDistribucion = obtenerRuta($iddistribucion);
     $ruta = $rutasDistribucion[0]['idft_ruta_distribucion'];
     $html = "<select id='selMensajeros{$iddistribucion}' class='selMensajeros' style='width:150px' >";
@@ -498,12 +500,14 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
         ->andWhere("ft_ruta_distribucion = :ruta")
         ->setParameter(":ruta", $ruta, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
-    foreach ($mensajeros as $key => $ruta) {
-        $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
-        $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+
+    if ($Distribucion->entre_sedes == 0) {
+        foreach ($mensajeros as $key => $ruta) {
+            $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
+            $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+        }
     }
 
-    $Distribucion = new Distribucion($iddistribucion);
     if ($Distribucion->entre_sedes == 1) {
         $VfuncionarioDc = new VfuncionarioDc($Distribucion->mensajero_destino);
         $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
@@ -904,7 +908,7 @@ function obtener_sede_origen($iddistribucion)
  * Retorna la sede de destino del documento en el reporte de distribución 
  *
  * @param [integer] $iddistribucion
- * @return string retorna el nombre de la sede de destino
+ * @return string retorno Nos entrega el nombre de la sede de destino dentro de un div que contiene un data-param con el id de la sede para enviar al adicionar generar planilla
  * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
  * @date 2019-09-27
  */
@@ -912,18 +916,19 @@ function obtener_sede_destino($iddistribucion)
 {
     $Distribucion = new Distribucion($iddistribucion);
     $sedeDestino = $Distribucion->sede_destino;
+
     $query = Model::getQueryBuilder();
     $nombreSedeDestino = $query
-        ->select('nombre')
+        ->select('nombre', 'idcf_ventanilla')
         ->from('cf_ventanilla')
         ->where('estado=1')
         ->andWhere('idcf_ventanilla = :idSede')
         ->setParameter(':idSede', $sedeDestino, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
 
-    return $nombreSedeDestino[0]['nombre'];
+    $retorno = "<div id='sedeDestino{$iddistribucion}' data-idsede='{$nombreSedeDestino[0]['idcf_ventanilla']}' > {$nombreSedeDestino[0]['nombre']} </div>";
+    return $retorno;
 }
-
 /**
  * Esta funcion obtiene el asunto desde  ft_radicacion_entrada para que el asunto llegue limpio sin 'ASUNTO:' ya que para el reporte de distribución es redundante incluirlo.
  *
@@ -989,22 +994,41 @@ function obtener_mensajero($idMensajero)
 
 /**
  * Retorna el nombre de recorrido en una planilla de distribucion (Matutino, Vespertina)
- *
+
  * @param [integer] $idft_despacho_ingresados
- * @param [type] $iddoc
- * @return void
+ * @return string Retorna el nombre del recorrido de la planilla de distribucion
+ * * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
  */
-function obtener_tipo_recorrido($idft_despacho_ingresados)
+
+function obtener_tipo_recorrido($iddoc)
 {
-    $resultado = "Matutino";
-    if ($resultado == 2) {
-        $resultado = "Vespertina";
+    $resultado = 'Matutino';
+
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('tipo_recorrido')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    if ($planilla[0]['tipo_recorrido'] == 2) {
+        $resultado = 'Vespertino';
     }
     return $resultado;
 }
+/**
+ * Esta funcion obtiene las distribuciones que se encuentran en la planilla de distribucion
+ * NOTA : SE DEJA EN ESPERA, HASTA DEFINIR CON LUZ MOLINA COMO SE DEBE VISUALIZAR.
 
-function obtener_distribucion($idft_despacho_ingresados)
+ * @param [integer] $idft_despacho_ingresados
+ * @return string los numeros de radicados de sus distribuciones.
+ * * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
+ */
+
+function obtener_distribucion($iddoc)
 {
     return '*';
 }
-

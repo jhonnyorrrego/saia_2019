@@ -112,7 +112,7 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
 <input type='hidden' name='tipo_mensajero' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                tipo_mensajero
+                'tipo_mensajero'
             ) ?>'>
         <div class='form-group form-group-default ' id='group_anexo'>
             <label title=''>ANEXO</label>
@@ -195,12 +195,12 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
 <input type='hidden' name='iddestino_radicacion' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                iddestino_radicacion
+                'iddestino_radicacion'
             ) ?>'>
 <input type='hidden' name='estado_documento' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                estado_documento
+                'estado_documento'
             ) ?>'>
 
         <div class='form-group form-group-default required' id='group_tipo_recorrido'>
@@ -275,39 +275,40 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
 <input type='hidden' name='docs_seleccionados' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                docs_seleccionados
+                'docs_seleccionados'
             ) ?>'>
 <input type='hidden' name='idft_despacho_ingresados' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                idft_despacho_ingresados
+                'idft_despacho_ingresados'
             ) ?>'>
 <input type='hidden' name='mensajero' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                mensajero
+                'mensajero'
             ) ?>'>
 <input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                documento_iddocumento
+                'documento_iddocumento'
             ) ?>'>
 <input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                encabezado
+                'encabezado'
             ) ?>'>
 <input type='hidden' name='fecha_entrega' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                fecha_entrega
+                'fecha_entrega'
             ) ?>'>
+<?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
 <input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(
                 353,
                 $_REQUEST['iddoc'],
-                firma
+                'firma'
             ) ?>'>
-<?php campos_ocultos_entrega(353, $_REQUEST['iddoc']) ?>
+<?php sede_destino(353, $_REQUEST['iddoc']) ?>
 <input type='hidden' name='campo_descripcion' value='4080'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
 <input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>
