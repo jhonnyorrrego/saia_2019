@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)array(
+$Response = (object) array(
     'data' => [],
     'message' => "",
     'success' => 1,
@@ -28,7 +28,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     foreach ($data as $key => $Funcionario) {
         $data[$key] = [
             'image' => $Funcionario->getImage('foto_recorte'),
-            'label' => $Funcionario->getName() . ' - ' . $Funcionario->getLogin(),
+            'label' => $Funcionario->getName() . ' - ' . $Funcionario->login,
             'user'  => $Funcionario->getPK()
         ];
     }

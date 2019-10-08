@@ -5,7 +5,7 @@ $(function() {
         legal: 2,
         both: 3
     };
-    console.log(params);
+
     $('#toggle_advanced').on('click', function() {
         $('#advanced').toggleClass('d-none');
 
@@ -139,25 +139,29 @@ $(function() {
 
         if ($('#ciudad').length) {
             var select = $('#ciudad');
-            select.select2({
-                minimumInputLength: 3,
-                language: 'es',
-                ajax: {
-                    url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
-                    dataType: 'json',
-                    delay: 200,
-                    data: function(params) {
-                        return {
-                            term: params.term,
-                            key: localStorage.getItem('key'),
-                            token: localStorage.getItem('token')
-                        };
-                    },
-                    processResults: function(response) {
-                        return { results: response.data };
+            select
+                .select2({
+                    minimumInputLength: 3,
+                    language: 'es',
+                    ajax: {
+                        url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
+                        dataType: 'json',
+                        delay: 200,
+                        data: function(params) {
+                            return {
+                                term: params.term,
+                                key: localStorage.getItem('key'),
+                                token: localStorage.getItem('token')
+                            };
+                        },
+                        processResults: function(response) {
+                            return { results: response.data };
+                        }
                     }
-                }
-            });
+                })
+                .on('select2:selecting', function(e) {
+                    select.val(null).trigger('change');
+                });
         }
 
         $(`[name='tipo'][value='${scopes.natural}']`)
@@ -215,8 +219,8 @@ $(function() {
                         },
                         success: function(response) {
                             var option = new Option(
-                                response.data.text,
-                                response.data.id,
+                                response.data[0].text,
+                                response.data[0].id,
                                 true,
                                 true
                             );

@@ -114,12 +114,19 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
     {
         $requiredClass = $this->getRequiredClass();
         $options = json_decode($this->CamposFormato->opciones);
-        $multiple = $options->tipo == 'multiple' ? 'multiple="multiple"' : '';
+
+        if ($options->tipo != 'multiple') {
+            $unique = <<<JS
+                select.val(null).trigger('change');
+JS;
+        } else {
+            $unique = "";
+        }
 
         $content = <<<HTML
             <div class='form-group form-group-default form-group-default-select2 {$requiredClass}' id='group_{$this->CamposFormato->nombre}'>
                 <label title='{$this->CamposFormato->ayuda}'>{$this->getLabel()}</label>
-                <select class="full-width" id='{$this->CamposFormato->nombre}' {$requiredClass} {$multiple}></select>
+                <select class="full-width" id='{$this->CamposFormato->nombre}' multiple="multiple" {$requiredClass} ></select>
                 <input type="hidden" name="{$this->CamposFormato->nombre}">
             </div>
             <script>
@@ -144,6 +151,7 @@ class ExternalUserGeneratorController extends ComponentFormGeneratorController i
                             }
                         }                        
                     }).on('select2:selecting', function (e) {
+                        {$unique}
                         let data = e.params.args.data;
 
                         if(data.showModal){
