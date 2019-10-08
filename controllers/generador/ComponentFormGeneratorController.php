@@ -142,7 +142,7 @@ class ComponentFormGeneratorController
         $value = implode(',', $descriptions);
 
         if ($Formato->detalle) {
-            $response[] = "<input type='hidden' name='padre' value='<?= \$_REQUEST['padre'] ?>'>";
+            $Parent = $Formato->getParent();
             $response[] = "<input type='hidden' name='anterior' value='<?= \$_REQUEST['anterior'] ?>'>";
         }
 

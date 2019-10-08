@@ -365,9 +365,25 @@ function fancyTree($filtro = false)
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/skin-lion/ui.fancytree.min.css';
-    $customCss = $ruta_db_superior . 'views/arbol/css/arbol.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
-    $css .= '<link class="main-stylesheet" href="' . $customCss . '" rel="stylesheet" type="text/css" />';
+    $css .= '<style>
+        ul.fancytree-container {           
+            overflow: auto;
+            position: relative;
+            border: none !important;
+            outline: none !important;
+        }
+        span.fancytree-title {
+            font-family: verdana;
+            font-size: 7pt;
+        }
+        span.fancytree-checkbox.fancytree-radio {
+            vertical-align: middle;
+        }
+        span.fancytree-expander {
+            vertical-align: middle !important;
+        }
+    </style>';
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/2.30.0/jquery.fancytree.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';

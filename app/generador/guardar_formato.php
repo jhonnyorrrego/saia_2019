@@ -72,8 +72,10 @@ try {
         $data->tipo_edicion = 0;
     }
 
+    $data->fecha = $data->fecha ?? date('Y-m-d H:i:s');
     $data->mostrar_pdf = $data->mostrar_pdf ?? 0;
     $data->cod_padre = $data->cod_padre ? $data->cod_padre : 0;
+    $data->detalle = $data->cod_padre ? 1 : 0;
     $data->firma_digital = $data->firma_digital ? (int) $data->firma_digital : 0;
     $data->mostrar_tipodoc_pdf = $data->mostrar_tipodoc_pdf ? $data->mostrar_tipodoc_pdf : 0;
 

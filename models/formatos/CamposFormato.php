@@ -312,7 +312,7 @@ class CamposFormato extends Model
             'valor' => $Parent->getPK(),
             'banderas' => 'i',
             'acciones' => 'a,e',
-            'etiqueta_html' => 'hidden'
+            'etiqueta_html' => 'funcion'
         ]);
     }
 }

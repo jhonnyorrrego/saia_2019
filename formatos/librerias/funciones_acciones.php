@@ -231,16 +231,10 @@ function ejecutar_acciones_formato($iddoc = NULL, $idformato = NULL, $listado_fu
 function llama_funcion_accion($iddoc = NULL, $idformato = NULL, $accion = NULL, $momento = NULL)
 {
 	$listado_acciones = listar_acciones_formato($idformato, $accion, $momento);
-	if ($listado_acciones != "") {
+	if ($listado_acciones) {
 		ejecutar_acciones_formato($iddoc, $idformato, $listado_acciones);
 	}
 }
-
-function fecha_formato($iddoc = NULL, $idformato = NULL)
-{
-	//  
-}
-
 
 function digitalizar_formato($idformato, $iddoc)
 {

@@ -17,9 +17,13 @@ class FunctionGeneratorController extends ComponentFormGeneratorController imple
     public function generateAditionComponent()
     {
         if (in_array($this->CamposFormato->nombre, $this->Formato->getSystemFields())) {
+            $parentField = $this->Formato->getParent() ? $this->Formato->getParent()->nombre_tabla : null;
             switch ($this->CamposFormato->nombre) {
                 case 'dependencia':
                     $response = $this->generateDependencie();
+                    break;
+                case $parentField:
+                    $response = $this->generateParentField($parentField);
                     break;
 
                 default:
@@ -63,6 +67,12 @@ class FunctionGeneratorController extends ComponentFormGeneratorController imple
     public static function showValue($CamposFormato, $documentId)
     {
         return parent::showValue($CamposFormato, $documentId);
+    }
+
+    public function generateParentField($parentField)
+    {
+        $value = $this->scope == self::SCOPE_ADD ? "<?= \$_REQUEST['padre'] ?>" : "<?= \$ft['{$parentField}'] ?>";
+        return "<input type='hidden' name='{$this->CamposFormato->nombre}' value='{$value}'>";
     }
 
     /**
