@@ -96,7 +96,6 @@ class GuardarFtController
             throw new Exception("Error al guardar el documento", 1);
         }
 
-        registrar_accion_digitalizacion($this->Documento->getPK(), 'CREACION DOCUMENTO');
         llama_funcion_accion($this->Documento->getPK(), $this->formatId, "radicar", "POSTERIOR");
 
         if (array_key_exists("anterior", $data)) {
@@ -207,8 +206,6 @@ class GuardarFtController
 
                 if (is_array($data[$field])) {
                     $data[$field] = implode(',', $data[$CamposFormato->nombre]);
-                } else if ($CamposFormato->valor == "{*form_ejecutor*}") {
-                    $data[$field] = ejecutoradd($data[$CamposFormato->nombre]);
                 } else if ($CamposFormato->etiqueta_html == 'archivo') {
                     $routes = explode(',', $data[$CamposFormato->nombre]);
 
@@ -238,7 +235,6 @@ class GuardarFtController
         }
 
         if (!$edit) { //adicionar
-
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "adicionar", "ANTERIOR");
 
             $QueryBuilder->insert($this->Formato->nombre_tabla);
@@ -252,7 +248,72 @@ class GuardarFtController
                 $this->saveFiles($fieldFiles);
             }
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "adicionar", "POSTERIOR");
-            generar_ruta_documento($this->formatId, $this->Documento->getPK());
+
+            $diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $this->Documento->getPK(), '');
+            if ($diagram_instance["numcampos"]) {
+                $listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "");
+                $ruta = array();
+                // pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
+                for ($i = 0; $i < $listado_pasos["numcampos"]; $i++) {
+                    array_push($ruta, array(
+                        "funcionario" => -1,
+                        "tipo_firma" => 1,
+                        "paso_actividad" => $listado_pasos[$i]["idpaso_actividad"]
+                    ));
+                }
+                if (count($ruta)) {
+                    insertar_ruta($ruta, $this->Documento->getPK(), 0);
+                }
+            } else {
+                $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $this->formatId, "orden");
+                $rut = array();
+                for ($i = 0; $i < $dato["numcampos"]; $i++) {
+                    $funcionario = "";
+                    if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 1) {
+                        $funcionario = $dato[$i]["llave"];
+                    } else if ($dato[$i]["entidad"] == 2 && $dato[$i]["tipo_campo"] == 1) {
+                        $cargo = busca_filtro_tabla("", "cargo a, dependencia_cargo b, funcionario c", "idcargo=" . $dato[$i]["llave"] . " and cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and b.estado=1", "");
+                        $funcionario = $cargo[0]["funcionario_codigo"];
+                    } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 1) {
+                        $funcionario_temp = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $dato[$i]["llave"], "");
+                        if ($funcionario_temp["numcampos"]) {
+                            if ($funcionario_temp[0]["estado_dc"] && $funcionario_temp[0]["estado"]) {
+                                $funcionario = $funcionario_temp[0]["funcionario_codigo"];
+                            } else {
+                                $funcionario_temp2 = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia=" . $funcionario_temp[0]["iddependencia"] . " AND idcargo=" . $funcionario_temp[0]["idcargo"] . " AND estado_dc=1 AND estado=1", "");
+                                if ($funcionario_temp2["numcampos"]) {
+                                    $funcionario = $funcionario_temp2[0]["funcionario_codigo"];
+                                }
+                            }
+                        }
+                    } else if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 2) {
+                        $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+                        $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $this->Documento->getPK(), "");
+                        $funcionario = $datos[0][$formato[0]["nom_campo"]];
+                    } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 2) {
+                        $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
+                        $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $this->Documento->getPK(), "");
+                        $funcionario_codigo = busca_filtro_tabla("B.funcionario_codigo", "dependencia_cargo A, funcionario B", "A.iddependencia_cargo=" . $datos[0][$formato[0]["nom_campo"]] . " AND A.funcionario_idfuncionario=B.idfuncionario", "");
+                        $funcionario = $funcionario_codigo[0]["funcionario_codigo"];
+                    } else if ($dato[$i]["tipo_campo"] == 3) {
+                        include_once($ruta_db_superior . $dato[$i]["ruta"]);
+                        $funcionario = call_user_func_array($dato[$i]["funcion"], array(
+                            $this->formatId,
+                            $this->Documento->getPK()
+                        ));
+                    }
+                    if ($i == 0 && $funcionario == SessionController::getValue('usuario_actual'))
+                        continue;
+                    if ($funcionario != '') {
+                        array_push($rut, array(
+                            "funcionario" => $funcionario,
+                            "tipo_firma" => $dato[$i]["firma"]
+                        ));
+                    }
+                }
+                if ($dato["numcampos"])
+                    insertar_ruta($rut, $this->Documento->getPK());
+            }
         } else { // editar
             llama_funcion_accion($this->Documento->getPK(), $this->formatId, "editar", "ANTERIOR");
 
