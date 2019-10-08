@@ -1,8 +1,6 @@
 <?php
 
-
 use \Doctrine\DBAL\Types\Type;
-
 
 class Expediente extends LogModel
 {
@@ -38,18 +36,6 @@ class Expediente extends LogModel
     protected $fk_caja;
 
     protected $estado;
-
-    // public $permiso;
-    // protected $fondo;
-    // protected $proceso;    
-    // protected $no_unidad_conservacion;
-    // protected $no_folios;
-    // protected $no_carpeta;
-    // protected $soporte;
-    // protected $frecuencia_consulta;
-    // protected $fecha_cierre;
-    // protected $funcionario_cierre;
-    // protected $notas_transf;
 
     public function __construct($id = null)
     {
@@ -95,8 +81,7 @@ class Expediente extends LogModel
         ];
     }
 
-
-    protected function afterCreate()
+    public function afterCreate()
     {
         parent::afterCreate();
 
@@ -188,10 +173,64 @@ class Expediente extends LogModel
         return $retorno;
     }
 
+    /**
+     * obtiene los datos del expediente
+     * utilizados para el front
+     *
+     * @param integer $id
+     * @return array
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function getDataId(int $id): array
+    {
+        return ($data = self::getAllData(['idexpediente' => $id]))
+            ? $data[0] : [];
+    }
 
+    /**
+     * obtiene todos los datos de los expedientes
+     * utilizado para el front
+     *
+     * @param array $conditions
+     * @param integer $offset
+     * @param integer $limit
+     * @return array
+     * @author Andres Agudelo <andres.agudelo@cerok.com>
+     * @date 2019
+     */
+    public static function getAllData(
+        array $conditions = [],
+        int $offset = null,
+        int $limit = null
+    ): array {
 
+        $fields = [
+            'v.idexpediente',
+            'v.expediente',
+            'v.fecha',
+            'v.nom_estado_archivo',
+            'v.estado_cierre',
+            'v.nom_estado_cierre',
+            'v.nombre_responsable',
+            'v.nombre_creador',
+            'v.descripcion',
+            'v.tomo_no'
+        ];
 
+        $QueryBuilder = self::getQueryBuilder()
+            ->select($fields)
+            ->from('vexpedientes', 'v');
 
+        $QueryBuilder = self::callBuilderMethod($conditions, $QueryBuilder, 'andWhere');
+
+        if ($limit) {
+            $QueryBuilder
+                ->setFirstResult($offset)
+                ->setMaxResults($limit);
+        }
+        return $QueryBuilder->execute()->fetchAll() ?? [];
+    }
 
 
 
@@ -206,7 +245,7 @@ class Expediente extends LogModel
      * @return void
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    protected function afterDelete()
+    public function afterDelete()
     {
         $ExpedienteDoc = ExpedienteDoc::findAllByAttributes(['fk_expediente' => $this->getPK()]);
         if ($ExpedienteDoc) {

@@ -550,7 +550,7 @@ abstract class Model
      * @return array
      */
     public final function getData(
-        $conditions = [],
+        array $conditions = [],
         $fields = null,
         $order = null,
         $offset = null,

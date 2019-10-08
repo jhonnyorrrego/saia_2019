@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'core/autoload.php';
+UtilitiesController::defaultHeaderCors();
 
 $Response = (object) [
     'data' => [],
@@ -21,7 +22,7 @@ $Response = (object) [
 ];
 
 try {
-    //JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
     $data = [];
     $query = SerieDependencia::getQueryBuilder()
@@ -48,6 +49,4 @@ try {
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();
 }
-
-header('Access-Control-Allow-Origin: *');
 echo json_encode($Response);
