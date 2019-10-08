@@ -144,7 +144,7 @@ $(function() {
 
     function defaultUser(userId) {
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             url: `${baseUrl}app/funcionario/autocompletar.php`,
             data: {

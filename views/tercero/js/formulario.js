@@ -139,30 +139,111 @@ $(function() {
 
         if ($('#ciudad').length) {
             var select = $('#ciudad');
-            select.select2({
-                minimumInputLength: 3,
-                language: 'es',
-                ajax: {
-                    url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
-                    dataType: 'json',
-                    delay: 200,
-                    data: function(params) {
-                        return {
-                            term: params.term,
-                            key: localStorage.getItem('key'),
-                            token: localStorage.getItem('token')
-                        };
-                    },
-                    processResults: function(response) {
-                        return { results: response.data };
+            select
+                .select2({
+                    minimumInputLength: 3,
+                    language: 'es',
+                    ajax: {
+                        url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
+                        dataType: 'json',
+                        delay: 200,
+                        data: function(params) {
+                            return {
+                                term: params.term,
+                                key: localStorage.getItem('key'),
+                                token: localStorage.getItem('token')
+                            };
+                        },
+                        processResults: function(response) {
+                            return { results: response.data };
+                        }
                     }
-                }
-            });
+                })
+                .on('select2:selecting', function(e) {
+                    select.val(null).trigger('change');
+                });
         }
 
         $(`[name='tipo'][value='${scopes.natural}']`)
             .prop('checked', true)
             .trigger('change');
+
+        if (+params.id) {
+            findData();
+        }
+    }
+
+    function findData() {
+        $.post(
+            `${params.baseUrl}app/tercero/consulta.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                userId: params.id
+            },
+            function(response) {
+                if (response.success) {
+                    putValues(response.data);
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
+    }
+
+    function putValues(data) {
+        for (let name in data) {
+            if (!data[name]) {
+                continue;
+            }
+
+            switch (name) {
+                case 'tipo_identificacion':
+                    $(`[name="tipo_identificacion"]`)
+                        .val(data[name])
+                        .trigger('change');
+                    break;
+                case 'ciudad':
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: `${params.baseUrl}app/configuracion/autocompletar_municipios.php`,
+                        data: {
+                            default: data[name],
+                            key: localStorage.getItem('key'),
+                            token: localStorage.getItem('token')
+                        },
+                        success: function(response) {
+                            var option = new Option(
+                                response.data[0].text,
+                                response.data[0].id,
+                                true,
+                                true
+                            );
+                            $(`[name="ciudad"]`)
+                                .append(option)
+                                .trigger('change');
+                        }
+                    });
+                    break;
+                case 'tipo':
+                    $(`[name="tipo"][value="${data[name]}"]`)
+                        .attr('checked', true)
+                        .trigger('change');
+                    break;
+                default:
+                    let e = $(`[name="${name}"]`);
+
+                    if (e.length) {
+                        e.val(data[name]).trigger('change');
+                    }
+                    break;
+            }
+        }
     }
 
     function generateType(field) {

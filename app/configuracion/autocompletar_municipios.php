@@ -23,12 +23,32 @@ $Response = (object) [
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['term']) {
-        throw new Exception("Debe indicar el término de búsqueda", 1);
-    }
-
-    $results = Model::getQueryBuilder()
-        ->select("
+    if ($_REQUEST['term']) {
+        $results = Model::getQueryBuilder()
+            ->select("
+                CONCAT(a.nombre,
+                    CONCAT(
+                        ' - ',
+                        CONCAT(
+                            b.nombre,
+                            CONCAT(
+                                ' - ',
+                                c.nombre   
+                            )
+                        )
+                    )
+                ) AS text
+            ", "a.idmunicipio as id")
+            ->from('municipio', 'a')
+            ->join('a', 'departamento', 'b', 'a.departamento_iddepartamento = b.iddepartamento')
+            ->join('b', 'pais', 'c', 'b.pais_idpais = c.idpais')
+            ->where("CONCAT(a.nombre,CONCAT(' ',b.nombre)) like :query")
+            ->andWhere('a.estado = 1 AND b.estado = 1 AND c.estado = 1')
+            ->setParameter('query', "%{$_REQUEST['term']}%")
+            ->execute()->fetchAll();
+    } else if ($_REQUEST['default']) {
+        $results = Model::getQueryBuilder()
+            ->select("
             CONCAT(a.nombre,
                 CONCAT(
                     ' - ',
@@ -42,13 +62,15 @@ try {
                 )
             ) AS text
         ", "a.idmunicipio as id")
-        ->from('municipio', 'a')
-        ->join('a', 'departamento', 'b', 'a.departamento_iddepartamento = b.iddepartamento')
-        ->join('b', 'pais', 'c', 'b.pais_idpais = c.idpais')
-        ->where("CONCAT(a.nombre,CONCAT(' ',b.nombre)) like :query")
-        ->andWhere('a.estado = 1 AND b.estado = 1 AND c.estado = 1')
-        ->setParameter('query', "%{$_REQUEST['term']}%")
-        ->execute()->fetchAll();
+            ->from('municipio', 'a')
+            ->join('a', 'departamento', 'b', 'a.departamento_iddepartamento = b.iddepartamento')
+            ->join('b', 'pais', 'c', 'b.pais_idpais = c.idpais')
+            ->andWhere('a.idmunicipio = :id')
+            ->setParameter('id', $_REQUEST['default'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
+    } else {
+        throw new Exception("Debe indicar el término de búsqueda", 1);
+    }
 
     $Response->data = $results;
     $Response->success = 1;

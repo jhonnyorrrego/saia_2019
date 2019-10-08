@@ -93,7 +93,8 @@ INFO;
             'nombre' => '{*post_generar_planilla*}',
             'nombre_funcion' => 'post_generar_planilla',
             'etiqueta' => 'post_generar_planilla',
-            'ruta' => 'funciones.php'
+            'ruta' => 'funciones.php',
+            'formato' => ''
         ]);
 
         $this->connection->insert('funciones_formato_accion', [
