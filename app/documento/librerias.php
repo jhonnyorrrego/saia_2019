@@ -124,9 +124,22 @@ function obtener_pantilla_documento($plantilla)
     return nombre_plantilla($plantilla);
 }
 
+/**
+ * delimita la descripcion del documento
+ * a 150 caracteres en caso de ser extensa
+ *
+ * @param string $descripcion
+ * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-10-08
+ */
 function obtener_descripcion($descripcion)
 {
-    return delimita($descripcion, 150);
+    if (strlen($descripcion) > 150) {
+        $descripcion = substr($descripcion, 0, 147) . '...';
+    }
+
+    return $descripcion;
 }
 
 function obtener_iddocumento()
@@ -136,8 +149,6 @@ function obtener_iddocumento()
 
 function filtro_despacho()
 {
-
-
     if ($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda'] != '') {
         $docs = busca_filtro_tabla("", "documento,ft_despacho_ingresados", "documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=" . $_REQUEST['variable_busqueda'], "");
         if ($docs['numcampos']) {
