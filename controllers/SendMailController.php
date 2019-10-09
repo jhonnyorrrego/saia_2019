@@ -360,8 +360,6 @@ class SendMailController
             $mail->isHTML(true);
             $mail->Subject = $this->subject;
             $mail->Body = $this->body;
-            var_dump($mail);
-            //	return 123;
             return $mail->send();
         } catch (Exception $e) {
             return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

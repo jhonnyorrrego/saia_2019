@@ -155,13 +155,13 @@ class Funcionario extends Model
         Equipo de atención al cliente de SAIA<br>
         soporte@cerok.com
 TEXT;
-        return enviar_mensaje(
-            '',
-            ['para' => 'email'],
-            ['para' => [$this->email]],
-            'Bienvenido a SAIA!',
-            $description
+        $SendMailController = new SendMailController('Bienvenido a SAIA!', $description);
+        $SendMailController->setDestinations(
+            SendMailController::DESTINATION_TYPE_EMAIL,
+            [$this->email]
         );
+
+        return $SendMailController->send();
     }
 
     /**
