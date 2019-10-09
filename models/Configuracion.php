@@ -63,7 +63,7 @@ class Configuracion extends Model
     public static function findByNames($names)
     {
         $QueryBuilder = self::getQueryBuilder()
-            ->select('nombre,valor')
+            ->select('*')
             ->from('configuracion')
             ->where('nombre in (:list)')
             ->setParameter(':list', $names, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);

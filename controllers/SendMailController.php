@@ -157,7 +157,7 @@ class SendMailController
         }
 
         if ($keep) {
-            $destinations = array_unique(array_merge($this->destinations + $destinations));
+            $destinations = array_unique(array_merge($this->destinations, $destinations));
         }
 
         return $this->destinations = $destinations;
@@ -192,7 +192,7 @@ class SendMailController
         }
 
         if ($keep) {
-            $destinations = array_unique(array_merge($this->copyDestinations + $destinations));
+            $destinations = array_unique(array_merge($this->copyDestinations, $destinations));
         }
 
         return $this->copyDestinations = $destinations;
@@ -228,7 +228,7 @@ class SendMailController
         }
 
         if ($keep) {
-            $destinations = array_unique(array_merge($this->hiddenCopyDestinations + $destinations));
+            $destinations = array_unique(array_merge($this->hiddenCopyDestinations, $destinations));
         }
 
         return $this->hiddenCopyDestinations = $destinations;
@@ -321,7 +321,7 @@ class SendMailController
         try {
             $configuration = self::getConfiguration();
 
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
             $mail->isSMTP();
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->SMTPAuth = true;
@@ -329,7 +329,7 @@ class SendMailController
             $mail->Username = $configuration->user;
             $mail->Password = $configuration->password;
             $mail->Port = $configuration->port;
-            $mail->FromName = $configuration->user;
+            $mail->setFrom($configuration->user, $configuration->user);
 
             //definiendo los destinos
             $destinations = $this->getDestinations();
@@ -360,6 +360,8 @@ class SendMailController
             $mail->isHTML(true);
             $mail->Subject = $this->subject;
             $mail->Body = $this->body;
+            var_dump($mail);
+            //	return 123;
             return $mail->send();
         } catch (Exception $e) {
             return "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
