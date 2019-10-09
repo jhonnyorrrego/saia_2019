@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => '',
     'success' => 0
@@ -23,23 +23,36 @@ $Response = (object)[
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
 
-    if (!$_REQUEST['documentId']) {
-        throw new Exception('Documento invalido', 1);
+    $showParams = [
+        'token' => $_REQUEST["token"],
+        'key' => $_REQUEST["key"]
+    ];
+    $addParams = [
+        'key' => $_REQUEST["key"],
+        'token' => $_REQUEST["token"],
+        'padre' => $_REQUEST['padre'] ?? null,
+        'anterior' => $_REQUEST['anterior'] ?? null,
+    ];
+
+    if ($_REQUEST['documentId']) {
+        $Documento = new Documento($_REQUEST['documentId']);
+        $Formato = $Documento->getFormat();
+        $showParams["iddoc"] = $_REQUEST['documentId'];
+    } else if ($_REQUEST['formatId']) {
+        $Formato = new Formato($_REQUEST['formatId']);
     }
 
-    $Documento = new Documento($_REQUEST['documentId']);
-    $Formato = $Documento->getFormat();
-    $template = strtolower($Documento->plantilla);
-    $queryParams = http_build_query([
-        "iddoc" => $_REQUEST['documentId'],
-        "key" => $_REQUEST["key"],
-        "token" => $_REQUEST["token"]
-    ]);
+    $addParams['idformato'] = $Formato->getPK();
+    if ($addParams['anterior'] && !$addParams['padre']) {
+        $Documento = new Documento($addParams['anterior']);
+        $ft = $Documento->getFt();
+        $addParams['padre'] = $ft["id" . $Documento->getFormat()->nombre_tabla];
+    }
 
     $Response->data = [
-        'ruta_mostrar' => "formatos/{$template}/{$Formato->ruta_mostrar}?" . $queryParams,
-        'ruta_editar' => "formatos/{$template}/{$Formato->ruta_editar}",
-        'ruta_adicionar' => "formatos/{$template}/{$Formato->ruta_adicionar}"
+        'ruta_mostrar' => "formatos/{$Formato->nombre}/{$Formato->ruta_mostrar}?" . http_build_query($showParams),
+        'ruta_editar' => "formatos/{$Formato->nombre}/{$Formato->ruta_editar}",
+        'ruta_adicionar' => "formatos/{$Formato->nombre}/{$Formato->ruta_adicionar}?" . http_build_query($addParams)
     ];
 
     $Response->success = 1;

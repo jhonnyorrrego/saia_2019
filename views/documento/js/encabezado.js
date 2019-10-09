@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
     let params = $('[data-headerparams]').data('headerparams');
     let baseUrl = params.baseUrl;
     let documentId = params.documentId;
@@ -21,13 +21,13 @@ $(function () {
         }, 2000);
     })();
 
-    $('#go_back').on('click', function () {
+    $('#go_back').on('click', function() {
         $('#mailbox,#right_workspace').toggleClass('d-none');
     });
 
     $(document)
         .off('click', '#show_comments,#discutir_documento')
-        .on('click', '#show_comments,#discutir_documento', function () {
+        .on('click', '#show_comments,#discutir_documento', function() {
             let options = {
                 url: `views/documento/comentarios.php`,
                 params: {
@@ -42,7 +42,7 @@ $(function () {
 
     $(document)
         .off('click', '#show_documents,#vincular_otro_documento')
-        .on('click', '#show_documents,#vincular_otro_documento', function () {
+        .on('click', '#show_documents,#vincular_otro_documento', function() {
             let iframe = $('<iframe>', {
                 src: `${baseUrl}views/documento/vinculados.php?documentId=${documentId}`
             }).css({
@@ -63,52 +63,52 @@ $(function () {
 
     $(document)
         .off('click', '#resend,#reenviar')
-        .on('click', '#resend,#reenviar', function () {
+        .on('click', '#resend,#reenviar', function() {
             transferModal('Reenviar', 1);
         });
 
     $(document)
         .off('click', '#reply,#responder')
-        .on('click', '#reply,#responder', function () {
+        .on('click', '#reply,#responder', function() {
             let userInfo = $('#userInfo').data('info');
             transferModal('Responder', 2, userInfo);
         });
 
     $(document)
         .off('click', '#responder_todos')
-        .on('click', '#responder_todos', function () {
+        .on('click', '#responder_todos', function() {
             transferModal('Responder a todos', 3);
         });
 
     ///////////// fab buttons
     $(document)
         .off('click', '#confirmButton,#rejectButton')
-        .on('click', '#confirmButton,#rejectButton', function () {
+        .on('click', '#confirmButton,#rejectButton', function() {
             confirmDocument($(this).data('info').action);
         });
 
     $(document)
         .off('click', '#editButton')
-        .on('click', '#editButton', function () {
+        .on('click', '#editButton', function() {
             window.open($(this).data('info').route, '_self');
         });
 
     $(document)
         .off('click', '#managersButton')
-        .on('click', '#managersButton', function () {
+        .on('click', '#managersButton', function() {
             seeManagers();
         });
 
     $(document)
         .off('click', '#returnButton')
-        .on('click', '#returnButton', function () {
+        .on('click', '#returnButton', function() {
             returnDocument();
         });
     //////////// fin fab buttons
 
-    $('#show_tree').on('click', function () {
+    $('#show_tree').on('click', function() {
         let options = {
-            url: `views/arbol/proceso_formato.php`,
+            url: `views/documento/arbol_proceso_formato.php`,
             params: {
                 documentId: documentId
             },
@@ -119,12 +119,25 @@ $(function () {
                     label: 'Cerrar',
                     class: 'btn btn-danger'
                 }
+            },
+            onSuccess: function(data) {
+                if (data.type == 'show_document') {
+                    let query = $.param({
+                        documentId: data.documentId
+                    });
+                    let url = `${params.baseUrl}views/documento/index_acordeon.php?${query}`;
+                    window.location.href = url;
+                } else if (data.type == 'create_document') {
+                    openForm(data);
+                }
+
+                top.closeTopModal();
             }
         };
         top.topModal(options);
     });
 
-    $('#show_task').on('click', function () {
+    $('#show_task').on('click', function() {
         let options = {
             url: `${baseUrl}views/tareas/lista_documento.php`,
             params: {
@@ -141,7 +154,7 @@ $(function () {
         top.topModal(options);
     });
 
-    $('#show_versions').on('click', function () {
+    $('#show_versions').on('click', function() {
         let options = {
             url: `views/documento/lista_versiones.php`,
             params: {
@@ -158,7 +171,7 @@ $(function () {
         top.topModal(options);
     });
 
-    $('#priority_flag').on('click', function () {
+    $('#priority_flag').on('click', function() {
         let flag = $('#priority_flag i'),
             priority = flag.hasClass('text-danger') ? 0 : 1,
             key = localStorage.getItem('key');
@@ -170,7 +183,7 @@ $(function () {
                 selections: documentId,
                 key: key
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         message: response.message,
@@ -202,7 +215,7 @@ $(function () {
 
     window.addEventListener(
         'orientationchange',
-        function () {
+        function() {
             setTimeout(() => {
                 toggleGoBack();
             }, 500);
@@ -210,14 +223,14 @@ $(function () {
         false
     );
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         toggleGoBack();
     });
 
     /////// MENU INTERMEDIO ////////
     $(document)
         .off('click', '#crear_tarea')
-        .on('click', '#crear_tarea', function () {
+        .on('click', '#crear_tarea', function() {
             let route = $(this).data('url');
             top.topModal({
                 url: `${route}`,
@@ -233,7 +246,7 @@ $(function () {
 
     $(document)
         .off('click', '#etiquetar,#asignar_responsable')
-        .on('click', '#etiquetar,#asignar_responsable', function () {
+        .on('click', '#etiquetar,#asignar_responsable', function() {
             let route = $(this).data('url');
             top.topModal({
                 url: `${route}`,
@@ -248,13 +261,13 @@ $(function () {
 
     $(document)
         .off('click', '#solicitar_aprobacion')
-        .on('click', '#solicitar_aprobacion', function () {
+        .on('click', '#solicitar_aprobacion', function() {
             seeManagers();
         });
 
     $(document)
         .off('click', '#crear_nueva_version')
-        .on('click', '#crear_nueva_version', function () {
+        .on('click', '#crear_nueva_version', function() {
             $.post(
                 `${baseUrl}app/documento/autorizacion_versionamiento.php`,
                 {
@@ -263,7 +276,7 @@ $(function () {
                     documentId: documentId,
                     userId: localStorage.getItem('key')
                 },
-                function (response) {
+                function(response) {
                     if (response.success) {
                         showVersionConfirm();
                     } else {
@@ -279,7 +292,7 @@ $(function () {
 
     $(document)
         .off('click', '#privacidad')
-        .on('click', '#privacidad', function () {
+        .on('click', '#privacidad', function() {
             let route = $(this).data('url');
             top.topModal({
                 url: route,
@@ -295,7 +308,7 @@ $(function () {
 
     $(document)
         .off('click', '#actualizar_pdf')
-        .on('click', '#actualizar_pdf', function () {
+        .on('click', '#actualizar_pdf', function() {
             let route = $('#acordeon_container').attr('data-location');
             route += '&actualizar_pdf=1';
 
@@ -304,7 +317,7 @@ $(function () {
 
     $(document)
         .off('click', '#imprimir')
-        .on('click', '#imprimir', function () {
+        .on('click', '#imprimir', function() {
             let route = $('#acordeon_container').attr('data-location');
             route += '&mostrar_pdf=1';
 
@@ -313,19 +326,19 @@ $(function () {
 
     $(document)
         .off('click', '#anexos')
-        .on('click', '#anexos', function () {
+        .on('click', '#anexos', function() {
             $('#show_files').click();
         });
 
     $(document)
         .off('click', '#anular_documento')
-        .on('click', '#anular_documento', function () {
+        .on('click', '#anular_documento', function() {
             cancelNotification();
         });
 
     $(document)
         .off('click', '#imprimir_radicado')
-        .on('click', '#imprimir_radicado', function () {
+        .on('click', '#imprimir_radicado', function() {
             $.post(
                 `${baseUrl}app/documento/ruta_colilla.php`,
                 {
@@ -333,14 +346,14 @@ $(function () {
                     token: localStorage.getItem('token'),
                     documentId: documentId
                 },
-                function (response) {
+                function(response) {
                     if (response.success) {
                         let iframe = $('<iframe>', {
                             src: response.data.route
                         });
                         $('body').append(iframe);
 
-                        iframe.on('load', function () {
+                        iframe.on('load', function() {
                             setTimeout(() => {
                                 iframe.remove();
                             }, 5000);
@@ -405,7 +418,7 @@ $(function () {
                 token: localStorage.getItem('token'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     fabActions = response.data;
                     showFab();
@@ -449,7 +462,7 @@ $(function () {
                 documentId: documentId,
                 reject: !accept ? 1 : 0
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     let route = baseUrl + 'views/documento/acordeon.php';
                     $('#acordeon_container')
@@ -478,10 +491,10 @@ $(function () {
             size: 'modal-xl',
             title: 'Ruta actual asignada al documento',
             buttons: {},
-            onSuccess: function () {
+            onSuccess: function() {
                 findActions();
             },
-            beforeShow: function (event) {
+            beforeShow: function(event) {
                 if (!isOwner()) {
                     event.preventDefault();
                     top.notification({
@@ -506,7 +519,7 @@ $(function () {
                     documentId: documentId,
                     userId: localStorage.getItem('key')
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         owner = response.data;
                     } else {
@@ -529,7 +542,7 @@ $(function () {
                 key: localStorage.getItem('key'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     createMenu(response.data);
                 } else {
@@ -566,7 +579,7 @@ $(function () {
                 key: localStorage.getItem('key'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     showCounters(response.data);
                 } else {
@@ -602,7 +615,7 @@ $(function () {
                 token: localStorage.getItem('token'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -630,7 +643,7 @@ $(function () {
             buttons: [
                 [
                     '<button><b>Si</b></button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         storage();
                         top.notification({
                             type: 'info',
@@ -646,7 +659,7 @@ $(function () {
                 ],
                 [
                     '<button>NO</button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
@@ -668,7 +681,7 @@ $(function () {
                     documentId: documentId,
                     userId: localStorage.getItem('key')
                 },
-                function (response) {
+                function(response) {
                     if (response.success) {
                         if (response.data.show) {
                             showRouteAlert(response.message);
@@ -695,7 +708,7 @@ $(function () {
             buttons: [
                 [
                     '<button><b>No volver a mostrar esta alerta en este documento</b></button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
@@ -718,7 +731,7 @@ $(function () {
                 userId: localStorage.getItem('key'),
                 documentId: documentId
             },
-            function (response) {
+            function(response) {
                 if (!response.success) {
                     top.notification({
                         type: 'error',
@@ -738,7 +751,7 @@ $(function () {
             },
             size: 'modal-xl',
             title: 'Devolver documento',
-            onSuccess: function () {
+            onSuccess: function() {
                 findActions();
             }
         });
@@ -779,7 +792,7 @@ $(function () {
             buttons: [
                 [
                     '<button>Cancelar</button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         instance.hide(
                             { transitionOut: 'fadeOut' },
                             toast,
@@ -789,7 +802,7 @@ $(function () {
                 ],
                 [
                     '<button><b>Anular</b></button>',
-                    function (instance, toast) {
+                    function(instance, toast) {
                         var input = $(toast).find('#cancel_observation');
                         let observation = input.val();
                         cancelDocument(observation);
@@ -814,7 +827,7 @@ $(function () {
                 documentId: documentId,
                 observation: observation
             },
-            function (response) {
+            function(response) {
                 if (response.success) {
                     top.notification({
                         type: 'success',
@@ -835,5 +848,29 @@ $(function () {
         let state = $('#document_state').text();
         let className = state != 'Aprobado' ? 'label-danger' : 'label-info';
         $('#document_state').addClass(className);
+    }
+
+    function openForm(data) {
+        $.post(
+            `${params.baseUrl}app/formato/consulta_rutas.php`,
+            {
+                key: localStorage.getItem('key'),
+                token: localStorage.getItem('token'),
+                formatId: data.formatId,
+                anterior: data.parent
+            },
+            function(response) {
+                if (response.success) {
+                    window.location.href =
+                        params.baseUrl + response.data.ruta_adicionar;
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            },
+            'json'
+        );
     }
 });

@@ -5,7 +5,6 @@ require_once 'filesystem/StorageUtils.php';
 require_once 'filesystem/SaiaStorage.php';
 require_once 'core/autoload.php';
 
-use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 
@@ -19,117 +18,6 @@ function defineGlobalVars()
     if (!$_SESSION) {
         session_start();
     }
-}
-
-/**
- * crea un registro de cierta accion sobre cierto documento en la tabla digitalizacion
- *
- * @param integer $iddoc id del documento
- * @param string $accion accion ejecutada
- * @param string $justificacion descripcion que se llena cuando se borra una pagina
- * @return void
- * @author jhon sebastian valencia <jhon.valencia@cerok.com>
- * @date 2019
- */
-function registrar_accion_digitalizacion($iddoc, $accion, $justificacion = '')
-{
-    $userCode = SessionController::getValue('usuario_actual');
-
-    Digitalizacion::newRecord([
-        'funcionario' => $userCode,
-        'documento_iddocumento' => $iddoc,
-        'accion' => $accion,
-        'justificacion' => $justificacion,
-        'fecha' => date('Y-m-d H:i:s')
-    ]);
-}
-
-/*<Clase>
-<Nombre>leido</Nombre>
-<Parametros>$codigo:codigo del funcionario;$llave:id del documento</Parametros>
-<Responsabilidades>Marca el documento como leido por la persona que corresponda<Responsabilidades>
-<Notas>hace una transferencia del usuario actual para el mismo con el estado LEIDO</Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function leido($codigo, $llave)
-{
-
-    $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $llave . " and llave_entidad=" . $codigo, "fecha_inicial DESC");
-
-    if ($pendiente["numcampos"] > 0) {
-        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_entrada", "archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= " . fecha_db_almacenar($pendiente[0]["fecha_inicial"], "Y-m-d H:i:s"), "");
-        if (!$leido["numcampos"]) {
-            BuzonSalida::newRecord([
-                'archivo_idarchivo' => $llave,
-                'nombre' => 'LEIDO',
-                'fecha' => date('Y-m-d H:i:s'),
-                'origen' => $codigo,
-                'tipo_origen' => '1',
-                'destino' => $codigo,
-                'tipo_destino' => '1',
-                'tipo' => 'DOCUMENTO'
-            ]);
-
-            BuzonEntrada::newRecord([
-                'archivo_idarchivo' => $llave,
-                'nombre' => 'LEIDO',
-                'fecha' => date('Y-m-d H:i:s'),
-                'origen' => $codigo,
-                'tipo_origen' => '1',
-                'destino' => $codigo,
-                'tipo_destino' => '1',
-                'tipo' => 'DOCUMENTO'
-            ]);
-        }
-    } else {
-        $leido = busca_filtro_tabla("nombre,idtransferencia", "buzon_salida", "archivo_idarchivo=$llave and destino='$codigo'", "fecha desc");
-        if (!$leido["numcampos"] || $leido[0]["nombre"] <> "LEIDO") {
-
-            BuzonSalida::newRecord([
-                'archivo_idarchivo' => $llave,
-                'nombre' => 'LEIDO',
-                'fecha' => date('Y-m-d H:i:s'),
-                'origen' => $codigo,
-                'tipo_origen' => '1',
-                'destino' => $codigo,
-                'tipo_destino' => '1',
-                'tipo' => 'DOCUMENTO'
-            ]);
-
-            $insertar = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
-            $insertar .= " values(" . $llave . ",'LEIDO'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$codigo,1," . $codigo . ",1,'DOCUMENTO')";
-
-            BuzonEntrada::newRecord([
-                'archivo_idarchivo' => $llave,
-                'nombre' => 'LEIDO',
-                'fecha' => date('Y-m-d H:i:s'),
-                'origen' => $codigo,
-                'tipo_origen' => '1',
-                'destino' => $codigo,
-                'tipo_destino' => '1',
-                'tipo' => 'DOCUMENTO'
-            ]);
-        }
-    }
-}
-
-function normalizePath($path)
-{
-    return array_reduce(explode('/', $path), create_function('$a, $b', '
-        if($a === 0)
-            $a = "/";
-
-        if($b === "" || $b === ".")
-            return $a;
-
-        if($b === "..")
-            return dirname($a);
-
-        return preg_replace("/\/+/", "/", "$a/$b");
-    '), 0);
 }
 
 /*
@@ -207,22 +95,6 @@ function busca_filtro_tabla($campos, $tabla, $filtro = '', $orden = '', $conn = 
     return $response;
 }
 
-/**
- * recorta un string
- *
- * @param string $string
- * @param int $length
- * @return void
- */
-function delimita($string, $length)
-{
-    if (strlen($string) > $length) {
-        $string = substr($string, 0, $length - 3) . '...';
-    }
-
-    return $string;
-}
-
 /*
 <Clase>
 <Nombre>extrae_campo</Nombre>
@@ -283,7 +155,7 @@ function sincronizar_carpetas($tipo)
         $ruta_arch_tmp .= "../";
         $max_salida--;
     }
-    include_once $ruta_db_superior . "binario_func.php";
+
     $rutas = array();
     $usr_tmp_dir = "";
     $dir2 = "";
@@ -457,10 +329,17 @@ function sincronizar_carpetas($tipo)
                             $valor_adicional = "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
                         }
                         $strsql = "INSERT INTO $tipo(id_documento,imagen,pagina,ruta " . $campo_adicional . ") VALUES (" . $fieldList["id_documento"] . ",'" . $fieldList["imagen"] . "'," . $fieldList["pagina"] . ", '" . $fieldList["ruta"] . "' " . $valor_adicional . ")";
-                        phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA BUSQUEDA de INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
+                        phpmkr_query($strsql) or error("PROBLEMAS AL EJECUTAR LA BUSQUEDA de INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
                         $idpag = phpmkr_insert_id();
                         array_push($idimagenes, $idpag);
-                        registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
+
+                        Digitalizacion::newRecord([
+                            'funcionario' => SessionController::getValue('usuario_actual'),
+                            'documento_iddocumento' => $fieldList["id_documento"],
+                            'accion' => 'ADICION PAGINA',
+                            'justificacion' => "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]),
+                            'fecha' => date('Y-m-d H:i:s')
+                        ]);
                     } else {
                         error("Existen Problemas al Cargar el Archivo: $ruta_arch_tmp");
                     }
@@ -612,10 +491,16 @@ function sincronizar_carpetas($tipo)
                         $idbinario_pag = almacena_cont_binario_db($imagen->get('jpeg'), $descripcion, $fieldList["ruta"]);
                         if ($idbinario_min && $idbinario_pag) {
                             $strsql = "INSERT INTO $tipo(id_documento,idbinario_min,pagina,idbinario_pag,imagen,ruta) VALUES (" . $fieldList["id_documento"] . ",'" . $idbinario_min . "'," . $fieldList["pagina"] . ", '" . $idbinario_pag . "','" . $fieldList["imagen"] . "','" . $fieldList["ruta"] . "')";
-                            phpmkr_query($strsql, $conn) or error("PROBLEMAS AL EJECUTAR LA INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
+                            phpmkr_query($strsql) or error("PROBLEMAS AL EJECUTAR LA INSERCION" . phpmkr_error() . ' SQL:' . $strsql);
                             $idpag = phpmkr_insert_id();
                             array_push($idimagenes, $idpag);
-                            registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
+                            Digitalizacion::newRecord([
+                                'funcionario' => SessionController::getValue('usuario_actual'),
+                                'documento_iddocumento' => $fieldList["id_documento"],
+                                'accion' => 'ADICION PAGINA',
+                                'justificacion' => "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]),
+                                'fecha' => date('Y-m-d H:i:s')
+                            ]);
                         } else {
                             alerta("Error al almacenar el archivo Por favor verifique que el archivo sea accesible y este correctamente almacenado");
                         }
@@ -724,27 +609,23 @@ function contador($counter, $documentId)
     Connection::getInstance()->query($sql);
 }
 
-/*
-<Clase>
-<Nombre>muestra_contador
-<Parametros>$cad: nombre del contador a consultar
-<Responsabilidades>Retorna el valor del contador
-<Notas>
-<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Si no existe el contador que se quiere invocar
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * muestra el consecutivo de un contador
+ *
+ * @param string $name nombre del contador
+ * @return string
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-10-08
  */
-function muestra_contador($cad)
+function muestra_contador($name)
 {
-    $cuenta = busca_filtro_tabla("A.consecutivo,A.idcontador", "contador A", "A.nombre='" . $cad . "'", "");
-    if ($cuenta["numcampos"]) {
-        $consecutivo = $cuenta[0]["consecutivo"];
-        return $consecutivo;
-    } else {
-        error("NO EXISTE UN CONSECUTIVO LLAMADO " . $cad);
-        return 0;
+    $Contador = Contador::findByAttributes(['nombre' => $name]);
+
+    if (!$Contador) {
+        throw new Exception("No existe un consecutivo llamado {$name}", 1);
     }
+
+    return $Contador->consecutivo;
 }
 
 /**
@@ -1053,95 +934,37 @@ function transferencia_automatica(
     }
 }
 
-/*
- * <Clase>
- * <Nombre>generar_ruta_documento</Nombre>
- * <Parametros>$iddoc:id del documento</Parametros>
- * <Responsabilidades>
- * Se encarga de generar la ruta de un documento de manera automatica.
- * <Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
+/**
+ * obtiene el iddocumento del primer documento
+ * que le pertenece a un proceso
+ *
+ * @param integer $documentId iddocumento de un hijo referencia
+ * @return integer
+ * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+ * @date 2019-10-08
  */
-
-function generar_ruta_documento($idformato, $iddoc)
+function buscarPapaPrimero($documentId)
 {
+    $query = Model::getQueryBuilder()
+        ->select('C.nombre_tabla as parent_table', 'B.nombre_tabla as child_table')
+        ->from('documento', 'A')
+        ->join('A', 'formato', 'B', 'lower(A.plantilla)=lower(B.nombre)')
+        ->join('B', 'formato', 'C', 'B.cod_padre = C.idformato')
+        ->where('A.iddocumento = :documentId')
+        ->setParameter('documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetch();
 
-    $diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $iddoc, '', conn);
-    if ($diagram_instance["numcampos"]) {
-        $listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "");
-        $ruta = array();
-        // pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
-        for ($i = 0; $i < $listado_pasos["numcampos"]; $i++) {
-            array_push($ruta, array(
-                "funcionario" => -1,
-                "tipo_firma" => 1,
-                "paso_actividad" => $listado_pasos[$i]["idpaso_actividad"]
-            ));
-        }
-        if (count($ruta)) {
-            insertar_ruta($ruta, $iddoc, 0);
-        }
+    if ($query['parent_table']) {
+        $document = Model::getQueryBuilder()
+            ->select('B.documento_iddocumento')
+            ->from($query["child_table"], 'A')
+            ->join('A',  $query["parent_table"], 'B', "{$query['parent_table']} = id{$query['parent_table']}")
+            ->where('A.documento_iddocumento = :documentId')
+            ->setParameter('documentId', $documentId, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetch();
+
+        return buscarPapaPrimero($document["documento_iddocumento"]);
     } else {
-        generar_ruta_documento_fija_formato($idformato, $iddoc);
+        return $documentId;
     }
-}
-
-function generar_ruta_documento_fija_formato($idformato, $iddoc)
-{
-    global $ruta_db_superior;
-    include_once($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
-    $dato = busca_filtro_tabla("", "formato_ruta", "formato_idformato=" . $idformato, "orden");
-    $rut = array();
-    for ($i = 0; $i < $dato["numcampos"]; $i++) {
-        $funcionario = "";
-        if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 1) {
-            $funcionario = $dato[$i]["llave"];
-        } else if ($dato[$i]["entidad"] == 2 && $dato[$i]["tipo_campo"] == 1) {
-            $cargo = busca_filtro_tabla("", "cargo a, dependencia_cargo b, funcionario c", "idcargo=" . $dato[$i]["llave"] . " and cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and b.estado=1", "");
-            $funcionario = $cargo[0]["funcionario_codigo"];
-        } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 1) {
-            $funcionario_temp = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $dato[$i]["llave"], "");
-            if ($funcionario_temp["numcampos"]) {
-                if ($funcionario_temp[0]["estado_dc"] && $funcionario_temp[0]["estado"]) {
-                    $funcionario = $funcionario_temp[0]["funcionario_codigo"];
-                } else {
-                    $funcionario_temp2 = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia=" . $funcionario_temp[0]["iddependencia"] . " AND idcargo=" . $funcionario_temp[0]["idcargo"] . " AND estado_dc=1 AND estado=1", "");
-                    if ($funcionario_temp2["numcampos"]) {
-                        $funcionario = $funcionario_temp2[0]["funcionario_codigo"];
-                    }
-                }
-            }
-        } else if ($dato[$i]["entidad"] == 1 && $dato[$i]["tipo_campo"] == 2) {
-            $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
-            $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
-            $funcionario = $datos[0][$formato[0]["nom_campo"]];
-        } else if ($dato[$i]["entidad"] == 5 && $dato[$i]["tipo_campo"] == 2) {
-            $formato = busca_filtro_tabla("a.nombre_tabla, b.nombre as nom_campo", "formato a, campos_formato b", "formato_idformato=idformato and idcampos_formato=" . $dato[$i]["llave"], "");
-            $datos = busca_filtro_tabla($formato[0]["nom_campo"], $formato[0]["nombre_tabla"] . " a", "documento_iddocumento=" . $iddoc, "");
-            $funcionario_codigo = busca_filtro_tabla("B.funcionario_codigo", "dependencia_cargo A, funcionario B", "A.iddependencia_cargo=" . $datos[0][$formato[0]["nom_campo"]] . " AND A.funcionario_idfuncionario=B.idfuncionario", "");
-            $funcionario = $funcionario_codigo[0]["funcionario_codigo"];
-        } else if ($dato[$i]["tipo_campo"] == 3) {
-            include_once($ruta_db_superior . $dato[$i]["ruta"]);
-            $funcionario = call_user_func_array($dato[$i]["funcion"], array(
-                $idformato,
-                $iddoc
-            ));
-        }
-        if ($i == 0 && $funcionario == SessionController::getValue('usuario_actual'))
-            continue;
-        if ($funcionario != '') {
-            array_push($rut, array(
-                "funcionario" => $funcionario,
-                "tipo_firma" => $dato[$i]["firma"]
-            ));
-        }
-    }
-    if ($dato["numcampos"])
-        insertar_ruta($rut, $iddoc);
-    return;
 }
