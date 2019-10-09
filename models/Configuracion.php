@@ -9,7 +9,6 @@ class Configuracion extends Model
     protected $fecha;
     protected $encrypt;
 
-
     function __construct($id = null)
     {
         return parent::__construct($id);
