@@ -309,6 +309,7 @@ llama_funcion_accion(null,353 ,'ingresar','ANTERIOR');
                 'firma'
             ) ?>'>
 <?php sede_destino(353, $_REQUEST['iddoc']) ?>
+<?php sede_origen(353, $_REQUEST['iddoc']) ?>
 <input type='hidden' name='campo_descripcion' value='4080'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
 <input type='hidden' id='tipo_radicado' name='tipo_radicado' value='apoyo'>

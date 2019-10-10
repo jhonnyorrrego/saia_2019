@@ -153,7 +153,7 @@ echo select2();
                     var idruta_dist = [];
                     var mensajeroDistribucion = [];
                     var sede_destino = [];
-
+                    var sede_origen = 0;
                     try {
 
                         // verifica si los items tienen ruta o mensajero asignado para proceder con la generacion de planilla de distribucion
@@ -161,6 +161,7 @@ echo select2();
                             if (($('#selMensajeros' + item).val() != "") && ($('#selMensajeros' + item).val() != null)) {
                                 idruta_dist.push($('#ruta' + item).val());
                                 mensajeroDistribucion.push($('#selMensajeros' + item).val());
+                                sede_origen = $('#sedeOrigen' + item).data('idsede');
                                 // si no hay valor de sede destino el valor por defecto es 0
                                 if ($('#sedeDestino' + item).data('idsede') == '') {
                                     sede_destino.push(0);
@@ -253,6 +254,7 @@ echo select2();
                                     let params = $.param({
                                         idruta_dist: idruta_dist[0],
                                         mensajero: mensajeroDistribucion[0],
+                                        sede_origen: sede_origen,
                                         sede_destino: sede_destino[0]
                                     });
                                     let configuration = {

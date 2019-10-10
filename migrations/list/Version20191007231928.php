@@ -54,8 +54,8 @@ final class Version20191007231928 extends AbstractMigration
         ]);
 
         $cf_ventanilla = $schema->getTable('cf_ventanilla');
-        if (!$cf_ventanilla->hasColumn('idfuncionario')) {
-            $cf_ventanilla->addColumn('idfuncionario', 'integer', [
+        if (!$cf_ventanilla->hasColumn('iddependencia_cargo')) {
+            $cf_ventanilla->addColumn('iddependencia_cargo', 'integer', [
                 'default' => 0
             ]);
         }
@@ -82,8 +82,8 @@ final class Version20191007231928 extends AbstractMigration
         ]);
 
         $cf_ventanilla = $schema->getTable('cf_ventanilla');
-        if ($cf_ventanilla->hasColumn('idfuncionario')) {
-            $cf_ventanilla->dropColumn('idfuncionario');
+        if ($cf_ventanilla->hasColumn('iddependencia_cargo')) {
+            $cf_ventanilla->dropColumn('iddependencia_cargo');
         }
     }
 

@@ -34,20 +34,44 @@ try {
     $noRecepcionar = '';
     $success = 1;
     $items = explode(',', $_REQUEST['iddistribucion']);
-    for ($i = 0; $i < count($items); $i++) {
-        $iddistribucion = $items[$i];
-        $Distribucion = new Distribucion($iddistribucion);
-        if ($Distribucion->estado_distribucion == '0') {
-            $query = Model::getQueryBuilder();
-            $actualiza_por_distribuir = $query
-                ->update('distribucion')
-                ->set('estado_distribucion', '1')
-                ->where('iddistribucion=:item')
-                ->setParameter(':item', $iddistribucion, \Doctrine\DBAL\Types\Type::INTEGER)
-                ->execute();
-            $success = 2;
-        } else {
-            $noRecepcionar .= $Distribucion->numero_distribucion . ',';
+
+    $Distribucion = new Distribucion($items[0]);
+    if ($Distribucion->entre_sedes == 0) {
+        for ($i = 0; $i < count($items); $i++) {
+            $iddistribucion = $items[$i];
+            $Distribucion = new Distribucion($iddistribucion);
+            if (!$Distribucion->estado_distribucion) {
+                $query = Model::getQueryBuilder();
+                $actualiza_por_distribuir = $query
+                    ->update('distribucion')
+                    ->set('estado_distribucion', '1')
+                    ->where('iddistribucion=:item')
+                    ->setParameter(':item', $iddistribucion, \Doctrine\DBAL\Types\Type::INTEGER)
+                    ->execute();
+                $success = 2;
+            } else {
+                $noRecepcionar .= $Distribucion->numero_distribucion . ',';
+            }
+        }
+    } else {
+        for ($i = 0; $i < count($items); $i++) {
+            $iddistribucion = $items[$i];
+            $Distribucion = new Distribucion($iddistribucion);
+            if (!$Distribucion->estado_distribucion) {
+                $query = Model::getQueryBuilder();
+                $actualiza_por_distribuir = $query
+                    ->update('distribucion')
+                    ->set('estado_distribucion', 1)
+                    ->set('sede_origen', ':sede_origen')
+                    ->set('sede_destino', 0)
+                    ->where('iddistribucion=:item')
+                    ->setParameter(':sede_origen', $Distribucion->sede_destino, \Doctrine\DBAL\Types\Type::INTEGER)
+                    ->setParameter(':item', $iddistribucion, \Doctrine\DBAL\Types\Type::INTEGER)
+                    ->execute();
+                $success = 2;
+            } else {
+                $noRecepcionar .= $Distribucion->numero_distribucion . ',';
+            }
         }
     }
     $noRecepcionar = substr($noRecepcionar, 0, -1);

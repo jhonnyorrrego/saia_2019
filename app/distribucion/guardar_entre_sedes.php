@@ -39,8 +39,11 @@ try {
     $registros = explode(',', $_REQUEST['registros']);
 
     foreach ($registros as $idDistribucion) {
+        // Guardando los cambios del modo entre sedes de cada distribucion
         $Distribucion = new Distribucion($idDistribucion);
-        $Distribucion->entre_sedes = 1;
+        if ($Distribucion->entre_sedes == 0) {
+            $Distribucion->entre_sedes = $idDistribucion;
+        }
         $Distribucion->sede_destino = $_REQUEST['sede'];
         $Distribucion->mensajero_destino = $_REQUEST['mensajero'];
         $Distribucion->save();
