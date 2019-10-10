@@ -145,7 +145,7 @@ class Ruta extends Model
             'fk_documento' => $documentId,
             'finalizado' => 1,
             'tipo' => RutaDocumento::TIPO_RADICACION
-        ], null, 'idruta_documento desc');
+        ], [], 'idruta_documento desc');
 
         return self::findAllByAttributes([
             'fk_ruta_documento' => $RutaDocumento->getPK()

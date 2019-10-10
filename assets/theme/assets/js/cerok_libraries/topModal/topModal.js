@@ -10,7 +10,7 @@ var topModalDefaults = {
     keep: false, //mantener el contenido en caso de volver a llamarse la misma configuracion
     buttons: {
         success: {
-            label: 'Enviar',
+            label: 'Guardar',
             class: 'btn btn-complete'
         },
         cancel: {

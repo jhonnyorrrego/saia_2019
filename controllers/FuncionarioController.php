@@ -16,7 +16,7 @@ class FuncionarioController
         $Funcionario = Funcionario::findByAttributes(['login' => $user]);
         $Funcionario->intento_login++;
 
-        if ($Funcionario->intento_login >= $Configuracion->valor) {
+        if ($Funcionario->intento_login >= $Configuracion->getValue()) {
             $Funcionario->estado = 0;
         }
 
@@ -41,7 +41,7 @@ class FuncionarioController
      */
     public static function generateToken($Funcionario, $duration = 0, $forWebService = false)
     {
-        if(!$duration){
+        if (!$duration) {
             $duration = SessionController::TIME_LIFE;
         }
 
@@ -79,7 +79,8 @@ class FuncionarioController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-09
      */
-    public static function saveAccess(){
+    public static function saveAccess()
+    {
         LogAcceso::newRecord([
             'login' => SessionController::getLogin(),
             'iplocal' => UtilitiesController::getRealIP(),
@@ -99,7 +100,8 @@ class FuncionarioController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-09
      */
-    public static function saveLogout(){
+    public static function saveLogout()
+    {
         $LogAcceso = LogAcceso::findByAttributes([
             'exito' => 1,
             'login' => SessionController::getLogin(),
@@ -108,10 +110,10 @@ class FuncionarioController
             'funcionario_idfuncionario' => SessionController::getValue('idfuncionario')
         ]);
 
-        if($LogAcceso){
+        if ($LogAcceso) {
             $LogAcceso->fecha_cierre = date('Y-m-d H:i:s');
             $LogAcceso->save();
-        }else{
+        } else {
             throw new Exception("Invalid logout", 1);
         }
     }

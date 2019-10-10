@@ -41,13 +41,14 @@ try {
         $data[] = $Notificacion->getAttributes() + ['id' => $id];
     }
 
-    $ids = implode(',', $ids);
-    $sql = <<<SQL
-        UPDATE notificacion
-        SET notificado = 1
-        WHERE idnotificacion in ({$ids})
-SQL;
-    Notificacion::query($sql);
+    if ($ids) {
+        Model::getQueryBuilder()
+            ->update('notificacion')
+            ->setValue('notificado', 1)
+            ->where('idnotificacion in (:list)')
+            ->setParameter('list', $ids, \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+            ->execute();
+    }
 
     $Response->data = $data;
     $Response->success = 1;

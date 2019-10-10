@@ -113,7 +113,6 @@ include_once $ruta_db_superior . "assets/librerias.php";
             });
         });
     </script>
-    <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 </body>
 
 </html>

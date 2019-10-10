@@ -55,8 +55,8 @@ try {
         $Response->rows[] = [
             "id" => $row['iddependencia_cargo'],
             "name" => "{$row["nombre_dependencia"]} - {$row["nombre_cargo"]}",
-            "initial_date" => DateController::convertDate($row["fecha_inicial"]),
-            "final_date" => DateController::convertDate($row["fecha_final"]),
+            "initial_date" => DateController::convertDate($row["fecha_inicial"], 'Y-m-d'),
+            "final_date" => DateController::convertDate($row["fecha_final"], 'Y-m-d'),
             "state" => $row["estado"] == 1 ? "Activo" : "Inactivo"
         ];
     }
