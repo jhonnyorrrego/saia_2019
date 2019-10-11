@@ -8,6 +8,7 @@ class Configuracion extends Model
     protected $tipo;
     protected $fecha;
     protected $encrypt;
+    protected $acceso_root;
 
     function __construct($id = null)
     {
@@ -25,7 +26,8 @@ class Configuracion extends Model
             'valor',
             'tipo',
             'fecha',
-            'encrypt'
+            'encrypt',
+            'acceso_root'
         ];
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
