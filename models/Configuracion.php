@@ -8,7 +8,7 @@ class Configuracion extends Model
     protected $tipo;
     protected $fecha;
     protected $encrypt;
-
+    protected $acceso_root;
 
     function __construct($id = null)
     {
@@ -26,7 +26,8 @@ class Configuracion extends Model
             'valor',
             'tipo',
             'fecha',
-            'encrypt'
+            'encrypt',
+            'acceso_root'
         ];
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
@@ -64,7 +65,7 @@ class Configuracion extends Model
     public static function findByNames($names)
     {
         $QueryBuilder = self::getQueryBuilder()
-            ->select('nombre,valor')
+            ->select('*')
             ->from('configuracion')
             ->where('nombre in (:list)')
             ->setParameter(':list', $names, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);

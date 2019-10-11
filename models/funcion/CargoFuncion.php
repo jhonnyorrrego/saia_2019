@@ -7,7 +7,7 @@ class CargoFuncion extends LogModel
     protected $fk_cargo;
     protected $estado;
     protected $fecha;
-    
+
 
     //relations
     private $Funcion;
@@ -22,14 +22,23 @@ class CargoFuncion extends LogModel
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcion',
                 'fk_cargo',
                 'estado',
                 'fecha'
             ],
-            'date' => ['fecha']
+            'date' => ['fecha'],
+            'labels' => [
+                'estado' => [
+                    'label' => 'Estado',
+                    'values' => [
+                        0 => 'Inactivo',
+                        1 => 'Activo'
+                    ]
+                ]
+            ]
         ];
     }
 

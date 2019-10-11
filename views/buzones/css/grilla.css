@@ -59,3 +59,7 @@ tbody > tr > td {
     font-size: 12;
     color: #2c2c2c;
 }
+
+.th-inner {
+    text-align: center;
+}

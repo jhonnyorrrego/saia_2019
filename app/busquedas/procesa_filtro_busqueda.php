@@ -74,23 +74,14 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			if ($cadena && $consulta_adicional && ($componente[0]["nombre"] == "todos_documentos" || $componente[0]["nombre"] == "listado_documentos")) {
 				$consulta_adicional = " and " . $consulta_adicional;
 			}
-			if (MOTOR == "Oracle") {
-				$FiltroTemp = new BusquedaFiltroTemp();
-				$idbusqueda_temp = $FiltroTemp::newRecord([
-					'fk_busqueda_componente' => $_REQUEST["idbusqueda_componente"],
-					'funcionario_idfuncionario' => $_SESSION["idfuncionario"],
-					'fecha' => date("Y-m-d H:i:s")
 
-				]);
-			} else {
-				$FiltroTemp = new BusquedaFiltroTemp();
-				$idbusqueda_temp = $FiltroTemp::newRecord([
-					'fk_busqueda_componente' => $_REQUEST["idbusqueda_componente"],
-					'funcionario_idfuncionario' => $_SESSION["idfuncionario"],
-					'detalle' => $cadena . $consulta_adicional . $cadena_adicional,
-					'fecha' => date("Y-m-d H:i:s")
-				]);
-			}
+			$idbusqueda_temp = BusquedaFiltroTemp::newRecord([
+				'fk_busqueda_componente' => $_REQUEST["idbusqueda_componente"],
+				'funcionario_idfuncionario' => $_SESSION["idfuncionario"],
+				'detalle' => $cadena . $consulta_adicional . $cadena_adicional,
+				'fecha' => date("Y-m-d H:i:s")
+			]);
+
 
 			$idbusqueda_fil = filtros_adicionales();
 		}
@@ -203,36 +194,15 @@ function valor_dato($campo, $valor)
 	$retorno_ = False;
 	if ($cant_date > 0) {
 		if (in_array($campo, $date)) {
-			if (MOTOR == "Oracle") {
-				$retorno_ = $valor;
-			} else {
-				$retorno_ = $valor;
-			}
+			$retorno_ = $valor;
 		}
 	} else if ($cant_datetime > 0) {
 		if (in_array($campo, $datetime)) {
-			if (MOTOR == "Oracle") {
-				$retorno_ = $valor;
-			} else {
-				$retorno_ = $valor;
-			}
+			$retorno_ = $valor;
 		}
 	}
-	if (MOTOR == "MySql") {
-		$retorno = addslashes($retorno_);
-	} else if (MOTOR == "Oracle") {
-		$retorno = $retorno_;
-	} else if (MOTOR == "SqlServer") {
-		$retorno = str_replace("\'", "''", addslashes($retorno_));
-	} else {
-		$retorno = $retorno_;
-	}
 
-	if ($retorno_ != '')
-		return ($retorno);
-	else {
-		return false;
-	}
+	return $retorno_ ? $retorno_ : false;
 }
 
 function filtros_adicionales()
@@ -260,7 +230,6 @@ function filtros_adicionales()
 
 function campos_especiales()
 {
-	global $conn, $ruta_db_superior;
 	if (@$_REQUEST["campos_especiales"]) {
 		$campos = explode(",", $_REQUEST["campos_especiales"]);
 		$cantidad = count($campos);
@@ -328,7 +297,7 @@ function campos_especiales()
 							$where[] = "lower(b.empresa) like '%" . str_replace(" ", "%", strtolower(parsear_cadena_tildes($varios3[$j]))) . "%'";
 						}
 					}
-					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "", $conn);
+					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "");
 
 					for ($k = 0; $k < $datos_ejecutor["numcampos"]; $k++) {
 						$cadena[] = "(" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%'')";
@@ -351,9 +320,8 @@ function campos_especiales()
 
 function realizar_consulta()
 {
-	global $conn, $ruta_db_superior;
 	$tablas = array();
-	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden", $conn);
+	$datos_busqueda = busca_filtro_tabla("", "busqueda A, busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . @$_REQUEST["idbusqueda_componente"], "orden");
 	if ($datos_busqueda[0]["tablas"] != '' && $datos_busqueda[0]["tablas_adicionales"] != '') {
 		$datos_busqueda[0]["tablas"] = $datos_busqueda[0]["tablas"] . "," . $datos_busqueda[0]["tablas_adicionales"];
 	}
@@ -423,11 +391,10 @@ function realizar_consulta()
 
 function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
 {
-	global $conn;
 	$condicion_filtro = '';
-	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden");
 	if (!$datos_condicion["numcampos"]) {
-		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
+		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "");
 		$condicion = $datos_condicion[0]["codigo_where"];
 	} else {
 		if ($filtros != '') {
@@ -523,70 +490,39 @@ function parsear_consulta($key, $valor, $req_condicion_llave)
 			$condicion = '|' . $req_condicion_llave . '|';
 			$valor_ = $valor;
 			$escaped_val = ($valor);
-			if (MOTOR == "MySql") {
-				$str_quote1 = "'";
-				$str_quote2 = "'";
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				$cadena = addslashes($key . $condicion . $valor);
-			} else {
-				$str_quote1 = "''";
-				$str_quote2 = "''";
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				$cadena = ($key . $condicion . $valor);
-			}
+			$str_quote1 = "'";
+			$str_quote2 = "'";
+			$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+			$cadena = $key . $condicion . $valor;
+
 			break;
 
 		case 'like':
 			$condicion = "|" . $req_condicion_llave . "|";
-			if (MOTOR == "MySql") {
-				$str_quote1 = "'%";
-				$str_quote2 = "%'";
-				if (strpos($valor, ",") === false) {
-					$valor_ = $valor;
-					$escaped_val = strtolower(trim($valor));
+			$str_quote1 = "'%";
+			$str_quote2 = "%'";
+			if (strpos($valor, ",") === false) {
+				$valor_ = $valor;
+				$escaped_val = strtolower(trim($valor));
+				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+				// $key se puede calcular fuera del switch
+				$cadena = "lower(" . $key . ")" . $condicion . $valor;
+			} else {
+				$valores = explode(",", $valor);
+				$cant = count($valores);
+				for ($j = 0; $j < $cant; $j++) {
+					$valor_ = $valores[$j];
+					$escaped_val = strtolower(trim($valor_));
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
-					$cadena = addslashes("lower(" . $key . ")" . $condicion . $valor);
-				} else {
-					$valores = explode(",", $valor);
-					$cant = count($valores);
-					for ($j = 0; $j < $cant; $j++) {
-						$valor_ = $valores[$j];
-						$escaped_val = strtolower(trim($valor_));
-						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-						// $key se puede calcular fuera del switch
-						$cadena .= addslashes("lower(" . $key . ")" . $condicion . $valor);
-						if (($j + 1) < $cant) {
-							$cadena .= "|-|";
-						}
+					$cadena .= "lower(" . $key . ")" . $condicion . $valor;
+					if (($j + 1) < $cant) {
+						$cadena .= "|-|";
 					}
-					$cadena = "($cadena)";
 				}
-			} else if (MOTOR == "Oracle") {
-				$str_quote1 = "''%";
-				$str_quote2 = "%''";
-				$valor_ = $valor;
-				$escaped_val = strtolower($valor);
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
-				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
-			} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
-				$str_quote1 = "''%";
-				$str_quote2 = "%''";
-				$valor_ = $valor;
-				$escaped_val = strtolower($valor);
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
-				$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . $valor);
-			} else {
-				$str_quote1 = "''%";
-				$str_quote2 = "%''";
-				$valor_ = $valor;
-				$escaped_val = strtolower($valor);
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
-				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
+				$cadena = "($cadena)";
 			}
+
 			break;
 
 		case 'like_comas':
@@ -621,57 +557,30 @@ function parsear_consulta($key, $valor, $req_condicion_llave)
 
 		case 'like_total':
 			$condicion = "|" . str_replace("like_total", "like", $req_condicion_llave) . "|";
-			if (MOTOR == "MySql") {
-				$str_quote1 = "'%";
-				$str_quote2 = "%'";
-				if (strpos($valor, ",") === false) {
-					$valor_ = $valor;
-					$escaped_val = strtolower(trim($valor));
-					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-					// $key se puede calcular fuera del switch
-					$cadena = addslashes("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
-				} else {
-					$valores = explode(",", $valor);
-					$cant = count($valores);
-					for ($j = 0; $j < $cant; $j++) {
-						$valor_ = $valores[$j];
-						$escaped_val = strtolower(trim($valor_));
-						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-						// $key se puede calcular fuera del switch
-						$cadena .= addslashes("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
-						if (($j + 1) < $cant) {
-							$cadena .= "|-|";
-						}
-					}
-					$cadena = "($cadena)";
-				}
-			} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
-				$str_quote1 = "''%";
-				$str_quote2 = "%''";
-				if (strpos($valor, ",") === false) {
-					$valor_ = $valor;
-					$escaped_val = strtolower($valor);
-					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-					// $key se puede calcular fuera del switch
-					$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
-				} else {
-					$valores = explode(",", $valor);
-					$cant = count($valores);
-					for ($j = 0; $j < $cant; $j++) {
-						$valor_ = $valores[$j];
-						$escaped_val = strtolower(trim($valor_));
-						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-						// $key se puede calcular fuera del switch
-						$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
-						if (($j + 1) < $cant) {
-							$cadena .= "|-|";
-						}
-					}
-					$cadena = "($cadena)";
-				}
+			$str_quote1 = "'%";
+			$str_quote2 = "%'";
+			if (strpos($valor, ",") === false) {
+				$valor_ = $valor;
+				$escaped_val = strtolower(trim($valor));
+				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+				// $key se puede calcular fuera del switch
+				$cadena = "lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor);
 			} else {
-				$cadena = procesar_filtro_like_general($key, $valor, $condicion);
+				$valores = explode(",", $valor);
+				$cant = count($valores);
+				for ($j = 0; $j < $cant; $j++) {
+					$valor_ = $valores[$j];
+					$escaped_val = strtolower(trim($valor_));
+					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+					// $key se puede calcular fuera del switch
+					$cadena .= "lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor);
+					if (($j + 1) < $cant) {
+						$cadena .= "|-|";
+					}
+				}
+				$cadena = "($cadena)";
 			}
+
 			break;
 
 		case 'in':
@@ -685,88 +594,29 @@ function parsear_consulta($key, $valor, $req_condicion_llave)
 			}
 			$str_quote1 = "(";
 			$str_quote2 = ")";
-			if (MOTOR == "MySql") {
-				if ($condicion_min == 'in') {
-					$valor = ajustar_lista_valores($valor);
-				}
-				$valor_ = $valor;
-				$escaped_val = strtolower($valor);
-				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
-				$cadena = addslashes("lower(" . $key . ")" . $condicion . $valor);
-			} else if (MOTOR == "Oracle") {
-				$valor = str_replace("\'", "'", $valor);
+			if ($condicion_min == 'in') {
 				$valor = ajustar_lista_valores($valor);
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = $str_quote1 . strtolower($valor) . $str_quote2;
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				// $key se puede calcular fuera del switch
-				$cadena = ($funcion_campo . $condicion . $valor);
-			} else {
-				$valor = ajustar_lista_valores($valor);
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = $str_quote1 . strtolower($valor) . $str_quote2;
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				// $key se puede calcular fuera del switch
-				$cadena = ($funcion_campo . $condicion . $valor);
 			}
+			$valor_ = $valor;
+			$escaped_val = strtolower($valor);
+			$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
+			// $key se puede calcular fuera del switch
+			$cadena = "lower(" . $key . ")" . $condicion . $valor;
+
 			break;
 		case 'date':
 			$condicion = "|" . $req_condicion_llave . "|";
-			if (MOTOR == "MySql") {
-				if (substr($valor, -1) == ",") {
-					$valor = substr($valor, 0, -1);
-				}
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = strtolower($valor);
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				// $key se puede calcular fuera del switch
-				$cadena = addslashes("date_format(" . $key . ",'%Y-%m-%d')='" . $valor . "'");
-			} else if (MOTOR == "Oracle") {
-				if (substr($valor, -1) == ",") {
-					$valor = substr($valor, 0, -1);
-				}
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = strtolower($valor);
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				// $key se puede calcular fuera del switch
-				$cadena = ("CONVERT(date," . $key . ",20)='" . $valor . "'");
-			} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
-				if (substr($valor, -1) == ",") {
-					$valor = substr($valor, 0, -1);
-				}
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = strtolower($valor);
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				$cadena = ("CONVERT(VARCHAR(10)," . $key . ",120)='" . $valor . "'");
-			} else {
-				if (substr($valor, -1) == ",") {
-					$valor = substr($valor, 0, -1);
-				}
-				if (!valor_dato($key, $valor)) {
-					$valor = str_replace("'", "''", $valor);
-					$valor = strtolower($valor);
-				} else {
-					$valor = valor_dato($key, $valor);
-				}
-				// $key se puede calcular fuera del switch
-				$cadena = ("CONVERT(date," . $key . ",20)='" . $valor . "'");
+			if (substr($valor, -1) == ",") {
+				$valor = substr($valor, 0, -1);
 			}
+			if (!valor_dato($key, $valor)) {
+				$valor = str_replace("'", "''", $valor);
+				$valor = strtolower($valor);
+			} else {
+				$valor = valor_dato($key, $valor);
+			}
+			// $key se puede calcular fuera del switch
+			$cadena = "date_format(" . $key . ",'%Y-%m-%d')='" . $valor . "'";
 			break;
 
 		default:
@@ -784,14 +634,10 @@ function parsear_consulta($key, $valor, $req_condicion_llave)
 			}
 
 			if ($tipodate) {
-				if (MOTOR == "MySql") {
-					$key = "date_format(" . $key . ",\'%Y-%m-%d\')";
-				} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
-					$key = "CONVERT(VARCHAR(10)," . $key . ",120)";
-				}
+				$key = "date_format(" . $key . ",\'%Y-%m-%d\')";
 				$cadena = $key . $condicion . $valor;
 			} else {
-				$cadena = addslashes($key . $condicion . $valor);
+				$cadena = $key . $condicion . $valor;
 			}
 	}
 	return $cadena;

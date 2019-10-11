@@ -155,13 +155,13 @@ class Funcionario extends Model
         Equipo de atención al cliente de SAIA<br>
         soporte@cerok.com
 TEXT;
-        return enviar_mensaje(
-            '',
-            ['para' => 'email'],
-            ['para' => [$this->email]],
-            'Bienvenido a SAIA!',
-            $description
+        $SendMailController = new SendMailController('Bienvenido a SAIA!', $description);
+        $SendMailController->setDestinations(
+            SendMailController::DESTINATION_TYPE_EMAIL,
+            [$this->email]
         );
+
+        return $SendMailController->send();
     }
 
     /**
@@ -221,15 +221,19 @@ TEXT;
     }
 
     /**
-     * @return array the basic information from user
-     * @author jhon.valencia@cerok.com
+     * obtiene la informaion basica del funcionario
+     *
+     * @param boolean $generateImage forza la generacion de la imagen
+     * @return array
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @date 2019
      */
-    public function getBasicInformation()
+    public function getBasicInformation($generateImage = false)
     {
         return [
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'cutedPhoto' => $this->getImage('foto_recorte'),
+            'cutedPhoto' => $this->getImage('foto_recorte', $generateImage),
             'login' => $this->login
         ];
     }
@@ -245,9 +249,7 @@ TEXT;
     public function getName()
     {
         $name = $this->nombres . ' ' . $this->apellidos;
-        $name = trim(strtolower(html_entity_decode($name)));
-        $name = ucwords($name);
-        return $name;
+        return  ucwords(strtolower($name));
     }
 
     /**
@@ -303,7 +305,7 @@ TEXT;
      */
     public function updateImage($image, $attribute)
     {
-        $fileName = "{$attribute}-{$this->getPK()}.{$image['extension']}";
+        $fileName = sprintf("%s-%s.%s", $attribute, time() . $this->getPK(), $image['extension']);
         $this->$attribute = TemporalController::createFileDbRoute(
             "fotos/{$fileName}",
             "imagenes",

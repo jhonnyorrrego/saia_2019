@@ -267,21 +267,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <!--END TAB PANES -->
     </div>
     <!-- END QUICKVIEW-->
-    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="edit_photo_modal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body text-center mt-2">
-                    <img id="img_edit_photo" width="100%">
-                </div>
-                <div class="modal-footer">
-                    <label class="btn btn-danger">Cargar imagen
-                        <input type="file" style="display:none" id="file_photo">
-                    </label>
-                    <div class="btn btn-complete" id="btn_save_photo">Guardar</div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Modal -->
     <button data-toggle="modal" data-target="#dinamic_modal" style="display:none"></button>
     <div class="modal" tabindex="-1" role="dialog" id="dinamic_modal" data-backdrop="true" data-keyboard="true">
@@ -301,15 +286,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
     </div>
-    <!-- /.modal-dialog -->
+    <!-- End Modal -->
+
     <?= jquery() ?>
     <?= jsBootstrap() ?>
     <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <?= jsTheme() ?>
     <?= select2() ?>
-    <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js" type="text/javascript"></script>
     <?= breakpoint() ?>
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>

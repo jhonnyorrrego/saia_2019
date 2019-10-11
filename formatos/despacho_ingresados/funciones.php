@@ -132,23 +132,100 @@ function mostrar_seleccionados_entrega($idformato, $iddoc)
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato, $iddoc)
 {
-    global $conn, $ruta_db_superior;
-    $seleccionado = busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie,ventanilla", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-    $iddestino_radicacion = explode(",", $seleccionado[0]['iddestino_radicacion']);
-    $cont = count($iddestino_radicacion);
-    for ($i = 0; $i < $cont; $i++) {
-        $insert = "INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $seleccionado[0]['idft_despacho_ingresados'] . "'," . $seleccionado[0]['serie_idserie'] . ")";
-        phpmkr_query($insert);
-        $busca_item_actual = busca_filtro_tabla("idft_item_despacho_ingres", "ft_item_despacho_ingres", "ft_destino_radicacio=" . $iddestino_radicacion[$i] . " and ft_despacho_ingresados=" . $seleccionado[0]['idft_despacho_ingresados'], "", $conn);
-        $insert = "INSERT INTO dt_recep_despacho(iddistribucion,ft_item_despacho_ingres,idfuncionario) VALUES ('" . $iddestino_radicacion[$i] . "', '" . $busca_item_actual[0]['idft_item_despacho_ingres'] . "'," . SessionController::getValue('idfuncionario') . ")";
-        phpmkr_query($insert);
+    $ft_despacho_ingresados = Model::getQueryBuilder()
+        ->select('iddestino_radicacion', 'serie_idserie', 'idft_despacho_ingresados', 'ventanilla')
+        ->from('ft_despacho_ingresados')
+        ->where("documento_iddocumento=:iddoc")
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()
+        ->fetchAll();
 
-        $distribucion = busca_filtro_tabla("documento_iddocumento", "distribucion", "iddistribucion=" . $iddestino_radicacion[$i], "", $conn);
-        $insert = "INSERT INTO dt_ventanilla_doc(documento_iddocumento,idcf_ventanilla,idfuncionario) VALUES ('" . $distribucion[0]['documento_iddocumento'] . "', '" . $seleccionado[$i]['ventanilla'] . "'," . SessionController::getValue('idfuncionario') . ")";
-        phpmkr_query($insert);
+    $iddestino_radicacion = explode(",", $ft_despacho_ingresados[0]['iddestino_radicacion']);
+    foreach ($iddestino_radicacion as $iddestino) {
 
-        $update = "UPDATE distribucion SET estado_distribucion=2 WHERE iddistribucion=" . $iddestino_radicacion[$i];
-        phpmkr_query($update);
+        $Distribucion = new Distribucion($iddestino);
+
+        if (($Distribucion->entre_sedes == 0) || ($iddestino == $Distribucion->entre_sedes)) {
+            $nuevoItemDespacho = Model::getQueryBuilder()
+                ->insert('ft_item_despacho_ingres')
+                ->values(
+                    array(
+                        'ft_destino_radicacio' => ':destino',
+                        'ft_despacho_ingresados' => ':planilla',
+                        'serie_idserie' => ':idserie',
+                    )
+                )
+                ->setParameter(':destino', $iddestino, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':planilla', $ft_despacho_ingresados[0]['idft_despacho_ingresados'], \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':idserie', $ft_despacho_ingresados[0]['serie_idserie'], \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute();
+        } else {
+            $distribucionPadre = Model::getQueryBuilder()
+                ->select('iddistribucion')
+                ->from('distribucion')
+                ->where('documento_iddocumento=:iddoc')
+                ->andWhere('iddistribucion = :entre_sedes')
+                ->setParameter(':iddoc', $Distribucion->documento_iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':entre_sedes', $Distribucion->entre_sedes, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute()
+                ->fetchAll();
+
+            $nuevoItemDespacho = Model::getQueryBuilder()
+                ->insert('ft_item_despacho_ingres')
+                ->values(
+                    array(
+                        'ft_destino_radicacio' => ':destino',
+                        'ft_despacho_ingresados' => ':planilla',
+                        'serie_idserie' => ':idserie',
+                    )
+                )
+                ->setParameter(':destino', $distribucionPadre[0]['iddistribucion'], \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':planilla', $ft_despacho_ingresados[0]['idft_despacho_ingresados'], \Doctrine\DBAL\Types\Type::INTEGER)
+                ->setParameter(':idserie', $ft_despacho_ingresados[0]['serie_idserie'], \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute();
+        }
+
+        $idFtItem = Model::getQueryBuilder()
+            ->select('idft_item_despacho_ingres')
+            ->from('ft_item_despacho_ingres')
+            ->where('ft_destino_radicacio=:destino')
+            ->andWhere('ft_despacho_ingresados = :planilla')
+            ->andWhere('serie_idserie = :idserie')
+            ->setParameter(':destino', $iddestino, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':planilla', $ft_despacho_ingresados[0]['idft_despacho_ingresados'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':idserie', $ft_despacho_ingresados[0]['serie_idserie'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()
+            ->fetchAll();
+
+        $nuevoItemRecep = Model::getQueryBuilder()
+            ->insert('dt_recep_despacho')
+            ->values(
+                array(
+                    'iddistribucion' => ':idDistribucion',
+                    'ft_item_despacho_ingres' => ':nuevoItemDespacho',
+                    'idfuncionario' => ':idFuncionario',
+                )
+            )
+            ->setParameter(':idDistribucion', $iddestino, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':nuevoItemDespacho', $idFtItem[0]['idft_item_despacho_ingres'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':idFuncionario', SessionController::getValue('idfuncionario'), \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+
+        $nuevoItemDespacho = Model::getQueryBuilder()
+            ->insert('dt_ventanilla_doc')
+            ->values(
+                array(
+                    'documento_iddocumento' => ':idDocumento',
+                    'idcf_ventanilla' => ':idcf_ventanilla',
+                    'idfuncionario' => ':idFuncionario',
+                )
+            )
+            ->setParameter(':idDocumento', $Distribucion->documento_iddocumento, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':idcf_ventanilla', $ft_despacho_ingresados[0]['ventanilla'], \Doctrine\DBAL\Types\Type::INTEGER)
+            ->setParameter(':idFuncionario', SessionController::getValue('idfuncionario'), \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute();
+        $Distribucion->estado_distribucion = 2;
+        $Distribucion->save();
     }
 }
 
@@ -223,9 +300,18 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
 
 function obtener_tipo_recorrido($idformato, $iddoc)
 {
-    $resultado = "Matutino";
-    if ('2' == 2) {
-        $resultado = "Vespertina";
+    $resultado = 'Matutino';
+
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('tipo_recorrido')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    if ($planilla[0]['tipo_recorrido'] == 2) {
+        $resultado = 'Vespertino';
     }
     echo $resultado;
 }
@@ -240,6 +326,8 @@ function obtener_tipo_recorrido($idformato, $iddoc)
  */
 function post_generar_planilla()
 {
+    proceso_entre_sedes();
+
     echo jquery();
     echo <<<HTML
     <script>
@@ -252,4 +340,98 @@ function post_generar_planilla()
         frameWindow.refreshGrid();        
     </script>
 HTML;
+}
+
+function proceso_entre_sedes()
+{
+    $iddestino_radicacion = explode(',', $_REQUEST['iddestino_radicacion']);
+    $Distribucion = new Distribucion($iddestino_radicacion[0]);
+
+    if ($Distribucion->sede_origen != $Distribucion->sede_destino) {
+        foreach ($iddestino_radicacion as $iddestino) {
+            $Distribucion = new Distribucion($iddestino);
+            $camposDistribucion = [
+                'origen' => $Distribucion->origen,
+                'tipo_origen' => 1,
+                'ruta_origen' => $Distribucion->ruta_origen,
+                'mensajero_origen' => $Distribucion->mensajero_destino,
+                'destino' => $Distribucion->destino,
+                'tipo_destino' => $Distribucion->tipo_destino,
+                'ruta_destino' => $Distribucion->ruta_destino,
+                'mensajero_destino' => $Distribucion->mensajero_destino,
+                'numero_distribucion' => $Distribucion->numero_distribucion,
+                'estado_distribucion' => 0,
+                'estado_recogida' => $Distribucion->estado_recogida,
+                'documento_iddocumento' => $Distribucion->documento_iddocumento,
+                'fecha_creacion' => $Distribucion->fecha_creacion,
+                'sede_origen' => $Distribucion->sede_origen,
+                'sede_destino' => $Distribucion->sede_destino,
+                'entre_sedes' => $Distribucion->entre_sedes
+            ];
+
+            $nuevoItemDistribucion = Distribucion::newRecord($camposDistribucion);
+        }
+    }
+}
+
+/** Funcion para crear un hidden en el adicionar de la planilla de distribucion con el id de la sede destino.
+ *  si no se encuentra la opcion entre sedes el valor por defecto sera 0
+ * @param void
+ * @return string Un html con el componente hidden para guardar el valor del REQUEST.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-07
+ */
+
+function sede_origen()
+{
+    echo "<input type='hidden' name='sede_origen' value='{$_REQUEST['sede_origen']}'>";
+}
+
+function sede_destino()
+{
+    echo "<input type='hidden' name='sede_destino' value='{$_REQUEST['sede_destino']}'>";
+}
+
+/** Funcion que muestra la sede destino en el mostrar de la planilla de distribucion solo si esta tiene la opcion entre sedes
+ * @param $idformato Identificador del formato
+ * @param $iddoc Identificador del documento
+ * @return string Un html con el titulo 'Sede destino: ' y el nombre de la sede destino.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-07
+ */
+
+function mostrar_destino_entre_sedes($idformato, $iddoc)
+{
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('sede_origen', 'sede_destino')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $query = Model::getQueryBuilder();
+    $nombreSedeOrigen = $query
+        ->select('nombre', 'idcf_ventanilla')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $planilla[0]['sede_origen'], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $query = Model::getQueryBuilder();
+    $nombreSedeDestino = $query
+        ->select('nombre', 'idcf_ventanilla')
+        ->from('cf_ventanilla')
+        ->where('estado=1')
+        ->andWhere('idcf_ventanilla = :idSede')
+        ->setParameter(':idSede', $planilla[0]['sede_destino'], \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $retorno = "<b>Sede origen: </b> {$nombreSedeOrigen[0]['nombre']} ";
+    if ($planilla[0]['sede_origen'] != $planilla[0]['sede_destino']) {
+        $retorno .= "| <b>Sede destino:</b> {$nombreSedeDestino[0]['nombre']}";
+    }
+
+    echo $retorno;
 }

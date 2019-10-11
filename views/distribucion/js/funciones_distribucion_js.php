@@ -152,15 +152,24 @@ echo select2();
                 if (seleccionado) {
                     var idruta_dist = [];
                     var mensajeroDistribucion = [];
-
+                    var sede_destino = [];
+                    var sede_origen = 0;
                     try {
 
                         // verifica si los items tienen ruta o mensajero asignado para proceder con la generacion de planilla de distribucion
                         registros_seleccionados.forEach(function(item, index, array) {
-                            console.log($('#selMensajeros' + item).val());
                             if (($('#selMensajeros' + item).val() != "") && ($('#selMensajeros' + item).val() != null)) {
                                 idruta_dist.push($('#ruta' + item).val());
                                 mensajeroDistribucion.push($('#selMensajeros' + item).val());
+                                sede_origen = $('#sedeOrigen' + item).data('idsede');
+                                // si no hay valor de sede destino el valor por defecto es 0
+                                if ($('#sedeDestino' + item).data('idsede') == '') {
+                                    sede_destino.push(0);
+                                    // Si hay opcion entre sedes, guarda el valor de la sede destino del item.
+                                } else {
+                                    sede_destino.push($('#sedeDestino' + item).data('idsede'));
+                                }
+
                             } else {
                                 top.notification({
                                     message: "Uno de los items no tienen mensajero asignado",
@@ -204,6 +213,24 @@ echo select2();
                             count++;
                         });
 
+                        // Compara si la sede es igual para generar la planilla, comienza a comparar desde el segundo ciclo porque compara la posicion anterior 
+                        // con la actual hasta terminar todos los items de distribucion.
+                        count = 0;
+                        sede_destino.forEach(function(element) {
+
+                            if (count) {
+                                if (sede_destino[count - 1] != sede_destino[count]) {
+                                    top.notification({
+                                        message: "No puede seleccionar distribuciones con diferentes sedes destino",
+                                        type: "error",
+                                        duration: "3500"
+                                    });
+                                    throw "error";
+                                }
+                            }
+                            count++;
+                        });
+
                         // cosulta si los items ya se encuentran recepcionados
                         $.ajax({
                             type: 'POST',
@@ -226,7 +253,9 @@ echo select2();
                                     //definicion de parametros para ventana kaiten, adicionar planilla_distribucion
                                     let params = $.param({
                                         idruta_dist: idruta_dist[0],
-                                        mensajero: mensajeroDistribucion[0]
+                                        mensajero: mensajeroDistribucion[0],
+                                        sede_origen: sede_origen,
+                                        sede_destino: sede_destino[0]
                                     });
                                     let configuration = {
                                         kConnector: 'iframe',

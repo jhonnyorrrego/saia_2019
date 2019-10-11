@@ -33,7 +33,7 @@
                         type: 'success',
                         message: response.message
                     });
-                    $('#tabla_resultados').bootstrapTable("refresh");
+                    $('#table').bootstrapTable("refresh");
                 } else {
                     top.notification({
                         type: 'error',
@@ -53,7 +53,7 @@
                 title: 'Usuario',
                 onSuccess: function() {
                     top.closeTopModal();
-                    $('#tabla_resultados').bootstrapTable("refresh");
+                    $('#table').bootstrapTable("refresh");
                 },
                 buttons: {
                     success: {

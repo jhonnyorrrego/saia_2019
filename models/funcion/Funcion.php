@@ -24,7 +24,16 @@ class Funcion extends LogModel
                 'estado',
                 'fecha'
             ],
-            'date' => ['fecha']
+            'date' => ['fecha'],
+            'labels' => [
+                'estado' => [
+                    'label' => 'Estado',
+                    'values' => [
+                        0 => 'Inactivo',
+                        1 => 'Activo'
+                    ]
+                ]
+            ]
         ];
     }
 
@@ -50,7 +59,7 @@ class Funcion extends LogModel
     {
         $diff = array_diff_assoc($this->getAttributes(), $this->clone->getAttributes());
 
-        if (array_key_exists('estado', $diff) && $diff['estado'] == 0) {
+        if (array_key_exists('estado', $diff) && (int) $diff['estado'] == 0) {
             return $this->inactiveRelations();
         }
 
@@ -85,6 +94,7 @@ class Funcion extends LogModel
             ->select('*')
             ->from('funcion')
             ->where('nombre like :like')
+            ->andWhere('estado = 1')
             ->setParameter(':like', "%{$term}%");
 
         return self::findByQueryBuilder($QueryBuilder);

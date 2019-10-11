@@ -114,9 +114,19 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <label for='fecha_ruta_distribuc' title=''>FECHA Y HORA</label>
 <label id="fecha_ruta_distribuc-error" class="error" for="fecha_ruta_distribuc" style="display: none;"></label>
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
+<?php $defaultValue = ComponentFormGeneratorController::callShowValue(
+                404,
+                $_REQUEST['iddoc'],
+                'fecha_ruta_distribuc'
+            ) ?>
+<?php $defaultValue = DateController::convertDate(
+                $defaultValue,
+                'Y-m-d H:i:s',
+                DateController::DEFAULT_FORMAT
+            ) ?>
 <script type='text/javascript'>
             $(function () {
-                var configuracion={"defaultDate":null,"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"<?= $defaultValue ?>","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
                 $('#fecha_ruta_distribuc').datetimepicker(configuracion);
                 $('#content_container').height($(window).height());
             });
@@ -131,14 +141,14 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             <input class='form-control required' type='text' id='nombre_ruta' name='nombre_ruta' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                nombre_ruta
+                'nombre_ruta'
             ) ?>' />
         </div>
 
         <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
             <label title=''>MENSAJEROS DE LA RUTA</label>
             <div class='form-group'>
-            <select name='asignar_mensajeros' id='asignar_mensajeros' required>
+            <select class='full-width' name='asignar_mensajeros' id='asignar_mensajeros' required>
             <option value=''>Por favor seleccione...</option>
         <option value='15'>
                 1
@@ -146,7 +156,6 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                 <script>
                 $(document).ready(function() {
                     $('#asignar_mensajeros').select2();
-                    $('#asignar_mensajeros').addClass('full-width');
                 });
                 </script>
             </div>
@@ -203,30 +212,30 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <input type='hidden' name='firma' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                firma
+                'firma'
             ) ?>'>
 <div class='form-group form-group-default  col-12 '  id='group_descripcion_ruta'>
             <label title=''>DESCRIPCIóN RUTA</label>
             <input class='form-control ' type='text' id='descripcion_ruta' name='descripcion_ruta' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                descripcion_ruta
+                'descripcion_ruta'
             ) ?>' />
         </div>
 <input type='hidden' name='encabezado' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                encabezado
+                'encabezado'
             ) ?>'>
 <input type='hidden' name='documento_iddocumento' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                documento_iddocumento
+                'documento_iddocumento'
             ) ?>'>
 <input type='hidden' name='idft_ruta_distribucion' value='<?= ComponentFormGeneratorController::callShowValue(
                 404,
                 $_REQUEST['iddoc'],
-                idft_ruta_distribucion
+                'idft_ruta_distribucion'
             ) ?>'>
 <input type='hidden' name='campo_descripcion' value='4987'>
 <input type='hidden' name='iddoc' value='<?= $_REQUEST['iddoc'] ?? null ?>'>
@@ -241,8 +250,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             </div>
         </div>
     </div>
-    <?php fecha_formato(404,$_REQUEST['iddoc'] ?? null) ?>
-<?php add_edit_ruta_dist(404,$_REQUEST['iddoc'] ?? null) ?>
+    <?php add_edit_ruta_dist(404,$_REQUEST['iddoc'] ?? null) ?>
 
     <script>
         $(function() {

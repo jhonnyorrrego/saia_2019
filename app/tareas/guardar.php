@@ -128,14 +128,17 @@ function sendNotification($Tarea)
         }
 
         $icsRoute = generateIcs($Tarea);
-        enviar_mensaje(
-            '',
-            ['para' => 'email'],
-            ['para' => $emails],
-            'Nueva tarea asignada',
-            $Tarea->getName() . ' - ' . $Tarea->descripcion,
+        $body = $Tarea->getName() . ' - ' . $Tarea->descripcion;
+        $SendMailController = new SendMailController('Nueva tarea asignada', $body);
+        $SendMailController->setDestinations(
+            SendMailController::DESTINATION_TYPE_EMAIL,
+            $emails
+        );
+        $SendMailController->setAttachments(
+            SendMailController::ATTACHMENT_TYPE_ROUTE,
             [$icsRoute]
         );
+        $SendMailController->send();
     }
 }
 
