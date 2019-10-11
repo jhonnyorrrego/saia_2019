@@ -347,7 +347,7 @@ function proceso_entre_sedes()
     $iddestino_radicacion = explode(',', $_REQUEST['iddestino_radicacion']);
     $Distribucion = new Distribucion($iddestino_radicacion[0]);
 
-    if ($Distribucion->entre_sedes > 0) {
+    if ($Distribucion->sede_origen != $Distribucion->sede_destino) {
         foreach ($iddestino_radicacion as $iddestino) {
             $Distribucion = new Distribucion($iddestino);
             $camposDistribucion = [
@@ -429,7 +429,7 @@ function mostrar_destino_entre_sedes($idformato, $iddoc)
         ->execute()->fetchAll();
 
     $retorno = "<b>Sede origen: </b> {$nombreSedeOrigen[0]['nombre']} ";
-    if ($planilla[0]['sede_destino'] != 0) {
+    if ($planilla[0]['sede_origen'] != $planilla[0]['sede_destino']) {
         $retorno .= "| <b>Sede destino:</b> {$nombreSedeDestino[0]['nombre']}";
     }
 

@@ -63,7 +63,7 @@ try {
                     ->update('distribucion')
                     ->set('estado_distribucion', 1)
                     ->set('sede_origen', ':sede_origen')
-                    ->set('sede_destino', 0)
+                    ->set('sede_destino', ':sede_origen')
                     ->where('iddistribucion=:item')
                     ->setParameter(':sede_origen', $Distribucion->sede_destino, \Doctrine\DBAL\Types\Type::INTEGER)
                     ->setParameter(':item', $iddistribucion, \Doctrine\DBAL\Types\Type::INTEGER)
