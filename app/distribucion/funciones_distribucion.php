@@ -679,8 +679,20 @@ function retornar_origen_destino_distribucion($tipo, $valor)
 function condicion_adicional_distribucion()
 {
     $condicion_adicional = "";
-    $funcionario_codigo_usuario_actual = SessionController::getValue('usuario_actual');
-    $es_mensajero = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "lower(cargo)='mensajero' AND funcionario_codigo='" . $funcionario_codigo_usuario_actual . "' AND estado_dc=1", "");
+    $userCode = SessionController::getValue('usuario_actual');
+
+    $query = Model::getQueryBuilder()
+        ->select('iddependencia_cargo')
+        ->from(VfuncionarioDc::getTableName())
+        ->where('estado_dc = 1')
+        ->andWhere('funcionario_codigo = :userCode')
+        ->andWhere('LOWER(cargo) = :position')
+        ->setParameter('position', 'mensajero')
+        ->setParameter('userCode', $userCode, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    $esMensajero = $query[0]['iddependencia_cargo'];
+
     $administrador_mensajeria = validar_administrador_mensajeria();
     //CONDICION VENTANILLA
     $conector_mensajero = ' AND ';
@@ -689,14 +701,14 @@ function condicion_adicional_distribucion()
     if (!$administrador_mensajeria) {
         $ventanilla_radicacion = usuario_actual('ventanilla_radicacion');
         if ($ventanilla_radicacion) {
-            if ($es_mensajero['numcampos']) {
+            if ($esMensajero[0]) {
                 $condicion_adicional .= " AND ( ( a.sede_origen=" . $ventanilla_radicacion . " ) OR ";
                 $conector_mensajero = '';
                 $conector_final_mensajero = ' )';
             } else {
                 $condicion_adicional .= " AND ( a.sede_origen=" . $ventanilla_radicacion . " OR a.sede_destino=" . $ventanilla_radicacion . " ) ";
             }
-        } else if ($es_mensajero['numcampos']) { } else {
+        } else if ($esMensajero[0]) { } else {
             $condicion_adicional .= " AND ( 1=2 ) ";
             //la consulta sale vacia si no pertenece a dependencia ventanilla
         }
@@ -704,17 +716,17 @@ function condicion_adicional_distribucion()
 
     //FIN CONDICION VENTANILLA
     //FILTRO MENSAJERO
-    if (!$administrador_mensajeria && $es_mensajero['numcampos']) { //si no es un administrador filtramos como si fuera un mensajero
-        if ($es_mensajero['numcampos']) { //si es mensajero
-            $lista_roles_funcionarios = '';
-            for ($i = 0; $i < $es_mensajero['numcampos']; $i++) {
-                $lista_roles_funcionarios .= $es_mensajero[$i]['iddependencia_cargo'];
-                if (($i + 1) != $es_mensajero['numcampos']) {
-                    $lista_roles_funcionarios .= ',';
-                }
-            } //fin for rol funcionario mensajero
+    if (!$administrador_mensajeria && $esMensajero) { //si no es un administrador filtramos como si fuera un mensajero
+        if ($esMensajero[0]) { //si es mensajero
+            $listaRolesFuncionarios = '';
 
-            $condicion_adicional .= $conector_mensajero . "  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(" . $lista_roles_funcionarios . ") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(" . $lista_roles_funcionarios . ") AND a.estado_recogida=1  ) ) " . $conector_final_mensajero;
+            foreach ($esMensajero[0] as $mensajero) {
+                $listaRolesFuncionarios .= "{$mensajero['iddependencia_cargo']},";
+            }
+            $listaRolesFuncionarios = substr($listaRolesFuncionarios, 0, -1);
+            //fin for rol funcionario mensajero
+
+            $condicion_adicional .= $conector_mensajero . "  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(" . $listaRolesFuncionarios . ") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(" . $lista_roles_funcionarios . ") AND a.estado_recogida=1  ) ) " . $conector_final_mensajero;
         } //fin $es_mensajero mensajero
     } // FIN: si no es un administrador filtramos como si fuera un mensajero
     //FIN FILTRO MENSAJERO
@@ -776,7 +788,7 @@ function condicion_adicional_distribucion()
         ->select('idcf_ventanilla', 'nombre')
         ->from('cf_ventanilla')
         ->where('idfuncionario=:funcionario')
-        ->setParameter(':funcionario', $funcionario_codigo_usuario_actual, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->setParameter(':funcionario', $userCode, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()
         ->fetchAll();
     if ($gestorMensajeria) {
