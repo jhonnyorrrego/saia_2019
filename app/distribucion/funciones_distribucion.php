@@ -771,6 +771,18 @@ function condicion_adicional_distribucion()
         }
         //FIN FILTRO POR TIPO ORIGEN
     } //fin if $_REQUEST['variable_busqueda']
+
+    $gestorMensajeria = Model::getQueryBuilder()
+        ->select('idcf_ventanilla', 'nombre')
+        ->from('cf_ventanilla')
+        ->where('idfuncionario=:funcionario')
+        ->setParameter(':funcionario', $funcionario_codigo_usuario_actual, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()
+        ->fetchAll();
+    if ($gestorMensajeria) {
+        $condicion_adicional .= '';
+    }
+
     return $condicion_adicional;
 }
 
