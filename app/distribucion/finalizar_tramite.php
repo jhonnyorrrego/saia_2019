@@ -33,28 +33,37 @@ try {
 
     $vector_iddistribucion = explode(',', $_REQUEST['iddistribucion']);
 
-    for ($i = 0; $i < count($vector_iddistribucion); $i++) {
-        $iddistribucion = $vector_iddistribucion[$i];
+    foreach ($vector_iddistribucion as $vector) {
+        $iddistribucion = $vector;
+        $Distribucion = new Distribucion($iddistribucion);
+        $diligencia = mostrar_diligencia_distribucion($Distribucion->tipo_origen, $Distribucion->estado_recogida);
 
-        $distribucion = busca_filtro_tabla("tipo_origen,estado_recogida,estado_distribucion", "distribucion", "iddistribucion=" . $iddistribucion, "");
-        $diligencia = mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'], $distribucion[0]['estado_recogida']);
-        $upd = '';
-        switch ($diligencia) {
-            case 'RECOGIDA':
-                $estado_distribucion = 1;
-                if (@$_REQUEST['finaliza_manual']) {
-                    $estado_distribucion = 0;
-                }
-                $upd = " UPDATE distribucion SET estado_recogida=1,estado_distribucion=" . $estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
-                break;
-            case 'ENTREGA':
-                $estado_distribucion = 3;
-                $upd = " UPDATE distribucion SET estado_distribucion=" . $estado_distribucion . " WHERE iddistribucion=" . $iddistribucion;
-                break;
-        } //fin switch
-
-        if ($upd != '') {
-            phpmkr_query($upd);
+        if ($Distribucion->entre_sedes == 0) {
+            switch ($diligencia) {
+                case 'RECOGIDA':
+                    $Distribucion->estado_recogida = 1;
+                    $Distribucion->estado_distribucion = 1;
+                    $Distribucion->save();
+                    break;
+                case 'ENTREGA':
+                    $Distribucion->estado_distribucion = 3;
+                    $Distribucion->save();
+                    break;
+            } //fin switch  
+        }
+        if ($Distribucion->entre_sedes > 0) {
+            $query = Model::getQueryBuilder();
+            $copiasDistribuciones = $query
+                ->select("iddistribucion")
+                ->from("distribucion")
+                ->where("entre_sedes= :entreSedes")
+                ->setParameter("entreSedes", $Distribucion->entre_sedes, \Doctrine\DBAL\Types\Type::INTEGER)
+                ->execute()->fetchAll();
+        }
+        foreach ($copiasDistribuciones as $itemDistribucion) {
+            $Distribucion = new Distribucion($itemDistribucion['iddistribucion']);
+            $Distribucion->estado_distribucion = 3;
+            $Distribucion->save();
         }
     }
 
