@@ -116,7 +116,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
 <input type="text" class="form-control"  id="fecha_ruta_distribuc"  required name="fecha_ruta_distribuc" />
 <script type='text/javascript'>
             $(function () {
-                var configuracion={"defaultDate":"2019-10-05","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"2019-10-09","format":"YYYY-MM-DD","locale":"es","useCurrent":true};
                 $('#fecha_ruta_distribuc').datetimepicker(configuracion);
                 $('#content_container').height($(window).height());
             });
@@ -134,7 +134,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
         <div class='form-group form-group-default form-group-default-select2 required' id='group_asignar_mensajeros'>
             <label title=''>MENSAJEROS DE LA RUTA</label>
             <div class='form-group'>
-            <select name='asignar_mensajeros' id='asignar_mensajeros' required>
+            <select class='full-width' name='asignar_mensajeros' id='asignar_mensajeros' required>
             <option value=''>Por favor seleccione...</option>
         <option value='15'>
                 1
@@ -142,7 +142,6 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
                 <script>
                 $(document).ready(function() {
                     $('#asignar_mensajeros').select2();
-                    $('#asignar_mensajeros').addClass('full-width');
                 });
                 </script>
             </div>
@@ -182,8 +181,7 @@ llama_funcion_accion(null,404 ,'ingresar','ANTERIOR');
             </div>
         </div>
     </div>
-    <?php fecha_formato(404,$_REQUEST['iddoc'] ?? null) ?>
-<?php add_edit_ruta_dist(404,$_REQUEST['iddoc'] ?? null) ?>
+    <?php add_edit_ruta_dist(404,$_REQUEST['iddoc'] ?? null) ?>
 
     <script>
         $(function() {

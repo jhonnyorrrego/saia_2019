@@ -387,7 +387,7 @@ function mostrar_dependencia_carta($idformato, $iddoc)
 	}
 }
 if (@$_REQUEST["tipo"] != 5) {
-	echo (librerias_jquery('1.7'));
+	echo jquery();
 	?>
 	<link rel="stylesheet" href="<?php echo ($ruta_db_superior); ?>css/image-enlarger.css" media="screen" type="text/css" />
 	<script type="text/javascript" src="<?php echo ($ruta_db_superior); ?>js/dhtml-suite-for-applications.js"></script>

@@ -138,8 +138,6 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
 
         $Documento = new Documento($iddoc);
 
-        $Distribucion = new Distribucion();
-
         $camposDistribucion = [
             'origen' => $datos['origen'],
             'tipo_origen' => $datos['tipo_origen'],
@@ -155,14 +153,14 @@ function ingresar_distribucion($iddoc, $datos, $iddistribucion = 0)
             'documento_iddocumento' => $iddoc,
             'fecha_creacion' => date('Y-m-d H:i:s'),
             'sede_origen' => $Documento->ventanilla_radicacion,
-            'sede_destino' => 0
+            'sede_destino' => $Documento->ventanilla_radicacion,
         ];
 
         if ($iddistribucion) {
             $camposDistribucion = array_merge($camposDistribucion, ["iddistribucion" => $iddistribucion]);
         }
-        $Distribucion::newRecord($camposDistribucion);
-        $distribuciones[] = $Distribucion;
+        $nuevaDistribucion = Distribucion::newRecord($camposDistribucion);
+        $distribuciones[] = $nuevaDistribucion;
     }
     return $distribuciones;
 }
@@ -443,8 +441,8 @@ function mostrar_nombre_ruta_distribucion($iddistribucion)
     $opciones .= "</select> <script> $('#ruta{$iddistribucion}').select2();</script>";
 
     $Distribucion = new Distribucion($iddistribucion);
-    if ($Distribucion->entre_sedes == 1) {
-        $opciones = '';
+    if ($Distribucion->sede_origen != $Distribucion->sede_destino) {
+        $opciones = '(Entre sedes)';
     }
     return $opciones;
 }
@@ -487,6 +485,8 @@ function obtenerRuta($iddistribucion)
  */
 function select_mensajeros_ruta_distribucion($iddistribucion)
 {
+    $Distribucion = new Distribucion($iddistribucion);
+
     $rutasDistribucion = obtenerRuta($iddistribucion);
     $ruta = $rutasDistribucion[0]['idft_ruta_distribucion'];
     $html = "<select id='selMensajeros{$iddistribucion}' class='selMensajeros' style='width:150px' >";
@@ -498,19 +498,21 @@ function select_mensajeros_ruta_distribucion($iddistribucion)
         ->andWhere("ft_ruta_distribucion = :ruta")
         ->setParameter(":ruta", $ruta, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
-    foreach ($mensajeros as $key => $ruta) {
-        $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
-        $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+
+    if ($Distribucion->sede_origen == $Distribucion->sede_destino) {
+        foreach ($mensajeros as $key => $ruta) {
+            $VfuncionarioDc = new VfuncionarioDc($mensajeros[$key]["mensajero_ruta"]);
+            $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
+        }
     }
 
-    $Distribucion = new Distribucion($iddistribucion);
-    if ($Distribucion->entre_sedes == 1) {
+    if ($Distribucion->sede_origen != $Distribucion->sede_destino) {
         $VfuncionarioDc = new VfuncionarioDc($Distribucion->mensajero_destino);
         $html .= "<option value='{$VfuncionarioDc->getPK()}'>{$VfuncionarioDc->nombres} {$VfuncionarioDc->apellidos}</option>";
     }
 
     $html .= "</select><script> $('#selMensajeros{$iddistribucion}').select2();</script>";
-    if ($Distribucion->entre_sedes == 1) {
+    if ($Distribucion->sede_origen != $Distribucion->sede_destino) {
         $html .= "<script> $('#selMensajeros{$iddistribucion}').attr('disabled','disabled');</script>";
     }
     return $html;
@@ -576,18 +578,53 @@ function filtro_planilla_distribucion()
         return '1=1';
     }
 }
+/**
+ * Esta funcion muestra las planillas que estan asociadas a la distribucion en los reportes de distribucion pendientes, en distribucion y finalizados
+ *
+ * @param [integer] $iddistribucion
+ * @return string Con html que muestra con botones las planillas que estan asociadas al documento.
+ * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-10
+ */
 function mostrar_planilla_diligencia_distribucion($iddistribucion)
 { //Planilla Asociada
-    $planillas = busca_filtro_tabla("b.iddocumento,b.numero", "ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c", "a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=" . $iddistribucion, "");
+    $ft_destapacho_ingresados = Model::getQueryBuilder()
+        ->select('b.iddocumento', 'b.numero')
+        ->from('ft_despacho_ingresados', 'a')
+        ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+        ->innerJoin('a', 'ft_item_despacho_ingres', 'c', 'a.idft_despacho_ingresados=c.ft_despacho_ingresados')
+        ->where('lower(b.estado)="aprobado"')
+        ->andWhere('c.ft_destino_radicacio = :iddist')
+        ->setParameter(':iddist', $iddistribucion, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
     $html = "No tiene planilla asociada";
     //Pendiente
     //el componente 379 tiene busqueda de planillas
-    if ($planillas['numcampos']) {
+    $Distribucion = new Distribucion($iddistribucion);
+    if (($iddistribucion == $Distribucion->entre_sedes) || ($Distribucion->entre_sedes == 0)) {
+        if ($ft_destapacho_ingresados) {
+            $html = '';
+            foreach ($ft_destapacho_ingresados as $planilla) {
+                $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planilla['iddocumento'] . '" conector="iframe" titulo="No Registro ' . $planilla['numero'] . '"><center><button class="btn btn-complete">' . $planilla['numero'] . '</button></center></div>';
+            }
+        }
+    } else {
+        $registros_planillas = Model::getQueryBuilder()
+            ->select('b.iddocumento', 'b.numero')
+            ->from('ft_despacho_ingresados', 'a')
+            ->innerJoin('a', 'documento', 'b', 'a.documento_iddocumento=b.iddocumento')
+            ->innerJoin('a', 'ft_item_despacho_ingres', 'c', 'a.idft_despacho_ingresados=c.ft_despacho_ingresados')
+            ->where('lower(b.estado)="aprobado"')
+            ->andWhere('c.ft_destino_radicacio = :iddist')
+            ->setParameter(':iddist', $Distribucion->entre_sedes, \Doctrine\DBAL\Types\Type::INTEGER)
+            ->execute()->fetchAll();
         $html = '';
-        for ($i = 0; $i < $planillas['numcampos']; $i++) {
-            $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Registro ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . '</button></center></div>';
+        foreach ($registros_planillas as $planilla) {
+            $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planilla['iddocumento'] . '" conector="iframe" titulo="No Registro ' . $planilla['numero'] . '"><center><button class="btn btn-complete">' . $planilla['numero'] . '</button></center></div>';
         }
     }
+
     return $html;
 }
 
@@ -639,103 +676,176 @@ function retornar_origen_destino_distribucion($tipo, $valor)
     return $nombre;
 }
 
-function condicion_adicional_distribucion()
+function condicionGeneralDistribucion()
 {
-    $condicion_adicional = "";
-    $funcionario_codigo_usuario_actual = SessionController::getValue('usuario_actual');
-    $es_mensajero = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "lower(cargo)='mensajero' AND funcionario_codigo='" . $funcionario_codigo_usuario_actual . "' AND estado_dc=1", "");
+    $condicionAdicional = "";
+    $userCode = SessionController::getValue('usuario_actual');
+
+    $esMensajero = Model::getQueryBuilder()
+        ->select('iddependencia_cargo')
+        ->from(VfuncionarioDc::getTableName())
+        ->where('estado_dc = 1')
+        ->andWhere('funcionario_codigo = :userCode')
+        ->andWhere('LOWER(cargo) = :position')
+        ->setParameter('position', 'mensajero')
+        ->setParameter('userCode', $userCode, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
     $administrador_mensajeria = validar_administrador_mensajeria();
     //CONDICION VENTANILLA
     $conector_mensajero = ' AND ';
-    $conector_final_mensajero = '';
+    $conectorFinalMensajero = '';
+
     if (!$administrador_mensajeria) {
-        $ventanilla_radicacion = usuario_actual('ventanilla_radicacion');
-        if ($ventanilla_radicacion) {
-            if ($es_mensajero['numcampos']) {
-                $condicion_adicional .= " AND ( ( b.ventanilla_radicacion=" . $ventanilla_radicacion . " ) OR ";
+        $ventanillaRadicacion = usuario_actual('ventanilla_radicacion');
+        if ($ventanillaRadicacion) {
+            if ($esMensajero[0]) {
+                $condicionAdicional .= " AND ( ( a.sede_origen=" . $ventanillaRadicacion . " ) OR ";
                 $conector_mensajero = '';
-                $conector_final_mensajero = ' )';
+                $conectorFinalMensajero = ' )';
             } else {
-                $condicion_adicional .= " AND ( b.ventanilla_radicacion=" . $ventanilla_radicacion . " ) ";
+                $condicionAdicional .= " AND ( a.sede_origen=" . $ventanillaRadicacion . " OR a.sede_destino=" . $ventanillaRadicacion . " ) ";
             }
-        } else if ($es_mensajero['numcampos']) { } else {
-            $condicion_adicional .= " AND ( 1=2 ) ";
+        } else if ($esMensajero[0]) { } else {
+            $condicionAdicional .= " AND ( 1=2 ) ";
             //la consulta sale vacia si no pertenece a dependencia ventanilla
         }
     }
 
     //FIN CONDICION VENTANILLA
     //FILTRO MENSAJERO
-    if (!$administrador_mensajeria && $es_mensajero['numcampos']) { //si no es un administrador filtramos como si fuera un mensajero
-        if ($es_mensajero['numcampos']) { //si es mensajero
-            $lista_roles_funcionarios = '';
-            for ($i = 0; $i < $es_mensajero['numcampos']; $i++) {
-                $lista_roles_funcionarios .= $es_mensajero[$i]['iddependencia_cargo'];
-                if (($i + 1) != $es_mensajero['numcampos']) {
-                    $lista_roles_funcionarios .= ',';
-                }
-            } //fin for rol funcionario mensajero
+    if (!$administrador_mensajeria && $esMensajero) { //si no es un administrador filtramos como si fuera un mensajero
+        if ($esMensajero[0]) {
+            //si es mensajero
+            $listaRolesFuncionarios = '';
 
-            $condicion_adicional .= $conector_mensajero . "  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(" . $lista_roles_funcionarios . ") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(" . $lista_roles_funcionarios . ") AND a.estado_recogida=1  ) ) " . $conector_final_mensajero;
+            foreach ($esMensajero as $mensajero) {
+                $listaRolesFuncionarios .= "{$mensajero['iddependencia_cargo']},";
+            }
+
+            $listaRolesFuncionarios = substr($listaRolesFuncionarios, 0, -1);
+            //fin for rol funcionario mensajero
+
+            $condicionAdicional .= $conector_mensajero . "  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(" . $listaRolesFuncionarios . ") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(" . $listaRolesFuncionarios . ") AND a.estado_recogida=1  ) ) " . $conectorFinalMensajero;
         } //fin $es_mensajero mensajero
     } // FIN: si no es un administrador filtramos como si fuera un mensajero
     //FIN FILTRO MENSAJERO
 
     if (@$_REQUEST['variable_busqueda']) {
-        $vector_variable_busqueda = explode('|', $_REQUEST['variable_busqueda']);
+        $vectorVariableBusqueda = explode('|', $_REQUEST['variable_busqueda']);
         //FILTRO POR VENTANILLA DE RADICACION
-        if ($vector_variable_busqueda[0] == 'filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]) {
-            $condicion_adicional .= " AND ( b.ventanilla_radicacion=" . $vector_variable_busqueda[1] . " )";
-        } //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'
+        if ($vectorVariableBusqueda[0] == 'filtro_ventanilla_radicacion' && $vectorVariableBusqueda[1]) {
+            $condicionAdicional .= " AND ( b.ventanilla_radicacion=" . $vectorVariableBusqueda[1] . " )";
+        } //fin if $vectorVariableBusqueda[0]=='filtro_ventanillaRadicacion'
         //FILTRO POR RUTA DE DISTRIBUCION
-        if ($vector_variable_busqueda[0] == 'idft_ruta_distribucion' && $vector_variable_busqueda[1]) {
+        if ($vectorVariableBusqueda[0] == 'idft_ruta_distribucion' && $vectorVariableBusqueda[1]) {
 
             //CONDICION RUTA ORIGEN
-            $condicion_adicional .= " AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.ruta_origen=" . $vector_variable_busqueda[1] . ")";
+            $condicionAdicional .= " AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.ruta_origen=" . $vectorVariableBusqueda[1] . ")";
 
             //CONDICION RUTA DESTINO
-            $condicion_adicional .= " OR ( a.tipo_destino=1 AND a.ruta_destino=" . $vector_variable_busqueda[1] . " AND a.estado_recogida=1  ) )";
-        } //fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
+            $condicionAdicional .= " OR ( a.tipo_destino=1 AND a.ruta_destino=" . $vectorVariableBusqueda[1] . " AND a.estado_recogida=1  ) )";
+        } //fin if $vectorVariableBusqueda[0]=='idft_ruta_distribucion'
         //FILTRO POR MENSAJERO
-        if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1]) {
+        if ($vectorVariableBusqueda[0] == 'filtro_mensajero_distribucion' && $vectorVariableBusqueda[1]) {
 
-            $mensajero_tipo = explode('-', $vector_variable_busqueda[1]);
+            $mensajeroTipo = explode('-', $vectorVariableBusqueda[1]);
 
-            if ($mensajero_tipo[1] == 'i') {
+            if ($mensajeroTipo[1] == 'i') {
                 //CONDICION mensajero origen
-                $condicion_adicional .= " AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen=" . $mensajero_tipo[0] . ") OR ";
+                $condicionAdicional .= " AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen=" . $mensajeroTipo[0] . ") OR ";
             } else {
-                $condicion_adicional .= "  AND ( ";
+                $condicionAdicional .= "  AND ( ";
             }
             //CONDICION mensajero destino
-            $coondicion_tipo_mensajero_destino = 0;
-            if ($mensajero_tipo[1] == 'e') {
-                $coondicion_tipo_mensajero_destino = 1;
+            $condicionTipoMensajeroDestino = 0;
+            if ($mensajeroTipo[1] == 'e') {
+                $condicionTipoMensajeroDestino = 1;
             }
-            $condicion_adicional .= "  (a.mensajero_empresad=" . $coondicion_tipo_mensajero_destino . " AND a.mensajero_destino=" . $mensajero_tipo[0] . " AND a.estado_recogida=1  ) )";
-        } //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
+            $condicionAdicional .= "  (a.mensajero_empresad=" . $condicionTipoMensajeroDestino . " AND a.mensajero_destino=" . $mensajeroTipo[0] . " AND a.estado_recogida=1  ) )";
+        } //fin if $vectorVariableBusqueda[0]=='filtro_mensajero_distribucion'
         //FILTRO POR TIPO ORIGEN filtro_tipo_origen
-        if ($vector_variable_busqueda[0] == 'filtro_tipo_origen' && $vector_variable_busqueda[1]) {
-            switch ($vector_variable_busqueda[1]) {
+        if ($vectorVariableBusqueda[0] == 'filtro_tipo_origen' && $vectorVariableBusqueda[1]) {
+            switch ($vectorVariableBusqueda[1]) {
                 case 1:
                     //Externo
-                    $condicion_adicional .= " AND a.tipo_origen = 1 ";
+                    $condicionAdicional .= " AND a.tipo_origen = 1 ";
                     break;
                 case 2:
                     //Interno
-                    $condicion_adicional .= " AND a.tipo_origen = 2 ";
+                    $condicionAdicional .= " AND a.tipo_origen = 2 ";
                     break;
                 case 3:
                     //Mostrar Todos
-                    $condicion_adicional .= "";
+                    $condicionAdicional .= "";
                     break;
             }
         }
         //FIN FILTRO POR TIPO ORIGEN
     } //fin if $_REQUEST['variable_busqueda']
-    return $condicion_adicional;
+    return $condicionAdicional;
 }
 
+function condicion_adicional_pendientes($estado_distribucion)
+{
+    $condicionAdicional = condicionGeneralDistribucion();
+    $condicionAdicional = '';
+    $userCode = SessionController::getValue('usuario_actual');
+
+    $gestorMensajeria = Model::getQueryBuilder()
+        ->select('idcf_ventanilla', 'nombre')
+        ->from('cf_ventanilla')
+        ->where('idfuncionario=:funcionario')
+        ->setParameter(':funcionario', $userCode, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()
+        ->fetchAll();
+
+    if ($gestorMensajeria) {
+        $condicionAdicional .= 'AND (';
+        $count = 0;
+        foreach ($gestorMensajeria as $i => $gestor) {
+            if ($i != 0) {
+                $condicionAdicional .= ' OR ';
+            }
+
+            $condicionAdicional .= '((a.sede_destino = ' . $gestor['idcf_ventanilla'] . ' AND a.estado_distribucion=0) OR (a.sede_origen = ' . $gestor['idcf_ventanilla'] . ' AND a.estado_distribucion=1) )';
+        }
+        $condicionAdicional .= ')';
+    } else {
+        $condicionAdicional .= 'AND  1 = 2 ';
+    }
+
+    return $condicionAdicional;
+}
+
+
+function condicion_adicional_endistribucion()
+{
+    $condicionAdicional = condicionGeneralDistribucion();
+    $condicionAdicional = '';
+    $userCode = SessionController::getValue('usuario_actual');
+    $gestorMensajeria = Model::getQueryBuilder()
+        ->select('idcf_ventanilla', 'nombre')
+        ->from('cf_ventanilla')
+        ->where('idfuncionario=:funcionario')
+        ->setParameter(':funcionario', $userCode, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()
+        ->fetchAll();
+    if ($gestorMensajeria) {
+        $condicionAdicional .= 'AND (';
+        foreach ($gestorMensajeria as $i => $gestor) {
+            if ($i != 0) {
+                $condicionAdicional .= ' OR ';
+            }
+
+            $condicionAdicional .= 'a.sede_origen = ' . $gestor['idcf_ventanilla'];
+        }
+        $condicionAdicional .= ')';
+    } else {
+        $condicionAdicional .= 'AND  1 = 2 ';
+    }
+    return $condicionAdicional;
+}
 //---------------------------------------------------------------------------------------------
 //RUTAS DE DISTRIBUCION
 
@@ -839,18 +949,18 @@ function condicion_por_ingresar_ventanilla_distribucion()
     global $ruta_db_superior;
     include_once($ruta_db_superior . "app/distribucion/funciones_distribucion.php");
     $administrador_mensajeria = validar_administrador_mensajeria();
-    $ventanilla_radicacion_usuario_actual = usuario_actual('ventanilla_radicacion');
+    $ventanillaRadicacionUsuarioActual = usuario_actual('ventanilla_radicacion');
 
-    $condicion_adicional = "";
+    $condicionAdicional = "";
     if (!$administrador_mensajeria) {
-        $condicion_adicional .= " ";
-        if ($ventanilla_radicacion_usuario_actual) {
-            $condicion_adicional .= " AND ( a.ventanilla_radicacion=" . $ventanilla_radicacion_usuario_actual . " )";
+        $condicionAdicional .= " ";
+        if ($ventanillaRadicacionUsuarioActual) {
+            $condicionAdicional .= " AND ( a.ventanilla_radicacion=" . $ventanillaRadicacionUsuarioActual . " )";
         } else {
-            $condicion_adicional .= " AND (1=1)";
+            $condicionAdicional .= " AND (1=1)";
         }
     }
-    return $condicion_adicional;
+    return $condicionAdicional;
 }
 
 function obtener_radicado($idDocumento)
@@ -889,22 +999,21 @@ function obtener_sede_origen($iddistribucion)
     $sedeOrigen = $Distribucion->sede_origen;
     $query = Model::getQueryBuilder();
     $nombreSedeOrigen = $query
-        ->select('nombre')
+        ->select('idcf_ventanilla', 'nombre')
         ->from('cf_ventanilla')
         ->where('estado=1')
         ->andWhere('idcf_ventanilla = :idSede')
         ->setParameter(':idSede', $sedeOrigen, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
 
-    return $nombreSedeOrigen[0]['nombre'];
+    return "<div id='sedeOrigen{$iddistribucion}' data-idsede='{$nombreSedeOrigen[0]['idcf_ventanilla']}'> {$nombreSedeOrigen[0]['nombre']} </div>";
 }
-
 
 /**
  * Retorna la sede de destino del documento en el reporte de distribución 
  *
  * @param [integer] $iddistribucion
- * @return string retorna el nombre de la sede de destino
+ * @return string retorno Nos entrega el nombre de la sede de destino dentro de un div que contiene un data-param con el id de la sede para enviar al adicionar generar planilla
  * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
  * @date 2019-09-27
  */
@@ -912,18 +1021,19 @@ function obtener_sede_destino($iddistribucion)
 {
     $Distribucion = new Distribucion($iddistribucion);
     $sedeDestino = $Distribucion->sede_destino;
+
     $query = Model::getQueryBuilder();
     $nombreSedeDestino = $query
-        ->select('nombre')
+        ->select('nombre', 'idcf_ventanilla')
         ->from('cf_ventanilla')
         ->where('estado=1')
         ->andWhere('idcf_ventanilla = :idSede')
         ->setParameter(':idSede', $sedeDestino, \Doctrine\DBAL\Types\Type::INTEGER)
         ->execute()->fetchAll();
 
-    return $nombreSedeDestino[0]['nombre'];
+    $retorno = "<div id='sedeDestino{$iddistribucion}' data-idsede='{$nombreSedeDestino[0]['idcf_ventanilla']}' > {$nombreSedeDestino[0]['nombre']} </div>";
+    return $retorno;
 }
-
 /**
  * Esta funcion obtiene el asunto desde  ft_radicacion_entrada para que el asunto llegue limpio sin 'ASUNTO:' ya que para el reporte de distribución es redundante incluirlo.
  *
@@ -989,22 +1099,41 @@ function obtener_mensajero($idMensajero)
 
 /**
  * Retorna el nombre de recorrido en una planilla de distribucion (Matutino, Vespertina)
- *
+
  * @param [integer] $idft_despacho_ingresados
- * @param [type] $iddoc
- * @return void
+ * @return string Retorna el nombre del recorrido de la planilla de distribucion
+ * * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
  */
-function obtener_tipo_recorrido($idft_despacho_ingresados)
+
+function obtener_tipo_recorrido($iddoc)
 {
-    $resultado = "Matutino";
-    if ($resultado == 2) {
-        $resultado = "Vespertina";
+    $resultado = 'Matutino';
+
+    $query = Model::getQueryBuilder();
+    $planilla = $query
+        ->select('tipo_recorrido')
+        ->from('ft_despacho_ingresados')
+        ->where('documento_iddocumento = :iddoc')
+        ->setParameter(':iddoc', $iddoc, \Doctrine\DBAL\Types\Type::INTEGER)
+        ->execute()->fetchAll();
+
+    if ($planilla[0]['tipo_recorrido'] == 2) {
+        $resultado = 'Vespertino';
     }
     return $resultado;
 }
+/**
+ * Esta funcion obtiene las distribuciones que se encuentran en la planilla de distribucion
+ * NOTA : SE DEJA EN ESPERA, HASTA DEFINIR CON LUZ MOLINA COMO SE DEBE VISUALIZAR.
 
-function obtener_distribucion($idft_despacho_ingresados)
+ * @param [integer] $idft_despacho_ingresados
+ * @return string los numeros de radicados de sus distribuciones.
+ * * @author Julian Otalvaro Osorio <julian.otalvaro@cerok.com>
+ * @date 2019-10-04 
+ */
+
+function obtener_distribucion($iddoc)
 {
     return '*';
 }
-
