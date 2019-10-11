@@ -23,8 +23,15 @@ $Response = (object) [
 
 try {
     JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+
+    if (empty($method = $_REQUEST['method'])) {
+        throw new Exception("Error Processing Request", 1);
+    }
+
+    $newData = UtilitiesController::cleanForm($_REQUEST);
+    $Response->data = ExpedienteGetDataController::$method($newData);
+
     $Response->success = 1;
-    $Response->data = Expediente::getAllData();
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();
 }

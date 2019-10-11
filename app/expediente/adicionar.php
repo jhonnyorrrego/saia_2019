@@ -41,6 +41,8 @@ try {
         $newData['fk_dependencia'] = 0;
         $newData['fk_serie'] = 0;
         $newData['fk_subserie'] = 0;
+        $newData['fk_caja'] = 0;
+        $newData['consecutivo'] = 0;
     } else {
         $SerieDependencia = new SerieDependencia($newData['fk_serie_dependencia']);
         $Serie = $SerieDependencia->getSerieFk();
@@ -49,8 +51,8 @@ try {
         $newData['fk_serie'] = $Serie->tipo == 1 ?
             $SerieDependencia->fk_serie : $Serie->getCodPadre()->getPK();
         $newData['fk_subserie'] =  $Serie->tipo == 2 ? $SerieDependencia->fk_serie : 0;
+        $newData['consecutivo'] = Expediente::getMaxConsecutivoSerieDep($newData['fk_serie_dependencia']) + 1;
     }
-    $newData['fk_caja'] = 0;
 
     $attributes = array_merge($newData, $defaultValues);
 
@@ -59,7 +61,7 @@ try {
 
     try {
         if ($id = Expediente::newRecord($attributes)) {
-            $Response->data = Expediente::getDataId($id);
+            $Response->data = (new Vexpedientes($id))->getDataRowList();
             $Response->success = 1;
             $Response->message = "Datos Guardados!";
             $conn->commit();

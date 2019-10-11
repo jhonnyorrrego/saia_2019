@@ -68,15 +68,21 @@ class LogController
         );
 
         foreach ($diff as $attribute => $value) {
-            //un modelo nunca tiene attributos null => 'NULL'
-            if (!is_null($object->$attribute)) {
-                LogHistorial::newRecord([
-                    'fk_log' => $logId,
-                    'campo' => $attribute,
-                    'anterior' => $object->clone->$attribute,
-                    'nuevo' => $object->$attribute
-                ]);
-            }
+
+            $descriptionAttribute = "descripcion_{$attribute}";
+
+            $description = property_exists($object, $descriptionAttribute) ?
+                $object->$descriptionAttribute : null;
+
+            LogHistorial::newRecord([
+                'fk_log' => $logId,
+                'campo' => $attribute,
+                'anterior' => $object->clone->$attribute,
+                'nuevo' => $object->$attribute,
+                'descripcion' => $description
+            ]);
+
+            $object->$descriptionAttribute = null;
         }
 
         return $logId;

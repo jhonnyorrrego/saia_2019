@@ -7,7 +7,7 @@ class LogHistorial extends Model
     protected $campo;
     protected $anterior;
     protected $nuevo;
-    
+    protected $descripcion;
 
     function __construct($id = null)
     {
@@ -19,12 +19,13 @@ class LogHistorial extends Model
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_log',
                 'campo',
                 'anterior',
-                'nuevo'
+                'nuevo',
+                'descripcion'
             ],
             'date' => []
         ];
