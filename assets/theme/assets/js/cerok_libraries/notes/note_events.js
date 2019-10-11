@@ -1,44 +1,45 @@
 $(function() {
-    var notes = new Notes(localStorage.getItem("key"));
+    var notes = new Notes(localStorage.getItem('key'));
 
-    $(document).on("click", ".note_item", function() {
-        notes.active = $(this).data("noteid");
+    $(document).on('click', '.note_item', function() {
+        notes.active = $(this).data('noteid');
 
         let date = notes.getInfoFromActive().date;
-        $("#span_note_header").html(date);
+        $('#span_note_header').html(date);
     });
 
-    $("#note_tab").on("click", function() {
+    $('#note_tab').on('click', function() {
         notes.refreshList();
     });
 
-    $(".close-note-link").on("click", function() {
-        let content = $("#note_content").html();
+    $('.close-note-link').on('click', function() {
+        let content = $('#note_content').html();
 
         if (content) {
-            $("#save_note").attr("disabled", true);
+            $('#save_note').attr('disabled', true);
             $("#list_note > li[data-noteid='" + notes.active + "']").remove();
             notes.save(content);
         }
     });
 
-    $("#add_note").click(function() {
+    $('#add_note').click(function() {
         notes.active = 0;
     });
 
-    $("#save_note").on("click", function() {
-        $(".close-note-link").trigger("click");
+    $('#save_note').on('click', function() {
+        $('.close-note-link').trigger('click');
     });
 
-    $("#delete_notes").on("click", function() {
+    $('#delete_notes').on('click', function() {
         let list = [];
 
-        $.each($(".checkbox_note:checked"), function(i, element) {
+        $.each($('.checkbox_note:checked'), function(i, element) {
             list.push(element.value);
             $("#list_note > li[data-noteid='" + element.value + "']").remove();
         });
 
         notes.selected = list;
         notes.delete();
+        $('a.delete-note-link').trigger('click');
     });
 });

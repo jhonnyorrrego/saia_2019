@@ -37,37 +37,28 @@ try {
     $offset = ($_REQUEST["pageNumber"] - 1)  * $_REQUEST["pageSize"];
     $limit = $_REQUEST["pageSize"];
 
-    $sql = <<<SQL
-        SELECT 
-           count(*) as total
-        FROM
-            log a
-            JOIN {$relationalModelName::getTableName()} b
-                ON a.idlog = b.fk_log
-            JOIN funcionario c
-                ON c.idfuncionario = a.fk_funcionario
-        WHERE
-            b.{$relationalModelName::getParentRelationName()} = {$_REQUEST['item']}
-SQL;
-    $Response->total = Log::search($sql)[0]['total'];
+    $query = Model::getQueryBuilder()
+        ->select('count(*) as total')
+        ->from('log', 'a')
+        ->join('a', $relationalModelName::getTableName(), 'b', 'a.idlog = b.fk_log')
+        ->join('a', 'funcionario', 'c', 'c.idfuncionario = a.fk_funcionario')
+        ->where("b.{$relationalModelName::getParentRelationName()} = :item")
+        ->setParameter('item', $_REQUEST['item'])
+        ->execute()->fetch();
 
-    $sql = <<<SQL
-        SELECT 
-            a.*,
-            c.nombres,
-            c.apellidos,
-            c.login
-        FROM
-            log a
-            JOIN {$relationalModelName::getTableName()} b
-                ON a.idlog = b.fk_log
-            JOIN funcionario c
-                ON c.idfuncionario = a.fk_funcionario
-        WHERE
-            b.{$relationalModelName::getParentRelationName()} = {$_REQUEST['item']}
-        ORDER BY b.{$relationalModelName::getPrimaryLabel()} {$_REQUEST["sortOrder"]}
-SQL;
-    $records = Log::search($sql, $offset, $limit);
+    $Response->total = $query['total'];
+
+    $records = Model::getQueryBuilder()
+        ->select('a.*', 'c.nombres', 'c.apellidos', 'c.login')
+        ->from('log', 'a')
+        ->join('a', $relationalModelName::getTableName(), 'b', 'a.idlog = b.fk_log')
+        ->join('a', 'funcionario', 'c', 'c.idfuncionario = a.fk_funcionario')
+        ->where("b.{$relationalModelName::getParentRelationName()} = :item")
+        ->orderBy("b.{$relationalModelName::getPrimaryLabel()}", $_REQUEST["sortOrder"])
+        ->setParameter('item', $_REQUEST['item'])
+        ->setFirstResult($offset)
+        ->setMaxResults($limit)
+        ->execute()->fetchAll();
 
     $Funcionario = new Funcionario();
     foreach ($records as $row) {

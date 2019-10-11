@@ -67,13 +67,26 @@ try {
         foreach ($users as $key => $Funcionario) {
             $mails[] = $Funcionario->email;
         }
-        enviar_mensaje('', ['para' => 'email'], ['para' => $mails], 'Restablecer clave de acceso.', $message);
+
+        $SendMailController = new SendMailController('Restablecer clave de acceso.', $message);
+        $SendMailController->setDestinations(
+            SendMailController::DESTINATION_TYPE_EMAIL,
+            $mails
+        );
+        $SendMailController->send();
 
         $Response->message = "Solicitud realizada, Comuniquese con " . $users[0]->getName();
     } else {
         $url = $Funcionario->getRecoveryPasswordRoute();
         $message = 'Para reestablecer la clave ingrese al siguiente enlace ' . $url;
-        enviar_mensaje('', ['para' => 'email'], ['para' => [$Funcionario->email]], 'Restablecer clave de acceso.', $message);
+
+        $SendMailController = new SendMailController('Restablecer clave de acceso.', $message);
+        $SendMailController->setDestinations(
+            SendMailController::DESTINATION_TYPE_EMAIL,
+            [$Funcionario->email]
+        );
+        $SendMailController->send();
+
         $Response->message = "Se ha enviado un enlace de recuperación al correo " . $Funcionario->email;
         $Response->success = 1;
     }

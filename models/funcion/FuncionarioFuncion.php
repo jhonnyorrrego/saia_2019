@@ -24,7 +24,7 @@ class FuncionarioFuncion extends LogModel
      */
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)[
+        $this->dbAttributes = (object) [
             'safe' => [
                 'fk_funcion',
                 'fk_funcionario',
@@ -117,11 +117,13 @@ class FuncionarioFuncion extends LogModel
     public static function inactiveByFunction($functionId)
     {
         //no se debe usar executeUpdate ya que implementa LogModel
-        $relations = self::findAllByAttributes([
-            'fk_funcion' => $functionId,
-            'estado' => 1,
-            'fk_cargo' => null
-        ]);
+        $QueryBuilder = Model::getQueryBuilder()
+            ->select('*')
+            ->from('funcionario_funcion')
+            ->where('estado = 1 and fk_cargo is null')
+            ->andWhere('fk_funcion = :functionId')
+            ->setParameter('functionId', $functionId);
+        $relations = self::findByQueryBuilder($QueryBuilder);
 
         foreach ($relations as $FuncionarioFuncion) {
             $FuncionarioFuncion->estado = 0;

@@ -234,7 +234,7 @@ $('#user_form').validate({
             required: true,
             minlength: 8
         },
-        perfil: {
+        'perfil[]': {
             required: true
         },
         ventanilla_radicacion: {

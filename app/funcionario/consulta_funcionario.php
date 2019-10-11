@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'core/autoload.php';
 
-$Response = (object)[
+$Response = (object) [
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -30,7 +30,7 @@ if (JwtController::check($_REQUEST['token'], $_REQUEST['key'])) {
                 break;
             case 'userInformation':
                 $Funcionario = new Funcionario($_REQUEST['key']);
-                $data = $Funcionario->getBasicInformation();
+                $data = $Funcionario->getBasicInformation(true);
                 $data['originalPhoto'] = $Funcionario->getImage('foto_original');
                 $data['email'] = $Funcionario->email;
                 $data['direction'] = $Funcionario->direccion;

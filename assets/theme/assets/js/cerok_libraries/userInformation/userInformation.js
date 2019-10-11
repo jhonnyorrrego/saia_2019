@@ -1,15 +1,15 @@
-class UserInformation{
-    constructor (iduser){
+class UserInformation {
+    constructor(iduser) {
         this.user = iduser;
         this.baseUrl = Session.getBaseUrl();
         this.find();
     }
 
-    set user(iduser){
+    set user(iduser) {
         this._iduser = iduser;
     }
 
-    get user(){
+    get user() {
         return this._iduser;
     }
 
@@ -21,21 +21,26 @@ class UserInformation{
         return this._baseUrl;
     }
 
-    find(){
+    find() {
         let baseUrl = this.baseUrl;
-        $.post(`${baseUrl}app/funcionario/consulta_funcionario.php`,{
-            key: this.user,
-            type: 'userInformation',
-            token: localStorage.getItem('token')
-        }, function(response){
-            if(response.success){
-                for(let attribute in response.data){
-                   $(`#${attribute}`).text(response.data[attribute]);
-                }
+        $.post(
+            `${baseUrl}app/funcionario/consulta_funcionario.php`,
+            {
+                key: this.user,
+                type: 'userInformation',
+                token: localStorage.getItem('token')
+            },
+            function(response) {
+                if (response.success) {
+                    for (let attribute in response.data) {
+                        $(`#${attribute}`).text(response.data[attribute]);
+                    }
 
-                $("#image").attr("src", baseUrl + response.data.cutedPhoto);
-                $("#img_edit_photo").attr("src", baseUrl + response.data.originalPhoto);
-            }
-        }, 'json');
+                    $('#image').removeAttr('src');
+                    $('#image').attr('src', baseUrl + response.data.cutedPhoto);
+                }
+            },
+            'json'
+        );
     }
 }

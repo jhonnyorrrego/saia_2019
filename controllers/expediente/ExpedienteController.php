@@ -79,7 +79,7 @@ class ExpedienteController
                         $cant++;
                         $sql = "SELECT count(idexpediente_doc) as cant FROM expediente_doc 
                         WHERE fk_expediente={$idexp} AND fk_documento={$iddoc} AND tipo=1";
-                        $exist = ExpedientoDoc::search($sql);
+                        $exist =; //ejecuta la busqueda
                         if (!$exist[0]['cant']) {
                             if (ExpedienteDoc::newRecord($attributes)) {
                                 $success++;

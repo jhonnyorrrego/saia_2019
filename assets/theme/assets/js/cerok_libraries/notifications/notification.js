@@ -37,9 +37,7 @@ class Notification {
     findNotifications() {
         let _this = this;
         $.post(
-            `${
-                _this.options.baseUrl
-            }app/notificaciones/total_pendientes_leer.php`,
+            `${_this.options.baseUrl}app/notificaciones/total_pendientes_leer.php`,
             {
                 key: _this.options.key,
                 token: _this.options.token,
@@ -165,35 +163,44 @@ class Notification {
     }
 
     createItems(first, last) {
-        let _this = this;
-        let notifications = _this.notifications.slice(first, last + 1);
+        if (this.notifications.length) {
+            let _this = this;
+            let notifications = _this.notifications.slice(first, last + 1);
 
-        notifications.forEach(element => {
+            notifications.forEach(element => {
+                $(_this.options.listSelector).append(
+                    $('<a>', {
+                        href: '#',
+                        class: 'dropdown-item'
+                    }).text(
+                        `
+                    id: ${element.id}
+                    fecha : ${element.fecha}
+                        descripcion: ${element.descripcion}
+                        `
+                    )
+                );
+            });
+
             $(_this.options.listSelector).append(
+                $('<span>', {
+                    class: 'clearfix bg-master-lighter dropdown-item',
+                    id: 'more_notifications'
+                }).append(
+                    $('<span>', {
+                        class: 'fa fa-plus-circle pull-left btn btn-link',
+                        text: ' Ver más'
+                    })
+                )
+            );
+        } else {
+            $(this.options.listSelector).append(
                 $('<a>', {
                     href: '#',
                     class: 'dropdown-item'
-                }).text(
-                    `
-                        id: ${element.id}
-                        fecha : ${element.fecha}
-                        descripcion: ${element.descripcion}
-                    `
-                )
+                }).text('Sin notificaciones')
             );
-        });
-
-        $(_this.options.listSelector).append(
-            $('<span>', {
-                class: 'clearfix bg-master-lighter dropdown-item',
-                id: 'more_notifications'
-            }).append(
-                $('<span>', {
-                    class: 'fa fa-plus-circle pull-left btn btn-link',
-                    text: ' Ver más'
-                })
-            )
-        );
+        }
     }
 
     more() {

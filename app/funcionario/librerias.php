@@ -50,8 +50,8 @@ function get_profile($perfil)
 function get_name($userId, $name, $lastName)
 {
     $Funcionario = new Funcionario();
-    $Funcionario->nombres = htmlentities($name);
-    $Funcionario->apellidos = htmlentities($lastName);
+    $Funcionario->nombres = $name;
+    $Funcionario->apellidos = $lastName;
 
     return $Funcionario->getName();
 }

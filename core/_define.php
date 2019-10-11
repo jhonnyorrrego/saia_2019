@@ -41,7 +41,7 @@ if ($_SERVER["HTTPS"] == 'on') {
     define("PROTOCOLO_CONEXION", "http://");
 }
 
-define("RUTA_INFO_QR", PROTOCOLO_CONEXION . $ruta . "/" . RUTA_SAIA . "/webservice_saia_clientes/info_qr_cliente/");
+define("RUTA_INFO_QR", PROTOCOLO_CONEXION . RUTA_PDF . "/webservice_saia_clientes/info_qr_cliente/");
 
 define("TIPO_ALM", "local://../");
 define("RUTA_ARCHIVOS", TIPO_ALM . "almacenamiento/");

@@ -21,17 +21,20 @@ $Response = (object) [
 ];
 
 try {
+    $today = new DateTime(date('Y-m-d'));
     $data = Model::getQueryBuilder()
-        ->select('imagen', 'nombre', 'contenido', 'idcontenidos_carrusel as id')
-        ->from('contenidos_carrusel')
-        ->where('fecha_inicio <= :today')
-        ->andWhere('fecha_fin >= :today')
-        ->setParameter(':today', new DateTime(), 'datetime')
+        ->select('a.ruta', 'a.nombre', 'a.descripcion', 'a.idcarrusel_item as id')
+        ->from('carrusel_item', 'a')
+        ->join('a', 'carrusel', 'b', 'a.fk_carrusel = b.idcarrusel')
+        ->where('a.estado = 1 and b.estado = 1')
+        ->andWhere('a.fecha_inicial <= :today')
+        ->andWhere('a.fecha_final >= :today')
+        ->setParameter(':today', $today, 'datetime')
         ->execute()
         ->fetchAll();
 
     foreach ($data as $row) {
-        $image = TemporalController::createTemporalFile($row["imagen"], 'carrusel');
+        $image = TemporalController::createTemporalFile($row["ruta"], 'carrusel');
 
         if (!$image->success) {
             throw new Exception("Error al obtener la imagen", 1);
@@ -40,7 +43,7 @@ try {
         $Response->data[] = [
             "image" => $image->route,
             "title" => $row["nombre"],
-            "content" => $row["contenido"]
+            "content" => $row["descripcion"]
         ];
     }
 

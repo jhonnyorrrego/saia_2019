@@ -90,27 +90,6 @@ class Ui {
         }
     }
 
-    static imageAreaSelect() {
-        setTimeout(() => {
-            $('#img_edit_photo').imgAreaSelect({
-                handles: 'corners',
-                aspectRatio: '1:1',
-                minHeight: 40,
-                x1: 0,
-                y1: 0,
-                x2: 70,
-                y2: 70,
-                persistent: true
-            });
-        }, 500);
-    }
-
-    static hideImgAreaSelect() {
-        let ias = $('#img_edit_photo').imgAreaSelect({ instance: true });
-        ias.setOptions({ hide: true });
-        ias.update();
-    }
-
     static resizeIframe() {
         let headerHeight = $('#iframe_workspace').offset().top;
         let windowHeight = $(window).height();

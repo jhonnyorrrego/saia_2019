@@ -24,7 +24,8 @@ try {
     $sessionUserId = SessionController::hasActiveSession();
 
     if (
-        isset($_REQUEST['user'], $_REQUEST['password']) &&
+        !empty($_REQUEST['user']) &&
+        !empty($_REQUEST['password']) &&
         !$sessionUserId
     ) {
         $exist = Funcionario::countRecords(['login' => $_REQUEST['user']]);
