@@ -1,17 +1,17 @@
-$(function () {
+$(function() {
     var baseUrl = Session.getBaseUrl();
     Ui.putColor();
     Ui.putLogo('#logo');
     Ui.bindServiceWorker();
     resize();
 
-    $("[name='username'],[name='password']").on('keyup', function (e) {
+    $("[name='username'],[name='password']").on('keyup', function(e) {
         if (e.keyCode == 13) {
             $('#access').trigger('click');
         }
     });
 
-    $('#access').on('click', function (event) {
+    $('#access').on('click', function(event) {
         event.preventDefault();
         $.ajax({
             type: 'POST',
@@ -21,7 +21,7 @@ $(function () {
                 user: $("[name='username']").val(),
                 password: $("[name='password']").val()
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('key', response.data.key);
@@ -33,23 +33,23 @@ $(function () {
                     });
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.log(xhr.status, 'Error!');
             }
         });
     });
 
-    $('#recovery_form').on('submit', function (event) {
+    $('#recovery_form').on('submit', function(event) {
         event.preventDefault();
         $.ajax({
             type: 'GET',
             url: baseUrl + 'app/funcionario/solicitar_cambio_clave.php',
             dataType: 'json',
-            data: $("#recovery_form").serialize(),
-            beforeSend: function () {
+            data: $('#recovery_form').serialize(),
+            beforeSend: function() {
                 $('#buttons,#spiner').toggleClass('d-none');
             },
-            success: function (response) {
+            success: function(response) {
                 $('#buttons,#spiner').toggleClass('d-none');
                 if (response.success) {
                     top.notification({
@@ -65,33 +65,43 @@ $(function () {
                     });
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.log(xhr.status, 'Error!');
             }
         });
     });
 
-
-
     (function checkDirectory() {
-        $.post(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php', {
-            configurations: ['validar_acceso_ldap']
-        }, function (response) {
-            if (response.success) {
-                if (response.data[0].value == 0) {
-                    $('#message').parent().parent().hide();
+        $.post(
+            Session.getBaseUrl() +
+                'app/configuracion/consulta_configuraciones.php',
+            {
+                configurations: ['validar_acceso_ldap']
+            },
+            function(response) {
+                if (response.success) {
+                    if (response.data[0].value == 0) {
+                        $('#message')
+                            .parent()
+                            .parent()
+                            .hide();
+                    }
                 }
-            }
-        }, 'json');
+            },
+            'json'
+        );
     })();
 
     function loadCarousel() {
-        if ($("#carousel_container").is(':visible') && !$("#homepageItems").children().length) {
+        if (
+            $('#carousel_container').is(':visible') &&
+            !$('#homepageItems').children().length
+        ) {
             $.ajax({
-                url: baseUrl + 'app/carrusel/consulta_carousel.php',
+                url: baseUrl + 'app/carrusel/obtener_carrusel.php',
                 dataType: 'json',
-                success: function (response) {
-                    if (!$("#homepageItems").children().length) {
+                success: function(response) {
+                    if (!$('#homepageItems').children().length) {
                         paintCarousel(response.data);
                     }
                 }
@@ -106,10 +116,15 @@ $(function () {
         for (var i = 0; i < data.length; i++) {
             items += `
             <div class="carousel-item mx-0 px-0">
-                <img src="${baseUrl + data[i].image}" alt="..." class="carousel_image">
+                <img src="${baseUrl +
+                    data[i].image}" alt="..." class="carousel_image">
                 <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                    <h3 class="text-white" style="opacity: 1">${data[i].title}</h3>
-                    <p class="text-white" style="opacity: 1">${data[i].content}<p>
+                    <h3 class="text-white" style="opacity: 1">${
+                        data[i].title
+                    }</h3>
+                    <p class="text-white" style="opacity: 1">${
+                        data[i].content
+                    }<p>
                 </div>
             </div>`;
             indicators += `<li data-target="#myCarousel" data-slide-to="${i}"></li>`;
@@ -117,37 +132,51 @@ $(function () {
 
         $('#homepageItems').html(items);
         $('#indicators').html(indicators);
-        $('.carousel-item').first().addClass('active');
-        $('.carousel-indicators > li').first().addClass('active');
+        $('.carousel-item')
+            .first()
+            .addClass('active');
+        $('.carousel-indicators > li')
+            .first()
+            .addClass('active');
         let maxHeight = $(window).height() - $('#footer').height();
         let maxWidth = $(window).width() - $('#form-container').width();
-        $('#carousel_container,#homepageItems').height(maxHeight).width(maxWidth);
+        $('#carousel_container,#homepageItems')
+            .height(maxHeight)
+            .width(maxWidth);
 
-        $('.carousel_image').first().on('load', function () {
-            resizeCarouselImage($(this), maxHeight, maxWidth);
-        });
+        $('.carousel_image')
+            .first()
+            .on('load', function() {
+                resizeCarouselImage($(this), maxHeight, maxWidth);
+            });
 
-        $("#myCarousel").carousel();
-        $('#myCarousel').on('slide.bs.carousel', function (e) {
-            let image = $(e.relatedTarget).find('img');
-            resizeCarouselImage(image, maxHeight, maxWidth);
+        $('#myCarousel').carousel();
+        $('#myCarousel')
+            .on('slide.bs.carousel', function(e) {
+                let image = $(e.relatedTarget).find('img');
+                resizeCarouselImage(image, maxHeight, maxWidth);
 
-            if (!$(e.relatedTarget).is(':visible')) {
-                $(e.relatedTarget).show();
-            }
-        }).on('slid.bs.carousel', function (e) {
-            if (e.direction == 'left') {
-                $('.carousel-item.active').prev().hide();
-            } else {
-                $('.carousel-item.active').next().hide();
-            }
-        });
+                if (!$(e.relatedTarget).is(':visible')) {
+                    $(e.relatedTarget).show();
+                }
+            })
+            .on('slid.bs.carousel', function(e) {
+                if (e.direction == 'left') {
+                    $('.carousel-item.active')
+                        .prev()
+                        .hide();
+                } else {
+                    $('.carousel-item.active')
+                        .next()
+                        .hide();
+                }
+            });
     }
 
     function resizeCarouselImage(image, maxHeight, maxWidth) {
         $('.carousel-item').removeClass('d-flex justify-content-center');
         $('#homepageItems').removeClass('d-flex align-items-center');
-        
+
         if (image.width() > image.height()) {
             image.css('width', maxWidth);
             $('#homepageItems').addClass('d-flex align-items-center');
@@ -157,21 +186,25 @@ $(function () {
         }
     }
 
-    $(window).resize(function () {
+    $(window).resize(function() {
         resize();
     });
 
-    window.addEventListener("orientationchange", function () {
-        setTimeout(() => {
-            resize();
-        }, 500);
-    }, false);
+    window.addEventListener(
+        'orientationchange',
+        function() {
+            setTimeout(() => {
+                resize();
+            }, 500);
+        },
+        false
+    );
 
     function resize() {
         breakpoint = checkSize();
         $('.carousel-item > img')
-            .attr('height', $(window).height() - $("#footer").height())
-            .attr('width', $("#carousel_container").width());
+            .attr('height', $(window).height() - $('#footer').height())
+            .attr('width', $('#carousel_container').width());
 
         loadCarousel();
     }
