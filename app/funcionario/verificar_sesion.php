@@ -20,9 +20,13 @@ $Response = (object) [
 ];
 
 try {
-    JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+    if ($_REQUEST['externalVerification']) {
+        $Response->data = LogAcceso::checkActiveToken($_REQUEST['token']);
+    } else {
+        JwtController::check($_REQUEST['token'], $_REQUEST['key']);
+        $Response->data = true;
+    }
 
-    $Response->data = true;
     $Response->success = 1;
 } catch (\Throwable $th) {
     $Response->message = $th->getMessage();

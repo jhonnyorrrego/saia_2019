@@ -39,8 +39,11 @@ class FuncionarioController
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2019-04-09
      */
-    public static function generateToken($Funcionario, $duration = 0, $forWebService = false)
-    {
+    public static function generateToken(
+        $Funcionario,
+        $duration = 0,
+        $forExternalAccess = false
+    ) {
         if (!$duration) {
             $duration = SessionController::TIME_LIFE;
         }
@@ -49,7 +52,7 @@ class FuncionarioController
             "id" => $Funcionario->getPK(),
             "funcionario_codigo" => $Funcionario->funcionario_codigo,
             "login" => $Funcionario->usuario,
-            "web_service" => $forWebService
+            "web_service" => $forExternalAccess
         ];
 
         return JwtController::SignIn($data, $duration);

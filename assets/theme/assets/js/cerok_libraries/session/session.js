@@ -71,7 +71,7 @@ class Session {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: `${baseUrl}app/funcionario/verificar_session.php`,
+                url: `${baseUrl}app/funcionario/verificar_sesion.php`,
                 data: {
                     token: localStorage.getItem('token'),
                     key: localStorage.getItem('key')
