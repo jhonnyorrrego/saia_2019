@@ -1,0 +1,590 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files (x86)\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.3.2
+3 info using node@v0.10.13
+4 verbose readDependencies using package.json deps
+5 verbose install where, deps [ 'D:\\xampp7\\htdocs\\nuevosaia\\saia_2019',
+5 verbose install   [ 'alpaca',
+5 verbose install     'bootstrap',
+5 verbose install     'echarts',
+5 verbose install     'glyphicons-only-bootstrap',
+5 verbose install     'handlebars',
+5 verbose install     'izitoast',
+5 verbose install     'jquery',
+5 verbose install     'jquery-ui-dist',
+5 verbose install     'jquery-validation',
+5 verbose install     'jspanel4',
+5 verbose install     'lodash',
+5 verbose install     'moment',
+5 verbose install     'popper.js' ] ]
+6 info preinstall saia@1.0.0
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'alpaca@^1.5.27', null ]
+9 verbose cache add name=undefined spec="alpaca@^1.5.27" args=["alpaca@^1.5.27",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'alpaca@^1.5.27',
+10 verbose parsed url   path: 'alpaca@^1.5.27',
+10 verbose parsed url   href: 'alpaca@^1.5.27' }
+11 verbose cache add name="alpaca" spec="^1.5.27" args=["alpaca","^1.5.27"]
+12 verbose parsed url { protocol: null,
+12 verbose parsed url   slashes: null,
+12 verbose parsed url   auth: null,
+12 verbose parsed url   host: null,
+12 verbose parsed url   port: null,
+12 verbose parsed url   hostname: null,
+12 verbose parsed url   hash: null,
+12 verbose parsed url   search: null,
+12 verbose parsed url   query: null,
+12 verbose parsed url   pathname: '^1.5.27',
+12 verbose parsed url   path: '^1.5.27',
+12 verbose parsed url   href: '^1.5.27' }
+13 verbose addNamed [ 'alpaca', '^1.5.27' ]
+14 verbose addNamed [ null, null ]
+15 verbose cache add [ 'bootstrap@^4.3.1', null ]
+16 verbose cache add name=undefined spec="bootstrap@^4.3.1" args=["bootstrap@^4.3.1",null]
+17 verbose parsed url { protocol: null,
+17 verbose parsed url   slashes: null,
+17 verbose parsed url   auth: null,
+17 verbose parsed url   host: null,
+17 verbose parsed url   port: null,
+17 verbose parsed url   hostname: null,
+17 verbose parsed url   hash: null,
+17 verbose parsed url   search: null,
+17 verbose parsed url   query: null,
+17 verbose parsed url   pathname: 'bootstrap@^4.3.1',
+17 verbose parsed url   path: 'bootstrap@^4.3.1',
+17 verbose parsed url   href: 'bootstrap@^4.3.1' }
+18 verbose cache add name="bootstrap" spec="^4.3.1" args=["bootstrap","^4.3.1"]
+19 verbose parsed url { protocol: null,
+19 verbose parsed url   slashes: null,
+19 verbose parsed url   auth: null,
+19 verbose parsed url   host: null,
+19 verbose parsed url   port: null,
+19 verbose parsed url   hostname: null,
+19 verbose parsed url   hash: null,
+19 verbose parsed url   search: null,
+19 verbose parsed url   query: null,
+19 verbose parsed url   pathname: '^4.3.1',
+19 verbose parsed url   path: '^4.3.1',
+19 verbose parsed url   href: '^4.3.1' }
+20 verbose addNamed [ 'bootstrap', '^4.3.1' ]
+21 verbose addNamed [ null, null ]
+22 verbose cache add [ 'echarts@^4.3.0', null ]
+23 verbose cache add name=undefined spec="echarts@^4.3.0" args=["echarts@^4.3.0",null]
+24 verbose parsed url { protocol: null,
+24 verbose parsed url   slashes: null,
+24 verbose parsed url   auth: null,
+24 verbose parsed url   host: null,
+24 verbose parsed url   port: null,
+24 verbose parsed url   hostname: null,
+24 verbose parsed url   hash: null,
+24 verbose parsed url   search: null,
+24 verbose parsed url   query: null,
+24 verbose parsed url   pathname: 'echarts@^4.3.0',
+24 verbose parsed url   path: 'echarts@^4.3.0',
+24 verbose parsed url   href: 'echarts@^4.3.0' }
+25 verbose cache add name="echarts" spec="^4.3.0" args=["echarts","^4.3.0"]
+26 verbose parsed url { protocol: null,
+26 verbose parsed url   slashes: null,
+26 verbose parsed url   auth: null,
+26 verbose parsed url   host: null,
+26 verbose parsed url   port: null,
+26 verbose parsed url   hostname: null,
+26 verbose parsed url   hash: null,
+26 verbose parsed url   search: null,
+26 verbose parsed url   query: null,
+26 verbose parsed url   pathname: '^4.3.0',
+26 verbose parsed url   path: '^4.3.0',
+26 verbose parsed url   href: '^4.3.0' }
+27 verbose addNamed [ 'echarts', '^4.3.0' ]
+28 verbose addNamed [ null, null ]
+29 verbose cache add [ 'glyphicons-only-bootstrap@^1.0.1', null ]
+30 verbose cache add name=undefined spec="glyphicons-only-bootstrap@^1.0.1" args=["glyphicons-only-bootstrap@^1.0.1",null]
+31 verbose parsed url { protocol: null,
+31 verbose parsed url   slashes: null,
+31 verbose parsed url   auth: null,
+31 verbose parsed url   host: null,
+31 verbose parsed url   port: null,
+31 verbose parsed url   hostname: null,
+31 verbose parsed url   hash: null,
+31 verbose parsed url   search: null,
+31 verbose parsed url   query: null,
+31 verbose parsed url   pathname: 'glyphicons-only-bootstrap@^1.0.1',
+31 verbose parsed url   path: 'glyphicons-only-bootstrap@^1.0.1',
+31 verbose parsed url   href: 'glyphicons-only-bootstrap@^1.0.1' }
+32 verbose cache add name="glyphicons-only-bootstrap" spec="^1.0.1" args=["glyphicons-only-bootstrap","^1.0.1"]
+33 verbose parsed url { protocol: null,
+33 verbose parsed url   slashes: null,
+33 verbose parsed url   auth: null,
+33 verbose parsed url   host: null,
+33 verbose parsed url   port: null,
+33 verbose parsed url   hostname: null,
+33 verbose parsed url   hash: null,
+33 verbose parsed url   search: null,
+33 verbose parsed url   query: null,
+33 verbose parsed url   pathname: '^1.0.1',
+33 verbose parsed url   path: '^1.0.1',
+33 verbose parsed url   href: '^1.0.1' }
+34 verbose addNamed [ 'glyphicons-only-bootstrap', '^1.0.1' ]
+35 verbose addNamed [ null, null ]
+36 verbose cache add [ 'handlebars@^4.1.2', null ]
+37 verbose cache add name=undefined spec="handlebars@^4.1.2" args=["handlebars@^4.1.2",null]
+38 verbose parsed url { protocol: null,
+38 verbose parsed url   slashes: null,
+38 verbose parsed url   auth: null,
+38 verbose parsed url   host: null,
+38 verbose parsed url   port: null,
+38 verbose parsed url   hostname: null,
+38 verbose parsed url   hash: null,
+38 verbose parsed url   search: null,
+38 verbose parsed url   query: null,
+38 verbose parsed url   pathname: 'handlebars@^4.1.2',
+38 verbose parsed url   path: 'handlebars@^4.1.2',
+38 verbose parsed url   href: 'handlebars@^4.1.2' }
+39 verbose cache add name="handlebars" spec="^4.1.2" args=["handlebars","^4.1.2"]
+40 verbose parsed url { protocol: null,
+40 verbose parsed url   slashes: null,
+40 verbose parsed url   auth: null,
+40 verbose parsed url   host: null,
+40 verbose parsed url   port: null,
+40 verbose parsed url   hostname: null,
+40 verbose parsed url   hash: null,
+40 verbose parsed url   search: null,
+40 verbose parsed url   query: null,
+40 verbose parsed url   pathname: '^4.1.2',
+40 verbose parsed url   path: '^4.1.2',
+40 verbose parsed url   href: '^4.1.2' }
+41 verbose addNamed [ 'handlebars', '^4.1.2' ]
+42 verbose addNamed [ null, null ]
+43 verbose cache add [ 'izitoast@^1.4.0', null ]
+44 verbose cache add name=undefined spec="izitoast@^1.4.0" args=["izitoast@^1.4.0",null]
+45 verbose parsed url { protocol: null,
+45 verbose parsed url   slashes: null,
+45 verbose parsed url   auth: null,
+45 verbose parsed url   host: null,
+45 verbose parsed url   port: null,
+45 verbose parsed url   hostname: null,
+45 verbose parsed url   hash: null,
+45 verbose parsed url   search: null,
+45 verbose parsed url   query: null,
+45 verbose parsed url   pathname: 'izitoast@^1.4.0',
+45 verbose parsed url   path: 'izitoast@^1.4.0',
+45 verbose parsed url   href: 'izitoast@^1.4.0' }
+46 verbose cache add name="izitoast" spec="^1.4.0" args=["izitoast","^1.4.0"]
+47 verbose parsed url { protocol: null,
+47 verbose parsed url   slashes: null,
+47 verbose parsed url   auth: null,
+47 verbose parsed url   host: null,
+47 verbose parsed url   port: null,
+47 verbose parsed url   hostname: null,
+47 verbose parsed url   hash: null,
+47 verbose parsed url   search: null,
+47 verbose parsed url   query: null,
+47 verbose parsed url   pathname: '^1.4.0',
+47 verbose parsed url   path: '^1.4.0',
+47 verbose parsed url   href: '^1.4.0' }
+48 verbose addNamed [ 'izitoast', '^1.4.0' ]
+49 verbose addNamed [ null, null ]
+50 verbose cache add [ 'jquery@^3.3.1', null ]
+51 verbose cache add name=undefined spec="jquery@^3.3.1" args=["jquery@^3.3.1",null]
+52 verbose parsed url { protocol: null,
+52 verbose parsed url   slashes: null,
+52 verbose parsed url   auth: null,
+52 verbose parsed url   host: null,
+52 verbose parsed url   port: null,
+52 verbose parsed url   hostname: null,
+52 verbose parsed url   hash: null,
+52 verbose parsed url   search: null,
+52 verbose parsed url   query: null,
+52 verbose parsed url   pathname: 'jquery@^3.3.1',
+52 verbose parsed url   path: 'jquery@^3.3.1',
+52 verbose parsed url   href: 'jquery@^3.3.1' }
+53 verbose cache add name="jquery" spec="^3.3.1" args=["jquery","^3.3.1"]
+54 verbose parsed url { protocol: null,
+54 verbose parsed url   slashes: null,
+54 verbose parsed url   auth: null,
+54 verbose parsed url   host: null,
+54 verbose parsed url   port: null,
+54 verbose parsed url   hostname: null,
+54 verbose parsed url   hash: null,
+54 verbose parsed url   search: null,
+54 verbose parsed url   query: null,
+54 verbose parsed url   pathname: '^3.3.1',
+54 verbose parsed url   path: '^3.3.1',
+54 verbose parsed url   href: '^3.3.1' }
+55 verbose addNamed [ 'jquery', '^3.3.1' ]
+56 verbose addNamed [ null, null ]
+57 verbose cache add [ 'jquery-ui-dist@^1.12.1', null ]
+58 verbose cache add name=undefined spec="jquery-ui-dist@^1.12.1" args=["jquery-ui-dist@^1.12.1",null]
+59 verbose parsed url { protocol: null,
+59 verbose parsed url   slashes: null,
+59 verbose parsed url   auth: null,
+59 verbose parsed url   host: null,
+59 verbose parsed url   port: null,
+59 verbose parsed url   hostname: null,
+59 verbose parsed url   hash: null,
+59 verbose parsed url   search: null,
+59 verbose parsed url   query: null,
+59 verbose parsed url   pathname: 'jquery-ui-dist@^1.12.1',
+59 verbose parsed url   path: 'jquery-ui-dist@^1.12.1',
+59 verbose parsed url   href: 'jquery-ui-dist@^1.12.1' }
+60 verbose cache add name="jquery-ui-dist" spec="^1.12.1" args=["jquery-ui-dist","^1.12.1"]
+61 verbose parsed url { protocol: null,
+61 verbose parsed url   slashes: null,
+61 verbose parsed url   auth: null,
+61 verbose parsed url   host: null,
+61 verbose parsed url   port: null,
+61 verbose parsed url   hostname: null,
+61 verbose parsed url   hash: null,
+61 verbose parsed url   search: null,
+61 verbose parsed url   query: null,
+61 verbose parsed url   pathname: '^1.12.1',
+61 verbose parsed url   path: '^1.12.1',
+61 verbose parsed url   href: '^1.12.1' }
+62 verbose addNamed [ 'jquery-ui-dist', '^1.12.1' ]
+63 verbose addNamed [ null, null ]
+64 verbose cache add [ 'jquery-validation@^1.19.1', null ]
+65 verbose cache add name=undefined spec="jquery-validation@^1.19.1" args=["jquery-validation@^1.19.1",null]
+66 verbose parsed url { protocol: null,
+66 verbose parsed url   slashes: null,
+66 verbose parsed url   auth: null,
+66 verbose parsed url   host: null,
+66 verbose parsed url   port: null,
+66 verbose parsed url   hostname: null,
+66 verbose parsed url   hash: null,
+66 verbose parsed url   search: null,
+66 verbose parsed url   query: null,
+66 verbose parsed url   pathname: 'jquery-validation@^1.19.1',
+66 verbose parsed url   path: 'jquery-validation@^1.19.1',
+66 verbose parsed url   href: 'jquery-validation@^1.19.1' }
+67 verbose cache add name="jquery-validation" spec="^1.19.1" args=["jquery-validation","^1.19.1"]
+68 verbose parsed url { protocol: null,
+68 verbose parsed url   slashes: null,
+68 verbose parsed url   auth: null,
+68 verbose parsed url   host: null,
+68 verbose parsed url   port: null,
+68 verbose parsed url   hostname: null,
+68 verbose parsed url   hash: null,
+68 verbose parsed url   search: null,
+68 verbose parsed url   query: null,
+68 verbose parsed url   pathname: '^1.19.1',
+68 verbose parsed url   path: '^1.19.1',
+68 verbose parsed url   href: '^1.19.1' }
+69 verbose addNamed [ 'jquery-validation', '^1.19.1' ]
+70 verbose addNamed [ null, null ]
+71 verbose cache add [ 'jspanel4@^4.7.0', null ]
+72 verbose cache add name=undefined spec="jspanel4@^4.7.0" args=["jspanel4@^4.7.0",null]
+73 verbose parsed url { protocol: null,
+73 verbose parsed url   slashes: null,
+73 verbose parsed url   auth: null,
+73 verbose parsed url   host: null,
+73 verbose parsed url   port: null,
+73 verbose parsed url   hostname: null,
+73 verbose parsed url   hash: null,
+73 verbose parsed url   search: null,
+73 verbose parsed url   query: null,
+73 verbose parsed url   pathname: 'jspanel4@^4.7.0',
+73 verbose parsed url   path: 'jspanel4@^4.7.0',
+73 verbose parsed url   href: 'jspanel4@^4.7.0' }
+74 verbose cache add name="jspanel4" spec="^4.7.0" args=["jspanel4","^4.7.0"]
+75 verbose parsed url { protocol: null,
+75 verbose parsed url   slashes: null,
+75 verbose parsed url   auth: null,
+75 verbose parsed url   host: null,
+75 verbose parsed url   port: null,
+75 verbose parsed url   hostname: null,
+75 verbose parsed url   hash: null,
+75 verbose parsed url   search: null,
+75 verbose parsed url   query: null,
+75 verbose parsed url   pathname: '^4.7.0',
+75 verbose parsed url   path: '^4.7.0',
+75 verbose parsed url   href: '^4.7.0' }
+76 verbose addNamed [ 'jspanel4', '^4.7.0' ]
+77 verbose addNamed [ null, null ]
+78 verbose cache add [ 'lodash@^4.17.15', null ]
+79 verbose cache add name=undefined spec="lodash@^4.17.15" args=["lodash@^4.17.15",null]
+80 verbose parsed url { protocol: null,
+80 verbose parsed url   slashes: null,
+80 verbose parsed url   auth: null,
+80 verbose parsed url   host: null,
+80 verbose parsed url   port: null,
+80 verbose parsed url   hostname: null,
+80 verbose parsed url   hash: null,
+80 verbose parsed url   search: null,
+80 verbose parsed url   query: null,
+80 verbose parsed url   pathname: 'lodash@^4.17.15',
+80 verbose parsed url   path: 'lodash@^4.17.15',
+80 verbose parsed url   href: 'lodash@^4.17.15' }
+81 verbose cache add name="lodash" spec="^4.17.15" args=["lodash","^4.17.15"]
+82 verbose parsed url { protocol: null,
+82 verbose parsed url   slashes: null,
+82 verbose parsed url   auth: null,
+82 verbose parsed url   host: null,
+82 verbose parsed url   port: null,
+82 verbose parsed url   hostname: null,
+82 verbose parsed url   hash: null,
+82 verbose parsed url   search: null,
+82 verbose parsed url   query: null,
+82 verbose parsed url   pathname: '^4.17.15',
+82 verbose parsed url   path: '^4.17.15',
+82 verbose parsed url   href: '^4.17.15' }
+83 verbose addNamed [ 'lodash', '^4.17.15' ]
+84 verbose addNamed [ null, null ]
+85 verbose cache add [ 'moment@^2.24.0', null ]
+86 verbose cache add name=undefined spec="moment@^2.24.0" args=["moment@^2.24.0",null]
+87 verbose parsed url { protocol: null,
+87 verbose parsed url   slashes: null,
+87 verbose parsed url   auth: null,
+87 verbose parsed url   host: null,
+87 verbose parsed url   port: null,
+87 verbose parsed url   hostname: null,
+87 verbose parsed url   hash: null,
+87 verbose parsed url   search: null,
+87 verbose parsed url   query: null,
+87 verbose parsed url   pathname: 'moment@^2.24.0',
+87 verbose parsed url   path: 'moment@^2.24.0',
+87 verbose parsed url   href: 'moment@^2.24.0' }
+88 verbose cache add name="moment" spec="^2.24.0" args=["moment","^2.24.0"]
+89 verbose parsed url { protocol: null,
+89 verbose parsed url   slashes: null,
+89 verbose parsed url   auth: null,
+89 verbose parsed url   host: null,
+89 verbose parsed url   port: null,
+89 verbose parsed url   hostname: null,
+89 verbose parsed url   hash: null,
+89 verbose parsed url   search: null,
+89 verbose parsed url   query: null,
+89 verbose parsed url   pathname: '^2.24.0',
+89 verbose parsed url   path: '^2.24.0',
+89 verbose parsed url   href: '^2.24.0' }
+90 verbose addNamed [ 'moment', '^2.24.0' ]
+91 verbose addNamed [ null, null ]
+92 verbose cache add [ 'popper.js@^1.15.0', null ]
+93 verbose cache add name=undefined spec="popper.js@^1.15.0" args=["popper.js@^1.15.0",null]
+94 verbose parsed url { protocol: null,
+94 verbose parsed url   slashes: null,
+94 verbose parsed url   auth: null,
+94 verbose parsed url   host: null,
+94 verbose parsed url   port: null,
+94 verbose parsed url   hostname: null,
+94 verbose parsed url   hash: null,
+94 verbose parsed url   search: null,
+94 verbose parsed url   query: null,
+94 verbose parsed url   pathname: 'popper.js@^1.15.0',
+94 verbose parsed url   path: 'popper.js@^1.15.0',
+94 verbose parsed url   href: 'popper.js@^1.15.0' }
+95 verbose cache add name="popper.js" spec="^1.15.0" args=["popper.js","^1.15.0"]
+96 verbose parsed url { protocol: null,
+96 verbose parsed url   slashes: null,
+96 verbose parsed url   auth: null,
+96 verbose parsed url   host: null,
+96 verbose parsed url   port: null,
+96 verbose parsed url   hostname: null,
+96 verbose parsed url   hash: null,
+96 verbose parsed url   search: null,
+96 verbose parsed url   query: null,
+96 verbose parsed url   pathname: '^1.15.0',
+96 verbose parsed url   path: '^1.15.0',
+96 verbose parsed url   href: '^1.15.0' }
+97 verbose addNamed [ 'popper.js', '^1.15.0' ]
+98 verbose addNamed [ null, null ]
+99 silly lockFile 0e2ebe81-alpaca-1-5-27 alpaca@^1.5.27
+100 verbose lock alpaca@^1.5.27 C:\Users\USER\AppData\Roaming\npm-cache\0e2ebe81-alpaca-1-5-27.lock
+101 silly lockFile 47dc9c11-bootstrap-4-3-1 bootstrap@^4.3.1
+102 verbose lock bootstrap@^4.3.1 C:\Users\USER\AppData\Roaming\npm-cache\47dc9c11-bootstrap-4-3-1.lock
+103 silly lockFile 0ffabb0e-echarts-4-3-0 echarts@^4.3.0
+104 verbose lock echarts@^4.3.0 C:\Users\USER\AppData\Roaming\npm-cache\0ffabb0e-echarts-4-3-0.lock
+105 silly lockFile 05375b93-glyphicons-only-bootstrap-1-0-1 glyphicons-only-bootstrap@^1.0.1
+106 verbose lock glyphicons-only-bootstrap@^1.0.1 C:\Users\USER\AppData\Roaming\npm-cache\05375b93-glyphicons-only-bootstrap-1-0-1.lock
+107 silly lockFile 2a464b6f-handlebars-4-1-2 handlebars@^4.1.2
+108 verbose lock handlebars@^4.1.2 C:\Users\USER\AppData\Roaming\npm-cache\2a464b6f-handlebars-4-1-2.lock
+109 silly lockFile 372b72cb-izitoast-1-4-0 izitoast@^1.4.0
+110 verbose lock izitoast@^1.4.0 C:\Users\USER\AppData\Roaming\npm-cache\372b72cb-izitoast-1-4-0.lock
+111 silly lockFile d086f8e0-jquery-3-3-1 jquery@^3.3.1
+112 verbose lock jquery@^3.3.1 C:\Users\USER\AppData\Roaming\npm-cache\d086f8e0-jquery-3-3-1.lock
+113 silly lockFile 622c8ef4-jquery-ui-dist-1-12-1 jquery-ui-dist@^1.12.1
+114 verbose lock jquery-ui-dist@^1.12.1 C:\Users\USER\AppData\Roaming\npm-cache\622c8ef4-jquery-ui-dist-1-12-1.lock
+115 silly lockFile bd3a8385-jquery-validation-1-19-1 jquery-validation@^1.19.1
+116 verbose lock jquery-validation@^1.19.1 C:\Users\USER\AppData\Roaming\npm-cache\bd3a8385-jquery-validation-1-19-1.lock
+117 silly lockFile 25582178-jspanel4-4-7-0 jspanel4@^4.7.0
+118 verbose lock jspanel4@^4.7.0 C:\Users\USER\AppData\Roaming\npm-cache\25582178-jspanel4-4-7-0.lock
+119 silly lockFile c7231224-lodash-4-17-15 lodash@^4.17.15
+120 verbose lock lodash@^4.17.15 C:\Users\USER\AppData\Roaming\npm-cache\c7231224-lodash-4-17-15.lock
+121 silly lockFile da512169-moment-2-24-0 moment@^2.24.0
+122 verbose lock moment@^2.24.0 C:\Users\USER\AppData\Roaming\npm-cache\da512169-moment-2-24-0.lock
+123 silly addNameRange { name: 'alpaca', range: '*', hasData: false }
+124 silly lockFile dc3f25cf-popper-js-1-15-0 popper.js@^1.15.0
+125 verbose lock popper.js@^1.15.0 C:\Users\USER\AppData\Roaming\npm-cache\dc3f25cf-popper-js-1-15-0.lock
+126 silly addNameRange { name: 'bootstrap', range: '*', hasData: false }
+127 silly addNameRange { name: 'echarts', range: '*', hasData: false }
+128 silly addNameRange { name: 'glyphicons-only-bootstrap', range: '*', hasData: false }
+129 silly addNameRange { name: 'handlebars', range: '*', hasData: false }
+130 silly addNameRange { name: 'jquery', range: '*', hasData: false }
+131 silly addNameRange { name: 'jquery-ui-dist', range: '*', hasData: false }
+132 silly addNameRange { name: 'jquery-validation', range: '*', hasData: false }
+133 silly addNameRange { name: 'jspanel4', range: '*', hasData: false }
+134 silly addNameRange { name: 'izitoast', range: '*', hasData: false }
+135 silly addNameRange { name: 'lodash', range: '*', hasData: false }
+136 silly addNameRange { name: 'moment', range: '*', hasData: false }
+137 verbose url raw alpaca
+138 verbose url resolving [ 'https://registry.npmjs.org/', './alpaca' ]
+139 verbose url resolved https://registry.npmjs.org/alpaca
+140 info trying registry request attempt 1 at 17:33:29
+141 http GET https://registry.npmjs.org/alpaca
+142 silly addNameRange { name: 'popper.js', range: '*', hasData: false }
+143 verbose url raw bootstrap
+144 verbose url resolving [ 'https://registry.npmjs.org/', './bootstrap' ]
+145 verbose url resolved https://registry.npmjs.org/bootstrap
+146 info trying registry request attempt 1 at 17:33:29
+147 http GET https://registry.npmjs.org/bootstrap
+148 verbose url raw echarts
+149 verbose url resolving [ 'https://registry.npmjs.org/', './echarts' ]
+150 verbose url resolved https://registry.npmjs.org/echarts
+151 info trying registry request attempt 1 at 17:33:29
+152 http GET https://registry.npmjs.org/echarts
+153 verbose url raw glyphicons-only-bootstrap
+154 verbose url resolving [ 'https://registry.npmjs.org/', './glyphicons-only-bootstrap' ]
+155 verbose url resolved https://registry.npmjs.org/glyphicons-only-bootstrap
+156 info trying registry request attempt 1 at 17:33:29
+157 http GET https://registry.npmjs.org/glyphicons-only-bootstrap
+158 verbose url raw handlebars
+159 verbose url resolving [ 'https://registry.npmjs.org/', './handlebars' ]
+160 verbose url resolved https://registry.npmjs.org/handlebars
+161 info trying registry request attempt 1 at 17:33:29
+162 http GET https://registry.npmjs.org/handlebars
+163 verbose url raw jquery
+164 verbose url resolving [ 'https://registry.npmjs.org/', './jquery' ]
+165 verbose url resolved https://registry.npmjs.org/jquery
+166 info trying registry request attempt 1 at 17:33:29
+167 http GET https://registry.npmjs.org/jquery
+168 verbose url raw jquery-ui-dist
+169 verbose url resolving [ 'https://registry.npmjs.org/', './jquery-ui-dist' ]
+170 verbose url resolved https://registry.npmjs.org/jquery-ui-dist
+171 info trying registry request attempt 1 at 17:33:29
+172 http GET https://registry.npmjs.org/jquery-ui-dist
+173 verbose url raw jquery-validation
+174 verbose url resolving [ 'https://registry.npmjs.org/', './jquery-validation' ]
+175 verbose url resolved https://registry.npmjs.org/jquery-validation
+176 info trying registry request attempt 1 at 17:33:29
+177 http GET https://registry.npmjs.org/jquery-validation
+178 verbose url raw jspanel4
+179 verbose url resolving [ 'https://registry.npmjs.org/', './jspanel4' ]
+180 verbose url resolved https://registry.npmjs.org/jspanel4
+181 info trying registry request attempt 1 at 17:33:29
+182 http GET https://registry.npmjs.org/jspanel4
+183 verbose url raw izitoast
+184 verbose url resolving [ 'https://registry.npmjs.org/', './izitoast' ]
+185 verbose url resolved https://registry.npmjs.org/izitoast
+186 info trying registry request attempt 1 at 17:33:29
+187 http GET https://registry.npmjs.org/izitoast
+188 verbose url raw lodash
+189 verbose url resolving [ 'https://registry.npmjs.org/', './lodash' ]
+190 verbose url resolved https://registry.npmjs.org/lodash
+191 info trying registry request attempt 1 at 17:33:29
+192 http GET https://registry.npmjs.org/lodash
+193 verbose url raw moment
+194 verbose url resolving [ 'https://registry.npmjs.org/', './moment' ]
+195 verbose url resolved https://registry.npmjs.org/moment
+196 info trying registry request attempt 1 at 17:33:29
+197 http GET https://registry.npmjs.org/moment
+198 verbose url raw popper.js
+199 verbose url resolving [ 'https://registry.npmjs.org/', './popper.js' ]
+200 verbose url resolved https://registry.npmjs.org/popper.js
+201 info trying registry request attempt 1 at 17:33:29
+202 http GET https://registry.npmjs.org/popper.js
+203 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+204 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+205 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+206 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+207 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+208 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+209 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+210 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+211 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+212 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+213 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+214 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+215 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+216 info trying registry request attempt 2 at 17:33:40
+217 http GET https://registry.npmjs.org/echarts
+218 info trying registry request attempt 2 at 17:33:40
+219 http GET https://registry.npmjs.org/alpaca
+220 info trying registry request attempt 2 at 17:33:40
+221 http GET https://registry.npmjs.org/bootstrap
+222 info trying registry request attempt 2 at 17:33:40
+223 http GET https://registry.npmjs.org/glyphicons-only-bootstrap
+224 info trying registry request attempt 2 at 17:33:40
+225 http GET https://registry.npmjs.org/handlebars
+226 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+227 info trying registry request attempt 2 at 17:33:40
+228 http GET https://registry.npmjs.org/jquery
+229 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+230 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+231 info trying registry request attempt 2 at 17:33:40
+232 http GET https://registry.npmjs.org/jspanel4
+233 info trying registry request attempt 2 at 17:33:40
+234 http GET https://registry.npmjs.org/jquery-validation
+235 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+236 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+237 info trying registry request attempt 2 at 17:33:40
+238 http GET https://registry.npmjs.org/jquery-ui-dist
+239 info trying registry request attempt 2 at 17:33:40
+240 http GET https://registry.npmjs.org/izitoast
+241 info trying registry request attempt 2 at 17:33:40
+242 http GET https://registry.npmjs.org/moment
+243 info trying registry request attempt 2 at 17:33:40
+244 http GET https://registry.npmjs.org/lodash
+245 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+246 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+247 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+248 info trying registry request attempt 2 at 17:33:40
+249 http GET https://registry.npmjs.org/popper.js
+250 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+251 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+252 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+253 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+254 info retry will retry, error on last attempt: Error: CERT_UNTRUSTED
+255 info trying registry request attempt 3 at 17:34:40
+256 http GET https://registry.npmjs.org/echarts
+257 info trying registry request attempt 3 at 17:34:40
+258 http GET https://registry.npmjs.org/alpaca
+259 info trying registry request attempt 3 at 17:34:40
+260 http GET https://registry.npmjs.org/bootstrap
+261 info trying registry request attempt 3 at 17:34:40
+262 http GET https://registry.npmjs.org/handlebars
+263 info trying registry request attempt 3 at 17:34:40
+264 http GET https://registry.npmjs.org/glyphicons-only-bootstrap
+265 silly lockFile 0ffabb0e-echarts-4-3-0 echarts@^4.3.0
+266 silly lockFile 0ffabb0e-echarts-4-3-0 echarts@^4.3.0
+267 error Error: CERT_UNTRUSTED
+267 error     at SecurePair.<anonymous> (tls.js:1349:32)
+267 error     at SecurePair.EventEmitter.emit (events.js:92:17)
+267 error     at SecurePair.maybeInitFinished (tls.js:962:10)
+267 error     at CleartextStream.read [as _read] (tls.js:463:15)
+267 error     at CleartextStream.Readable.read (_stream_readable.js:320:10)
+267 error     at EncryptedStream.write [as _write] (tls.js:366:25)
+267 error     at doWrite (_stream_writable.js:219:10)
+267 error     at writeOrBuffer (_stream_writable.js:209:5)
+267 error     at EncryptedStream.Writable.write (_stream_writable.js:180:11)
+267 error     at write (_stream_readable.js:573:24)
+267 error     at flow (_stream_readable.js:582:7)
+268 error If you need help, you may report this log at:
+268 error     <http://github.com/isaacs/npm/issues>
+268 error or email it to:
+268 error     <npm-@googlegroups.com>
+269 error System Windows_NT 6.2.9200
+270 error command "C:\\Program Files (x86)\\nodejs\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+271 error cwd D:\xampp7\htdocs\nuevosaia\saia_2019
+272 error node -v v0.10.13
+273 error npm -v 1.3.2
+274 verbose exit [ 1, true ]

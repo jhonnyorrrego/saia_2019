@@ -91,6 +91,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <a href="#" class="dropdown-item new_add" data-type="process">
                             <i class="fa fa-share-alt"></i> Procesos Generales
                         </a>
+                        <a href="http://localhost/mesaAyuda_front/" target="iframe_workspace" class="dropdown-item new_add" data-type="ma_tickets">
+                            <i class="fa fa-ticket"></i> Nuevo ticket
+                        </a>
                     </div>
                 </div>
                 <div class="d-lg-inline-block align-middle d-none">
@@ -175,7 +178,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="content">
                 <!-- START CONTAINER FLUID -->
                 <div class="container mw-100 m-0 p-0" id="workspace" style="position:absolute;">
-                    <iframe class="m-0 p-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no" style="position:absolute;z-index:0;"></iframe>
+                    <iframe class="m-0 p-0" frameBorder="0" id="iframe_workspace" name="iframe_workspace" width="100%" height="100%" scrolling="no" style="position:absolute;z-index:0;"></iframe>
                     <div class="d-inline d-block d-lg-none rounded-circle bg-white text-center" style="z-index:1;position:absolute;width:60px;height:60px;" id="new_action_mobile_container">
                         <span class="p-0 m-0 rounded-circle w-100 h-100" id="new_action_mobile" style="cursor:pointer;">
                             <i class="fa fa-plus-circle text-institutional" style="font-size:60px"></i>
