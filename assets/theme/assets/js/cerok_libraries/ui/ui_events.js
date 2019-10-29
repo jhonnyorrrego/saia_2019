@@ -67,6 +67,9 @@ $(function() {
             <a href="#" class="dropdown-item new_add" data-type="process">
                 <i class="fa fa-share-alt"></i> Procesos Generales
             </a>
+            <a href="http://localhost/mesaAyuda_front/" target="iframe_workspace" class="dropdown-item new_add" data-type="process">
+                <i class="fa fa-ticket"></i> Nuevo ticket
+            </a>
         `;
 
         let modal_options = {
