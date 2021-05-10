@@ -29,7 +29,7 @@
     "jquery-ui-dist": "^1.12.1",
     "jquery-validation": "^1.19.1",
     "jspanel4": "^4.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "popper.js": "^1.15.0"
   }
