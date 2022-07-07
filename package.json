@@ -30,7 +30,7 @@
     "jquery-validation": "^1.19.1",
     "jspanel4": "^4.7.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "popper.js": "^1.15.0"
   }
 }
